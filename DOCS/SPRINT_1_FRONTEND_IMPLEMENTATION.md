@@ -26,15 +26,15 @@
 ```typescript
 - Configurable base URL via VITE_API_BASE_URL
 - Default: http://localhost:8000/api/v1
-- Timeout: 10s
+- Timeout: 15s
 - JSON content-type headers
 ```
 
 #### State Management
 ```typescript
-- Auth store (Zustand): user, role, isAuthenticated
+- Auth store (Zustand): user, token, isAuthenticated, loading/error states
 - UI store (Zustand): sidebar toggle state
-- Mocked data for Sprint 1 (no backend calls)
+- Integrated API data flow for login/dashboard/clients/binders
 ```
 
 #### Utilities
@@ -110,29 +110,29 @@ Features:
 
 ### 4. Pages ✅
 
-All pages are read-only with placeholder content.
+All pages are read-only for domain data and integrated to backend endpoints.
 
 #### Dashboard (`src/pages/Dashboard.tsx`)
 ```typescript
 Features:
-- Health check to backend (/health)
-- Connection status display
+- Integrated GET /dashboard/summary
+- Summary KPIs display (in office / ready / overdue)
 - Hebrew labels
-- Placeholder for future widgets
+- Error and loading states
 ```
 
 #### Binders (`src/pages/Binders.tsx`)
 ```typescript
-- Placeholder content
-- Hebrew labels
-- "Will be added in next sprint" message
+- Integrated GET /binders
+- Hebrew labels + he-IL date formatting
+- Read-only table with status badges
 ```
 
 #### Clients (`src/pages/Clients.tsx`)
 ```typescript
-- Placeholder content
-- Hebrew labels
-- "Will be added in next sprint" message
+- Integrated GET /clients
+- Hebrew labels + localized client type names
+- Read-only table with status badges
 ```
 
 #### Login (`src/pages/Login.tsx`)
@@ -140,7 +140,7 @@ Features:
 Features:
 - Email + password inputs
 - Submit button
-- Non-functional (Sprint 1 scope)
+- Functional auth login via POST /auth/login
 - Hebrew labels
 ```
 
@@ -148,7 +148,7 @@ Features:
 
 ### 5. Routing ✅
 
-#### Router (`src/router/index.tsx`)
+#### Router (`src/router/AppRoutes.tsx`)
 ```typescript
 Routes:
 - / → Dashboard
@@ -166,16 +166,11 @@ Layout:
 
 ### 6. App Entry ✅
 
-#### App Component (`src/App.tsx`)
-```typescript
-- BrowserRouter wrapper
-- Full-height flex layout
-- Gray background
-```
-
 #### Main Entry (`src/main.tsx`)
 ```typescript
 - React.StrictMode
+- BrowserRouter wrapper
+- Full-height flex layout
 - Root element mounting
 - Error handling
 ```
@@ -206,7 +201,7 @@ src/
 │   ├── Dashboard.tsx         ✅
 │   └── Login.tsx             ✅
 ├── router/
-│   └── index.tsx             ✅
+│   └── AppRoutes.tsx         ✅
 ├── stores/
 │   ├── auth.store.ts         ✅
 │   └── ui.store.ts           ✅
@@ -215,7 +210,6 @@ src/
 │   └── common.ts             ✅
 ├── utils/
 │   └── cn.ts                 ✅
-├── App.tsx                   ✅
 └── main.tsx                  ✅
 ```
 
@@ -326,20 +320,15 @@ Dependencies:
 
 The following are deferred to future sprints:
 
-1. **Data Integration**
-   - Real API calls to backend
-   - Client list from GET /api/v1/clients
-   - Binder list from GET /api/v1/binders
-
-2. **Pagination**
+1. **Pagination**
    - Implement when data fetching begins
 
-3. **SLA Indicators**
+2. **SLA Indicators**
    - Display days_in_office from backend
    - Show status badges
    - No calculations in frontend
 
-4. **Forms**
+3. **Forms**
    - Create/edit clients
    - Create/edit binders
    - With proper validation

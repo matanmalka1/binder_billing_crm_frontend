@@ -3,6 +3,7 @@ import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Spinner } from '../components/ui/Spinner';
 import { api } from '../api/client';
+import { getApiErrorMessage } from '../utils/apiError';
 
 interface Binder {
   id: number;
@@ -50,8 +51,8 @@ export const Binders: React.FC = () => {
         setError(null);
         const response = await api.get<BindersListResponse>('/binders');
         setBinders(response.data.items);
-      } catch (err: any) {
-        setError(err.response?.data?.detail || 'שגיאה בטעינת רשימת תיקים');
+      } catch (error: unknown) {
+        setError(getApiErrorMessage(error, 'שגיאה בטעינת רשימת תיקים'));
       } finally {
         setLoading(false);
       }

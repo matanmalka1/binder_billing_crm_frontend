@@ -23,7 +23,7 @@ export const Header: React.FC = () => {
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <UserIcon className="w-4 h-4 text-gray-400" />
-          <span>שלום, <span className="font-semibold text-gray-900">{user?.name || 'אורח'}</span></span>
+          <span>שלום, <span className="font-semibold text-gray-900">{user?.full_name || 'אורח'}</span></span>
         </div>
         <button
           onClick={logout}

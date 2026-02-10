@@ -3,6 +3,7 @@ import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Spinner } from '../components/ui/Spinner';
 import { api } from '../api/client';
+import { getApiErrorMessage } from '../utils/apiError';
 
 interface Client {
   id: number;
@@ -61,8 +62,8 @@ export const Clients: React.FC = () => {
         setError(null);
         const response = await api.get<ClientsListResponse>('/clients');
         setClients(response.data.items);
-      } catch (err: any) {
-        setError(err.response?.data?.detail || 'שגיאה בטעינת רשימת לקוחות');
+      } catch (error: unknown) {
+        setError(getApiErrorMessage(error, 'שגיאה בטעינת רשימת לקוחות'));
       } finally {
         setLoading(false);
       }

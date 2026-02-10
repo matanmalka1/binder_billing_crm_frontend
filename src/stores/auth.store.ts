@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { api } from '../api/client';
+import { getApiErrorMessage } from '../utils/apiError';
 
 export type UserRole = 'advisor' | 'secretary';
 
@@ -20,6 +21,11 @@ interface AuthState {
   clearError: () => void;
 }
 
+interface LoginResponse {
+  token: string;
+  user: User;
+}
+
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   token: localStorage.getItem('auth_token'),
@@ -31,7 +37,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true, error: null });
     
     try {
-      const response = await api.post('/auth/login', { email, password });
+      const response = await api.post<LoginResponse>('/auth/login', { email, password });
       const { token, user } = response.data;
       
       // Save token
@@ -44,8 +50,8 @@ export const useAuthStore = create<AuthState>((set) => ({
         isLoading: false,
         error: null,
       });
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || 'שגיאה בהתחברות';
+    } catch (error: unknown) {
+      const errorMessage = getApiErrorMessage(error, 'שגיאה בהתחברות');
       set({
         user: null,
         token: null,
