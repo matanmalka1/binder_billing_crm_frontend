@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { App } from "./App";
+import { BrowserRouter } from "react-router-dom";
+import { AppRoutes } from "./router/AppRoutes";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -10,6 +11,10 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <AppRoutes />
+      </div>
+    </BrowserRouter>
   </React.StrictMode>,
 );

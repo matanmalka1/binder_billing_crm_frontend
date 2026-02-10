@@ -1,10 +1,71 @@
-
 import { create } from 'zustand';
-import type { AuthState, User } from '../types/common';
+import { api } from '../api/client';
+
+export type UserRole = 'advisor' | 'secretary';
+
+export interface User {
+  id: number;
+  full_name: string;
+  role: UserRole;
+}
+
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  clearError: () => void;
+}
 
 export const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: true, // Mocked for Sprint 1
-  user: { name: 'ישראל ישראלי', role: 'advisor' }, // Mocked user
-  setUser: (user: User | null) => set({ user, isAuthenticated: !!user }),
-  logout: () => set({ user: null, isAuthenticated: false }),
+  user: null,
+  token: localStorage.getItem('auth_token'),
+  isAuthenticated: !!localStorage.getItem('auth_token'),
+  isLoading: false,
+  error: null,
+
+  login: async (email: string, password: string) => {
+    set({ isLoading: true, error: null });
+    
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      const { token, user } = response.data;
+      
+      // Save token
+      localStorage.setItem('auth_token', token);
+      
+      set({
+        user,
+        token,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      });
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.detail || 'שגיאה בהתחברות';
+      set({
+        user: null,
+        token: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: errorMessage,
+      });
+      localStorage.removeItem('auth_token');
+    }
+  },
+
+  logout: () => {
+    localStorage.removeItem('auth_token');
+    set({
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      error: null,
+    });
+  },
+
+  clearError: () => set({ error: null }),
 }));

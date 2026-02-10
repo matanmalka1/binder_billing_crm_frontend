@@ -1,69 +1,100 @@
+import React, { useEffect, useState } from 'react';
+import { Card } from '../components/ui/Card';
+import { Badge } from '../components/ui/Badge';
+import { Spinner } from '../components/ui/Spinner';
+import { api } from '../api/client';
+import { useAuthStore } from '../stores/auth.store';
 
-import React, { useEffect, useState } from "react";
-import { Card } from "../components/ui/Card";
-import { api } from "../api/client";
-
-type HealthState = {
-  status: "idle" | "loading" | "ok" | "error";
-  message: string;
-};
+interface DashboardSummary {
+  binders_in_office: number;
+  binders_ready_for_pickup: number;
+  binders_overdue: number;
+}
 
 export const Dashboard: React.FC = () => {
-  const [health, setHealth] = useState<HealthState>({
-    status: "idle",
-    message: "",
-  });
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { user } = useAuthStore();
 
   useEffect(() => {
-    let mounted = true;
-
-    const loadHealth = async () => {
-      setHealth({ status: "loading", message: "בודק חיבור לשרת..." });
+    const fetchSummary = async () => {
       try {
-        await api.get("/health");
-        if (!mounted) return;
-        setHealth({ status: "ok", message: "החיבור לשרת תקין" });
-      } catch {
-        if (!mounted) return;
-        setHealth({
-          status: "error",
-          message: "לא התקבלה תגובה מהשרת (מצב קריאה בלבד)",
-        });
+        setLoading(true);
+        setError(null);
+        const response = await api.get<DashboardSummary>('/dashboard/summary');
+        setSummary(response.data);
+      } catch (err: any) {
+        setError(err.response?.data?.detail || 'שגיאה בטעינת נתונים');
+      } finally {
+        setLoading(false);
       }
     };
 
-    loadHealth();
-    return () => {
-      mounted = false;
-    };
+    fetchSummary();
   }, []);
 
   return (
     <div className="space-y-6">
-      <header>
-        <h2 className="text-2xl font-bold text-gray-900">לוח בקרה</h2>
-        <p className="text-gray-600">ברוך הבא למערכת בינדר וחיובים</p>
-      </header>
-
-      <Card className="min-h-[200px] flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg text-gray-500 font-medium">לוח בקרה - יתווסף בהמשך</p>
-          <div className="mt-4 w-12 h-1 bg-blue-100 mx-auto rounded" />
-          {health.status !== "idle" && (
-            <p
-              className={
-                health.status === "ok"
-                  ? "mt-4 text-sm text-green-700"
-                  : health.status === "loading"
-                    ? "mt-4 text-sm text-blue-700"
-                    : "mt-4 text-sm text-orange-700"
-              }
-            >
-              {health.message}
+      <header className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">לוח בקרה</h2>
+          {user && (
+            <p className="text-gray-600">
+              שלום, {user.full_name} ({user.role === 'advisor' ? 'יועץ' : 'מזכירה'})
             </p>
           )}
         </div>
-      </Card>
+      </header>
+
+      {loading && (
+        <div className="flex justify-center py-12">
+          <Spinner size="lg" />
+        </div>
+      )}
+
+      {error && (
+        <Card className="bg-red-50 border-red-200">
+          <p className="text-red-600">{error}</p>
+        </Card>
+      )}
+
+      {!loading && !error && summary && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card title="תיקים במשרד">
+            <div className="flex items-center justify-between">
+              <span className="text-3xl font-bold text-blue-600">
+                {summary.binders_in_office}
+              </span>
+              <Badge variant="info">במשרד</Badge>
+            </div>
+          </Card>
+
+          <Card title="מוכנים לאיסוף">
+            <div className="flex items-center justify-between">
+              <span className="text-3xl font-bold text-green-600">
+                {summary.binders_ready_for_pickup}
+              </span>
+              <Badge variant="success">מוכן</Badge>
+            </div>
+          </Card>
+
+          <Card title="באיחור">
+            <div className="flex items-center justify-between">
+              <span className="text-3xl font-bold text-red-600">
+                {summary.binders_overdue}
+              </span>
+              <Badge variant="error">איחור</Badge>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {!loading && !error && !summary && (
+        <Card>
+          <p className="text-gray-600 text-center">אין נתונים להצגה</p>
+        </Card>
+      )}
     </div>
   );
 };
