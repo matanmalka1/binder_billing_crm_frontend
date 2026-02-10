@@ -1,0 +1,38 @@
+import React from 'react';
+import { Menu, LogOut, User as UserIcon } from 'lucide-react';
+import { useAuthStore } from '../../stores/auth.store';
+import { useUIStore } from '../../stores/ui.store';
+
+export const Header: React.FC = () => {
+  const { user, logout } = useAuthStore();
+  const { toggleSidebar } = useUIStore();
+
+  return (
+    <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 z-10 shrink-0">
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={toggleSidebar}
+          className="p-2 rounded-md hover:bg-gray-100 lg:hidden text-gray-600"
+          aria-label="פתח תפריט"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+        <h1 className="text-xl font-bold text-gray-900">בינדר ומערכת חיובים</h1>
+      </div>
+
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <UserIcon className="w-4 h-4 text-gray-400" />
+          <span>שלום, <span className="font-semibold text-gray-900">{user?.name || 'אורח'}</span></span>
+        </div>
+        <button
+          onClick={logout}
+          className="flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-medium transition-colors"
+        >
+          <LogOut className="w-4 h-4" />
+          <span>התנתקות</span>
+        </button>
+      </div>
+    </header>
+  );
+};
