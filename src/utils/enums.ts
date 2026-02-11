@@ -39,5 +39,46 @@ export const getRoleLabel = (role: string): string => {
     advisor: "יועץ",
     secretary: "מזכירה",
   };
-  return labels[role] || "משתמש"; // Safe fallback for unknown roles
+  return labels[role] || "—";
+};
+
+export const getWorkStateLabel = (workState: string): string => {
+  const labels: Record<string, string> = {
+    waiting_for_work: "ממתין לטיפול",
+    in_progress: "בטיפול",
+    completed: "הושלם",
+  };
+  return labels[workState] || "—";
+};
+
+export const getSlaStateLabel = (slaState: string): string => {
+  const labels: Record<string, string> = {
+    on_track: "במסלול",
+    approaching: "מתקרב ליעד",
+    overdue: "באיחור",
+  };
+  return labels[slaState] || "—";
+};
+
+export const getSignalLabel = (signal: string): string => {
+  const labels: Record<string, string> = {
+    overdue: "באיחור",
+    near_sla: "קרוב ליעד",
+    ready_for_pickup: "מוכן לאיסוף",
+    idle_binder: "תיק לא פעיל",
+    missing_permanent_documents: "חסרים מסמכים קבועים",
+    unpaid_charges: "חיובים שלא שולמו",
+  };
+  return labels[signal] || "—";
+};
+
+export const getActionLabel = (action: string): string => {
+  const labels: Record<string, string> = {
+    receive: "קליטת תיק",
+    ready: "מוכן לאיסוף",
+    return: "החזרת תיק",
+    freeze: "הקפאת לקוח",
+    activate: "הפעלת לקוח",
+  };
+  return labels[action] || "—";
 };

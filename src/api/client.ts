@@ -28,6 +28,45 @@ api.interceptors.request.use(
   }
 );
 
+export type BinderAction = "receive" | "return";
+export type ClientAction = "freeze" | "activate";
+export type MutationMethod = "post" | "patch";
+
+export interface DashboardQuickActionRequest {
+  endpoint: string;
+  method?: MutationMethod;
+  payload?: Record<string, unknown>;
+}
+
+export const triggerBinderAction = (
+  binderId: number,
+  action: BinderAction,
+) => {
+  if (action === "receive") {
+    return api.post("/binders/receive", { binder_id: binderId });
+  }
+
+  return api.post(`/binders/${binderId}/return`);
+};
+
+export const triggerClientAction = (
+  clientId: number,
+  action: ClientAction,
+) => {
+  const status = action === "freeze" ? "frozen" : "active";
+  return api.patch(`/clients/${clientId}`, { status });
+};
+
+export const triggerDashboardQuickAction = (
+  action: DashboardQuickActionRequest,
+) => {
+  return api.request({
+    url: action.endpoint,
+    method: action.method ?? "post",
+    data: action.payload,
+  });
+};
+
 // Response interceptor - handle auth errors
 api.interceptors.response.use(
   (response) => response,

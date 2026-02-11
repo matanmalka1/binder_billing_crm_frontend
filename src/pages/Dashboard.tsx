@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card } from "../components/ui/Card";
-import { api } from "../api/client";
-
-type DashboardData = {
-  total_clients: number;
-  active_binders: number;
-  overdue_binders: number;
-  binders_due_today: number;
-  binders_due_this_week: number;
-};
+import { api, triggerDashboardQuickAction } from "../api/client";
+import { getApiErrorMessage } from "../utils/apiError";
+import { DashboardContent } from "../features/dashboard/components/DashboardContent";
+import type {
+  DashboardData,
+  DashboardQuickAction,
+  DashboardQuickActionWithEndpoint,
+} from "../features/dashboard/types";
 
 type DashboardState = {
   status: "idle" | "loading" | "ok" | "error";
   message: string;
   data: DashboardData | null;
+};
+
+const isValidQuickAction = (
+  action: DashboardQuickAction,
+): action is DashboardQuickActionWithEndpoint => {
+  return typeof action.endpoint === "string" && action.endpoint.length > 0;
 };
 
 export const Dashboard: React.FC = () => {
@@ -22,36 +27,64 @@ export const Dashboard: React.FC = () => {
     message: "",
     data: null,
   });
+  const [activeQuickAction, setActiveQuickAction] = useState<string | null>(
+    null,
+  );
+
+  const loadDashboard = useCallback(async () => {
+    setDashboard({
+      status: "loading",
+      message: "טוען נתוני לוח בקרה...",
+      data: null,
+    });
+    try {
+      const response = await api.get<DashboardData>("/dashboard/overview");
+      setDashboard({
+        status: "ok",
+        message: "נתונים נטענו בהצלחה",
+        data: response.data,
+      });
+    } catch (error: unknown) {
+      setDashboard({
+        status: "error",
+        message: getApiErrorMessage(
+          error,
+          "לא התקבלה תגובה מהשרת (מצב קריאה בלבד)",
+        ),
+        data: null,
+      });
+    }
+  }, []);
 
   useEffect(() => {
-    let mounted = true;
-
-    const loadDashboard = async () => {
-      setDashboard({ status: "loading", message: "טוען נתוני לוח בקרה...", data: null });
-      try {
-        // ✅ CORRECT ENDPOINT per spec
-        const response = await api.get<DashboardData>("/dashboard/overview");
-        if (!mounted) return;
-        setDashboard({
-          status: "ok",
-          message: "נתונים נטענו בהצלחה",
-          data: response.data,
-        });
-      } catch (error) {
-        if (!mounted) return;
-        setDashboard({
-          status: "error",
-          message: "לא התקבלה תגובה מהשרת (מצב קריאה בלבד)",
-          data: null,
-        });
-      }
-    };
-
     loadDashboard();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  }, [loadDashboard]);
+
+  const handleQuickAction = async (action: DashboardQuickActionWithEndpoint) => {
+    const actionKey = action.key || action.endpoint;
+    setActiveQuickAction(actionKey);
+
+    try {
+      await triggerDashboardQuickAction({
+        endpoint: action.endpoint,
+        method: action.method,
+        payload: action.payload,
+      });
+      await loadDashboard();
+    } catch (error: unknown) {
+      setDashboard((prevState) => ({
+        ...prevState,
+        message: getApiErrorMessage(error, "שגיאה בביצוע פעולה מהירה"),
+      }));
+    } finally {
+      setActiveQuickAction(null);
+    }
+  };
+
+  const quickActions =
+    dashboard.data && Array.isArray(dashboard.data.quick_actions)
+      ? dashboard.data.quick_actions.filter(isValidQuickAction)
+      : [];
 
   return (
     <div className="space-y-6">
@@ -79,32 +112,12 @@ export const Dashboard: React.FC = () => {
       )}
 
       {dashboard.status === "ok" && dashboard.data && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card title="לקוחות">
-            <div className="text-3xl font-bold text-blue-600">{dashboard.data.total_clients}</div>
-            <p className="text-sm text-gray-600 mt-1">סך הכל לקוחות במערכת</p>
-          </Card>
-
-          <Card title="תיקים פעילים">
-            <div className="text-3xl font-bold text-green-600">{dashboard.data.active_binders}</div>
-            <p className="text-sm text-gray-600 mt-1">תיקים שטרם הוחזרו</p>
-          </Card>
-
-          <Card title="תיקים באיחור">
-            <div className="text-3xl font-bold text-red-600">{dashboard.data.overdue_binders}</div>
-            <p className="text-sm text-gray-600 mt-1">חרגו מ-90 יום</p>
-          </Card>
-
-          <Card title="תיקים ליום זה">
-            <div className="text-3xl font-bold text-orange-600">{dashboard.data.binders_due_today}</div>
-            <p className="text-sm text-gray-600 mt-1">מועד החזרה היום</p>
-          </Card>
-
-          <Card title="תיקים לשבוע זה">
-            <div className="text-3xl font-bold text-purple-600">{dashboard.data.binders_due_this_week}</div>
-            <p className="text-sm text-gray-600 mt-1">מועד החזרה תוך 7 ימים</p>
-          </Card>
-        </div>
+        <DashboardContent
+          data={dashboard.data}
+          quickActions={quickActions}
+          activeQuickAction={activeQuickAction}
+          onQuickAction={handleQuickAction}
+        />
       )}
 
       {dashboard.status === "idle" && (
