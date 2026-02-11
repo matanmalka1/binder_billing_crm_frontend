@@ -1,10 +1,10 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
-import { ActionButton } from "../../../components/ui/ActionButton";
-import type { BinderAction } from "../../../api/client";
+import { ActionButton } from "../../actions/components/ActionButton";
+import { resolveEntityActions } from "../../actions/resolveActions";
+import type { ResolvedBackendAction } from "../../actions/types";
 import {
-  getActionLabel,
   getSignalLabel,
   getSlaStateLabel,
   getStatusLabel,
@@ -15,12 +15,8 @@ import type { Binder } from "../types";
 interface BindersTableCardProps {
   binders: Binder[];
   activeActionKey: string | null;
-  onActionClick: (binderId: number, action: BinderAction) => void;
+  onActionClick: (action: ResolvedBackendAction) => void;
 }
-
-const isBinderAction = (value: string): value is BinderAction => {
-  return value === "receive" || value === "return";
-};
 
 const getStatusBadge = (status: string) => {
   const label = getStatusLabel(status);
@@ -66,28 +62,21 @@ export const BindersTableCard: React.FC<BindersTableCardProps> = ({
           </thead>
           <tbody className="divide-y divide-gray-100">
             {binders.map((binder) => {
-              const actions = Array.isArray(binder.available_actions)
-                ? binder.available_actions.filter(
-                    (action): action is BinderAction =>
-                      typeof action === "string" && isBinderAction(action),
-                  )
-                : [];
-
+              const actions = resolveEntityActions(
+                binder.available_actions,
+                "/binders",
+                binder.id,
+                `binder-${binder.id}`,
+              );
               return (
                 <tr key={binder.id} className="hover:bg-gray-50">
                   <td className="py-3 pr-4 font-medium text-gray-900">{binder.binder_number}</td>
                   <td className="py-3 pr-4">{getStatusBadge(binder.status)}</td>
                   <td className="py-3 pr-4 text-gray-600">{formatDate(binder.received_at)}</td>
-                  <td className="py-3 pr-4 text-gray-600">
-                    {formatDate(binder.expected_return_at)}
-                  </td>
+                  <td className="py-3 pr-4 text-gray-600">{formatDate(binder.expected_return_at)}</td>
                   <td className="py-3 pr-4 font-medium text-gray-900">{binder.days_in_office}</td>
-                  <td className="py-3 pr-4 text-gray-600">
-                    {getWorkStateLabel(binder.work_state ?? "")}
-                  </td>
-                  <td className="py-3 pr-4 text-gray-600">
-                    {getSlaStateLabel(binder.sla_state ?? "")}
-                  </td>
+                  <td className="py-3 pr-4 text-gray-600">{getWorkStateLabel(binder.work_state ?? "")}</td>
+                  <td className="py-3 pr-4 text-gray-600">{getSlaStateLabel(binder.sla_state ?? "")}</td>
                   <td className="py-3 pr-4">
                     {Array.isArray(binder.signals) && binder.signals.length > 0 ? (
                       <div className="flex flex-wrap gap-1">
@@ -105,18 +94,15 @@ export const BindersTableCard: React.FC<BindersTableCardProps> = ({
                     {actions.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {actions.map((action) => {
-                          const rowActionKey = `${binder.id}-${action}`;
                           return (
                             <ActionButton
-                              key={rowActionKey}
+                              key={action.uiKey}
                               type="button"
                               variant="outline"
-                              label={getActionLabel(action)}
-                              onClick={() => onActionClick(binder.id, action)}
-                              isLoading={activeActionKey === rowActionKey}
-                              disabled={
-                                activeActionKey !== null && activeActionKey !== rowActionKey
-                              }
+                              label={action.label}
+                              onClick={() => onActionClick(action)}
+                              isLoading={activeActionKey === action.uiKey}
+                              disabled={!action.endpoint || (activeActionKey !== null && activeActionKey !== action.uiKey)}
                             />
                           );
                         })}

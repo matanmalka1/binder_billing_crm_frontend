@@ -1,3 +1,5 @@
+import type { BackendActionInput } from "../actions/types";
+
 export interface Binder {
   id: number;
   client_id: number;
@@ -7,7 +9,7 @@ export interface Binder {
   expected_return_at: string;
   returned_at: string | null;
   days_in_office: number;
-  available_actions?: string[];
+  available_actions?: BackendActionInput[] | null;
   work_state?: string | null;
   sla_state?: string | null;
   signals?: string[] | null;

@@ -1,3 +1,5 @@
+import type { BackendActionInput } from "../actions/types";
+
 export interface TimelineEvent {
   event_type: string;
   timestamp: string;
@@ -5,6 +7,8 @@ export interface TimelineEvent {
   charge_id: number | null;
   description: string;
   metadata?: Record<string, unknown> | null;
+  actions?: BackendActionInput[] | null;
+  available_actions?: BackendActionInput[] | null;
 }
 
 export interface TimelineResponse {

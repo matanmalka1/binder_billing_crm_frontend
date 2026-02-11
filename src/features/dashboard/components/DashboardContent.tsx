@@ -1,9 +1,7 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
-import { ActionButton } from "../../../components/ui/ActionButton";
 import {
-  getActionLabel,
   getSignalLabel,
   getSlaStateLabel,
   getWorkStateLabel,
@@ -11,16 +9,17 @@ import {
 import type {
   AttentionItem,
   DashboardData,
-  DashboardQuickActionWithEndpoint,
 } from "../types";
 import { AttentionPanel } from "./AttentionPanel";
+import { OperationalPanel } from "./OperationalPanel";
+import type { BackendActionInput, ResolvedBackendAction } from "../../actions/types";
 
 interface DashboardContentProps {
   data: DashboardData;
   attentionItems: AttentionItem[];
-  quickActions: DashboardQuickActionWithEndpoint[];
+  quickActions: BackendActionInput[];
   activeQuickAction: string | null;
-  onQuickAction: (action: DashboardQuickActionWithEndpoint) => void;
+  onQuickAction: (action: ResolvedBackendAction) => void;
 }
 
 export const DashboardContent: React.FC<DashboardContentProps> = ({
@@ -88,28 +87,11 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
         </div>
       </Card>
 
-      {quickActions.length > 0 ? (
-        <Card title="פעולות מהירות">
-          <div className="flex flex-wrap gap-2">
-            {quickActions.map((action) => {
-              const quickActionKey = action.key || action.endpoint;
-              return (
-                <ActionButton
-                  key={quickActionKey}
-                  type="button"
-                  variant="outline"
-                  label={getActionLabel(action.key ?? "")}
-                  onClick={() => onQuickAction(action)}
-                  isLoading={activeQuickAction === quickActionKey}
-                  disabled={
-                    activeQuickAction !== null && activeQuickAction !== quickActionKey
-                  }
-                />
-              );
-            })}
-          </div>
-        </Card>
-      ) : null}
+      <OperationalPanel
+        quickActions={quickActions}
+        activeActionKey={activeQuickAction}
+        onQuickAction={onQuickAction}
+      />
     </div>
   );
 };

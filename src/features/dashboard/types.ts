@@ -1,15 +1,6 @@
-import type { DashboardQuickActionRequest } from "../../api/client";
+import type { BackendActionInput } from "../actions/types";
 
-export type DashboardQuickAction = {
-  key?: string;
-  endpoint?: string;
-  method?: DashboardQuickActionRequest["method"];
-  payload?: Record<string, unknown>;
-};
-
-export type DashboardQuickActionWithEndpoint = DashboardQuickAction & {
-  endpoint: string;
-};
+export type DashboardQuickAction = BackendActionInput;
 
 export interface AttentionItem {
   item_type: string;

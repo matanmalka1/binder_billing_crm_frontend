@@ -9,6 +9,7 @@ import { Login } from '../pages/Login';
 import { Header } from '../components/layout/Header';
 import { Sidebar } from '../components/layout/Sidebar';
 import { PageContainer } from '../components/layout/PageContainer';
+import { GlobalToast } from '../components/ui/GlobalToast';
 
 // Protected Route wrapper
 interface ProtectedRouteProps {
@@ -32,6 +33,7 @@ const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
+        <GlobalToast />
         <PageContainer>{children}</PageContainer>
       </div>
     </div>

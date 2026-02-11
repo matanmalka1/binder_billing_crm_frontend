@@ -1,9 +1,14 @@
 import React from "react";
 import { Badge } from "../../../components/ui/Badge";
+import type { ResolvedBackendAction } from "../../actions/types";
 import type { TimelineEvent } from "../types";
+import { TimelineActionRow } from "./TimelineActionRow";
 
 interface TimelineItemProps {
   event: TimelineEvent;
+  itemKey: string;
+  activeActionKey: string | null;
+  onAction: (action: ResolvedBackendAction) => void;
 }
 
 const getEventTypeLabel = (eventType: string) => {
@@ -22,7 +27,14 @@ const formatTimestamp = (timestamp: string) => {
   return new Date(timestamp).toLocaleString("he-IL");
 };
 
-export const TimelineItem: React.FC<TimelineItemProps> = ({ event }) => {
+export const TimelineItem: React.FC<TimelineItemProps> = ({
+  event,
+  itemKey,
+  activeActionKey,
+  onAction,
+}) => {
+  const eventActions = event.actions || event.available_actions || [];
+
   return (
     <li className="rounded-md border border-gray-200 p-3">
       <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -34,6 +46,14 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({ event }) => {
         <span>תיק: {event.binder_id ?? "—"}</span>
         <span>חיוב: {event.charge_id ?? "—"}</span>
       </div>
+      <TimelineActionRow
+        actions={eventActions}
+        binderId={event.binder_id}
+        chargeId={event.charge_id}
+        scopeKey={`timeline-${itemKey}`}
+        activeActionKey={activeActionKey}
+        onAction={onAction}
+      />
     </li>
   );
 };

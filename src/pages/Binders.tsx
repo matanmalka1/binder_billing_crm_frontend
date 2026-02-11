@@ -2,18 +2,26 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Card } from "../components/ui/Card";
 import { Spinner } from "../components/ui/Spinner";
-import { api, type BinderAction, triggerBinderAction } from "../api/client";
+import { api } from "../api/client";
 import { getApiErrorMessage } from "../utils/apiError";
+import { useUIStore } from "../store/ui.store";
+import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
+import { executeBackendAction } from "../features/actions/executeAction";
+import type { ResolvedBackendAction } from "../features/actions/types";
 import { BindersFiltersBar } from "../features/binders/components/BindersFiltersBar";
 import { BindersTableCard } from "../features/binders/components/BindersTableCard";
 import type { Binder, BindersListResponse } from "../features/binders/types";
 
+type PendingAction = ResolvedBackendAction | null;
+
 export const Binders: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { showToast } = useUIStore();
   const [binders, setBinders] = useState<Binder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<PendingAction>(null);
 
   const filters = {
     work_state: searchParams.get("work_state") ?? "",
@@ -25,16 +33,12 @@ export const Binders: React.FC = () => {
       setLoading(true);
       setError(null);
       const params: Record<string, string> = {};
-      if (filters.work_state) {
-        params.work_state = filters.work_state;
-      }
-      if (filters.sla_state) {
-        params.sla_state = filters.sla_state;
-      }
+      if (filters.work_state) params.work_state = filters.work_state;
+      if (filters.sla_state) params.sla_state = filters.sla_state;
       const response = await api.get<BindersListResponse>("/binders", { params });
-      setBinders(response.data.items);
-    } catch (error: unknown) {
-      setError(getApiErrorMessage(error, "שגיאה בטעינת רשימת תיקים"));
+      setBinders(response.data.items ?? []);
+    } catch (requestError: unknown) {
+      setError(getApiErrorMessage(requestError, "שגיאה בטעינת רשימת תיקים"));
     } finally {
       setLoading(false);
     }
@@ -46,26 +50,38 @@ export const Binders: React.FC = () => {
 
   const handleFilterChange = (name: "work_state" | "sla_state", value: string) => {
     const next = new URLSearchParams(searchParams);
-    if (value) {
-      next.set(name, value);
-    } else {
-      next.delete(name);
-    }
+    if (value) next.set(name, value);
+    else next.delete(name);
     setSearchParams(next);
   };
 
-  const handleActionClick = async (binderId: number, action: BinderAction) => {
-    const key = `${binderId}-${action}`;
-    setActiveActionKey(key);
-
+  const runAction = useCallback(async (action: ResolvedBackendAction) => {
+    setActiveActionKey(action.uiKey);
     try {
-      await triggerBinderAction(binderId, action);
+      await executeBackendAction(action);
+      showToast("הפעולה הושלמה בהצלחה", "success");
       await fetchBinders();
-    } catch (error: unknown) {
-      setError(getApiErrorMessage(error, "שגיאה בביצוע פעולת תיק"));
+    } catch (requestError: unknown) {
+      const message = getApiErrorMessage(requestError, "שגיאה בביצוע פעולת תיק");
+      setError(message);
+      showToast(message, "error");
     } finally {
       setActiveActionKey(null);
     }
+  }, [fetchBinders, showToast]);
+
+  const handleActionClick = (action: ResolvedBackendAction) => {
+    if (action.confirm) {
+      setPendingAction(action);
+      return;
+    }
+    void runAction(action);
+  };
+
+  const handleConfirmAction = async () => {
+    if (!pendingAction) return;
+    await runAction(pendingAction);
+    setPendingAction(null);
   };
 
   return (
@@ -74,36 +90,25 @@ export const Binders: React.FC = () => {
         <h2 className="text-2xl font-bold text-gray-900">תיקים</h2>
         <p className="text-gray-600">רשימת כל התיקים במערכת</p>
       </header>
-
       <Card title="סינון">
         <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </Card>
-
-      {loading && (
-        <div className="flex justify-center py-12">
-          <Spinner size="lg" />
-        </div>
-      )}
-
-      {error && (
-        <Card className="bg-red-50 border-red-200">
-          <p className="text-red-600">{error}</p>
-        </Card>
-      )}
-
-      {!loading && !error && binders.length === 0 && (
-        <Card>
-          <p className="text-gray-600 text-center">אין תיקים להצגה</p>
-        </Card>
-      )}
-
+      {loading && <div className="flex justify-center py-12"><Spinner size="lg" /></div>}
+      {error && <Card className="bg-red-50 border-red-200"><p className="text-red-600">{error}</p></Card>}
+      {!loading && !error && binders.length === 0 && <Card><p className="text-center text-gray-600">אין תיקים להצגה</p></Card>}
       {!loading && !error && binders.length > 0 && (
-        <BindersTableCard
-          binders={binders}
-          activeActionKey={activeActionKey}
-          onActionClick={handleActionClick}
-        />
+        <BindersTableCard binders={binders} activeActionKey={activeActionKey} onActionClick={handleActionClick} />
       )}
+      <ConfirmDialog
+        open={Boolean(pendingAction)}
+        title={pendingAction?.confirm?.title || "אישור פעולה"}
+        message={pendingAction?.confirm?.message || "האם להמשיך בביצוע הפעולה?"}
+        confirmLabel={pendingAction?.confirm?.confirmLabel || "אישור"}
+        cancelLabel={pendingAction?.confirm?.cancelLabel || "ביטול"}
+        isLoading={activeActionKey === pendingAction?.uiKey}
+        onConfirm={handleConfirmAction}
+        onCancel={() => setPendingAction(null)}
+      />
     </div>
   );
 };
