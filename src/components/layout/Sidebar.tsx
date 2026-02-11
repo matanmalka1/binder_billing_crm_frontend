@@ -8,7 +8,7 @@ import {
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
-import { useUIStore } from "../../stores/ui.store";
+import { useUIStore } from "../../store/ui.store";
 import { cn } from "../../utils/cn";
 
 export const Sidebar: React.FC = () => {
@@ -24,7 +24,7 @@ export const Sidebar: React.FC = () => {
   return (
     <aside
       className={cn(
-        "bg-gray-900 text-white transition-all duration-300 flex flex-col relative",
+        "bg-gray-900 text-white flex flex-col relative",
         isSidebarOpen ? "w-64" : "w-20",
       )}
     >
@@ -43,7 +43,7 @@ export const Sidebar: React.FC = () => {
             to={link.to}
             className={({ isActive }) =>
               cn(
-                "flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group",
+                "flex items-center gap-3 px-3 py-3 rounded-lg group",
                 isActive
                   ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
                   : "text-gray-400 hover:bg-gray-800 hover:text-white",
@@ -53,7 +53,7 @@ export const Sidebar: React.FC = () => {
             <link.icon className="w-5 h-5 shrink-0" />
             {isSidebarOpen && <span className="font-medium">{link.label}</span>}
             {!isSidebarOpen && (
-              <div className="absolute left-full mr-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 whitespace-nowrap">
+              <div className="absolute right-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap">
                 {link.label}
               </div>
             )}
@@ -63,7 +63,7 @@ export const Sidebar: React.FC = () => {
 
       <button
         onClick={toggleSidebar}
-        className="p-4 border-t border-gray-800 hover:bg-gray-800 transition-colors flex items-center justify-center"
+        className="p-4 border-t border-gray-800 hover:bg-gray-800 flex items-center justify-center"
       >
         {isSidebarOpen ? (
           <ChevronRight className="w-5 h-5" />

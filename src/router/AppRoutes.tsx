@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthStore } from '../stores/auth.store';
+import { useAuthStore } from '../store/auth.store';
 import { Dashboard } from '../pages/Dashboard';
 import { Binders } from '../pages/Binders';
 import { Clients } from '../pages/Clients';

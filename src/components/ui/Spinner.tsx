@@ -18,7 +18,7 @@ export const Spinner: React.FC<SpinnerProps> = ({ size = 'md', className }) => {
     <div className={cn('flex justify-center items-center', className)}>
       <div
         className={cn(
-          'animate-spin rounded-full border-solid border-blue-600 border-t-transparent',
+          'rounded-full border-solid border-blue-600 border-t-transparent',
           sizes[size]
         )}
       />

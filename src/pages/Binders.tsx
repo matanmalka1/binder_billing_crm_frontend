@@ -31,7 +31,7 @@ const getStatusBadge = (status: string) => {
     case 'overdue':
       return <Badge variant="error">באיחור</Badge>;
     default:
-      return <Badge variant="neutral">{status}</Badge>;
+      return <Badge variant="neutral">—</Badge>;
   }
 };
 
@@ -101,7 +101,7 @@ export const Binders: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {binders.map((binder) => (
-                  <tr key={binder.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={binder.id} className="hover:bg-gray-50">
                     <td className="py-3 pr-4">
                       <span className="font-medium text-gray-900">
                         {binder.binder_number}

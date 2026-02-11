@@ -32,7 +32,7 @@ const getStatusBadge = (status: string) => {
     case 'closed':
       return <Badge variant="neutral">סגור</Badge>;
     default:
-      return <Badge variant="neutral">{status}</Badge>;
+      return <Badge variant="neutral">—</Badge>;
   }
 };
 
@@ -43,7 +43,7 @@ const getClientTypeName = (type: string) => {
     company: 'חברה',
     employee: 'שכיר',
   };
-  return types[type] || type;
+  return types[type] || '—';
 };
 
 const formatDate = (dateString: string) => {
@@ -113,7 +113,7 @@ export const Clients: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {clients.map((client) => (
-                  <tr key={client.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={client.id} className="hover:bg-gray-50">
                     <td className="py-3 pr-4">
                       <span className="font-medium text-gray-900">
                         {client.full_name}
