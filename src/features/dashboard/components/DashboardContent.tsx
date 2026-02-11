@@ -9,12 +9,15 @@ import {
   getWorkStateLabel,
 } from "../../../utils/enums";
 import type {
+  AttentionItem,
   DashboardData,
   DashboardQuickActionWithEndpoint,
 } from "../types";
+import { AttentionPanel } from "./AttentionPanel";
 
 interface DashboardContentProps {
   data: DashboardData;
+  attentionItems: AttentionItem[];
   quickActions: DashboardQuickActionWithEndpoint[];
   activeQuickAction: string | null;
   onQuickAction: (action: DashboardQuickActionWithEndpoint) => void;
@@ -22,6 +25,7 @@ interface DashboardContentProps {
 
 export const DashboardContent: React.FC<DashboardContentProps> = ({
   data,
+  attentionItems,
   quickActions,
   activeQuickAction,
   onQuickAction,
@@ -50,6 +54,8 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
           <p className="mt-1 text-sm text-gray-600">מועד החזרה תוך 7 ימים</p>
         </Card>
       </div>
+
+      <AttentionPanel items={attentionItems} />
 
       <Card title="מצב תפעולי">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">

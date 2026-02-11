@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Briefcase,
   Users,
+  Search,
   LogIn,
   ChevronRight,
   ChevronLeft,
@@ -18,6 +19,7 @@ export const Sidebar: React.FC = () => {
     { to: "/", label: "לוח בקרה", icon: LayoutDashboard },
     { to: "/binders", label: "תיקים", icon: Briefcase },
     { to: "/clients", label: "לקוחות", icon: Users },
+    { to: "/search", label: "חיפוש", icon: Search },
     { to: "/login", label: "כניסה", icon: LogIn },
   ];
 

@@ -4,6 +4,7 @@ import { api, triggerDashboardQuickAction } from "../api/client";
 import { getApiErrorMessage } from "../utils/apiError";
 import { DashboardContent } from "../features/dashboard/components/DashboardContent";
 import type {
+  AttentionResponse,
   DashboardData,
   DashboardQuickAction,
   DashboardQuickActionWithEndpoint,
@@ -27,6 +28,7 @@ export const Dashboard: React.FC = () => {
     message: "",
     data: null,
   });
+  const [attentionItems, setAttentionItems] = useState<AttentionResponse["items"]>([]);
   const [activeQuickAction, setActiveQuickAction] = useState<string | null>(
     null,
   );
@@ -38,12 +40,16 @@ export const Dashboard: React.FC = () => {
       data: null,
     });
     try {
-      const response = await api.get<DashboardData>("/dashboard/overview");
+      const [overviewResponse, attentionResponse] = await Promise.all([
+        api.get<DashboardData>("/dashboard/overview"),
+        api.get<AttentionResponse>("/dashboard/attention"),
+      ]);
       setDashboard({
         status: "ok",
         message: "נתונים נטענו בהצלחה",
-        data: response.data,
+        data: overviewResponse.data,
       });
+      setAttentionItems(attentionResponse.data.items ?? []);
     } catch (error: unknown) {
       setDashboard({
         status: "error",
@@ -53,6 +59,7 @@ export const Dashboard: React.FC = () => {
         ),
         data: null,
       });
+      setAttentionItems([]);
     }
   }, []);
 
@@ -114,6 +121,7 @@ export const Dashboard: React.FC = () => {
       {dashboard.status === "ok" && dashboard.data && (
         <DashboardContent
           data={dashboard.data}
+          attentionItems={attentionItems}
           quickActions={quickActions}
           activeQuickAction={activeQuickAction}
           onQuickAction={handleQuickAction}

@@ -3,6 +3,8 @@ import { useAuthStore } from '../store/auth.store';
 import { Dashboard } from '../pages/Dashboard';
 import { Binders } from '../pages/Binders';
 import { Clients } from '../pages/Clients';
+import { Search } from '../pages/Search';
+import { ClientTimeline } from '../pages/ClientTimeline';
 import { Login } from '../pages/Login';
 import { Header } from '../components/layout/Header';
 import { Sidebar } from '../components/layout/Sidebar';
@@ -69,6 +71,26 @@ export const AppRoutes: React.FC = () => {
           <ProtectedRoute>
             <AuthenticatedLayout>
               <Clients />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clients/:clientId/timeline"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout>
+              <ClientTimeline />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/search"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout>
+              <Search />
             </AuthenticatedLayout>
           </ProtectedRoute>
         }

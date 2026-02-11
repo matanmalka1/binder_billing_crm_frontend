@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { ActionButton } from "../../../components/ui/ActionButton";
@@ -55,6 +56,7 @@ export const ClientsTableCard: React.FC<ClientsTableCardProps> = ({
               <th className="pb-3 pr-4 font-semibold text-gray-700">סטטוס</th>
               <th className="pb-3 pr-4 font-semibold text-gray-700">טלפון</th>
               <th className="pb-3 pr-4 font-semibold text-gray-700">תאריך פתיחה</th>
+              <th className="pb-3 pr-4 font-semibold text-gray-700">ציר זמן</th>
               <th className="pb-3 pr-4 font-semibold text-gray-700">פעולות</th>
             </tr>
           </thead>
@@ -77,6 +79,14 @@ export const ClientsTableCard: React.FC<ClientsTableCardProps> = ({
                     {client.phone || "—"}
                   </td>
                   <td className="py-3 pr-4 text-gray-600">{formatDate(client.opened_at)}</td>
+                  <td className="py-3 pr-4">
+                    <Link
+                      to={`/clients/${client.id}/timeline`}
+                      className="rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-50"
+                    >
+                      צפייה
+                    </Link>
+                  </td>
                   <td className="py-3 pr-4">
                     {actions.length > 0 ? (
                       <div className="flex flex-wrap gap-2">

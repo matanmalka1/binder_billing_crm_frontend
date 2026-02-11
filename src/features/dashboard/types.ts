@@ -11,6 +11,19 @@ export type DashboardQuickActionWithEndpoint = DashboardQuickAction & {
   endpoint: string;
 };
 
+export interface AttentionItem {
+  item_type: string;
+  binder_id: number | null;
+  client_id: number | null;
+  client_name: string | null;
+  description: string;
+}
+
+export interface AttentionResponse {
+  items: AttentionItem[];
+  total: number;
+}
+
 export type DashboardData = {
   total_clients: number;
   active_binders: number;
