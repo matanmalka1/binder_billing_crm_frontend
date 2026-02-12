@@ -11,7 +11,7 @@ import { Documents } from "../pages/Documents";
 import { Login } from "../pages/Login";
 import { Header } from "../components/layout/Header";
 import { Sidebar } from "../components/layout/Sidebar";
-import { PageContainer } from "../components/layout/PageContainer";
+import { PageLayout } from "../components/layout/PageLayout";
 import { RoleGuard } from "../components/auth/RoleGuard";
 
 const ProtectedRoute: React.FC = () => {
@@ -30,9 +30,9 @@ const AuthenticatedLayout: React.FC = () => {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        <PageContainer>
+        <PageLayout>
           <Outlet />
-        </PageContainer>
+        </PageLayout>
       </div>
     </div>
   );
