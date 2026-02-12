@@ -34,9 +34,6 @@ api.interceptors.response.use(
       localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
       localStorage.removeItem(AUTH_USER_STORAGE_KEY);
       window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
-      if (!window.location.pathname.startsWith("/login")) {
-        window.location.href = "/login";
-      }
     }
     return Promise.reject(error);
   },

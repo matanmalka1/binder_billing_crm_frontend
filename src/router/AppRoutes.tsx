@@ -1,4 +1,6 @@
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { AUTH_EXPIRED_EVENT } from "../api/client";
 import { useAuthStore } from "../store/auth.store";
 import { Dashboard } from "../pages/Dashboard";
 import { Binders } from "../pages/Binders";
@@ -13,6 +15,23 @@ import { Header } from "../components/layout/Header";
 import { Sidebar } from "../components/layout/Sidebar";
 import { PageLayout } from "../components/layout/PageLayout";
 import { RoleGuard } from "../components/auth/RoleGuard";
+
+const AuthExpiredNavigationHandler: React.FC = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleAuthExpired = () => {
+      if (!window.location.pathname.startsWith("/login")) {
+        navigate("/login", { replace: true });
+      }
+    };
+
+    window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+  }, [navigate]);
+
+  return null;
+};
 
 const ProtectedRoute: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
@@ -40,31 +59,34 @@ const AuthenticatedLayout: React.FC = () => {
 
 export const AppRoutes: React.FC = () => {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
+    <>
+      <AuthExpiredNavigationHandler />
+      <Routes>
+        <Route path="/login" element={<Login />} />
 
-      <Route path="/" element={<ProtectedRoute />}>
-        <Route element={<AuthenticatedLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route
-            path="dashboard/overview"
-            element={
-              <RoleGuard allow={["advisor"]}>
-                <Dashboard />
-              </RoleGuard>
-            }
-          />
-          <Route path="binders" element={<Binders />} />
-          <Route path="clients" element={<Clients />} />
-          <Route path="clients/:clientId/timeline" element={<ClientTimeline />} />
-          <Route path="search" element={<Search />} />
-          <Route path="charges" element={<Charges />} />
-          <Route path="charges/:chargeId" element={<ChargeDetails />} />
-          <Route path="documents" element={<Documents />} />
+        <Route path="/" element={<ProtectedRoute />}>
+          <Route element={<AuthenticatedLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route
+              path="dashboard/overview"
+              element={
+                <RoleGuard allow={["advisor"]}>
+                  <Dashboard />
+                </RoleGuard>
+              }
+            />
+            <Route path="binders" element={<Binders />} />
+            <Route path="clients" element={<Clients />} />
+            <Route path="clients/:clientId/timeline" element={<ClientTimeline />} />
+            <Route path="search" element={<Search />} />
+            <Route path="charges" element={<Charges />} />
+            <Route path="charges/:chargeId" element={<ChargeDetails />} />
+            <Route path="documents" element={<Documents />} />
+          </Route>
         </Route>
-      </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 };
