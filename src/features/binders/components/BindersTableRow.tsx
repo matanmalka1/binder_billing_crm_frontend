@@ -13,7 +13,7 @@ interface BindersTableRowProps {
   onActionClick: (action: ResolvedBackendAction) => void;
 }
 
-export const BindersTableRow: React.FC<BindersTableRowProps> = ({
+const BindersTableRowView: React.FC<BindersTableRowProps> = ({
   binder,
   activeActionKey,
   onActionClick,
@@ -69,3 +69,28 @@ export const BindersTableRow: React.FC<BindersTableRowProps> = ({
     </tr>
   );
 };
+
+const keyBelongsToBinderRow = (key: string | null, binderId: number): boolean => {
+  if (!key) return false;
+  return key.startsWith(`binder-${binderId}-`);
+};
+
+export const BindersTableRow = React.memo(
+  BindersTableRowView,
+  (prevProps, nextProps) => {
+    if (prevProps.binder !== nextProps.binder) return false;
+    if (prevProps.onActionClick !== nextProps.onActionClick) return false;
+
+    const previousKey = prevProps.activeActionKey;
+    const nextKey = nextProps.activeActionKey;
+
+    const didNullStateChange = (previousKey === null) !== (nextKey === null);
+    if (didNullStateChange) return false;
+
+    const rowBinderId = nextProps.binder.id;
+    if (keyBelongsToBinderRow(previousKey, rowBinderId)) return false;
+    if (keyBelongsToBinderRow(nextKey, rowBinderId)) return false;
+
+    return true;
+  },
+);

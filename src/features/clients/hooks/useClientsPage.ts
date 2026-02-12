@@ -88,10 +88,13 @@ export const useClientsPage = () => {
   const { cancelPendingAction, confirmPendingAction, pendingAction, requestConfirmation } =
     useConfirmableAction(runAction);
 
-  const handleActionClick = (action: ResolvedBackendAction) => {
-    if (requestConfirmation(action, Boolean(action.confirm))) return;
-    void runAction(action);
-  };
+  const handleActionClick = useCallback(
+    (action: ResolvedBackendAction) => {
+      if (requestConfirmation(action, Boolean(action.confirm))) return;
+      void runAction(action);
+    },
+    [requestConfirmation, runAction],
+  );
 
   return {
     activeActionKey,
