@@ -1,17 +1,20 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthStore } from '../store/auth.store';
-import { Dashboard } from '../pages/Dashboard';
-import { Binders } from '../pages/Binders';
-import { Clients } from '../pages/Clients';
-import { Search } from '../pages/Search';
-import { ClientTimeline } from '../pages/ClientTimeline';
-import { Login } from '../pages/Login';
-import { Header } from '../components/layout/Header';
-import { Sidebar } from '../components/layout/Sidebar';
-import { PageContainer } from '../components/layout/PageContainer';
-import { GlobalToast } from '../components/ui/GlobalToast';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuthStore } from "../store/auth.store";
+import { Dashboard } from "../pages/Dashboard";
+import { Binders } from "../pages/Binders";
+import { Clients } from "../pages/Clients";
+import { Search } from "../pages/Search";
+import { ClientTimeline } from "../pages/ClientTimeline";
+import { Charges } from "../pages/Charges";
+import { ChargeDetails } from "../pages/ChargeDetails";
+import { Documents } from "../pages/Documents";
+import { Login } from "../pages/Login";
+import { Header } from "../components/layout/Header";
+import { Sidebar } from "../components/layout/Sidebar";
+import { PageContainer } from "../components/layout/PageContainer";
+import { GlobalToast } from "../components/ui/GlobalToast";
+import { RoleGuard } from "../components/auth/RoleGuard";
 
-// Protected Route wrapper
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
@@ -26,7 +29,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-// Authenticated Layout
 const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="flex flex-1 overflow-hidden h-screen">
@@ -43,10 +45,8 @@ const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Public route */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected routes */}
       <Route
         path="/"
         element={
@@ -57,6 +57,20 @@ export const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/dashboard/overview"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout>
+              <RoleGuard allow={["advisor"]}>
+                <Dashboard />
+              </RoleGuard>
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/binders"
         element={
@@ -67,6 +81,7 @@ export const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/clients"
         element={
@@ -77,6 +92,7 @@ export const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/clients/:clientId/timeline"
         element={
@@ -87,6 +103,7 @@ export const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/search"
         element={
@@ -98,7 +115,39 @@ export const AppRoutes: React.FC = () => {
         }
       />
 
-      {/* Catch all - redirect to dashboard */}
+      <Route
+        path="/charges"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout>
+              <Charges />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/charges/:chargeId"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout>
+              <ChargeDetails />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/documents"
+        element={
+          <ProtectedRoute>
+            <AuthenticatedLayout>
+              <Documents />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

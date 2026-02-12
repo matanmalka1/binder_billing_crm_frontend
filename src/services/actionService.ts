@@ -1,4 +1,5 @@
 import { api } from "../api/client";
+import type { UserRole } from "../types/common";
 import type { ActionMethod, CanonicalActionToken } from "../features/actions/types";
 
 interface CanonicalActionContext {
@@ -42,8 +43,16 @@ const ACTION_LABELS: Record<CanonicalActionToken, string> = {
   cancel_charge: "ביטול חיוב",
 };
 
+const ADVISOR_ONLY_ACTIONS = new Set<CanonicalActionToken>([
+  "freeze",
+  "mark_paid",
+  "issue_charge",
+  "cancel_charge",
+]);
+
 const isEntityId = (value: number | null | undefined): value is number =>
   typeof value === "number" && Number.isInteger(value) && value > 0;
+
 const isNonEmptyText = (value: unknown): value is string =>
   typeof value === "string" && value.trim().length > 0;
 
@@ -52,15 +61,35 @@ const hasValidReceivePayload = (
 ): payload is Record<string, unknown> & { client_id: number; binder_number: string } => {
   const clientId = payload?.client_id;
   const binderNumber = payload?.binder_number;
-  return typeof clientId === "number" && Number.isInteger(clientId) && clientId > 0 && isNonEmptyText(binderNumber);
+  return (
+    typeof clientId === "number" &&
+    Number.isInteger(clientId) &&
+    clientId > 0 &&
+    isNonEmptyText(binderNumber)
+  );
 };
 
-export const getCanonicalActionToken = (rawToken: string | null | undefined): CanonicalActionToken | null => {
+export const getCanonicalActionToken = (
+  rawToken: string | null | undefined,
+): CanonicalActionToken | null => {
   if (!rawToken) return null;
   return TOKEN_ALIASES[rawToken.trim().toLowerCase()] ?? null;
 };
 
-export const getCanonicalActionLabel = (rawToken: string | null | undefined): string => {
+export const isActionAllowedForRole = (
+  rawToken: string | null | undefined,
+  role: UserRole | null | undefined,
+): boolean => {
+  const token = getCanonicalActionToken(rawToken);
+  if (!token) return true;
+  if (!role) return true;
+  if (role === "advisor") return true;
+  return !ADVISOR_ONLY_ACTIONS.has(token);
+};
+
+export const getCanonicalActionLabel = (
+  rawToken: string | null | undefined,
+): string => {
   const token = getCanonicalActionToken(rawToken);
   return token ? ACTION_LABELS[token] : "—";
 };
@@ -78,23 +107,43 @@ export const resolveCanonicalAction = (
         ? { token, method: "post", endpoint: "/binders/receive", payload: context.payload }
         : null;
     case "ready":
-      return isEntityId(context.binderId) ? { token, method: "post", endpoint: `/binders/${context.binderId}/ready` } : null;
+      return isEntityId(context.binderId)
+        ? { token, method: "post", endpoint: `/binders/${context.binderId}/ready` }
+        : null;
     case "return":
-      return isEntityId(context.binderId) ? { token, method: "post", endpoint: `/binders/${context.binderId}/return` } : null;
+      return isEntityId(context.binderId)
+        ? { token, method: "post", endpoint: `/binders/${context.binderId}/return` }
+        : null;
     case "freeze":
       return isEntityId(context.clientId)
-        ? { token, method: "patch", endpoint: `/clients/${context.clientId}`, payload: { ...context.payload, status: "frozen" } }
+        ? {
+            token,
+            method: "patch",
+            endpoint: `/clients/${context.clientId}`,
+            payload: { ...context.payload, status: "frozen" },
+          }
         : null;
     case "activate":
       return isEntityId(context.clientId)
-        ? { token, method: "patch", endpoint: `/clients/${context.clientId}`, payload: { ...context.payload, status: "active" } }
+        ? {
+            token,
+            method: "patch",
+            endpoint: `/clients/${context.clientId}`,
+            payload: { ...context.payload, status: "active" },
+          }
         : null;
     case "mark_paid":
-      return isEntityId(context.chargeId) ? { token, method: "post", endpoint: `/charges/${context.chargeId}/mark-paid` } : null;
+      return isEntityId(context.chargeId)
+        ? { token, method: "post", endpoint: `/charges/${context.chargeId}/mark-paid` }
+        : null;
     case "issue_charge":
-      return isEntityId(context.chargeId) ? { token, method: "post", endpoint: `/charges/${context.chargeId}/issue` } : null;
+      return isEntityId(context.chargeId)
+        ? { token, method: "post", endpoint: `/charges/${context.chargeId}/issue` }
+        : null;
     case "cancel_charge":
-      return isEntityId(context.chargeId) ? { token, method: "post", endpoint: `/charges/${context.chargeId}/cancel` } : null;
+      return isEntityId(context.chargeId)
+        ? { token, method: "post", endpoint: `/charges/${context.chargeId}/cancel` }
+        : null;
   }
 };
 
@@ -104,7 +153,8 @@ export const validateActionBeforeRequest = (request: {
   payload?: Record<string, unknown>;
 }) => {
   const canonicalToken = getCanonicalActionToken(request.token);
-  const isReceiveAction = canonicalToken === "receive" || request.endpoint === "/binders/receive";
+  const isReceiveAction =
+    canonicalToken === "receive" || request.endpoint === "/binders/receive";
   if (isReceiveAction && !hasValidReceivePayload(request.payload)) {
     throw new Error("פעולת קליטת תיק דורשת client_id ו-binder_number");
   }

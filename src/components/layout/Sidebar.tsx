@@ -5,7 +5,6 @@ import {
   Briefcase,
   Users,
   Search,
-  LogIn,
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
@@ -20,7 +19,8 @@ export const Sidebar: React.FC = () => {
     { to: "/binders", label: "תיקים", icon: Briefcase },
     { to: "/clients", label: "לקוחות", icon: Users },
     { to: "/search", label: "חיפוש", icon: Search },
-    { to: "/login", label: "כניסה", icon: LogIn },
+    { to: "/charges", label: "חיובים", icon: ReceiptText },
+    { to: "/documents", label: "מסמכים", icon: FileText },
   ];
 
   return (

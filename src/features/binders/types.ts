@@ -8,7 +8,7 @@ export interface Binder {
   received_at: string;
   expected_return_at: string;
   returned_at: string | null;
-  days_in_office: number;
+  days_in_office?: number | null;
   available_actions?: BackendActionInput[] | null;
   work_state?: string | null;
   sla_state?: string | null;

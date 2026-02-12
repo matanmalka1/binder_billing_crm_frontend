@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Card } from "../components/ui/Card";
 import { Spinner } from "../components/ui/Spinner";
-import { api } from "../api/client";
+import { bindersApi } from "../api/binders.api";
 import { getRequestErrorMessage, handleCanonicalActionError } from "../utils/errorHandler";
 import { useUIStore } from "../store/ui.store";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
@@ -32,11 +32,11 @@ export const Binders: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const params: Record<string, string> = {};
-      if (filters.work_state) params.work_state = filters.work_state;
-      if (filters.sla_state) params.sla_state = filters.sla_state;
-      const response = await api.get<BindersListResponse>("/binders", { params });
-      setBinders(response.data.items ?? []);
+      const response: BindersListResponse = await bindersApi.list({
+        work_state: filters.work_state || undefined,
+        sla_state: filters.sla_state || undefined,
+      });
+      setBinders(response.items ?? []);
     } catch (requestError: unknown) {
       setError(getRequestErrorMessage(requestError, "שגיאה בטעינת רשימת תיקים"));
     } finally {
@@ -55,23 +55,26 @@ export const Binders: React.FC = () => {
     setSearchParams(next);
   };
 
-  const runAction = useCallback(async (action: ResolvedBackendAction) => {
-    setActiveActionKey(action.uiKey);
-    try {
-      await executeBackendAction(action);
-      showToast("הפעולה הושלמה בהצלחה", "success");
-      await fetchBinders();
-    } catch (requestError: unknown) {
-      const message = handleCanonicalActionError({
-        error: requestError,
-        fallbackMessage: "שגיאה בביצוע פעולת תיק",
-        showToast,
-      });
-      setError(message);
-    } finally {
-      setActiveActionKey(null);
-    }
-  }, [fetchBinders, showToast]);
+  const runAction = useCallback(
+    async (action: ResolvedBackendAction) => {
+      setActiveActionKey(action.uiKey);
+      try {
+        await executeBackendAction(action);
+        showToast("הפעולה הושלמה בהצלחה", "success");
+        await fetchBinders();
+      } catch (requestError: unknown) {
+        const message = handleCanonicalActionError({
+          error: requestError,
+          fallbackMessage: "שגיאה בביצוע פעולת תיק",
+          showToast,
+        });
+        setError(message);
+      } finally {
+        setActiveActionKey(null);
+      }
+    },
+    [fetchBinders, showToast],
+  );
 
   const handleActionClick = (action: ResolvedBackendAction) => {
     if (action.confirm) {
@@ -96,11 +99,27 @@ export const Binders: React.FC = () => {
       <Card title="סינון">
         <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </Card>
-      {loading && <div className="flex justify-center py-12"><Spinner size="lg" /></div>}
-      {error && <Card className="bg-red-50 border-red-200"><p className="text-red-600">{error}</p></Card>}
-      {!loading && !error && binders.length === 0 && <Card><p className="text-center text-gray-600">אין תיקים להצגה</p></Card>}
+      {loading && (
+        <div className="flex justify-center py-12">
+          <Spinner size="lg" />
+        </div>
+      )}
+      {error && (
+        <Card className="bg-red-50 border-red-200">
+          <p className="text-red-600">{error}</p>
+        </Card>
+      )}
+      {!loading && !error && binders.length === 0 && (
+        <Card>
+          <p className="text-center text-gray-600">אין תיקים להצגה</p>
+        </Card>
+      )}
       {!loading && !error && binders.length > 0 && (
-        <BindersTableCard binders={binders} activeActionKey={activeActionKey} onActionClick={handleActionClick} />
+        <BindersTableCard
+          binders={binders}
+          activeActionKey={activeActionKey}
+          onActionClick={handleActionClick}
+        />
       )}
       <ConfirmDialog
         open={Boolean(pendingAction)}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { ApiErrorResponse } from "../types/api";
+import type { BackendErrorEnvelope } from "../types/api";
 
 const toText = (value: unknown): string | null => {
   if (typeof value !== "string") return null;
@@ -16,6 +16,7 @@ const extractDetailText = (detail: unknown): string | null => {
     if (first && typeof first === "object") {
       const firstMessage = toText((first as { msg?: unknown }).msg);
       if (firstMessage) return firstMessage;
+
       const nestedDetail = toText((first as { detail?: unknown }).detail);
       if (nestedDetail) return nestedDetail;
     }
@@ -28,13 +29,8 @@ export const getApiErrorMessage = (
   error: unknown,
   fallbackMessage: string,
 ): string => {
-  if (axios.isAxiosError<ApiErrorResponse>(error)) {
-    const responseData = error.response?.data as
-      | (ApiErrorResponse & {
-          detail?: unknown;
-          error?: unknown;
-        })
-      | undefined;
+  if (axios.isAxiosError<BackendErrorEnvelope>(error)) {
+    const responseData = error.response?.data;
 
     const detailMessage = extractDetailText(responseData?.detail);
     if (detailMessage) return detailMessage;

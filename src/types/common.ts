@@ -1,14 +1,19 @@
+export type UserRole = "advisor" | "secretary";
 
-export type UserRole = 'advisor' | 'secretary';
-
-export interface User {
-  name: string;
+export interface AuthUser {
+  id: number;
+  full_name: string;
   role: UserRole;
 }
 
-export interface AuthState {
-  isAuthenticated: boolean;
-  user: User | null;
-  setUser: (user: User | null) => void;
-  logout: () => void;
+export interface PaginatedResponse<T> {
+  items: T[];
+  page: number;
+  page_size: number;
+  total: number;
+}
+
+export interface PaginationState {
+  page: number;
+  pageSize: number;
 }

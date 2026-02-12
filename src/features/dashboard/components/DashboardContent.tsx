@@ -8,7 +8,7 @@ import {
 } from "../../../utils/enums";
 import type {
   AttentionItem,
-  DashboardData,
+  DashboardAdvisorData,
   DashboardQuickAction,
 } from "../types";
 import { AttentionPanel } from "./AttentionPanel";
@@ -16,7 +16,7 @@ import { OperationalPanel } from "./OperationalPanel";
 import type { ResolvedBackendAction } from "../../actions/types";
 
 interface DashboardContentProps {
-  data: DashboardData;
+  data: DashboardAdvisorData;
   attentionItems: AttentionItem[];
   quickActions: DashboardQuickAction[];
   activeQuickAction: string | null;
@@ -50,7 +50,9 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
           <p className="mt-1 text-sm text-gray-600">מועד החזרה היום</p>
         </Card>
         <Card title="תיקים לשבוע זה">
-          <div className="text-3xl font-bold text-purple-600">{data.binders_due_this_week}</div>
+          <div className="text-3xl font-bold text-purple-600">
+            {data.binders_due_this_week}
+          </div>
           <p className="mt-1 text-sm text-gray-600">מועד החזרה תוך 7 ימים</p>
         </Card>
       </div>

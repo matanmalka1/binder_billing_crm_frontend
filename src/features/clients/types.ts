@@ -9,6 +9,7 @@ export interface Client {
   phone: string | null;
   email: string | null;
   opened_at: string;
+  closed_at?: string | null;
   available_actions?: BackendActionInput[] | null;
 }
 

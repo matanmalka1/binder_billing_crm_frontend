@@ -15,7 +15,8 @@ export interface AttentionResponse {
   total: number;
 }
 
-export type DashboardData = {
+export interface DashboardAdvisorData {
+  role_view: "advisor";
   total_clients: number;
   active_binders: number;
   overdue_binders: number;
@@ -25,4 +26,13 @@ export type DashboardData = {
   sla_state?: string | null;
   signals?: string[] | null;
   quick_actions?: DashboardQuickAction[] | null;
-};
+}
+
+export interface DashboardSecretaryData {
+  role_view: "secretary";
+  binders_in_office: number;
+  binders_ready_for_pickup: number;
+  binders_overdue: number;
+}
+
+export type DashboardData = DashboardAdvisorData | DashboardSecretaryData;

@@ -1,0 +1,170 @@
+import { useCallback, useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "sonner";
+import { dashboardApi } from "../../../api/dashboard.api";
+import { useAuthStore } from "../../../store/auth.store";
+import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/errorHandler";
+import { executeBackendAction } from "../../actions/executeAction";
+import type { ResolvedBackendAction } from "../../actions/types";
+import type { AttentionResponse, DashboardData } from "../types";
+import { dashboardKeys } from "../queryKeys";
+
+type DashboardState = {
+  status: "idle" | "loading" | "ok" | "error";
+  message: string;
+  data: DashboardData | null;
+};
+
+export const useDashboardPage = () => {
+  const queryClient = useQueryClient();
+  const { user } = useAuthStore();
+  const [activeQuickAction, setActiveQuickAction] = useState<string | null>(null);
+  const [pendingQuickAction, setPendingQuickAction] = useState<ResolvedBackendAction | null>(null);
+  const [actionDenied, setActionDenied] = useState(false);
+
+  const hasRole = Boolean(user?.role);
+  const isAdvisor = user?.role === "advisor";
+  const isSecretary = user?.role === "secretary";
+
+  const overviewQuery = useQuery({
+    enabled: isAdvisor,
+    queryKey: dashboardKeys.overview(),
+    queryFn: dashboardApi.getOverview,
+  });
+
+  const summaryQuery = useQuery({
+    enabled: isSecretary,
+    queryKey: dashboardKeys.summary(),
+    queryFn: dashboardApi.getSummary,
+  });
+
+  const attentionQuery = useQuery({
+    enabled: hasRole,
+    queryKey: dashboardKeys.attention(),
+    queryFn: dashboardApi.getAttention,
+  });
+
+  const actionMutation = useMutation({
+    mutationFn: (action: ResolvedBackendAction) => executeBackendAction(action),
+    onSuccess: async () => {
+      toast.success("הפעולה המהירה בוצעה בהצלחה");
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: dashboardKeys.overview() }),
+        queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() }),
+        queryClient.invalidateQueries({ queryKey: dashboardKeys.attention() }),
+      ]);
+    },
+  });
+
+  const getStatusCode = (error: unknown): number | null => {
+    if (!axios.isAxiosError(error)) return null;
+    const status = error.response?.status;
+    return typeof status === "number" ? status : null;
+  };
+
+  const queryDenied =
+    getStatusCode(isAdvisor ? overviewQuery.error : summaryQuery.error) === 403 ||
+    getStatusCode(attentionQuery.error) === 403;
+
+  const denied = queryDenied || actionDenied;
+
+  const dashboard = useMemo<DashboardState>(() => {
+    if (!hasRole) {
+      return { status: "error", message: "לא ניתן לזהות תפקיד משתמש", data: null };
+    }
+
+    const roleQueryLoading = isAdvisor
+      ? overviewQuery.isPending
+      : isSecretary
+        ? summaryQuery.isPending
+        : false;
+
+    if (attentionQuery.isPending || roleQueryLoading) {
+      return { status: "loading", message: "טוען נתוני לוח בקרה...", data: null };
+    }
+
+    const roleQueryError = isAdvisor
+      ? overviewQuery.error
+      : isSecretary
+        ? summaryQuery.error
+        : null;
+    const loadError = roleQueryError || attentionQuery.error;
+    if (loadError) {
+      return {
+        status: "error",
+        message: getRequestErrorMessage(loadError, "שגיאה בטעינת לוח הבקרה"),
+        data: null,
+      };
+    }
+
+    if (isAdvisor && overviewQuery.data) {
+      return {
+        status: "ok",
+        message: "נתונים נטענו בהצלחה",
+        data: { role_view: "advisor", ...overviewQuery.data },
+      };
+    }
+
+    if (isSecretary && summaryQuery.data) {
+      return {
+        status: "ok",
+        message: "נתונים נטענו בהצלחה",
+        data: { role_view: "secretary", ...summaryQuery.data },
+      };
+    }
+
+    return { status: "idle", message: "", data: null };
+  }, [
+    attentionQuery.error,
+    attentionQuery.isPending,
+    hasRole,
+    isAdvisor,
+    isSecretary,
+    overviewQuery.data,
+    overviewQuery.error,
+    overviewQuery.isPending,
+    summaryQuery.data,
+    summaryQuery.error,
+    summaryQuery.isPending,
+  ]);
+
+  const attentionItems = (attentionQuery.data?.items ?? []) as AttentionResponse["items"];
+
+  const runQuickAction = useCallback(
+    async (action: ResolvedBackendAction) => {
+      setActiveQuickAction(action.uiKey);
+      try {
+        setActionDenied(false);
+        await actionMutation.mutateAsync(action);
+      } catch (requestError: unknown) {
+        if (getStatusCode(requestError) === 403) {
+          setActionDenied(true);
+        }
+        handleCanonicalActionError({
+          error: requestError,
+          fallbackMessage: "שגיאה בביצוע פעולה מהירה",
+        });
+      } finally {
+        setActiveQuickAction(null);
+      }
+    },
+    [actionMutation],
+  );
+
+  const handleQuickAction = (action: ResolvedBackendAction) => {
+    if (action.confirm) return setPendingQuickAction(action);
+    void runQuickAction(action);
+  };
+
+  return {
+    activeQuickAction,
+    attentionItems,
+    dashboard,
+    denied,
+    handleQuickAction,
+    pendingQuickAction,
+    runQuickAction,
+    setPendingQuickAction,
+  };
+};

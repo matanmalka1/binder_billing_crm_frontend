@@ -1,46 +1,40 @@
 import type {
-  ActionConfirmConfig,
   ActionMethod,
   BackendActionInput,
   BackendActionObject,
   ResolvedBackendAction,
 } from "./types";
+import { isAdvisorOnlyEndpoint } from "../../contracts/backendContract";
+import { useAuthStore } from "../../store/auth.store";
+import { isActionAllowedForRole, getCanonicalActionToken } from "../../services/actionService";
 import { resolveContractAction } from "./contractActionMap";
-import { getCanonicalActionToken } from "../../services/actionService";
+import {
+  getEntityIds,
+  isActionMethod,
+  resolveConfirm,
+  toEndpoint,
+  toPayload,
+  toResolvedAction,
+  toText,
+  type ResolveContext,
+} from "./resolveActions.helpers";
 
-interface ResolveContext {
-  entityPath?: string;
-  entityId?: number;
-  binderId?: number | null;
-  chargeId?: number | null;
-  clientId?: number | null;
-  scopeKey?: string;
-}
+const isAllowedByRole = (
+  token: string,
+  method: ActionMethod,
+  endpoint: string,
+): boolean => {
+  const role = useAuthStore.getState().user?.role;
 
-const isActionMethod = (value: unknown): value is ActionMethod => {
-  return value === "post" || value === "patch" || value === "put" || value === "delete";
-};
+  if (!isActionAllowedForRole(token, role)) {
+    return false;
+  }
 
-const toText = (value: unknown) => (typeof value === "string" ? value.trim() : "");
-const toEndpoint = (value: unknown) => {
-  const text = toText(value);
-  return text.length > 0 ? text : null;
-};
-const toPayload = (value: unknown) => {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
-  return value as Record<string, unknown>;
-};
+  if (role === "secretary" && isAdvisorOnlyEndpoint(method.toUpperCase(), endpoint)) {
+    return false;
+  }
 
-const resolveConfirm = (action: BackendActionObject): ActionConfirmConfig | undefined => {
-  const needsConfirm =
-    action.confirm_required === true || Boolean(action.confirm_message) || Boolean(action.confirm_title);
-  if (!needsConfirm) return undefined;
-  return {
-    title: toText(action.confirm_title) || "אישור פעולה",
-    message: toText(action.confirm_message) || "האם להמשיך?",
-    confirmLabel: toText(action.confirm_label) || "אישור",
-    cancelLabel: toText(action.cancel_label) || "ביטול",
-  };
+  return true;
 };
 
 const toResolved = (
@@ -49,7 +43,8 @@ const toResolved = (
   endpoint: string | null,
 ): ResolvedBackendAction | null => {
   if (!endpoint) return null;
-  return { ...base, token, endpoint };
+  if (!isAllowedByRole(token, base.method, endpoint)) return null;
+  return toResolvedAction(base, token, endpoint);
 };
 
 const resolveObjectAction = (
@@ -64,6 +59,7 @@ const resolveObjectAction = (
     : toEndpoint(action.endpoint || action.url) || contract.endpoint;
   const baseKey = token || `action-${index}`;
   const uiKey = `${context.scopeKey || "action"}-${index}-${baseKey}`;
+
   return toResolved(
     {
       key: baseKey,
@@ -124,13 +120,10 @@ export const resolveEntityActions = (
   entityId: number,
   scopeKey?: string,
 ): ResolvedBackendAction[] => {
-  const ids =
-    entityPath === "/binders"
-      ? { binderId: entityId }
-      : entityPath === "/charges"
-        ? { chargeId: entityId }
-        : entityPath === "/clients"
-          ? { clientId: entityId }
-          : {};
-  return resolveActions(actions, { ...ids, entityPath, entityId, scopeKey });
+  return resolveActions(actions, {
+    ...getEntityIds(entityPath, entityId),
+    entityPath,
+    entityId,
+    scopeKey,
+  });
 };
