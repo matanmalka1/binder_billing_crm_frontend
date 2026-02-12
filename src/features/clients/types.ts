@@ -1,3 +1,5 @@
+import type { BackendActionInput } from "../actions/types";
+
 export interface Client {
   id: number;
   full_name: string;
@@ -7,7 +9,7 @@ export interface Client {
   phone: string | null;
   email: string | null;
   opened_at: string;
-  available_actions?: string[];
+  available_actions?: BackendActionInput[] | null;
 }
 
 export interface ClientsListResponse {

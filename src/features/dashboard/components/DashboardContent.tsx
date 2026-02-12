@@ -9,15 +9,16 @@ import {
 import type {
   AttentionItem,
   DashboardData,
+  DashboardQuickAction,
 } from "../types";
 import { AttentionPanel } from "./AttentionPanel";
 import { OperationalPanel } from "./OperationalPanel";
-import type { BackendActionInput, ResolvedBackendAction } from "../../actions/types";
+import type { ResolvedBackendAction } from "../../actions/types";
 
 interface DashboardContentProps {
   data: DashboardData;
   attentionItems: AttentionItem[];
-  quickActions: BackendActionInput[];
+  quickActions: DashboardQuickAction[];
   activeQuickAction: string | null;
   onQuickAction: (action: ResolvedBackendAction) => void;
 }

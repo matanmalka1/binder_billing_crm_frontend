@@ -102,7 +102,7 @@ export const BindersTableCard: React.FC<BindersTableCardProps> = ({
                               label={action.label}
                               onClick={() => onActionClick(action)}
                               isLoading={activeActionKey === action.uiKey}
-                              disabled={!action.endpoint || (activeActionKey !== null && activeActionKey !== action.uiKey)}
+                              disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
                             />
                           );
                         })}

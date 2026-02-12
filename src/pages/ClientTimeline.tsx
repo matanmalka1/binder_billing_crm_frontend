@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Card } from "../components/ui/Card";
 import { Spinner } from "../components/ui/Spinner";
 import { api } from "../api/client";
-import { getApiErrorMessage } from "../utils/apiError";
+import { getRequestErrorMessage, handleCanonicalActionError } from "../utils/errorHandler";
 import { useUIStore } from "../store/ui.store";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { executeBackendAction } from "../features/actions/executeAction";
@@ -32,7 +32,7 @@ export const ClientTimeline: React.FC = () => {
       const response = await api.get<TimelineResponse>(`/clients/${clientId}/timeline`);
       setEvents(response.data.events ?? []);
     } catch (requestError: unknown) {
-      setError(getApiErrorMessage(requestError, "שגיאה בטעינת ציר זמן"));
+      setError(getRequestErrorMessage(requestError, "שגיאה בטעינת ציר זמן"));
     } finally {
       setLoading(false);
     }
@@ -49,8 +49,11 @@ export const ClientTimeline: React.FC = () => {
       showToast("הפעולה בוצעה בהצלחה", "success");
       await loadTimeline();
     } catch (requestError: unknown) {
-      const message = getApiErrorMessage(requestError, "שגיאה בביצוע פעולה");
-      showToast(message, "error");
+      const message = handleCanonicalActionError({
+        error: requestError,
+        fallbackMessage: "שגיאה בביצוע פעולה",
+        showToast,
+      });
       setError(message);
     } finally {
       setActiveActionKey(null);

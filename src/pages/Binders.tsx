@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Card } from "../components/ui/Card";
 import { Spinner } from "../components/ui/Spinner";
 import { api } from "../api/client";
-import { getApiErrorMessage } from "../utils/apiError";
+import { getRequestErrorMessage, handleCanonicalActionError } from "../utils/errorHandler";
 import { useUIStore } from "../store/ui.store";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { executeBackendAction } from "../features/actions/executeAction";
@@ -38,7 +38,7 @@ export const Binders: React.FC = () => {
       const response = await api.get<BindersListResponse>("/binders", { params });
       setBinders(response.data.items ?? []);
     } catch (requestError: unknown) {
-      setError(getApiErrorMessage(requestError, "שגיאה בטעינת רשימת תיקים"));
+      setError(getRequestErrorMessage(requestError, "שגיאה בטעינת רשימת תיקים"));
     } finally {
       setLoading(false);
     }
@@ -62,9 +62,12 @@ export const Binders: React.FC = () => {
       showToast("הפעולה הושלמה בהצלחה", "success");
       await fetchBinders();
     } catch (requestError: unknown) {
-      const message = getApiErrorMessage(requestError, "שגיאה בביצוע פעולת תיק");
+      const message = handleCanonicalActionError({
+        error: requestError,
+        fallbackMessage: "שגיאה בביצוע פעולת תיק",
+        showToast,
+      });
       setError(message);
-      showToast(message, "error");
     } finally {
       setActiveActionKey(null);
     }

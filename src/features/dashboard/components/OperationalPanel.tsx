@@ -2,10 +2,10 @@ import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { ActionButton } from "../../actions/components/ActionButton";
 import { resolveStandaloneActions } from "../../actions/resolveActions";
-import type { BackendActionInput, ResolvedBackendAction } from "../../actions/types";
+import type { BackendQuickAction, ResolvedBackendAction } from "../../actions/types";
 
 interface OperationalPanelProps {
-  quickActions: BackendActionInput[];
+  quickActions: BackendQuickAction[];
   activeActionKey: string | null;
   onQuickAction: (action: ResolvedBackendAction) => void;
 }
@@ -32,7 +32,7 @@ export const OperationalPanel: React.FC<OperationalPanelProps> = ({
             label={action.label}
             onClick={() => onQuickAction(action)}
             isLoading={activeActionKey === action.uiKey}
-            disabled={!action.endpoint || (activeActionKey !== null && activeActionKey !== action.uiKey)}
+            disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
           />
         ))}
       </div>

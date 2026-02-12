@@ -41,7 +41,7 @@ export const TimelineActionRow: React.FC<TimelineActionRowProps> = ({
           label={action.label}
           onClick={() => onAction(action)}
           isLoading={activeActionKey === action.uiKey}
-          disabled={!action.endpoint || (activeActionKey !== null && activeActionKey !== action.uiKey)}
+          disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
         />
       ))}
     </div>

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Card } from "../components/ui/Card";
 import { api } from "../api/client";
-import { getApiErrorMessage } from "../utils/apiError";
+import { getRequestErrorMessage, handleCanonicalActionError } from "../utils/errorHandler";
 import { useUIStore } from "../store/ui.store";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { executeBackendAction } from "../features/actions/executeAction";
@@ -30,10 +30,16 @@ export const Dashboard: React.FC = () => {
     } catch (requestError: unknown) {
       setDashboard({
         status: "error",
-        message: getApiErrorMessage(requestError, "לא התקבלה תגובה מהשרת (מצב קריאה בלבד)"),
+        message: getRequestErrorMessage(requestError, "שגיאה בטעינת לוח הבקרה"),
         data: null,
       });
       setAttentionItems([]);
+    } finally {
+      setDashboard((prevState) =>
+        prevState.status === "loading"
+          ? { status: "error", message: "שגיאה בטעינת לוח הבקרה", data: null }
+          : prevState,
+      );
     }
   }, []);
 
@@ -48,9 +54,12 @@ export const Dashboard: React.FC = () => {
       showToast("הפעולה המהירה בוצעה בהצלחה", "success");
       await loadDashboard();
     } catch (requestError: unknown) {
-      const message = getApiErrorMessage(requestError, "שגיאה בביצוע פעולה מהירה");
+      const message = handleCanonicalActionError({
+        error: requestError,
+        fallbackMessage: "שגיאה בביצוע פעולה מהירה",
+        showToast,
+      });
       setDashboard((prevState) => ({ ...prevState, message }));
-      showToast(message, "error");
     } finally {
       setActiveQuickAction(null);
     }
@@ -68,7 +77,7 @@ export const Dashboard: React.FC = () => {
     <div className="space-y-6">
       <header><h2 className="text-2xl font-bold text-gray-900">לוח בקרה</h2><p className="text-gray-600">ברוך הבא למערכת בינדר וחיובים</p></header>
       {dashboard.status === "loading" && <Card className="min-h-[200px] flex items-center justify-center"><p className="text-sm text-blue-700">{dashboard.message}</p></Card>}
-      {dashboard.status === "error" && <Card className="min-h-[200px] flex items-center justify-center"><div className="text-center"><p className="text-lg font-medium text-gray-500">לוח בקרה - יתווסף בהמשך</p><p className="mt-4 text-sm text-orange-700">{dashboard.message}</p></div></Card>}
+      {dashboard.status === "error" && <Card className="min-h-[200px] flex items-center justify-center"><div className="text-center"><p className="text-lg font-medium text-gray-700">שגיאה בטעינת לוח הבקרה</p><p className="mt-4 text-sm text-orange-700">{dashboard.message}</p></div></Card>}
       {dashboard.status === "ok" && dashboard.data && (
         <DashboardContent
           data={dashboard.data}

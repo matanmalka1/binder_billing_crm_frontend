@@ -1,4 +1,13 @@
 export type ActionMethod = "post" | "patch" | "put" | "delete";
+export type CanonicalActionToken =
+  | "receive"
+  | "return"
+  | "ready"
+  | "freeze"
+  | "activate"
+  | "mark_paid"
+  | "issue_charge"
+  | "cancel_charge";
 
 export interface BackendActionObject {
   key?: string;
@@ -14,6 +23,7 @@ export interface BackendActionObject {
   binder_id?: number | null;
   charge_id?: number | null;
   client_id?: number | null;
+  confirm_required?: boolean;
   confirm_title?: string;
   confirm_message?: string;
   confirm_label?: string;
@@ -21,6 +31,15 @@ export interface BackendActionObject {
 }
 
 export type BackendActionInput = string | BackendActionObject;
+
+export interface BackendQuickAction extends BackendActionObject {
+  key: string;
+  label: string;
+  method: ActionMethod;
+  endpoint: string;
+  payload?: Record<string, unknown> | null;
+  confirm_required: boolean;
+}
 
 export interface ActionConfirmConfig {
   title: string;
@@ -32,9 +51,10 @@ export interface ActionConfirmConfig {
 export interface ResolvedBackendAction {
   key: string;
   uiKey: string;
+  token: string;
   label: string;
   method: ActionMethod;
-  endpoint: string | null;
+  endpoint: string;
   payload?: Record<string, unknown>;
   confirm?: ActionConfirmConfig;
 }

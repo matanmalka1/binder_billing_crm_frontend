@@ -1,6 +1,6 @@
-import type { BackendActionInput } from "../actions/types";
+import type { BackendQuickAction } from "../actions/types";
 
-export type DashboardQuickAction = BackendActionInput;
+export type DashboardQuickAction = BackendQuickAction;
 
 export interface AttentionItem {
   item_type: string;

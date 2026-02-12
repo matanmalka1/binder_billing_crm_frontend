@@ -6,6 +6,7 @@ import type {
   ResolvedBackendAction,
 } from "./types";
 import { resolveContractAction } from "./contractActionMap";
+import { getCanonicalActionToken } from "../../services/actionService";
 
 interface ResolveContext {
   entityPath?: string;
@@ -25,9 +26,15 @@ const toEndpoint = (value: unknown) => {
   const text = toText(value);
   return text.length > 0 ? text : null;
 };
+const toPayload = (value: unknown) => {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  return value as Record<string, unknown>;
+};
 
 const resolveConfirm = (action: BackendActionObject): ActionConfirmConfig | undefined => {
-  if (!action.confirm_message && !action.confirm_title) return undefined;
+  const needsConfirm =
+    action.confirm_required === true || Boolean(action.confirm_message) || Boolean(action.confirm_title);
+  if (!needsConfirm) return undefined;
   return {
     title: toText(action.confirm_title) || "אישור פעולה",
     message: toText(action.confirm_message) || "האם להמשיך?",
@@ -36,41 +43,59 @@ const resolveConfirm = (action: BackendActionObject): ActionConfirmConfig | unde
   };
 };
 
+const toResolved = (
+  base: Omit<ResolvedBackendAction, "endpoint" | "token">,
+  token: string,
+  endpoint: string | null,
+): ResolvedBackendAction | null => {
+  if (!endpoint) return null;
+  return { ...base, token, endpoint };
+};
+
 const resolveObjectAction = (
   action: BackendActionObject,
   index: number,
   context: ResolveContext,
-): ResolvedBackendAction => {
+): ResolvedBackendAction | null => {
   const token = toText(action.key || action.action || action.type || action.item_type);
   const contract = resolveContractAction(token || null, action, context);
+  const endpoint = getCanonicalActionToken(token)
+    ? contract.endpoint
+    : toEndpoint(action.endpoint || action.url) || contract.endpoint;
   const baseKey = token || `action-${index}`;
   const uiKey = `${context.scopeKey || "action"}-${index}-${baseKey}`;
-  return {
-    key: baseKey,
-    uiKey,
-    label: toText(action.label) || contract.label,
-    method: isActionMethod(action.method) ? action.method : contract.method,
-    endpoint: toEndpoint(action.endpoint || action.url) || contract.endpoint,
-    payload: action.payload || action.body || contract.payload,
-    confirm: resolveConfirm(action),
-  };
+  return toResolved(
+    {
+      key: baseKey,
+      uiKey,
+      label: toText(action.label) || contract.label,
+      method: isActionMethod(action.method) ? action.method : contract.method,
+      payload: toPayload(action.payload) || toPayload(action.body) || contract.payload,
+      confirm: resolveConfirm(action),
+    },
+    contract.token,
+    endpoint,
+  );
 };
 
 const resolveStringAction = (
   action: string,
   index: number,
   context: ResolveContext,
-): ResolvedBackendAction => {
+): ResolvedBackendAction | null => {
   const token = toText(action) || `action-${index}`;
   const contract = resolveContractAction(token, null, context);
-  return {
-    key: token,
-    uiKey: `${context.scopeKey || "action"}-${index}-${token}`,
-    label: contract.label,
-    method: contract.method,
-    endpoint: contract.endpoint,
-    payload: contract.payload,
-  };
+  return toResolved(
+    {
+      key: token,
+      uiKey: `${context.scopeKey || "action"}-${index}-${token}`,
+      label: contract.label,
+      method: contract.method,
+      payload: contract.payload,
+    },
+    contract.token,
+    contract.endpoint,
+  );
 };
 
 const resolveActions = (
@@ -78,10 +103,12 @@ const resolveActions = (
   context: ResolveContext,
 ): ResolvedBackendAction[] => {
   if (!Array.isArray(actions)) return [];
-  return actions.map((action, index) => {
-    if (typeof action === "string") return resolveStringAction(action, index, context);
-    return resolveObjectAction(action, index, context);
-  });
+  return actions
+    .map((action, index) => {
+      if (typeof action === "string") return resolveStringAction(action, index, context);
+      return resolveObjectAction(action, index, context);
+    })
+    .filter((action): action is ResolvedBackendAction => action !== null);
 };
 
 export const resolveStandaloneActions = (

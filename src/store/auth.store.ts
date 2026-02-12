@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { api } from '../api/client';
-import { getApiErrorMessage } from '../utils/apiError';
+import { getRequestErrorMessage } from '../utils/errorHandler';
 
 export type UserRole = 'advisor' | 'secretary';
 
@@ -47,19 +47,19 @@ export const useAuthStore = create<AuthState>((set) => ({
         user,
         token,
         isAuthenticated: true,
-        isLoading: false,
         error: null,
       });
     } catch (error: unknown) {
-      const errorMessage = getApiErrorMessage(error, 'שגיאה בהתחברות');
+      const errorMessage = getRequestErrorMessage(error, 'שגיאה בהתחברות');
       set({
         user: null,
         token: null,
         isAuthenticated: false,
-        isLoading: false,
         error: errorMessage,
       });
       localStorage.removeItem('auth_token');
+    } finally {
+      set((state) => ({ ...state, isLoading: false }));
     }
   },
 

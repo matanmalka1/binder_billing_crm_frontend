@@ -1,13 +1,15 @@
-import { api } from "../../api/client";
 import type { ResolvedBackendAction } from "./types";
+import { executeApiAction, validateActionBeforeRequest } from "../../services/actionService";
 
 export const executeBackendAction = async (action: ResolvedBackendAction) => {
-  if (!action.endpoint) {
-    throw new Error("הפעולה אינה זמינה כרגע");
-  }
-  return api.request({
-    url: action.endpoint,
+  validateActionBeforeRequest({
+    token: action.token,
+    endpoint: action.endpoint,
+    payload: action.payload,
+  });
+  return executeApiAction({
+    endpoint: action.endpoint,
     method: action.method,
-    data: action.payload,
+    payload: action.payload,
   });
 };

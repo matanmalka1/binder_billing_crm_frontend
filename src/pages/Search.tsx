@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Card } from "../components/ui/Card";
 import { Spinner } from "../components/ui/Spinner";
 import { api } from "../api/client";
-import { getApiErrorMessage } from "../utils/apiError";
+import { getRequestErrorMessage } from "../utils/errorHandler";
 import { SearchContent } from "../features/search/components/SearchContent";
 import type { SearchFilters, SearchResponse, SearchResult } from "../features/search/types";
 
@@ -37,8 +37,8 @@ export const Search: React.FC = () => {
       const response = await api.get<SearchResponse>("/search", { params });
       setResults(response.data.results ?? []);
       setTotal(response.data.total ?? 0);
-    } catch (error: unknown) {
-      setError(getApiErrorMessage(error, "שגיאה בטעינת תוצאות חיפוש"));
+    } catch (requestError: unknown) {
+      setError(getRequestErrorMessage(requestError, "שגיאה בטעינת תוצאות חיפוש"));
     } finally {
       setLoading(false);
     }
