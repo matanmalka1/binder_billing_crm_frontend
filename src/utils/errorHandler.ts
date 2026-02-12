@@ -1,10 +1,10 @@
 import axios from "axios";
+import { toast } from "sonner";
 import { getApiErrorMessage } from "./apiError";
 
 interface HandleActionErrorParams {
   error: unknown;
   fallbackMessage: string;
-  showToast: (message: string, tone?: "success" | "error") => void;
 }
 
 const getHttpStatus = (error: unknown): number | null => {
@@ -37,9 +37,8 @@ export const getRequestErrorMessage = (
 export const handleCanonicalActionError = ({
   error,
   fallbackMessage,
-  showToast,
 }: HandleActionErrorParams): string => {
   const message = resolveCanonicalActionMessage(error, fallbackMessage);
-  showToast(message, "error");
+  toast.error(message);
   return message;
 };

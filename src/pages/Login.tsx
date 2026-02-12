@@ -1,59 +1,63 @@
-import React, { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../store/auth.store';
-import { Card } from '../components/ui/Card';
-import { Input } from '../components/ui/Input';
-import { Button } from '../components/ui/Button';
+import React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Navigate, useNavigate } from "react-router-dom";
+import { Button } from "../components/ui/Button";
+import { Card } from "../components/ui/Card";
+import { Input } from "../components/ui/Input";
+import {
+  loginDefaultValues,
+  loginSchema,
+  type LoginFormValues,
+} from "../features/auth/schemas";
+import { useAuthStore } from "../store/auth.store";
 
 export const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const { login, isAuthenticated, isLoading, error, clearError } = useAuthStore();
   const navigate = useNavigate();
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = useForm<LoginFormValues>({
+    defaultValues: loginDefaultValues,
+    resolver: zodResolver(loginSchema),
+  });
 
-  // If already authenticated, redirect to dashboard
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = handleSubmit(async (values) => {
     clearError();
-    
-    if (!email || !password) {
-      return;
-    }
 
-    await login(email, password);
-    
-    // Navigate on success (isAuthenticated will be true)
+    await login(values.email, values.password);
+
     if (useAuthStore.getState().isAuthenticated) {
-      navigate('/');
+      navigate("/");
     }
-  };
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50">
       <Card className="w-full max-w-md" title="כניסה למערכת">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={onSubmit} className="space-y-4">
           <Input
             label="דוא״ל"
             type="email"
             placeholder="הכנס כתובת דוא״ל"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            error={errors.email?.message}
             disabled={isLoading}
-            required
+            {...register("email")}
           />
-          
+
           <Input
             label="סיסמה"
             type="password"
             placeholder="הכנס סיסמה"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            error={errors.password?.message}
             disabled={isLoading}
-            required
+            {...register("password")}
           />
 
           {error && (
@@ -66,9 +70,9 @@ export const Login: React.FC = () => {
             type="submit"
             className="w-full"
             isLoading={isLoading}
-            disabled={isLoading || !email || !password}
+            disabled={isLoading}
           >
-            {isLoading ? 'מתחבר...' : 'כניסה'}
+            {isLoading ? "מתחבר..." : "כניסה"}
           </Button>
         </form>
       </Card>

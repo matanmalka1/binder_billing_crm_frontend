@@ -1,4 +1,3 @@
-import React from "react";
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "../../store/auth.store";
 import { useUIStore } from "../../store/ui.store";
@@ -18,7 +17,7 @@ export const Header: React.FC = () => {
         >
           <Menu className="w-6 h-6" />
         </button>
-        <h1 className="text-xl font-bold text-gray-900">בינדר ומערכת חיובים</h1>
+        <h1 className="text-xl font-bold text-gray-900">יוסף מאיר מערכת ניהול</h1>
       </div>
 
       <div className="flex items-center gap-6">

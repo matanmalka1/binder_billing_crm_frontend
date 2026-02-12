@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -7,6 +6,8 @@ import {
   Search,
   ChevronRight,
   ChevronLeft,
+  ReceiptText,
+  FileText,
 } from "lucide-react";
 import { useUIStore } from "../../store/ui.store";
 import { cn } from "../../utils/cn";

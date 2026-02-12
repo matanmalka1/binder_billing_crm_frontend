@@ -1,0 +1,19 @@
+import React from "react";
+import { cn } from "../../utils/cn";
+import { Card } from "./Card";
+
+interface PageErrorCardProps {
+  message: string;
+  className?: string;
+}
+
+export const PageErrorCard: React.FC<PageErrorCardProps> = ({
+  message,
+  className,
+}) => {
+  return (
+    <Card className={cn("border-red-200 bg-red-50", className)}>
+      <p className="text-red-600">{message}</p>
+    </Card>
+  );
+};
