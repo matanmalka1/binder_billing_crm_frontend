@@ -1,94 +1,25 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { Card } from "../components/ui/Card";
-import { Spinner } from "../components/ui/Spinner";
-import { bindersApi } from "../api/binders.api";
-import { getRequestErrorMessage, handleCanonicalActionError } from "../utils/errorHandler";
-import { useUIStore } from "../store/ui.store";
-import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
-import { executeBackendAction } from "../features/actions/executeAction";
-import type { ResolvedBackendAction } from "../features/actions/types";
+import { EmptyStateCard } from "../components/ui/EmptyStateCard";
+import { PageErrorCard } from "../components/ui/PageErrorCard";
+import { PageLoading } from "../components/ui/PageLoading";
+import { PendingActionDialog } from "../features/actions/components/PendingActionDialog";
 import { BindersFiltersBar } from "../features/binders/components/BindersFiltersBar";
 import { BindersTableCard } from "../features/binders/components/BindersTableCard";
-import type { Binder, BindersListResponse } from "../features/binders/types";
-
-type PendingAction = ResolvedBackendAction | null;
+import { useBindersPage } from "../features/binders/hooks/useBindersPage";
 
 export const Binders: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { showToast } = useUIStore();
-  const [binders, setBinders] = useState<Binder[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
-  const [pendingAction, setPendingAction] = useState<PendingAction>(null);
-
-  const filters = {
-    work_state: searchParams.get("work_state") ?? "",
-    sla_state: searchParams.get("sla_state") ?? "",
-  };
-
-  const fetchBinders = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response: BindersListResponse = await bindersApi.list({
-        work_state: filters.work_state || undefined,
-        sla_state: filters.sla_state || undefined,
-      });
-      setBinders(response.items ?? []);
-    } catch (requestError: unknown) {
-      setError(getRequestErrorMessage(requestError, "שגיאה בטעינת רשימת תיקים"));
-    } finally {
-      setLoading(false);
-    }
-  }, [filters.sla_state, filters.work_state]);
-
-  useEffect(() => {
-    fetchBinders();
-  }, [fetchBinders]);
-
-  const handleFilterChange = (name: "work_state" | "sla_state", value: string) => {
-    const next = new URLSearchParams(searchParams);
-    if (value) next.set(name, value);
-    else next.delete(name);
-    setSearchParams(next);
-  };
-
-  const runAction = useCallback(
-    async (action: ResolvedBackendAction) => {
-      setActiveActionKey(action.uiKey);
-      try {
-        await executeBackendAction(action);
-        showToast("הפעולה הושלמה בהצלחה", "success");
-        await fetchBinders();
-      } catch (requestError: unknown) {
-        const message = handleCanonicalActionError({
-          error: requestError,
-          fallbackMessage: "שגיאה בביצוע פעולת תיק",
-          showToast,
-        });
-        setError(message);
-      } finally {
-        setActiveActionKey(null);
-      }
-    },
-    [fetchBinders, showToast],
-  );
-
-  const handleActionClick = (action: ResolvedBackendAction) => {
-    if (action.confirm) {
-      setPendingAction(action);
-      return;
-    }
-    void runAction(action);
-  };
-
-  const handleConfirmAction = async () => {
-    if (!pendingAction) return;
-    await runAction(pendingAction);
-    setPendingAction(null);
-  };
+  const {
+    activeActionKey,
+    binders,
+    cancelPendingAction,
+    confirmPendingAction,
+    error,
+    filters,
+    handleActionClick,
+    handleFilterChange,
+    loading,
+    pendingAction,
+  } = useBindersPage();
 
   return (
     <div className="space-y-6">
@@ -99,20 +30,10 @@ export const Binders: React.FC = () => {
       <Card title="סינון">
         <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </Card>
-      {loading && (
-        <div className="flex justify-center py-12">
-          <Spinner size="lg" />
-        </div>
-      )}
-      {error && (
-        <Card className="bg-red-50 border-red-200">
-          <p className="text-red-600">{error}</p>
-        </Card>
-      )}
+      {loading && <PageLoading />}
+      {error && <PageErrorCard message={error} />}
       {!loading && !error && binders.length === 0 && (
-        <Card>
-          <p className="text-center text-gray-600">אין תיקים להצגה</p>
-        </Card>
+        <EmptyStateCard message="אין תיקים להצגה" />
       )}
       {!loading && !error && binders.length > 0 && (
         <BindersTableCard
@@ -121,15 +42,11 @@ export const Binders: React.FC = () => {
           onActionClick={handleActionClick}
         />
       )}
-      <ConfirmDialog
-        open={Boolean(pendingAction)}
-        title={pendingAction?.confirm?.title || "אישור פעולה"}
-        message={pendingAction?.confirm?.message || "האם להמשיך בביצוע הפעולה?"}
-        confirmLabel={pendingAction?.confirm?.confirmLabel || "אישור"}
-        cancelLabel={pendingAction?.confirm?.cancelLabel || "ביטול"}
-        isLoading={activeActionKey === pendingAction?.uiKey}
-        onConfirm={handleConfirmAction}
-        onCancel={() => setPendingAction(null)}
+      <PendingActionDialog
+        pendingAction={pendingAction}
+        activeActionKey={activeActionKey}
+        onConfirm={confirmPendingAction}
+        onCancel={cancelPendingAction}
       />
     </div>
   );

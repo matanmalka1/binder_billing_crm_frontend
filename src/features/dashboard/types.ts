@@ -1,19 +1,9 @@
+import type { AttentionItem, AttentionResponse } from "../../api/dashboard.api";
 import type { BackendQuickAction } from "../actions/types";
 
+export type { AttentionItem, AttentionResponse };
+
 export type DashboardQuickAction = BackendQuickAction;
-
-export interface AttentionItem {
-  item_type: string;
-  binder_id: number | null;
-  client_id: number | null;
-  client_name: string | null;
-  description: string;
-}
-
-export interface AttentionResponse {
-  items: AttentionItem[];
-  total: number;
-}
 
 export interface DashboardAdvisorData {
   role_view: "advisor";

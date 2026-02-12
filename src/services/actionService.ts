@@ -1,73 +1,16 @@
 import { api } from "../api/client";
 import type { UserRole } from "../types/common";
 import type { ActionMethod, CanonicalActionToken } from "../features/actions/types";
-
-interface CanonicalActionContext {
-  binderId?: number | null;
-  chargeId?: number | null;
-  clientId?: number | null;
-  payload?: Record<string, unknown>;
-}
-
-interface CanonicalActionResolution {
-  token: CanonicalActionToken;
-  method: ActionMethod;
-  endpoint: string;
-  payload?: Record<string, unknown>;
-}
-
-const TOKEN_ALIASES: Record<string, CanonicalActionToken> = {
-  receive: "receive",
-  receive_binder: "receive",
-  ready: "ready",
-  ready_binder: "ready",
-  return: "return",
-  return_binder: "return",
-  freeze: "freeze",
-  activate: "activate",
-  mark_paid: "mark_paid",
-  pay_charge: "mark_paid",
-  mark_charge_paid: "mark_paid",
-  issue_charge: "issue_charge",
-  cancel_charge: "cancel_charge",
-};
-
-const ACTION_LABELS: Record<CanonicalActionToken, string> = {
-  receive: "קליטת תיק",
-  ready: "מוכן לאיסוף",
-  return: "החזרת תיק",
-  freeze: "הקפאת לקוח",
-  activate: "הפעלת לקוח",
-  mark_paid: "סימון חיוב כשולם",
-  issue_charge: "הנפקת חיוב",
-  cancel_charge: "ביטול חיוב",
-};
-
-const ADVISOR_ONLY_ACTIONS = new Set<CanonicalActionToken>([
-  "freeze",
-  "mark_paid",
-  "issue_charge",
-  "cancel_charge",
-]);
-
-const isEntityId = (value: number | null | undefined): value is number =>
-  typeof value === "number" && Number.isInteger(value) && value > 0;
-
-const isNonEmptyText = (value: unknown): value is string =>
-  typeof value === "string" && value.trim().length > 0;
-
-const hasValidReceivePayload = (
-  payload?: Record<string, unknown>,
-): payload is Record<string, unknown> & { client_id: number; binder_number: string } => {
-  const clientId = payload?.client_id;
-  const binderNumber = payload?.binder_number;
-  return (
-    typeof clientId === "number" &&
-    Number.isInteger(clientId) &&
-    clientId > 0 &&
-    isNonEmptyText(binderNumber)
-  );
-};
+import {
+  ACTION_LABELS,
+  ADVISOR_ONLY_ACTIONS,
+  TOKEN_ALIASES,
+} from "./actionService.constants";
+import type {
+  CanonicalActionContext,
+  CanonicalActionResolution,
+} from "./actionService.types";
+import { hasValidReceivePayload, isEntityId } from "./actionService.validators";
 
 export const getCanonicalActionToken = (
   rawToken: string | null | undefined,
@@ -145,6 +88,7 @@ export const resolveCanonicalAction = (
         ? { token, method: "post", endpoint: `/charges/${context.chargeId}/cancel` }
         : null;
   }
+  return null;
 };
 
 export const validateActionBeforeRequest = (request: {

@@ -1,0 +1,71 @@
+import React from "react";
+import { Badge } from "../../../components/ui/Badge";
+import { ActionButton } from "../../actions/components/ActionButton";
+import { resolveEntityActions } from "../../actions/resolveActions";
+import type { ResolvedBackendAction } from "../../actions/types";
+import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
+import type { Binder } from "../types";
+import { formatDate, getStatusBadge } from "./bindersTableUtils";
+
+interface BindersTableRowProps {
+  binder: Binder;
+  activeActionKey: string | null;
+  onActionClick: (action: ResolvedBackendAction) => void;
+}
+
+export const BindersTableRow: React.FC<BindersTableRowProps> = ({
+  binder,
+  activeActionKey,
+  onActionClick,
+}) => {
+  const actions = resolveEntityActions(
+    binder.available_actions,
+    "/binders",
+    binder.id,
+    `binder-${binder.id}`,
+  );
+
+  return (
+    <tr className="hover:bg-gray-50">
+      <td className="py-3 pr-4 font-medium text-gray-900">{binder.binder_number}</td>
+      <td className="py-3 pr-4">{getStatusBadge(binder.status)}</td>
+      <td className="py-3 pr-4 text-gray-600">{formatDate(binder.received_at)}</td>
+      <td className="py-3 pr-4 text-gray-600">{formatDate(binder.expected_return_at)}</td>
+      <td className="py-3 pr-4 font-medium text-gray-900">{binder.days_in_office}</td>
+      <td className="py-3 pr-4 text-gray-600">{getWorkStateLabel(binder.work_state ?? "")}</td>
+      <td className="py-3 pr-4 text-gray-600">{getSlaStateLabel(binder.sla_state ?? "")}</td>
+      <td className="py-3 pr-4">
+        {Array.isArray(binder.signals) && binder.signals.length > 0 ? (
+          <div className="flex flex-wrap gap-1">
+            {binder.signals.map((signal) => (
+              <Badge key={`${binder.id}-${signal}`} variant="neutral">
+                {getSignalLabel(signal)}
+              </Badge>
+            ))}
+          </div>
+        ) : (
+          <span className="text-gray-500">—</span>
+        )}
+      </td>
+      <td className="py-3 pr-4">
+        {actions.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {actions.map((action) => (
+              <ActionButton
+                key={action.uiKey}
+                type="button"
+                variant="outline"
+                label={action.label}
+                onClick={() => onActionClick(action)}
+                isLoading={activeActionKey === action.uiKey}
+                disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
+              />
+            ))}
+          </div>
+        ) : (
+          <span className="text-gray-500">—</span>
+        )}
+      </td>
+    </tr>
+  );
+};

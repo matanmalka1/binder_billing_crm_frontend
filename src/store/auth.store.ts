@@ -5,54 +5,10 @@ import {
   AUTH_USER_STORAGE_KEY,
 } from "../api/client";
 import { authApi } from "../api/auth.api";
-import type { AuthUser, UserRole } from "../types/common";
+import type { UserRole } from "../types/common";
 import { getRequestErrorMessage } from "../utils/errorHandler";
-
-interface AuthState {
-  user: AuthUser | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-  clearError: () => void;
-  isAdvisor: () => boolean;
-  hasRole: (role: UserRole) => boolean;
-  resetSession: () => void;
-}
-
-const parseStoredUser = (): AuthUser | null => {
-  const raw = localStorage.getItem(AUTH_USER_STORAGE_KEY);
-  if (!raw) return null;
-
-  try {
-    const parsed = JSON.parse(raw) as Partial<AuthUser>;
-    if (
-      typeof parsed?.id === "number" &&
-      typeof parsed?.full_name === "string" &&
-      (parsed?.role === "advisor" || parsed?.role === "secretary")
-    ) {
-      return {
-        id: parsed.id,
-        full_name: parsed.full_name,
-        role: parsed.role,
-      };
-    }
-  } catch {
-    localStorage.removeItem(AUTH_USER_STORAGE_KEY);
-  }
-
-  return null;
-};
-
-const clearStoredAuth = () => {
-  localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
-  localStorage.removeItem(AUTH_USER_STORAGE_KEY);
-};
-
-const storedToken = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
-const storedUser = parseStoredUser();
+import type { AuthState } from "./auth.types";
+import { clearStoredAuth, storedToken, storedUser } from "./auth.storage";
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: storedUser,

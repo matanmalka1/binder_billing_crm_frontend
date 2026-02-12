@@ -1,15 +1,13 @@
 import type {
-  ActionMethod,
   BackendActionInput,
   BackendActionObject,
   ResolvedBackendAction,
 } from "./types";
-import { isAdvisorOnlyEndpoint } from "../../contracts/backendContract";
-import { useAuthStore } from "../../store/auth.store";
-import { isActionAllowedForRole, getCanonicalActionToken } from "../../services/actionService";
+import { getCanonicalActionToken } from "../../services/actionService";
 import { resolveContractAction } from "./contractActionMap";
 import {
   getEntityIds,
+  isAllowedByRole,
   isActionMethod,
   resolveConfirm,
   toEndpoint,
@@ -18,24 +16,6 @@ import {
   toText,
   type ResolveContext,
 } from "./resolveActions.helpers";
-
-const isAllowedByRole = (
-  token: string,
-  method: ActionMethod,
-  endpoint: string,
-): boolean => {
-  const role = useAuthStore.getState().user?.role;
-
-  if (!isActionAllowedForRole(token, role)) {
-    return false;
-  }
-
-  if (role === "secretary" && isAdvisorOnlyEndpoint(method.toUpperCase(), endpoint)) {
-    return false;
-  }
-
-  return true;
-};
 
 const toResolved = (
   base: Omit<ResolvedBackendAction, "endpoint" | "token">,
@@ -110,9 +90,7 @@ const resolveActions = (
 export const resolveStandaloneActions = (
   actions: BackendActionInput[] | null | undefined,
   scopeKey?: string,
-): ResolvedBackendAction[] => {
-  return resolveActions(actions, { scopeKey });
-};
+): ResolvedBackendAction[] => resolveActions(actions, { scopeKey });
 
 export const resolveEntityActions = (
   actions: BackendActionInput[] | null | undefined,

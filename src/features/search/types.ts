@@ -1,20 +1,6 @@
-export interface SearchResult {
-  result_type: string;
-  client_id: number;
-  client_name: string;
-  binder_id: number | null;
-  binder_number: string | null;
-  work_state?: string | null;
-  sla_state?: string | null;
-  signals?: string[] | null;
-}
+import type { SearchResponse, SearchResult } from "../../api/search.api";
 
-export interface SearchResponse {
-  results: SearchResult[];
-  page: number;
-  page_size: number;
-  total: number;
-}
+export type { SearchResponse, SearchResult };
 
 export interface SearchFilters {
   query: string;
