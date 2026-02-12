@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge } from "../../../components/ui/Badge";
-import type { ResolvedBackendAction } from "../../actions/types";
+import type { ResolvedBackendAction } from "../../../lib/actions/types";
 import type { TimelineEvent } from "../types";
 import { TimelineActionRow } from "./TimelineActionRow";
 

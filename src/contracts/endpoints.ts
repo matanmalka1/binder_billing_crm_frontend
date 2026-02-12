@@ -33,3 +33,23 @@ export const ENDPOINTS = {
   documentSignalsByClient: (clientId: number | string) =>
     `/documents/client/${clientId}/signals`,
 } as const;
+
+export const ENDPOINT_TEMPLATES = {
+  clientById: "/clients/{client_id}",
+  clientBinders: "/clients/{client_id}/binders",
+  clientTimeline: "/clients/{client_id}/timeline",
+  binderById: "/binders/{binder_id}",
+  binderReady: "/binders/{binder_id}/ready",
+  binderReturn: "/binders/{binder_id}/return",
+  binderHistory: "/binders/{binder_id}/history",
+  chargeById: "/charges/{charge_id}",
+  chargeIssue: "/charges/{charge_id}/issue",
+  chargeMarkPaid: "/charges/{charge_id}/mark-paid",
+  chargeCancel: "/charges/{charge_id}/cancel",
+  documentsByClient: "/documents/client/{client_id}",
+  documentSignalsByClient: "/documents/client/{client_id}/signals",
+} as const;
+
+export type EndpointTemplateKey = keyof typeof ENDPOINT_TEMPLATES;
+
+export const endpointTemplate = (key: EndpointTemplateKey): string => ENDPOINT_TEMPLATES[key];

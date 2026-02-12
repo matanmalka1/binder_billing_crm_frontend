@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../endpoints";
+import { ENDPOINTS, endpointTemplate } from "../endpoints";
 import type { EndpointContract } from "../types";
 
 export const BINDERS_CONTRACT_ENTRIES: EndpointContract[] = [
@@ -11,13 +11,13 @@ export const BINDERS_CONTRACT_ENTRIES: EndpointContract[] = [
   {
     key: "binders.ready",
     method: "POST",
-    path: "/binders/{binder_id}/ready",
+    path: endpointTemplate("binderReady"),
     role: "advisor_or_secretary",
   },
   {
     key: "binders.return",
     method: "POST",
-    path: "/binders/{binder_id}/return",
+    path: endpointTemplate("binderReturn"),
     role: "advisor_or_secretary",
   },
   {
@@ -30,7 +30,7 @@ export const BINDERS_CONTRACT_ENTRIES: EndpointContract[] = [
   {
     key: "binders.get",
     method: "GET",
-    path: "/binders/{binder_id}",
+    path: endpointTemplate("binderById"),
     role: "advisor_or_secretary",
   },
   {
@@ -57,14 +57,14 @@ export const BINDERS_CONTRACT_ENTRIES: EndpointContract[] = [
   {
     key: "binders.byClient",
     method: "GET",
-    path: "/clients/{client_id}/binders",
+    path: endpointTemplate("clientBinders"),
     role: "advisor_or_secretary",
     query: ["page", "page_size"],
   },
   {
     key: "binders.history",
     method: "GET",
-    path: "/binders/{binder_id}/history",
+    path: endpointTemplate("binderHistory"),
     role: "advisor_or_secretary",
   },
 ];

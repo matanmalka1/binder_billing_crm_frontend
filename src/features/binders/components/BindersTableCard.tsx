@@ -1,6 +1,6 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
-import type { ResolvedBackendAction } from "../../actions/types";
+import type { ResolvedBackendAction } from "../../../lib/actions/types";
 import type { Binder } from "../types";
 import { BindersTableRow } from "./BindersTableRow";
 

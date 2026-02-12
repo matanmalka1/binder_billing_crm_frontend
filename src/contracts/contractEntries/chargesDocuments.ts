@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../endpoints";
+import { ENDPOINTS, endpointTemplate } from "../endpoints";
 import type { EndpointContract } from "../types";
 
 export const CHARGES_DOCUMENTS_CONTRACT_ENTRIES: EndpointContract[] = [
@@ -18,25 +18,25 @@ export const CHARGES_DOCUMENTS_CONTRACT_ENTRIES: EndpointContract[] = [
   {
     key: "charges.get",
     method: "GET",
-    path: "/charges/{charge_id}",
+    path: endpointTemplate("chargeById"),
     role: "advisor_or_secretary",
   },
   {
     key: "charges.issue",
     method: "POST",
-    path: "/charges/{charge_id}/issue",
+    path: endpointTemplate("chargeIssue"),
     role: "advisor",
   },
   {
     key: "charges.markPaid",
     method: "POST",
-    path: "/charges/{charge_id}/mark-paid",
+    path: endpointTemplate("chargeMarkPaid"),
     role: "advisor",
   },
   {
     key: "charges.cancel",
     method: "POST",
-    path: "/charges/{charge_id}/cancel",
+    path: endpointTemplate("chargeCancel"),
     role: "advisor",
   },
   {
@@ -48,13 +48,13 @@ export const CHARGES_DOCUMENTS_CONTRACT_ENTRIES: EndpointContract[] = [
   {
     key: "documents.clientList",
     method: "GET",
-    path: "/documents/client/{client_id}",
+    path: endpointTemplate("documentsByClient"),
     role: "advisor_or_secretary",
   },
   {
     key: "documents.clientSignals",
     method: "GET",
-    path: "/documents/client/{client_id}/signals",
+    path: endpointTemplate("documentSignalsByClient"),
     role: "advisor_or_secretary",
   },
 ];

@@ -6,9 +6,9 @@ import { timelineApi } from "../../../api/timeline.api";
 import { handleCanonicalActionError } from "../../../utils/errorHandler";
 import { parsePositiveInt } from "../../../utils/number";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
-import { executeBackendAction } from "../../actions/executeAction";
+import { executeBackendAction } from "../../../lib/actions/executeAction";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
-import type { ResolvedBackendAction } from "../../actions/types";
+import type { ResolvedBackendAction } from "../../../lib/actions/types";
 import type { TimelineEvent } from "../types";
 import { timelineKeys } from "../queryKeys";
 

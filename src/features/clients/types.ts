@@ -1,4 +1,4 @@
-import type { BackendActionInput } from "../actions/types";
+import type { BackendActionInput } from "../../lib/actions/types";
 
 export interface Client {
   id: number;

@@ -1,8 +1,8 @@
 import React from "react";
 import { Badge } from "../../../components/ui/Badge";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveEntityActions } from "../../actions/resolveActions";
-import type { ResolvedBackendAction } from "../../actions/types";
+import { resolveEntityActions } from "../../../lib/actions/resolver";
+import type { ResolvedBackendAction } from "../../../lib/actions/types";
 import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
 import type { Binder } from "../types";
 import { formatDate, getStatusBadge } from "./bindersTableUtils";

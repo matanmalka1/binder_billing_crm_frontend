@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../endpoints";
+import { ENDPOINTS, endpointTemplate } from "../endpoints";
 import type { EndpointContract } from "../types";
 
 export const CLIENTS_CONTRACT_ENTRIES: EndpointContract[] = [
@@ -18,13 +18,13 @@ export const CLIENTS_CONTRACT_ENTRIES: EndpointContract[] = [
   {
     key: "clients.get",
     method: "GET",
-    path: "/clients/{client_id}",
+    path: endpointTemplate("clientById"),
     role: "advisor_or_secretary",
   },
   {
     key: "clients.patch",
     method: "PATCH",
-    path: "/clients/{client_id}",
+    path: endpointTemplate("clientById"),
     role: "advisor_or_secretary",
   },
 ];

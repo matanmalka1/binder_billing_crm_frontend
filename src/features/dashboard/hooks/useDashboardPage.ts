@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import { dashboardApi } from "../../../api/dashboard.api";
 import { useAuthStore } from "../../../store/auth.store";
 import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/errorHandler";
-import { executeBackendAction } from "../../actions/executeAction";
-import type { ResolvedBackendAction } from "../../actions/types";
+import { executeBackendAction } from "../../../lib/actions/executeAction";
+import type { ResolvedBackendAction } from "../../../lib/actions/types";
 import type { AttentionResponse, DashboardData } from "../types";
 import { dashboardKeys } from "../queryKeys";
 

@@ -1,4 +1,4 @@
-import type { BackendQuickAction } from "../features/actions/types";
+import type { BackendQuickAction } from "../lib/actions/types";
 import { ENDPOINTS } from "../contracts/backendContract";
 import type { PaginatedResponse } from "../types/common";
 import { toQueryParams } from "./queryParams";

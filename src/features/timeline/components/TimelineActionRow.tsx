@@ -1,7 +1,7 @@
 import React from "react";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveEntityActions, resolveStandaloneActions } from "../../actions/resolveActions";
-import type { BackendActionInput, ResolvedBackendAction } from "../../actions/types";
+import { resolveEntityActions, resolveStandaloneActions } from "../../../lib/actions/resolver";
+import type { BackendActionInput, ResolvedBackendAction } from "../../../lib/actions/types";
 
 interface TimelineActionRowProps {
   actions: BackendActionInput[] | null | undefined;

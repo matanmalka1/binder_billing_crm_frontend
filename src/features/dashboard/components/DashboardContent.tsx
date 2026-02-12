@@ -13,7 +13,7 @@ import type {
 } from "../types";
 import { AttentionPanel } from "./AttentionPanel";
 import { OperationalPanel } from "./OperationalPanel";
-import type { ResolvedBackendAction } from "../../actions/types";
+import type { ResolvedBackendAction } from "../../../lib/actions/types";
 
 interface DashboardContentProps {
   data: DashboardAdvisorData;

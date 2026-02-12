@@ -1,5 +1,5 @@
 import type { AttentionItem, AttentionResponse } from "../../api/dashboard.api";
-import type { BackendQuickAction } from "../actions/types";
+import type { BackendQuickAction } from "../../lib/actions/types";
 
 export type { AttentionItem, AttentionResponse };
 

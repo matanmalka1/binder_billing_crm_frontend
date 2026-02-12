@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../endpoints";
+import { ENDPOINTS, endpointTemplate } from "../endpoints";
 import type { EndpointContract } from "../types";
 
 export const SEARCH_TIMELINE_CONTRACT_ENTRIES: EndpointContract[] = [
@@ -23,7 +23,7 @@ export const SEARCH_TIMELINE_CONTRACT_ENTRIES: EndpointContract[] = [
   {
     key: "timeline.client",
     method: "GET",
-    path: "/clients/{client_id}/timeline",
+    path: endpointTemplate("clientTimeline"),
     role: "advisor_or_secretary",
     query: ["page", "page_size"],
   },
