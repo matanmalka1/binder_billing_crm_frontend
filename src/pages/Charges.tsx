@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { AccessBanner } from "../components/ui/AccessBanner";
 import { DataTable } from "../components/ui/DataTable";
-import { Pagination } from "../components/ui/Pagination";
+import { PaginationCard } from "../components/ui/PaginationCard";
 import { ChargesCreateCard } from "../features/charges/components/ChargesCreateCard";
 import { ChargesFiltersCard } from "../features/charges/components/ChargesFiltersCard";
 import { buildChargeColumns } from "../features/charges/components/chargeColumns";
@@ -34,6 +34,11 @@ export const Charges: React.FC = () => {
         runAction,
       }),
     [actionLoadingId, isAdvisor, runAction],
+  );
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(Math.max(total, 1) / filters.page_size),
   );
 
   return (
@@ -88,12 +93,13 @@ export const Charges: React.FC = () => {
         />
 
         {!loading && charges.length > 0 && (
-          <Pagination
-            currentPage={filters.page}
+          <PaginationCard
+            page={filters.page}
+            totalPages={totalPages}
             total={total}
-            pageSize={filters.page_size}
             onPageChange={(page) => setFilter("page", String(page))}
             showPageSizeSelect
+            pageSize={filters.page_size}
             pageSizeOptions={[20, 50, 100]}
             onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
           />

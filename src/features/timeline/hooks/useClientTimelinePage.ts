@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
 import { timelineApi } from "../../../api/timeline.api";
-import { getRequestErrorMessage, handleCanonicalActionError, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
+import { getErrorMessage, showErrorToast, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
@@ -57,10 +57,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
       try {
         await actionMutation.mutateAsync(action);
       } catch (requestError: unknown) {
-        handleCanonicalActionError({
-          error: requestError,
-          fallbackMessage: "שגיאה בביצוע פעולה",
-        });
+        showErrorToast(requestError, "שגיאה בביצוע פעולה", { canonicalAction: true });
       } finally {
         setActiveActionKey(null);
       }
@@ -81,7 +78,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
       !hasValidClient
         ? "מזהה לקוח חסר"
         : timelineQuery.error
-          ? getRequestErrorMessage(timelineQuery.error, "שגיאה בטעינת ציר זמן")
+          ? getErrorMessage(timelineQuery.error, "שגיאה בטעינת ציר זמן")
           : null,
     events: timelineQuery.data?.events ?? [],
     handleAction,

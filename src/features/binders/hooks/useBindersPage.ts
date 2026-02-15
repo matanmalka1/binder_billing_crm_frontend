@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
 import { bindersApi } from "../../../api/binders.api";
-import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/utils";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
@@ -56,10 +56,7 @@ export const useBindersPage = () => {
       try {
         await actionMutation.mutateAsync(action);
       } catch (requestError: unknown) {
-        handleCanonicalActionError({
-          error: requestError,
-          fallbackMessage: "שגיאה בביצוע פעולת תיק",
-        });
+        showErrorToast(requestError, "שגיאה בביצוע פעולת תיק", { canonicalAction: true });
       } finally {
         setActiveActionKey(null);
       }
@@ -78,7 +75,7 @@ export const useBindersPage = () => {
     activeActionKey,
     binders: bindersQuery.data?.items ?? [],
     error: bindersQuery.error
-      ? getRequestErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת תיקים")
+      ? getErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת תיקים")
       : null,
     filters,
     handleActionClick,

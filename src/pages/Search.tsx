@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
 import { Badge } from "../components/ui/Badge";
-import { Pagination } from "../components/ui/Pagination";
+import { PaginationCard } from "../components/ui/PaginationCard";
 import { DataTable, type Column } from "../components/ui/DataTable";
 import { SearchFiltersBar } from "../features/search/components/SearchFiltersBar";
 import { useSearchPage } from "../features/search/hooks/useSearchPage";
@@ -98,6 +98,11 @@ export const Search: React.FC = () => {
     },
   ];
 
+  const totalPages = Math.max(
+    1,
+    Math.ceil(Math.max(total, 1) / filters.page_size),
+  );
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -139,12 +144,13 @@ export const Search: React.FC = () => {
         />
 
         {!loading && results.length > 0 && (
-          <Pagination
-            currentPage={filters.page}
+          <PaginationCard
+            page={filters.page}
+            totalPages={totalPages}
             total={total}
-            pageSize={filters.page_size}
             onPageChange={(page) => handleFilterChange("page", String(page))}
             showPageSizeSelect
+            pageSize={filters.page_size}
             pageSizeOptions={[20, 50, 100]}
             onPageSizeChange={(pageSize) =>
               handleFilterChange("page_size", String(pageSize))

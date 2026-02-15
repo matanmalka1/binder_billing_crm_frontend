@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
-import { Pagination } from "../components/ui/Pagination";
+import { PaginationCard } from "../components/ui/PaginationCard";
 import { DataTable } from "../components/ui/DataTable";
 import { AccessBanner } from "../components/ui/AccessBanner";
 import { Button } from "../components/ui/Button";
@@ -15,7 +15,7 @@ import { useClientsPage } from "../features/clients/hooks/useClientsPage";
 import { useAuthStore } from "../store/auth.store";
 import { clientsApi, type CreateClientPayload } from "../api/clients.api";
 import { toast } from "../utils/toast";
-import { getRequestErrorMessage } from "../utils/utils";
+import { getErrorMessage } from "../utils/utils";
 
 export const Clients: React.FC = () => {
   const navigate = useNavigate();
@@ -48,12 +48,17 @@ export const Clients: React.FC = () => {
       navigate(`/clients/${client.id}`);
     },
     onError: (err) =>
-      toast.error(getRequestErrorMessage(err, "שגיאה ביצירת לקוח")),
+      toast.error(getErrorMessage(err, "שגיאה ביצירת לקוח")),
   });
 
   const columns = useMemo(
     () => buildClientColumns({ activeActionKey, handleActionClick }),
     [activeActionKey, handleActionClick],
+  );
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(Math.max(total, 1) / filters.page_size),
   );
 
   return (
@@ -110,12 +115,13 @@ export const Clients: React.FC = () => {
         />
 
         {!loading && clients.length > 0 && (
-          <Pagination
-            currentPage={filters.page}
+          <PaginationCard
+            page={filters.page}
+            totalPages={totalPages}
             total={total}
-            pageSize={filters.page_size}
             onPageChange={setPage}
             showPageSizeSelect
+            pageSize={filters.page_size}
             pageSizeOptions={[20, 50, 100]}
             onPageSizeChange={(pageSize) =>
               handleFilterChange("page_size", String(pageSize))

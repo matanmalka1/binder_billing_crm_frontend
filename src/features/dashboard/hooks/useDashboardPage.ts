@@ -9,7 +9,7 @@ import type {
   DashboardSummaryResponse,
 } from "../../../api/dashboard.api";
 import { useAuthStore } from "../../../store/auth.store";
-import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/utils";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { dashboardKeys } from "../queryKeys";
@@ -111,7 +111,7 @@ export const useDashboardPage = () => {
     if (loadError) {
       return {
         status: "error",
-        message: getRequestErrorMessage(loadError, "שגיאה בטעינת לוח הבקרה"),
+        message: getErrorMessage(loadError, "שגיאה בטעינת לוח הבקרה"),
         data: null,
       };
     }
@@ -159,10 +159,7 @@ export const useDashboardPage = () => {
         if (getStatusCode(requestError) === 403) {
           setActionDenied(true);
         }
-        handleCanonicalActionError({
-          error: requestError,
-          fallbackMessage: "שגיאה בביצוע פעולה מהירה",
-        });
+        showErrorToast(requestError, "שגיאה בביצוע פעולה מהירה", { canonicalAction: true });
       } finally {
         setActiveQuickAction(null);
       }

@@ -6,7 +6,7 @@ import {
 } from "../api/client";
 import { authApi } from "../api/auth.api";
 import type { UserRole } from "../types/store";
-import { getRequestErrorMessage } from "../utils/utils";
+import { getErrorMessage } from "../utils/utils";
 import type { AuthState } from "./auth.types";
 import { clearStoredAuth, storedToken, storedUser } from "./auth.storage";
 
@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         user: null,
         token: null,
         isAuthenticated: false,
-        error: getRequestErrorMessage(error, "שגיאה בהתחברות"),
+        error: getErrorMessage(error, "שגיאה בהתחברות"),
         isLoading: false,
       });
     }

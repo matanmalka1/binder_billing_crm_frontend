@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { clientsApi, type UpdateClientPayload, type ClientResponse } from "../../../api/clients.api";
 import { bindersApi } from "../../../api/binders.api";
 import { chargesApi } from "../../../api/charges.api";
-import { getRequestErrorMessage } from "../../../utils/utils";
+import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
 type UseClientDetailsParams = { clientId: number | null; isAdvisor: boolean };
@@ -54,7 +54,7 @@ export const useClientDetails = ({
       await queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
     onError: (err) =>
-      toast.error(getRequestErrorMessage(err, "שגיאה בעדכון פרטי לקוח")),
+      toast.error(getErrorMessage(err, "שגיאה בעדכון פרטי לקוח")),
   });
 
   const updateClient = async (payload: UpdateClientPayload) => {
@@ -66,7 +66,7 @@ export const useClientDetails = ({
     isValidId,
     isLoading: clientQuery.isLoading,
     error: clientQuery.error
-      ? getRequestErrorMessage(clientQuery.error, "שגיאה בטעינת פרטי לקוח")
+      ? getErrorMessage(clientQuery.error, "שגיאה בטעינת פרטי לקוח")
       : null,
     binders: bindersQuery.data?.items ?? [],
     bindersTotal: bindersQuery.data?.total ?? 0,

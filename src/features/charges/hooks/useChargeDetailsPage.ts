@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { chargesApi, type ChargeResponse } from "../../../api/charges.api";
 import { toast } from "../../../utils/toast";
-import { getRequestErrorMessage, isPositiveInt } from "../../../utils/utils";
+import { getErrorMessage, isPositiveInt } from "../../../utils/utils";
 import { chargesKeys } from "../queryKeys";
 export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: boolean) => {
   const queryClient = useQueryClient();
@@ -67,7 +67,7 @@ export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: bo
         ? requestError.response?.status
         : null;
       if (typeof status === "number" && status === 403) setDenied(true);
-      setActionError(getRequestErrorMessage(requestError, "שגיאה בביצוע פעולה"));
+      setActionError(getErrorMessage(requestError, "שגיאה בביצוע פעולה"));
     }
   };
 
@@ -75,7 +75,7 @@ export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: bo
     if (!hasValidChargeId) return "מזהה חיוב חסר";
     if (actionError) return actionError;
     if (chargeQuery.error) {
-      return getRequestErrorMessage(chargeQuery.error, "שגיאה בטעינת פרטי חיוב");
+      return getErrorMessage(chargeQuery.error, "שגיאה בטעינת פרטי חיוב");
     }
     return null;
   }, [actionError, chargeQuery.error, hasValidChargeId]);

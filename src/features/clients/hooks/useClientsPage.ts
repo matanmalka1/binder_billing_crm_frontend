@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
 import { clientsApi, type ClientResponse, type ListClientsParams } from "../../../api/clients.api";
-import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/utils";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { parsePositiveInt } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
@@ -73,10 +73,7 @@ export const useClientsPage = () => {
       try {
         await actionMutation.mutateAsync(action);
       } catch (requestError: unknown) {
-        handleCanonicalActionError({
-          error: requestError,
-          fallbackMessage: "שגיאה בביצוע פעולת לקוח",
-        });
+        showErrorToast(requestError, "שגיאה בביצוע פעולת לקוח", { canonicalAction: true });
       } finally {
         setActiveActionKey(null);
       }
@@ -94,7 +91,7 @@ export const useClientsPage = () => {
   return {
     activeActionKey,
     clients: listQuery.data?.items ?? ([] as ClientResponse[]),
-    error: listQuery.error ? getRequestErrorMessage(listQuery.error, "שגיאה בטעינת רשימת לקוחות") : null,
+    error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת רשימת לקוחות") : null,
     filters,
     handleActionClick,
     handleFilterChange,

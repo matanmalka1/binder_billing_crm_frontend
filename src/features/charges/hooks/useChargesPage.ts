@@ -10,7 +10,7 @@ import {
 } from "../../../api/charges.api";
 import { chargesKeys } from "../queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
-import { getRequestErrorMessage, parsePositiveInt } from "../../../utils/utils";
+import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
@@ -78,7 +78,7 @@ export const useChargesPage = () => {
     try {
       await actionMutation.mutateAsync({ action, chargeId });
     } catch (requestError: unknown) {
-      toast.error(getRequestErrorMessage(requestError, "שגיאה בביצוע פעולת חיוב"));
+      toast.error(getErrorMessage(requestError, "שגיאה בביצוע פעולת חיוב"));
     }
   };
 
@@ -99,7 +99,7 @@ export const useChargesPage = () => {
       await createMutation.mutateAsync(payload);
       return true;
     } catch (requestError: unknown) {
-      toast.error(getRequestErrorMessage(requestError, "שגיאה ביצירת חיוב"));
+      toast.error(getErrorMessage(requestError, "שגיאה ביצירת חיוב"));
       return false;
     }
   };
@@ -108,10 +108,10 @@ export const useChargesPage = () => {
     actionLoadingId: actionMutation.isPending ? (actionMutation.variables?.chargeId ?? null) : null,
     charges: listQuery.data?.items ?? ([] as ChargeResponse[]),
     createError: createMutation.error
-      ? getRequestErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")
+      ? getErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")
       : null,
     createLoading: createMutation.isPending,
-    error: listQuery.error ? getRequestErrorMessage(listQuery.error, "שגיאה בטעינת רשימת חיובים") : null,
+    error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת רשימת חיובים") : null,
     filters,
     isAdvisor,
     loading: listQuery.isPending,

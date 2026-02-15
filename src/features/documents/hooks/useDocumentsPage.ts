@@ -8,7 +8,7 @@ import {
   type OperationalSignalsResponse,
   type UploadDocumentPayload,
 } from "../../../api/documents.api";
-import { getRequestErrorMessage, isPositiveInt } from "../../../utils/utils";
+import { getErrorMessage, isPositiveInt } from "../../../utils/utils";
 import { documentsKeys } from "../queryKeys";
 
 export const useDocumentsPage = () => {
@@ -81,7 +81,7 @@ export const useDocumentsPage = () => {
       });
       return true;
     } catch (requestError: unknown) {
-      setUploadError(getRequestErrorMessage(requestError, "שגיאה בהעלאת מסמך"));
+      setUploadError(getErrorMessage(requestError, "שגיאה בהעלאת מסמך"));
       return false;
     }
   };
@@ -92,7 +92,7 @@ export const useDocumentsPage = () => {
 
   const errorSource = clientsQuery.error || documentsQuery.error || signalsQuery.error;
   const error = errorSource
-    ? getRequestErrorMessage(errorSource, "שגיאה בטעינת מסמכים")
+    ? getErrorMessage(errorSource, "שגיאה בטעינת מסמכים")
     : null;
 
   return {

@@ -99,25 +99,36 @@ const getHttpStatus = (error: unknown): number | null => {
   return typeof status === "number" ? status : null;
 };
 
-const resolveCanonicalActionMessage = (error: unknown, fallbackMessage: string): string => {
-  const status = getHttpStatus(error);
-  if (status === 403) return "אין הרשאה לבצע פעולה זו";
-  if (status === 500) return "שגיאת שרת פנימית. נסה שוב בעוד מספר רגעים";
+type ErrorOptions = {
+  canonicalAction?: boolean;
+};
+
+const resolveErrorMessage = (
+  error: unknown,
+  fallbackMessage: string,
+  options?: ErrorOptions,
+): string => {
+  if (options?.canonicalAction) {
+    const status = getHttpStatus(error);
+    if (status === 403) return "אין הרשאה לבצע פעולה זו";
+    if (status === 500) return "שגיאת שרת פנימית. נסה שוב בעוד מספר רגעים";
+  }
+
   return getApiErrorMessage(error, fallbackMessage);
 };
 
-export const getRequestErrorMessage = (error: unknown, fallbackMessage: string): string => {
-  return getApiErrorMessage(error, fallbackMessage);
-};
+export const getErrorMessage = (
+  error: unknown,
+  fallbackMessage: string,
+  options?: ErrorOptions,
+): string => resolveErrorMessage(error, fallbackMessage, options);
 
-export const handleCanonicalActionError = ({
-  error,
-  fallbackMessage,
-}: {
-  error: unknown;
-  fallbackMessage: string;
-}): string => {
-  const message = resolveCanonicalActionMessage(error, fallbackMessage);
+export const showErrorToast = (
+  error: unknown,
+  fallbackMessage: string,
+  options?: ErrorOptions,
+): string => {
+  const message = resolveErrorMessage(error, fallbackMessage, options);
   toast.error(message);
   return message;
 };

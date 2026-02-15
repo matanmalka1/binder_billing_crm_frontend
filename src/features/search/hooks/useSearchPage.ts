@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { searchApi } from "../../../api/search.api";
-import { getRequestErrorMessage, parsePositiveInt } from "../../../utils/utils";
+import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 import type { SearchFilters } from "../types";
 import { searchKeys } from "../queryKeys";
 
@@ -64,7 +64,7 @@ export const useSearchPage = () => {
 
   return {
     error: searchQuery.error
-      ? getRequestErrorMessage(searchQuery.error, "שגיאה בטעינת תוצאות חיפוש")
+      ? getErrorMessage(searchQuery.error, "שגיאה בטעינת תוצאות חיפוש")
       : null,
     filters,
     handleFilterChange,
