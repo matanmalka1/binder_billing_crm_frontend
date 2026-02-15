@@ -1,7 +1,16 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { TimelineItem } from "./TimelineItem";
-import type { TimelineCardProps } from "../types";
+import type { TimelineEvent } from "../../../api/timeline.api";
+import type { ActionCommand } from "../../../lib/actions/types";
+
+
+export interface TimelineCardProps {
+  events: TimelineEvent[];
+  activeActionKey: string | null;
+  onAction: (action: ActionCommand) => void;
+}
+
 
 export const TimelineCard: React.FC<TimelineCardProps> = ({
   events,

@@ -2,7 +2,16 @@ import React from "react";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { resolveActions } from "../../../lib/actions/adapter";
-import type { TimelineItemProps } from "../types";
+import type { TimelineEvent } from "../../../api/timeline.api";
+import type { ActionCommand } from "../../../lib/actions/types";
+
+export interface TimelineItemProps {
+  event: TimelineEvent;
+  itemKey: string;
+  activeActionKey: string | null;
+  onAction: (action: ActionCommand) => void;
+}
+;
 
 const getEventTypeLabel = (eventType: string) => {
   const labels: Record<string, string> = {

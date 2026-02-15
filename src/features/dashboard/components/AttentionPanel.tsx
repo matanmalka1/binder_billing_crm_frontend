@@ -1,4 +1,3 @@
-import React from "react";
 import { Card } from "../../../components/ui/Card";
 import type { AttentionItem } from "../../../api/dashboard.api";
 

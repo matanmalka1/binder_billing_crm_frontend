@@ -1,7 +1,17 @@
 import React from "react";
 import { Button } from "../../../components/ui/Button";
 import { Modal } from "../../../components/ui/Modal";
-import type { ConfirmDialogProps } from "../types";
+
+export interface ConfirmDialogProps {
+  open: boolean;
+  title: string;
+  message: string;
+  confirmLabel: string;
+  cancelLabel: string;
+  isLoading?: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
 
 export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   open,

@@ -1,6 +1,13 @@
 import React from "react";
 import { ConfirmDialog } from "./ConfirmDialog";
-import type { PendingActionDialogProps } from "../types";
+import type { ActionCommand } from "../../../lib/actions/types";
+
+export interface PendingActionDialogProps {
+  pendingAction: ActionCommand | null;
+  activeActionKey: string | null;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
 
 export const PendingActionDialog: React.FC<PendingActionDialogProps> = ({
   pendingAction,
