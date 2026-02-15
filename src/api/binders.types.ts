@@ -1,4 +1,4 @@
-import type { BackendActionInput } from "../lib/actions";
+import type { BackendActionInput } from "../lib/actions/types";
 import type { PaginatedResponse } from "../types/common";
 
 export interface BinderResponse {

@@ -6,9 +6,9 @@ import { clientsApi } from "../../../api/clients.api";
 import { handleCanonicalActionError } from "../../../utils/errorHandler";
 import { parsePositiveInt } from "../../../utils/number";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
-import { executeAction } from "../../../lib/actions";
+import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
-import type { ActionCommand } from "../../../lib/actions";
+import type { ActionCommand } from "../../../lib/actions/types";
 import { clientsKeys } from "../queryKeys";
 
 export const useClientsPage = () => {

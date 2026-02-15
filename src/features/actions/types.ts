@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { ActionCommand } from "../../lib/actions";
+import type { ActionCommand } from "../../lib/actions/types";
 
 export interface ActionModalProps {
   open: boolean;

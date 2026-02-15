@@ -1,5 +1,5 @@
 import type { ClientResponse } from "../../api/clients.api";
-import type { ActionCommand } from "../../lib/actions";
+import type { ActionCommand } from "../../lib/actions/types";
 
 export interface ClientsFilters {
   has_signals: string;

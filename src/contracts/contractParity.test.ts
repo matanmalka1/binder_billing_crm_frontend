@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { findEndpointContract } from "./backendContract";
+import { findEndpointContract } from "./guards";
 import {
   ADVISOR_ONLY_ACTIONS,
   isActionAllowed,
   resolveCanonicalAction,
   TOKEN_ALIASES,
 } from "../lib/actions/catalog";
-import type { ActionId } from "../lib/actions";
+import type { ActionId } from "../lib/actions/types";
 
 const ACTION_SAMPLE_CONTEXT: Record<
   ActionId,

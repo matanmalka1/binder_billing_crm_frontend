@@ -5,9 +5,9 @@ import { toast } from "sonner";
 import { bindersApi } from "../../../api/binders.api";
 import { handleCanonicalActionError } from "../../../utils/errorHandler";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
-import { executeAction } from "../../../lib/actions";
+import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
-import type { ActionCommand } from "../../../lib/actions";
+import type { ActionCommand } from "../../../lib/actions/types";
 import { bindersKeys } from "../queryKeys";
 import type { BindersFilters } from "../types";
 

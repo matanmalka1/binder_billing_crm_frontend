@@ -1,6 +1,6 @@
 import React from "react";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveEntityActions, resolveStandaloneActions } from "../../../lib/actions";
+import { resolveEntityActions, resolveStandaloneActions } from "../../../lib/actions/adapter";
 import type { TimelineActionRowProps } from "../types";
 
 export const TimelineActionRow: React.FC<TimelineActionRowProps> = ({

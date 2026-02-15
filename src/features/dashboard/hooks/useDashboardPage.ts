@@ -10,8 +10,8 @@ import type {
 } from "../../../api/dashboard.api";
 import { useAuthStore } from "../../../store/auth.store";
 import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/errorHandler";
-import { executeAction } from "../../../lib/actions";
-import type { ActionCommand } from "../../../lib/actions";
+import { executeAction } from "../../../lib/actions/runtime";
+import type { ActionCommand } from "../../../lib/actions/types";
 import { dashboardKeys } from "../queryKeys";
 
 type DashboardData =

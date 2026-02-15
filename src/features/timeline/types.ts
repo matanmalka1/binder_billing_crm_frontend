@@ -1,5 +1,5 @@
 import type { TimelineEvent } from "../../api/timeline.api";
-import type { BackendActionInput, ActionCommand } from "../../lib/actions";
+import type { BackendActionInput, ActionCommand } from "../../lib/actions/types";
 
 export interface TimelineCardProps {
   events: TimelineEvent[];

@@ -1,8 +1,8 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveStandaloneActions } from "../../../lib/actions";
-import type { BackendQuickAction, ActionCommand } from "../../../lib/actions";
+import { resolveStandaloneActions } from "../../../lib/actions/adapter";
+import type { BackendQuickAction, ActionCommand } from "../../../lib/actions/types";
 
 interface OperationalPanelProps {
   quickActions: BackendQuickAction[];

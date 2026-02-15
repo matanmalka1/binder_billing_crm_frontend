@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import type { AttentionItem, DashboardOverviewResponse } from "../../../api/dashboard.api";
-import type { BackendQuickAction, ActionCommand } from "../../../lib/actions";
+import type { BackendQuickAction, ActionCommand } from "../../../lib/actions/types";
 import {
   getSignalLabel,
   getSlaStateLabel,

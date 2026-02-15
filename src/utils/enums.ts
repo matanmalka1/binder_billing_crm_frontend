@@ -1,4 +1,4 @@
-import { getActionLabel as getCanonicalActionLabel } from "../lib/actions";
+import { getActionLabel as getCanonicalActionLabel } from "../lib/actions/catalog";
 
 /**
  * Safe enum label mappers - ensures Hebrew-only UI

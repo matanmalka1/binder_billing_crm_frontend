@@ -1,5 +1,5 @@
-import type { BackendActionInput } from "../lib/actions";
-import { ENDPOINTS } from "../contracts/backendContract";
+import type { BackendActionInput } from "../lib/actions/types";
+import { ENDPOINTS } from "../contracts/endpoints";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";
 

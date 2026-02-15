@@ -1,5 +1,5 @@
 import type { BinderResponse } from "../../api/binders.types";
-import type { ActionCommand } from "../../lib/actions";
+import type { ActionCommand } from "../../lib/actions/types";
 
 export interface BindersFilters {
   work_state: string;
