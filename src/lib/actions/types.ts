@@ -10,21 +10,6 @@ export type ActionId =
   | "issue_charge"
   | "cancel_charge";
 
-export type ActionTokenSourceField =
-  | "key"
-  | "action"
-  | "type"
-  | "item_type"
-  | "operation";
-
-export const ACTION_TOKEN_SOURCE_FIELDS: readonly ActionTokenSourceField[] = [
-  "key",
-  "action",
-  "type",
-  "item_type",
-  "operation",
-] as const;
-
 export interface BackendActionObject {
   key?: string;
   action?: string;
@@ -46,8 +31,6 @@ export interface BackendActionObject {
   confirm_label?: string;
   cancel_label?: string;
 }
-
-
 
 export interface BackendQuickAction extends BackendActionObject {
   key: string;

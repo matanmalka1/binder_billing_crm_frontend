@@ -1,20 +1,13 @@
 import { useAuthStore } from "../../store/auth.store";
-import {
-  getActionLabel,
-  isActionAllowed,
-  normalizeActionId,
-  resolveCanonicalAction,
-} from "./catalog";
+import { getActionLabel, isActionAllowed, normalizeActionId, resolveCanonicalAction } from "./catalog";
 import type {
   ActionCommand,
   ActionConfirmConfig,
   ActionId,
   ActionMethod,
-  ActionTokenSourceField,
   BackendActionInput,
   BackendActionObject,
 } from "./types";
-import { ACTION_TOKEN_SOURCE_FIELDS } from "./types";
 
 export interface ResolveContext {
   entityPath?: string;
@@ -28,7 +21,6 @@ export interface ResolveContext {
 
 export interface NormalizedIncomingAction {
   rawToken: string | null;
-  tokenSourceField: ActionTokenSourceField | "string" | null;
   key: string;
   uiKey: string;
   label: string | null;
@@ -94,17 +86,13 @@ const buildUiKey = (index: number, baseKey: string, scopeKey?: string): string =
   return `${scopeKey || DEFAULT_SCOPE_KEY}-${index}-${baseKey}`;
 };
 
-const extractTokenFromAction = (
-  action: BackendActionObject,
-): { token: string | null; sourceField: ActionTokenSourceField | null } => {
-  for (const field of ACTION_TOKEN_SOURCE_FIELDS) {
-    const value = toText(action[field]);
-    if (value) {
-      return { token: value, sourceField: field };
-    }
+const extractToken = (action: BackendActionObject): string | null => {
+  const candidates = [action.key, action.action, action.type, action.item_type, action.operation];
+  for (const candidate of candidates) {
+    const text = toText(candidate);
+    if (text) return text;
   }
-
-  return { token: null, sourceField: null };
+  return null;
 };
 
 const normalizeEntityIds = (
@@ -141,7 +129,6 @@ const normalizeBackendAction = (
 
     return {
       rawToken: token,
-      tokenSourceField: "string",
       key: baseKey,
       uiKey: buildUiKey(index, baseKey, context.scopeKey),
       label: null,
@@ -154,14 +141,13 @@ const normalizeBackendAction = (
     };
   }
 
-  const { token, sourceField } = extractTokenFromAction(input);
+  const token = extractToken(input);
   const baseKey = token || `action-${index}`;
   const payload = toPayload(input.payload) || toPayload(input.body) || context.payload;
   const ids = normalizeEntityIds(input, context);
 
   return {
     rawToken: token,
-    tokenSourceField: sourceField,
     key: baseKey,
     uiKey: buildUiKey(index, baseKey, context.scopeKey),
     label: toText(input.label) || null,
@@ -189,9 +175,7 @@ const materializeAction = (
   const hasCanonical = actionId !== null;
   const endpoint = hasCanonical ? canonical?.endpoint ?? null : normalized.explicitEndpoint || null;
   if (!hasCanonical && !endpoint && normalized.rawToken && import.meta.env.DEV) {
-    console.warn(
-      `[actions] Dropping unresolved action token "${normalized.rawToken}" (source: ${normalized.tokenSourceField ?? "unknown"}).`,
-    );
+    console.warn(`[actions] Dropping unresolved action token "${normalized.rawToken}".`);
   }
 
   if (!endpoint) return null;
