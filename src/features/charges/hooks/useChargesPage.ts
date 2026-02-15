@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   chargesApi,
@@ -9,39 +9,29 @@ import {
 import { chargesKeys } from "../queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
 import { getRequestErrorMessage } from "../../../utils/utils";
-import { usePaginationParams } from "../../../hooks/usePaginationParams";
+import { usePaginatedResource } from "../../../hooks/usePaginatedResource";
 import type { ChargesFilters } from "../types";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
-  const { searchParams, setSearchParams, page, page_size, setPage } = usePaginationParams();
+  const { data, total, error, loading, filters, setFilter } = usePaginatedResource({
+    parseFilters: (params, page, pageSize) => ({
+      client_id: params.get("client_id") ?? "",
+      status: params.get("status") ?? "",
+      page,
+      page_size: pageSize,
+    }),
+    buildParams: (parsed) => ({
+      client_id: parsed.client_id ? Number(parsed.client_id) : undefined,
+      status: parsed.status || undefined,
+      page: parsed.page,
+      page_size: parsed.page_size,
+    }),
+    queryKey: (params) => chargesKeys.list(params),
+    queryFn: (params) => chargesApi.list(params),
+  });
   const { user } = useAuthStore();
   const isAdvisor = user?.role === "advisor";
-
-  const filters = useMemo<ChargesFilters>(
-    () => ({
-      client_id: searchParams.get("client_id") ?? "",
-      status: searchParams.get("status") ?? "",
-      page,
-      page_size,
-    }),
-    [searchParams, page, page_size],
-  );
-
-  const listParams = useMemo<ChargesListParams>(
-    () => ({
-      client_id: filters.client_id ? Number(filters.client_id) : undefined,
-      status: filters.status || undefined,
-      page: filters.page,
-      page_size: filters.page_size,
-    }),
-    [filters.client_id, filters.page, filters.page_size, filters.status],
-  );
-
-  const chargesQuery = useQuery({
-    queryKey: chargesKeys.list(listParams),
-    queryFn: () => chargesApi.list(listParams),
-  });
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateChargePayload) => chargesApi.create(payload),
@@ -68,14 +58,6 @@ export const useChargesPage = () => {
       await queryClient.invalidateQueries({ queryKey: chargesKeys.lists() });
     },
   });
-
-  const setFilter = (key: string, value: string) => {
-    const next = new URLSearchParams(searchParams);
-    if (value) next.set(key, value);
-    else next.delete(key);
-    if (key !== "page") next.set("page", "1");
-    setSearchParams(next);
-  };
 
   const runAction = async (chargeId: number, action: "issue" | "markPaid" | "cancel") => {
     if (!isAdvisor) {
@@ -104,26 +86,20 @@ export const useChargesPage = () => {
     }
   };
 
-  const error =
-    chargesQuery.error
-      ? getRequestErrorMessage(chargesQuery.error, "שגיאה בטעינת רשימת חיובים")
-      : null;
-
   return {
     actionLoadingId: actionMutation.isPending ? (actionMutation.variables?.chargeId ?? null) : null,
-    charges: chargesQuery.data?.items ?? [],
+    charges: data,
     createError: createMutation.error
       ? getRequestErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")
       : null,
     createLoading: createMutation.isPending,
-    error,
+    error: error ? getRequestErrorMessage(error, "שגיאה בטעינת רשימת חיובים") : null,
     filters,
     isAdvisor,
-    loading: chargesQuery.isPending,
+    loading,
     runAction,
     setFilter,
-    setSearchParams,
     submitCreate,
-    total: chargesQuery.data?.total ?? 0,
+    total,
   };
 };

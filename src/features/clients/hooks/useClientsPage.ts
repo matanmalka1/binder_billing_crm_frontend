@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { clientsApi } from "../../../api/clients.api";
 import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/utils";
@@ -7,41 +7,32 @@ import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { clientsKeys } from "../queryKeys";
-import { usePaginationParams } from "../../../hooks/usePaginationParams";
+import { usePaginatedResource } from "../../../hooks/usePaginatedResource";
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
-  const { searchParams, setSearchParams, page, page_size, setPage: setPageParam } = usePaginationParams();
-  const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
-  const filters = useMemo(
-    () => ({
-      has_signals: searchParams.get("has_signals") ?? "",
-      status: searchParams.get("status") ?? "",
+  const { data, total, error, loading, filters, setFilter, setPage } = usePaginatedResource({
+    parseFilters: (params, page, pageSize) => ({
+      has_signals: params.get("has_signals") ?? "",
+      status: params.get("status") ?? "",
       page,
-      page_size,
+      page_size: pageSize,
     }),
-    [searchParams, page, page_size],
-  );
-
-  const listParams = useMemo(
-    () => ({
+    buildParams: (parsed) => ({
       has_signals:
-        filters.has_signals === "true"
+        parsed.has_signals === "true"
           ? true
-          : filters.has_signals === "false"
+          : parsed.has_signals === "false"
             ? false
             : undefined,
-      status: filters.status || undefined,
-      page: filters.page,
-      page_size: filters.page_size,
+      status: parsed.status || undefined,
+      page: parsed.page,
+      page_size: parsed.page_size,
     }),
-    [filters.has_signals, filters.page, filters.page_size, filters.status],
-  );
-
-  const clientsQuery = useQuery({
-    queryKey: clientsKeys.list(listParams),
-    queryFn: () => clientsApi.list(listParams),
+    queryKey: (params) => clientsKeys.list(params),
+    queryFn: (params) => clientsApi.list(params),
   });
+  const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
 
   const actionMutation = useMutation({
     mutationFn: (action: ActionCommand) => executeAction(action),
@@ -51,15 +42,8 @@ export const useClientsPage = () => {
     },
   });
 
-  const handleFilterChange = (name: "has_signals" | "status" | "page_size", value: string) => {
-    const next = new URLSearchParams(searchParams);
-    if (value) next.set(name, value);
-    else next.delete(name);
-    next.set("page", "1");
-    setSearchParams(next);
-  };
-
-  const setPage = (nextPage: number) => setPageParam(nextPage);
+  const handleFilterChange = (name: "has_signals" | "status" | "page_size", value: string) =>
+    setFilter(name, value);
 
   const runAction = useCallback(
     async (action: ActionCommand) => {
@@ -91,17 +75,15 @@ export const useClientsPage = () => {
 
   return {
     activeActionKey,
-    clients: clientsQuery.data?.items ?? [],
-    error: clientsQuery.error
-      ? getRequestErrorMessage(clientsQuery.error, "שגיאה בטעינת רשימת לקוחות")
-      : null,
+    clients: data,
+    error: error ? getRequestErrorMessage(error, "שגיאה בטעינת רשימת לקוחות") : null,
     filters,
     handleActionClick,
     handleFilterChange,
-    loading: clientsQuery.isPending,
+    loading,
     pendingAction,
     setPage,
-    total: clientsQuery.data?.total ?? 0,
+    total,
     runAction,
     cancelPendingAction,
     confirmPendingAction,
