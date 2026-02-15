@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AUTH_EXPIRED_EVENT } from "../api/client";
 import { useAuthStore } from "../store/auth.store";
