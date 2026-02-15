@@ -1,6 +1,8 @@
 import type { UserRole } from "../../types/store";
 import { ENDPOINTS } from "../../api/endpoints";
+import { isPositiveInt } from "../../utils/utils";
 import type { ActionId, ActionMethod } from "./types";
+
 
 export interface CanonicalActionContext {
   binderId?: number | null;
@@ -51,7 +53,7 @@ export const ADVISOR_ONLY_ACTIONS = new Set<ActionId>([
 ]);
 
 const isEntityId = (value: number | null | undefined): value is number =>
-  typeof value === "number" && Number.isInteger(value) && value > 0;
+  isPositiveInt(typeof value === "number" ? value : null);
 
 const isNonEmptyText = (value: unknown): value is string =>
   typeof value === "string" && value.trim().length > 0;

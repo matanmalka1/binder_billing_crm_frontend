@@ -8,7 +8,7 @@ import {
   type OperationalSignalsResponse,
   type UploadDocumentPayload,
 } from "../../../api/documents.api";
-import { getRequestErrorMessage } from "../../../utils/utils";
+import { getRequestErrorMessage, isPositiveInt } from "../../../utils/utils";
 import { documentsKeys } from "../queryKeys";
 
 export const useDocumentsPage = () => {
@@ -17,7 +17,7 @@ export const useDocumentsPage = () => {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const selectedClientId = useMemo(() => {
     const raw = Number(searchParams.get("client_id") || 0);
-    return Number.isInteger(raw) && raw > 0 ? raw : 0;
+    return isPositiveInt(raw) ? raw : 0;
   }, [searchParams]);
 
   const clientsQuery = useQuery({

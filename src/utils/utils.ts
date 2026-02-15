@@ -24,6 +24,10 @@ export const parsePositiveInt = (value: string | null, fallback: number): number
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 };
 
+export const isPositiveInt = (value: unknown): value is number => {
+  return typeof value === "number" && Number.isInteger(value) && value > 0;
+};
+
 // ============================================================================
 // DATETIME UTILITIES
 // ============================================================================

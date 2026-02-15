@@ -3,14 +3,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { chargesApi, type ChargeResponse } from "../../../api/charges.api";
 import { toast } from "sonner";
-import { getRequestErrorMessage } from "../../../utils/utils";
+import { getRequestErrorMessage, isPositiveInt } from "../../../utils/utils";
 import { chargesKeys } from "../queryKeys";
 export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: boolean) => {
   const queryClient = useQueryClient();
   const [actionError, setActionError] = useState<string | null>(null);
   const [denied, setDenied] = useState(false);
   const chargeIdNumber = Number(chargeId || 0);
-  const hasValidChargeId = Number.isInteger(chargeIdNumber) && chargeIdNumber > 0;
+  const hasValidChargeId = isPositiveInt(chargeIdNumber);
 
   const chargeQuery = useQuery({
     enabled: hasValidChargeId,

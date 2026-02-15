@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { timelineApi } from "../../../api/timeline.api";
-import { getRequestErrorMessage, handleCanonicalActionError, parsePositiveInt } from "../../../utils/utils";
+import { getRequestErrorMessage, handleCanonicalActionError, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
@@ -16,7 +16,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
   const page = parsePositiveInt(searchParams.get("page"), 1);
   const pageSize = parsePositiveInt(searchParams.get("page_size"), 50);
   const clientIdNumber = Number(clientId || 0);
-  const hasValidClient = Number.isInteger(clientIdNumber) && clientIdNumber > 0;
+  const hasValidClient = isPositiveInt(clientIdNumber);
 
   const timelineParams = useMemo(
     () => ({ page, page_size: pageSize }),
