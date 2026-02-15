@@ -1,4 +1,3 @@
-import React from "react";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
 import { DocumentsClientCard } from "../features/documents/components/DocumentsClientCard";

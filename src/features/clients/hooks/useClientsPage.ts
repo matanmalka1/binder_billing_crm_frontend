@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { clientsApi } from "../../../api/clients.api";
+import { clientsApi, type ClientResponse, type ListClientsParams } from "../../../api/clients.api";
 import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
@@ -11,7 +11,16 @@ import { usePaginatedResource } from "../../../hooks/usePaginatedResource";
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
-  const { data, total, error, loading, filters, setFilter, setPage } = usePaginatedResource({
+  const { data, total, error, loading, filters, setFilter, setPage } = usePaginatedResource<
+    {
+      has_signals: string;
+      status: string;
+      page: number;
+      page_size: number;
+    },
+    ListClientsParams,
+    ClientResponse
+  >({
     parseFilters: (params, page, pageSize) => ({
       has_signals: params.get("has_signals") ?? "",
       status: params.get("status") ?? "",

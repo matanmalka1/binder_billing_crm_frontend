@@ -1,4 +1,3 @@
-import React from "react";
 import { Select } from "../../../components/ui/Select";
 import { SLA_STATE_OPTIONS, WORK_STATE_OPTIONS } from "../../../constants/filterOptions.constants";
 import type { BindersFiltersBarProps } from "../types";

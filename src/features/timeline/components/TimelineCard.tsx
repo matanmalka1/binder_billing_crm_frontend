@@ -1,4 +1,3 @@
-import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { TimelineItem } from "./TimelineItem";
 import type { TimelineEvent } from "../../../api/timeline.api";

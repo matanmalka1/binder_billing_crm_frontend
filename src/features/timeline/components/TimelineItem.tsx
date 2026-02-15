@@ -1,4 +1,3 @@
-import React from "react";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { mapActions } from "../../../lib/actions/mapActions";
@@ -11,7 +10,7 @@ export interface TimelineItemProps {
   activeActionKey: string | null;
   onAction: (action: ActionCommand) => void;
 }
-;
+
 
 const getEventTypeLabel = (eventType: string) => {
   const labels: Record<string, string> = {
@@ -37,13 +36,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
 }) => {
   const eventActions = event.actions || event.available_actions || [];
   const scopeKey = `timeline-${itemKey}`;
-  const resolvedContext =
-    event.binder_id !== null
-      ? { entityPath: "/binders", entityId: event.binder_id, scopeKey }
-      : event.charge_id !== null
-        ? { entityPath: "/charges", entityId: event.charge_id, scopeKey }
-        : { scopeKey };
-  const resolvedActions = mapActions(eventActions, { scopeKey: `timeline-${event.id}` });
+  const resolvedActions = mapActions(eventActions, { scopeKey });
 
   return (
     <li className="rounded-md border border-gray-200 p-3">

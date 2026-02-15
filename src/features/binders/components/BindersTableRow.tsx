@@ -3,7 +3,8 @@ import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { mapActions } from "../../../lib/actions/mapActions";
 import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
-import { formatDate, getStatusBadge } from "./bindersTable.utils";
+import { formatDate } from "../../../utils/utils";
+import { getStatusBadge } from "./bindersTable.utils";
 import type { BindersTableRowProps } from "../types";
 
 const BindersTableRowView: React.FC<BindersTableRowProps> = ({

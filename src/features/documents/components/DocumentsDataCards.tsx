@@ -1,4 +1,3 @@
-import React from "react";
 import { Card } from "../../../components/ui/Card";
 import type { OperationalSignalsResponse, PermanentDocumentResponse } from "../../../api/documents.api";
 import { formatDateTime } from "../../../utils/utils";

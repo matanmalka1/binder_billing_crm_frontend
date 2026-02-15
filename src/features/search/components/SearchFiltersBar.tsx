@@ -1,4 +1,3 @@
-import React from "react";
 import { SearchFiltersPrimaryFields } from "./SearchFiltersPrimaryFields";
 import { SearchFiltersStatusFields } from "./SearchFiltersStatusFields";
 import type { SearchFiltersBarProps } from "../types";

@@ -1,4 +1,3 @@
-import React from "react";
 import { Card } from "../components/ui/Card";
 import { AccessDenied } from "../components/auth/AccessDenied";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
@@ -36,7 +35,9 @@ export const Dashboard: React.FC = () => {
       {dashboard.status === "error" && !denied && (
         <Card className="min-h-[200px] flex items-center justify-center">
           <div className="text-center">
-            <p className="text-lg font-medium text-gray-700">שגיאה בטעינת לוח הבקרה</p>
+            <p className="text-lg font-medium text-gray-700">
+              שגיאה בטעינת לוח הבקרה
+            </p>
             <p className="mt-4 text-sm text-orange-700">{dashboard.message}</p>
           </div>
         </Card>
@@ -52,9 +53,13 @@ export const Dashboard: React.FC = () => {
         />
       )}
 
-      {dashboard.status === "ok" && dashboard.data?.role_view === "secretary" && (
-        <SecretaryDashboardContent data={dashboard.data} attentionItems={attentionItems} />
-      )}
+      {dashboard.status === "ok" &&
+        dashboard.data?.role_view === "secretary" && (
+          <SecretaryDashboardContent
+            data={dashboard.data}
+            attentionItems={attentionItems}
+          />
+        )}
 
       {dashboard.status === "idle" && (
         <Card className="min-h-[200px] flex items-center justify-center">

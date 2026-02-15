@@ -1,4 +1,3 @@
-import React from "react";
 import { Badge } from "../../../components/ui/Badge";
 import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
 import { getResultTypeLabel } from "../../../constants/filterOptions.constants";

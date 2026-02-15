@@ -1,20 +1,19 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { usePaginationParams } from "./usePaginationParams";
 import type { QueryKey } from "@tanstack/react-query";
+import { usePaginationParams } from "./usePaginationParams";
+import type { PaginatedResponse } from "../types/common";
 
-interface Options<F, P, R> {
+interface Options<F, P, T> {
   parseFilters: (searchParams: URLSearchParams, page: number, pageSize: number) => F;
   buildParams: (filters: F) => P;
   queryKey: (params: P) => QueryKey;
-  queryFn: (params: P) => Promise<R>;
+  queryFn: (params: P) => Promise<PaginatedResponse<T>>;
   defaultPage?: number;
   defaultPageSize?: number;
 }
 
-export const usePaginatedResource = <F, P, R extends { items?: unknown[]; total?: number }>(
-  options: Options<F, P, R>,
-) => {
+export const usePaginatedResource = <F, P, T>(options: Options<F, P, T>) => {
   const {
     parseFilters,
     buildParams,
@@ -43,7 +42,7 @@ export const usePaginatedResource = <F, P, R extends { items?: unknown[]; total?
   };
 
   return {
-    data: query.data?.items ?? [],
+    data: query.data?.items ?? ([] as T[]),
     total: query.data?.total ?? 0,
     error: query.error,
     loading: query.isPending,

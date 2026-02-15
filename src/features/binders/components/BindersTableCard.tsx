@@ -1,4 +1,3 @@
-import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { BindersTableRow } from "./BindersTableRow";
 import type { BindersTableCardProps } from "../types";

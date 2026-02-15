@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { Card } from "../components/ui/Card";
 import { ErrorCard } from "../components/ui/ErrorCard";
@@ -33,7 +32,10 @@ export const ClientTimeline: React.FC = () => {
       <header className="space-y-2">
         <h2 className="text-2xl font-bold text-gray-900">ציר זמן לקוח</h2>
         <p className="text-gray-600">מזהה לקוח: {clientId ?? "—"}</p>
-        <Link to="/clients" className="inline-block text-sm font-medium text-blue-600">
+        <Link
+          to="/clients"
+          className="inline-block text-sm font-medium text-blue-600"
+        >
           חזרה לרשימת לקוחות
         </Link>
       </header>

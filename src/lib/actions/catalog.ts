@@ -3,7 +3,6 @@ import { ENDPOINTS } from "../../api/endpoints";
 import { isPositiveInt } from "../../utils/utils";
 import type { ActionId, ActionMethod } from "./types";
 
-
 export interface CanonicalActionContext {
   binderId?: number | null;
   chargeId?: number | null;

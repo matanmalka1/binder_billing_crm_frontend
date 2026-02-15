@@ -1,4 +1,3 @@
-import React from "react";
 import { Badge } from "../../../components/ui/Badge";
 import { getStatusLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
@@ -10,5 +9,3 @@ export const getStatusBadge = (status: string): React.ReactNode => {
   if (status === "overdue") return <Badge variant="error">{label}</Badge>;
   return <Badge variant="neutral">{label}</Badge>;
 };
-
-export { formatDate };

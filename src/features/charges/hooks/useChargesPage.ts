@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   chargesApi,
+  type ChargeResponse,
+  type ChargesListParams,
   type CreateChargePayload,
 } from "../../../api/charges.api";
 import { chargesKeys } from "../queryKeys";
@@ -11,7 +13,16 @@ import { usePaginatedResource } from "../../../hooks/usePaginatedResource";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
-  const { data, total, error, loading, filters, setFilter } = usePaginatedResource({
+  const { data, total, error, loading, filters, setFilter, setSearchParams } = usePaginatedResource<
+    {
+      client_id: string;
+      status: string;
+      page: number;
+      page_size: number;
+    },
+    ChargesListParams,
+    ChargeResponse
+  >({
     parseFilters: (params, page, pageSize) => ({
       client_id: params.get("client_id") ?? "",
       status: params.get("status") ?? "",
@@ -96,6 +107,7 @@ export const useChargesPage = () => {
     loading,
     runAction,
     setFilter,
+    setSearchParams,
     submitCreate,
     total,
   };
