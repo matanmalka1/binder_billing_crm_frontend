@@ -24,8 +24,8 @@ export const parsePositiveInt = (value: string | null, fallback: number): number
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 };
 
-export const isPositiveInt = (value: unknown): value is number => {
-  return typeof value === "number" && Number.isInteger(value) && value > 0;
+export const isPositiveInt = (value: number | null | undefined): value is number => {
+  return value != null && value > 0;
 };
 
 // ============================================================================
@@ -49,17 +49,15 @@ export const formatDateTime = (value: string | null): string => {
 // ============================================================================
 
 const extractDetailText = (detail: unknown): string | null => {
-  const detailText = toText(detail);
-  if (detailText) return detailText;
+  // Backend responses typically return either a plain string or
+  // an array of error objects with `detail`/`msg` fields. Keep parsing minimal.
+  const direct = toText(detail);
+  if (direct) return direct;
 
   if (Array.isArray(detail) && detail.length > 0) {
-    const first = detail[0];
+    const first = detail[0] as { detail?: unknown; msg?: unknown } | unknown;
     if (first && typeof first === "object") {
-      const firstMessage = toText((first as { msg?: unknown }).msg);
-      if (firstMessage) return firstMessage;
-
-      const nestedDetail = toText((first as { detail?: unknown }).detail);
-      if (nestedDetail) return nestedDetail;
+      return toText((first as { detail?: unknown }).detail) ?? toText((first as { msg?: unknown }).msg);
     }
   }
 

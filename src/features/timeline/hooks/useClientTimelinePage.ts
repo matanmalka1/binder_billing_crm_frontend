@@ -68,13 +68,12 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     [actionMutation],
   );
 
-  const { cancelPendingAction, confirmPendingAction, pendingAction, requestConfirmation } =
-    useConfirmableAction(runAction);
-
-  const handleAction = (action: ActionCommand) => {
-    if (requestConfirmation(action, Boolean(action.confirm))) return;
-    void runAction(action);
-  };
+  const {
+    cancelPendingAction,
+    confirmPendingAction,
+    handleAction,
+    pendingAction,
+  } = useConfirmableAction(runAction, (action) => Boolean(action.confirm));
 
   return {
     activeActionKey,

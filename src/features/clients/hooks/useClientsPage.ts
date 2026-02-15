@@ -1,45 +1,47 @@
-import { useCallback, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { clientsApi, type ClientResponse, type ListClientsParams } from "../../../api/clients.api";
 import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/utils";
+import { parsePositiveInt } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { clientsKeys } from "../queryKeys";
-import { usePaginatedResource } from "../../../hooks/usePaginatedResource";
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
-  const { data, total, error, loading, filters, setFilter, setPage } = usePaginatedResource<
-    {
-      has_signals: string;
-      status: string;
-      page: number;
-      page_size: number;
-    },
-    ListClientsParams,
-    ClientResponse
-  >({
-    parseFilters: (params, page, pageSize) => ({
-      has_signals: params.get("has_signals") ?? "",
-      status: params.get("status") ?? "",
-      page,
-      page_size: pageSize,
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const filters = useMemo(
+    () => ({
+      has_signals: searchParams.get("has_signals") ?? "",
+      status: searchParams.get("status") ?? "",
+      page: parsePositiveInt(searchParams.get("page"), 1),
+      page_size: parsePositiveInt(searchParams.get("page_size"), 20),
     }),
-    buildParams: (parsed) => ({
+    [searchParams],
+  );
+
+  const apiParams = useMemo<ListClientsParams>(
+    () => ({
       has_signals:
-        parsed.has_signals === "true"
+        filters.has_signals === "true"
           ? true
-          : parsed.has_signals === "false"
+          : filters.has_signals === "false"
             ? false
             : undefined,
-      status: parsed.status || undefined,
-      page: parsed.page,
-      page_size: parsed.page_size,
+      status: filters.status || undefined,
+      page: filters.page,
+      page_size: filters.page_size,
     }),
-    queryKey: (params) => clientsKeys.list(params),
-    queryFn: (params) => clientsApi.list(params),
+    [filters],
+  );
+
+  const listQuery = useQuery({
+    queryKey: clientsKeys.list(apiParams),
+    queryFn: () => clientsApi.list(apiParams),
   });
   const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
 
@@ -51,8 +53,19 @@ export const useClientsPage = () => {
     },
   });
 
-  const handleFilterChange = (name: "has_signals" | "status" | "page_size", value: string) =>
-    setFilter(name, value);
+  const handleFilterChange = (name: "has_signals" | "status" | "page_size", value: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set(name, value);
+    else next.delete(name);
+    next.set("page", "1");
+    setSearchParams(next);
+  };
+
+  const setPage = (nextPage: number) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("page", String(nextPage));
+    setSearchParams(next);
+  };
 
   const runAction = useCallback(
     async (action: ActionCommand) => {
@@ -71,28 +84,24 @@ export const useClientsPage = () => {
     [actionMutation],
   );
 
-  const { cancelPendingAction, confirmPendingAction, pendingAction, requestConfirmation } =
-    useConfirmableAction(runAction);
-
-  const handleActionClick = useCallback(
-    (action: ActionCommand) => {
-      if (requestConfirmation(action, Boolean(action.confirm))) return;
-      void runAction(action);
-    },
-    [requestConfirmation, runAction],
-  );
+  const {
+    cancelPendingAction,
+    confirmPendingAction,
+    handleAction: handleActionClick,
+    pendingAction,
+  } = useConfirmableAction(runAction, (action) => Boolean(action.confirm));
 
   return {
     activeActionKey,
-    clients: data,
-    error: error ? getRequestErrorMessage(error, "שגיאה בטעינת רשימת לקוחות") : null,
+    clients: listQuery.data?.items ?? ([] as ClientResponse[]),
+    error: listQuery.error ? getRequestErrorMessage(listQuery.error, "שגיאה בטעינת רשימת לקוחות") : null,
     filters,
     handleActionClick,
     handleFilterChange,
-    loading,
+    loading: listQuery.isPending,
     pendingAction,
     setPage,
-    total,
+    total: listQuery.data?.total ?? 0,
     runAction,
     cancelPendingAction,
     confirmPendingAction,

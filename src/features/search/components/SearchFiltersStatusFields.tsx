@@ -1,6 +1,5 @@
 import { Select } from "../../../components/ui/Select";
 import {
-  BOOLEAN_OPTIONS,
   PAGE_SIZE_OPTIONS,
   SIGNAL_TYPE_OPTIONS,
   SLA_STATE_OPTIONS,
@@ -44,7 +43,11 @@ export const SearchFiltersStatusFields: React.FC<SearchFiltersStatusFieldsProps>
           label="יש אותות"
           value={filters.has_signals}
           onChange={(event) => onFilterChange("has_signals", event.target.value)}
-          options={BOOLEAN_OPTIONS}
+          options={[
+            { value: "", label: "הכל" },
+            { value: "true", label: "כן" },
+            { value: "false", label: "לא" },
+          ]}
         />
         <Select
           label="גודל עמוד"

@@ -33,12 +33,6 @@ export const SIGNAL_TYPE_OPTIONS: Option[] = [
   { value: "idle_binder", label: getSignalLabel("idle_binder") },
 ];
 
-export const BOOLEAN_OPTIONS: Option[] = [
-  { value: "", label: "הכל" },
-  { value: "true", label: "כן" },
-  { value: "false", label: "לא" },
-];
-
 export const PAGE_SIZE_OPTIONS: Option[] = [
   { value: "20", label: "20" },
   { value: "50", label: "50" },

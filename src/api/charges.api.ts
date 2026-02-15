@@ -42,12 +42,6 @@ export interface CreateChargePayload {
   currency?: string;
 }
 
-export const isAdvisorCharge = (
-  charge: ChargeResponse,
-): charge is ChargeAdvisorResponse => {
-  return "amount" in charge && typeof charge.amount === "number";
-};
-
 export const chargesApi = {
   list: async (params: ChargesListParams): Promise<ChargesListResponse> => {
     const response = await api.get<ChargesListResponse>(ENDPOINTS.charges, {

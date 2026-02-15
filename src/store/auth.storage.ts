@@ -9,18 +9,7 @@ export const parseStoredUser = (): AuthUser | null => {
   if (!raw) return null;
 
   try {
-    const parsed = JSON.parse(raw) as Partial<AuthUser>;
-    if (
-      typeof parsed?.id === "number" &&
-      typeof parsed?.full_name === "string" &&
-      (parsed?.role === "advisor" || parsed?.role === "secretary")
-    ) {
-      return {
-        id: parsed.id,
-        full_name: parsed.full_name,
-        role: parsed.role,
-      };
-    }
+    return JSON.parse(raw) as AuthUser;
   } catch {
     localStorage.removeItem(AUTH_USER_STORAGE_KEY);
   }

@@ -1,4 +1,7 @@
 import type { ListClientsParams } from "../../api/clients.api";
-import { createListDetailKeys } from "../../utils/queryKeys";
 
-export const clientsKeys = createListDetailKeys<ListClientsParams>("clients");
+export const clientsKeys = {
+  list: (filters: ListClientsParams) => ["clients", "list", filters] as const,
+  detail: (id: number) => ["clients", "detail", id] as const,
+  lists: () => ["clients", "list"] as const,
+};

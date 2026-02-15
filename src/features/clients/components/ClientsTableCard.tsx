@@ -1,25 +1,23 @@
 import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/Card";
-import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { mapActions } from "../../../lib/actions/mapActions";
 import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import type { ClientsTableCardProps } from "../types";
 import { formatDate } from "../../../utils/utils";
+import { StatusBadge } from "../../../components/ui/StatusBadge";
 
-const getStatusBadge = (status: string) => {
-  const label = getClientStatusLabel(status);
-  switch (status) {
-    case "active":
-      return <Badge variant="success">{label}</Badge>;
-    case "frozen":
-      return <Badge variant="warning">{label}</Badge>;
-    case "closed":
-      return <Badge variant="neutral">{label}</Badge>;
-    default:
-      return <Badge variant="neutral">{label}</Badge>;
-  }
-};
+const getStatusBadge = (status: string) => (
+  <StatusBadge
+    status={status}
+    getLabel={getClientStatusLabel}
+    variantMap={{
+      active: "success",
+      frozen: "warning",
+      closed: "neutral",
+    }}
+  />
+);
 
 export const ClientsTableCard: React.FC<ClientsTableCardProps> = ({
   clients,

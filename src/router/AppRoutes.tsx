@@ -14,7 +14,7 @@ import { Login } from "../pages/Login";
 import { Header } from "../components/layout/Header";
 import { Sidebar } from "../components/layout/Sidebar";
 import { PageLayout } from "../components/layout/PageLayout";
-import { RoleGuard } from "../components/auth/RoleGuard";
+import { AccessDenied } from "../components/auth/AccessDenied";
 
 const AuthExpiredNavigationHandler: React.FC = () => {
   const navigate = useNavigate();
@@ -58,6 +58,8 @@ const AuthenticatedLayout: React.FC = () => {
 };
 
 export const AppRoutes: React.FC = () => {
+  const { user } = useAuthStore();
+
   return (
     <>
       <AuthExpiredNavigationHandler />
@@ -70,9 +72,7 @@ export const AppRoutes: React.FC = () => {
             <Route
               path="dashboard/overview"
               element={
-                <RoleGuard allow={["advisor"]}>
-                  <Dashboard />
-                </RoleGuard>
+                user?.role === "advisor" ? <Dashboard /> : <AccessDenied />
               }
             />
             <Route path="binders" element={<Binders />} />

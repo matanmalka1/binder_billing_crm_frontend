@@ -1,15 +1,5 @@
 export type ActionMethod = "post" | "patch" | "put" | "delete";
 
-export type ActionId =
-  | "receive"
-  | "return"
-  | "ready"
-  | "freeze"
-  | "activate"
-  | "mark_paid"
-  | "issue_charge"
-  | "cancel_charge";
-
 export interface BackendAction {
   key: string;
   label?: string;
@@ -38,7 +28,7 @@ export interface ActionConfirmConfig {
 export interface ActionCommand {
   key: string;
   uiKey: string;
-  id: ActionId | "custom";
+  id: string;
   label: string;
   method: ActionMethod;
   endpoint: string;

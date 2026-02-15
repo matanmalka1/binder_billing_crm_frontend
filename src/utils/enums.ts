@@ -1,5 +1,3 @@
-import { getActionLabel as getCanonicalActionLabel } from "../lib/actions/catalog";
-
 /**
  * Label mappers for enum values
  *
@@ -74,6 +72,17 @@ export const getSignalLabel = (signal: string): string => {
   return labels[signal] || "—";
 };
 
+const ACTION_LABELS: Record<string, string> = {
+  receive: "קליטת תיק",
+  ready: "מוכן לאיסוף",
+  return: "החזרת תיק",
+  freeze: "הקפאת לקוח",
+  activate: "הפעלת לקוח",
+  mark_paid: "סימון חיוב כשולם",
+  issue_charge: "הנפקת חיוב",
+  cancel_charge: "ביטול חיוב",
+};
+
 export const getActionLabel = (action: string): string => {
-  return getCanonicalActionLabel(action);
+  return ACTION_LABELS[action] || "—";
 };

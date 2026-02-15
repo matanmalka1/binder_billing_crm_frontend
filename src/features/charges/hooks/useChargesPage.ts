@@ -1,4 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
   chargesApi,
@@ -8,35 +10,35 @@ import {
 } from "../../../api/charges.api";
 import { chargesKeys } from "../queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
-import { getRequestErrorMessage } from "../../../utils/utils";
-import { usePaginatedResource } from "../../../hooks/usePaginatedResource";
+import { getRequestErrorMessage, parsePositiveInt } from "../../../utils/utils";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
-  const { data, total, error, loading, filters, setFilter, setSearchParams } = usePaginatedResource<
-    {
-      client_id: string;
-      status: string;
-      page: number;
-      page_size: number;
-    },
-    ChargesListParams,
-    ChargeResponse
-  >({
-    parseFilters: (params, page, pageSize) => ({
-      client_id: params.get("client_id") ?? "",
-      status: params.get("status") ?? "",
-      page,
-      page_size: pageSize,
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const filters = useMemo(
+    () => ({
+      client_id: searchParams.get("client_id") ?? "",
+      status: searchParams.get("status") ?? "",
+      page: parsePositiveInt(searchParams.get("page"), 1),
+      page_size: parsePositiveInt(searchParams.get("page_size"), 20),
     }),
-    buildParams: (parsed) => ({
-      client_id: parsed.client_id ? Number(parsed.client_id) : undefined,
-      status: parsed.status || undefined,
-      page: parsed.page,
-      page_size: parsed.page_size,
+    [searchParams],
+  );
+
+  const apiParams = useMemo<ChargesListParams>(
+    () => ({
+      client_id: filters.client_id ? Number(filters.client_id) : undefined,
+      status: filters.status || undefined,
+      page: filters.page,
+      page_size: filters.page_size,
     }),
-    queryKey: (params) => chargesKeys.list(params),
-    queryFn: (params) => chargesApi.list(params),
+    [filters],
+  );
+
+  const listQuery = useQuery({
+    queryKey: chargesKeys.list(apiParams),
+    queryFn: () => chargesApi.list(apiParams),
   });
   const { user } = useAuthStore();
   const isAdvisor = user?.role === "advisor";
@@ -80,6 +82,14 @@ export const useChargesPage = () => {
     }
   };
 
+  const setFilter = (key: string, value: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set(key, value);
+    else next.delete(key);
+    next.set("page", "1");
+    setSearchParams(next);
+  };
+
   const submitCreate = async (payload: CreateChargePayload): Promise<boolean> => {
     if (!isAdvisor) {
       return false;
@@ -96,19 +106,19 @@ export const useChargesPage = () => {
 
   return {
     actionLoadingId: actionMutation.isPending ? (actionMutation.variables?.chargeId ?? null) : null,
-    charges: data,
+    charges: listQuery.data?.items ?? ([] as ChargeResponse[]),
     createError: createMutation.error
       ? getRequestErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")
       : null,
     createLoading: createMutation.isPending,
-    error: error ? getRequestErrorMessage(error, "שגיאה בטעינת רשימת חיובים") : null,
+    error: listQuery.error ? getRequestErrorMessage(listQuery.error, "שגיאה בטעינת רשימת חיובים") : null,
     filters,
     isAdvisor,
-    loading,
+    loading: listQuery.isPending,
     runAction,
     setFilter,
     setSearchParams,
     submitCreate,
-    total,
+    total: listQuery.data?.total ?? 0,
   };
 };

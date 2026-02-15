@@ -4,7 +4,7 @@ interface ModalProps {
   open: boolean;
   title: string;
   children: React.ReactNode;
-  footer?: React.ReactNode;
+  footer: React.ReactNode;
   onClose: () => void;
 }
 
@@ -35,7 +35,7 @@ export const Modal: React.FC<ModalProps> = ({
             </button>
           </div>
           <div className="py-4">{children}</div>
-          {footer ? <div className="border-t border-gray-100 pt-3">{footer}</div> : null}
+          <div className="border-t border-gray-100 pt-3">{footer}</div>
         </Card>
       </div>
     </div>

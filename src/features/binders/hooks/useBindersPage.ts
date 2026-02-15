@@ -67,16 +67,12 @@ export const useBindersPage = () => {
     [actionMutation],
   );
 
-  const { cancelPendingAction, confirmPendingAction, pendingAction, requestConfirmation } =
-    useConfirmableAction(runAction);
-
-  const handleActionClick = useCallback(
-    (action: ActionCommand) => {
-      if (requestConfirmation(action, Boolean(action.confirm))) return;
-      void runAction(action);
-    },
-    [requestConfirmation, runAction],
-  );
+  const {
+    cancelPendingAction,
+    confirmPendingAction,
+    handleAction: handleActionClick,
+    pendingAction,
+  } = useConfirmableAction(runAction, (action) => Boolean(action.confirm));
 
   return {
     activeActionKey,

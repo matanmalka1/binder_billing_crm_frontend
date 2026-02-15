@@ -1,4 +1,7 @@
 import type { ChargesListParams } from "../../api/charges.api";
-import { createListDetailKeys } from "../../utils/queryKeys";
 
-export const chargesKeys = createListDetailKeys<ChargesListParams>("charges");
+export const chargesKeys = {
+  list: (filters: ChargesListParams) => ["charges", "list", filters] as const,
+  detail: (id: number) => ["charges", "detail", id] as const,
+  lists: () => ["charges", "list"] as const,
+};

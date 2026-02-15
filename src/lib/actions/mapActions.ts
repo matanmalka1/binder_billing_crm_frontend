@@ -1,6 +1,22 @@
 import { useAuthStore } from "../../store/auth.store";
-import { getActionLabel, isActionAllowed, normalizeActionId } from "./catalog";
-import type { ActionCommand, ActionId, BackendAction } from "./types";
+import { getActionLabel } from "../../utils/enums";
+import type { ActionCommand, BackendAction } from "./types";
+
+const ADVISOR_ONLY_KEYS = new Set([
+  "freeze",
+  "mark_paid",
+  "issue_charge",
+  "cancel_charge",
+]);
+
+const isActionAllowed = (
+  actionKey: string,
+  role: string | null | undefined,
+): boolean => {
+  if (!role) return true;
+  if (role === "advisor") return true;
+  return !ADVISOR_ONLY_KEYS.has(actionKey);
+};
 
 const buildConfirm = (action: BackendAction) => {
   const needsConfirm = action.confirm_required === true || action.confirm_message || action.confirm_title;
@@ -23,8 +39,7 @@ export const mapActions = (
 
   return actions
     .map((action, index) => {
-      const id = normalizeActionId(action.key) as ActionId | null;
-      if (!isActionAllowed(id, role)) return null;
+      if (!isActionAllowed(action.key, role)) return null;
       if (!action.endpoint) return null;
 
       const uiKey = `${scopeKey || "action"}-${index}-${action.key}`;
@@ -32,8 +47,8 @@ export const mapActions = (
       return {
         key: action.key,
         uiKey,
-        id: id ?? "custom",
-        label: action.label || getActionLabel(id ?? action.key),
+        id: action.key,
+        label: action.label || getActionLabel(action.key),
         method: action.method,
         endpoint: action.endpoint,
         payload: action.payload ?? undefined,
