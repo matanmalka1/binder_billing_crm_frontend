@@ -5,6 +5,7 @@ import { useAuthStore } from "../store/auth.store";
 import { Dashboard } from "../pages/Dashboard";
 import { Binders } from "../pages/Binders";
 import { Clients } from "../pages/Clients";
+import { ClientDetails } from "../pages/ClientDetails";
 import { Search } from "../pages/Search";
 import { ClientTimeline } from "../pages/ClientTimeline";
 import { Charges } from "../pages/Charges";
@@ -34,27 +35,21 @@ const AuthExpiredNavigationHandler: React.FC = () => {
 
 const ProtectedRoute: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
   return <Outlet />;
 };
 
-const AuthenticatedLayout: React.FC = () => {
-  return (
-    <div className="flex flex-1 overflow-hidden h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <PageLayout>
-          <Outlet />
-        </PageLayout>
-      </div>
+const AuthenticatedLayout: React.FC = () => (
+  <div className="flex flex-1 overflow-hidden h-screen">
+    <Sidebar />
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <Header />
+      <PageLayout>
+        <Outlet />
+      </PageLayout>
     </div>
-  );
-};
+  </div>
+);
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -68,6 +63,7 @@ export const AppRoutes: React.FC = () => {
             <Route index element={<Dashboard />} />
             <Route path="binders" element={<Binders />} />
             <Route path="clients" element={<Clients />} />
+            <Route path="clients/:clientId" element={<ClientDetails />} />
             <Route path="clients/:clientId/timeline" element={<ClientTimeline />} />
             <Route path="search" element={<Search />} />
             <Route path="charges" element={<Charges />} />

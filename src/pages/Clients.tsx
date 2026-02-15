@@ -1,14 +1,29 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
 import { Pagination } from "../components/ui/Pagination";
 import { DataTable } from "../components/ui/DataTable";
+import { AccessBanner } from "../components/ui/AccessBanner";
+import { Button } from "../components/ui/Button";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { ClientsFiltersBar } from "../features/clients/components/ClientsFiltersBar";
+import { CreateClientModal } from "../features/clients/components/CreateClientModal";
 import { buildClientColumns } from "../features/clients/components/clientColumns";
 import { useClientsPage } from "../features/clients/hooks/useClientsPage";
+import { useAuthStore } from "../store/auth.store";
+import { clientsApi, type CreateClientPayload } from "../api/clients.api";
+import { toast } from "../utils/toast";
+import { getRequestErrorMessage } from "../utils/utils";
 
 export const Clients: React.FC = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user } = useAuthStore();
+  const isAdvisor = user?.role === "advisor";
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
   const {
     activeActionKey,
     clients,
@@ -24,21 +39,47 @@ export const Clients: React.FC = () => {
     total,
   } = useClientsPage();
 
+  const createMutation = useMutation({
+    mutationFn: (payload: CreateClientPayload) => clientsApi.create(payload),
+    onSuccess: async (client) => {
+      toast.success("לקוח נוצר בהצלחה");
+      setShowCreateModal(false);
+      await queryClient.invalidateQueries({ queryKey: ["clients"] });
+      navigate(`/clients/${client.id}`);
+    },
+    onError: (err) =>
+      toast.error(getRequestErrorMessage(err, "שגיאה ביצירת לקוח")),
+  });
+
   const columns = useMemo(
-    () =>
-      buildClientColumns({
-        activeActionKey,
-        handleActionClick,
-      }),
+    () => buildClientColumns({ activeActionKey, handleActionClick }),
     [activeActionKey, handleActionClick],
   );
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title="לקוחות" 
+      <PageHeader
+        title="לקוחות"
         description="רשימת כל הלקוחות במערכת"
+        actions={
+          isAdvisor ? (
+            <Button
+              variant="primary"
+              onClick={() => setShowCreateModal(true)}
+              className="gap-2"
+            >
+              לקוח חדש
+            </Button>
+          ) : null
+        }
       />
+
+      {!isAdvisor && (
+        <AccessBanner
+          variant="info"
+          message="יצירה ועריכה של לקוחות זמינה ליועצים בלבד."
+        />
+      )}
 
       <FilterBar>
         <ClientsFiltersBar
@@ -63,6 +104,7 @@ export const Clients: React.FC = () => {
           data={clients}
           columns={columns}
           getRowKey={(client) => client.id}
+          onRowClick={(client) => navigate(`/clients/${client.id}`)}
           isLoading={loading}
           emptyMessage="אין לקוחות להצגה"
         />
@@ -81,6 +123,17 @@ export const Clients: React.FC = () => {
           />
         )}
       </div>
+
+      {isAdvisor && (
+        <CreateClientModal
+          open={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onSubmit={async (data) => {
+            await createMutation.mutateAsync(data);
+          }}
+          isLoading={createMutation.isPending}
+        />
+      )}
 
       <ConfirmDialog
         open={Boolean(pendingAction)}
