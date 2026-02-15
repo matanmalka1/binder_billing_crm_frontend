@@ -81,7 +81,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
           : null,
     events: timelineQuery.data?.events ?? [],
     handleAction,
-    loading: hasValidClient ? timelineQuery.isPending : false,
+    loading: timelineQuery.isPending,
     page,
     pageSize,
     pendingAction,

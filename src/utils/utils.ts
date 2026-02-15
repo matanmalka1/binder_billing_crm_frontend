@@ -48,45 +48,15 @@ export const formatDateTime = (value: string | null): string => {
 // API ERROR EXTRACTION
 // ============================================================================
 
-const extractDetailText = (detail: unknown): string | null => {
-  // Backend errors arrive either as a plain string or a Pydantic-style array
-  // like [{ msg: "...", loc: [...] }]; keep parsing minimal and predictable.
+const extractDetail = (error: unknown): string | null => {
+  if (!axios.isAxiosError<BackendErrorEnvelope>(error)) return null;
+  const detail = error.response?.data?.detail;
   if (typeof detail === "string") return detail.trim() || null;
-
   if (Array.isArray(detail) && detail[0] && typeof detail[0] === "object") {
-    const maybeMsg = (detail[0] as { msg?: unknown }).msg;
-    if (typeof maybeMsg === "string") return maybeMsg.trim() || null;
+    const msg = (detail[0] as { msg?: unknown }).msg;
+    if (typeof msg === "string") return msg.trim() || null;
   }
-
   return null;
-};
-
-const getApiErrorMessage = (error: unknown, fallbackMessage: string): string => {
-  if (axios.isAxiosError<BackendErrorEnvelope>(error)) {
-    const responseData = error.response?.data;
-
-    const detailMessage = extractDetailText(responseData?.detail);
-    if (detailMessage) return detailMessage;
-
-    const messageText = toText(responseData?.message);
-    if (messageText) return messageText;
-
-    const errorText = toText(responseData?.error);
-    if (errorText) return errorText;
-
-    if (responseData?.error && typeof responseData.error === "object") {
-      const nestedDetail = extractDetailText(
-        (responseData.error as { detail?: unknown }).detail,
-      );
-      if (nestedDetail) return nestedDetail;
-    }
-  }
-
-  if (error instanceof Error && error.message) {
-    return error.message;
-  }
-
-  return fallbackMessage;
 };
 
 // ============================================================================
@@ -114,7 +84,14 @@ const resolveErrorMessage = (
     if (status === 500) return "שגיאת שרת פנימית. נסה שוב בעוד מספר רגעים";
   }
 
-  return getApiErrorMessage(error, fallbackMessage);
+  const detail = extractDetail(error);
+  if (detail) return detail;
+
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  return fallbackMessage;
 };
 
 export const getErrorMessage = (
