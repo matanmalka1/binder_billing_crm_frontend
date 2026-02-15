@@ -101,13 +101,13 @@ export const useDocumentsPage = () => {
     loading,
     selectedClientId,
     setClient,
-    signals: (signalsQuery.data ??
-      ({
+    signals:
+      signalsQuery.data ?? {
         client_id: 0,
         missing_documents: [],
         binders_nearing_sla: [],
         binders_overdue: [],
-      } as OperationalSignalsResponse)),
+      },
     submitUpload,
     uploadError,
     uploading: uploadMutation.isPending,

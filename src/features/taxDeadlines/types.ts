@@ -1,10 +1,10 @@
-export interface TaxDeadlineFilters {
+import type { PagedFilters } from "../../types/filters";
+
+export type TaxDeadlineFilters = PagedFilters<{
   client_id: string;
   deadline_type: string;
   status: string;
-  page: number;
-  page_size: number;
-}
+}>;
 
 export interface CreateTaxDeadlineForm {
   client_id: string;

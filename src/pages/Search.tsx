@@ -136,9 +136,7 @@ export const Search: React.FC = () => {
         <DataTable
           data={results}
           columns={columns}
-          getRowKey={(result, index) =>
-            `${result.result_type}-${result.client_id}-${result.binder_id}-${index}`
-          }
+          getRowKey={(result) => `${result.result_type}-${result.client_id}-${result.binder_id}`}
           isLoading={loading}
           emptyMessage="לא נמצאו תוצאות. נסה להרחיב את קריטריוני החיפוש"
         />

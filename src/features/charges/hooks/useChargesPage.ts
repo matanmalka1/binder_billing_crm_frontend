@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
@@ -16,25 +15,19 @@ export const useChargesPage = () => {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const filters = useMemo(
-    () => ({
-      client_id: searchParams.get("client_id") ?? "",
-      status: searchParams.get("status") ?? "",
-      page: parsePositiveInt(searchParams.get("page"), 1),
-      page_size: parsePositiveInt(searchParams.get("page_size"), 20),
-    }),
-    [searchParams],
-  );
+  const filters = {
+    client_id: searchParams.get("client_id") ?? "",
+    status: searchParams.get("status") ?? "",
+    page: parsePositiveInt(searchParams.get("page"), 1),
+    page_size: parsePositiveInt(searchParams.get("page_size"), 20),
+  };
 
-  const apiParams = useMemo<ChargesListParams>(
-    () => ({
-      client_id: toOptionalNumber(filters.client_id),
-      status: toOptionalString(filters.status),
-      page: filters.page,
-      page_size: filters.page_size,
-    }),
-    [filters],
-  );
+  const apiParams: ChargesListParams = {
+    client_id: toOptionalNumber(filters.client_id),
+    status: toOptionalString(filters.status),
+    page: filters.page,
+    page_size: filters.page_size,
+  };
 
   const listQuery = useQuery({
     queryKey: ["charges", "list", apiParams] as const,
@@ -106,7 +99,7 @@ export const useChargesPage = () => {
 
   return {
     actionLoadingId: actionMutation.isPending ? (actionMutation.variables?.chargeId ?? null) : null,
-    charges: listQuery.data?.items ?? ([] as ChargeResponse[]),
+    charges: listQuery.data?.items ?? [],
     createError: createMutation.error
       ? getErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")
       : null,

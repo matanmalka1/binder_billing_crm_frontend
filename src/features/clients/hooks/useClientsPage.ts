@@ -25,12 +25,7 @@ export const useClientsPage = () => {
 
   const apiParams = useMemo<ListClientsParams>(
     () => ({
-      has_signals:
-        filters.has_signals === "true"
-          ? true
-          : filters.has_signals === "false"
-            ? false
-            : undefined,
+      has_signals: filters.has_signals ? filters.has_signals === "true" : undefined,
       status: filters.status || undefined,
       page: filters.page,
       page_size: filters.page_size,

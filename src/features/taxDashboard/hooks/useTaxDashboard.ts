@@ -6,12 +6,12 @@ export const useTaxDashboard = () => {
   const currentYear = new Date().getFullYear();
 
   const submissionsQuery = useQuery({
-    queryKey: ["tax", "submissions", currentYear],
+    queryKey: ["tax", "submissions", currentYear] as const,
     queryFn: () => taxDashboardApi.getTaxSubmissionsWidget(currentYear),
   });
 
   const deadlinesQuery = useQuery({
-    queryKey: ["tax", "deadlines", "urgent"],
+    queryKey: ["tax", "deadlines", "urgent"] as const,
     queryFn: () => taxDeadlinesApi.getDashboardDeadlines(),
   });
 

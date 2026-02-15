@@ -17,7 +17,7 @@ export interface Column<T> {
 export interface DataTableProps<T> {
   data: T[];
   columns: Column<T>[];
-  getRowKey: (item: T, index: number) => string | number;
+  getRowKey: (item: T) => string | number;
   onRowClick?: (item: T) => void;
   className?: string;
   emptyMessage?: string;
@@ -85,7 +85,7 @@ export const DataTable = <T,>({
           <tbody className="divide-y divide-gray-100">
             {data.map((item, index) => (
               <tr
-                key={getRowKey(item, index)}
+                key={getRowKey(item)}
                 className={cn(
                   "transition-colors",
                   onRowClick && "cursor-pointer hover:bg-gray-50 active:bg-gray-100",

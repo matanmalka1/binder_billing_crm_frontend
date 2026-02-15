@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { chargesApi, type ChargeResponse } from "../../../api/charges.api";
 import { toast } from "../../../utils/toast";
-import { getErrorMessage, isPositiveInt } from "../../../utils/utils";
+import { getErrorMessage, getHttpStatus, isPositiveInt } from "../../../utils/utils";
 export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: boolean) => {
   const queryClient = useQueryClient();
   const [actionError, setActionError] = useState<string | null>(null);
@@ -18,9 +18,7 @@ export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: bo
   });
 
   useEffect(() => {
-    const status = axios.isAxiosError(chargeQuery.error)
-      ? chargeQuery.error.response?.status
-      : null;
+    const status = getHttpStatus(chargeQuery.error);
     if (status === 403) {
       setDenied(true);
       return;
@@ -62,10 +60,8 @@ export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: bo
       setDenied(false);
       await actionMutation.mutateAsync(action);
     } catch (requestError: unknown) {
-      const status = axios.isAxiosError(requestError)
-        ? requestError.response?.status
-        : null;
-      if (typeof status === "number" && status === 403) setDenied(true);
+      const status = getHttpStatus(requestError);
+      if (status === 403) setDenied(true);
       setActionError(getErrorMessage(requestError, "שגיאה בביצוע פעולה"));
     }
   };

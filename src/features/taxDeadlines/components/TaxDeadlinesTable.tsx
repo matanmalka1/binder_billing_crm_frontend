@@ -10,7 +10,7 @@ import {
   getUrgencyColor,
 } from "../../../api/taxDeadlines.utils";
 import { staggerDelay } from "../../../utils/animation";
-import { formatDate } from "../../../utils/utils";
+import { formatDate, cn } from "../../../utils/utils";
 
 interface Props {
   deadlines: TaxDeadlineResponse[];
@@ -151,8 +151,4 @@ export const TaxDeadlinesTable: React.FC<Props> = ({
       </div>
     </Card>
   );
-};
-
-const cn = (...classes: (string | boolean | undefined | null)[]): string => {
-  return classes.filter(Boolean).join(" ");
 };

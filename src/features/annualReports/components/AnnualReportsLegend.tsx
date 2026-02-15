@@ -2,6 +2,7 @@ import { User } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { getReportStageLabel, getStageColor } from "../../../api/annualReports.utils";
 import { STAGE_ORDER } from "../hooks/useAnnualReportsKanban";
+import { cn } from "../../../utils/utils";
 
 export const AnnualReportsLegend: React.FC = () => (
   <Card variant="elevated" className="bg-gradient-to-br from-blue-50 to-purple-50">
@@ -19,6 +20,3 @@ export const AnnualReportsLegend: React.FC = () => (
     </div>
   </Card>
 );
-
-const cn = (...classes: (string | boolean | undefined | null)[]): string =>
-  classes.filter(Boolean).join(" ");

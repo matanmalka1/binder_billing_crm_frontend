@@ -9,7 +9,7 @@ import type {
   DashboardSummaryResponse,
 } from "../../../api/dashboard.api";
 import { useAuthStore } from "../../../store/auth.store";
-import { getErrorMessage, showErrorToast } from "../../../utils/utils";
+import { getErrorMessage, getHttpStatus, showErrorToast } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import type { ActionCommand } from "../../../lib/actions/types";
 
@@ -50,14 +50,8 @@ export const useDashboardPage = () => {
     },
   });
 
-  const getStatusCode = (error: unknown): number | null => {
-    if (!axios.isAxiosError(error)) return null;
-    const status = error.response?.status;
-    return typeof status === "number" ? status : null;
-  };
-
   const denied = useMemo(() => {
-    const queryDenied = getStatusCode(dashboardQuery.error) === 403;
+    const queryDenied = getHttpStatus(dashboardQuery.error) === 403;
     return queryDenied || actionDenied;
   }, [actionDenied, dashboardQuery.error]);
 
@@ -104,7 +98,7 @@ export const useDashboardPage = () => {
     isSecretary,
   ]);
 
-  const attentionItems = (dashboardQuery.data?.attention.items ?? []) as AttentionResponse["items"];
+  const attentionItems = dashboardQuery.data?.attention.items ?? [];
 
   const runQuickAction = useCallback(
     async (action: ActionCommand) => {

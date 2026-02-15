@@ -32,7 +32,7 @@ export const useSearchPage = () => {
       binder_number: filters.binder_number || undefined,
       work_state: filters.work_state || undefined,
       sla_state: filters.sla_state || undefined,
-      signal_type: filters.signal_type.length > 0 ? filters.signal_type : undefined,
+      signal_type: filters.signal_type.length ? filters.signal_type : undefined,
       has_signals:
         filters.has_signals === "true" ? true : filters.has_signals === "false" ? false : undefined,
       page: filters.page,

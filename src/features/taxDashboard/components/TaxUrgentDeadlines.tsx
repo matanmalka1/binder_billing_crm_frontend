@@ -9,8 +9,9 @@ import {
   getUrgencyColor,
   getUrgencyLabel,
 } from "../../../api/taxDeadlines.utils";
-import { formatDate } from "../../../utils/utils";
+import { formatDate, cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
+import { cn } from "../../../utils/utils";
 
 interface Props {
   items: DeadlineUrgentItem[];
@@ -115,6 +116,3 @@ const DeadlineMeta: React.FC<DeadlineMetaProps> = ({ icon, label, children }) =>
     </div>
   </div>
 );
-
-const cn = (...classes: (string | boolean | undefined | null)[]): string =>
-  classes.filter(Boolean).join(" ");

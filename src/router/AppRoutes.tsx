@@ -21,17 +21,22 @@ import { PageLayout } from "../components/layout/PageLayout";
 
 const AuthExpiredNavigationHandler: React.FC = () => {
   const navigate = useNavigate();
+  const navigateRef = useRef(navigate);
+
+  useEffect(() => {
+    navigateRef.current = navigate;
+  }, [navigate]);
 
   useEffect(() => {
     const handleAuthExpired = () => {
       if (!window.location.pathname.startsWith("/login")) {
-        navigate("/login", { replace: true });
+        navigateRef.current("/login", { replace: true });
       }
     };
 
     window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
     return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
-  }, [navigate]);
+  }, []);
 
   return null;
 };

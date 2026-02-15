@@ -1,6 +1,6 @@
-import type { PagedQueryParams } from "../../types/common";
+import type { PagedFilters } from "../../types/filters";
 
-export interface ChargesFilters extends PagedQueryParams {
+export type ChargesFilters = PagedFilters<{
   client_id: string;
   status: string;
-}
+}>;

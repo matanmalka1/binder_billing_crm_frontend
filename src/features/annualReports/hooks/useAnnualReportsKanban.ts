@@ -32,7 +32,7 @@ export const useAnnualReportsKanban = () => {
   const PAGE_SIZE = 6;
 
   const kanbanQuery = useQuery({
-    queryKey: ["tax", "annual-reports", "kanban"],
+    queryKey: ["tax", "annual-reports", "kanban"] as const,
     queryFn: () => annualReportsApi.getKanbanView(),
   });
 

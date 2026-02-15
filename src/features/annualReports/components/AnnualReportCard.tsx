@@ -4,6 +4,7 @@ import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { getReportStageLabel, getStageColor } from "../../../api/annualReports.utils";
 import { staggerDelay } from "../../../utils/animation";
+import { cn } from "../../../utils/utils";
 import type { StageKey } from "../hooks/useAnnualReportsKanban";
 
 interface Props {
@@ -103,6 +104,3 @@ export const AnnualReportCard: React.FC<Props> = ({
     </div>
   </Card>
 );
-
-const cn = (...classes: (string | boolean | undefined | null)[]): string =>
-  classes.filter(Boolean).join(" ");

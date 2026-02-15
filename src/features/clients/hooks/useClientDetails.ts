@@ -62,7 +62,7 @@ export const useClientDetails = ({
   };
 
   return {
-    client: (clientQuery.data as ClientResponse) || null,
+    client: clientQuery.data ?? null,
     isValidId,
     isLoading: clientQuery.isLoading,
     error: clientQuery.error
