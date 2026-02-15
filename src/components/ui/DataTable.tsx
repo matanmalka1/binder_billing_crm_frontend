@@ -21,7 +21,7 @@ export interface DataTableProps<T> {
   rowClassName?: (item: T, index: number) => string;
 }
 
-export function DataTable<T>({
+export const DataTable = <T,>({
   data,
   columns,
   getRowKey,
@@ -30,7 +30,7 @@ export function DataTable<T>({
   emptyMessage = "אין נתונים להצגה",
   isLoading = false,
   rowClassName,
-}: DataTableProps<T>) {
+}: DataTableProps<T>) => {
   if (isLoading) {
     return (
       <Card className={className}>
@@ -122,4 +122,4 @@ export function DataTable<T>({
       </div>
     </Card>
   );
-}
+};
