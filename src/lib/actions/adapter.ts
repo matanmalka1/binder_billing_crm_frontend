@@ -1,4 +1,4 @@
-import { isAdvisorOnlyEndpoint } from "../../contracts/backendContract";
+import { isAdvisorOnlyEndpoint } from "../../contracts/guards";
 import { useAuthStore } from "../../store/auth.store";
 import {
   getActionLabel,
@@ -28,7 +28,6 @@ export interface ResolveContext {
 }
 
 export interface NormalizedIncomingAction {
-  index: number;
   rawToken: string | null;
   tokenSourceField: ActionTokenSourceField | "string" | null;
   key: string;
@@ -138,7 +137,7 @@ const normalizeEntityIds = (
   return { binderId, chargeId, clientId };
 };
 
-export const normalizeBackendAction = (
+const normalizeBackendAction = (
   input: BackendActionInput,
   index: number,
   context: ResolveContext,
@@ -149,7 +148,6 @@ export const normalizeBackendAction = (
     const ids = normalizeEntityIds(null, context);
 
     return {
-      index,
       rawToken: token,
       tokenSourceField: "string",
       key: baseKey,
@@ -170,7 +168,6 @@ export const normalizeBackendAction = (
   const ids = normalizeEntityIds(input, context);
 
   return {
-    index,
     rawToken: token,
     tokenSourceField: sourceField,
     key: baseKey,
@@ -186,7 +183,7 @@ export const normalizeBackendAction = (
   };
 };
 
-export const materializeAction = (
+const materializeAction = (
   normalized: NormalizedIncomingAction,
 ): ActionCommand | null => {
   const actionId = normalizeActionId(normalized.rawToken);
@@ -198,7 +195,7 @@ export const materializeAction = (
   });
 
   const hasCanonical = actionId !== null;
-  const endpoint = hasCanonical ? canonical?.endpoint ?? null : normalized.explicitEndpoint || canonical?.endpoint || null;
+  const endpoint = hasCanonical ? canonical?.endpoint ?? null : normalized.explicitEndpoint || null;
   if (!hasCanonical && !endpoint && normalized.rawToken && import.meta.env.DEV) {
     console.warn(
       `[actions] Dropping unresolved action token "${normalized.rawToken}" (source: ${normalized.tokenSourceField ?? "unknown"}).`,
@@ -227,7 +224,7 @@ export const materializeAction = (
   };
 };
 
-export const resolveActions = (
+const resolveActions = (
   actions: BackendActionInput[] | null | undefined,
   context: ResolveContext,
 ): ActionCommand[] => {

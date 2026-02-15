@@ -1,5 +1,5 @@
 import type { PaginatedResponse } from "../types/common";
-import { ENDPOINTS } from "../contracts/backendContract";
+import { ENDPOINTS } from "../contracts/endpoints";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";
 

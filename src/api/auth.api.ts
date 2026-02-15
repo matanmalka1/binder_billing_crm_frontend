@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../contracts/backendContract";
+import { ENDPOINTS } from "../contracts/endpoints";
 import type { AuthUser } from "../types/common";
 import { api } from "./client";
 

@@ -1,9 +1,9 @@
-import { ENDPOINTS } from "../../contracts/backendContract";
+import { ENDPOINTS } from "../../contracts/endpoints";
 import { api } from "../../api/client";
 import { hasValidReceivePayload } from "./catalog";
 import type { ActionCommand } from "./types";
 
-export const validateActionBeforeRequest = (command: ActionCommand) => {
+const validateActionBeforeRequest = (command: ActionCommand) => {
   const isReceiveAction =
     command.id === "receive" || command.endpoint === ENDPOINTS.binderReceive;
   if (isReceiveAction && !hasValidReceivePayload(command.payload)) {

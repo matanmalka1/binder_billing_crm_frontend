@@ -1,5 +1,5 @@
 import type { UserRole } from "../../types/common";
-import { ENDPOINTS } from "../../contracts/backendContract";
+import { ENDPOINTS } from "../../contracts/endpoints";
 import type { ActionId, ActionMethod } from "./types";
 
 export interface CanonicalActionContext {

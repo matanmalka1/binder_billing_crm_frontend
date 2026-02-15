@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../contracts/backendContract";
+import { ENDPOINTS } from "../contracts/endpoints";
 import { api } from "./client";
 
 export interface PermanentDocumentResponse {

@@ -1,5 +1,5 @@
 import type { UserRole } from "../types/common";
-import { BACKEND_CONTRACT } from "./backendContract";
+import { BACKEND_CONTRACT } from "./contractRegistry";
 import { normalizePath, templateToRegex } from "./pathMatcher";
 import type { EndpointContract, HttpMethod } from "./types";
 

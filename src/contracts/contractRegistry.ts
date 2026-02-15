@@ -6,14 +6,6 @@ import { DASHBOARD_CONTRACT_ENTRIES } from "./contractEntries/dashboard";
 import { SEARCH_TIMELINE_CONTRACT_ENTRIES } from "./contractEntries/searchTimeline";
 import type { EndpointContract } from "./types";
 
-export { API_BASE_PATH, ENDPOINTS } from "./endpoints";
-export type { EndpointContract, EndpointRole, HttpMethod } from "./types";
-export {
-  findEndpointContract,
-  isAdvisorOnlyEndpoint,
-  isRoleAllowedForEndpoint,
-} from "./guards";
-
 export const BACKEND_CONTRACT: EndpointContract[] = [
   ...AUTH_HEALTH_CONTRACT_ENTRIES,
   ...CLIENTS_CONTRACT_ENTRIES,

@@ -3,9 +3,17 @@ import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/Button";
 import { Card } from "../../../components/ui/Card";
 import { formatDateTime } from "../../../utils/datetime";
-import { getChargeAmountText } from "../utils/chargeAmount";
+import { getChargeAmountText } from "../utils/chargeStatus.ts";
 import { canCancel, canIssue, canMarkPaid } from "../utils/chargeStatus";
 import type { ChargeResponse } from "../../../api/charges.api";
+
+
+export interface ChargesFilters {
+  client_id: string;
+  status: string;
+  page: number;
+  page_size: number;
+}
 
 interface ChargesTableCardProps {
   actionLoadingId: number | null;
