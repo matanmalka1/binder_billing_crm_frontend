@@ -6,8 +6,7 @@ import { Button } from "../../../components/ui/Button";
 import { resolveActions } from "../../../lib/actions/adapter";
 import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import type { ClientsTableCardProps } from "../types";
-
-const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString("he-IL");
+import { formatDate } from "../../../utils/utils";
 
 const getStatusBadge = (status: string) => {
   const label = getClientStatusLabel(status);

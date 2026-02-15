@@ -1,6 +1,7 @@
 import React from "react";
 import { Badge } from "../../../components/ui/Badge";
 import { getStatusLabel } from "../../../utils/enums";
+import { formatDate } from "../../../utils/utils";
 
 export const getStatusBadge = (status: string): React.ReactNode => {
   const label = getStatusLabel(status);
@@ -10,5 +11,4 @@ export const getStatusBadge = (status: string): React.ReactNode => {
   return <Badge variant="neutral">{label}</Badge>;
 };
 
-export const formatDate = (dateString: string): string =>
-  new Date(dateString).toLocaleDateString("he-IL");
+export { formatDate };

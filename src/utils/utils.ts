@@ -28,9 +28,16 @@ export const parsePositiveInt = (value: string | null, fallback: number): number
 // DATETIME UTILITIES
 // ============================================================================
 
+const HE_LOCALE = "he-IL";
+
+export const formatDate = (value: string | null): string => {
+  if (!value) return "—";
+  return new Date(value).toLocaleDateString(HE_LOCALE);
+};
+
 export const formatDateTime = (value: string | null): string => {
   if (!value) return "—";
-  return new Date(value).toLocaleString("he-IL");
+  return new Date(value).toLocaleString(HE_LOCALE);
 };
 
 // ============================================================================
