@@ -10,6 +10,7 @@ import { useAuthStore } from "../store/auth.store";
 import { useChargeDetailsPage } from "../features/charges/hooks/useChargeDetailsPage";
 import { getChargeAmountText } from "../features/charges/utils/chargeStatus";
 import { formatDateTime } from "../utils/utils";
+
 export const ChargeDetails: React.FC = () => {
   const { chargeId } = useParams();
   const { user } = useAuthStore();

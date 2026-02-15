@@ -4,9 +4,10 @@ interface CardProps {
   children: React.ReactNode;
   className?: string;
   title?: string;
+  footer?: React.ReactNode;
 }
 
-export const Card: React.FC<CardProps> = ({ children, className, title }) => {
+export const Card: React.FC<CardProps> = ({ children, className, title, footer }) => {
   return (
     <div
       className={cn(
@@ -20,6 +21,9 @@ export const Card: React.FC<CardProps> = ({ children, className, title }) => {
         </div>
       )}
       <div className="p-4">{children}</div>
+      {footer && (
+        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">{footer}</div>
+      )}
     </div>
   );
 };
