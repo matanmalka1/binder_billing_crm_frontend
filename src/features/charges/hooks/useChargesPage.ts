@@ -1,16 +1,13 @@
-import { useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   chargesApi,
-  type ChargesListParams,
   type CreateChargePayload,
 } from "../../../api/charges.api";
 import { chargesKeys } from "../queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
 import { getRequestErrorMessage } from "../../../utils/utils";
 import { usePaginatedResource } from "../../../hooks/usePaginatedResource";
-import type { ChargesFilters } from "../types";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
