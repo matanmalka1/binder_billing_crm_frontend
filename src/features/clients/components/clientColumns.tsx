@@ -86,9 +86,7 @@ export const buildClientColumns = ({
     key: "actions",
     header: "פעולות",
     render: (client) => {
-      const actions = mapActions(client.available_actions, {
-        scopeKey: `client-${client.id}`,
-      });
+      const actions = mapActions(client.available_actions);
 
       if (actions.length === 0) {
         return <span className="text-gray-500">—</span>;

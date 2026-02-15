@@ -99,9 +99,7 @@ export const buildBindersColumns = ({
     key: "actions",
     header: "פעולות",
     render: (binder) => {
-      const actions = mapActions(binder.available_actions, {
-        scopeKey: `binder-${binder.id}`,
-      });
+      const actions = mapActions(binder.available_actions);
 
       if (actions.length === 0) {
         return <span className="text-gray-500">—</span>;

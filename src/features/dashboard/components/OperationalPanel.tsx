@@ -15,7 +15,7 @@ export const OperationalPanel: React.FC<OperationalPanelProps> = ({
   activeActionKey,
   onQuickAction,
 }) => {
-  const actions = mapActions(quickActions, { scopeKey: "dashboard-quick" });
+  const actions = mapActions(quickActions);
 
   if (actions.length === 0) {
     return null;

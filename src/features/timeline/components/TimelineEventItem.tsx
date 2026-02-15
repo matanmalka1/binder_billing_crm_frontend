@@ -27,7 +27,7 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
 }) => {
   const eventActions = event.actions || event.available_actions || [];
   const scopeKey = `timeline-${event.timestamp}-${event.event_type}`;
-  const resolvedActions = mapActions(eventActions, { scopeKey });
+  const resolvedActions = mapActions(eventActions);
   const colors = getEventColor(event.event_type);
 
   return (
