@@ -4,7 +4,6 @@ import axios from "axios";
 import { chargesApi, type ChargeResponse } from "../../../api/charges.api";
 import { toast } from "sonner";
 import { getRequestErrorMessage } from "../../../utils/utils";
-import { resolveQueryErrorMessage } from "../../../utils/queryError";
 import { chargesKeys } from "../queryKeys";
 export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: boolean) => {
   const queryClient = useQueryClient();
@@ -76,7 +75,7 @@ export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: bo
     if (!hasValidChargeId) return "מזהה חיוב חסר";
     if (actionError) return actionError;
     if (chargeQuery.error) {
-      return resolveQueryErrorMessage(chargeQuery.error, "שגיאה בטעינת פרטי חיוב");
+      return getRequestErrorMessage(chargeQuery.error, "שגיאה בטעינת פרטי חיוב");
     }
     return null;
   }, [actionError, chargeQuery.error, hasValidChargeId]);

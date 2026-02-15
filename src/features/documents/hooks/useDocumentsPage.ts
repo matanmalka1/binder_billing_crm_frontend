@@ -9,7 +9,6 @@ import {
   type UploadDocumentPayload,
 } from "../../../api/documents.api";
 import { getRequestErrorMessage } from "../../../utils/utils";
-import { resolveQueryErrorMessage } from "../../../utils/queryError";
 import { emptySignals } from "../constants/emptySignals";
 import { documentsKeys } from "../queryKeys";
 
@@ -94,7 +93,7 @@ export const useDocumentsPage = () => {
 
   const errorSource = clientsQuery.error || documentsQuery.error || signalsQuery.error;
   const error = errorSource
-    ? resolveQueryErrorMessage(errorSource, "שגיאה בטעינת מסמכים")
+    ? getRequestErrorMessage(errorSource, "שגיאה בטעינת מסמכים")
     : null;
 
   return {

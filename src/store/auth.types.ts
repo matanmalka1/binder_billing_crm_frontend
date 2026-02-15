@@ -1,4 +1,4 @@
-import type { AuthUser ,UserRole} from "../types/store";
+import type { AuthUser ,UserRole } from "../types/common";
 
 export interface AuthState {
   user: AuthUser | null;

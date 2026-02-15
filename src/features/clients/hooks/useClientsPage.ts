@@ -3,9 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { clientsApi } from "../../../api/clients.api";
-import { handleCanonicalActionError } from "../../../utils/utils";
-import { parsePositiveInt } from "../../../utils/utils";
-import { resolveQueryErrorMessage } from "../../../utils/queryError";
+import { getRequestErrorMessage, handleCanonicalActionError, parsePositiveInt } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
@@ -99,7 +97,7 @@ export const useClientsPage = () => {
     activeActionKey,
     clients: clientsQuery.data?.items ?? [],
     error: clientsQuery.error
-      ? resolveQueryErrorMessage(clientsQuery.error, "שגיאה בטעינת רשימת לקוחות")
+      ? getRequestErrorMessage(clientsQuery.error, "שגיאה בטעינת רשימת לקוחות")
       : null,
     filters,
     handleActionClick,

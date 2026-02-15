@@ -3,8 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { bindersApi } from "../../../api/binders.api";
-import { handleCanonicalActionError } from "../../../utils/utils";
-import { resolveQueryErrorMessage } from "../../../utils/queryError";
+import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
@@ -83,7 +82,7 @@ export const useBindersPage = () => {
     activeActionKey,
     binders: bindersQuery.data?.items ?? [],
     error: bindersQuery.error
-      ? resolveQueryErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת תיקים")
+      ? getRequestErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת תיקים")
       : null,
     filters,
     handleActionClick,

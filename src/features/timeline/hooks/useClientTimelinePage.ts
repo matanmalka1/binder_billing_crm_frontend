@@ -3,9 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { timelineApi } from "../../../api/timeline.api";
-import { handleCanonicalActionError } from "../../../utils/utils";
-import { parsePositiveInt } from "../../../utils/utils";
-import { resolveQueryErrorMessage } from "../../../utils/queryError";
+import { getRequestErrorMessage, handleCanonicalActionError, parsePositiveInt } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
@@ -84,7 +82,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
       !hasValidClient
         ? "מזהה לקוח חסר"
         : timelineQuery.error
-          ? resolveQueryErrorMessage(timelineQuery.error, "שגיאה בטעינת ציר זמן")
+          ? getRequestErrorMessage(timelineQuery.error, "שגיאה בטעינת ציר זמן")
           : null,
     events: timelineQuery.data?.events ?? [],
     handleAction,
