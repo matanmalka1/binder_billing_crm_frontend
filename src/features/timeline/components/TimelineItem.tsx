@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
-import { resolveActions } from "../../../lib/actions/adapter";
+import { mapActions } from "../../../lib/actions/mapActions";
 import type { TimelineEvent } from "../../../api/timeline.api";
 import type { ActionCommand } from "../../../lib/actions/types";
 
@@ -43,7 +43,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
       : event.charge_id !== null
         ? { entityPath: "/charges", entityId: event.charge_id, scopeKey }
         : { scopeKey };
-  const resolvedActions = resolveActions(eventActions, resolvedContext);
+  const resolvedActions = mapActions(eventActions, { scopeKey: `timeline-${event.id}` });
 
   return (
     <li className="rounded-md border border-gray-200 p-3">

@@ -10,38 +10,21 @@ export type ActionId =
   | "issue_charge"
   | "cancel_charge";
 
-export interface BackendActionObject {
-  key?: string;
-  action?: string;
-  type?: string;
-  item_type?: string;
-  operation?: string;
+export interface BackendAction {
+  key: string;
   label?: string;
-  endpoint?: string;
-  url?: string;
-  method?: string;
+  method: ActionMethod;
+  endpoint: string;
   payload?: Record<string, unknown> | null;
-  body?: Record<string, unknown> | null;
-  binder_id?: number | null;
-  charge_id?: number | null;
-  client_id?: number | null;
   confirm_required?: boolean;
   confirm_title?: string;
   confirm_message?: string;
   confirm_label?: string;
   cancel_label?: string;
+  binder_id?: number | null;
+  charge_id?: number | null;
+  client_id?: number | null;
 }
-
-export interface BackendQuickAction extends BackendActionObject {
-  key: string;
-  label: string;
-  method: ActionMethod;
-  endpoint: string;
-  payload?: Record<string, unknown> | null;
-  confirm_required: boolean;
-}
-
-export type BackendActionInput = string | BackendActionObject;
 
 export interface ActionConfirmConfig {
   title: string;
