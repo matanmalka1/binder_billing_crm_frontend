@@ -32,5 +32,19 @@ export const ENDPOINTS = {
   documentsByClient: (clientId: number | string) => `/documents/client/${clientId}`,
   documentSignalsByClient: (clientId: number | string) =>
     `/documents/client/${clientId}/signals`,
+  annualReports: "/annual-reports",
+  annualReportById: (id: number | string) => `/annual-reports/${id}`,
+  annualReportTransition: (id: number | string) =>
+    `/annual-reports/${id}/transition`,
+  annualReportSubmit: (id: number | string) => `/annual-reports/${id}/submit`,
+  annualReportsKanban: "/annual-reports/kanban/view",
+  taxDeadlines: "/tax-deadlines",
+  taxDeadlineById: (id: number | string) => `/tax-deadlines/${id}`,
+  taxDeadlineComplete: (id: number | string) =>
+    `/tax-deadlines/${id}/complete`,
+  taxDeadlinesDashboard: "/tax-deadlines/dashboard/urgent",
+  clientAuthorityContacts: (clientId: number | string) =>
+    `/clients/${clientId}/authority-contacts`,
+  authorityContactById: (id: number | string) => `/authority-contacts/${id}`,
+  dashboardTaxSubmissions: "/dashboard/tax-submissions",
 } as const;
-
