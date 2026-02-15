@@ -1,11 +1,19 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/Button";
-import { Badge } from "../../../components/ui/Badge";
-import { ExternalLink, DollarSign, Calendar, CheckCircle, XCircle } from "lucide-react";
+import { StatusBadge } from "../../../components/ui/StatusBadge";
+import { ExternalLink } from "lucide-react";
 import { formatDateTime } from "../../../utils/utils";
 import { getChargeAmountText, canCancel, canIssue, canMarkPaid } from "../utils/chargeStatus";
 import type { ChargeResponse } from "../../../api/charges.api";
 import { cn } from "../../../utils/utils";
+import { getChargeStatusLabel } from "../../../utils/enums";
+
+const chargeStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+  draft: "neutral",
+  issued: "info",
+  paid: "success",
+  canceled: "error",
+};
 
 interface ChargeRowProps {
   charge: ChargeResponse;
@@ -14,24 +22,6 @@ interface ChargeRowProps {
   isAdvisor: boolean;
   onRunAction: (chargeId: number, action: "issue" | "markPaid" | "cancel") => Promise<void>;
 }
-
-const getStatusBadge = (status: string) => {
-  const variants: Record<string, { variant: "success" | "warning" | "error" | "info" | "neutral"; icon?: React.ReactNode }> = {
-    draft: { variant: "neutral", icon: <Calendar className="h-3 w-3" /> },
-    issued: { variant: "info", icon: <DollarSign className="h-3 w-3" /> },
-    paid: { variant: "success", icon: <CheckCircle className="h-3 w-3" /> },
-    canceled: { variant: "error", icon: <XCircle className="h-3 w-3" /> },
-  };
-
-  const config = variants[status] || { variant: "neutral" as const };
-
-  return (
-    <Badge variant={config.variant} className="flex items-center gap-1.5">
-      {config.icon}
-      {status}
-    </Badge>
-  );
-};
 
 export const ChargeRow: React.FC<ChargeRowProps> = ({
   charge,
@@ -68,7 +58,13 @@ export const ChargeRow: React.FC<ChargeRowProps> = ({
         <span className="text-sm text-gray-700">{charge.charge_type}</span>
       </td>
 
-      <td className="py-4 pr-4">{getStatusBadge(charge.status)}</td>
+      <td className="py-4 pr-4">
+        <StatusBadge
+          status={charge.status}
+          getLabel={getChargeStatusLabel}
+          variantMap={chargeStatusVariants}
+        />
+      </td>
 
       <td className="py-4 pr-4">
         <span className="font-mono text-sm font-semibold text-gray-900">

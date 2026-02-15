@@ -12,7 +12,6 @@ import { useAuthStore } from "../../../store/auth.store";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import type { ActionCommand } from "../../../lib/actions/types";
-import { dashboardKeys } from "../queryKeys";
 
 type DashboardData =
   | (DashboardOverviewResponse & { role_view: "advisor" })
@@ -37,19 +36,19 @@ export const useDashboardPage = () => {
 
   const overviewQuery = useQuery({
     enabled: isAdvisor,
-    queryKey: dashboardKeys.overview(),
+    queryKey: ["dashboard", "overview"] as const,
     queryFn: dashboardApi.getOverview,
   });
 
   const summaryQuery = useQuery({
     enabled: isSecretary,
-    queryKey: dashboardKeys.summary(),
+    queryKey: ["dashboard", "summary"] as const,
     queryFn: dashboardApi.getSummary,
   });
 
   const attentionQuery = useQuery({
     enabled: hasRole,
-    queryKey: dashboardKeys.attention(),
+    queryKey: ["dashboard", "attention"] as const,
     queryFn: dashboardApi.getAttention,
   });
 
@@ -58,9 +57,9 @@ export const useDashboardPage = () => {
     onSuccess: async () => {
       toast.success("הפעולה המהירה בוצעה בהצלחה");
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: dashboardKeys.overview() }),
-        queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() }),
-        queryClient.invalidateQueries({ queryKey: dashboardKeys.attention() }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard", "overview"] }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard", "summary"] }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard", "attention"] }),
       ]);
     },
   });

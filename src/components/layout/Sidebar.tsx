@@ -9,11 +9,14 @@ import {
   ReceiptText,
   FileText,
 } from "lucide-react";
-import { useUIStore } from "../../store/ui.store";
 import { cn } from "../../utils/utils";
 
-export const Sidebar: React.FC = () => {
-  const { isSidebarOpen, toggleSidebar } = useUIStore();
+interface SidebarProps {
+  isSidebarOpen: boolean;
+  toggleSidebar: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
 
   const links = [
     { to: "/", label: "לוח בקרה", icon: LayoutDashboard },

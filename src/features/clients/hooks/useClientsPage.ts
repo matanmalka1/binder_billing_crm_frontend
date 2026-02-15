@@ -8,7 +8,6 @@ import { parsePositiveInt } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
-import { clientsKeys } from "../queryKeys";
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
@@ -40,7 +39,7 @@ export const useClientsPage = () => {
   );
 
   const listQuery = useQuery({
-    queryKey: clientsKeys.list(apiParams),
+    queryKey: ["clients", "list", apiParams] as const,
     queryFn: () => clientsApi.list(apiParams),
   });
   const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
@@ -49,7 +48,7 @@ export const useClientsPage = () => {
     mutationFn: (action: ActionCommand) => executeAction(action),
     onSuccess: async () => {
       toast.success("הפעולה הושלמה בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: clientsKeys.lists() });
+      await queryClient.invalidateQueries({ queryKey: ["clients", "list"] });
     },
   });
 

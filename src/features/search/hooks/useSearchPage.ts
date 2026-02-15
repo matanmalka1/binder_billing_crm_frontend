@@ -4,7 +4,6 @@ import { useSearchParams } from "react-router-dom";
 import { searchApi } from "../../../api/search.api";
 import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 import type { SearchFilters } from "../types";
-import { searchKeys } from "../queryKeys";
 
 export const useSearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,7 +42,7 @@ export const useSearchPage = () => {
   );
 
   const searchQuery = useQuery({
-    queryKey: searchKeys.result(searchParamsForQuery),
+    queryKey: ["search", "results", searchParamsForQuery] as const,
     queryFn: () => searchApi.search(searchParamsForQuery),
   });
 

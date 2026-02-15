@@ -1,16 +1,18 @@
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import type { Column } from "../../../components/ui/DataTable";
+import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { mapActions } from "../../../lib/actions/mapActions";
 import type { BinderResponse } from "../../../api/binders.types";
 import type { ActionCommand } from "../../../lib/actions/types";
-import {
-  getSignalLabel,
-  getSlaStateLabel,
-  getWorkStateLabel,
-} from "../../../utils/enums";
+import { getStatusLabel, getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
-import { getStatusBadge } from "./bindersTable.utils";
+
+const binderStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+  in_office: "info",
+  ready_for_pickup: "success",
+  overdue: "error",
+};
 
 interface BuildBindersColumnsParams {
   activeActionKey: string | null;
@@ -31,7 +33,13 @@ export const buildBindersColumns = ({
   {
     key: "status",
     header: "סטטוס",
-    render: (binder) => getStatusBadge(binder.status),
+    render: (binder) => (
+      <StatusBadge
+        status={binder.status}
+        getLabel={getStatusLabel}
+        variantMap={binderStatusVariants}
+      />
+    ),
   },
   {
     key: "received_at",

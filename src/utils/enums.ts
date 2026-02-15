@@ -34,6 +34,16 @@ export const getClientStatusLabel = (status: string): string => {
   return labels[status] || "—";
 };
 
+export const getChargeStatusLabel = (status: string): string => {
+  const labels: Record<string, string> = {
+    draft: "טיוטה",
+    issued: "הונפק",
+    paid: "שולם",
+    canceled: "בוטל",
+  };
+  return labels[status] || "—";
+};
+
 export const getRoleLabel = (role: string): string => {
   const labels: Record<string, string> = {
     advisor: "יועץ",

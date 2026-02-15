@@ -7,7 +7,6 @@ import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
-import { bindersKeys } from "../queryKeys";
 import type { BindersFilters } from "../types";
 
 export const useBindersPage = () => {
@@ -31,7 +30,7 @@ export const useBindersPage = () => {
   );
 
   const bindersQuery = useQuery({
-    queryKey: bindersKeys.list(listParams),
+    queryKey: ["binders", "list", listParams] as const,
     queryFn: () => bindersApi.list(listParams),
   });
 
@@ -39,7 +38,7 @@ export const useBindersPage = () => {
     mutationFn: (action: ActionCommand) => executeAction(action),
     onSuccess: async () => {
       toast.success("הפעולה הושלמה בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: bindersKeys.lists() });
+      await queryClient.invalidateQueries({ queryKey: ["binders", "list"] });
     },
   });
 

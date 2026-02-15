@@ -1,6 +1,6 @@
-import type { SearchResult } from "../../api/search.api";
+import type { SearchResult, SearchParams } from "../../api/search.api";
 
-export interface SearchFilters {
+export interface SearchFilters extends Omit<SearchParams, "has_signals" | "signal_type"> {
   query: string;
   client_name: string;
   id_number: string;
@@ -21,16 +21,6 @@ export interface SearchContentProps {
 }
 
 export interface SearchFiltersBarProps {
-  filters: SearchFilters;
-  onFilterChange: (name: keyof SearchFilters, value: string | string[]) => void;
-}
-
-export interface SearchFiltersPrimaryFieldsProps {
-  filters: SearchFilters;
-  onFilterChange: (name: keyof SearchFilters, value: string) => void;
-}
-
-export interface SearchFiltersStatusFieldsProps {
   filters: SearchFilters;
   onFilterChange: (name: keyof SearchFilters, value: string | string[]) => void;
 }

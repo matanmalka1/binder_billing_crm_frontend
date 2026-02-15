@@ -6,7 +6,7 @@ import { PaginationCard } from "../components/ui/PaginationCard";
 import { DataTable, type Column } from "../components/ui/DataTable";
 import { SearchFiltersBar } from "../features/search/components/SearchFiltersBar";
 import { useSearchPage } from "../features/search/hooks/useSearchPage";
-import { useDebounce } from "../hooks/useDebounce";
+import { useDebounce } from "use-debounce";
 import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../utils/enums";
 import { getResultTypeLabel } from "../constants/filterOptions.constants";
 import type { SearchResult } from "../api/search.api";
@@ -15,10 +15,10 @@ export const Search: React.FC = () => {
   const { error, filters, handleFilterChange, loading, results, total } = useSearchPage();
 
   // Debounce text inputs for better UX
-  const debouncedQuery = useDebounce(filters.query, 500);
-  const debouncedClientName = useDebounce(filters.client_name, 500);
-  const debouncedIdNumber = useDebounce(filters.id_number, 500);
-  const debouncedBinderNumber = useDebounce(filters.binder_number, 500);
+  const [debouncedQuery] = useDebounce(filters.query, 500);
+  const [debouncedClientName] = useDebounce(filters.client_name, 500);
+  const [debouncedIdNumber] = useDebounce(filters.id_number, 500);
+  const [debouncedBinderNumber] = useDebounce(filters.binder_number, 500);
 
   // Show loading indicator while debouncing
   const isDebouncing = useMemo(() => {

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
+import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ClientResponse } from "../../../api/clients.api";
 import { mapActions } from "../../../lib/actions/mapActions";
@@ -8,14 +8,10 @@ import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
 import type { ActionCommand } from "../../../lib/actions/types";
 
-const getStatusBadge = (status: string) => {
-  const variantMap = {
-    active: "success" as const,
-    frozen: "warning" as const,
-    closed: "neutral" as const,
-  };
-  const variant = variantMap[status as keyof typeof variantMap] ?? "neutral";
-  return <Badge variant={variant}>{getClientStatusLabel(status)}</Badge>;
+const clientStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+  active: "success",
+  frozen: "warning",
+  closed: "neutral",
 };
 
 interface BuildClientColumnsParams {
@@ -51,7 +47,13 @@ export const buildClientColumns = ({
   {
     key: "status",
     header: "סטטוס",
-    render: (client) => getStatusBadge(client.status),
+    render: (client) => (
+      <StatusBadge
+        status={client.status}
+        getLabel={getClientStatusLabel}
+        variantMap={clientStatusVariants}
+      />
+    ),
   },
   {
     key: "phone",

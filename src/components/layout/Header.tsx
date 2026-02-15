@@ -1,11 +1,13 @@
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "../../store/auth.store";
-import { useUIStore } from "../../store/ui.store";
 import { getRoleLabel } from "../../utils/enums";
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  toggleSidebar: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const { user, logout } = useAuthStore();
-  const { toggleSidebar } = useUIStore();
 
   return (
     <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 z-10 shrink-0">

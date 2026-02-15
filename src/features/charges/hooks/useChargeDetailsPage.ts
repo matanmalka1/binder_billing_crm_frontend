@@ -4,7 +4,6 @@ import axios from "axios";
 import { chargesApi, type ChargeResponse } from "../../../api/charges.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage, isPositiveInt } from "../../../utils/utils";
-import { chargesKeys } from "../queryKeys";
 export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: boolean) => {
   const queryClient = useQueryClient();
   const [actionError, setActionError] = useState<string | null>(null);
@@ -14,7 +13,7 @@ export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: bo
 
   const chargeQuery = useQuery({
     enabled: hasValidChargeId,
-    queryKey: chargesKeys.detail(chargeIdNumber),
+    queryKey: ["charges", "detail", chargeIdNumber] as const,
     queryFn: () => chargesApi.getById(chargeIdNumber),
   });
 
@@ -50,8 +49,8 @@ export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: bo
     onSuccess: async () => {
       toast.success("פעולת חיוב בוצעה בהצלחה");
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: chargesKeys.detail(chargeIdNumber) }),
-        queryClient.invalidateQueries({ queryKey: chargesKeys.lists() }),
+        queryClient.invalidateQueries({ queryKey: ["charges", "detail", chargeIdNumber] }),
+        queryClient.invalidateQueries({ queryKey: ["charges", "list"] }),
       ]);
     },
   });

@@ -7,7 +7,6 @@ import { getErrorMessage, showErrorToast, isPositiveInt, parsePositiveInt } from
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
-import { timelineKeys } from "../queryKeys";
 
 export const useClientTimelinePage = (clientId: string | undefined) => {
   const queryClient = useQueryClient();
@@ -25,7 +24,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
 
   const timelineQuery = useQuery({
     enabled: hasValidClient,
-    queryKey: timelineKeys.events(clientIdNumber, timelineParams),
+    queryKey: ["timeline", "client", clientIdNumber, "events", timelineParams] as const,
     queryFn: () => timelineApi.getClientTimeline(clientIdNumber, timelineParams),
   });
 
@@ -34,7 +33,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     onSuccess: async () => {
       toast.success("הפעולה בוצעה בהצלחה");
       await queryClient.invalidateQueries({
-        queryKey: timelineKeys.client(clientIdNumber),
+        queryKey: ["timeline", "client", clientIdNumber],
       });
     },
   });

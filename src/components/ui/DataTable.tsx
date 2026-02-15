@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 import { Card } from "./Card";
 import { cn } from "../../utils/utils";
+import { EmptyState, type EmptyStateProps } from "./EmptyState";
+import type { LucideIcon } from "lucide-react";
+import { Inbox } from "lucide-react";
 
 export interface Column<T> {
   key: string;
@@ -19,6 +22,10 @@ export interface DataTableProps<T> {
   emptyMessage?: string;
   isLoading?: boolean;
   rowClassName?: (item: T, index: number) => string;
+  emptyState?: Omit<EmptyStateProps, "icon" | "message"> & {
+    icon?: LucideIcon;
+    message?: string;
+  };
 }
 
 export const DataTable = <T,>({
@@ -30,6 +37,7 @@ export const DataTable = <T,>({
   emptyMessage = "אין נתונים להצגה",
   isLoading = false,
   rowClassName,
+  emptyState,
 }: DataTableProps<T>) => {
   if (isLoading) {
     return (
@@ -70,9 +78,14 @@ export const DataTable = <T,>({
 
   if (data.length === 0) {
     return (
-      <Card className={className}>
-        <div className="py-12 text-center text-gray-500">{emptyMessage}</div>
-      </Card>
+      <EmptyState
+        icon={emptyState?.icon ?? Inbox}
+        title={emptyState?.title}
+        message={emptyState?.message ?? emptyMessage}
+        action={emptyState?.action}
+        variant={emptyState?.variant}
+        className={cn(className, emptyState?.className)}
+      />
     );
   }
 

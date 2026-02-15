@@ -9,7 +9,6 @@ import {
   type UploadDocumentPayload,
 } from "../../../api/documents.api";
 import { getErrorMessage, isPositiveInt } from "../../../utils/utils";
-import { documentsKeys } from "../queryKeys";
 
 export const useDocumentsPage = () => {
   const queryClient = useQueryClient();
@@ -21,7 +20,7 @@ export const useDocumentsPage = () => {
   }, [searchParams]);
 
   const clientsQuery = useQuery({
-    queryKey: documentsKeys.clients(),
+    queryKey: ["documents", "clients"] as const,
     queryFn: async () => {
       const response = await clientsApi.list({ page: 1, page_size: 100 });
       return (response.items ?? []).map((item) => ({
@@ -33,13 +32,13 @@ export const useDocumentsPage = () => {
 
   const documentsQuery = useQuery({
     enabled: selectedClientId > 0,
-    queryKey: documentsKeys.listByClient(selectedClientId),
+    queryKey: ["documents", "client", selectedClientId, "list"] as const,
     queryFn: () => documentsApi.listByClient(selectedClientId),
   });
 
   const signalsQuery = useQuery({
     enabled: selectedClientId > 0,
-    queryKey: documentsKeys.signalsByClient(selectedClientId),
+    queryKey: ["documents", "client", selectedClientId, "signals"] as const,
     queryFn: () => documentsApi.getSignalsByClient(selectedClientId),
   });
 
@@ -49,10 +48,10 @@ export const useDocumentsPage = () => {
       toast.success("מסמך הועלה בהצלחה");
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: documentsKeys.listByClient(variables.client_id),
+          queryKey: ["documents", "client", variables.client_id, "list"],
         }),
         queryClient.invalidateQueries({
-          queryKey: documentsKeys.signalsByClient(variables.client_id),
+          queryKey: ["documents", "client", variables.client_id, "signals"],
         }),
       ]);
     },

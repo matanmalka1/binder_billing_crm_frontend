@@ -1,7 +1,6 @@
-export interface BindersFilters {
-  work_state: string;
-  sla_state: string;
-}
+import type { ListBindersParams } from "../../api/binders.types";
+
+export type BindersFilters = ListBindersParams;
 
 export interface BindersFiltersBarProps {
   filters: BindersFilters;

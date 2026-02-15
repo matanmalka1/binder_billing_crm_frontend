@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AUTH_EXPIRED_EVENT } from "../api/client";
 import { useAuthStore } from "../store/auth.store";
@@ -39,17 +39,22 @@ const ProtectedRoute: React.FC = () => {
   return <Outlet />;
 };
 
-const AuthenticatedLayout: React.FC = () => (
-  <div className="flex flex-1 overflow-hidden h-screen">
-    <Sidebar />
-    <div className="flex-1 flex flex-col overflow-hidden">
-      <Header />
-      <PageLayout>
-        <Outlet />
-      </PageLayout>
+const AuthenticatedLayout: React.FC = () => {
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
+  return (
+    <div className="flex flex-1 overflow-hidden h-screen">
+      <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header toggleSidebar={toggleSidebar} />
+        <PageLayout>
+          <Outlet />
+        </PageLayout>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const AppRoutes: React.FC = () => {
   return (

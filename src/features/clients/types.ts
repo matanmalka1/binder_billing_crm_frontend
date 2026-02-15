@@ -1,10 +1,8 @@
-import type { ClientResponse } from "../../api/clients.api";
-import type { PagedQueryParams } from "../../types/common";
+import type { ClientResponse, ListClientsParams } from "../../api/clients.api";
 import type { ActionCommand } from "../../lib/actions/types";
 
-export interface ClientsFilters extends PagedQueryParams {
+export interface ClientsFilters extends Omit<ListClientsParams, "has_signals"> {
   has_signals: string;
-  status: string;
 }
 
 export interface ClientsFiltersBarProps {

@@ -8,7 +8,6 @@ import {
   type ChargesListParams,
   type CreateChargePayload,
 } from "../../../api/charges.api";
-import { chargesKeys } from "../queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
 import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 
@@ -37,7 +36,7 @@ export const useChargesPage = () => {
   );
 
   const listQuery = useQuery({
-    queryKey: chargesKeys.list(apiParams),
+    queryKey: ["charges", "list", apiParams] as const,
     queryFn: () => chargesApi.list(apiParams),
   });
   const { user } = useAuthStore();
@@ -47,7 +46,7 @@ export const useChargesPage = () => {
     mutationFn: (payload: CreateChargePayload) => chargesApi.create(payload),
     onSuccess: async () => {
       toast.success("חיוב נוצר בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: chargesKeys.lists() });
+      await queryClient.invalidateQueries({ queryKey: ["charges", "list"] });
     },
   });
 
@@ -65,7 +64,7 @@ export const useChargesPage = () => {
     },
     onSuccess: async () => {
       toast.success("פעולת חיוב בוצעה בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: chargesKeys.lists() });
+      await queryClient.invalidateQueries({ queryKey: ["charges", "list"] });
     },
   });
 

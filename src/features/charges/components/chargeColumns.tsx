@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/Button";
+import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ChargeResponse } from "../../../api/charges.api";
 import { getChargeAmountText, canCancel, canIssue, canMarkPaid } from "../utils/chargeStatus";
 import { formatDateTime } from "../../../utils/utils";
-import { ChargeStatusBadge } from "./ChargeStatusBadge";
+import { getChargeStatusLabel } from "../../../utils/enums";
 
 export type ChargeAction = "issue" | "markPaid" | "cancel";
 
@@ -49,7 +50,18 @@ export const buildChargeColumns = ({
   {
     key: "status",
     header: "סטטוס",
-    render: (charge) => <ChargeStatusBadge status={charge.status} />,
+    render: (charge) => (
+      <StatusBadge
+        status={charge.status}
+        getLabel={getChargeStatusLabel}
+        variantMap={{
+          draft: "neutral",
+          issued: "info",
+          paid: "success",
+          canceled: "error",
+        }}
+      />
+    ),
   },
   {
     key: "amount",

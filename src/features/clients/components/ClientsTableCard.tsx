@@ -7,17 +7,11 @@ import type { ClientsTableCardProps } from "../types";
 import { formatDate } from "../../../utils/utils";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 
-const getStatusBadge = (status: string) => (
-  <StatusBadge
-    status={status}
-    getLabel={getClientStatusLabel}
-    variantMap={{
-      active: "success",
-      frozen: "warning",
-      closed: "neutral",
-    }}
-  />
-);
+const clientStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+  active: "success",
+  frozen: "warning",
+  closed: "neutral",
+};
 
 export const ClientsTableCard: React.FC<ClientsTableCardProps> = ({
   clients,
@@ -48,7 +42,13 @@ export const ClientsTableCard: React.FC<ClientsTableCardProps> = ({
                   <td className="py-3 pr-4 font-medium text-gray-900">{client.full_name}</td>
                   <td className="py-3 pr-4 font-mono text-sm text-gray-600">{client.id_number}</td>
                   <td className="py-3 pr-4 text-gray-600">{getClientTypeLabel(client.client_type)}</td>
-                  <td className="py-3 pr-4">{getStatusBadge(client.status)}</td>
+                  <td className="py-3 pr-4">
+                    <StatusBadge
+                      status={client.status}
+                      getLabel={getClientStatusLabel}
+                      variantMap={clientStatusVariants}
+                    />
+                  </td>
                   <td className="py-3 pr-4 font-mono text-sm text-gray-600">{client.phone || "—"}</td>
                   <td className="py-3 pr-4 text-gray-600">{formatDate(client.opened_at)}</td>
                   <td className="py-3 pr-4">
