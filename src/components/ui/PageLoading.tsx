@@ -1,18 +1,23 @@
 import { cn } from "../../utils/utils";
-import { Spinner } from "./Spinner";
+import { TableSkeleton } from "./TableSkeleton";
 
 interface PageLoadingProps {
-  size?: "sm" | "md" | "lg";
+  message?: string;
+  rows?: number;
+  columns?: number;
   className?: string;
 }
 
 export const PageLoading: React.FC<PageLoadingProps> = ({
-  size = "lg",
+  message = "טוען נתונים...",
+  rows = 3,
+  columns = 4,
   className,
 }) => {
   return (
-    <div className={cn("flex justify-center py-12", className)}>
-      <Spinner size={size} />
+    <div className={cn("space-y-4 py-12", className)}>
+      <TableSkeleton rows={rows} columns={columns} className="mx-auto max-w-4xl" />
+      <p className="text-center text-sm text-gray-500">{message}</p>
     </div>
   );
 };

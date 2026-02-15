@@ -4,6 +4,7 @@ import { cn } from "../../utils/utils";
 import { EmptyState, type EmptyStateProps } from "./EmptyState";
 import type { LucideIcon } from "lucide-react";
 import { Inbox } from "lucide-react";
+import { TableSkeleton } from "./TableSkeleton";
 
 export interface Column<T> {
   key: string;
@@ -41,38 +42,11 @@ export const DataTable = <T,>({
 }: DataTableProps<T>) => {
   if (isLoading) {
     return (
-      <Card className={className}>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="border-b border-gray-200">
-              <tr className="text-right">
-                {columns.map((column) => (
-                  <th
-                    key={column.key}
-                    className={cn(
-                      "pb-3 pr-4 font-semibold text-gray-700",
-                      column.headerClassName,
-                    )}
-                  >
-                    {column.header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {Array.from({ length: 5 }).map((_, idx) => (
-                <tr key={idx} className="animate-pulse">
-                  {columns.map((column) => (
-                    <td key={column.key} className="py-3 pr-4">
-                      <div className="h-4 bg-gray-200 rounded w-3/4" />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+      <TableSkeleton
+        rows={5}
+        columns={Math.max(columns.length, 1)}
+        className={className}
+      />
     );
   }
 
