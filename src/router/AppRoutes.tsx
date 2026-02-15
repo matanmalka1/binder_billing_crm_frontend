@@ -11,6 +11,9 @@ import { ClientTimeline } from "../pages/ClientTimeline";
 import { Charges } from "../pages/Charges";
 import { ChargeDetails } from "../pages/ChargeDetails";
 import { Documents } from "../pages/Documents";
+import { TaxDashboard } from "../pages/TaxDashboard";
+import { AnnualReportsKanban } from "../pages/AnnualReportsKanban";
+import { TaxDeadlines } from "../pages/TaxDeadlines";
 import { Login } from "../pages/Login";
 import { Header } from "../components/layout/Header";
 import { Sidebar } from "../components/layout/Sidebar";
@@ -74,6 +77,9 @@ export const AppRoutes: React.FC = () => {
             <Route path="charges" element={<Charges />} />
             <Route path="charges/:chargeId" element={<ChargeDetails />} />
             <Route path="documents" element={<Documents />} />
+            <Route path="tax" element={<TaxDashboard />} />
+            <Route path="tax/reports" element={<AnnualReportsKanban />} />
+            <Route path="tax/deadlines" element={<TaxDeadlines />} />
           </Route>
         </Route>
 

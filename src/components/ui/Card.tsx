@@ -1,3 +1,4 @@
+import React from "react";
 import { cn } from "../../utils/utils";
 
 interface CardProps {
@@ -8,6 +9,7 @@ interface CardProps {
   footer?: React.ReactNode;
   variant?: "default" | "elevated";
   interactive?: boolean;
+  style?: React.CSSProperties;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -18,6 +20,7 @@ export const Card: React.FC<CardProps> = ({
   footer,
   variant = "default",
   interactive = false,
+  style,
 }) => {
   const variants = {
     default: "bg-white border border-gray-200/80",
@@ -34,6 +37,8 @@ export const Card: React.FC<CardProps> = ({
         "animate-fade-in",
         className,
       )}
+    style={style}
+    style={style}
     >
       {(title || subtitle) && (
         <div className="px-6 py-4 border-b border-gray-100/80 bg-gradient-to-r from-gray-50/50 to-transparent">

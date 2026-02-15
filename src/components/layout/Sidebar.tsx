@@ -8,6 +8,8 @@ import {
   ChevronLeft,
   ReceiptText,
   FileText,
+  FileSpreadsheet,
+  CalendarClock,
 } from "lucide-react";
 import { cn } from "../../utils/utils";
 
@@ -25,6 +27,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     { to: "/search", label: "חיפוש", icon: Search },
     { to: "/charges", label: "חיובים", icon: ReceiptText },
     { to: "/documents", label: "מסמכים", icon: FileText },
+    { to: "/tax", label: "דוחות מס", icon: FileSpreadsheet },
+    { to: "/tax/reports", label: "דוחות שנתיים", icon: FileText },
+    { to: "/tax/deadlines", label: "מועדי מס", icon: CalendarClock },
   ];
 
   return (
