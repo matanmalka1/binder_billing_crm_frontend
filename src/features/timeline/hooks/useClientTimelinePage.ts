@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "sonner";
+import { toast } from "../../../utils/toast";
 import { timelineApi } from "../../../api/timeline.api";
 import { getRequestErrorMessage, handleCanonicalActionError, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";

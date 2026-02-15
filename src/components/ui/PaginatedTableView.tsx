@@ -2,6 +2,7 @@ import { ErrorCard } from "./ErrorCard";
 import { EmptyState } from "./EmptyState";
 import { TableSkeleton } from "./TableSkeleton";
 import { PaginationCard } from "./PaginationCard";
+import type { LucideIcon } from "lucide-react";
 import { Inbox } from "lucide-react";
 
 export interface PaginationState {
@@ -18,7 +19,7 @@ export interface PaginatedTableViewProps<T> {
   pagination: PaginationState;
   renderTable: (data: T[]) => React.ReactNode;
   emptyState?: {
-    icon?: React.ComponentType<{ className?: string }>;
+    icon?: LucideIcon;
     title?: string;
     message?: string;
   };

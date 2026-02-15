@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { chargesApi, type ChargeResponse } from "../../../api/charges.api";
-import { toast } from "sonner";
+import { toast } from "../../../utils/toast";
 import { getRequestErrorMessage, isPositiveInt } from "../../../utils/utils";
 import { chargesKeys } from "../queryKeys";
 export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: boolean) => {

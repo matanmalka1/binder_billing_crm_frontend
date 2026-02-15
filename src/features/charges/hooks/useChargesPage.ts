@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "sonner";
+import { toast } from "../../../utils/toast";
 import {
   chargesApi,
   type ChargeResponse,

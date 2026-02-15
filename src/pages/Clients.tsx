@@ -1,10 +1,11 @@
-import { Users } from "lucide-react";
+import { useMemo } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
-import { PaginatedTableView } from "../components/ui/PaginatedTableView";
+import { Pagination } from "../components/ui/Pagination";
+import { DataTable } from "../components/ui/DataTable";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { ClientsFiltersBar } from "../features/clients/components/ClientsFiltersBar";
-import { ClientsTableCard } from "../features/clients/components/ClientsTableCard";
+import { buildClientColumns } from "../features/clients/components/clientColumns";
 import { useClientsPage } from "../features/clients/hooks/useClientsPage";
 
 export const Clients: React.FC = () => {
@@ -23,9 +24,21 @@ export const Clients: React.FC = () => {
     total,
   } = useClientsPage();
 
+  const columns = useMemo(
+    () =>
+      buildClientColumns({
+        activeActionKey,
+        handleActionClick,
+      }),
+    [activeActionKey, handleActionClick],
+  );
+
   return (
     <div className="space-y-6">
-      <PageHeader title="לקוחות" description="רשימת כל הלקוחות במערכת" />
+      <PageHeader 
+        title="לקוחות" 
+        description="רשימת כל הלקוחות במערכת"
+      />
 
       <FilterBar>
         <ClientsFiltersBar
@@ -39,25 +52,35 @@ export const Clients: React.FC = () => {
         />
       </FilterBar>
 
-      <PaginatedTableView
-        data={clients}
-        loading={loading}
-        error={error}
-        pagination={{
-          page: filters.page,
-          pageSize: filters.page_size,
-          total,
-          onPageChange: setPage,
-        }}
-        renderTable={(data) => (
-          <ClientsTableCard
-            clients={data}
-            activeActionKey={activeActionKey}
-            onActionClick={handleActionClick}
+      <div className="space-y-4">
+        {error && (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
+        )}
+
+        <DataTable
+          data={clients}
+          columns={columns}
+          getRowKey={(client) => client.id}
+          isLoading={loading}
+          emptyMessage="אין לקוחות להצגה"
+        />
+
+        {!loading && clients.length > 0 && (
+          <Pagination
+            currentPage={filters.page}
+            total={total}
+            pageSize={filters.page_size}
+            onPageChange={setPage}
+            showPageSizeSelect
+            pageSizeOptions={[20, 50, 100]}
+            onPageSizeChange={(pageSize) =>
+              handleFilterChange("page_size", String(pageSize))
+            }
           />
         )}
-        emptyState={{ icon: Users, message: "אין לקוחות להצגה" }}
-      />
+      </div>
 
       <ConfirmDialog
         open={Boolean(pendingAction)}

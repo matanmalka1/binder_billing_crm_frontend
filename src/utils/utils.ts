@@ -1,5 +1,5 @@
 import axios from "axios";
-import { toast } from "sonner";
+import { toast } from "./toast";
 import type { BackendErrorEnvelope } from "../types/common";
 
 // ============================================================================

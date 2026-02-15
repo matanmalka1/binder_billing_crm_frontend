@@ -1,11 +1,13 @@
+import type { ReactNode } from "react";
 import { cn } from "../../utils/utils";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "gradient";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "gradient";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  fullWidth?: boolean;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -15,81 +17,48 @@ export const Button: React.FC<ButtonProps> = ({
   size = "md",
   isLoading,
   disabled,
+  fullWidth = false,
   leftIcon,
   rightIcon,
   ...props
 }) => {
   const variants = {
-    primary: cn(
-      "bg-gradient-to-r from-primary-600 to-primary-700",
-      "text-white shadow-sm",
-      "hover:from-primary-700 hover:to-primary-800",
-      "hover:shadow-md hover:-translate-y-0.5",
-      "active:translate-y-0",
-      "focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-    ),
-    secondary: cn(
-      "bg-gradient-to-r from-gray-100 to-gray-200",
-      "text-gray-900 shadow-sm",
-      "hover:from-gray-200 hover:to-gray-300",
-      "hover:shadow-md hover:-translate-y-0.5",
-      "active:translate-y-0",
-      "focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
-    ),
-    outline: cn(
-      "bg-white border-2 border-gray-300",
-      "text-gray-700",
-      "hover:bg-gray-50 hover:border-gray-400",
-      "hover:shadow-sm hover:-translate-y-0.5",
-      "active:translate-y-0",
-      "focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-    ),
-    ghost: cn(
-      "bg-transparent",
-      "text-gray-700",
-      "hover:bg-gray-100",
-      "focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
-    ),
-    gradient: cn(
-      "bg-gradient-to-r from-primary-500 via-purple-500 to-accent-500",
-      "text-white shadow-lg",
-      "hover:shadow-xl hover:-translate-y-1",
-      "active:translate-y-0",
-      "focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-    ),
+    primary:
+      "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 shadow-sm",
+    secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300",
+    outline:
+      "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100",
+    ghost: "text-gray-600 hover:bg-gray-100 active:bg-gray-200",
+    danger:
+      "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm",
+    gradient:
+      "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-sm hover:shadow-md",
   };
 
   const sizes = {
     sm: "px-3 py-1.5 text-sm",
-    md: "px-4 py-2.5 text-base",
+    md: "px-4 py-2 text-base",
     lg: "px-6 py-3 text-lg",
   };
 
   return (
     <button
       className={cn(
-        "relative inline-flex items-center justify-center gap-2",
-        "rounded-lg font-medium",
+        "rounded-md font-medium disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2",
+        "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
         "transition-all duration-200",
-        "disabled:opacity-50 disabled:cursor-not-allowed",
-        "disabled:hover:transform-none",
-        "focus:outline-none",
         variants[variant],
         sizes[size],
+        fullWidth && "w-full",
         className,
       )}
       disabled={disabled || isLoading}
       {...props}
     >
-      {/* Loading spinner */}
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-        </div>
+        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
       )}
-      
-      {/* Content */}
-      <span className={cn("flex items-center gap-2", isLoading && "opacity-0")}>
+      <span className={cn("inline-flex items-center gap-2", isLoading && "opacity-0")}>
         {leftIcon}
         {children}
         {rightIcon}

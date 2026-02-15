@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "sonner";
+import { toast } from "../../../utils/toast";
 import { bindersApi } from "../../../api/binders.api";
 import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";

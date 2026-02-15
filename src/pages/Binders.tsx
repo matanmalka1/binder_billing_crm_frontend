@@ -1,10 +1,10 @@
-import { FolderOpen } from "lucide-react";
+import { useMemo } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
-import { PaginatedTableView } from "../components/ui/PaginatedTableView";
+import { DataTable } from "../components/ui/DataTable";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { BindersFiltersBar } from "../features/binders/components/BindersFiltersBar";
-import { BindersTableCard } from "../features/binders/components/BindersTableCard";
+import { buildBindersColumns } from "../features/binders/components/bindersColumns";
 import { useBindersPage } from "../features/binders/hooks/useBindersPage";
 
 export const Binders: React.FC = () => {
@@ -21,35 +21,41 @@ export const Binders: React.FC = () => {
     pendingAction,
   } = useBindersPage();
 
+  const columns = useMemo(
+    () =>
+      buildBindersColumns({
+        activeActionKey,
+        handleActionClick,
+      }),
+    [activeActionKey, handleActionClick],
+  );
+
   return (
     <div className="space-y-6">
       <PageHeader title="תיקים" description="רשימת כל התיקים במערכת" />
 
       <FilterBar>
-        <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
+        <BindersFiltersBar
+          filters={filters}
+          onFilterChange={handleFilterChange}
+        />
       </FilterBar>
 
-      <PaginatedTableView
-        data={binders}
-        loading={loading}
-        error={error}
-        pagination={{
-          page: 1,
-          pageSize: Math.max(binders.length, 1),
-          total: binders.length,
-          onPageChange: () => {},
-        }}
-        renderTable={(data) => (
-          <BindersTableCard
-            binders={data}
-            activeActionKey={activeActionKey}
-            onActionClick={handleActionClick}
-          />
+      <div className="space-y-4">
+        {error && (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
         )}
-        emptyState={{ icon: FolderOpen, message: "אין תיקים להצגה" }}
-        skeletonRows={5}
-        skeletonColumns={6}
-      />
+
+        <DataTable
+          data={binders}
+          columns={columns}
+          getRowKey={(binder) => binder.id}
+          isLoading={loading}
+          emptyMessage="אין תיקים להצגה"
+        />
+      </div>
 
       <ConfirmDialog
         open={Boolean(pendingAction)}

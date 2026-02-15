@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { toast } from "sonner";
+import { toast } from "../../../utils/toast";
 import { dashboardApi } from "../../../api/dashboard.api";
 import type {
   AttentionResponse,

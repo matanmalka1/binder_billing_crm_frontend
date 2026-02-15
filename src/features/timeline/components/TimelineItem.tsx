@@ -6,7 +6,6 @@ import type { ActionCommand } from "../../../lib/actions/types";
 
 export interface TimelineItemProps {
   event: TimelineEvent;
-  itemKey: string;
   activeActionKey: string | null;
   onAction: (action: ActionCommand) => void;
 }
@@ -30,7 +29,6 @@ const formatTimestamp = (timestamp: string) => {
 
 export const TimelineItem: React.FC<TimelineItemProps> = ({
   event,
-  itemKey,
   activeActionKey,
   onAction,
 }) => {
