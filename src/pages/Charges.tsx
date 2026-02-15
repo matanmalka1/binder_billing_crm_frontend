@@ -1,8 +1,8 @@
 
-import { ErrorCard } from "../components/ui/ErrorCard";
-import { PageLoading } from "../components/ui/PageLoading";
-import { PaginationCard } from "../components/ui/PaginationCard";
-import { AccessDenied } from "../components/auth/AccessDenied";
+import { Inbox } from "lucide-react";
+import { PageHeader } from "../components/layout/PageHeader";
+import { AccessBanner } from "../components/ui/AccessBanner";
+import { PaginatedTableView } from "../components/ui/PaginatedTableView";
 import { ChargesCreateCard } from "../features/charges/components/ChargesCreateCard";
 import { ChargesFiltersCard } from "../features/charges/components/ChargesFiltersCard";
 import { ChargesTableCard } from "../features/charges/components/ChargesTableCard";
@@ -24,17 +24,18 @@ export const Charges: React.FC = () => {
     submitCreate,
     total,
   } = useChargesPage();
-  const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
-
   return (
     <div className="space-y-6">
-      <header>
-        <h2 className="text-2xl font-bold text-gray-900">חיובים</h2>
-        <p className="text-gray-600">רשימת חיובים ופעולות חיוב נתמכות</p>
-      </header>
+      <PageHeader
+        title="חיובים"
+        description="רשימת חיובים ופעולות חיוב נתמכות"
+      />
 
       {!isAdvisor && (
-        <AccessDenied message="יצירה ושינוי חיובים זמינים ליועץ בלבד. ניתן לצפות ברשימה בלבד." />
+        <AccessBanner
+          variant="warning"
+          message="יצירה ושינוי חיובים זמינים ליועץ בלבד. ניתן לצפות ברשימה בלבד."
+        />
       )}
 
       {isAdvisor && (
@@ -51,27 +52,26 @@ export const Charges: React.FC = () => {
         onClear={() => setSearchParams(new URLSearchParams())}
       />
 
-      {loading && <PageLoading />}
-
-      {error && <ErrorCard message={error} />}
-
-      {!loading && !error && (
-        <ChargesTableCard
-          actionLoadingId={actionLoadingId}
-          charges={charges}
-          isAdvisor={isAdvisor}
-          onRunAction={runAction}
-        />
-      )}
-
-      {!loading && !error && (
-        <PaginationCard
-          page={filters.page}
-          total={total}
-          totalPages={totalPages}
-          onPageChange={(nextPage) => setFilter("page", String(nextPage))}
-        />
-      )}
+      <PaginatedTableView
+        data={charges}
+        loading={loading}
+        error={error}
+        pagination={{
+          page: filters.page,
+          pageSize: filters.page_size,
+          total,
+          onPageChange: (nextPage) => setFilter("page", String(nextPage)),
+        }}
+        renderTable={(data) => (
+          <ChargesTableCard
+            actionLoadingId={actionLoadingId}
+            charges={data}
+            isAdvisor={isAdvisor}
+            onRunAction={runAction}
+          />
+        )}
+        emptyState={{ icon: Inbox, message: "אין חיובים להצגה" }}
+      />
     </div>
   );
 };

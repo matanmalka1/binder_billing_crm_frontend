@@ -1,9 +1,9 @@
 import { Link, useParams } from "react-router-dom";
-import { Card } from "../components/ui/Card";
-import { ErrorCard } from "../components/ui/ErrorCard";
-import { PageLoading } from "../components/ui/PageLoading";
-import { PaginationCard } from "../components/ui/PaginationCard";
+import { PageHeader } from "../components/layout/PageHeader";
+import { FilterBar } from "../components/ui/FilterBar";
+import { PaginatedTableView } from "../components/ui/PaginatedTableView";
 import { Select } from "../components/ui/Select";
+import { Clock4 } from "lucide-react";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { TimelineCard } from "../features/timeline/components/TimelineCard";
 import { useClientTimelinePage } from "../features/timeline/hooks/useClientTimelinePage";
@@ -29,18 +29,13 @@ export const ClientTimeline: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <header className="space-y-2">
-        <h2 className="text-2xl font-bold text-gray-900">ציר זמן לקוח</h2>
-        <p className="text-gray-600">מזהה לקוח: {clientId ?? "—"}</p>
-        <Link
-          to="/clients"
-          className="inline-block text-sm font-medium text-blue-600"
-        >
-          חזרה לרשימת לקוחות
-        </Link>
-      </header>
+      <PageHeader
+        title="ציר זמן לקוח"
+        description={`מזהה לקוח: ${clientId ?? "—"}`}
+        breadcrumbs={[{ label: "לקוחות", to: "/clients" }]}
+      />
 
-      <Card>
+      <FilterBar title="סינון">
         <div className="flex items-center gap-2 text-sm">
           <label className="text-gray-600">גודל עמוד:</label>
           <Select
@@ -54,28 +49,27 @@ export const ClientTimeline: React.FC = () => {
             <option value="200">200</option>
           </Select>
         </div>
-      </Card>
+      </FilterBar>
 
-      {loading && <PageLoading />}
-
-      {error && <ErrorCard message={error} />}
-
-      {!loading && !error && (
-        <>
+      <PaginatedTableView
+        data={events}
+        loading={loading}
+        error={error}
+        pagination={{
+          page,
+          pageSize,
+          total,
+          onPageChange: setPage,
+        }}
+        renderTable={(data) => (
           <TimelineCard
-            events={events}
+            events={data}
             activeActionKey={activeActionKey}
             onAction={handleAction}
           />
-          <PaginationCard
-            page={page}
-            totalPages={totalPages}
-            total={total}
-            label="אירועים"
-            onPageChange={setPage}
-          />
-        </>
-      )}
+        )}
+        emptyState={{ icon: Clock4, message: "אין אירועים להצגה" }}
+      />
 
       <ConfirmDialog
         open={Boolean(pendingAction)}

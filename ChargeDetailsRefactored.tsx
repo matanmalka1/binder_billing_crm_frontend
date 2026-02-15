@@ -1,29 +1,34 @@
+import { Receipt } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { PageHeader } from "../components/layout/PageHeader";
-import { AccessBanner } from "../components/ui/AccessBanner";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { DescriptionList } from "../components/ui/DescriptionList";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
+import { AccessBanner } from "../components/ui/AccessBanner";
 import { useAuthStore } from "../store/auth.store";
 import { useChargeDetailsPage } from "../features/charges/hooks/useChargeDetailsPage";
 import { getChargeAmountText } from "../features/charges/utils/chargeStatus";
 import { formatDateTime } from "../utils/utils";
-export const ChargeDetails: React.FC = () => {
+
+export const ChargeDetailsRefactored: React.FC = () => {
   const { chargeId } = useParams();
   const { user } = useAuthStore();
   const isAdvisor = user?.role === "advisor";
+  
   const { actionLoading, charge, denied, error, loading, runAction } =
     useChargeDetailsPage(chargeId, isAdvisor);
 
   return (
     <div className="space-y-6">
+      {/* Standardized Header with Breadcrumbs */}
       <PageHeader
         title={charge ? `חיוב #${charge.id}` : "פירוט חיוב"}
         breadcrumbs={[{ label: "חיובים", to: "/charges" }]}
       />
 
+      {/* Access Denied Banner (non-blocking) */}
       {denied && (
         <AccessBanner
           variant="warning"
@@ -31,10 +36,13 @@ export const ChargeDetails: React.FC = () => {
         />
       )}
 
+      {/* Loading State */}
       {loading && <PageLoading />}
 
+      {/* Error State */}
       {error && <ErrorCard message={error} />}
 
+      {/* Success State */}
       {!loading && !error && charge && (
         <Card
           title={`חיוב #${charge.id}`}
@@ -77,6 +85,7 @@ export const ChargeDetails: React.FC = () => {
             )
           }
         >
+          {/* Standardized Description List */}
           <DescriptionList
             columns={2}
             items={[

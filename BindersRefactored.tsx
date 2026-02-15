@@ -7,7 +7,7 @@ import { BindersFiltersBar } from "../features/binders/components/BindersFilters
 import { BindersTableCard } from "../features/binders/components/BindersTableCard";
 import { useBindersPage } from "../features/binders/hooks/useBindersPage";
 
-export const Binders: React.FC = () => {
+export const BindersRefactored: React.FC = () => {
   const {
     activeActionKey,
     binders,
@@ -23,19 +23,25 @@ export const Binders: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="תיקים" description="רשימת כל התיקים במערכת" />
+      {/* Standardized Header */}
+      <PageHeader
+        title="תיקים"
+        description="רשימת כל התיקים במערכת"
+      />
 
+      {/* Standardized Filter Bar */}
       <FilterBar>
         <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </FilterBar>
 
+      {/* Standardized Table View with Pagination */}
       <PaginatedTableView
         data={binders}
         loading={loading}
         error={error}
         pagination={{
           page: 1,
-          pageSize: Math.max(binders.length, 1),
+          pageSize: 20,
           total: binders.length,
           onPageChange: () => {},
         }}
@@ -46,11 +52,13 @@ export const Binders: React.FC = () => {
             onActionClick={handleActionClick}
           />
         )}
-        emptyState={{ icon: FolderOpen, message: "אין תיקים להצגה" }}
-        skeletonRows={5}
-        skeletonColumns={6}
+        emptyState={{
+          icon: FolderOpen,
+          message: "אין תיקים להצגה",
+        }}
       />
 
+      {/* Standardized Confirm Dialog */}
       <ConfirmDialog
         open={Boolean(pendingAction)}
         title={pendingAction?.confirm?.title || "אישור פעולה"}
