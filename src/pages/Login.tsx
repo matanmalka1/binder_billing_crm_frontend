@@ -35,7 +35,7 @@ export const Login: React.FC = () => {
 
   const onSubmit = handleSubmit(async (values) => {
     clearError();
-    await login(values.email, values.password);
+    await login(values.email, values.password, rememberMe);
 
     if (useAuthStore.getState().isAuthenticated) {
       navigate("/");

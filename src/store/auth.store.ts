@@ -13,18 +13,22 @@ import { clearStoredAuth, storedToken, storedUser } from "./auth.storage";
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: storedUser,
   token: storedToken,
-  isAuthenticated: Boolean(storedToken),
+  isAuthenticated: Boolean(storedToken || storedUser),
   isLoading: false,
   error: null,
 
-  login: async (email: string, password: string) => {
+  login: async (email: string, password: string, rememberMe = false) => {
     set({ isLoading: true, error: null });
 
     try {
-      const response = await authApi.login({ email, password });
+      const response = await authApi.login({ email, password, rememberMe });
       const { token, user } = response;
 
-      localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
+      if (!rememberMe) {
+        localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
+      } else {
+        localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+      }
       localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(user));
 
       set({
