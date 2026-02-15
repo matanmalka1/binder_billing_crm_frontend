@@ -32,7 +32,7 @@ export const Clients: React.FC = () => {
           filters={{
             has_signals: filters.has_signals,
             status: filters.status,
-            page_size: String(filters.page_size),
+            page_size: filters.page_size,
           }}
           onFilterChange={handleFilterChange}
         />
