@@ -1,4 +1,4 @@
-import type { BackendQuickAction } from "../lib/actions/types";
+import type { BackendAction } from "../lib/actions/types";
 import { ENDPOINTS } from "./endpoints";
 import type { PaginatedResponse } from "../types/common";
 import { toQueryParams } from "./queryParams";
@@ -13,7 +13,7 @@ export interface DashboardOverviewResponse {
   work_state?: string | null;
   sla_state?: string | null;
   signals?: string[] | null;
-  quick_actions?: BackendQuickAction[] | null;
+  quick_actions?: BackendAction[] | null;
 }
 
 export interface DashboardSummaryResponse {

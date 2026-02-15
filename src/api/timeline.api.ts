@@ -1,4 +1,4 @@
-import type { BackendActionInput } from "../lib/actions/types";
+import type { BackendAction } from "../lib/actions/types";
 import { ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";
@@ -10,8 +10,8 @@ export interface TimelineEvent {
   charge_id: number | null;
   description: string;
   metadata?: Record<string, unknown> | null;
-  actions?: BackendActionInput[] | null;
-  available_actions?: BackendActionInput[] | null;
+  actions?: BackendAction[] | null;
+  available_actions?: BackendAction[] | null;
 }
 
 export interface TimelineResponse {

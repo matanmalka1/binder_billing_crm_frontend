@@ -26,6 +26,8 @@ export interface BackendAction {
   client_id?: number | null;
 }
 
+export type BackendActionInput = BackendAction;
+
 export interface ActionConfirmConfig {
   title: string;
   message: string;

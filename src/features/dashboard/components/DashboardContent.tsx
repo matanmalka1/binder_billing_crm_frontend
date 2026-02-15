@@ -1,7 +1,7 @@
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import type { AttentionItem, DashboardOverviewResponse } from "../../../api/dashboard.api";
-import type { BackendQuickAction, ActionCommand } from "../../../lib/actions/types";
+import type { BackendAction, ActionCommand } from "../../../lib/actions/types";
 import {
   getSignalLabel,
   getSlaStateLabel,
@@ -13,7 +13,7 @@ import { OperationalPanel } from "./OperationalPanel";
 interface DashboardContentProps {
   data: DashboardOverviewResponse;
   attentionItems: AttentionItem[];
-  quickActions: BackendQuickAction[];
+  quickActions: BackendAction[];
   activeQuickAction: string | null;
   onQuickAction: (action: ActionCommand) => void;
 }

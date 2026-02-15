@@ -1,10 +1,10 @@
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { mapActions } from "../../../lib/actions/mapActions";
-import type { BackendQuickAction, ActionCommand } from "../../../lib/actions/types";
+import type { BackendAction, ActionCommand } from "../../../lib/actions/types";
 
 interface OperationalPanelProps {
-  quickActions: BackendQuickAction[];
+  quickActions: BackendAction[];
   activeActionKey: string | null;
   onQuickAction: (action: ActionCommand) => void;
 }

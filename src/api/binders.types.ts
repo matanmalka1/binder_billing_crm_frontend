@@ -1,4 +1,4 @@
-import type { BackendActionInput } from "../lib/actions/types";
+import type { BackendAction } from "../lib/actions/types";
 import type { PaginatedResponse } from "../types/common";
 
 export interface BinderResponse {
@@ -14,7 +14,7 @@ export interface BinderResponse {
   work_state?: string | null;
   sla_state?: string | null;
   signals?: string[] | null;
-  available_actions?: BackendActionInput[] | null;
+  available_actions?: BackendAction[] | null;
 }
 
 export interface BinderListResponse {

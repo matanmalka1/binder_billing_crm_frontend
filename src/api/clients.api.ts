@@ -1,4 +1,4 @@
-import type { BackendActionInput } from "../lib/actions/types";
+import type { BackendAction } from "../lib/actions/types";
 import { ENDPOINTS } from "./endpoints";
 import type { PaginatedResponse } from "../types/common";
 import { toQueryParams } from "./queryParams";
@@ -14,7 +14,7 @@ export interface ClientResponse {
   email: string | null;
   opened_at: string;
   closed_at: string | null;
-  available_actions?: BackendActionInput[] | null;
+  available_actions?: BackendAction[] | null;
 }
 
 export type ClientListResponse = PaginatedResponse<ClientResponse>;
