@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
@@ -12,7 +12,6 @@ import type { BindersFilters } from "../types";
 export const useBindersPage = () => {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
   const filters = useMemo<BindersFilters>(
     () => ({
       work_state: searchParams.get("work_state") ?? "",
@@ -51,13 +50,10 @@ export const useBindersPage = () => {
 
   const runAction = useCallback(
     async (action: ActionCommand) => {
-      setActiveActionKey(action.uiKey);
       try {
         await actionMutation.mutateAsync(action);
       } catch (requestError: unknown) {
         showErrorToast(requestError, "שגיאה בביצוע פעולת תיק", { canonicalAction: true });
-      } finally {
-        setActiveActionKey(null);
       }
     },
     [actionMutation],
@@ -66,9 +62,14 @@ export const useBindersPage = () => {
   const {
     cancelPendingAction,
     confirmPendingAction,
-    handleAction: handleActionClick,
+    handleAction: onAction,
     pendingAction,
   } = useConfirmableAction(runAction, (action) => Boolean(action.confirm));
+
+  const activeActionKey =
+    actionMutation.isPending && actionMutation.variables
+      ? actionMutation.variables.uiKey ?? null
+      : null;
 
   return {
     activeActionKey,
@@ -77,7 +78,7 @@ export const useBindersPage = () => {
       ? getErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת תיקים")
       : null,
     filters,
-    handleActionClick,
+    onAction,
     handleFilterChange,
     loading: bindersQuery.isPending,
     pendingAction,

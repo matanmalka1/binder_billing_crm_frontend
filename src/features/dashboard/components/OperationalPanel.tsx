@@ -3,6 +3,7 @@ import { Zap, ChevronLeft } from "lucide-react";
 import { mapActions } from "../../../lib/actions/mapActions";
 import type { BackendAction, ActionCommand } from "../../../lib/actions/types";
 import { cn } from "../../../utils/utils";
+import { staggerDelay } from "../../../utils/animation";
 
 interface OperationalPanelProps {
   quickActions: BackendAction[];
@@ -63,7 +64,7 @@ export const OperationalPanel: React.FC<OperationalPanelProps> = ({
                     ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
                     : "border-gray-200 bg-white hover:border-primary-300"
                 )}
-                style={{ animationDelay: `${index * 50}ms` }}
+                style={{ animationDelay: staggerDelay(index) }}
               >
                 {/* Action Content */}
                 <div className="flex-1">

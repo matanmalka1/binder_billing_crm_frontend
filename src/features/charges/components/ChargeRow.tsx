@@ -7,6 +7,7 @@ import { getChargeAmountText, canCancel, canIssue, canMarkPaid } from "../utils/
 import type { ChargeResponse } from "../../../api/charges.api";
 import { cn } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
+import { staggerDelay } from "../../../utils/animation";
 
 const chargeStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   draft: "neutral",
@@ -39,7 +40,7 @@ export const ChargeRow: React.FC<ChargeRowProps> = ({
         "hover:bg-gradient-to-r hover:from-primary-50/30 hover:to-transparent",
         "animate-fade-in"
       )}
-      style={{ animationDelay: `${index * 30}ms` }}
+      style={{ animationDelay: staggerDelay(index) }}
     >
       <td className="py-4 pr-6">
         <div className="flex items-center gap-2">

@@ -2,6 +2,7 @@ import { AlertCircle } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { getReportStageLabel, getStageColor } from "../../../api/annualReports.utils";
+import { staggerDelay } from "../../../utils/animation";
 import type { KanbanStage, StageKey } from "../hooks/useAnnualReportsKanban";
 import { AnnualReportCard } from "./AnnualReportCard";
 
@@ -27,7 +28,7 @@ export const AnnualReportColumn: React.FC<Props> = ({
   return (
     <div
       className="w-56 shrink-0 animate-fade-in"
-      style={{ animationDelay: `${stageIndex * 70}ms` }}
+      style={{ animationDelay: staggerDelay(stageIndex) }}
     >
       <div className="mb-2 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-2.5 border border-gray-200">
         <div className="flex items-center justify-between mb-2">
@@ -59,7 +60,7 @@ export const AnnualReportColumn: React.FC<Props> = ({
                 canMoveBack={canMoveBack}
                 canMoveForward={canMoveForward}
                 onTransition={onTransition}
-                animationDelay={index * 40}
+                animationIndex={index}
               />
             );
           })

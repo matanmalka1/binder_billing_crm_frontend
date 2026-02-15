@@ -34,22 +34,10 @@ export const useDashboardPage = () => {
   const isAdvisor = user?.role === "advisor";
   const isSecretary = user?.role === "secretary";
 
-  const overviewQuery = useQuery({
-    enabled: isAdvisor,
-    queryKey: ["dashboard", "overview"] as const,
-    queryFn: dashboardApi.getOverview,
-  });
-
-  const summaryQuery = useQuery({
-    enabled: isSecretary,
-    queryKey: ["dashboard", "summary"] as const,
-    queryFn: dashboardApi.getSummary,
-  });
-
-  const attentionQuery = useQuery({
+  const dashboardQuery = useQuery<DashboardOverviewResponse | DashboardSummaryResponse>({
     enabled: hasRole,
-    queryKey: ["dashboard", "attention"] as const,
-    queryFn: dashboardApi.getAttention,
+    queryKey: ["dashboard", isAdvisor ? "overview" : "summary"] as const,
+    queryFn: isAdvisor ? dashboardApi.getOverview : dashboardApi.getSummary,
   });
 
   const actionMutation = useMutation({
@@ -57,9 +45,7 @@ export const useDashboardPage = () => {
     onSuccess: async () => {
       toast.success("הפעולה המהירה בוצעה בהצלחה");
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["dashboard", "overview"] }),
-        queryClient.invalidateQueries({ queryKey: ["dashboard", "summary"] }),
-        queryClient.invalidateQueries({ queryKey: ["dashboard", "attention"] }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
       ]);
     },
   });
@@ -71,82 +57,54 @@ export const useDashboardPage = () => {
   };
 
   const denied = useMemo(() => {
-    const queryErrors = [
-      overviewQuery.error,
-      summaryQuery.error,
-      attentionQuery.error,
-    ];
-    const queryDenied = queryErrors.some((error) => getStatusCode(error) === 403);
-
+    const queryDenied = getStatusCode(dashboardQuery.error) === 403;
     return queryDenied || actionDenied;
-  }, [
-    actionDenied,
-    attentionQuery.error,
-    overviewQuery.error,
-    summaryQuery.error,
-  ]);
+  }, [actionDenied, dashboardQuery.error]);
 
   const dashboard = useMemo<DashboardState>(() => {
     if (!hasRole) {
       return { status: "error", message: "לא ניתן לזהות תפקיד משתמש", data: null };
     }
 
-    const roleQueryLoading = isAdvisor
-      ? overviewQuery.isPending
-      : isSecretary
-        ? summaryQuery.isPending
-        : false;
-
-    if (attentionQuery.isPending || roleQueryLoading) {
+    if (dashboardQuery.isPending) {
       return { status: "loading", message: "טוען נתוני לוח בקרה...", data: null };
     }
 
-    const roleQueryError = isAdvisor
-      ? overviewQuery.error
-      : isSecretary
-        ? summaryQuery.error
-        : null;
-    const loadError = roleQueryError || attentionQuery.error;
-    if (loadError) {
+    if (dashboardQuery.error) {
       return {
         status: "error",
-        message: getErrorMessage(loadError, "שגיאה בטעינת לוח הבקרה"),
+        message: getErrorMessage(dashboardQuery.error, "שגיאה בטעינת לוח הבקרה"),
         data: null,
       };
     }
 
-    if (isAdvisor && overviewQuery.data) {
+    if (isAdvisor && dashboardQuery.data) {
       return {
         status: "ok",
         message: "נתונים נטענו בהצלחה",
-        data: { role_view: "advisor", ...overviewQuery.data },
+        data: { role_view: "advisor", ...dashboardQuery.data },
       };
     }
 
-    if (isSecretary && summaryQuery.data) {
+    if (isSecretary && dashboardQuery.data) {
       return {
         status: "ok",
         message: "נתונים נטענו בהצלחה",
-        data: { role_view: "secretary", ...summaryQuery.data },
+        data: { role_view: "secretary", ...dashboardQuery.data },
       };
     }
 
     return { status: "idle", message: "", data: null };
   }, [
-    attentionQuery.error,
-    attentionQuery.isPending,
+    dashboardQuery.data,
+    dashboardQuery.error,
+    dashboardQuery.isPending,
     hasRole,
     isAdvisor,
     isSecretary,
-    overviewQuery.data,
-    overviewQuery.error,
-    overviewQuery.isPending,
-    summaryQuery.data,
-    summaryQuery.error,
-    summaryQuery.isPending,
   ]);
 
-  const attentionItems = (attentionQuery.data?.items ?? []) as AttentionResponse["items"];
+  const attentionItems = (dashboardQuery.data?.attention.items ?? []) as AttentionResponse["items"];
 
   const runQuickAction = useCallback(
     async (action: ActionCommand) => {

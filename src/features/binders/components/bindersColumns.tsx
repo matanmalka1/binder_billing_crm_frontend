@@ -1,8 +1,7 @@
 import { Badge } from "../../../components/ui/Badge";
-import { Button } from "../../../components/ui/Button";
 import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
-import { mapActions } from "../../../lib/actions/mapActions";
+import { buildActionsColumn } from "../../../components/ui/columnHelpers";
 import type { BinderResponse } from "../../../api/binders.types";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { getStatusLabel, getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
@@ -16,12 +15,12 @@ const binderStatusVariants: Record<string, "success" | "warning" | "error" | "in
 
 interface BuildBindersColumnsParams {
   activeActionKey: string | null;
-  handleActionClick: (action: ActionCommand) => void;
+  onAction: (action: ActionCommand) => void;
 }
 
 export const buildBindersColumns = ({
   activeActionKey,
-  handleActionClick,
+  onAction,
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
   {
     key: "binder_number",
@@ -95,36 +94,10 @@ export const buildBindersColumns = ({
       );
     },
   },
-  {
-    key: "actions",
+  buildActionsColumn<BinderResponse>({
     header: "פעולות",
-    render: (binder) => {
-      const actions = mapActions(binder.available_actions);
-
-      if (actions.length === 0) {
-        return <span className="text-gray-500">—</span>;
-      }
-
-      return (
-        <div className="flex flex-wrap gap-2">
-          {actions.map((action: ActionCommand) => (
-            <Button
-              key={action.uiKey}
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleActionClick(action);
-              }}
-              isLoading={activeActionKey === action.uiKey}
-              disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
-            >
-              {action.label || "—"}
-            </Button>
-          ))}
-        </div>
-      );
-    },
-  },
+    activeActionKey,
+    onAction,
+    getActions: (binder) => binder.available_actions as ActionCommand[] | undefined,
+  }),
 ];

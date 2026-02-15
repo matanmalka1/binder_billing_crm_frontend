@@ -10,6 +10,7 @@ import {
   getUrgencyLabel,
 } from "../../../api/taxDeadlines.utils";
 import { formatDate } from "../../../utils/utils";
+import { staggerDelay } from "../../../utils/animation";
 
 interface Props {
   items: DeadlineUrgentItem[];
@@ -44,7 +45,7 @@ export const TaxUrgentDeadlines: React.FC<Props> = ({ items }) => {
                 "relative rounded-xl border-2 p-4 transition-all duration-200",
                 "hover:shadow-lg hover:-translate-y-1 animate-fade-in"
               )}
-              style={{ animationDelay: `${index * 50}ms` }}
+              style={{ animationDelay: staggerDelay(index) }}
             >
               <div
                 className={cn(

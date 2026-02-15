@@ -81,7 +81,7 @@ export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: bo
 
   return {
     actionLoading: actionMutation.isPending,
-    charge: (chargeQuery.data ?? null) as ChargeResponse | null,
+    charge: chargeQuery.data ?? null,
     denied,
     error,
     loading: hasValidChargeId ? chargeQuery.isPending : false,

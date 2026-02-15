@@ -2,6 +2,7 @@ import { Badge } from "../../../components/ui/Badge";
 import { Link } from "react-router-dom";
 import type { SearchResult } from "../../../api/search.api";
 import { cn } from "../../../utils/utils";
+import { staggerDelay } from "../../../utils/animation";
 import {
   getResultColor,
   getResultIcon,
@@ -37,7 +38,7 @@ export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
         "hover:bg-gradient-to-r hover:from-primary-50/30 hover:to-transparent",
         "animate-fade-in",
       )}
-      style={{ animationDelay: `${index * 30}ms` }}
+      style={{ animationDelay: staggerDelay(index) }}
     >
       <td className="py-4 pr-6">
         <div className="flex items-center gap-2">

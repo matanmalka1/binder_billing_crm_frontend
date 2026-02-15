@@ -15,7 +15,7 @@ export const Binders: React.FC = () => {
     confirmPendingAction,
     error,
     filters,
-    handleActionClick,
+    onAction,
     handleFilterChange,
     loading,
     pendingAction,
@@ -25,9 +25,9 @@ export const Binders: React.FC = () => {
     () =>
       buildBindersColumns({
         activeActionKey,
-        handleActionClick,
+        onAction,
       }),
-    [activeActionKey, handleActionClick],
+    [activeActionKey, onAction],
   );
 
   return (

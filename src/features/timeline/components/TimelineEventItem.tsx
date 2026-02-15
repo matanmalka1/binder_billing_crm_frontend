@@ -5,6 +5,7 @@ import { mapActions } from "../../../lib/actions/mapActions";
 import type { TimelineEvent } from "../../../api/timeline.api";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { cn } from "../../../utils/utils";
+import { staggerDelay } from "../../../utils/animation";
 import {
   formatTimestamp,
   getEventColor,
@@ -33,7 +34,7 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
   return (
     <li
       className={cn("relative pr-16 animate-fade-in")}
-      style={{ animationDelay: `${index * 50}ms` }}
+      style={{ animationDelay: staggerDelay(index) }}
     >
       <div
         className={cn(

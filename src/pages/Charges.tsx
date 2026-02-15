@@ -41,35 +41,35 @@ export const Charges: React.FC = () => {
     Math.ceil(Math.max(total, 1) / filters.page_size),
   );
 
+  const advisorBadge = isAdvisor ? (
+    <div className="flex items-center gap-2 text-sm text-gray-600">
+      <Receipt className="h-4 w-4" />
+      <span>יועץ</span>
+    </div>
+  ) : null;
+
+  const roleGate = isAdvisor ? (
+    <ChargesCreateCard
+      createError={createError}
+      createLoading={createLoading}
+      onSubmit={submitCreate}
+    />
+  ) : (
+    <AccessBanner
+      variant="warning"
+      message="יצירה ושינוי חיובים זמינים ליועץ בלבד. ניתן לצפות ברשימה בלבד."
+    />
+  );
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="חיובים"
         description="רשימת חיובים ופעולות חיוב נתמכות"
-        actions={
-          isAdvisor && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Receipt className="h-4 w-4" />
-              <span>יועץ</span>
-            </div>
-          )
-        }
+        actions={advisorBadge}
       />
 
-      {!isAdvisor && (
-        <AccessBanner
-          variant="warning"
-          message="יצירה ושינוי חיובים זמינים ליועץ בלבד. ניתן לצפות ברשימה בלבד."
-        />
-      )}
-
-      {isAdvisor && (
-        <ChargesCreateCard
-          createError={createError}
-          createLoading={createLoading}
-          onSubmit={submitCreate}
-        />
-      )}
+      {roleGate}
 
       <ChargesFiltersCard
         filters={filters}

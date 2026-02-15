@@ -2,6 +2,7 @@ import { Badge } from "../../../components/ui/Badge";
 import { CheckCircle } from "lucide-react";
 import type { AttentionItem } from "../../../api/dashboard.api";
 import { cn } from "../../../utils/utils";
+import { staggerDelay } from "../../../utils/animation";
 
 interface AttentionSectionProps {
   section: {
@@ -34,7 +35,7 @@ export const AttentionSection: React.FC<AttentionSectionProps> = ({
           ? `border-${section.color}-200 bg-gradient-to-br from-${section.color}-50 to-transparent`
           : "border-gray-200 bg-gray-50",
       )}
-      style={{ animationDelay: `${sectionIndex * 100}ms` }}
+      style={{ animationDelay: staggerDelay(sectionIndex, 100) }}
     >
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
@@ -73,7 +74,7 @@ export const AttentionSection: React.FC<AttentionSectionProps> = ({
                 "hover:shadow-md hover:border-gray-300",
                 "animate-fade-in",
               )}
-              style={{ animationDelay: `${index * 50}ms` }}
+              style={{ animationDelay: staggerDelay(index) }}
             >
               <p className="text-sm font-medium text-gray-900 leading-relaxed">
                 {item.description || "—"}

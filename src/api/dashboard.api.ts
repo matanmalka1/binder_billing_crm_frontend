@@ -14,12 +14,14 @@ export interface DashboardOverviewResponse {
   sla_state?: string | null;
   signals?: string[] | null;
   quick_actions?: BackendAction[] | null;
+  attention: AttentionResponse;
 }
 
 export interface DashboardSummaryResponse {
   binders_in_office: number;
   binders_ready_for_pickup: number;
   binders_overdue: number;
+  attention: AttentionResponse;
 }
 
 export interface AttentionItem {

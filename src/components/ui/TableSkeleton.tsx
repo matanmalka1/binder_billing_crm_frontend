@@ -1,5 +1,6 @@
 import { Card } from "./Card";
 import { cn } from "../../utils/utils";
+import { staggerDelay } from "../../utils/animation";
 
 export interface TableSkeletonProps {
   rows?: number;
@@ -46,7 +47,7 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
                       )}
                       style={{
                         backgroundSize: "1000px 100%",
-                        animationDelay: `${rowIndex * 50}ms`,
+                        animationDelay: staggerDelay(rowIndex),
                       }}
                     />
                   </td>

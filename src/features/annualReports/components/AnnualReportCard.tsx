@@ -3,6 +3,7 @@ import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { getReportStageLabel, getStageColor } from "../../../api/annualReports.utils";
+import { staggerDelay } from "../../../utils/animation";
 import type { StageKey } from "../hooks/useAnnualReportsKanban";
 
 interface Props {
@@ -19,7 +20,7 @@ interface Props {
   canMoveBack: boolean;
   canMoveForward: boolean;
   onTransition: (reportId: number, stageKey: StageKey, dir: "forward" | "back") => void;
-  animationDelay: number;
+  animationIndex: number;
 }
 
 export const AnnualReportCard: React.FC<Props> = ({
@@ -30,12 +31,12 @@ export const AnnualReportCard: React.FC<Props> = ({
   canMoveBack,
   canMoveForward,
   onTransition,
-  animationDelay,
+  animationIndex,
 }) => (
   <Card
     variant="elevated"
     className="group hover:shadow-elevation-3 transition-all duration-200 animate-scale-in h-[220px] flex flex-col"
-    style={{ animationDelay: `${animationDelay}ms` }}
+    style={{ animationDelay: staggerDelay(animationIndex) }}
   >
     <div className="mb-3 flex-1">
       <div className="mb-2 flex items-start justify-between gap-2">

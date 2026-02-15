@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
 import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
+import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
 import { toast } from "../../../utils/toast";
 import type { TaxDeadlineFilters, CreateTaxDeadlineForm } from "../types";
 
@@ -21,19 +22,23 @@ export const useTaxDeadlines = () => {
       page: parsePositiveInt(searchParams.get("page"), 1),
       page_size: parsePositiveInt(searchParams.get("page_size"), 20),
     }),
-    [searchParams]
+    [searchParams],
+  );
+
+  const apiParams = useMemo(
+    () => ({
+      client_id: toOptionalNumber(filters.client_id),
+      deadline_type: toOptionalString(filters.deadline_type),
+      status: toOptionalString(filters.status),
+      page: filters.page,
+      page_size: filters.page_size,
+    }),
+    [filters],
   );
 
   const deadlinesQuery = useQuery({
-    queryKey: ["tax", "deadlines", "list", filters],
-    queryFn: () =>
-      taxDeadlinesApi.listTaxDeadlines({
-        client_id: filters.client_id ? Number(filters.client_id) : undefined,
-        deadline_type: filters.deadline_type || undefined,
-        status: filters.status || undefined,
-        page: filters.page,
-        page_size: filters.page_size,
-      }),
+    queryKey: ["tax", "deadlines", "list", apiParams],
+    queryFn: () => taxDeadlinesApi.listTaxDeadlines(apiParams),
   });
 
   const createMutation = useMutation({

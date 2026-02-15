@@ -1,6 +1,7 @@
 import { calculateDaysRemaining, getDeadlineIcon, getDeadlineTypeLabel } from "../../../api/taxDeadlines.utils";
 import { Card } from "../../../components/ui/Card";
 import { formatDate } from "../../../utils/utils";
+import { staggerDelay } from "../../../utils/animation";
 import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
 
 interface Props {
@@ -21,7 +22,7 @@ export const TaxUpcomingDeadlines: React.FC<Props> = ({ items }) => {
           <div
             key={deadline.id}
             className="flex items-center justify-between rounded-lg border border-gray-200 p-3 hover:bg-gray-50 transition-colors"
-            style={{ animationDelay: `${index * 30}ms` }}
+            style={{ animationDelay: staggerDelay(index) }}
           >
             <div className="flex items-center gap-3">
               <span className="text-xl">{getDeadlineIcon(deadline.deadline_type)}</span>

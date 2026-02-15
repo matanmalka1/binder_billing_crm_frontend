@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { cn } from "../../utils/utils";
+import { staggerDelay } from "../../utils/animation";
 
 export interface Breadcrumb {
   label: string;
@@ -73,7 +74,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
 
         {/* Optional Action Buttons */}
         {actions && (
-          <div className="flex items-center gap-2 animate-slide-in" style={{ animationDelay: '100ms' }}>
+          <div
+            className="flex items-center gap-2 animate-slide-in"
+            style={{ animationDelay: staggerDelay(1, 100) }}
+          >
             {actions}
           </div>
         )}

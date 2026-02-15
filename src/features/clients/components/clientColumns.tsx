@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import { Button } from "../../../components/ui/Button";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ClientResponse } from "../../../api/clients.api";
-import { mapActions } from "../../../lib/actions/mapActions";
+import { buildActionsColumn } from "../../../components/ui/columnHelpers";
 import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
 import type { ActionCommand } from "../../../lib/actions/types";
@@ -16,12 +15,12 @@ const clientStatusVariants: Record<string, "success" | "warning" | "error" | "in
 
 interface BuildClientColumnsParams {
   activeActionKey: string | null;
-  handleActionClick: (action: ActionCommand) => void;
+  onAction: (action: ActionCommand) => void;
 }
 
 export const buildClientColumns = ({
   activeActionKey,
-  handleActionClick,
+  onAction,
 }: BuildClientColumnsParams): Column<ClientResponse>[] => [
   {
     key: "full_name",
@@ -85,33 +84,11 @@ export const buildClientColumns = ({
   {
     key: "actions",
     header: "פעולות",
-    render: (client) => {
-      const actions = mapActions(client.available_actions);
-
-      if (actions.length === 0) {
-        return <span className="text-gray-500">—</span>;
-      }
-
-      return (
-        <div className="flex flex-wrap gap-2">
-          {actions.map((action: ActionCommand) => (
-            <Button
-              key={action.uiKey}
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleActionClick(action);
-              }}
-              isLoading={activeActionKey === action.uiKey}
-              disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
-            >
-              {action.label || "—"}
-            </Button>
-          ))}
-        </div>
-      );
-    },
+    render: buildActionsColumn<ClientResponse>({
+      header: "פעולות",
+      activeActionKey,
+      onAction,
+      getActions: (client) => client.available_actions as ActionCommand[] | undefined,
+    }).render,
   },
 ];

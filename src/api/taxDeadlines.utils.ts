@@ -1,4 +1,6 @@
-const deadlineTypeLabels: Record<string, string> = {
+import { makeClassGetter, makeLabelGetter } from "../utils/labels";
+
+const deadlineTypeLabels = {
   vat: "מע״מ",
   advance_payment: "מקדמות",
   national_insurance: "ביטוח לאומי",
@@ -6,14 +8,14 @@ const deadlineTypeLabels: Record<string, string> = {
   other: "אחר",
 };
 
-const urgencyLabels: Record<string, string> = {
+const urgencyLabels = {
   green: "תקין",
   yellow: "קרוב למועד",
   red: "דחוף",
   overdue: "באיחור",
 };
 
-const urgencyColors: Record<string, string> = {
+const urgencyColors = {
   green: "bg-green-100 text-green-800 border-green-200",
   yellow: "bg-yellow-100 text-yellow-800 border-yellow-200",
   red: "bg-red-100 text-red-800 border-red-200",
@@ -21,7 +23,7 @@ const urgencyColors: Record<string, string> = {
   overdue: "bg-red-600 text-white border-red-700",
 };
 
-const deadlineIcons: Record<string, string> = {
+const deadlineIcons = {
   vat: "📊",
   advance_payment: "💰",
   national_insurance: "🏥",
@@ -29,17 +31,13 @@ const deadlineIcons: Record<string, string> = {
   other: "📌",
 };
 
-export const getDeadlineTypeLabel = (type: string): string => {
-  return deadlineTypeLabels[type] || "אחר";
-};
-
-export const getUrgencyLabel = (urgency: string): string => {
-  return urgencyLabels[urgency] || "—";
-};
-
-export const getUrgencyColor = (urgency: string): string => {
-  return urgencyColors[urgency] || "bg-gray-100 text-gray-800 border-gray-200";
-};
+export const getDeadlineTypeLabel = makeLabelGetter(deadlineTypeLabels, "אחר");
+export const getUrgencyLabel = makeLabelGetter(urgencyLabels);
+export const getUrgencyColor = makeClassGetter(
+  urgencyColors,
+  undefined,
+  "bg-gray-100 text-gray-800 border-gray-200",
+);
 
 export const formatCurrency = (amount: number | null, currency = "ILS"): string => {
   if (amount === null) return "—";

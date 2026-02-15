@@ -9,6 +9,7 @@ import {
   getDeadlineTypeLabel,
   getUrgencyColor,
 } from "../../../api/taxDeadlines.utils";
+import { staggerDelay } from "../../../utils/animation";
 import { formatDate } from "../../../utils/utils";
 
 interface Props {
@@ -77,7 +78,7 @@ export const TaxDeadlinesTable: React.FC<Props> = ({
                 <tr
                   key={deadline.id}
                   className="group transition-all duration-200 hover:bg-gradient-to-r hover:from-primary-50/30 hover:to-transparent animate-fade-in"
-                  style={{ animationDelay: `${index * 30}ms` }}
+                  style={{ animationDelay: staggerDelay(index) }}
                 >
                   <td className="py-4 pr-6">
                     <span className="font-mono text-sm font-semibold text-gray-900">

@@ -83,16 +83,16 @@ export const useClientsPage = () => {
   const {
     cancelPendingAction,
     confirmPendingAction,
-    handleAction: handleActionClick,
+    handleAction: onAction,
     pendingAction,
   } = useConfirmableAction(runAction, (action) => Boolean(action.confirm));
 
   return {
     activeActionKey,
-    clients: listQuery.data?.items ?? ([] as ClientResponse[]),
+    clients: listQuery.data?.items ?? [],
     error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת רשימת לקוחות") : null,
     filters,
-    handleActionClick,
+    onAction,
     handleFilterChange,
     loading: listQuery.isPending,
     pendingAction,

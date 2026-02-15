@@ -10,6 +10,7 @@ import {
 } from "../../../api/charges.api";
 import { useAuthStore } from "../../../store/auth.store";
 import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
+import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
@@ -27,8 +28,8 @@ export const useChargesPage = () => {
 
   const apiParams = useMemo<ChargesListParams>(
     () => ({
-      client_id: filters.client_id ? Number(filters.client_id) : undefined,
-      status: filters.status || undefined,
+      client_id: toOptionalNumber(filters.client_id),
+      status: toOptionalString(filters.status),
       page: filters.page,
       page_size: filters.page_size,
     }),
