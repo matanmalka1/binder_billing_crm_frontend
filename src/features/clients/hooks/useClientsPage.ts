@@ -1,26 +1,26 @@
 import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { clientsApi } from "../../../api/clients.api";
-import { getRequestErrorMessage, handleCanonicalActionError, parsePositiveInt } from "../../../utils/utils";
+import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { clientsKeys } from "../queryKeys";
+import { usePaginationParams } from "../../../hooks/usePaginationParams";
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { searchParams, setSearchParams, page, page_size, setPage: setPageParam } = usePaginationParams();
   const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
   const filters = useMemo(
     () => ({
       has_signals: searchParams.get("has_signals") ?? "",
       status: searchParams.get("status") ?? "",
-      page: parsePositiveInt(searchParams.get("page"), 1),
-      page_size: parsePositiveInt(searchParams.get("page_size"), 20),
+      page,
+      page_size,
     }),
-    [searchParams],
+    [searchParams, page, page_size],
   );
 
   const listParams = useMemo(
@@ -59,11 +59,7 @@ export const useClientsPage = () => {
     setSearchParams(next);
   };
 
-  const setPage = (nextPage: number) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("page", String(nextPage));
-    setSearchParams(next);
-  };
+  const setPage = (nextPage: number) => setPageParam(nextPage);
 
   const runAction = useCallback(
     async (action: ActionCommand) => {

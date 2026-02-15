@@ -9,7 +9,6 @@ import {
   type UploadDocumentPayload,
 } from "../../../api/documents.api";
 import { getRequestErrorMessage } from "../../../utils/utils";
-import { emptySignals } from "../constants/emptySignals";
 import { documentsKeys } from "../queryKeys";
 
 export const useDocumentsPage = () => {
@@ -103,7 +102,13 @@ export const useDocumentsPage = () => {
     loading,
     selectedClientId,
     setClient,
-    signals: (signalsQuery.data ?? emptySignals) as OperationalSignalsResponse,
+    signals: (signalsQuery.data ??
+      ({
+        client_id: 0,
+        missing_documents: [],
+        binders_nearing_sla: [],
+        binders_overdue: [],
+      } as OperationalSignalsResponse)),
     submitUpload,
     uploadError,
     uploading: uploadMutation.isPending,

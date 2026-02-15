@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
   chargesApi,
@@ -10,12 +9,12 @@ import {
 import { chargesKeys } from "../queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
 import { getRequestErrorMessage } from "../../../utils/utils";
-import { parsePositiveInt } from "../../../utils/utils";
+import { usePaginationParams } from "../../../hooks/usePaginationParams";
 import type { ChargesFilters } from "../types";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { searchParams, setSearchParams, page, page_size, setPage } = usePaginationParams();
   const { user } = useAuthStore();
   const isAdvisor = user?.role === "advisor";
 
@@ -23,10 +22,10 @@ export const useChargesPage = () => {
     () => ({
       client_id: searchParams.get("client_id") ?? "",
       status: searchParams.get("status") ?? "",
-      page: parsePositiveInt(searchParams.get("page"), 1),
-      page_size: parsePositiveInt(searchParams.get("page_size"), 20),
+      page,
+      page_size,
     }),
-    [searchParams],
+    [searchParams, page, page_size],
   );
 
   const listParams = useMemo<ChargesListParams>(
