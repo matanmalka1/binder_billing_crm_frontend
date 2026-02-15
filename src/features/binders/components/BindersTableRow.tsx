@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "../../../components/ui/Badge";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveEntityActions } from "../../../lib/actions/adapter";
+import { resolveActions } from "../../../lib/actions/adapter";
 import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
 import { formatDate, getStatusBadge } from "./bindersTable.utils";
 import type { BindersTableRowProps } from "../types";
@@ -11,12 +11,11 @@ const BindersTableRowView: React.FC<BindersTableRowProps> = ({
   activeActionKey,
   onActionClick,
 }) => {
-  const actions = resolveEntityActions(
-    binder.available_actions,
-    "/binders",
-    binder.id,
-    `binder-${binder.id}`,
-  );
+  const actions = resolveActions(binder.available_actions, {
+    entityPath: "/binders",
+    entityId: binder.id,
+    scopeKey: `binder-${binder.id}`,
+  });
 
   return (
     <tr className="hover:bg-gray-50">

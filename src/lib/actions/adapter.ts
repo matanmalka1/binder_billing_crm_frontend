@@ -1,4 +1,3 @@
-import { isAdvisorOnlyEndpoint } from "../../contracts/guards";
 import { useAuthStore } from "../../store/auth.store";
 import {
   getActionLabel,
@@ -90,13 +89,6 @@ const resolveConfirm = (
 };
 
 const isEntityPath = (value: string): value is EntityPath => value in ENTITY_CONTEXT_KEYS;
-
-const getEntityIds = (entityPath: string, entityId: number): ResolveContext => {
-  if (!isEntityPath(entityPath)) return {};
-
-  const contextKey = ENTITY_CONTEXT_KEYS[entityPath];
-  return { [contextKey]: entityId };
-};
 
 const buildUiKey = (index: number, baseKey: string, scopeKey?: string): string => {
   return `${scopeKey || DEFAULT_SCOPE_KEY}-${index}-${baseKey}`;
@@ -208,7 +200,7 @@ const materializeAction = (
   if (!isActionAllowed(actionId, role)) return null;
 
   const method = normalized.method ?? canonical?.method ?? fallbackMethod(actionId);
-  if (role === "secretary" && isAdvisorOnlyEndpoint(method.toUpperCase(), endpoint)) {
+  if (role === "secretary" ) {
     return null;
   }
 
@@ -224,7 +216,7 @@ const materializeAction = (
   };
 };
 
-const resolveActions = (
+export const resolveActions = (
   actions: BackendActionInput[] | null | undefined,
   context: ResolveContext,
 ): ActionCommand[] => {
@@ -236,23 +228,4 @@ const resolveActions = (
       return materializeAction(normalized);
     })
     .filter((action): action is ActionCommand => action !== null);
-};
-
-export const resolveStandaloneActions = (
-  actions: BackendActionInput[] | null | undefined,
-  scopeKey?: string,
-): ActionCommand[] => resolveActions(actions, { scopeKey });
-
-export const resolveEntityActions = (
-  actions: BackendActionInput[] | null | undefined,
-  entityPath: string,
-  entityId: number,
-  scopeKey?: string,
-): ActionCommand[] => {
-  return resolveActions(actions, {
-    ...getEntityIds(entityPath, entityId),
-    entityPath,
-    entityId,
-    scopeKey,
-  });
 };

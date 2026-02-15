@@ -1,6 +1,6 @@
 import React from "react";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveEntityActions, resolveStandaloneActions } from "../../../lib/actions/adapter";
+import { resolveActions } from "../../../lib/actions/adapter";
 import type { TimelineActionRowProps } from "../types";
 
 export const TimelineActionRow: React.FC<TimelineActionRowProps> = ({
@@ -11,12 +11,14 @@ export const TimelineActionRow: React.FC<TimelineActionRowProps> = ({
   activeActionKey,
   onAction,
 }) => {
-  const resolvedActions =
+  const resolvedContext =
     binderId !== null
-      ? resolveEntityActions(actions, "/binders", binderId, scopeKey)
+      ? { entityPath: "/binders", entityId: binderId, scopeKey }
       : chargeId !== null
-        ? resolveEntityActions(actions, "/charges", chargeId, scopeKey)
-        : resolveStandaloneActions(actions, scopeKey);
+        ? { entityPath: "/charges", entityId: chargeId, scopeKey }
+        : { scopeKey };
+
+  const resolvedActions = resolveActions(actions, resolvedContext);
 
   if (resolvedActions.length === 0) {
     return null;

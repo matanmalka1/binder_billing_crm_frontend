@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveEntityActions } from "../../../lib/actions/adapter";
+import { resolveActions } from "../../../lib/actions/adapter";
 import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import type { ClientsTableCardProps } from "../types";
 
@@ -46,12 +46,11 @@ export const ClientsTableCard: React.FC<ClientsTableCardProps> = ({
           </thead>
           <tbody className="divide-y divide-gray-100">
             {clients.map((client) => {
-              const actions = resolveEntityActions(
-                client.available_actions,
-                "/clients",
-                client.id,
-                `client-${client.id}`,
-              );
+              const actions = resolveActions(client.available_actions, {
+                entityPath: "/clients",
+                entityId: client.id,
+                scopeKey: `client-${client.id}`,
+              });
               return (
                 <tr key={client.id} className="hover:bg-gray-50">
                   <td className="py-3 pr-4 font-medium text-gray-900">{client.full_name}</td>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveStandaloneActions } from "../../../lib/actions/adapter";
+import { resolveActions } from "../../../lib/actions/adapter";
 import type { BackendQuickAction, ActionCommand } from "../../../lib/actions/types";
 
 interface OperationalPanelProps {
@@ -15,7 +15,7 @@ export const OperationalPanel: React.FC<OperationalPanelProps> = ({
   activeActionKey,
   onQuickAction,
 }) => {
-  const actions = resolveStandaloneActions(quickActions, "dashboard-quick");
+  const actions = resolveActions(quickActions, { scopeKey: "dashboard-quick" });
 
   if (actions.length === 0) {
     return null;
