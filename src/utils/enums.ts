@@ -1,12 +1,12 @@
 import { getActionLabel as getCanonicalActionLabel } from "../lib/actions/catalog";
 
 /**
- * Safe enum label mappers - ensures Hebrew-only UI
+ * Label mappers for enum values
  *
- * All unknown values return safe fallback "—" (em dash)
- * No English text can leak to UI
+ * IMPORTANT: These are the canonical source for display labels.
+ * When you update these, also update the corresponding constants
+ * in src/constants/filterOptions.constants.ts
  */
-
 export const getStatusLabel = (status: string): string => {
   const labels: Record<string, string> = {
     in_office: "במשרד",

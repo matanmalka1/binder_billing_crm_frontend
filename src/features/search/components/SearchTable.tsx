@@ -1,21 +1,8 @@
 import React from "react";
 import { Badge } from "../../../components/ui/Badge";
-import {
-  getSignalLabel,
-  getSlaStateLabel,
-  getWorkStateLabel,
-} from "../../../utils/enums";
+import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
+import { getResultTypeLabel } from "../../../constants/filterOptions.constants";
 import type { SearchTableProps } from "../types";
-
-const getResultTypeLabel = (resultType: string) => {
-  if (resultType === "binder") {
-    return "תיק";
-  }
-  if (resultType === "client") {
-    return "לקוח";
-  }
-  return "—";
-};
 
 export const SearchTable: React.FC<SearchTableProps> = ({ results }) => {
   return (

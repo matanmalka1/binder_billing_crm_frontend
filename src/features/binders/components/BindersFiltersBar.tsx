@@ -1,5 +1,6 @@
 import React from "react";
 import { Select } from "../../../components/ui/Select";
+import { SLA_STATE_OPTIONS, WORK_STATE_OPTIONS } from "../../../constants/filterOptions.constants";
 import type { BindersFiltersBarProps } from "../types";
 
 export const BindersFiltersBar: React.FC<BindersFiltersBarProps> = ({
@@ -12,23 +13,15 @@ export const BindersFiltersBar: React.FC<BindersFiltersBarProps> = ({
         label="מצב עבודה"
         value={filters.work_state}
         onChange={(event) => onFilterChange("work_state", event.target.value)}
-      >
-        <option value="">הכל</option>
-        <option value="waiting_for_work">ממתין לטיפול</option>
-        <option value="in_progress">בטיפול</option>
-        <option value="completed">הושלם</option>
-      </Select>
+        options={WORK_STATE_OPTIONS}
+      />
 
       <Select
         label="מצב SLA"
         value={filters.sla_state}
         onChange={(event) => onFilterChange("sla_state", event.target.value)}
-      >
-        <option value="">הכל</option>
-        <option value="on_track">במסלול</option>
-        <option value="approaching">מתקרב ליעד</option>
-        <option value="overdue">באיחור</option>
-      </Select>
+        options={SLA_STATE_OPTIONS}
+      />
     </div>
   );
 };
