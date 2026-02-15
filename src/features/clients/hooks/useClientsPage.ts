@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { clientsApi } from "../../../api/clients.api";
-import { handleCanonicalActionError } from "../../../utils/errorHandler";
+import { handleCanonicalActionError } from "../../../utils/utils";
 import { parsePositiveInt } from "../../../utils/utils";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
 import { executeAction } from "../../../lib/actions/runtime";

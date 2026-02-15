@@ -9,7 +9,7 @@ import type {
   DashboardSummaryResponse,
 } from "../../../api/dashboard.api";
 import { useAuthStore } from "../../../store/auth.store";
-import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/errorHandler";
+import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { dashboardKeys } from "../queryKeys";

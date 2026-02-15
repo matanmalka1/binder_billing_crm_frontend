@@ -8,7 +8,7 @@ import {
   type OperationalSignalsResponse,
   type UploadDocumentPayload,
 } from "../../../api/documents.api";
-import { getRequestErrorMessage } from "../../../utils/errorHandler";
+import { getRequestErrorMessage } from "../../../utils/utils";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
 import { emptySignals } from "../constants/emptySignals";
 import { documentsKeys } from "../queryKeys";
