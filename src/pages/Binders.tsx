@@ -1,7 +1,7 @@
 import { Card } from "../components/ui/Card";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
-import { PendingActionDialog } from "../features/actions/components/PendingActionDialog";
+import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { BindersFiltersBar } from "../features/binders/components/BindersFiltersBar";
 import { BindersTableCard } from "../features/binders/components/BindersTableCard";
 import { useBindersPage } from "../features/binders/hooks/useBindersPage";
@@ -43,9 +43,13 @@ export const Binders: React.FC = () => {
           onActionClick={handleActionClick}
         />
       )}
-      <PendingActionDialog
-        pendingAction={pendingAction}
-        activeActionKey={activeActionKey}
+      <ConfirmDialog
+        open={Boolean(pendingAction)}
+        title={pendingAction?.confirm?.title || "אישור פעולה"}
+        message={pendingAction?.confirm?.message || "האם להמשיך בביצוע הפעולה?"}
+        confirmLabel={pendingAction?.confirm?.confirmLabel || "אישור"}
+        cancelLabel={pendingAction?.confirm?.cancelLabel || "ביטול"}
+        isLoading={activeActionKey === pendingAction?.uiKey}
         onConfirm={confirmPendingAction}
         onCancel={cancelPendingAction}
       />
