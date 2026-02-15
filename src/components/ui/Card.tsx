@@ -6,7 +6,7 @@ interface CardProps {
   title?: string;
   subtitle?: string;
   footer?: React.ReactNode;
-  variant?: "default" | "elevated" | "glass" | "gradient";
+  variant?: "default" | "elevated";
   interactive?: boolean;
 }
 
@@ -22,9 +22,6 @@ export const Card: React.FC<CardProps> = ({
   const variants = {
     default: "bg-white border border-gray-200/80",
     elevated: "bg-white border-0 shadow-elevation-2",
-    glass: "glass border-white/20",
-    gradient:
-      "bg-gradient-to-br from-white to-primary-50/30 border border-primary-100/50",
   };
 
   return (

@@ -100,9 +100,9 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
                   activeActionKey !== null &&
                   activeActionKey !== action.uiKey
                 }
-                rightIcon={<ChevronLeft className="h-3 w-3" />}
               >
                 {action.label || "—"}
+                <ChevronLeft className="h-3 w-3" />
               </Button>
             ))}
           </div>

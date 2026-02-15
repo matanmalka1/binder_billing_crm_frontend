@@ -1,13 +1,10 @@
-import type { ReactNode } from "react";
 import { cn } from "../../utils/utils";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "gradient";
-  size?: "sm" | "md" | "lg";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
+  size?: "sm" | "md";
   isLoading?: boolean;
   fullWidth?: boolean;
-  leftIcon?: ReactNode;
-  rightIcon?: ReactNode;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -18,8 +15,6 @@ export const Button: React.FC<ButtonProps> = ({
   isLoading,
   disabled,
   fullWidth = false,
-  leftIcon,
-  rightIcon,
   ...props
 }) => {
   const variants = {
@@ -31,14 +26,11 @@ export const Button: React.FC<ButtonProps> = ({
     ghost: "text-gray-600 hover:bg-gray-100 active:bg-gray-200",
     danger:
       "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm",
-    gradient:
-      "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-sm hover:shadow-md",
   };
 
   const sizes = {
     sm: "px-3 py-1.5 text-sm",
     md: "px-4 py-2 text-base",
-    lg: "px-6 py-3 text-lg",
   };
 
   return (
@@ -59,9 +51,7 @@ export const Button: React.FC<ButtonProps> = ({
         <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
       )}
       <span className={cn("inline-flex items-center gap-2", isLoading && "opacity-0")}>
-        {leftIcon}
         {children}
-        {rightIcon}
       </span>
     </button>
   );

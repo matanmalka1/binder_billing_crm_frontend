@@ -77,10 +77,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
         {/* Optional Action */}
         {action && (
-          <Button 
+        <Button 
             onClick={action.onClick} 
             variant="primary"
-            size="lg"
           >
             {action.label}
           </Button>

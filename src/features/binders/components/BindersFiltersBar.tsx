@@ -30,15 +30,15 @@ export const BindersFiltersBar: React.FC<BindersFiltersBarProps> = ({
         </div>
 
         {hasActiveFilters && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleReset}
-            leftIcon={<RotateCcw className="h-4 w-4" />}
-          >
-            איפוס
-          </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={handleReset}
+        >
+          <RotateCcw className="h-4 w-4" />
+          איפוס
+        </Button>
         )}
       </div>
 
