@@ -1,5 +1,5 @@
 import React from "react";
-import { PageErrorCard } from "../components/ui/PageErrorCard";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
 import { SearchContent } from "../features/search/components/SearchContent";
 import { useSearchPage } from "../features/search/hooks/useSearchPage";
@@ -25,7 +25,7 @@ export const Search: React.FC = () => {
         />
       )}
 
-      {error && <PageErrorCard message={error} />}
+      {error && <ErrorCard message={error} />}
     </div>
   );
 };

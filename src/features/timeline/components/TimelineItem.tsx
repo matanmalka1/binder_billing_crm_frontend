@@ -1,6 +1,7 @@
 import React from "react";
 import { Badge } from "../../../components/ui/Badge";
-import { TimelineActionRow } from "./TimelineActionRow";
+import { Button } from "../../../components/ui/Button";
+import { resolveActions } from "../../../lib/actions/adapter";
 import type { TimelineItemProps } from "../types";
 
 const getEventTypeLabel = (eventType: string) => {
@@ -26,6 +27,14 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
   onAction,
 }) => {
   const eventActions = event.actions || event.available_actions || [];
+  const scopeKey = `timeline-${itemKey}`;
+  const resolvedContext =
+    event.binder_id !== null
+      ? { entityPath: "/binders", entityId: event.binder_id, scopeKey }
+      : event.charge_id !== null
+        ? { entityPath: "/charges", entityId: event.charge_id, scopeKey }
+        : { scopeKey };
+  const resolvedActions = resolveActions(eventActions, resolvedContext);
 
   return (
     <li className="rounded-md border border-gray-200 p-3">
@@ -38,14 +47,22 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
         <span>תיק: {event.binder_id ?? "—"}</span>
         <span>חיוב: {event.charge_id ?? "—"}</span>
       </div>
-      <TimelineActionRow
-        actions={eventActions}
-        binderId={event.binder_id}
-        chargeId={event.charge_id}
-        scopeKey={`timeline-${itemKey}`}
-        activeActionKey={activeActionKey}
-        onAction={onAction}
-      />
+      {resolvedActions.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {resolvedActions.map((action) => (
+            <Button
+              key={action.uiKey}
+              type="button"
+              variant="outline"
+              onClick={() => onAction(action)}
+              isLoading={activeActionKey === action.uiKey}
+              disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
+            >
+              {action.label || "—"}
+            </Button>
+          ))}
+        </div>
+      )}
     </li>
   );
 };

@@ -1,6 +1,6 @@
 import React from "react";
-import { ActionButton } from "./ActionButton";
-import { ActionModal } from "./ActionModal";
+import { Button } from "../../../components/ui/Button";
+import { Modal } from "../../../components/ui/Modal";
 import type { ConfirmDialogProps } from "../types";
 
 export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
@@ -14,30 +14,32 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   onCancel,
 }) => {
   return (
-    <ActionModal
+    <Modal
       open={open}
       title={title}
       onClose={onCancel}
       footer={
         <div className="flex items-center justify-end gap-2">
-          <ActionButton
+          <Button
             type="button"
             variant="secondary"
-            label={cancelLabel}
             disabled={isLoading}
             onClick={onCancel}
-          />
-          <ActionButton
+          >
+            {cancelLabel || "—"}
+          </Button>
+          <Button
             type="button"
-            label={confirmLabel}
             isLoading={isLoading}
             disabled={isLoading}
             onClick={onConfirm}
-          />
+          >
+            {confirmLabel || "—"}
+          </Button>
         </div>
       }
     >
       <p className="text-sm text-gray-700">{message}</p>
-    </ActionModal>
+    </Modal>
   );
 };

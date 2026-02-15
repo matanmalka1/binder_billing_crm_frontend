@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../contracts/endpoints";
+import { ENDPOINTS } from "./endpoints";
 import type { AuthUser } from "../types/store";
 import { api } from "./client";
 
@@ -14,7 +14,10 @@ export interface LoginResponse {
 
 export const authApi = {
   login: async (payload: LoginRequest): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>(ENDPOINTS.authLogin, payload);
+    const response = await api.post<LoginResponse>(
+      ENDPOINTS.authLogin,
+      payload,
+    );
     return response.data;
   },
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { Card } from "../components/ui/Card";
-import { PageErrorCard } from "../components/ui/PageErrorCard";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { Select } from "../components/ui/Select";
@@ -56,7 +56,7 @@ export const ClientTimeline: React.FC = () => {
 
       {loading && <PageLoading />}
 
-      {error && <PageErrorCard message={error} />}
+      {error && <ErrorCard message={error} />}
 
       {!loading && !error && (
         <>

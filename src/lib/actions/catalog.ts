@@ -1,5 +1,5 @@
 import type { UserRole } from "../../types/store";
-import { ENDPOINTS } from "../../contracts/endpoints";
+import { ENDPOINTS } from "../../api/endpoints";
 import type { ActionId, ActionMethod } from "./types";
 
 export interface CanonicalActionContext {
@@ -58,10 +58,16 @@ const isNonEmptyText = (value: unknown): value is string =>
 
 export const hasValidReceivePayload = (
   payload?: Record<string, unknown>,
-): payload is Record<string, unknown> & { client_id: number; binder_number: string } => {
+): payload is Record<string, unknown> & {
+  client_id: number;
+  binder_number: string;
+} => {
   const clientId = payload?.client_id;
   const binderNumber = payload?.binder_number;
-  return isEntityId(typeof clientId === "number" ? clientId : null) && isNonEmptyText(binderNumber);
+  return (
+    isEntityId(typeof clientId === "number" ? clientId : null) &&
+    isNonEmptyText(binderNumber)
+  );
 };
 
 const resolvePostById = (
@@ -69,7 +75,9 @@ const resolvePostById = (
   id: number | null | undefined,
   endpointFactory: (entityId: number) => string,
 ): CanonicalActionResolution | null => {
-  return isEntityId(id) ? { id: actionId, method: "post", endpoint: endpointFactory(id) } : null;
+  return isEntityId(id)
+    ? { id: actionId, method: "post", endpoint: endpointFactory(id) }
+    : null;
 };
 
 const resolveClientStatusAction = (
@@ -83,7 +91,10 @@ const resolveClientStatusAction = (
     id: actionId,
     method: "patch",
     endpoint: ENDPOINTS.clientById(clientId),
-    payload: { ...payload, status: actionId === "freeze" ? "frozen" : "active" },
+    payload: {
+      ...payload,
+      status: actionId === "freeze" ? "frozen" : "active",
+    },
   };
 };
 
@@ -123,21 +134,46 @@ export const resolveCanonicalAction = (
   switch (actionId) {
     case "receive":
       return hasValidReceivePayload(context.payload)
-        ? { id: actionId, method: "post", endpoint: ENDPOINTS.binderReceive, payload: context.payload }
+        ? {
+            id: actionId,
+            method: "post",
+            endpoint: ENDPOINTS.binderReceive,
+            payload: context.payload,
+          }
         : null;
     case "ready":
       return resolvePostById(actionId, context.binderId, ENDPOINTS.binderReady);
     case "return":
-      return resolvePostById(actionId, context.binderId, ENDPOINTS.binderReturn);
+      return resolvePostById(
+        actionId,
+        context.binderId,
+        ENDPOINTS.binderReturn,
+      );
     case "freeze":
-      return resolveClientStatusAction(actionId, context.clientId, context.payload);
+      return resolveClientStatusAction(
+        actionId,
+        context.clientId,
+        context.payload,
+      );
     case "activate":
-      return resolveClientStatusAction(actionId, context.clientId, context.payload);
+      return resolveClientStatusAction(
+        actionId,
+        context.clientId,
+        context.payload,
+      );
     case "mark_paid":
-      return resolvePostById(actionId, context.chargeId, ENDPOINTS.chargeMarkPaid);
+      return resolvePostById(
+        actionId,
+        context.chargeId,
+        ENDPOINTS.chargeMarkPaid,
+      );
     case "issue_charge":
       return resolvePostById(actionId, context.chargeId, ENDPOINTS.chargeIssue);
     case "cancel_charge":
-      return resolvePostById(actionId, context.chargeId, ENDPOINTS.chargeCancel);
+      return resolvePostById(
+        actionId,
+        context.chargeId,
+        ENDPOINTS.chargeCancel,
+      );
   }
 };

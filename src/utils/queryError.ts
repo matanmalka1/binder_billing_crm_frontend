@@ -1,4 +1,4 @@
-import { getRequestErrorMessage } from "./errorHandler";
+import { getRequestErrorMessage } from "./utils";
 
 export const resolveQueryErrorMessage = (
   error: unknown,

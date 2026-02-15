@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
-import { ActionButton } from "../../actions/components/ActionButton";
+import { Button } from "../../../components/ui/Button";
 import { resolveActions } from "../../../lib/actions/adapter";
 import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import type { ClientsTableCardProps } from "../types";
@@ -71,15 +71,16 @@ export const ClientsTableCard: React.FC<ClientsTableCardProps> = ({
                     {actions.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {actions.map((action) => (
-                          <ActionButton
+                          <Button
                             key={action.uiKey}
                             type="button"
                             variant="outline"
-                            label={action.label}
                             onClick={() => onActionClick(action)}
                             isLoading={activeActionKey === action.uiKey}
                             disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
-                          />
+                          >
+                            {action.label || "—"}
+                          </Button>
                         ))}
                       </div>
                     ) : (

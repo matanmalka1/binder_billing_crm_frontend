@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../contracts/endpoints";
+import { ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";
 import type {
@@ -33,17 +33,24 @@ export const bindersApi = {
   },
 
   getById: async (binderId: number): Promise<BinderResponse> => {
-    const response = await api.get<BinderResponse>(ENDPOINTS.binderById(binderId));
+    const response = await api.get<BinderResponse>(
+      ENDPOINTS.binderById(binderId),
+    );
     return response.data;
   },
 
   receive: async (payload: ReceiveBinderPayload): Promise<BinderResponse> => {
-    const response = await api.post<BinderResponse>(ENDPOINTS.binderReceive, payload);
+    const response = await api.post<BinderResponse>(
+      ENDPOINTS.binderReceive,
+      payload,
+    );
     return response.data;
   },
 
   ready: async (binderId: number): Promise<BinderResponse> => {
-    const response = await api.post<BinderResponse>(ENDPOINTS.binderReady(binderId));
+    const response = await api.post<BinderResponse>(
+      ENDPOINTS.binderReady(binderId),
+    );
     return response.data;
   },
 
@@ -61,9 +68,12 @@ export const bindersApi = {
   listOpen: async (
     params: ListOperationalBindersParams,
   ): Promise<BinderExtendedListResponse> => {
-    const response = await api.get<BinderExtendedListResponse>(ENDPOINTS.bindersOpen, {
-      params: toQueryParams(params),
-    });
+    const response = await api.get<BinderExtendedListResponse>(
+      ENDPOINTS.bindersOpen,
+      {
+        params: toQueryParams(params),
+      },
+    );
     return response.data;
   },
 

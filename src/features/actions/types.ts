@@ -1,13 +1,4 @@
-import type { ReactNode } from "react";
 import type { ActionCommand } from "../../lib/actions/types";
-
-export interface ActionModalProps {
-  open: boolean;
-  title: string;
-  onClose: () => void;
-  children: ReactNode;
-  footer?: ReactNode;
-}
 
 export interface ConfirmDialogProps {
   open: boolean;

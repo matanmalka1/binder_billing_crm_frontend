@@ -1,5 +1,5 @@
 import type { BackendActionInput } from "../lib/actions/types";
-import { ENDPOINTS } from "../contracts/endpoints";
+import { ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";
 
@@ -32,9 +32,12 @@ export const timelineApi = {
     clientId: number,
     params: TimelineParams,
   ): Promise<TimelineResponse> => {
-    const response = await api.get<TimelineResponse>(ENDPOINTS.clientTimeline(clientId), {
-      params: toQueryParams(params),
-    });
+    const response = await api.get<TimelineResponse>(
+      ENDPOINTS.clientTimeline(clientId),
+      {
+        params: toQueryParams(params),
+      },
+    );
     return response.data;
   },
 };

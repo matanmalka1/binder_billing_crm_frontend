@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../contracts/endpoints";
+import { ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";
 

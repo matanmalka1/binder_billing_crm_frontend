@@ -1,5 +1,5 @@
 import React from "react";
-import { PageErrorCard } from "../components/ui/PageErrorCard";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { AccessDenied } from "../components/auth/AccessDenied";
@@ -53,7 +53,7 @@ export const Charges: React.FC = () => {
 
       {loading && <PageLoading />}
 
-      {error && <PageErrorCard message={error} />}
+      {error && <ErrorCard message={error} />}
 
       {!loading && !error && (
         <ChargesTableCard

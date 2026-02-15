@@ -1,5 +1,5 @@
 import type { BackendQuickAction } from "../lib/actions/types";
-import { ENDPOINTS } from "../contracts/endpoints";
+import { ENDPOINTS } from "./endpoints";
 import type { PaginatedResponse } from "../types/common";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";
@@ -70,17 +70,23 @@ export interface ListDashboardParams {
 
 export const dashboardApi = {
   getOverview: async (): Promise<DashboardOverviewResponse> => {
-    const response = await api.get<DashboardOverviewResponse>(ENDPOINTS.dashboardOverview);
+    const response = await api.get<DashboardOverviewResponse>(
+      ENDPOINTS.dashboardOverview,
+    );
     return response.data;
   },
 
   getSummary: async (): Promise<DashboardSummaryResponse> => {
-    const response = await api.get<DashboardSummaryResponse>(ENDPOINTS.dashboardSummary);
+    const response = await api.get<DashboardSummaryResponse>(
+      ENDPOINTS.dashboardSummary,
+    );
     return response.data;
   },
 
   getAttention: async (): Promise<AttentionResponse> => {
-    const response = await api.get<AttentionResponse>(ENDPOINTS.dashboardAttention);
+    const response = await api.get<AttentionResponse>(
+      ENDPOINTS.dashboardAttention,
+    );
     return response.data;
   },
 
@@ -89,10 +95,15 @@ export const dashboardApi = {
     return response.data;
   },
 
-  getWorkQueue: async (params: ListDashboardParams): Promise<WorkQueueResponse> => {
-    const response = await api.get<WorkQueueResponse>(ENDPOINTS.dashboardWorkQueue, {
-      params: toQueryParams(params),
-    });
+  getWorkQueue: async (
+    params: ListDashboardParams,
+  ): Promise<WorkQueueResponse> => {
+    const response = await api.get<WorkQueueResponse>(
+      ENDPOINTS.dashboardWorkQueue,
+      {
+        params: toQueryParams(params),
+      },
+    );
     return response.data;
   },
 };

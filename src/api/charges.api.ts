@@ -1,5 +1,5 @@
 import type { PaginatedResponse } from "../types/common";
-import { ENDPOINTS } from "../contracts/endpoints";
+import { ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";
 
@@ -57,17 +57,26 @@ export const chargesApi = {
   },
 
   getById: async (chargeId: number): Promise<ChargeResponse> => {
-    const response = await api.get<ChargeResponse>(ENDPOINTS.chargeById(chargeId));
+    const response = await api.get<ChargeResponse>(
+      ENDPOINTS.chargeById(chargeId),
+    );
     return response.data;
   },
 
-  create: async (payload: CreateChargePayload): Promise<ChargeAdvisorResponse> => {
-    const response = await api.post<ChargeAdvisorResponse>(ENDPOINTS.charges, payload);
+  create: async (
+    payload: CreateChargePayload,
+  ): Promise<ChargeAdvisorResponse> => {
+    const response = await api.post<ChargeAdvisorResponse>(
+      ENDPOINTS.charges,
+      payload,
+    );
     return response.data;
   },
 
   issue: async (chargeId: number): Promise<ChargeAdvisorResponse> => {
-    const response = await api.post<ChargeAdvisorResponse>(ENDPOINTS.chargeIssue(chargeId));
+    const response = await api.post<ChargeAdvisorResponse>(
+      ENDPOINTS.chargeIssue(chargeId),
+    );
     return response.data;
   },
 
@@ -79,7 +88,9 @@ export const chargesApi = {
   },
 
   cancel: async (chargeId: number): Promise<ChargeAdvisorResponse> => {
-    const response = await api.post<ChargeAdvisorResponse>(ENDPOINTS.chargeCancel(chargeId));
+    const response = await api.post<ChargeAdvisorResponse>(
+      ENDPOINTS.chargeCancel(chargeId),
+    );
     return response.data;
   },
 };

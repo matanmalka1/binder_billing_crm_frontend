@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../contracts/endpoints";
+import { ENDPOINTS } from "./endpoints";
 import { api } from "./client";
 
 export interface PermanentDocumentResponse {
@@ -29,7 +29,9 @@ export interface UploadDocumentPayload {
 }
 
 export const documentsApi = {
-  upload: async (payload: UploadDocumentPayload): Promise<PermanentDocumentResponse> => {
+  upload: async (
+    payload: UploadDocumentPayload,
+  ): Promise<PermanentDocumentResponse> => {
     const formData = new FormData();
     formData.append("client_id", String(payload.client_id));
     formData.append("document_type", payload.document_type);
@@ -48,14 +50,18 @@ export const documentsApi = {
     return response.data;
   },
 
-  listByClient: async (clientId: number): Promise<PermanentDocumentListResponse> => {
+  listByClient: async (
+    clientId: number,
+  ): Promise<PermanentDocumentListResponse> => {
     const response = await api.get<PermanentDocumentListResponse>(
       ENDPOINTS.documentsByClient(clientId),
     );
     return response.data;
   },
 
-  getSignalsByClient: async (clientId: number): Promise<OperationalSignalsResponse> => {
+  getSignalsByClient: async (
+    clientId: number,
+  ): Promise<OperationalSignalsResponse> => {
     const response = await api.get<OperationalSignalsResponse>(
       ENDPOINTS.documentSignalsByClient(clientId),
     );

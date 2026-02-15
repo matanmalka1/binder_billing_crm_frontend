@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "../../contracts/endpoints";
+import { ENDPOINTS } from "../../api/endpoints";
 import { api } from "../../api/client";
 import { hasValidReceivePayload } from "./catalog";
 import type { ActionCommand } from "./types";

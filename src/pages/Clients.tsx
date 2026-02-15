@@ -1,7 +1,6 @@
 import React from "react";
 import { Card } from "../components/ui/Card";
-import { EmptyStateCard } from "../components/ui/EmptyStateCard";
-import { PageErrorCard } from "../components/ui/PageErrorCard";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { PendingActionDialog } from "../features/actions/components/PendingActionDialog";
@@ -45,10 +44,12 @@ export const Clients: React.FC = () => {
 
       {loading && <PageLoading />}
 
-      {error && <PageErrorCard message={error} />}
+      {error && <ErrorCard message={error} />}
 
       {!loading && !error && clients.length === 0 && (
-        <EmptyStateCard message="אין לקוחות להצגה" />
+        <Card>
+          <p className="text-center text-gray-600">אין לקוחות להצגה</p>
+        </Card>
       )}
 
       {!loading && !error && clients.length > 0 && (

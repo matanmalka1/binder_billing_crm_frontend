@@ -13,12 +13,3 @@ export interface TimelineItemProps {
   activeActionKey: string | null;
   onAction: (action: ActionCommand) => void;
 }
-
-export interface TimelineActionRowProps {
-  actions: BackendActionInput[] | null | undefined;
-  binderId: number | null;
-  chargeId: number | null;
-  scopeKey: string;
-  activeActionKey: string | null;
-  onAction: (action: ActionCommand) => void;
-}

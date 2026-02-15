@@ -12,8 +12,7 @@ export const cn = (...classes: (string | boolean | undefined | null)[]): string 
 
 const toText = (value: unknown): string | null => {
   if (typeof value !== "string") return null;
-  const trimmed = value.trim();
-  return trimmed.length > 0 ? trimmed : null;
+  return value.trim().length > 0 ? value.trim() : null;
 };
 
 // ============================================================================

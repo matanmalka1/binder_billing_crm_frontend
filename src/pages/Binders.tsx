@@ -1,6 +1,5 @@
 import { Card } from "../components/ui/Card";
-import { EmptyStateCard } from "../components/ui/EmptyStateCard";
-import { PageErrorCard } from "../components/ui/PageErrorCard";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
 import { PendingActionDialog } from "../features/actions/components/PendingActionDialog";
 import { BindersFiltersBar } from "../features/binders/components/BindersFiltersBar";
@@ -31,9 +30,11 @@ export const Binders: React.FC = () => {
         <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </Card>
       {loading && <PageLoading />}
-      {error && <PageErrorCard message={error} />}
+      {error && <ErrorCard message={error} />}
       {!loading && !error && binders.length === 0 && (
-        <EmptyStateCard message="אין תיקים להצגה" />
+        <Card>
+          <p className="text-center text-gray-600">אין תיקים להצגה</p>
+        </Card>
       )}
       {!loading && !error && binders.length > 0 && (
         <BindersTableCard

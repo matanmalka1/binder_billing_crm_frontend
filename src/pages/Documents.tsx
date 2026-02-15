@@ -1,5 +1,5 @@
 import React from "react";
-import { PageErrorCard } from "../components/ui/PageErrorCard";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
 import { DocumentsClientCard } from "../features/documents/components/DocumentsClientCard";
 import { DocumentsDataCards } from "../features/documents/components/DocumentsDataCards";
@@ -40,7 +40,7 @@ export const Documents: React.FC = () => {
 
       {loading && <PageLoading />}
 
-      {error && <PageErrorCard message={error} />}
+      {error && <ErrorCard message={error} />}
 
       {!loading && !error && selectedClientId > 0 && (
         <DocumentsDataCards documents={documents} signals={signals} />

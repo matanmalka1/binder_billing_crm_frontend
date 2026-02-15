@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
-import { PageErrorCard } from "../components/ui/PageErrorCard";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
 import { AccessDenied } from "../components/auth/AccessDenied";
 import { isAdvisorCharge } from "../api/charges.api";
@@ -29,7 +29,7 @@ export const ChargeDetails: React.FC = () => {
 
       {loading && <PageLoading />}
 
-      {error && <PageErrorCard message={error} />}
+      {error && <ErrorCard message={error} />}
 
       {!loading && !error && charge && (
         <Card title={`חיוב #${charge.id}`}>

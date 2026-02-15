@@ -1,5 +1,5 @@
 import type { BackendActionInput } from "../lib/actions/types";
-import { ENDPOINTS } from "../contracts/endpoints";
+import { ENDPOINTS } from "./endpoints";
 import type { PaginatedResponse } from "../types/common";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";
@@ -52,7 +52,9 @@ export const clientsApi = {
   },
 
   getById: async (clientId: number): Promise<ClientResponse> => {
-    const response = await api.get<ClientResponse>(ENDPOINTS.clientById(clientId));
+    const response = await api.get<ClientResponse>(
+      ENDPOINTS.clientById(clientId),
+    );
     return response.data;
   },
 

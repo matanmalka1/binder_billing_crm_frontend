@@ -1,5 +1,5 @@
 import React from "react";
-import { PageErrorCard } from "../ui/PageErrorCard";
+import { ErrorCard } from "../ui/ErrorCard";
 
 interface AppErrorBoundaryProps {
   children: React.ReactNode;
@@ -36,7 +36,7 @@ export class AppErrorBoundary extends React.Component<
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
           <div className="w-full max-w-xl space-y-4">
-            <PageErrorCard message="אירעה שגיאה בלתי צפויה" />
+            <ErrorCard message="אירעה שגיאה בלתי צפויה" />
             <button
               type="button"
               onClick={this.handleReload}
