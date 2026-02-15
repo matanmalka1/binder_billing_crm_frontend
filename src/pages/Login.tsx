@@ -77,6 +77,7 @@ export const Login: React.FC = () => {
                   סיסמה
                 </label>
               </div>
+              
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="הזן את הסיסמה שלך"
@@ -98,11 +99,8 @@ export const Login: React.FC = () => {
             </div>
 
             {/* Remember Me */}
-            <div className="flex justify-end">
-              <label
-                className="flex items-center gap-2 cursor-pointer text-sm text-gray-700"
-                dir="rtl"
-              >
+            <div className="flex">
+              <label className="flex flex-row-reverse items-center gap-2 cursor-pointer text-sm text-gray-700">
                 <input
                   type="checkbox"
                   checked={rememberMe}
