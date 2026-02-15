@@ -6,6 +6,9 @@ import { PageLoading } from "../components/ui/PageLoading";
 import { AccessDenied } from "../components/auth/AccessDenied";
 import { useAuthStore } from "../store/auth.store";
 import { useChargeDetailsPage } from "../features/charges/hooks/useChargeDetailsPage";
+import { getChargeAmountText } from "../features/charges/utils/chargeStatus";
+
+
 import { formatDateTime } from "../utils/utils";
 export const ChargeDetails: React.FC = () => {
   const { chargeId } = useParams();
@@ -36,9 +39,8 @@ export const ChargeDetails: React.FC = () => {
             <p className="text-sm text-gray-700">סטטוס: {charge.status}</p>
             <p className="text-sm text-gray-700">סוג חיוב: {charge.charge_type}</p>
             <p className="text-sm text-gray-700">תקופה: {charge.period || "—"}</p>
-            <p className="text-sm text-gray-700">
-              סכום: {"amount" in charge && typeof charge.amount === "number" ? `${charge.amount} ${charge.currency}` : "—"}
-            </p>
+            <p className="text-sm text-gray-700">סכום: {getChargeAmountText(charge)}</p>
+
             <p className="text-sm text-gray-700">
               נוצר בתאריך: {formatDateTime(charge.created_at)}
             </p>

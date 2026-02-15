@@ -23,6 +23,3 @@ export const documentsUploadDefaultValues: DocumentsUploadFormValues = {
   file: null,
 };
 
-export const toUploadDocumentType = (
-  value: DocumentsUploadFormValues["document_type"],
-): UploadDocumentPayload["document_type"] => value;

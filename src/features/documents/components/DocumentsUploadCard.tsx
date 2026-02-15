@@ -7,7 +7,6 @@ import type { UploadDocumentPayload } from "../../../api/documents.api";
 import {
   documentsUploadDefaultValues,
   documentsUploadSchema,
-  toUploadDocumentType,
   type DocumentsUploadFormValues,
 } from "../schemas";
 
@@ -41,7 +40,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
       return;
     }
     const uploaded = await submitUpload({
-      document_type: toUploadDocumentType(values.document_type),
+      document_type: values.document_type,
       file: values.file,
     });
     if (uploaded) {

@@ -60,26 +60,21 @@ const BindersTableRowView: React.FC<BindersTableRowProps> = ({
   );
 };
 
-const keyBelongsToBinderRow = (key: string | null, binderId: number): boolean => {
-  if (!key) return false;
-  return key.startsWith(`binder-${binderId}-`);
-};
-
 export const BindersTableRow = React.memo(
   BindersTableRowView,
   (prevProps, nextProps) => {
+    // Data changed
     if (prevProps.binder !== nextProps.binder) return false;
+    // Callback identity changed
     if (prevProps.onActionClick !== nextProps.onActionClick) return false;
 
-    const previousKey = prevProps.activeActionKey;
-    const nextKey = nextProps.activeActionKey;
-
-    const didNullStateChange = (previousKey === null) !== (nextKey === null);
-    if (didNullStateChange) return false;
-
-    const rowBinderId = nextProps.binder.id;
-    if (keyBelongsToBinderRow(previousKey, rowBinderId)) return false;
-    if (keyBelongsToBinderRow(nextKey, rowBinderId)) return false;
+    const prevLoading = prevProps.activeActionKey?.startsWith(
+      `binder-${prevProps.binder.id}-`,
+    );
+    const nextLoading = nextProps.activeActionKey?.startsWith(
+      `binder-${nextProps.binder.id}-`,
+    );
+    if (prevLoading !== nextLoading) return false;
 
     return true;
   },

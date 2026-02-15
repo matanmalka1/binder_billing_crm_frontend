@@ -12,8 +12,8 @@ export const Dashboard: React.FC = () => {
     dashboard,
     denied,
     handleQuickAction,
+    confirmPendingAction,
     pendingQuickAction,
-    runQuickAction,
     setPendingQuickAction,
   } = useDashboardPage();
 
@@ -76,11 +76,7 @@ export const Dashboard: React.FC = () => {
         confirmLabel={pendingQuickAction?.confirm?.confirmLabel || "אישור"}
         cancelLabel={pendingQuickAction?.confirm?.cancelLabel || "ביטול"}
         isLoading={activeQuickAction === pendingQuickAction?.uiKey}
-        onConfirm={async () => {
-          if (!pendingQuickAction) return;
-          await runQuickAction(pendingQuickAction);
-          setPendingQuickAction(null);
-        }}
+        onConfirm={confirmPendingAction}
         onCancel={() => setPendingQuickAction(null)}
       />
     </div>

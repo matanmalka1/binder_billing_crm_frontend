@@ -35,7 +35,8 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
   onAction,
 }) => {
   const eventActions = event.actions || event.available_actions || [];
-  const scopeKey = `timeline-${itemKey}`;
+  // Keep action keys stable without duplicating the list index; timestamp + type are sufficient.
+  const scopeKey = `timeline-${event.timestamp}-${event.event_type}`;
   const resolvedActions = mapActions(eventActions, { scopeKey });
 
   return (

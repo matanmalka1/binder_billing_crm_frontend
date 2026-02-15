@@ -30,7 +30,7 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
 
       <Select
         label="גודל עמוד"
-        value={filters.page_size}
+        value={String(filters.page_size)}
         onChange={(event) => onFilterChange("page_size", event.target.value)}
       >
         <option value="20">20</option>

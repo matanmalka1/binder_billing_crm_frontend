@@ -71,11 +71,21 @@ export const useDashboardPage = () => {
     return typeof status === "number" ? status : null;
   };
 
-  const queryDenied =
-    getStatusCode(isAdvisor ? overviewQuery.error : summaryQuery.error) === 403 ||
-    getStatusCode(attentionQuery.error) === 403;
+  const denied = useMemo(() => {
+    const queryErrors = [
+      overviewQuery.error,
+      summaryQuery.error,
+      attentionQuery.error,
+    ];
+    const queryDenied = queryErrors.some((error) => getStatusCode(error) === 403);
 
-  const denied = queryDenied || actionDenied;
+    return queryDenied || actionDenied;
+  }, [
+    actionDenied,
+    attentionQuery.error,
+    overviewQuery.error,
+    summaryQuery.error,
+  ]);
 
   const dashboard = useMemo<DashboardState>(() => {
     if (!hasRole) {
@@ -165,12 +175,22 @@ export const useDashboardPage = () => {
     void runQuickAction(action);
   };
 
+  const confirmPendingAction = useCallback(async () => {
+    if (!pendingQuickAction) return;
+    try {
+      await runQuickAction(pendingQuickAction);
+    } finally {
+      setPendingQuickAction(null);
+    }
+  }, [pendingQuickAction, runQuickAction]);
+
   return {
     activeQuickAction,
     attentionItems,
     dashboard,
     denied,
     handleQuickAction,
+    confirmPendingAction,
     pendingQuickAction,
     runQuickAction,
     setPendingQuickAction,

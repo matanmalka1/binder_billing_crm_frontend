@@ -49,16 +49,13 @@ export const formatDateTime = (value: string | null): string => {
 // ============================================================================
 
 const extractDetailText = (detail: unknown): string | null => {
-  // Backend responses typically return either a plain string or
-  // an array of error objects with `detail`/`msg` fields. Keep parsing minimal.
-  const direct = toText(detail);
-  if (direct) return direct;
+  // Backend errors arrive either as a plain string or a Pydantic-style array
+  // like [{ msg: "...", loc: [...] }]; keep parsing minimal and predictable.
+  if (typeof detail === "string") return detail.trim() || null;
 
-  if (Array.isArray(detail) && detail.length > 0) {
-    const first = detail[0] as { detail?: unknown; msg?: unknown } | unknown;
-    if (first && typeof first === "object") {
-      return toText((first as { detail?: unknown }).detail) ?? toText((first as { msg?: unknown }).msg);
-    }
+  if (Array.isArray(detail) && detail[0] && typeof detail[0] === "object") {
+    const maybeMsg = (detail[0] as { msg?: unknown }).msg;
+    if (typeof maybeMsg === "string") return maybeMsg.trim() || null;
   }
 
   return null;
