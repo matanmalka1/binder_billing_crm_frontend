@@ -11,15 +11,18 @@ export const Search: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Standardized Header */}
       <PageHeader
         title="חיפוש"
         description="חיפוש גלובלי על בסיס נתוני שרת בלבד"
       />
 
+      {/* Standardized Filter Bar */}
       <FilterBar>
         <SearchFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </FilterBar>
 
+      {/* Standardized Table View with Pagination */}
       <PaginatedTableView
         data={results}
         loading={loading}

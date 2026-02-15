@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
+import { Clock4 } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
 import { PaginatedTableView } from "../components/ui/PaginatedTableView";
 import { Select } from "../components/ui/Select";
-import { Clock4 } from "lucide-react";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { TimelineCard } from "../features/timeline/components/TimelineCard";
 import { useClientTimelinePage } from "../features/timeline/hooks/useClientTimelinePage";
@@ -28,12 +28,14 @@ export const ClientTimeline: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Standardized Header with Breadcrumbs */}
       <PageHeader
         title="ציר זמן לקוח"
         description={`מזהה לקוח: ${clientId ?? "—"}`}
         breadcrumbs={[{ label: "לקוחות", to: "/clients" }]}
       />
 
+      {/* Standardized Filter Bar */}
       <FilterBar title="סינון">
         <div className="flex items-center gap-2 text-sm">
           <label className="text-gray-600">גודל עמוד:</label>
@@ -50,6 +52,7 @@ export const ClientTimeline: React.FC = () => {
         </div>
       </FilterBar>
 
+      {/* Standardized Table View with Pagination */}
       <PaginatedTableView
         data={events}
         loading={loading}
@@ -70,6 +73,7 @@ export const ClientTimeline: React.FC = () => {
         emptyState={{ icon: Clock4, message: "אין אירועים להצגה" }}
       />
 
+      {/* Confirm Dialog */}
       <ConfirmDialog
         open={Boolean(pendingAction)}
         title={pendingAction?.confirm?.title || "אישור פעולה"}

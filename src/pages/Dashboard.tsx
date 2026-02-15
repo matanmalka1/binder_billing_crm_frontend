@@ -23,8 +23,13 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="לוח בקרה" description="ברוך הבא למערכת בינדר וחיובים" />
+      {/* Standardized Header */}
+      <PageHeader 
+        title="לוח בקרה" 
+        description="ברוך הבא למערכת בינדר וחיובים" 
+      />
 
+      {/* Access Denied Banner (non-blocking) */}
       {denied && (
         <AccessBanner
           variant="warning"
@@ -32,14 +37,18 @@ export const Dashboard: React.FC = () => {
         />
       )}
 
+      {/* Loading State */}
       {dashboard.status === "loading" && <PageLoading />}
 
+      {/* Error State */}
       {dashboard.status === "error" && !denied && (
         <ErrorCard message={dashboard.message} />
       )}
 
+      {/* Success - Advisor View */}
       {dashboard.status === "ok" && dashboard.data?.role_view === "advisor" && (
         <>
+          {/* Stats Grid with Standardized Cards */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <StatsCard
               title="לקוחות"
@@ -78,8 +87,10 @@ export const Dashboard: React.FC = () => {
             />
           </div>
 
+          {/* Attention Panel */}
           <AttentionPanel items={attentionItems} />
 
+          {/* Operational Panel */}
           <OperationalPanel
             quickActions={dashboard.data.quick_actions ?? []}
             activeActionKey={activeQuickAction}
@@ -88,8 +99,10 @@ export const Dashboard: React.FC = () => {
         </>
       )}
 
+      {/* Success - Secretary View */}
       {dashboard.status === "ok" && dashboard.data?.role_view === "secretary" && (
         <>
+          {/* Stats Grid */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <StatsCard
               title="תיקים במשרד"
@@ -114,10 +127,12 @@ export const Dashboard: React.FC = () => {
             />
           </div>
 
+          {/* Attention Panel */}
           <AttentionPanel items={attentionItems} />
         </>
       )}
-    
+
+      {/* Confirm Dialog */}
       <ConfirmDialog
         open={Boolean(pendingQuickAction)}
         title={pendingQuickAction?.confirm?.title || "אישור פעולה"}

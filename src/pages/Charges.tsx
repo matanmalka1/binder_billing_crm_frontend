@@ -1,7 +1,7 @@
-
 import { Inbox } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { AccessBanner } from "../components/ui/AccessBanner";
+import { FilterBar } from "../components/ui/FilterBar";
 import { PaginatedTableView } from "../components/ui/PaginatedTableView";
 import { ChargesCreateCard } from "../features/charges/components/ChargesCreateCard";
 import { ChargesFiltersCard } from "../features/charges/components/ChargesFiltersCard";
@@ -24,13 +24,16 @@ export const Charges: React.FC = () => {
     submitCreate,
     total,
   } = useChargesPage();
+
   return (
     <div className="space-y-6">
+      {/* Standardized Header */}
       <PageHeader
         title="חיובים"
         description="רשימת חיובים ופעולות חיוב נתמכות"
       />
 
+      {/* Access Banner (non-blocking) */}
       {!isAdvisor && (
         <AccessBanner
           variant="warning"
@@ -38,6 +41,7 @@ export const Charges: React.FC = () => {
         />
       )}
 
+      {/* Create Card (advisor only) */}
       {isAdvisor && (
         <ChargesCreateCard
           createError={createError}
@@ -46,12 +50,16 @@ export const Charges: React.FC = () => {
         />
       )}
 
-      <ChargesFiltersCard
-        filters={filters}
-        onFilterChange={setFilter}
-        onClear={() => setSearchParams(new URLSearchParams())}
-      />
+      {/* Standardized Filter Bar */}
+      <FilterBar>
+        <ChargesFiltersCard
+          filters={filters}
+          onFilterChange={setFilter}
+          onClear={() => setSearchParams(new URLSearchParams())}
+        />
+      </FilterBar>
 
+      {/* Standardized Table View with Pagination */}
       <PaginatedTableView
         data={charges}
         loading={loading}
