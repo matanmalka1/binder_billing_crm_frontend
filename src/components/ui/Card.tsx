@@ -38,7 +38,6 @@ export const Card: React.FC<CardProps> = ({
         className,
       )}
     style={style}
-    style={style}
     >
       {(title || subtitle) && (
         <div className="px-6 py-4 border-b border-gray-100/80 bg-gradient-to-r from-gray-50/50 to-transparent">
