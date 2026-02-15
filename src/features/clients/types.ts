@@ -1,21 +1,19 @@
-import type { BackendActionInput } from "../../lib/actions/types";
+import type { ClientResponse } from "../../api/clients.api";
+import type { ActionCommand } from "../../lib/actions";
 
-export interface Client {
-  id: number;
-  full_name: string;
-  id_number: string;
-  client_type: string;
+export interface ClientsFilters {
+  has_signals: string;
   status: string;
-  phone: string | null;
-  email: string | null;
-  opened_at: string;
-  closed_at?: string | null;
-  available_actions?: BackendActionInput[] | null;
+  page_size: string;
 }
 
-export interface ClientsListResponse {
-  items: Client[];
-  page: number;
-  page_size: number;
-  total: number;
+export interface ClientsFiltersBarProps {
+  filters: ClientsFilters;
+  onFilterChange: (name: keyof ClientsFilters, value: string) => void;
+}
+
+export interface ClientsTableCardProps {
+  clients: ClientResponse[];
+  activeActionKey: string | null;
+  onActionClick: (action: ActionCommand) => void;
 }

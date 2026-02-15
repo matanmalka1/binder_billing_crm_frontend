@@ -1,14 +1,7 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
-import type { ResolvedBackendAction } from "../../../lib/actions/types";
-import type { TimelineEvent } from "../types";
 import { TimelineItem } from "./TimelineItem";
-
-interface TimelineCardProps {
-  events: TimelineEvent[];
-  activeActionKey: string | null;
-  onAction: (action: ResolvedBackendAction) => void;
-}
+import type { TimelineCardProps } from "../types";
 
 export const TimelineCard: React.FC<TimelineCardProps> = ({
   events,
@@ -22,13 +15,13 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({
           {events.map((event, index) => {
             const itemKey = `${event.timestamp}-${event.event_type}-${index}`;
             return (
-            <TimelineItem
-              key={itemKey}
-              event={event}
-              itemKey={itemKey}
-              activeActionKey={activeActionKey}
-              onAction={onAction}
-            />
+              <TimelineItem
+                key={itemKey}
+                event={event}
+                itemKey={itemKey}
+                activeActionKey={activeActionKey}
+                onAction={onAction}
+              />
             );
           })}
         </ul>

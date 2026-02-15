@@ -1,26 +1,22 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
+import type { AttentionItem, DashboardOverviewResponse } from "../../../api/dashboard.api";
+import type { BackendQuickAction, ActionCommand } from "../../../lib/actions";
 import {
   getSignalLabel,
   getSlaStateLabel,
   getWorkStateLabel,
 } from "../../../utils/enums";
-import type {
-  AttentionItem,
-  DashboardAdvisorData,
-  DashboardQuickAction,
-} from "../types";
 import { AttentionPanel } from "./AttentionPanel";
 import { OperationalPanel } from "./OperationalPanel";
-import type { ResolvedBackendAction } from "../../../lib/actions/types";
 
 interface DashboardContentProps {
-  data: DashboardAdvisorData;
+  data: DashboardOverviewResponse;
   attentionItems: AttentionItem[];
-  quickActions: DashboardQuickAction[];
+  quickActions: BackendQuickAction[];
   activeQuickAction: string | null;
-  onQuickAction: (action: ResolvedBackendAction) => void;
+  onQuickAction: (action: ActionCommand) => void;
 }
 
 export const DashboardContent: React.FC<DashboardContentProps> = ({

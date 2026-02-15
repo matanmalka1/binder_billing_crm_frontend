@@ -1,4 +1,4 @@
-import type { BackendActionInput } from "../lib/actions/types";
+import type { BackendActionInput } from "../lib/actions";
 import { ENDPOINTS } from "../contracts/backendContract";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";

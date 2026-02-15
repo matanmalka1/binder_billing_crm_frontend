@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { resolveEntityActions, resolveStandaloneActions } from "./resolver";
+import { resolveEntityActions, resolveStandaloneActions } from "./adapter";
 
 const authState = { user: null as { role: "advisor" | "secretary" } | null };
 
@@ -27,7 +27,7 @@ describe("action resolver", () => {
     ]);
 
     expect(resolved).toHaveLength(1);
-    expect(resolved[0].token).toBe("ready");
+    expect(resolved[0].id).toBe("ready");
     expect(resolved[0].endpoint).toBe("/binders/7/ready");
   });
 
@@ -42,7 +42,7 @@ describe("action resolver", () => {
 
     expect(resolved).toHaveLength(1);
     expect(resolved[0].endpoint).toBe("/custom/action");
-    expect(resolved[0].token).toBe("backend_new_action");
+    expect(resolved[0].id).toBe("custom");
   });
 
   it("drops unknown token when endpoint is not resolvable", () => {
@@ -83,7 +83,7 @@ describe("action resolver", () => {
     const resolved = resolveEntityActions([{ key: "pay_charge" }], "/charges", 14);
 
     expect(resolved).toHaveLength(1);
-    expect(resolved[0].token).toBe("mark_paid");
+    expect(resolved[0].id).toBe("mark_paid");
     expect(resolved[0].endpoint).toBe("/charges/14/mark-paid");
   });
 });

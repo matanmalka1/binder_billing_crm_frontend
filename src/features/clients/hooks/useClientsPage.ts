@@ -6,10 +6,9 @@ import { clientsApi } from "../../../api/clients.api";
 import { handleCanonicalActionError } from "../../../utils/errorHandler";
 import { parsePositiveInt } from "../../../utils/number";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
-import { executeBackendAction } from "../../../lib/actions/executeAction";
+import { executeAction } from "../../../lib/actions";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
-import type { ResolvedBackendAction } from "../../../lib/actions/types";
-import type { Client } from "../types";
+import type { ActionCommand } from "../../../lib/actions";
 import { clientsKeys } from "../queryKeys";
 
 export const useClientsPage = () => {
@@ -47,7 +46,7 @@ export const useClientsPage = () => {
   });
 
   const actionMutation = useMutation({
-    mutationFn: (action: ResolvedBackendAction) => executeBackendAction(action),
+    mutationFn: (action: ActionCommand) => executeAction(action),
     onSuccess: async () => {
       toast.success("הפעולה הושלמה בהצלחה");
       await queryClient.invalidateQueries({ queryKey: clientsKeys.lists() });
@@ -69,7 +68,7 @@ export const useClientsPage = () => {
   };
 
   const runAction = useCallback(
-    async (action: ResolvedBackendAction) => {
+    async (action: ActionCommand) => {
       setActiveActionKey(action.uiKey);
       try {
         await actionMutation.mutateAsync(action);
@@ -89,7 +88,7 @@ export const useClientsPage = () => {
     useConfirmableAction(runAction);
 
   const handleActionClick = useCallback(
-    (action: ResolvedBackendAction) => {
+    (action: ActionCommand) => {
       if (requestConfirmation(action, Boolean(action.confirm))) return;
       void runAction(action);
     },
@@ -98,7 +97,7 @@ export const useClientsPage = () => {
 
   return {
     activeActionKey,
-    clients: (clientsQuery.data?.items ?? []) as Client[],
+    clients: clientsQuery.data?.items ?? [],
     error: clientsQuery.error
       ? resolveQueryErrorMessage(clientsQuery.error, "שגיאה בטעינת רשימת לקוחות")
       : null,

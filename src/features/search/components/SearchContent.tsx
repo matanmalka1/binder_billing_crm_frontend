@@ -1,18 +1,8 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
-import type { SearchFilters, SearchResult } from "../types";
 import { SearchFiltersBar } from "./SearchFiltersBar";
 import { SearchTable } from "./SearchTable";
-
-interface SearchContentProps {
-  total: number;
-  filters: SearchFilters;
-  results: SearchResult[];
-  onFilterChange: (
-    name: keyof SearchFilters,
-    value: string | string[],
-  ) => void;
-}
+import type { SearchContentProps } from "../types";
 
 export const SearchContent: React.FC<SearchContentProps> = ({
   total,

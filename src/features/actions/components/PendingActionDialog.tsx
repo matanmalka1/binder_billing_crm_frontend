@@ -1,13 +1,6 @@
 import React from "react";
 import { ConfirmDialog } from "./ConfirmDialog";
-import type { ResolvedBackendAction } from "../types";
-
-interface PendingActionDialogProps {
-  pendingAction: ResolvedBackendAction | null;
-  activeActionKey: string | null;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+import type { PendingActionDialogProps } from "../types";
 
 export const PendingActionDialog: React.FC<PendingActionDialogProps> = ({
   pendingAction,

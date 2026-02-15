@@ -5,17 +5,17 @@ import { toast } from "sonner";
 import { bindersApi } from "../../../api/binders.api";
 import { handleCanonicalActionError } from "../../../utils/errorHandler";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
-import { executeBackendAction } from "../../../lib/actions/executeAction";
+import { executeAction } from "../../../lib/actions";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
-import type { ResolvedBackendAction } from "../../../lib/actions/types";
-import type { Binder, BindersListResponse } from "../types";
+import type { ActionCommand } from "../../../lib/actions";
 import { bindersKeys } from "../queryKeys";
+import type { BindersFilters } from "../types";
 
 export const useBindersPage = () => {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
-  const filters = useMemo(
+  const filters = useMemo<BindersFilters>(
     () => ({
       work_state: searchParams.get("work_state") ?? "",
       sla_state: searchParams.get("sla_state") ?? "",
@@ -37,14 +37,14 @@ export const useBindersPage = () => {
   });
 
   const actionMutation = useMutation({
-    mutationFn: (action: ResolvedBackendAction) => executeBackendAction(action),
+    mutationFn: (action: ActionCommand) => executeAction(action),
     onSuccess: async () => {
       toast.success("הפעולה הושלמה בהצלחה");
       await queryClient.invalidateQueries({ queryKey: bindersKeys.lists() });
     },
   });
 
-  const handleFilterChange = (name: "work_state" | "sla_state", value: string) => {
+  const handleFilterChange = (name: keyof BindersFilters, value: string) => {
     const next = new URLSearchParams(searchParams);
     if (value) next.set(name, value);
     else next.delete(name);
@@ -52,7 +52,7 @@ export const useBindersPage = () => {
   };
 
   const runAction = useCallback(
-    async (action: ResolvedBackendAction) => {
+    async (action: ActionCommand) => {
       setActiveActionKey(action.uiKey);
       try {
         await actionMutation.mutateAsync(action);
@@ -72,7 +72,7 @@ export const useBindersPage = () => {
     useConfirmableAction(runAction);
 
   const handleActionClick = useCallback(
-    (action: ResolvedBackendAction) => {
+    (action: ActionCommand) => {
       if (requestConfirmation(action, Boolean(action.confirm))) return;
       void runAction(action);
     },
@@ -81,7 +81,7 @@ export const useBindersPage = () => {
 
   return {
     activeActionKey,
-    binders: ((bindersQuery.data as BindersListResponse | undefined)?.items ?? []) as Binder[],
+    binders: bindersQuery.data?.items ?? [],
     error: bindersQuery.error
       ? resolveQueryErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת תיקים")
       : null,

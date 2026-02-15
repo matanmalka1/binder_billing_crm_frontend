@@ -45,7 +45,7 @@ export interface CreateChargePayload {
 export const isAdvisorCharge = (
   charge: ChargeResponse,
 ): charge is ChargeAdvisorResponse => {
-  return typeof (charge as ChargeAdvisorResponse).amount === "number";
+  return "amount" in charge && typeof charge.amount === "number";
 };
 
 export const chargesApi = {

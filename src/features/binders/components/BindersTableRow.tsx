@@ -1,17 +1,10 @@
 import React from "react";
 import { Badge } from "../../../components/ui/Badge";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveEntityActions } from "../../../lib/actions/resolver";
-import type { ResolvedBackendAction } from "../../../lib/actions/types";
+import { resolveEntityActions } from "../../../lib/actions";
 import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
-import type { Binder } from "../types";
-import { formatDate, getStatusBadge } from "./bindersTableUtils";
-
-interface BindersTableRowProps {
-  binder: Binder;
-  activeActionKey: string | null;
-  onActionClick: (action: ResolvedBackendAction) => void;
-}
+import { formatDate, getStatusBadge } from "./bindersTable.utils";
+import type { BindersTableRowProps } from "../types";
 
 const BindersTableRowView: React.FC<BindersTableRowProps> = ({
   binder,

@@ -21,8 +21,8 @@ export const RoleGuard: React.FC<RoleGuardProps> = ({
   }
 
   if (!user || !allow.includes(user.role)) {
-    return <>{fallback ?? <AccessDenied />}</>;
+    return fallback ?? <AccessDenied />;
   }
 
-  return <>{children}</>;
+  return children;
 };

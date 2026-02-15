@@ -1,15 +1,7 @@
 import React from "react";
 import { Badge } from "../../../components/ui/Badge";
-import type { ResolvedBackendAction } from "../../../lib/actions/types";
-import type { TimelineEvent } from "../types";
 import { TimelineActionRow } from "./TimelineActionRow";
-
-interface TimelineItemProps {
-  event: TimelineEvent;
-  itemKey: string;
-  activeActionKey: string | null;
-  onAction: (action: ResolvedBackendAction) => void;
-}
+import type { TimelineItemProps } from "../types";
 
 const getEventTypeLabel = (eventType: string) => {
   const labels: Record<string, string> = {

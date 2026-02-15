@@ -1,16 +1,7 @@
 import React from "react";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveEntityActions, resolveStandaloneActions } from "../../../lib/actions/resolver";
-import type { BackendActionInput, ResolvedBackendAction } from "../../../lib/actions/types";
-
-interface TimelineActionRowProps {
-  actions: BackendActionInput[] | null | undefined;
-  binderId: number | null;
-  chargeId: number | null;
-  scopeKey: string;
-  activeActionKey: string | null;
-  onAction: (action: ResolvedBackendAction) => void;
-}
+import { resolveEntityActions, resolveStandaloneActions } from "../../../lib/actions";
+import type { TimelineActionRowProps } from "../types";
 
 export const TimelineActionRow: React.FC<TimelineActionRowProps> = ({
   actions,

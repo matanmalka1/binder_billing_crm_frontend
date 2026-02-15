@@ -1,6 +1,4 @@
-import type { SearchResponse, SearchResult } from "../../api/search.api";
-
-export type { SearchResponse, SearchResult };
+import type { SearchResult } from "../../api/search.api";
 
 export interface SearchFilters {
   query: string;
@@ -13,4 +11,30 @@ export interface SearchFilters {
   has_signals: string;
   page: number;
   page_size: number;
+}
+
+export interface SearchContentProps {
+  total: number;
+  filters: SearchFilters;
+  results: SearchResult[];
+  onFilterChange: (name: keyof SearchFilters, value: string | string[]) => void;
+}
+
+export interface SearchFiltersBarProps {
+  filters: SearchFilters;
+  onFilterChange: (name: keyof SearchFilters, value: string | string[]) => void;
+}
+
+export interface SearchFiltersPrimaryFieldsProps {
+  filters: SearchFilters;
+  onFilterChange: (name: keyof SearchFilters, value: string) => void;
+}
+
+export interface SearchFiltersStatusFieldsProps {
+  filters: SearchFilters;
+  onFilterChange: (name: keyof SearchFilters, value: string | string[]) => void;
+}
+
+export interface SearchTableProps {
+  results: SearchResult[];
 }

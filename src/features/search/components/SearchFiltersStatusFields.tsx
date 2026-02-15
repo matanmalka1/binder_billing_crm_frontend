@@ -1,14 +1,6 @@
 import React from "react";
 import { Select } from "../../../components/ui/Select";
-import type { SearchFilters } from "../types";
-
-interface SearchFiltersStatusFieldsProps {
-  filters: SearchFilters;
-  onFilterChange: (
-    name: keyof SearchFilters,
-    value: string | string[],
-  ) => void;
-}
+import type { SearchFiltersStatusFieldsProps } from "../types";
 
 export const SearchFiltersStatusFields: React.FC<SearchFiltersStatusFieldsProps> = ({
   filters,

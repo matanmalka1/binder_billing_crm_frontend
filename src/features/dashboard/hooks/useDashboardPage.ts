@@ -3,12 +3,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import { dashboardApi } from "../../../api/dashboard.api";
+import type {
+  AttentionResponse,
+  DashboardOverviewResponse,
+  DashboardSummaryResponse,
+} from "../../../api/dashboard.api";
 import { useAuthStore } from "../../../store/auth.store";
 import { getRequestErrorMessage, handleCanonicalActionError } from "../../../utils/errorHandler";
-import { executeBackendAction } from "../../../lib/actions/executeAction";
-import type { ResolvedBackendAction } from "../../../lib/actions/types";
-import type { AttentionResponse, DashboardData } from "../types";
+import { executeAction } from "../../../lib/actions";
+import type { ActionCommand } from "../../../lib/actions";
 import { dashboardKeys } from "../queryKeys";
+
+type DashboardData =
+  | (DashboardOverviewResponse & { role_view: "advisor" })
+  | (DashboardSummaryResponse & { role_view: "secretary" });
 
 type DashboardState = {
   status: "idle" | "loading" | "ok" | "error";
@@ -20,7 +28,7 @@ export const useDashboardPage = () => {
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
   const [activeQuickAction, setActiveQuickAction] = useState<string | null>(null);
-  const [pendingQuickAction, setPendingQuickAction] = useState<ResolvedBackendAction | null>(null);
+  const [pendingQuickAction, setPendingQuickAction] = useState<ActionCommand | null>(null);
   const [actionDenied, setActionDenied] = useState(false);
 
   const hasRole = Boolean(user?.role);
@@ -46,7 +54,7 @@ export const useDashboardPage = () => {
   });
 
   const actionMutation = useMutation({
-    mutationFn: (action: ResolvedBackendAction) => executeBackendAction(action),
+    mutationFn: (action: ActionCommand) => executeAction(action),
     onSuccess: async () => {
       toast.success("הפעולה המהירה בוצעה בהצלחה");
       await Promise.all([
@@ -132,7 +140,7 @@ export const useDashboardPage = () => {
   const attentionItems = (attentionQuery.data?.items ?? []) as AttentionResponse["items"];
 
   const runQuickAction = useCallback(
-    async (action: ResolvedBackendAction) => {
+    async (action: ActionCommand) => {
       setActiveQuickAction(action.uiKey);
       try {
         setActionDenied(false);
@@ -152,7 +160,7 @@ export const useDashboardPage = () => {
     [actionMutation],
   );
 
-  const handleQuickAction = (action: ResolvedBackendAction) => {
+  const handleQuickAction = (action: ActionCommand) => {
     if (action.confirm) return setPendingQuickAction(action);
     void runQuickAction(action);
   };

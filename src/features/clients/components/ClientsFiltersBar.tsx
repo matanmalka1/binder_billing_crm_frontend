@@ -1,16 +1,6 @@
 import React from "react";
 import { Select } from "../../../components/ui/Select";
-
-interface ClientsFilters {
-  has_signals: string;
-  status: string;
-  page_size: string;
-}
-
-interface ClientsFiltersBarProps {
-  filters: ClientsFilters;
-  onFilterChange: (name: keyof ClientsFilters, value: string) => void;
-}
+import type { ClientsFiltersBarProps } from "../types";
 
 export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
   filters,

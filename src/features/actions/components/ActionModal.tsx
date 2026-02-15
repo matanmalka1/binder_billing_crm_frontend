@@ -1,12 +1,5 @@
 import { Modal } from "../../../components/ui/Modal";
-
-interface ActionModalProps {
-  open: boolean;
-  title: string;
-  onClose: () => void;
-  children: React.ReactNode;
-  footer?: React.ReactNode;
-}
+import type { ActionModalProps } from "../types";
 
 export const ActionModal: React.FC<ActionModalProps> = ({
   open,

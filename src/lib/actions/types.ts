@@ -1,5 +1,6 @@
 export type ActionMethod = "post" | "patch" | "put" | "delete";
-export type CanonicalActionToken =
+
+export type ActionId =
   | "receive"
   | "return"
   | "ready"
@@ -64,10 +65,10 @@ export interface ActionConfirmConfig {
   cancelLabel: string;
 }
 
-export interface ResolvedBackendAction {
+export interface ActionCommand {
   key: string;
   uiKey: string;
-  token: string;
+  id: ActionId | "custom";
   label: string;
   method: ActionMethod;
   endpoint: string;

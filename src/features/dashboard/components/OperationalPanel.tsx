@@ -1,13 +1,13 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
 import { ActionButton } from "../../actions/components/ActionButton";
-import { resolveStandaloneActions } from "../../../lib/actions/resolver";
-import type { BackendQuickAction, ResolvedBackendAction } from "../../../lib/actions/types";
+import { resolveStandaloneActions } from "../../../lib/actions";
+import type { BackendQuickAction, ActionCommand } from "../../../lib/actions";
 
 interface OperationalPanelProps {
   quickActions: BackendQuickAction[];
   activeActionKey: string | null;
-  onQuickAction: (action: ResolvedBackendAction) => void;
+  onQuickAction: (action: ActionCommand) => void;
 }
 
 export const OperationalPanel: React.FC<OperationalPanelProps> = ({

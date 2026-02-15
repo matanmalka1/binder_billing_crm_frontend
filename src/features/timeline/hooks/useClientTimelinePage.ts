@@ -6,10 +6,9 @@ import { timelineApi } from "../../../api/timeline.api";
 import { handleCanonicalActionError } from "../../../utils/errorHandler";
 import { parsePositiveInt } from "../../../utils/number";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
-import { executeBackendAction } from "../../../lib/actions/executeAction";
+import { executeAction } from "../../../lib/actions";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
-import type { ResolvedBackendAction } from "../../../lib/actions/types";
-import type { TimelineEvent } from "../types";
+import type { ActionCommand } from "../../../lib/actions";
 import { timelineKeys } from "../queryKeys";
 
 export const useClientTimelinePage = (clientId: string | undefined) => {
@@ -33,7 +32,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
   });
 
   const actionMutation = useMutation({
-    mutationFn: (action: ResolvedBackendAction) => executeBackendAction(action),
+    mutationFn: (action: ActionCommand) => executeAction(action),
     onSuccess: async () => {
       toast.success("הפעולה בוצעה בהצלחה");
       await queryClient.invalidateQueries({
@@ -55,7 +54,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
   };
 
   const runAction = useCallback(
-    async (action: ResolvedBackendAction) => {
+    async (action: ActionCommand) => {
       setActiveActionKey(action.uiKey);
       try {
         await actionMutation.mutateAsync(action);
@@ -74,7 +73,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
   const { cancelPendingAction, confirmPendingAction, pendingAction, requestConfirmation } =
     useConfirmableAction(runAction);
 
-  const handleAction = (action: ResolvedBackendAction) => {
+  const handleAction = (action: ActionCommand) => {
     if (requestConfirmation(action, Boolean(action.confirm))) return;
     void runAction(action);
   };
@@ -87,7 +86,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
         : timelineQuery.error
           ? resolveQueryErrorMessage(timelineQuery.error, "שגיאה בטעינת ציר זמן")
           : null,
-    events: (timelineQuery.data?.events ?? []) as TimelineEvent[],
+    events: timelineQuery.data?.events ?? [],
     handleAction,
     loading: hasValidClient ? timelineQuery.isPending : false,
     page,

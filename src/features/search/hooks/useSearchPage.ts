@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { searchApi } from "../../../api/search.api";
 import { parsePositiveInt } from "../../../utils/number";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
-import type { SearchFilters, SearchResult } from "../types";
+import type { SearchFilters } from "../types";
 import { searchKeys } from "../queryKeys";
 
 export const useSearchPage = () => {
@@ -70,7 +70,7 @@ export const useSearchPage = () => {
     filters,
     handleFilterChange,
     loading: searchQuery.isPending,
-    results: (searchQuery.data?.results ?? []) as SearchResult[],
+    results: searchQuery.data?.results ?? [],
     total: searchQuery.data?.total ?? 0,
   };
 };

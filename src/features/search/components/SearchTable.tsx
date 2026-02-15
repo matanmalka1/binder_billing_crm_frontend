@@ -5,11 +5,7 @@ import {
   getSlaStateLabel,
   getWorkStateLabel,
 } from "../../../utils/enums";
-import type { SearchResult } from "../types";
-
-interface SearchTableProps {
-  results: SearchResult[];
-}
+import type { SearchTableProps } from "../types";
 
 const getResultTypeLabel = (resultType: string) => {
   if (resultType === "binder") {

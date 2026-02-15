@@ -1,20 +1,21 @@
 import { isAdvisorOnlyEndpoint } from "../../contracts/backendContract";
 import { useAuthStore } from "../../store/auth.store";
+import {
+  getActionLabel,
+  isActionAllowed,
+  normalizeActionId,
+  resolveCanonicalAction,
+} from "./catalog";
 import type {
+  ActionCommand,
   ActionConfirmConfig,
+  ActionId,
   ActionMethod,
   ActionTokenSourceField,
   BackendActionInput,
   BackendActionObject,
-  ResolvedBackendAction,
 } from "./types";
 import { ACTION_TOKEN_SOURCE_FIELDS } from "./types";
-import {
-  getCanonicalActionLabel,
-  getCanonicalActionToken,
-  isActionAllowedForRole,
-  resolveCanonicalAction,
-} from "./service";
 
 export interface ResolveContext {
   entityPath?: string;
@@ -26,7 +27,7 @@ export interface ResolveContext {
   scopeKey?: string;
 }
 
-export interface NormalizedActionInput {
+export interface NormalizedIncomingAction {
   index: number;
   rawToken: string | null;
   tokenSourceField: ActionTokenSourceField | "string" | null;
@@ -42,16 +43,18 @@ export interface NormalizedActionInput {
   clientId: number | null;
 }
 
-interface ContractResolved {
-  label: string;
-  method: ActionMethod;
-  endpoint: string | null;
-  payload?: Record<string, unknown>;
-  token: string;
-}
+const DEFAULT_SCOPE_KEY = "action";
 
-const fallbackMethod = (token: string | null): ActionMethod => {
-  return token === "freeze" || token === "activate" ? "patch" : "post";
+const ENTITY_CONTEXT_KEYS = {
+  "/binders": "binderId",
+  "/charges": "chargeId",
+  "/clients": "clientId",
+} as const;
+
+type EntityPath = keyof typeof ENTITY_CONTEXT_KEYS;
+
+const fallbackMethod = (actionId: ActionId | null): ActionMethod => {
+  return actionId === "freeze" || actionId === "activate" ? "patch" : "post";
 };
 
 const isActionMethod = (value: unknown): value is ActionMethod => {
@@ -87,11 +90,17 @@ const resolveConfirm = (
   };
 };
 
+const isEntityPath = (value: string): value is EntityPath => value in ENTITY_CONTEXT_KEYS;
+
 const getEntityIds = (entityPath: string, entityId: number): ResolveContext => {
-  if (entityPath === "/binders") return { binderId: entityId };
-  if (entityPath === "/charges") return { chargeId: entityId };
-  if (entityPath === "/clients") return { clientId: entityId };
-  return {};
+  if (!isEntityPath(entityPath)) return {};
+
+  const contextKey = ENTITY_CONTEXT_KEYS[entityPath];
+  return { [contextKey]: entityId };
+};
+
+const buildUiKey = (index: number, baseKey: string, scopeKey?: string): string => {
+  return `${scopeKey || DEFAULT_SCOPE_KEY}-${index}-${baseKey}`;
 };
 
 const extractTokenFromAction = (
@@ -111,12 +120,20 @@ const normalizeEntityIds = (
   action: BackendActionObject | null,
   context: ResolveContext,
 ): { binderId: number | null; chargeId: number | null; clientId: number | null } => {
+  const entityPath = context.entityPath && isEntityPath(context.entityPath) ? context.entityPath : null;
+  const fallbackEntityId = context.entityId ?? null;
   const binderId =
-    action?.binder_id ?? context.binderId ?? (context.entityPath === "/binders" ? context.entityId ?? null : null);
+    action?.binder_id ??
+    context.binderId ??
+    (entityPath === "/binders" ? fallbackEntityId : null);
   const chargeId =
-    action?.charge_id ?? context.chargeId ?? (context.entityPath === "/charges" ? context.entityId ?? null : null);
+    action?.charge_id ??
+    context.chargeId ??
+    (entityPath === "/charges" ? fallbackEntityId : null);
   const clientId =
-    action?.client_id ?? context.clientId ?? (context.entityPath === "/clients" ? context.entityId ?? null : null);
+    action?.client_id ??
+    context.clientId ??
+    (entityPath === "/clients" ? fallbackEntityId : null);
 
   return { binderId, chargeId, clientId };
 };
@@ -125,7 +142,7 @@ export const normalizeBackendAction = (
   input: BackendActionInput,
   index: number,
   context: ResolveContext,
-): NormalizedActionInput => {
+): NormalizedIncomingAction => {
   if (typeof input === "string") {
     const token = toText(input) || null;
     const baseKey = token || `action-${index}`;
@@ -136,7 +153,7 @@ export const normalizeBackendAction = (
       rawToken: token,
       tokenSourceField: "string",
       key: baseKey,
-      uiKey: `${context.scopeKey || "action"}-${index}-${baseKey}`,
+      uiKey: buildUiKey(index, baseKey, context.scopeKey),
       label: null,
       explicitEndpoint: null,
       method: null,
@@ -157,7 +174,7 @@ export const normalizeBackendAction = (
     rawToken: token,
     tokenSourceField: sourceField,
     key: baseKey,
-    uiKey: `${context.scopeKey || "action"}-${index}-${baseKey}`,
+    uiKey: buildUiKey(index, baseKey, context.scopeKey),
     label: toText(input.label) || null,
     explicitEndpoint: toEndpoint(input.endpoint || input.url),
     method: isActionMethod(input.method) ? input.method : null,
@@ -169,107 +186,72 @@ export const normalizeBackendAction = (
   };
 };
 
-export const resolveContractAction = (
-  rawToken: string | null,
-  action: BackendActionObject | null,
-  context: ResolveContext,
-): ContractResolved => {
-  const ids = normalizeEntityIds(action, context);
-  const payload = action ? (toPayload(action.payload) || toPayload(action.body) || context.payload) : context.payload;
-  const canonicalToken = getCanonicalActionToken(rawToken);
-  const canonical = resolveCanonicalAction(canonicalToken, {
-    binderId: ids.binderId,
-    chargeId: ids.chargeId,
-    clientId: ids.clientId,
-    payload,
-  });
-
-  return {
-    token: canonical?.token ?? (rawToken?.trim().toLowerCase() || ""),
-    label: canonical ? getCanonicalActionLabel(canonical.token) : getCanonicalActionLabel(rawToken),
-    method: canonical?.method ?? fallbackMethod(canonicalToken),
-    endpoint: canonical?.endpoint ?? null,
-    payload: canonical?.payload,
-  };
-};
-
-const resolveCanonicalFromNormalized = (
-  normalized: NormalizedActionInput,
-): ContractResolved => {
-  const contract = resolveContractAction(normalized.rawToken, null, {
+export const materializeAction = (
+  normalized: NormalizedIncomingAction,
+): ActionCommand | null => {
+  const actionId = normalizeActionId(normalized.rawToken);
+  const canonical = resolveCanonicalAction(actionId, {
     binderId: normalized.binderId,
     chargeId: normalized.chargeId,
     clientId: normalized.clientId,
     payload: normalized.payload,
   });
 
-  const hasCanonical = getCanonicalActionToken(normalized.rawToken) !== null;
-  const endpoint = hasCanonical ? contract.endpoint : normalized.explicitEndpoint || contract.endpoint;
+  const hasCanonical = actionId !== null;
+  const endpoint = hasCanonical ? canonical?.endpoint ?? null : normalized.explicitEndpoint || canonical?.endpoint || null;
   if (!hasCanonical && !endpoint && normalized.rawToken && import.meta.env.DEV) {
     console.warn(
       `[actions] Dropping unresolved action token "${normalized.rawToken}" (source: ${normalized.tokenSourceField ?? "unknown"}).`,
     );
   }
 
-  return {
-    token: contract.token,
-    label: contract.label,
-    method: normalized.method ?? contract.method,
-    endpoint,
-    payload: normalized.payload ?? contract.payload,
-  };
-};
-
-export const materializeResolvedAction = (
-  normalized: NormalizedActionInput,
-  resolved: ContractResolved,
-): ResolvedBackendAction | null => {
-  if (!resolved.endpoint) return null;
+  if (!endpoint) return null;
 
   const role = useAuthStore.getState().user?.role;
-  if (!isActionAllowedForRole(resolved.token, role)) return null;
-  if (role === "secretary" && isAdvisorOnlyEndpoint(resolved.method.toUpperCase(), resolved.endpoint)) {
+  if (!isActionAllowed(actionId, role)) return null;
+
+  const method = normalized.method ?? canonical?.method ?? fallbackMethod(actionId);
+  if (role === "secretary" && isAdvisorOnlyEndpoint(method.toUpperCase(), endpoint)) {
     return null;
   }
 
   return {
     key: normalized.key,
     uiKey: normalized.uiKey,
-    token: resolved.token,
-    label: normalized.label || resolved.label,
-    method: resolved.method,
-    endpoint: resolved.endpoint,
-    payload: resolved.payload,
+    id: canonical?.id ?? "custom",
+    label: normalized.label || getActionLabel(canonical?.id ?? actionId),
+    method,
+    endpoint,
+    payload: normalized.payload ?? canonical?.payload,
     confirm: normalized.confirm,
   };
 };
 
-const resolveActions = (
+export const resolveActions = (
   actions: BackendActionInput[] | null | undefined,
   context: ResolveContext,
-): ResolvedBackendAction[] => {
+): ActionCommand[] => {
   if (!Array.isArray(actions)) return [];
 
   return actions
     .map((action, index) => {
       const normalized = normalizeBackendAction(action, index, context);
-      const resolved = resolveCanonicalFromNormalized(normalized);
-      return materializeResolvedAction(normalized, resolved);
+      return materializeAction(normalized);
     })
-    .filter((action): action is ResolvedBackendAction => action !== null);
+    .filter((action): action is ActionCommand => action !== null);
 };
 
 export const resolveStandaloneActions = (
   actions: BackendActionInput[] | null | undefined,
   scopeKey?: string,
-): ResolvedBackendAction[] => resolveActions(actions, { scopeKey });
+): ActionCommand[] => resolveActions(actions, { scopeKey });
 
 export const resolveEntityActions = (
   actions: BackendActionInput[] | null | undefined,
   entityPath: string,
   entityId: number,
   scopeKey?: string,
-): ResolvedBackendAction[] => {
+): ActionCommand[] => {
   return resolveActions(actions, {
     ...getEntityIds(entityPath, entityId),
     entityPath,

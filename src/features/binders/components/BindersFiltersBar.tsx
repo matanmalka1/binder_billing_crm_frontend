@@ -1,15 +1,6 @@
 import React from "react";
 import { Select } from "../../../components/ui/Select";
-
-interface BindersFilters {
-  work_state: string;
-  sla_state: string;
-}
-
-interface BindersFiltersBarProps {
-  filters: BindersFilters;
-  onFilterChange: (name: keyof BindersFilters, value: string) => void;
-}
+import type { BindersFiltersBarProps } from "../types";
 
 export const BindersFiltersBar: React.FC<BindersFiltersBarProps> = ({
   filters,

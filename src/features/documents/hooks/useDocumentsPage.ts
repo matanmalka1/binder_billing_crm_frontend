@@ -6,7 +6,6 @@ import { clientsApi } from "../../../api/clients.api";
 import {
   documentsApi,
   type OperationalSignalsResponse,
-  type PermanentDocumentResponse,
   type UploadDocumentPayload,
 } from "../../../api/documents.api";
 import { getRequestErrorMessage } from "../../../utils/errorHandler";
@@ -100,7 +99,7 @@ export const useDocumentsPage = () => {
 
   return {
     clientOptions: clientsQuery.data ?? [],
-    documents: (documentsQuery.data?.items ?? []) as PermanentDocumentResponse[],
+    documents: documentsQuery.data?.items ?? [],
     error,
     loading,
     selectedClientId,

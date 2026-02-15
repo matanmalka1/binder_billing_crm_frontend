@@ -1,17 +1,7 @@
 import React from "react";
 import { ActionButton } from "./ActionButton";
 import { ActionModal } from "./ActionModal";
-
-interface ConfirmDialogProps {
-  open: boolean;
-  title: string;
-  message: string;
-  confirmLabel: string;
-  cancelLabel: string;
-  isLoading?: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+import type { ConfirmDialogProps } from "../types";
 
 export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   open,

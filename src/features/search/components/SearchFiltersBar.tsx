@@ -1,15 +1,7 @@
 import React from "react";
-import type { SearchFilters } from "../types";
 import { SearchFiltersPrimaryFields } from "./SearchFiltersPrimaryFields";
 import { SearchFiltersStatusFields } from "./SearchFiltersStatusFields";
-
-interface SearchFiltersBarProps {
-  filters: SearchFilters;
-  onFilterChange: (
-    name: keyof SearchFilters,
-    value: string | string[],
-  ) => void;
-}
+import type { SearchFiltersBarProps } from "../types";
 
 export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
   filters,

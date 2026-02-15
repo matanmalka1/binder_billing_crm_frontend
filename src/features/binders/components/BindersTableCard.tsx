@@ -1,14 +1,7 @@
 import React from "react";
 import { Card } from "../../../components/ui/Card";
-import type { ResolvedBackendAction } from "../../../lib/actions/types";
-import type { Binder } from "../types";
 import { BindersTableRow } from "./BindersTableRow";
-
-interface BindersTableCardProps {
-  binders: Binder[];
-  activeActionKey: string | null;
-  onActionClick: (action: ResolvedBackendAction) => void;
-}
+import type { BindersTableCardProps } from "../types";
 
 export const BindersTableCard: React.FC<BindersTableCardProps> = ({
   binders,

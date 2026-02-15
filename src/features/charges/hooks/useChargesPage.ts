@@ -4,7 +4,6 @@ import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
   chargesApi,
-  type ChargeResponse,
   type ChargesListParams,
   type CreateChargePayload,
 } from "../../../api/charges.api";
@@ -113,7 +112,7 @@ export const useChargesPage = () => {
 
   return {
     actionLoadingId: actionMutation.isPending ? (actionMutation.variables?.chargeId ?? null) : null,
-    charges: (chargesQuery.data?.items ?? []) as ChargeResponse[],
+    charges: chargesQuery.data?.items ?? [],
     createError: createMutation.error
       ? getRequestErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")
       : null,

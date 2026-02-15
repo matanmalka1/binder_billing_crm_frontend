@@ -2,16 +2,14 @@ import { describe, expect, it } from "vitest";
 import { findEndpointContract } from "./backendContract";
 import {
   ADVISOR_ONLY_ACTIONS,
-  TOKEN_ALIASES,
-} from "../lib/actions/service.constants";
-import {
-  isActionAllowedForRole,
+  isActionAllowed,
   resolveCanonicalAction,
-} from "../lib/actions/service";
-import type { CanonicalActionToken } from "../lib/actions/types";
+  TOKEN_ALIASES,
+} from "../lib/actions/catalog";
+import type { ActionId } from "../lib/actions";
 
 const ACTION_SAMPLE_CONTEXT: Record<
-  CanonicalActionToken,
+  ActionId,
   {
     binderId?: number;
     chargeId?: number;
@@ -65,8 +63,8 @@ describe("contract parity", () => {
 
   it("advisor-only action tokens are blocked for secretary role", () => {
     for (const token of ADVISOR_ONLY_ACTIONS) {
-      expect(isActionAllowedForRole(token, "secretary")).toBe(false);
-      expect(isActionAllowedForRole(token, "advisor")).toBe(true);
+      expect(isActionAllowed(token, "secretary")).toBe(false);
+      expect(isActionAllowed(token, "advisor")).toBe(true);
     }
   });
 });
