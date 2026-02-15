@@ -2,7 +2,7 @@ import {
   AUTH_TOKEN_STORAGE_KEY,
   AUTH_USER_STORAGE_KEY,
 } from "../api/client";
-import type { AuthUser } from "../types/common";
+import type { AuthUser } from "../types/store";
 
 export const parseStoredUser = (): AuthUser | null => {
   const raw = localStorage.getItem(AUTH_USER_STORAGE_KEY);

@@ -1,4 +1,3 @@
-// Shared auth types
 export type UserRole = "advisor" | "secretary";
 
 export interface AuthUser {

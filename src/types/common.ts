@@ -5,6 +5,12 @@ export interface PaginatedResponse<T> {
   total: number;
 }
 
+// Pagination params for API requests (snake_case to match backend)
+export interface PagedQueryParams {
+  page: number;
+  page_size: number;
+}
+
 export interface PaginationState {
   page: number;
   pageSize: number;
@@ -20,12 +26,4 @@ export interface BackendErrorEnvelope {
   detail?: unknown;
   message?: string;
   error?: BackendErrorBody | string;
-}
-
-export type UserRole = "advisor" | "secretary";
-
-export interface AuthUser {
-  id: number;
-  full_name: string;
-  role: UserRole;
 }

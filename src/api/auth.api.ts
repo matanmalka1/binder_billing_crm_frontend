@@ -1,5 +1,5 @@
 import { ENDPOINTS } from "./endpoints";
-import type { AuthUser } from "../types/common";
+import type { AuthUser } from "../types/store";
 import { api } from "./client";
 
 export interface LoginRequest {

@@ -5,7 +5,7 @@ import {
   AUTH_USER_STORAGE_KEY,
 } from "../api/client";
 import { authApi } from "../api/auth.api";
-import type { UserRole } from "../types/common";
+import type { UserRole } from "../types/store";
 import { getRequestErrorMessage } from "../utils/utils";
 import type { AuthState } from "./auth.types";
 import { clearStoredAuth, storedToken, storedUser } from "./auth.storage";
