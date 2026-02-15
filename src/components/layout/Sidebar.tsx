@@ -10,7 +10,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useUIStore } from "../../store/ui.store";
-import { cn } from "../../utils/cn";
+import { cn } from "../../utils/utils";
 
 export const Sidebar: React.FC = () => {
   const { isSidebarOpen, toggleSidebar } = useUIStore();

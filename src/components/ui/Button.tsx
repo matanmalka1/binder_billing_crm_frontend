@@ -1,4 +1,4 @@
-import { cn } from "../../utils/cn";
+import { cn } from "../../utils/utils";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline" | "ghost";

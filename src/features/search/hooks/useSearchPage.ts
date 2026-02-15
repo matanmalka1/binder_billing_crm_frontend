@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { searchApi } from "../../../api/search.api";
-import { parsePositiveInt } from "../../../utils/number";
+import { parsePositiveInt } from "../../../utils/utils";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
 import type { SearchFilters } from "../types";
 import { searchKeys } from "../queryKeys";

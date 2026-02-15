@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { chargesApi, type ChargeResponse } from "../../../api/charges.api";
 import { toast } from "sonner";
-import { getRequestErrorMessage } from "../../../utils/errorHandler";
+import { getRequestErrorMessage } from "../../../utils/utils";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
 import { chargesKeys } from "../queryKeys";
 export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: boolean) => {

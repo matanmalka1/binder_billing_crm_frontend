@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { timelineApi } from "../../../api/timeline.api";
 import { handleCanonicalActionError } from "../../../utils/errorHandler";
-import { parsePositiveInt } from "../../../utils/number";
+import { parsePositiveInt } from "../../../utils/utils";
 import { resolveQueryErrorMessage } from "../../../utils/queryError";
 import { executeAction } from "../../../lib/actions/runtime";
 import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";

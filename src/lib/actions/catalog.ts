@@ -1,4 +1,4 @@
-import type { UserRole } from "../../types/common";
+import type { UserRole } from "../../types/store";
 import { ENDPOINTS } from "../../contracts/endpoints";
 import type { ActionId, ActionMethod } from "./types";
 

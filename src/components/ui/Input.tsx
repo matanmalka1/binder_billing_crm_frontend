@@ -1,4 +1,4 @@
-import { cn } from '../../utils/cn';
+import { cn } from "../../utils/utils";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;

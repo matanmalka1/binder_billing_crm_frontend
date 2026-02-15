@@ -9,8 +9,8 @@ import {
 } from "../../../api/charges.api";
 import { chargesKeys } from "../queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
-import { getRequestErrorMessage } from "../../../utils/errorHandler";
-import { parsePositiveInt } from "../../../utils/number";
+import { getRequestErrorMessage } from "../../../utils/utils";
+import { parsePositiveInt } from "../../../utils/utils";
 import type { ChargesFilters } from "../types";
 
 export const useChargesPage = () => {

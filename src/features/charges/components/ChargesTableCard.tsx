@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/Button";
 import { Card } from "../../../components/ui/Card";
-import { formatDateTime } from "../../../utils/datetime";
+import { formatDateTime } from "../../../utils/utils";
 import { getChargeAmountText } from "../utils/chargeStatus.ts";
 import { canCancel, canIssue, canMarkPaid } from "../utils/chargeStatus";
 import type { ChargeResponse } from "../../../api/charges.api";

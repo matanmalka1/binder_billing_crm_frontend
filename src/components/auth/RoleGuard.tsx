@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "../../store/auth.store";
-import type { UserRole } from "../../types/common";
+import type { UserRole } from "../../types/store";
 import { AccessDenied } from "./AccessDenied";
 
 interface RoleGuardProps {

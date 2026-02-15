@@ -8,8 +8,7 @@ import { AccessDenied } from "../components/auth/AccessDenied";
 import { isAdvisorCharge } from "../api/charges.api";
 import { useAuthStore } from "../store/auth.store";
 import { useChargeDetailsPage } from "../features/charges/hooks/useChargeDetailsPage";
-import { formatDateTime } from "../utils/datetime";
-
+import { formatDateTime } from "../utils/utils";
 export const ChargeDetails: React.FC = () => {
   const { chargeId } = useParams();
   const { user } = useAuthStore();

@@ -47,7 +47,7 @@ export interface BackendActionObject {
   cancel_label?: string;
 }
 
-export type BackendActionInput = string | BackendActionObject;
+
 
 export interface BackendQuickAction extends BackendActionObject {
   key: string;
@@ -57,6 +57,8 @@ export interface BackendQuickAction extends BackendActionObject {
   payload?: Record<string, unknown> | null;
   confirm_required: boolean;
 }
+
+export type BackendActionInput = string | BackendActionObject;
 
 export interface ActionConfirmConfig {
   title: string;

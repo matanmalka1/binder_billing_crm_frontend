@@ -1,7 +1,7 @@
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "../../store/auth.store";
 import { useUIStore } from "../../store/ui.store";
-import { getRoleLabel } from "../../utils/enums"; // ✅ Import safe mapper
+import { getRoleLabel } from "../../utils/enums";
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuthStore();
