@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
 import { PaginatedTableView } from "../components/ui/PaginatedTableView";
@@ -25,7 +25,6 @@ export const ClientTimeline: React.FC = () => {
     setPageSize,
     total,
   } = useClientTimelinePage(clientId);
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   return (
     <div className="space-y-6">
