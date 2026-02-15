@@ -1,5 +1,8 @@
 import { Card } from "../../../components/ui/Card";
+import { Badge } from "../../../components/ui/Badge";
+import { AlertTriangle, CheckCircle, DollarSign, Bell } from "lucide-react";
 import type { AttentionItem } from "../../../api/dashboard.api";
+import { cn } from "../../../utils/utils";
 
 interface AttentionPanelProps {
   items: AttentionItem[];
@@ -9,45 +12,167 @@ const sections = [
   {
     key: "overdue",
     title: "תיקים באיחור",
+    icon: AlertTriangle,
     types: ["overdue", "overdue_binder", "idle_binder"],
+    variant: "error" as const,
+    color: "red",
   },
   {
     key: "unpaid",
     title: "חיובים שלא שולמו",
+    icon: DollarSign,
     types: ["unpaid_charge", "unpaid_charges"],
+    variant: "warning" as const,
+    color: "orange",
   },
   {
     key: "ready",
     title: "מוכן לאיסוף",
+    icon: CheckCircle,
     types: ["ready_for_pickup"],
+    variant: "success" as const,
+    color: "green",
   },
 ];
 
 export const AttentionPanel: React.FC<AttentionPanelProps> = ({ items }) => {
+  const totalItems = items.length;
+
   return (
-    <Card title="לוח תשומת לב">
+    <Card 
+      variant="elevated" 
+      className="overflow-hidden"
+      title="לוח תשומת לב"
+      subtitle={`${totalItems} פריטים הדורשים תשומת לב`}
+    >
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {sections.map((section) => {
-          const sectionItems = items.filter((item) => section.types.includes(item.item_type));
+        {sections.map((section, sectionIndex) => {
+          const sectionItems = items.filter((item) => 
+            section.types.includes(item.item_type)
+          );
+          const hasItems = sectionItems.length > 0;
+          const IconComponent = section.icon;
+
           return (
-            <section key={section.key} className="rounded-md border border-gray-200 p-3">
-              <h4 className="mb-2 text-sm font-semibold text-gray-800">{section.title}</h4>
-              {sectionItems.length > 0 ? (
-                <ul className="space-y-2">
+            <div
+              key={section.key}
+              className={cn(
+                "group relative rounded-xl border-2 p-4 transition-all duration-300",
+                "hover:shadow-lg hover:-translate-y-1",
+                "animate-scale-in",
+                hasItems 
+                  ? `border-${section.color}-200 bg-gradient-to-br from-${section.color}-50 to-transparent`
+                  : "border-gray-200 bg-gray-50"
+              )}
+              style={{ animationDelay: `${sectionIndex * 100}ms` }}
+            >
+              {/* Section Header */}
+              <div className="mb-4 flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={cn(
+                    "rounded-lg p-2 transition-transform group-hover:scale-110",
+                    hasItems 
+                      ? `bg-${section.color}-100`
+                      : "bg-gray-200"
+                  )}>
+                    <IconComponent className={cn(
+                      "h-5 w-5",
+                      hasItems 
+                        ? `text-${section.color}-600`
+                        : "text-gray-500"
+                    )} />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-900">
+                      {section.title}
+                    </h4>
+                    <Badge 
+                      variant={hasItems ? section.variant : "neutral"}
+                      className="mt-1"
+                    >
+                      {sectionItems.length} פריטים
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Section Content */}
+              {hasItems ? (
+                <ul className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
                   {sectionItems.map((item, index) => (
-                    <li key={`${section.key}-${item.client_id}-${item.binder_id}-${index}`}>
-                      <p className="text-sm text-gray-700">{item.description || "—"}</p>
-                      <p className="text-xs text-gray-500">{item.client_name || "—"}</p>
+                    <li
+                      key={`${section.key}-${item.client_id}-${item.binder_id}-${index}`}
+                      className={cn(
+                        "rounded-lg border border-gray-200 bg-white p-3",
+                        "transition-all duration-200",
+                        "hover:shadow-md hover:border-gray-300",
+                        "animate-fade-in"
+                      )}
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
+                      {/* Item Description */}
+                      <p className="text-sm font-medium text-gray-900 leading-relaxed">
+                        {item.description || "—"}
+                      </p>
+
+                      {/* Item Metadata */}
+                      <div className="mt-2 flex items-center gap-2 text-xs text-gray-600">
+                        {item.client_name && (
+                          <>
+                            <span className="font-medium">{item.client_name}</span>
+                            {(item.client_id || item.binder_id) && (
+                              <span className="text-gray-400">•</span>
+                            )}
+                          </>
+                        )}
+                        {item.client_id && (
+                          <span className="font-mono">לקוח #{item.client_id}</span>
+                        )}
+                        {item.binder_id && (
+                          <>
+                            <span className="text-gray-400">•</span>
+                            <span className="font-mono">תיק #{item.binder_id}</span>
+                          </>
+                        )}
+                      </div>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-gray-500">—</p>
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <div className="mb-2 rounded-full bg-gray-200 p-3">
+                    <CheckCircle className="h-6 w-6 text-gray-400" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-600">
+                    אין פריטים
+                  </p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    הכל בסדר גמור
+                  </p>
+                </div>
               )}
-            </section>
+
+              {/* Decorative corner accent */}
+              {hasItems && (
+                <div className={cn(
+                  "absolute top-0 left-0 h-1 w-12 rounded-br-lg",
+                  `bg-gradient-to-r from-${section.color}-500 to-${section.color}-600`
+                )} />
+              )}
+            </div>
           );
         })}
       </div>
+
+      {/* Overall Summary */}
+      {totalItems > 0 && (
+        <div className="mt-6 flex items-center gap-2 rounded-lg bg-gradient-to-r from-primary-50 to-accent-50 p-4 animate-fade-in">
+          <Bell className="h-5 w-5 text-primary-600 animate-pulse" />
+          <p className="text-sm font-medium text-gray-900">
+            סך הכל <span className="text-primary-600">{totalItems}</span> פריטים דורשים תשומת לב
+          </p>
+        </div>
+      )}
     </Card>
   );
 };

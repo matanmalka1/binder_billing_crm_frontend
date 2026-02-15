@@ -6,11 +6,59 @@
     <title>יוסף מאיר מערכת ניהול</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Playfair+Display:wght@600;700&family=Heebo:wght@300;400;500;700&display=swap');
+
+      :root {
+        --font-display: 'Playfair Display', serif;
+        --font-body: 'IBM Plex Sans', 'Heebo', sans-serif;
+        --font-mono: 'IBM Plex Mono', monospace;
+        --shadow-elevation-1: 0 2px 8px rgba(99, 102, 241, 0.08);
+        --shadow-elevation-2: 0 4px 16px rgba(99, 102, 241, 0.12);
+        --shadow-elevation-3: 0 8px 24px rgba(99, 102, 241, 0.16);
+      }
+
       body {
-        font-family: 'Heebo', sans-serif;
-        background-color: #f8fafc;
+        font-family: var(--font-body);
+        background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
         margin: 0;
+        color: #0f172a;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(12px);
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #4f46e5 0%, #f59e0b 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .shadow-elevation-1 { box-shadow: var(--shadow-elevation-1); }
+      .shadow-elevation-2 { box-shadow: var(--shadow-elevation-2); }
+      .shadow-elevation-3 { box-shadow: var(--shadow-elevation-3); }
+
+      .stagger-children > * {
+        opacity: 0;
+        animation: fade-in-up 350ms ease-out forwards;
+      }
+      .stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+      .stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+      .stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+      .stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+      .stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+
+      @keyframes fade-in-up {
+        0% { opacity: 0; transform: translateY(8px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
       }
     </style>
   </head>
