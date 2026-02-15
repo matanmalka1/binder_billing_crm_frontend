@@ -52,6 +52,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
           <NavLink
             key={link.to}
             to={link.to}
+            end={link.to === "/tax"}
             className={({ isActive }) =>
               cn(
                 "flex items-center gap-3 px-3 py-3 rounded-lg group",
