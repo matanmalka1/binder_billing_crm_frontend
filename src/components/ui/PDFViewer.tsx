@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { X, Download, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
-import { Modal } from "../../../components/ui/Modal";
-import { cn } from "../../../utils/utils";
+import { Download, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
+import { Button } from "./Button";
+import { Modal } from "./Modal";
+import { cn } from "../../utils/utils";
 
 interface PDFViewerProps {
   url: string;

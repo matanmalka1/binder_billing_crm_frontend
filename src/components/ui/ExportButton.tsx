@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FileDown, FileSpreadsheet, ChevronDown } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
-import { cn } from "../../../utils/utils";
+import { Button } from "./Button";
+import { cn } from "../../utils/utils";
 
 export type ExportFormat = "excel" | "pdf";
 

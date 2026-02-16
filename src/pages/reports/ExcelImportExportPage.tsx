@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
 import { Upload, Download, FileSpreadsheet, AlertCircle } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
-import { PageHeader } from "../../../components/layout/PageHeader";
-import { toast } from "../../../utils/toast";
-import { getErrorMessage } from "../../../utils/utils";
+import { Card } from "../../components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { PageHeader } from "../../components/layout/PageHeader";
+import { toast } from "../../utils/toast";
+import { getErrorMessage } from "../../utils/utils";
 
 interface ExcelImportExportProps {
   entityType: "clients" | "charges" | "binders";

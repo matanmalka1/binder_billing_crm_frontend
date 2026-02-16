@@ -2,7 +2,7 @@ import { Card } from "./Card";
 
 interface ModalProps {
   open: boolean;
-  title: string;
+  title: React.ReactNode;
   children: React.ReactNode;
   footer: React.ReactNode;
   onClose: () => void;

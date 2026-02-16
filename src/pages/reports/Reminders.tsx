@@ -1,50 +1,53 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, Bell, Calendar, AlertTriangle } from "lucide-react";
-import { PageHeader } from "../../../components/layout/PageHeader";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
-import { Badge } from "../../../components/ui/Badge";
-import { DataTable, type Column } from "../../../components/ui/DataTable";
-import { PageLoading } from "../../../components/ui/PageLoading";
-import { ErrorCard } from "../../../components/ui/ErrorCard";
-import { Modal } from "../../../components/ui/Modal";
-import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
-import { getErrorMessage, formatDate } from "../../../utils/utils";
-import { toast } from "../../../utils/toast";
-import { cn } from "../../../utils/utils";
+import { PageHeader } from "../../components/layout/PageHeader";
+import { Card } from "../../components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { Badge } from "../../components/ui/Badge";
+import { DataTable, type Column } from "../../components/ui/DataTable";
+import { Input } from "../../components/ui/Input";
+import { PageLoading } from "../../components/ui/PageLoading";
+import { ErrorCard } from "../../components/ui/ErrorCard";
+import { Modal } from "../../components/ui/Modal";
+import { Select } from "../../components/ui/Select";
+import { getErrorMessage, formatDate } from "../../utils/utils";
+import { toast } from "sonner";
+import { remindersApi } from "../../api/reminders.api";
 
-// Types (should match backend)
+// Reminder type definition matching backend model
 interface Reminder {
   id: number;
   client_id: number;
-  reminder_type: "TAX_DEADLINE_APPROACHING" | "BINDER_IDLE" | "UNPAID_CHARGE" | "CUSTOM";
+  reminder_type:
+    | "TAX_DEADLINE_APPROACHING"
+    | "BINDER_IDLE"
+    | "UNPAID_CHARGE"
+    | "CUSTOM";
   target_date: string;
   days_before: number;
   send_on: string;
   message: string;
   status: "PENDING" | "SENT" | "CANCELED";
   created_at: string;
+  sent_at?: string | null;
+  canceled_at?: string | null;
   binder_id?: number | null;
   charge_id?: number | null;
   tax_deadline_id?: number | null;
 }
 
-// Mock API (replace with actual API calls)
-const remindersApi = {
-  list: async (): Promise<Reminder[]> => {
-    // TODO: Replace with actual API call
-    return [];
-  },
-  create: async (data: Partial<Reminder>): Promise<Reminder> => {
-    // TODO: Replace with actual API call
-    throw new Error("Not implemented");
-  },
-  cancel: async (id: number): Promise<void> => {
-    // TODO: Replace with actual API call
-  },
-};
+// Create reminder request interface
+interface CreateReminderRequest {
+  client_id: number;
+  reminder_type: Reminder["reminder_type"];
+  target_date: string;
+  days_before: number;
+  message: string;
+  binder_id?: number;
+  charge_id?: number;
+  tax_deadline_id?: number;
+}
 
 const reminderTypeLabels: Record<string, string> = {
   TAX_DEADLINE_APPROACHING: "מועד מס מתקרב",
@@ -63,9 +66,38 @@ export const RemindersPage: React.FC = () => {
   const queryClient = useQueryClient();
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const remindersQuery = useQuery({
+  // Form state for create modal
+  const [formData, setFormData] = useState<CreateReminderRequest>({
+    client_id: 0,
+    reminder_type: "TAX_DEADLINE_APPROACHING",
+    target_date: "",
+    days_before: 7,
+    message: "",
+  });
+
+  const remindersQuery = useQuery<Reminder[], Error>({
     queryKey: ["reminders", "list"],
-    queryFn: remindersApi.list,
+    queryFn: () => remindersApi.list(),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: remindersApi.create,
+    onSuccess: () => {
+      toast.success("תזכורת נוצרה בהצלחה");
+      queryClient.invalidateQueries({ queryKey: ["reminders"] });
+      setShowCreateModal(false);
+      // Reset form
+      setFormData({
+        client_id: 0,
+        reminder_type: "TAX_DEADLINE_APPROACHING",
+        target_date: "",
+        days_before: 7,
+        message: "",
+      });
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error, "שגיאה ביצירת תזכורת"));
+    },
   });
 
   const cancelMutation = useMutation({
@@ -78,6 +110,30 @@ export const RemindersPage: React.FC = () => {
       toast.error(getErrorMessage(error, "שגיאה בביטול תזכורת"));
     },
   });
+
+  const handleCreateSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validation
+    if (!formData.client_id || formData.client_id <= 0) {
+      toast.error("נא להזין מזהה לקוח תקין");
+      return;
+    }
+    if (!formData.target_date) {
+      toast.error("נא לבחור תאריך יעד");
+      return;
+    }
+    if (!formData.message || formData.message.trim() === "") {
+      toast.error("נא להזין הודעת תזכורת");
+      return;
+    }
+    if (formData.days_before < 0) {
+      toast.error("מספר ימים לפני חייב להיות חיובי");
+      return;
+    }
+
+    createMutation.mutate(formData);
+  };
 
   const columns: Column<Reminder>[] = [
     {
@@ -101,7 +157,9 @@ export const RemindersPage: React.FC = () => {
       header: "הודעה",
       render: (reminder) => (
         <div className="max-w-md">
-          <p className="text-sm text-gray-700 truncate">{reminder.message}</p>
+          <p className="text-sm text-gray-700 truncate" title={reminder.message}>
+            {reminder.message}
+          </p>
         </div>
       ),
     },
@@ -209,19 +267,27 @@ export const RemindersPage: React.FC = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card variant="elevated" className="bg-gradient-to-br from-blue-50 to-blue-100">
+        <Card
+          variant="elevated"
+          className="bg-gradient-to-br from-blue-50 to-blue-100"
+        >
           <div className="flex items-center gap-4">
             <div className="rounded-lg bg-blue-200 p-3">
               <Bell className="h-6 w-6 text-blue-700" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-blue-900">{pendingCount}</div>
+              <div className="text-2xl font-bold text-blue-900">
+                {pendingCount}
+              </div>
               <div className="text-sm text-blue-700">תזכורות ממתינות</div>
             </div>
           </div>
         </Card>
 
-        <Card variant="elevated" className="bg-gradient-to-br from-green-50 to-green-100">
+        <Card
+          variant="elevated"
+          className="bg-gradient-to-br from-green-50 to-green-100"
+        >
           <div className="flex items-center gap-4">
             <div className="rounded-lg bg-green-200 p-3">
               <Calendar className="h-6 w-6 text-green-700" />
@@ -235,7 +301,10 @@ export const RemindersPage: React.FC = () => {
           </div>
         </Card>
 
-        <Card variant="elevated" className="bg-gradient-to-br from-purple-50 to-purple-100">
+        <Card
+          variant="elevated"
+          className="bg-gradient-to-br from-purple-50 to-purple-100"
+        >
           <div className="flex items-center gap-4">
             <div className="rounded-lg bg-purple-200 p-3">
               <AlertTriangle className="h-6 w-6 text-purple-700" />
@@ -258,7 +327,7 @@ export const RemindersPage: React.FC = () => {
         emptyMessage="אין תזכורות להצגה"
       />
 
-      {/* Create Modal Placeholder */}
+      {/* Create Modal */}
       {showCreateModal && (
         <Modal
           open={showCreateModal}
@@ -273,33 +342,88 @@ export const RemindersPage: React.FC = () => {
               >
                 ביטול
               </Button>
-              <Button type="button" variant="primary">
+              <Button
+                type="button"
+                variant="primary"
+                onClick={handleCreateSubmit}
+                isLoading={createMutation.isPending}
+              >
                 יצירה
               </Button>
             </div>
           }
         >
-          <div className="space-y-4">
-            <Select label="סוג תזכורת">
+          <form onSubmit={handleCreateSubmit} className="space-y-4">
+            <Select
+              label="סוג תזכורת"
+              value={formData.reminder_type}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  reminder_type: e.target.value as Reminder["reminder_type"],
+                })
+              }
+            >
               <option value="TAX_DEADLINE_APPROACHING">מועד מס מתקרב</option>
               <option value="BINDER_IDLE">תיק לא פעיל</option>
               <option value="UNPAID_CHARGE">חשבונית שלא שולמה</option>
               <option value="CUSTOM">התאמה אישית</option>
             </Select>
-            <Input type="number" label="מזהה לקוח" />
-            <Input type="date" label="תאריך יעד" />
-            <Input type="number" label="ימים לפני" defaultValue="7" />
+
+            <Input
+              type="number"
+              label="מזהה לקוח"
+              value={formData.client_id || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  client_id: parseInt(e.target.value) || 0,
+                })
+              }
+              required
+              min={1}
+            />
+
+            <Input
+              type="date"
+              label="תאריך יעד"
+              value={formData.target_date}
+              onChange={(e) =>
+                setFormData({ ...formData, target_date: e.target.value })
+              }
+              required
+            />
+
+            <Input
+              type="number"
+              label="ימים לפני"
+              value={formData.days_before}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  days_before: parseInt(e.target.value) || 0,
+                })
+              }
+              required
+              min={0}
+            />
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                הודעה
+                הודעה <span className="text-red-500">*</span>
               </label>
               <textarea
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="הזן הודעת תזכורת..."
+                value={formData.message}
+                onChange={(e) =>
+                  setFormData({ ...formData, message: e.target.value })
+                }
+                required
               />
             </div>
-          </div>
+          </form>
         </Modal>
       )}
     </div>

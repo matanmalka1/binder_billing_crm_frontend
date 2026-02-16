@@ -18,6 +18,9 @@ import { Login } from "../pages/Login";
 import { Header } from "../components/layout/Header";
 import { Sidebar } from "../components/layout/Sidebar";
 import { PageLayout } from "../components/layout/PageLayout";
+import { AgingReportPage } from "../pages/reports/AgingReport";
+import { RemindersPage } from "../pages/reports/Reminders";
+import { ExcelImportExportPage } from "../pages/reports/ExcelImportExportPage";
 
 const AuthExpiredNavigationHandler: React.FC = () => {
   const navigate = useNavigate();
@@ -85,6 +88,9 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax" element={<TaxDashboard />} />
             <Route path="tax/reports" element={<AnnualReportsKanban />} />
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
+            <Route path="reports/aging" element={<AgingReportPage />} />
+            <Route path="reports/reminders" element={<RemindersPage />} />
+            <Route path="reports/import-export" element={<ExcelImportExportPage entityType="clients" />} />
           </Route>
         </Route>
 

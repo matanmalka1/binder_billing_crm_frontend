@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileDown, FileSpreadsheet, Calendar, DollarSign } from "lucide-react";
-import { PageHeader } from "./src/components/layout/PageHeader";
-import { Card } from "./src/components/ui/Card";
-import { Button } from "./src/components/ui/Button";
-import { Input } from "./src/components/ui/Input";
-import { StatsCard } from "./src/components/ui/StatsCard";
-import { DataTable, type Column } from "./src/components/ui/DataTable";
-import { PageLoading } from "./src/components/ui/PageLoading";
-import { ErrorCard } from "./src/components/ui/ErrorCard";
-import { reportsApi, type AgingReportItem } from "./src/api/reports.api";
-import { getErrorMessage, cn } from "./src/utils/utils";
-import { toast } from "./src/utils/toast";
+import { PageHeader } from "../../components/layout/PageHeader";
+import { Card } from "../../components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
+import { StatsCard } from "../../components/ui/StatsCard";
+import { DataTable, type Column } from "../../components/ui/DataTable";
+import { PageLoading } from "../../components/ui/PageLoading";
+import { ErrorCard } from "../../components/ui/ErrorCard";
+import { reportsApi, type AgingReportItem } from "../../api/reports.api";
+import { getErrorMessage, cn } from "../../utils/utils";
+import { toast } from "../../utils/toast";
 
 export const AgingReportPage: React.FC = () => {
   const [asOfDate, setAsOfDate] = useState<string>(
@@ -243,7 +243,7 @@ export const AgingReportPage: React.FC = () => {
         columns={columns}
         getRowKey={(item) => item.client_id}
         emptyMessage="אין חובות פתוחים"
-        rowClassName={(item, index) =>
+        rowClassName={(item) =>
           cn("animate-fade-in", item.days_90_plus > 0 && "bg-red-50/30")
         }
       />

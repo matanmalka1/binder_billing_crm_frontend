@@ -10,6 +10,8 @@ import {
   FileText,
   FileSpreadsheet,
   CalendarClock,
+  BarChart3,
+  Bell,
 } from "lucide-react";
 import { cn } from "../../utils/utils";
 
@@ -30,6 +32,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     { to: "/tax", label: "דוחות מס", icon: FileSpreadsheet },
     { to: "/tax/reports", label: "דוחות שנתיים", icon: FileText },
     { to: "/tax/deadlines", label: "מועדי מס", icon: CalendarClock },
+    { to: "/reports/aging", label: "דוח חובות", icon: BarChart3 },
+    { to: "/reports/reminders", label: "תזכורות", icon: Bell },
+    { to: "/reports/import-export", label: "ייבוא/ייצוא", icon: FileSpreadsheet },
   ];
 
   return (
