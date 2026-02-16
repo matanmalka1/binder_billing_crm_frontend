@@ -7,7 +7,8 @@ export const ENDPOINTS = {
   clients: "/clients",
   clientById: (clientId: number | string) => `/clients/${clientId}`,
   clientBinders: (clientId: number | string) => `/clients/${clientId}/binders`,
-  clientTimeline: (clientId: number | string) => `/clients/${clientId}/timeline`,
+  clientTimeline: (clientId: number | string) =>
+    `/clients/${clientId}/timeline`,
   binders: "/binders",
   binderById: (binderId: number | string) => `/binders/${binderId}`,
   binderReady: (binderId: number | string) => `/binders/${binderId}/ready`,
@@ -26,10 +27,12 @@ export const ENDPOINTS = {
   charges: "/charges",
   chargeById: (chargeId: number | string) => `/charges/${chargeId}`,
   chargeIssue: (chargeId: number | string) => `/charges/${chargeId}/issue`,
-  chargeMarkPaid: (chargeId: number | string) => `/charges/${chargeId}/mark-paid`,
+  chargeMarkPaid: (chargeId: number | string) =>
+    `/charges/${chargeId}/mark-paid`,
   chargeCancel: (chargeId: number | string) => `/charges/${chargeId}/cancel`,
   documentsUpload: "/documents/upload",
-  documentsByClient: (clientId: number | string) => `/documents/client/${clientId}`,
+  documentsByClient: (clientId: number | string) =>
+    `/documents/client/${clientId}`,
   documentSignalsByClient: (clientId: number | string) =>
     `/documents/client/${clientId}/signals`,
   annualReports: "/annual-reports",
@@ -40,11 +43,12 @@ export const ENDPOINTS = {
   annualReportsKanban: "/annual-reports/kanban/view",
   taxDeadlines: "/tax-deadlines",
   taxDeadlineById: (id: number | string) => `/tax-deadlines/${id}`,
-  taxDeadlineComplete: (id: number | string) =>
-    `/tax-deadlines/${id}/complete`,
+  taxDeadlineComplete: (id: number | string) => `/tax-deadlines/${id}/complete`,
   taxDeadlinesDashboard: "/tax-deadlines/dashboard/urgent",
   clientAuthorityContacts: (clientId: number | string) =>
     `/clients/${clientId}/authority-contacts`,
   authorityContactById: (id: number | string) => `/authority-contacts/${id}`,
   dashboardTaxSubmissions: "/dashboard/tax-submissions",
+  reportsAging: "/reports/aging",
+  reportsAgingExport: "/reports/aging/export",
 } as const;
