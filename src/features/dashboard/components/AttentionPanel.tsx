@@ -10,7 +10,7 @@ interface AttentionPanelProps {
 const sections = [
   {
     key: "overdue",
-    title: "תיקים באיחור",
+    title: "קלסרים באיחור",
     icon: AlertTriangle,
     types: ["overdue", "overdue_binder", "idle_binder"],
     variant: "error" as const,

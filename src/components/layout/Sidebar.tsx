@@ -22,7 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
 
   const links = [
     { to: "/", label: "לוח בקרה", icon: LayoutDashboard },
-    { to: "/binders", label: "תיקים", icon: Briefcase },
+    { to: "/binders", label: "קלסרים", icon: Briefcase },
     { to: "/clients", label: "לקוחות", icon: Users },
     { to: "/search", label: "חיפוש", icon: Search },
     { to: "/charges", label: "חיובים", icon: ReceiptText },

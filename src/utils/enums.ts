@@ -75,7 +75,7 @@ export const getSignalLabel = (signal: string): string => {
     overdue: "באיחור",
     near_sla: "קרוב ליעד",
     ready_for_pickup: "מוכן לאיסוף",
-    idle_binder: "תיק לא פעיל",
+    idle_binder: "קלסר לא פעיל",
     missing_permanent_documents: "חסרים מסמכים קבועים",
     unpaid_charges: "חיובים שלא שולמו",
   };
@@ -83,9 +83,9 @@ export const getSignalLabel = (signal: string): string => {
 };
 
 const ACTION_LABELS: Record<string, string> = {
-  receive: "קליטת תיק",
+  receive: "קליטת קלסר",
   ready: "מוכן לאיסוף",
-  return: "החזרת תיק",
+  return: "החזרת קלסר",
   freeze: "הקפאת לקוח",
   activate: "הפעלת לקוח",
   mark_paid: "סימון חיוב כשולם",

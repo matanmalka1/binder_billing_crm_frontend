@@ -53,7 +53,7 @@ export const useBindersPage = () => {
       try {
         await actionMutation.mutateAsync(action);
       } catch (requestError: unknown) {
-        showErrorToast(requestError, "שגיאה בביצוע פעולת תיק", { canonicalAction: true });
+      showErrorToast(requestError, "שגיאה בביצוע פעולת קלסר", { canonicalAction: true });
       }
     },
     [actionMutation],
@@ -75,7 +75,7 @@ export const useBindersPage = () => {
     activeActionKey,
     binders: bindersQuery.data?.items ?? [],
     error: bindersQuery.error
-      ? getErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת תיקים")
+      ? getErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת קלסרים")
       : null,
     filters,
     onAction,

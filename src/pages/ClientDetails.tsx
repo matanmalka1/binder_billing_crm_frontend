@@ -58,7 +58,7 @@ export const ClientDetails: React.FC = () => {
   ];
 
   const stats = [
-    { show: true, icon: <FolderOpen className="h-6 w-6 text-blue-600" />, value: bindersTotal, label: "תיקים", bg: "bg-blue-100" },
+    { show: true, icon: <FolderOpen className="h-6 w-6 text-blue-600" />, value: bindersTotal, label: "קלסרים", bg: "bg-blue-100" },
     { show: isAdvisor, icon: <Receipt className="h-6 w-6 text-green-600" />, value: chargesTotal, label: "חיובים", bg: "bg-green-100" },
     { show: isAdvisor, icon: <FileText className="h-6 w-6 text-purple-600" />, value: "—", label: "מסמכים", bg: "bg-purple-100" },
   ];
@@ -115,11 +115,11 @@ export const ClientDetails: React.FC = () => {
           </div>
 
           {binders.length ? renderListCard(
-            "תיקים אחרונים",
+          "קלסרים אחרונים",
             binders.map((b) => ({ id: b.id, title: b.binder_number, subtitle: `נקלט: ${formatDate(b.received_at)}`, link: `/binders/${b.id}` })),
             bindersTotal,
             `/binders?client_id=${clientId}`,
-            "צפה בכל התיקים",
+            "צפה בכל הקלסרים",
           ) : null}
 
           {isAdvisor && charges.length ? renderListCard(

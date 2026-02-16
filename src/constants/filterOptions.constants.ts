@@ -40,7 +40,7 @@ export const PAGE_SIZE_OPTIONS: Option[] = [
 ];
 
 export const getResultTypeLabel = (resultType: string) => {
-  if (resultType === "binder") return "תיק";
+  if (resultType === "binder") return "קלסר";
   if (resultType === "client") return "לקוח";
   return "—";
 };

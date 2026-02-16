@@ -48,7 +48,7 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
           type="text"
           value={filters.query}
           onChange={(event) => onFilterChange("query", event.target.value)}
-          placeholder="שם לקוח / מספר תיק"
+          placeholder="שם לקוח / מספר קלסר"
         />
         <Input
           label="שם לקוח"
@@ -65,7 +65,7 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
           placeholder="מספר מזהה"
         />
         <Input
-          label="מספר תיק"
+          label="מספר קלסר"
           type="text"
           value={filters.binder_number}
           onChange={(event) => onFilterChange("binder_number", event.target.value)}

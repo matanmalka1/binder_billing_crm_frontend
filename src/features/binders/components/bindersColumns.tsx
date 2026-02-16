@@ -24,7 +24,7 @@ export const buildBindersColumns = ({
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
   {
     key: "binder_number",
-    header: "מספר תיק",
+    header: "מספר קלסר",
     render: (binder) => (
       <span className="font-medium text-gray-900">{binder.binder_number}</span>
     ),

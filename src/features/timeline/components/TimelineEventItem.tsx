@@ -76,7 +76,7 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
           {event.binder_id && (
             <div className="flex items-center gap-1.5 rounded-lg bg-gray-50 px-2 py-1">
               <FileText className="h-3 w-3 text-gray-500" />
-              <span className="font-mono">תיק #{event.binder_id}</span>
+              <span className="font-mono">קלסר #{event.binder_id}</span>
             </div>
           )}
           {event.charge_id && (

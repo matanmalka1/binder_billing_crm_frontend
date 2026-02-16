@@ -21,7 +21,7 @@ export const SearchTable: React.FC<SearchTableProps> = ({ results }) => {
                 לקוח
               </th>
               <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">
-                מספר תיק
+                מספר קלסר
               </th>
               <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">
                 מצב עבודה

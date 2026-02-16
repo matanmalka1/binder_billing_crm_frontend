@@ -58,7 +58,7 @@ export const Search: React.FC = () => {
     },
     {
       key: "binder_number",
-      header: "מספר תיק",
+      header: "מספר קלסר",
       render: (result) => (
         <span className="font-mono text-sm text-gray-700">{result.binder_number ?? "—"}</span>
       ),

@@ -52,11 +52,11 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({ document
           )}
         </section>
         <section>
-          <h4 className="text-sm font-semibold text-gray-800">תיקים מתקרבים ל-SLA</h4>
+          <h4 className="text-sm font-semibold text-gray-800">קלסרים מתקרבים ל-SLA</h4>
           <p className="mt-2 text-sm text-gray-700">{signals.binders_nearing_sla.length}</p>
         </section>
         <section>
-          <h4 className="text-sm font-semibold text-gray-800">תיקים באיחור</h4>
+          <h4 className="text-sm font-semibold text-gray-800">קלסרים באיחור</h4>
           <p className="mt-2 text-sm text-gray-700">{signals.binders_overdue.length}</p>
         </section>
       </div>

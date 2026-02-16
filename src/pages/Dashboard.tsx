@@ -58,28 +58,28 @@ export const Dashboard: React.FC = () => {
               variant="blue"
             />
             <StatsCard
-              title="תיקים פעילים"
+              title="קלסרים פעילים"
               value={dashboard.data.active_binders}
-              description="תיקים שטרם הוחזרו"
+              description="קלסרים שטרם הוחזרו"
               icon={FolderOpen}
               variant="green"
             />
             <StatsCard
-              title="תיקים באיחור"
+              title="קלסרים באיחור"
               value={dashboard.data.overdue_binders}
               description="חרגו מ-90 יום"
               icon={AlertTriangle}
               variant="red"
             />
             <StatsCard
-              title="תיקים ליום זה"
+              title="קלסרים ליום זה"
               value={dashboard.data.binders_due_today}
               description="מועד החזרה היום"
               icon={Calendar}
               variant="orange"
             />
             <StatsCard
-              title="תיקים לשבוע זה"
+              title="קלסרים לשבוע זה"
               value={dashboard.data.binders_due_this_week}
               description="מועד החזרה תוך 7 ימים"
               icon={CalendarClock}
@@ -105,23 +105,23 @@ export const Dashboard: React.FC = () => {
           {/* Stats Grid */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <StatsCard
-              title="תיקים במשרד"
+              title="קלסרים במשרד"
               value={dashboard.data.binders_in_office}
-              description="כלל התיקים הפעילים במשרד"
+              description="כלל הקלסרים הפעילים במשרד"
               icon={FolderOpen}
               variant="blue"
             />
             <StatsCard
               title="מוכן לאיסוף"
               value={dashboard.data.binders_ready_for_pickup}
-              description="תיקים הממתינים לאיסוף לקוח"
+              description="קלסרים הממתינים לאיסוף לקוח"
               icon={Users}
               variant="green"
             />
             <StatsCard
-              title="תיקים באיחור"
+              title="קלסרים באיחור"
               value={dashboard.data.binders_overdue}
-              description="תיקים בחריגה ממועד החזרה"
+              description="קלסרים בחריגה ממועד החזרה"
               icon={AlertTriangle}
               variant="red"
             />

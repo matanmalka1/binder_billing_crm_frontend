@@ -3,8 +3,8 @@ import React from "react";
 
 export const getEventTypeLabel = (eventType: string) => {
   const labels: Record<string, string> = {
-    binder_received: "קליטת תיק",
-    binder_returned: "החזרת תיק",
+    binder_received: "קליטת קלסר",
+    binder_returned: "החזרת קלסר",
     invoice_created: "יצירת חשבונית",
     charge_created: "יצירת חיוב",
     notification: "התראה",

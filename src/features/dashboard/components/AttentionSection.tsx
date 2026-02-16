@@ -95,7 +95,7 @@ export const AttentionSection: React.FC<AttentionSectionProps> = ({
                 {item.binder_id && (
                   <>
                     <span className="text-gray-400">•</span>
-                    <span className="font-mono">תיק #{item.binder_id}</span>
+                    <span className="font-mono">קלסר #{item.binder_id}</span>
                   </>
                 )}
               </div>

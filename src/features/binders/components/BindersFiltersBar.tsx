@@ -24,7 +24,7 @@ export const BindersFiltersBar: React.FC<BindersFiltersBarProps> = ({
             <Filter className="h-4 w-4 text-primary-600" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">סינון תיקים</h3>
+            <h3 className="text-sm font-semibold text-gray-900">סינון קלסרים</h3>
             <p className="text-xs text-gray-600">סנן לפי מצב עבודה או SLA</p>
           </div>
         </div>

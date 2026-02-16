@@ -32,7 +32,7 @@ export const Binders: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="תיקים" description="רשימת כל התיקים במערכת" />
+      <PageHeader title="קלסרים" description="רשימת כל הקלסרים במערכת" />
 
       <FilterBar>
         <BindersFiltersBar
@@ -53,7 +53,7 @@ export const Binders: React.FC = () => {
           columns={columns}
           getRowKey={(binder) => binder.id}
           isLoading={loading}
-          emptyMessage="אין תיקים להצגה"
+          emptyMessage="אין קלסרים להצגה"
         />
       </div>
 

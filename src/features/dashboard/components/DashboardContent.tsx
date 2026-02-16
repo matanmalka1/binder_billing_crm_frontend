@@ -32,19 +32,19 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
           <div className="text-3xl font-bold text-blue-600">{data.total_clients}</div>
           <p className="mt-1 text-sm text-gray-600">סך הכל לקוחות במערכת</p>
         </Card>
-        <Card title="תיקים פעילים">
+        <Card title="קלסרים פעילים">
           <div className="text-3xl font-bold text-green-600">{data.active_binders}</div>
-          <p className="mt-1 text-sm text-gray-600">תיקים שטרם הוחזרו</p>
+          <p className="mt-1 text-sm text-gray-600">קלסרים שטרם הוחזרו</p>
         </Card>
-        <Card title="תיקים באיחור">
+        <Card title="קלסרים באיחור">
           <div className="text-3xl font-bold text-red-600">{data.overdue_binders}</div>
           <p className="mt-1 text-sm text-gray-600">חרגו מ-90 יום</p>
         </Card>
-        <Card title="תיקים ליום זה">
+        <Card title="קלסרים ליום זה">
           <div className="text-3xl font-bold text-orange-600">{data.binders_due_today}</div>
           <p className="mt-1 text-sm text-gray-600">מועד החזרה היום</p>
         </Card>
-        <Card title="תיקים לשבוע זה">
+        <Card title="קלסרים לשבוע זה">
           <div className="text-3xl font-bold text-purple-600">
             {data.binders_due_this_week}
           </div>
