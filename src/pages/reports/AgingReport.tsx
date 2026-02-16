@@ -1,134 +1,26 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { FileDown, FileSpreadsheet, Calendar, DollarSign } from "lucide-react";
+import { FileDown, FileSpreadsheet } from "lucide-react";
 import { PageHeader } from "../../components/layout/PageHeader";
-import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
-import { Input } from "../../components/ui/Input";
-import { StatsCard } from "../../components/ui/StatsCard";
-import { DataTable, type Column } from "../../components/ui/DataTable";
 import { PageLoading } from "../../components/ui/PageLoading";
 import { ErrorCard } from "../../components/ui/ErrorCard";
-import { reportsApi, type AgingReportItem } from "../../api/reports.api";
-import { getErrorMessage, cn } from "../../utils/utils";
-import { toast } from "../../utils/toast";
+import { AgingReportFilters } from "../../features/reports/components/AgingReportFilters";
+import { AgingReportSummary } from "../../features/reports/components/Agingreportsummary";
+import { AgingReportTable } from "../../features/reports/components/Agingreporttable";
+import { AgingReportMetadata } from "../../features/reports/components/Agingreportmetadata";
+import { useAgingReport } from "../../features/reports/hooks/useAgingReport";
 
 export const AgingReportPage: React.FC = () => {
-  const [asOfDate, setAsOfDate] = useState<string>(
-    new Date().toISOString().split("T")[0],
-  );
-  const [exporting, setExporting] = useState<"excel" | "pdf" | null>(null);
+  const {
+    asOfDate,
+    setAsOfDate,
+    exporting,
+    handleExport,
+    data,
+    isLoading,
+    error,
+  } = useAgingReport();
 
-  const reportQuery = useQuery({
-    queryKey: ["reports", "aging", asOfDate],
-    queryFn: () => reportsApi.getAgingReport(asOfDate),
-  });
-
-  const handleExport = async (format: "excel" | "pdf") => {
-    setExporting(format);
-    try {
-      const result = await reportsApi.exportAgingReport(format);
-      toast.success(`דוח יוצא בהצלחה: ${result.filename}`);
-      reportsApi.downloadExport(result.download_url);
-    } catch (error) {
-      toast.error(getErrorMessage(error, "שגיאה בייצוא דוח"));
-    } finally {
-      setExporting(null);
-    }
-  };
-
-  const columns: Column<AgingReportItem>[] = [
-    {
-      key: "client_name",
-      header: "לקוח",
-      render: (item) => (
-        <div>
-          <div className="font-medium text-gray-900">{item.client_name}</div>
-          <div className="text-xs text-gray-500">לקוח #{item.client_id}</div>
-        </div>
-      ),
-    },
-    {
-      key: "total",
-      header: 'סה"כ חוב',
-      render: (item) => (
-        <span className="font-bold text-gray-900">
-          ₪
-          {item.total_outstanding.toLocaleString("he-IL", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
-        </span>
-      ),
-    },
-    {
-      key: "current",
-      header: "שוטף (0-30)",
-      render: (item) => (
-        <span className="text-green-700">
-          ₪
-          {item.current.toLocaleString("he-IL", {
-            minimumFractionDigits: 2,
-          })}
-        </span>
-      ),
-    },
-    {
-      key: "days_30",
-      header: "31-60 ימים",
-      render: (item) => (
-        <span className="text-yellow-700">
-          ₪
-          {item.days_30.toLocaleString("he-IL", {
-            minimumFractionDigits: 2,
-          })}
-        </span>
-      ),
-    },
-    {
-      key: "days_60",
-      header: "61-90 ימים",
-      render: (item) => (
-        <span className="text-orange-700">
-          ₪
-          {item.days_60.toLocaleString("he-IL", {
-            minimumFractionDigits: 2,
-          })}
-        </span>
-      ),
-    },
-    {
-      key: "days_90",
-      header: "90+ ימים",
-      render: (item) => (
-        <span className="text-red-700 font-semibold">
-          ₪
-          {item.days_90_plus.toLocaleString("he-IL", {
-            minimumFractionDigits: 2,
-          })}
-        </span>
-      ),
-    },
-    {
-      key: "oldest",
-      header: "חוב עתיק ביותר",
-      render: (item) =>
-        item.oldest_invoice_days ? (
-          <div className="text-sm">
-            <div className="text-gray-700">{item.oldest_invoice_days} ימים</div>
-            <div className="text-xs text-gray-500">
-              {item.oldest_invoice_date
-                ? new Date(item.oldest_invoice_date).toLocaleDateString("he-IL")
-                : "—"}
-            </div>
-          </div>
-        ) : (
-          <span className="text-gray-500">—</span>
-        ),
-    },
-  ];
-
-  if (reportQuery.isPending) {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <PageHeader title="דוח חובות לקוחות" />
@@ -137,18 +29,18 @@ export const AgingReportPage: React.FC = () => {
     );
   }
 
-  if (reportQuery.error) {
+  if (error) {
     return (
       <div className="space-y-6">
         <PageHeader title="דוח חובות לקוחות" />
-        <ErrorCard
-          message={getErrorMessage(reportQuery.error, "שגיאה בטעינת הדוח")}
-        />
+        <ErrorCard message={error} />
       </div>
     );
   }
 
-  const data = reportQuery.data!;
+  if (!data) {
+    return null;
+  }
 
   return (
     <div className="space-y-6">
@@ -184,79 +76,13 @@ export const AgingReportPage: React.FC = () => {
         }
       />
 
-      {/* Date Filter */}
-      <Card>
-        <div className="flex items-center gap-4">
-          <Calendar className="h-5 w-5 text-gray-400" />
-          <Input
-            type="date"
-            label="נכון לתאריך"
-            value={asOfDate}
-            onChange={(e) => setAsOfDate(e.target.value)}
-            className="max-w-xs"
-          />
-        </div>
-      </Card>
+      <AgingReportFilters asOfDate={asOfDate} onDateChange={setAsOfDate} />
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
-        <StatsCard
-          title="סה״כ חובות"
-          value={`₪${data.total_outstanding.toLocaleString("he-IL")}`}
-          icon={DollarSign}
-          variant="blue"
-          description="יתרות פתוחות"
-        />
-        <StatsCard
-          title="שוטף (0-30)"
-          value={`₪${data.summary.current.toLocaleString("he-IL")}`}
-          icon={DollarSign}
-          variant="green"
-          description="תוך 30 יום"
-        />
-        <StatsCard
-          title="31-60 ימים"
-          value={`₪${data.summary.days_30.toLocaleString("he-IL")}`}
-          icon={DollarSign}
-          variant="orange"
-          description="חודש שני"
-        />
-        <StatsCard
-          title="61-90 ימים"
-          value={`₪${data.summary.days_60.toLocaleString("he-IL")}`}
-          icon={DollarSign}
-          variant="orange"
-          description="חודש שלישי"
-        />
-        <StatsCard
-          title="90+ ימים"
-          value={`₪${data.summary.days_90_plus.toLocaleString("he-IL")}`}
-          icon={DollarSign}
-          variant="red"
-          description="דורש טיפול"
-        />
-      </div>
+      <AgingReportSummary data={data} />
 
-      {/* Detailed Table */}
-      <DataTable
-        data={data.items}
-        columns={columns}
-        getRowKey={(item) => item.client_id}
-        emptyMessage="אין חובות פתוחים"
-        rowClassName={(item) =>
-          cn("animate-fade-in", item.days_90_plus > 0 && "bg-red-50/30")
-        }
-      />
+      <AgingReportTable items={data.items} />
 
-      {/* Report Metadata */}
-      <Card variant="elevated" className="bg-gray-50">
-        <div className="flex items-center justify-between text-sm text-gray-600">
-          <div>
-            נוצר בתאריך: {new Date(data.report_date).toLocaleString("he-IL")}
-          </div>
-          <div>סה״כ {data.items.length} לקוחות עם חובות פתוחים</div>
-        </div>
-      </Card>
+      <AgingReportMetadata data={data} />
     </div>
   );
 };
