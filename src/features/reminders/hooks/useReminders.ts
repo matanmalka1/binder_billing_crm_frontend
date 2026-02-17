@@ -3,15 +3,15 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { remindersApi } from "../../../api/reminders.api";
 import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
-import type { Reminder, CreateReminderRequest } from "../reminder.types";
+import type { RemindersListResponse, CreateReminderRequest } from "../reminder.types";
 
+// Start with a valid union variant to satisfy TS (custom has no required FK)
 const defaultFormData: CreateReminderRequest = {
   client_id: 0,
-  reminder_type: "tax_deadline_approaching",
+  reminder_type: "custom",
   target_date: "",
   days_before: 7,
   message: "",
-  tax_deadline_id: undefined,
 };
 
 export const useReminders = () => {
@@ -20,7 +20,7 @@ export const useReminders = () => {
   const [formData, setFormData] = useState<CreateReminderRequest>(defaultFormData);
   const [cancelingId, setCancelingId] = useState<number | null>(null);
 
-  const remindersQuery = useQuery<Reminder[], Error>({
+  const remindersQuery = useQuery<RemindersListResponse, Error>({
     queryKey: ["reminders", "list"],
     queryFn: () => remindersApi.list(),
   });
@@ -82,11 +82,18 @@ export const useReminders = () => {
   };
 
   const handleFormChange = (updates: Partial<CreateReminderRequest>) => {
-    setFormData((prev) => ({ ...prev, ...updates }));
+    setFormData((prev) => {
+      // If reminder type changes, clear incompatible FK fields to keep the union valid
+      if (updates.reminder_type && updates.reminder_type !== prev.reminder_type) {
+        const reset = { binder_id: undefined, charge_id: undefined, tax_deadline_id: undefined } as Partial<CreateReminderRequest>;
+        return { ...prev, ...reset, ...updates } as CreateReminderRequest;
+      }
+      return { ...prev, ...updates } as CreateReminderRequest;
+    });
   };
 
   return {
-    reminders: remindersQuery.data || [],
+    reminders: remindersQuery.data?.items || [],
     isLoading: remindersQuery.isPending,
     error: remindersQuery.error
       ? getErrorMessage(remindersQuery.error, "שגיאה בטעינת תזכורות")

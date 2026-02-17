@@ -4,6 +4,7 @@ export type {
   ReminderType,
   ReminderStatus,
   CreateReminderRequest,
+  RemindersListResponse,
 } from "../../api/reminders.api";
 
 export const reminderTypeLabels: Record<string, string> = {
