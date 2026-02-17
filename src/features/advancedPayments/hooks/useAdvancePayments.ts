@@ -32,23 +32,29 @@ export const useAdvancePayments = (clientId: number, year: number) => {
     onError: (err) => toast.error(getErrorMessage(err, "שגיאה בעדכון מקדמה")),
   });
 
-  const rows = listQuery.data?.items ?? [];
-  const totalExpected = rows.reduce(
-    (sum: number, row: (typeof rows)[number]) =>
-      sum + (row.expected_amount ?? 0),
-    0,
-  );
-  const totalPaid = rows.reduce(
-    (sum: number, row: (typeof rows)[number]) => sum + (row.paid_amount ?? 0),
-    0,
-  );
+  const rows = enabled ? listQuery.data?.items ?? [] : [];
+  const totalExpected = enabled
+    ? rows.reduce(
+        (sum: number, row: (typeof rows)[number]) =>
+          sum + (row.expected_amount ?? 0),
+        0,
+      )
+    : 0;
+  const totalPaid = enabled
+    ? rows.reduce(
+        (sum: number, row: (typeof rows)[number]) =>
+          sum + (row.paid_amount ?? 0),
+        0,
+      )
+    : 0;
 
   return {
     rows,
-    isLoading: listQuery.isPending,
-    error: listQuery.error
-      ? getErrorMessage(listQuery.error, "שגיאה בטעינת מקדמות")
-      : null,
+    isLoading: enabled && listQuery.isPending,
+    error:
+      enabled && listQuery.error
+        ? getErrorMessage(listQuery.error, "שגיאה בטעינת מקדמות")
+        : null,
     totalExpected,
     totalPaid,
     updateRow: (id: number, paid_amount: number | null) =>
