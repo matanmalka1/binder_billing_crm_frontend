@@ -1,14 +1,14 @@
 import { Button } from "./Button";
 import { mapActions } from "../../lib/actions/mapActions";
 import type { Column } from "./DataTable";
-import type { ActionCommand } from "../../lib/actions/types";
+import type { ActionCommand, BackendAction } from "../../lib/actions/types";
 import { cn } from "../../utils/utils";
 
 type ActionsColumnParams<T> = {
   header?: string;
   activeActionKey: string | null;
   onAction: (action: ActionCommand) => void;
-  getActions: (row: T) => ActionCommand[] | undefined;
+  getActions: (row: T) => BackendAction[] | null | undefined;
 };
 
 export const buildActionsColumn = <T,>({

@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
 import {
   chargesApi,
-  type ChargeResponse,
   type ChargesListParams,
   type CreateChargePayload,
 } from "../../../api/charges.api";

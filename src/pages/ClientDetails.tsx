@@ -10,6 +10,9 @@ import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
 import { AccessBanner } from "../components/ui/AccessBanner";
 import { ClientEditForm } from "../features/clients/components/ClientEditForm";
+import { AuthorityContactsCard } from "../features/authorityContacts/components/AuthorityContactsCard";
+import { TaxProfileCard } from "../features/taxProfile/components/TaxProfileCard";
+import { CorrespondenceCard } from "../features/correspondence/components/CorrespondenceCard";
 import { useAuthStore } from "../store/auth.store";
 import { getClientStatusLabel, getClientTypeLabel } from "../utils/enums";
 import { formatDate } from "../utils/utils";
@@ -27,19 +30,10 @@ export const ClientDetails: React.FC = () => {
   const { user } = useAuthStore();
   const isAdvisor = user?.role === "advisor";
   const [isEditing, setIsEditing] = useState(false);
+  const clientIdNum = clientId ? Number(clientId) : null;
 
-  const {
-    client,
-    isValidId,
-    isLoading,
-    error,
-    binders,
-    bindersTotal,
-    charges,
-    chargesTotal,
-    updateClient,
-    isUpdating,
-  } = useClientDetails({ clientId: clientId ? Number(clientId) : null, isAdvisor });
+  const { client, isValidId, isLoading, error, binders, bindersTotal, charges, chargesTotal, updateClient, isUpdating } =
+    useClientDetails({ clientId: clientIdNum, isAdvisor });
 
   if (!isValidId) return (<div className="space-y-6"><PageHeader title="פרטי לקוח" /><ErrorCard message="מזהה לקוח לא תקין" /></div>);
   if (isLoading) return (<div className="space-y-6"><PageHeader title="טוען..." /><PageLoading /></div>);
@@ -57,34 +51,6 @@ export const ClientDetails: React.FC = () => {
     { label: "תאריך סגירה", value: client.closed_at ? formatDate(client.closed_at) : "—" },
   ];
 
-  const stats = [
-    { show: true, icon: <FolderOpen className="h-6 w-6 text-blue-600" />, value: bindersTotal, label: "קלסרים", bg: "bg-blue-100" },
-    { show: isAdvisor, icon: <Receipt className="h-6 w-6 text-green-600" />, value: chargesTotal, label: "חיובים", bg: "bg-green-100" },
-    { show: isAdvisor, icon: <FileText className="h-6 w-6 text-purple-600" />, value: "—", label: "מסמכים", bg: "bg-purple-100" },
-  ];
-
-  const renderListCard = (
-    title: string,
-    items: { id: number; title: string; subtitle: string; link: string }[],
-    total: number,
-    link: string,
-    linkLabel: string,
-  ) => (
-    <Card title={title} footer={total > 5 ? (<Link to={link} className="text-sm text-blue-600 hover:text-blue-700">{linkLabel} ({total})</Link>) : undefined}>
-      <div className="space-y-3">
-        {items.slice(0, 5).map((item) => (
-          <div key={item.id} className="flex items-center justify-between rounded-lg border border-gray-200 p-3 hover:bg-gray-50">
-            <div>
-              <div className="font-medium text-gray-900">{item.title}</div>
-              <div className="text-sm text-gray-600">{item.subtitle}</div>
-            </div>
-            <Link to={item.link}><Button variant="ghost" size="sm"><ChevronRight className="h-4 w-4" /></Button></Link>
-          </div>
-        ))}
-      </div>
-    </Card>
-  );
-
   return (
     <div className="space-y-6">
       <PageHeader
@@ -97,38 +63,60 @@ export const ClientDetails: React.FC = () => {
 
       {isEditing && isAdvisor ? (
         <Card title="עריכת פרטי לקוח">
-          <ClientEditForm client={client} onSave={async (data) => { await updateClient(data); }} onCancel={() => setIsEditing(false)} isLoading={isUpdating} />
+          <ClientEditForm client={client} onSave={async (data) => { await updateClient(data); setIsEditing(false); }} onCancel={() => setIsEditing(false)} isLoading={isUpdating} />
         </Card>
       ) : (
         <>
           <Card title="פרטי לקוח"><DescriptionList columns={2} items={infoItems} /></Card>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {stats.filter((s) => s.show).map((s, idx) => (
-              <Card key={idx}>
+            <Card>
+              <div className="flex items-center gap-3">
+                <div className="bg-blue-100 rounded-lg p-3"><FolderOpen className="h-6 w-6 text-blue-600" /></div>
+                <div><div className="text-2xl font-bold text-gray-900">{bindersTotal}</div><div className="text-sm text-gray-600">קלסרים</div></div>
+              </div>
+            </Card>
+            {isAdvisor && (
+              <Card>
                 <div className="flex items-center gap-3">
-                  <div className={`${s.bg} rounded-lg p-3`}>{s.icon}</div>
-                  <div><div className="text-2xl font-bold text-gray-900">{s.value}</div><div className="text-sm text-gray-600">{s.label}</div></div>
+                  <div className="bg-green-100 rounded-lg p-3"><Receipt className="h-6 w-6 text-green-600" /></div>
+                  <div><div className="text-2xl font-bold text-gray-900">{chargesTotal}</div><div className="text-sm text-gray-600">חיובים</div></div>
                 </div>
               </Card>
-            ))}
+            )}
           </div>
 
-          {binders.length ? renderListCard(
-          "קלסרים אחרונים",
-            binders.map((b) => ({ id: b.id, title: b.binder_number, subtitle: `נקלט: ${formatDate(b.received_at)}`, link: `/binders/${b.id}` })),
-            bindersTotal,
-            `/binders?client_id=${clientId}`,
-            "צפה בכל הקלסרים",
-          ) : null}
+          {binders.length > 0 && (
+            <Card title="קלסרים אחרונים" footer={bindersTotal > 5 ? (<Link to={`/binders?client_id=${clientId}`} className="text-sm text-blue-600">צפה בכל הקלסרים ({bindersTotal})</Link>) : undefined}>
+              <div className="space-y-3">
+                {binders.slice(0, 5).map((b) => (
+                  <div key={b.id} className="flex items-center justify-between rounded-lg border border-gray-200 p-3 hover:bg-gray-50">
+                    <div><div className="font-medium text-gray-900">{b.binder_number}</div><div className="text-sm text-gray-600">נקלט: {formatDate(b.received_at)}</div></div>
+                    <Link to={`/binders/${b.id}`}><Button variant="ghost" size="sm"><ChevronRight className="h-4 w-4" /></Button></Link>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
 
-          {isAdvisor && charges.length ? renderListCard(
-            "חיובים אחרונים",
-            charges.map((c) => ({ id: c.id, title: `חיוב #${c.id}`, subtitle: `${c.charge_type} • ${c.status}`, link: `/charges/${c.id}` })),
-            chargesTotal,
-            `/charges?client_id=${clientId}`,
-            "צפה בכל החיובים",
-          ) : null}
+          {isAdvisor && charges.length > 0 && (
+            <Card title="חיובים אחרונים" footer={chargesTotal > 5 ? (<Link to={`/charges?client_id=${clientId}`} className="text-sm text-blue-600">צפה בכל החיובים ({chargesTotal})</Link>) : undefined}>
+              <div className="space-y-3">
+                {charges.slice(0, 5).map((c) => (
+                  <div key={c.id} className="flex items-center justify-between rounded-lg border border-gray-200 p-3 hover:bg-gray-50">
+                    <div><div className="font-medium text-gray-900">חיוב #{c.id}</div><div className="text-sm text-gray-600">{c.charge_type} • {c.status}</div></div>
+                    <Link to={`/charges/${c.id}`}><Button variant="ghost" size="sm"><ChevronRight className="h-4 w-4" /></Button></Link>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+
+          {isAdvisor && <TaxProfileCard clientId={client.id} />}
+
+          <AuthorityContactsCard clientId={client.id} />
+
+          <CorrespondenceCard clientId={client.id} />
         </>
       )}
     </div>

@@ -21,14 +21,13 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { AgingReportPage } from "../pages/reports/AgingReport";
 import { RemindersPage } from "../pages/reports/Reminders";
 import { ExcelImportExportPage } from "../pages/reports/ExcelImportExportPage";
+import { AdvancePayments } from "../pages/tax/AdvancePayments";
 
 const AuthExpiredNavigationHandler: React.FC = () => {
   const navigate = useNavigate();
   const navigateRef = useRef(navigate);
 
-  useEffect(() => {
-    navigateRef.current = navigate;
-  }, [navigate]);
+  useEffect(() => { navigateRef.current = navigate; }, [navigate]);
 
   useEffect(() => {
     const handleAuthExpired = () => {
@@ -36,7 +35,6 @@ const AuthExpiredNavigationHandler: React.FC = () => {
         navigateRef.current("/login", { replace: true });
       }
     };
-
     window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
     return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
   }, []);
@@ -59,9 +57,7 @@ const AuthenticatedLayout: React.FC = () => {
       <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header toggleSidebar={toggleSidebar} />
-        <PageLayout>
-          <Outlet />
-        </PageLayout>
+        <PageLayout><Outlet /></PageLayout>
       </div>
     </div>
   );
@@ -88,6 +84,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax" element={<TaxDashboard />} />
             <Route path="tax/reports" element={<AnnualReportsKanban />} />
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
+            <Route path="tax/advance-payments" element={<AdvancePayments />} />
             <Route path="reports/aging" element={<AgingReportPage />} />
             <Route path="reports/reminders" element={<RemindersPage />} />
             <Route path="reports/import-export" element={<ExcelImportExportPage entityType="clients" />} />

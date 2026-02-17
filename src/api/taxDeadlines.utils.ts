@@ -51,6 +51,7 @@ export const calculateDaysRemaining = (dueDate: string): number => {
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 };
 
-export const getDeadlineIcon = (type: string): string => {
-  return deadlineIcons[type] || "📌";
-};
+export type DeadlineTypeKey = keyof typeof deadlineIcons;
+
+export const getDeadlineIcon = (type: DeadlineTypeKey | string): string =>
+  deadlineIcons[type as DeadlineTypeKey] ?? "📌";

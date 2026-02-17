@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
-import { clientsApi, type ClientResponse, type ListClientsParams } from "../../../api/clients.api";
+import { clientsApi, type ListClientsParams } from "../../../api/clients.api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { parsePositiveInt } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";

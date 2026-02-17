@@ -3,7 +3,7 @@ import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { buildActionsColumn } from "../../../components/ui/columnHelpers";
 import type { BinderResponse } from "../../../api/binders.types";
-import type { ActionCommand } from "../../../lib/actions/types";
+import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
 import { getStatusLabel, getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
 
@@ -94,10 +94,10 @@ export const buildBindersColumns = ({
       );
     },
   },
-  buildActionsColumn<BinderResponse>({
-    header: "פעולות",
-    activeActionKey,
-    onAction,
-    getActions: (binder) => binder.available_actions as ActionCommand[] | undefined,
-  }),
-];
+    buildActionsColumn<BinderResponse>({
+      header: "פעולות",
+      activeActionKey,
+      onAction,
+      getActions: (binder) => binder.available_actions as BackendAction[] | null | undefined,
+    }),
+  ];

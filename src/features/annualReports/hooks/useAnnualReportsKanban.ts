@@ -65,7 +65,15 @@ export const useAnnualReportsKanban = () => {
     await transitionMutation.mutateAsync({ reportId, newStage });
   };
 
-  const stages: KanbanStage[] = kanbanQuery.data?.stages || [];
+  // Normalize API response (string stage) into our typed union and drop unknown stages defensively
+  const stages: KanbanStage[] =
+    kanbanQuery.data?.stages
+      .map((stage) => {
+        const key = stage.stage as StageKey;
+        if (!STAGE_ORDER.includes(key)) return null;
+        return { stage: key, reports: stage.reports };
+      })
+      .filter((s): s is KanbanStage => Boolean(s)) || [];
   const maxCount = Math.max(0, ...stages.map((stage) => stage.reports.length));
   const totalPages = Math.max(1, Math.ceil(maxCount / PAGE_SIZE));
 

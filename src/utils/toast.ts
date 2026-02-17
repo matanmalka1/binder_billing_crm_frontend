@@ -1,6 +1,6 @@
 import { toast as sonnerToast } from "sonner";
 
-const RTL_STYLE = { direction: "rtl" };
+const RTL_STYLE: React.CSSProperties = { direction: "rtl" };
 
 const notify = (
   type: "success" | "error" | "info" | "warning",

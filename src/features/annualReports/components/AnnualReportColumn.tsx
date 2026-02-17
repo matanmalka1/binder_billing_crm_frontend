@@ -55,7 +55,6 @@ export const AnnualReportColumn: React.FC<Props> = ({
                 key={report.id}
                 report={report}
                 stageKey={stage.stage}
-                stageIndex={stageIndex}
                 isTransitioning={transitioningId === report.id}
                 canMoveBack={canMoveBack}
                 canMoveForward={canMoveForward}

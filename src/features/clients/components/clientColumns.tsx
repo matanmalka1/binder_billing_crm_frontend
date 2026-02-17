@@ -5,7 +5,7 @@ import type { ClientResponse } from "../../../api/clients.api";
 import { buildActionsColumn } from "../../../components/ui/columnHelpers";
 import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
-import type { ActionCommand } from "../../../lib/actions/types";
+import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
 
 const clientStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   active: "success",
@@ -84,11 +84,11 @@ export const buildClientColumns = ({
   {
     key: "actions",
     header: "פעולות",
-    render: buildActionsColumn<ClientResponse>({
-      header: "פעולות",
-      activeActionKey,
-      onAction,
-      getActions: (client) => client.available_actions as ActionCommand[] | undefined,
-    }).render,
-  },
-];
+      render: buildActionsColumn<ClientResponse>({
+        header: "פעולות",
+        activeActionKey,
+        onAction,
+        getActions: (client) => client.available_actions as BackendAction[] | null | undefined,
+      }).render,
+    },
+  ];
