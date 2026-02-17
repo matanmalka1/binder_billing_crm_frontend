@@ -52,10 +52,10 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             })
           }
         >
-          <option value="TAX_DEADLINE_APPROACHING">מועד מס מתקרב</option>
-          <option value="BINDER_IDLE">תיק לא פעיל</option>
-          <option value="UNPAID_CHARGE">חשבונית שלא שולמה</option>
-          <option value="CUSTOM">התאמה אישית</option>
+          <option value="tax_deadline_approaching">מועד מס מתקרב</option>
+          <option value="binder_idle">תיק לא פעיל</option>
+          <option value="unpaid_charge">חשבונית שלא שולמה</option>
+          <option value="custom">התאמה אישית</option>
         </Select>
 
         <Input

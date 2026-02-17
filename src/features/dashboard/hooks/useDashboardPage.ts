@@ -1,10 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { toast } from "../../../utils/toast";
 import { dashboardApi } from "../../../api/dashboard.api";
 import type {
-  AttentionResponse,
   DashboardOverviewResponse,
   DashboardSummaryResponse,
 } from "../../../api/dashboard.api";
@@ -22,6 +20,16 @@ type DashboardState = {
   message: string;
   data: DashboardData | null;
 };
+
+const isOverviewData = (
+  data: DashboardOverviewResponse | DashboardSummaryResponse | undefined,
+): data is DashboardOverviewResponse =>
+  Boolean(data && "total_clients" in data);
+
+const isSummaryData = (
+  data: DashboardOverviewResponse | DashboardSummaryResponse | undefined,
+): data is DashboardSummaryResponse =>
+  Boolean(data && "binders_in_office" in data);
 
 export const useDashboardPage = () => {
   const queryClient = useQueryClient();
@@ -57,22 +65,33 @@ export const useDashboardPage = () => {
 
   const dashboard = useMemo<DashboardState>(() => {
     if (!hasRole) {
-      return { status: "error", message: "לא ניתן לזהות תפקיד משתמש", data: null };
+      return {
+        status: "error",
+        message: "לא ניתן לזהות תפקיד משתמש",
+        data: null,
+      };
     }
 
     if (dashboardQuery.isPending) {
-      return { status: "loading", message: "טוען נתוני לוח בקרה...", data: null };
+      return {
+        status: "loading",
+        message: "טוען נתוני לוח בקרה...",
+        data: null,
+      };
     }
 
     if (dashboardQuery.error) {
       return {
         status: "error",
-        message: getErrorMessage(dashboardQuery.error, "שגיאה בטעינת לוח הבקרה"),
+        message: getErrorMessage(
+          dashboardQuery.error,
+          "שגיאה בטעינת לוח הבקרה",
+        ),
         data: null,
       };
     }
 
-    if (isAdvisor && dashboardQuery.data) {
+    if (isAdvisor && isOverviewData(dashboardQuery.data)) {
       return {
         status: "ok",
         message: "נתונים נטענו בהצלחה",
@@ -80,7 +99,7 @@ export const useDashboardPage = () => {
       };
     }
 
-    if (isSecretary && dashboardQuery.data) {
+    if (isSecretary && isSummaryData(dashboardQuery.data)) {
       return {
         status: "ok",
         message: "נתונים נטענו בהצלחה",
@@ -107,10 +126,12 @@ export const useDashboardPage = () => {
         setActionDenied(false);
         await actionMutation.mutateAsync(action);
       } catch (requestError: unknown) {
-        if (getStatusCode(requestError) === 403) {
+        if (getHttpStatus(requestError) === 403) {
           setActionDenied(true);
         }
-        showErrorToast(requestError, "שגיאה בביצוע פעולה מהירה", { canonicalAction: true });
+        showErrorToast(requestError, "שגיאה בביצוע פעולה מהירה", {
+          canonicalAction: true,
+        });
       } finally {
         setActiveQuickAction(null);
       }

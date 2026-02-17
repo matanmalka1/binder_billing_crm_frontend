@@ -7,10 +7,11 @@ import type { Reminder, CreateReminderRequest } from "../reminder.types";
 
 const defaultFormData: CreateReminderRequest = {
   client_id: 0,
-  reminder_type: "TAX_DEADLINE_APPROACHING",
+  reminder_type: "tax_deadline_approaching",
   target_date: "",
   days_before: 7,
   message: "",
+  tax_deadline_id: undefined,
 };
 
 export const useReminders = () => {

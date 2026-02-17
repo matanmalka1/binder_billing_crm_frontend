@@ -9,8 +9,8 @@ interface RemindersSummaryCardsProps {
 export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
   reminders,
 }) => {
-  const pendingCount = reminders.filter((r) => r.status === "PENDING").length;
-  const sentCount = reminders.filter((r) => r.status === "SENT").length;
+  const pendingCount = reminders.filter((r) => r.status === "pending").length;
+  const sentCount = reminders.filter((r) => r.status === "sent").length;
   const totalCount = reminders.length;
 
   return (

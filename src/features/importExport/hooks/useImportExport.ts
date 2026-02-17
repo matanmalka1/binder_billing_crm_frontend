@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { api } from "../../../api/client";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
 
@@ -19,20 +20,25 @@ export const useImportExport = (entityType: EntityType) => {
   const handleExport = async () => {
     setExporting(true);
     try {
-      // TODO: Replace with actual API call
-      // const response = await api.get(`/${entityType}/export`, {
-      //   responseType: 'blob'
-      // });
-      // const blob = new Blob([response.data]);
-      // const url = window.URL.createObjectURL(blob);
-      // const link = document.createElement('a');
-      // link.href = url;
-      // link.download = `${entityType}_export_${new Date().toISOString()}.xlsx`;
-      // link.click();
+      const response = await api.get(`/${entityType}/export`, {
+        responseType: "blob",
+      });
 
-      toast.success(`ייצוא ${entityLabel} הושלם`);
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${entityType}_export_${new Date().toISOString().split("T")[0]}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success(`ייצוא ${entityLabel} הושלם בהצלחה`);
     } catch (error) {
-      toast.error(getErrorMessage(error, "שגיאה בייצוא"));
+      toast.error(getErrorMessage(error, `שגיאה בייצוא ${entityLabel}`));
     } finally {
       setExporting(false);
     }
@@ -49,22 +55,42 @@ export const useImportExport = (entityType: EntityType) => {
       const formData = new FormData();
       formData.append("file", file);
 
-      // TODO: Replace with actual API call
-      // await api.post(`/${entityType}/import`, formData, {
-      //   headers: { 'Content-Type': 'multipart/form-data' }
-      // });
+      await api.post(`/${entityType}/import`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-      toast.success(`ייבוא ${entityLabel} הושלם`);
+      toast.success(`ייבוא ${entityLabel} הושלם בהצלחה`);
     } catch (error) {
-      toast.error(getErrorMessage(error, "שגיאה בייבוא"));
+      toast.error(getErrorMessage(error, `שגיאה בייבוא ${entityLabel}`));
     } finally {
       setImporting(false);
     }
   };
 
-  const handleDownloadTemplate = () => {
-    // TODO: Download template
-    toast.info("תבנית תורד בקרוב");
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await api.get(`/${entityType}/template`, {
+        responseType: "blob",
+      });
+
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${entityType}_template.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("תבנית הורדה בהצלחה");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "שגיאה בהורדת תבנית"));
+    }
   };
 
   return {

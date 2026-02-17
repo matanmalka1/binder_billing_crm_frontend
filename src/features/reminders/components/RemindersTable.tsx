@@ -73,9 +73,9 @@ const buildRemindersColumns = (
     render: (reminder) => (
       <Badge
         variant={
-          reminder.status === "SENT"
+          reminder.status === "sent"
             ? "success"
-            : reminder.status === "CANCELED"
+            : reminder.status === "canceled"
             ? "error"
             : "warning"
         }
@@ -88,7 +88,7 @@ const buildRemindersColumns = (
     key: "actions",
     header: "פעולות",
     render: (reminder) =>
-      reminder.status === "PENDING" ? (
+      reminder.status === "pending" ? (
         <Button
           type="button"
           variant="outline"

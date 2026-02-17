@@ -1,3 +1,4 @@
+// src/features/reports/hooks/useAgingReport.ts
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { reportsApi, type ExportFormat } from "../../../api/reports.api";
@@ -20,7 +21,11 @@ export const useAgingReport = () => {
     try {
       const result = await reportsApi.exportAgingReport(format);
       toast.success(`דוח יוצא בהצלחה: ${result.filename}`);
-      reportsApi.downloadExport(result.download_url);
+
+      // Open download URL in new tab
+      if (result.download_url) {
+        window.open(result.download_url, "_blank");
+      }
     } catch (error) {
       toast.error(getErrorMessage(error, "שגיאה בייצוא דוח"));
     } finally {

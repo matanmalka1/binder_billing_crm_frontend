@@ -5,7 +5,6 @@ import { toast } from "../../../utils/toast";
 import { clientsApi } from "../../../api/clients.api";
 import {
   documentsApi,
-  type OperationalSignalsResponse,
   type UploadDocumentPayload,
 } from "../../../api/documents.api";
 import { getErrorMessage, isPositiveInt } from "../../../utils/utils";

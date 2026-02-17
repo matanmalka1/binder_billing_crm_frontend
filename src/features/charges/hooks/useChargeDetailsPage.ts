@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { chargesApi, type ChargeResponse } from "../../../api/charges.api";
+import { chargesApi } from "../../../api/charges.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage, getHttpStatus, isPositiveInt } from "../../../utils/utils";
+
 export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: boolean) => {
   const queryClient = useQueryClient();
   const [actionError, setActionError] = useState<string | null>(null);
