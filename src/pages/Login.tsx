@@ -13,10 +13,15 @@ import {
 } from "../features/auth/schemas";
 import { useAuthStore } from "../store/auth.store";
 import { selectIsAuthenticated } from "../store/auth.selectors";
+import { useShallow } from "zustand/react/shallow";
 
 export const Login: React.FC = () => {
   const isAuthenticated = useAuthStore(selectIsAuthenticated);
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const login = useAuthStore((s) => s.login);
+  const clearError = useAuthStore((s) => s.clearError);
+  const { isLoading, error } = useAuthStore(
+    useShallow((s) => ({ isLoading: s.isLoading, error: s.error }))
+  );
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
