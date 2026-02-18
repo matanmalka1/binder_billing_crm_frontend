@@ -1,7 +1,8 @@
-import { Calendar, CheckCircle2 } from "lucide-react";
+import { Calendar, CheckCircle2, Inbox } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
+import { EmptyState } from "../../../components/ui/EmptyState";
 import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
 import {
   calculateDaysRemaining,
@@ -12,132 +13,149 @@ import {
 import { staggerDelay } from "../../../utils/animation";
 import { formatDate, cn } from "../../../utils/utils";
 
-interface Props {
+interface TaxDeadlinesTableProps {
   deadlines: TaxDeadlineResponse[];
   onComplete: (id: number) => void;
   completingId: number | null;
 }
 
-export const TaxDeadlinesTable: React.FC<Props> = ({
+TaxDeadlinesTable.displayName = "TaxDeadlinesTable";
+
+const urgencyRowMap: Record<string, string> = {
+  overdue: "bg-red-50/40",
+  red: "bg-orange-50/30",
+  yellow: "bg-yellow-50/30",
+};
+
+export function TaxDeadlinesTable({
   deadlines,
   onComplete,
   completingId,
-}) => {
+}: TaxDeadlinesTableProps) {
   if (deadlines.length === 0) {
     return (
-      <Card variant="elevated">
-        <div className="py-12 text-center text-gray-500">אין מועדים להצגה</div>
-      </Card>
+      <EmptyState
+        icon={Inbox}
+        title="אין מועדים להצגה"
+        message="לא נמצאו מועדים מסים התואמים לסינון הנוכחי"
+        variant="illustration"
+      />
     );
   }
 
   return (
     <Card variant="elevated">
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50">
-            <tr className="text-right border-b-2 border-gray-200">
-              <th className="pb-4 pr-6 pt-4 text-sm font-semibold text-gray-700">
-                לקוח
-              </th>
-              <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">
-                סוג
-              </th>
-              <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">
-                מועד
-              </th>
-              <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">
-                זמן נותר
-              </th>
-              <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">
-                סכום
-              </th>
-              <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">
-                סטטוס
-              </th>
-              <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">
-                פעולות
-              </th>
+        <table className="w-full min-w-[640px]">
+          <thead>
+            <tr className="border-b border-gray-200 text-right">
+              {["לקוח", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", "פעולות"].map(
+                (col) => (
+                  <th
+                    key={col}
+                    className="pb-3 pr-4 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-500"
+                  >
+                    {col}
+                  </th>
+                )
+              )}
             </tr>
           </thead>
+
           <tbody className="divide-y divide-gray-100">
             {deadlines.map((deadline, index) => {
               const daysRemaining = calculateDaysRemaining(deadline.due_date);
-              const urgency =
-                deadline.status === "completed"
-                  ? "completed"
-                  : daysRemaining < 0
-                    ? "overdue"
-                    : daysRemaining <= 2
-                      ? "red"
-                      : daysRemaining <= 7
-                        ? "yellow"
-                        : "green";
+              const isCompleted = deadline.status === "completed";
+
+              const urgency = isCompleted
+                ? "green"
+                : daysRemaining < 0
+                ? "overdue"
+                : daysRemaining <= 2
+                ? "red"
+                : daysRemaining <= 7
+                ? "yellow"
+                : "green";
+
+              const daysLabel = isCompleted
+                ? "—"
+                : daysRemaining < 0
+                ? `איחור ${Math.abs(daysRemaining)}י׳`
+                : daysRemaining === 0
+                ? "היום"
+                : `${daysRemaining} ימים`;
 
               return (
                 <tr
                   key={deadline.id}
-                  className="group transition-all duration-200 hover:bg-gradient-to-r hover:from-primary-50/30 hover:to-transparent animate-fade-in"
+                  className={cn(
+                    "transition-colors hover:bg-gray-50 animate-fade-in",
+                    !isCompleted && urgencyRowMap[urgency]
+                  )}
                   style={{ animationDelay: staggerDelay(index) }}
                 >
-                  <td className="py-4 pr-6">
-                    <span className="font-mono text-sm font-semibold text-gray-900">
-                      לקוח #{deadline.client_id}
+                  {/* Client */}
+                  <td className="py-3.5 pr-4">
+                    <span className="font-mono text-sm font-semibold text-gray-800">
+                      #{deadline.client_id}
                     </span>
                   </td>
-                  <td className="py-4 pr-4">
-                    <span className="text-sm text-gray-700">
-                      {getDeadlineTypeLabel(deadline.deadline_type)}
-                    </span>
+
+                  {/* Type */}
+                  <td className="py-3.5 pr-4 text-sm text-gray-700">
+                    {getDeadlineTypeLabel(deadline.deadline_type)}
                   </td>
-                  <td className="py-4 pr-4">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm font-medium text-gray-900">
+
+                  {/* Due date */}
+                  <td className="py-3.5 pr-4">
+                    <div className="flex items-center gap-1.5 text-sm">
+                      <Calendar className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                      <span className="font-medium text-gray-800">
                         {formatDate(deadline.due_date)}
                       </span>
                     </div>
                   </td>
-                  <td className="py-4 pr-4">
-                    {deadline.status === "completed" ? (
-                      <Badge variant="success">הושלם</Badge>
+
+                  {/* Days remaining */}
+                  <td className="py-3.5 pr-4">
+                    {isCompleted ? (
+                      <span className="text-sm text-gray-400">—</span>
                     ) : (
                       <Badge
-                        className={cn("border-2", getUrgencyColor(urgency))}
+                        className={cn("border font-semibold text-xs", getUrgencyColor(urgency))}
                       >
-                        {daysRemaining < 0
-                          ? `איחור ${Math.abs(daysRemaining)}י`
-                          : `${daysRemaining}י`}
+                        {daysLabel}
                       </Badge>
                     )}
                   </td>
-                  <td className="py-4 pr-4">
-                    <span className="text-sm font-medium text-gray-900">
-                      {formatCurrency(
-                        deadline.payment_amount,
-                        deadline.currency,
-                      )}
-                    </span>
+
+                  {/* Amount */}
+                  <td className="py-3.5 pr-4 text-sm font-medium text-gray-800">
+                    {formatCurrency(deadline.payment_amount, deadline.currency)}
                   </td>
-                  <td className="py-4 pr-4">
-                    {deadline.status === "completed" ? (
-                      <Badge variant="success">
-                        <CheckCircle2 className="h-3 w-3 inline ml-1" />
-                        הושלם
-                      </Badge>
+
+                  {/* Status */}
+                  <td className="py-3.5 pr-4">
+                    {isCompleted ? (
+                      <div className="flex items-center gap-1 text-green-700">
+                        <CheckCircle2 className="h-4 w-4" />
+                        <span className="text-xs font-medium">הושלם</span>
+                      </div>
                     ) : (
                       <Badge variant="warning">ממתין</Badge>
                     )}
                   </td>
-                  <td className="py-4 pr-4">
-                    {deadline.status === "pending" && (
+
+                  {/* Actions */}
+                  <td className="py-3.5 pr-4">
+                    {!isCompleted && (
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
                         onClick={() => onComplete(deadline.id)}
                         isLoading={completingId === deadline.id}
-                        disabled={completingId !== null}
+                        disabled={completingId !== null && completingId !== deadline.id}
                       >
                         סמן הושלם
                       </Button>
@@ -151,4 +169,4 @@ export const TaxDeadlinesTable: React.FC<Props> = ({
       </div>
     </Card>
   );
-};
+}

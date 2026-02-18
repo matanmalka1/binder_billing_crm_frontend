@@ -1,10 +1,10 @@
-import { AlertCircle } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
+import { Inbox } from "lucide-react";
 import { Badge } from "../../../components/ui/Badge";
 import { getReportStageLabel, getStageColor } from "../../../api/annualReports.utils";
 import { staggerDelay } from "../../../utils/animation";
 import type { KanbanStage, StageKey } from "../hooks/useAnnualReportsKanban";
 import { AnnualReportCard } from "./AnnualReportCard";
+import { cn } from "../../../utils/utils";
 
 interface Props {
   stage: KanbanStage;
@@ -15,6 +15,14 @@ interface Props {
   onTransition: (reportId: number, stageKey: StageKey, dir: "forward" | "back") => void;
 }
 
+const STAGE_ACCENT: Record<StageKey, string> = {
+  material_collection: "from-gray-400 to-gray-500",
+  in_progress:         "from-blue-400 to-blue-500",
+  final_review:        "from-purple-400 to-purple-500",
+  client_signature:    "from-orange-400 to-orange-500",
+  transmitted:         "from-green-400 to-green-500",
+};
+
 export const AnnualReportColumn: React.FC<Props> = ({
   stage,
   stageIndex,
@@ -24,45 +32,44 @@ export const AnnualReportColumn: React.FC<Props> = ({
   onTransition,
 }) => {
   const pagedReports = stage.reports.slice((page - 1) * pageSize, page * pageSize);
+  const accent = STAGE_ACCENT[stage.stage] ?? "from-gray-400 to-gray-500";
 
   return (
     <div
-      className="w-56 shrink-0 animate-fade-in"
+      className="w-72 shrink-0 animate-fade-in flex flex-col"
       style={{ animationDelay: staggerDelay(stageIndex) }}
     >
-      <div className="mb-2 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-2.5 border border-gray-200">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-lg font-bold text-gray-900">{getReportStageLabel(stage.stage)}</h3>
-          <Badge className={getStageColor(stage.stage)}>{stage.reports.length}</Badge>
+      {/* Column header */}
+      <div className="mb-3 rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div className={cn("h-1 w-full bg-gradient-to-r", accent)} />
+        <div className="flex items-center justify-between px-3 py-2.5">
+          <h3 className="text-sm font-semibold text-gray-800">{getReportStageLabel(stage.stage)}</h3>
+          <Badge className={cn("text-xs font-bold tabular-nums", getStageColor(stage.stage))}>
+            {stage.reports.length}
+          </Badge>
         </div>
-        <div className="h-1 w-full rounded-full bg-gradient-to-r from-primary-400 to-accent-400" />
       </div>
 
-      <div className="space-y-1.5">
+      {/* Cards */}
+      <div className="flex flex-col gap-2">
         {pagedReports.length === 0 ? (
-          <Card className="border-dashed">
-            <div className="py-8 text-center text-gray-400">
-              <AlertCircle className="mx-auto mb-2 h-8 w-8" />
-              <p className="text-sm">אין דוחות בשלב זה</p>
-            </div>
-          </Card>
+          <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-gray-200 bg-gray-50/60 py-10 text-gray-400">
+            <Inbox className="h-7 w-7" />
+            <p className="text-xs">אין דוחות בשלב זה</p>
+          </div>
         ) : (
-          pagedReports.map((report, index) => {
-            const canMoveBack = stageIndex > 0;
-            const canMoveForward = stageIndex < 4;
-            return (
-              <AnnualReportCard
-                key={report.id}
-                report={report}
-                stageKey={stage.stage}
-                isTransitioning={transitioningId === report.id}
-                canMoveBack={canMoveBack}
-                canMoveForward={canMoveForward}
-                onTransition={onTransition}
-                animationIndex={index}
-              />
-            );
-          })
+          pagedReports.map((report, index) => (
+            <AnnualReportCard
+              key={report.id}
+              report={report}
+              stageKey={stage.stage}
+              isTransitioning={transitioningId === report.id}
+              canMoveBack={stageIndex > 0}
+              canMoveForward={stageIndex < 4}
+              onTransition={onTransition}
+              animationIndex={index}
+            />
+          ))
         )}
       </div>
     </div>

@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { DataTable, type Column } from "../../../components/ui/DataTable";
 import { Badge } from "../../../components/ui/Badge";
 import type { AnnualReportFull } from "../../../api/annualReports.extended.api";
@@ -6,9 +5,10 @@ import {
   getStatusLabel,
   getStatusVariant,
   getClientTypeLabel,
+  getDeadlineTypeLabel,
 } from "../../../api/annualReports.extended.utils";
 import { formatDate } from "../../../utils/utils";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Clock } from "lucide-react";
 import { cn } from "../../../utils/utils";
 
 interface Props {
@@ -17,29 +17,61 @@ interface Props {
   onSelect?: (report: AnnualReportFull) => void;
 }
 
+const TERMINAL_STATUSES = new Set(["submitted", "accepted", "closed"]);
+
+const daysUntil = (dateStr: string | null): number | null => {
+  if (!dateStr) return null;
+  return Math.ceil((new Date(dateStr).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+};
+
+const DeadlineCell: React.FC<{ report: AnnualReportFull }> = ({ report }) => {
+  const days = daysUntil(report.filing_deadline);
+  const overdue = days !== null && days < 0 && !TERMINAL_STATUSES.has(report.status);
+  const isTerminal = TERMINAL_STATUSES.has(report.status);
+
+  return (
+    <div className="flex flex-col gap-0.5">
+      <span className={cn("text-sm", overdue && "font-semibold text-red-600")}>
+        {formatDate(report.filing_deadline)}
+      </span>
+      {days !== null && !isTerminal && (
+        <span
+          className={cn(
+            "inline-flex items-center gap-1 text-xs",
+            days < 0 ? "text-red-500" : days <= 14 ? "text-orange-500" : "text-gray-400"
+          )}
+        >
+          {days < 0 ? (
+            <>
+              <AlertTriangle className="h-3 w-3" />
+              באיחור {Math.abs(days)} ימים
+            </>
+          ) : (
+            <>
+              <Clock className="h-3 w-3" />
+              {days} ימים נותרו
+            </>
+          )}
+        </span>
+      )}
+    </div>
+  );
+};
+
 export const SeasonReportsTable: React.FC<Props> = ({ reports, isLoading, onSelect }) => {
-  const now = new Date();
-
-  const isOverdue = (report: AnnualReportFull) => {
-    if (!report.filing_deadline) return false;
-    const terminal = ["submitted", "accepted", "closed"];
-    if (terminal.includes(report.status)) return false;
-    return new Date(report.filing_deadline) < now;
-  };
-
   const columns: Column<AnnualReportFull>[] = [
     {
       key: "client_id",
       header: "לקוח",
       render: (r) => (
-        <span className="font-mono text-sm font-semibold text-gray-800">#{r.client_id}</span>
+        <span className="font-mono text-sm font-semibold text-gray-700">#{r.client_id}</span>
       ),
     },
     {
       key: "form_type",
       header: "טופס",
       render: (r) => (
-        <Badge variant="neutral" className="font-mono">
+        <Badge variant="neutral" className="font-mono text-xs">
           {r.form_type}
         </Badge>
       ),
@@ -48,7 +80,7 @@ export const SeasonReportsTable: React.FC<Props> = ({ reports, isLoading, onSele
       key: "client_type",
       header: "סוג לקוח",
       render: (r) => (
-        <span className="text-sm text-gray-700">{getClientTypeLabel(r.client_type)}</span>
+        <span className="text-sm text-gray-600">{getClientTypeLabel(r.client_type)}</span>
       ),
     },
     {
@@ -59,23 +91,22 @@ export const SeasonReportsTable: React.FC<Props> = ({ reports, isLoading, onSele
       ),
     },
     {
+      key: "deadline_type",
+      header: "סוג מועד",
+      render: (r) => (
+        <span className="text-xs text-gray-500">{getDeadlineTypeLabel(r.deadline_type)}</span>
+      ),
+    },
+    {
       key: "filing_deadline",
       header: "מועד הגשה",
-      render: (r) => {
-        const overdue = isOverdue(r);
-        return (
-          <div className={cn("flex items-center gap-1.5 text-sm", overdue && "text-red-600 font-semibold")}>
-            {overdue && <AlertTriangle className="h-3.5 w-3.5" />}
-            {formatDate(r.filing_deadline)}
-          </div>
-        );
-      },
+      render: (r) => <DeadlineCell report={r} />,
     },
     {
       key: "submitted_at",
       header: "הוגש",
       render: (r) => (
-        <span className="text-sm text-gray-600">{formatDate(r.submitted_at)}</span>
+        <span className="text-sm text-gray-500">{formatDate(r.submitted_at)}</span>
       ),
     },
   ];
@@ -88,9 +119,11 @@ export const SeasonReportsTable: React.FC<Props> = ({ reports, isLoading, onSele
       isLoading={isLoading}
       onRowClick={onSelect}
       emptyMessage="אין דוחות לשנה זו"
-      rowClassName={(r) =>
-        cn(isOverdue(r) && "bg-red-50/40")
-      }
+      rowClassName={(r) => {
+        const days = daysUntil(r.filing_deadline);
+        const overdue = days !== null && days < 0 && !TERMINAL_STATUSES.has(r.status);
+        return cn(overdue && "bg-red-50/40");
+      }}
     />
   );
 };

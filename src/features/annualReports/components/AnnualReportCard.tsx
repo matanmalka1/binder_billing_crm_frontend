@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, ChevronLeft, Info } from "lucide-react";
+import { ArrowRight, ArrowLeft, Info, Clock, AlertTriangle } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
@@ -24,6 +24,33 @@ interface Props {
   animationIndex: number;
 }
 
+const DeadlinePill: React.FC<{ days: number | null }> = ({ days }) => {
+  if (days === null) return null;
+
+  if (days < 0) {
+    return (
+      <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-600">
+        <AlertTriangle className="h-3 w-3" />
+        באיחור {Math.abs(days)} ימים
+      </span>
+    );
+  }
+  if (days <= 7) {
+    return (
+      <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-orange-50 px-2 py-0.5 text-xs font-semibold text-orange-600">
+        <Clock className="h-3 w-3" />
+        {days} ימים נותרו
+      </span>
+    );
+  }
+  return (
+    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
+      <Clock className="h-3 w-3" />
+      {days} ימים
+    </span>
+  );
+};
+
 export const AnnualReportCard: React.FC<Props> = ({
   report, stageKey, isTransitioning, canMoveBack, canMoveForward, onTransition, animationIndex,
 }) => {
@@ -33,40 +60,67 @@ export const AnnualReportCard: React.FC<Props> = ({
     <>
       <Card
         variant="elevated"
-        className="group hover:shadow-elevation-3 transition-all duration-200 animate-scale-in"
+        className="transition-all duration-200 animate-scale-in hover:shadow-md"
         style={{ animationDelay: staggerDelay(animationIndex) }}
       >
-        <div className="mb-3">
-          <div className="mb-2 flex items-start justify-between gap-2">
-            <div className="flex-1">
-              <h4 className="text-base font-bold text-gray-900 leading-tight">{report.client_name}</h4>
-              <p className="text-xs text-gray-500 mt-1">לקוח #{report.client_id}</p>
-            </div>
-            <Badge variant="info" className="shrink-0 font-mono">{report.tax_year}</Badge>
+        {/* Client name + year badge */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <h4 className="truncate text-sm font-semibold text-gray-900 leading-tight">
+              {report.client_name}
+            </h4>
+            <DeadlinePill days={report.days_until_due} />
           </div>
-          {report.days_until_due !== null && (
-            <div className="flex items-center gap-2 text-sm">
-              <Calendar className="h-4 w-4 text-gray-400" />
-              <span className={cn("font-medium", report.days_until_due < 0 && "text-red-600", report.days_until_due >= 0 && report.days_until_due <= 7 && "text-orange-600", report.days_until_due > 7 && "text-gray-600")}>
-                {report.days_until_due < 0 ? `באיחור ${Math.abs(report.days_until_due)} ימים` : `${report.days_until_due} ימים למועד`}
-              </span>
-            </div>
-          )}
+          <Badge variant="info" className="shrink-0 font-mono text-xs">
+            {report.tax_year}
+          </Badge>
         </div>
-        <div className="flex flex-wrap gap-1.5 border-t border-gray-100 pt-3">
-          <Button type="button" variant="ghost" size="sm" onClick={() => setShowDetail(true)} className="gap-1 text-xs">
-            <Info className="h-3 w-3" /> פרטים
+
+        {/* Action row */}
+        <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-2">
+          {/* Back arrow */}
+          <button
+            type="button"
+            onClick={() => onTransition(report.id, stageKey, "back")}
+            disabled={!canMoveBack || isTransitioning}
+            aria-label="שלב קודם"
+            className={cn(
+              "rounded-lg p-1.5 transition-colors",
+              canMoveBack
+                ? "text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+                : "invisible pointer-events-none"
+            )}
+          >
+            <ArrowRight className="h-4 w-4" />
+          </button>
+
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowDetail(true)}
+            className="gap-1 text-xs px-2"
+          >
+            <Info className="h-3.5 w-3.5" />
+            פרטים
           </Button>
-          {canMoveBack && (
-            <Button type="button" variant="outline" size="sm" onClick={() => onTransition(report.id, stageKey, "back")} disabled={isTransitioning} className="flex-1 gap-1">
-              <ChevronLeft className="h-3 w-3 rotate-180" /> חזור
-            </Button>
-          )}
-          {canMoveForward && (
-            <Button type="button" variant="primary" size="sm" onClick={() => onTransition(report.id, stageKey, "forward")} isLoading={isTransitioning} disabled={isTransitioning} className="flex-1 gap-1">
-              {isTransitioning ? "מעביר..." : "קדימה"} <ChevronLeft className="h-3 w-3" />
-            </Button>
-          )}
+
+          {/* Forward arrow */}
+          <button
+            type="button"
+            onClick={() => onTransition(report.id, stageKey, "forward")}
+            disabled={!canMoveForward || isTransitioning}
+            aria-label="שלב הבא"
+            className={cn(
+              "rounded-lg p-1.5 transition-colors",
+              canMoveForward
+                ? "text-primary-500 hover:bg-primary-50 hover:text-primary-700"
+                : "invisible pointer-events-none",
+              isTransitioning && "animate-pulse"
+            )}
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
         </div>
       </Card>
 

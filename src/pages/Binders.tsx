@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
 import { DataTable } from "../components/ui/DataTable";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { BindersFiltersBar } from "../features/binders/components/BindersFiltersBar";
 import { buildBindersColumns } from "../features/binders/components/bindersColumns";
@@ -33,7 +34,11 @@ export const Binders: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="קלסרים" description="רשימת כל הקלסרים במערכת" />
+      <PageHeader
+        title="קלסרים"
+        description="רשימת כל הקלסרים במערכת — סינון לפי מצב עבודה ו-SLA"
+        variant="gradient"
+      />
 
       <FilterBar>
         <BindersFiltersBar
@@ -42,21 +47,15 @@ export const Binders: React.FC = () => {
         />
       </FilterBar>
 
-      <div className="space-y-4">
-        {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-            <p className="text-sm text-red-600">{error}</p>
-          </div>
-        )}
+      {error && <ErrorCard message={error} />}
 
-        <DataTable
-          data={binders}
-          columns={columns}
-          getRowKey={(binder) => binder.id}
-          isLoading={loading}
-          emptyMessage="אין קלסרים להצגה"
-        />
-      </div>
+      <DataTable
+        data={binders}
+        columns={columns}
+        getRowKey={(binder) => binder.id}
+        isLoading={loading}
+        emptyMessage="אין קלסרים להצגה"
+      />
 
       <ConfirmDialog
         open={Boolean(pendingAction)}

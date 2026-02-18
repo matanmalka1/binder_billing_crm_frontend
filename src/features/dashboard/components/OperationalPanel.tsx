@@ -1,5 +1,5 @@
 import { Card } from "../../../components/ui/Card";
-import { Zap, ChevronLeft } from "lucide-react";
+import { Zap, ChevronLeft, Info } from "lucide-react";
 import { mapActions } from "../../../lib/actions/mapActions";
 import type { BackendAction, ActionCommand } from "../../../lib/actions/types";
 import { cn } from "../../../utils/utils";
@@ -106,7 +106,7 @@ export const OperationalPanel: React.FC<OperationalPanelProps> = ({
         {/* Help Text */}
         <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
           <p className="flex items-start gap-2">
-            <span className="text-blue-600">💡</span>
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" />
             <span>לחץ על פעולה לביצוע מהיר. פעולות מסוימות ידרשו אישור נוסף.</span>
           </p>
         </div>

@@ -24,7 +24,11 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="לוח בקרה" description="ברוך הבא למערכת בינדר וחיובים" />
+      <PageHeader
+        title="לוח בקרה"
+        description="סקירה כוללת של המערכת ופעולות מהירות"
+        variant="gradient"
+      />
 
       {denied && <AccessBanner variant="warning" message="אין הרשאה לצפות בנתוני לוח בקרה זה" />}
 
@@ -33,18 +37,16 @@ export const Dashboard: React.FC = () => {
 
       {dashboard.status === "ok" && dashboard.data?.role_view === "advisor" && (
         <>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <StatsCard title="לקוחות" value={dashboard.data.total_clients} description="סך הכל לקוחות במערכת" icon={Users} variant="blue" />
-            <StatsCard title="קלסרים פעילים" value={dashboard.data.active_binders} description="קלסרים שטרם הוחזרו" icon={FolderOpen} variant="green" />
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+            <StatsCard title="לקוחות" value={dashboard.data.total_clients} description="סך הכל לקוחות פעילים" icon={Users} variant="blue" />
+            <StatsCard title="קלסרים פעילים" value={dashboard.data.active_binders} description="טרם הוחזרו ללקוח" icon={FolderOpen} variant="green" />
             <StatsCard title="קלסרים באיחור" value={dashboard.data.overdue_binders} description="חרגו מ-90 יום" icon={AlertTriangle} variant="red" />
-            <StatsCard title="קלסרים ליום זה" value={dashboard.data.binders_due_today} description="מועד החזרה היום" icon={Calendar} variant="orange" />
-            <StatsCard title="קלסרים לשבוע זה" value={dashboard.data.binders_due_this_week} description="מועד החזרה תוך 7 ימים" icon={CalendarClock} variant="purple" />
+            <StatsCard title="החזרה היום" value={dashboard.data.binders_due_today} description="מועד החזרה הוא היום" icon={Calendar} variant="orange" />
+            <StatsCard title="החזרה השבוע" value={dashboard.data.binders_due_this_week} description="מועד החזרה תוך 7 ימים" icon={CalendarClock} variant="purple" />
           </div>
 
           <AdvisorTodayCard />
-
           <AttentionPanel items={attentionItems} />
-
           <OperationalPanel
             quickActions={dashboard.data.quick_actions ?? []}
             activeActionKey={activeQuickAction}
@@ -55,10 +57,10 @@ export const Dashboard: React.FC = () => {
 
       {dashboard.status === "ok" && dashboard.data?.role_view === "secretary" && (
         <>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <StatsCard title="קלסרים במשרד" value={dashboard.data.binders_in_office} description="כלל הקלסרים הפעילים במשרד" icon={FolderOpen} variant="blue" />
-            <StatsCard title="מוכן לאיסוף" value={dashboard.data.binders_ready_for_pickup} description="קלסרים הממתינים לאיסוף לקוח" icon={Users} variant="green" />
-            <StatsCard title="קלסרים באיחור" value={dashboard.data.binders_overdue} description="קלסרים בחריגה ממועד החזרה" icon={AlertTriangle} variant="red" />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <StatsCard title="קלסרים במשרד" value={dashboard.data.binders_in_office} description="כלל הקלסרים הפעילים" icon={FolderOpen} variant="blue" />
+            <StatsCard title="מוכן לאיסוף" value={dashboard.data.binders_ready_for_pickup} description="ממתינים לאיסוף לקוח" icon={Users} variant="green" />
+            <StatsCard title="באיחור" value={dashboard.data.binders_overdue} description="חריגה ממועד החזרה" icon={AlertTriangle} variant="red" />
           </div>
           <AttentionPanel items={attentionItems} />
         </>

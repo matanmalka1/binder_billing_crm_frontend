@@ -27,11 +27,32 @@ export const TaxDeadlines: React.FC = () => {
     totalPages,
   } = useTaxDeadlines();
 
+  const header = (
+    <PageHeader
+      title="מועדי מס"
+      description="ניהול ומעקב אחר כל מועדי המס"
+      breadcrumbs={[
+        { label: "דוחות מס", to: "/tax" },
+        { label: "מועדי מס", to: "/tax/deadlines" },
+      ]}
+      actions={
+        <Button
+          variant="primary"
+          onClick={() => setShowCreateModal(true)}
+          className="gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          מועד חדש
+        </Button>
+      }
+    />
+  );
+
   if (deadlinesQuery.isPending) {
     return (
       <div className="space-y-6">
-        <PageHeader title="מועדי מס" />
-        <PageLoading />
+        {header}
+        <PageLoading message="טוען מועדי מס..." rows={6} columns={7} />
       </div>
     );
   }
@@ -39,7 +60,7 @@ export const TaxDeadlines: React.FC = () => {
   if (deadlinesQuery.error) {
     return (
       <div className="space-y-6">
-        <PageHeader title="מועדי מס" />
+        {header}
         <ErrorCard
           message={getErrorMessage(deadlinesQuery.error, "שגיאה בטעינת מועדים")}
         />
@@ -49,20 +70,7 @@ export const TaxDeadlines: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="מועדי מס"
-        description="ניהול ומעקב אחר כל מועדי המס"
-        actions={
-          <Button
-            variant="primary"
-            onClick={() => setShowCreateModal(true)}
-            className="gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            מועד חדש
-          </Button>
-        }
-      />
+      {header}
 
       <TaxDeadlinesFilters filters={filters} onChange={handleFilterChange} />
 
@@ -72,11 +80,12 @@ export const TaxDeadlines: React.FC = () => {
         completingId={completingId}
       />
 
-      {deadlines.length > 0 && (
+      {total > 0 && (
         <PaginationCard
           page={filters.page}
           totalPages={totalPages}
           total={total}
+          label="מועדים"
           onPageChange={(page) => handleFilterChange("page", String(page))}
         />
       )}

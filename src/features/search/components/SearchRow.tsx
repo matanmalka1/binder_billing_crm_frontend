@@ -1,23 +1,39 @@
 import { Badge } from "../../../components/ui/Badge";
+import { ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { SearchResult } from "../../../api/search.api";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
-import {
-  getResultColor,
-  getResultIcon,
-  getResultLabel,
-} from "./searchResultMeta";
-import {
-  getSignalLabel,
-  getSlaStateLabel,
-  getWorkStateLabel,
-} from "../../../utils/enums";
+import { getResultColor, getResultIcon, getResultLabel } from "./searchResultMeta";
+import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
 
 interface SearchRowProps {
   result: SearchResult;
   index: number;
 }
+
+type BadgeVariant = "error" | "warning" | "info" | "neutral";
+
+const signalVariants: Record<string, BadgeVariant> = {
+  overdue:                     "error",
+  near_sla:                    "warning",
+  missing_permanent_documents: "warning",
+  unpaid_charges:              "warning",
+  ready_for_pickup:            "info",
+  idle_binder:                 "neutral",
+};
+
+const slaStateStyles: Record<string, string> = {
+  on_track:   "text-green-700",
+  approaching: "text-orange-600 font-semibold",
+  overdue:    "text-red-600 font-semibold",
+};
+
+const workStateStyles: Record<string, string> = {
+  waiting_for_work: "text-gray-500",
+  in_progress:      "text-blue-700",
+  completed:        "text-green-700",
+};
 
 export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
   const resultKey = `${result.result_type}-${result.client_id}-${result.binder_id}-${index}`;
@@ -40,64 +56,56 @@ export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
       )}
       style={{ animationDelay: staggerDelay(index) }}
     >
-      <td className="py-4 pr-6">
+      {/* Type */}
+      <td className="py-3.5 pr-6">
         <div className="flex items-center gap-2">
-          <div className="h-10 w-1 rounded-full bg-gradient-to-b from-primary-400 to-primary-600 opacity-0 transition-opacity group-hover:opacity-100" />
-          <div
-            className={cn(
-              "rounded-lg p-2",
-              getResultColor(result.result_type),
-            )}
-          >
+          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-primary-400 to-primary-600 opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className={cn("rounded-lg p-1.5", getResultColor(result.result_type))}>
             {getResultIcon(result.result_type)}
           </div>
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-xs font-medium text-gray-600">
             {getResultLabel(result.result_type)}
           </span>
         </div>
       </td>
 
-      <td className="py-4 pr-4">
-        <div>
-          <p className="font-medium text-gray-900">
-            {result.client_name ?? "—"}
-          </p>
-          <p className="text-xs text-gray-500 font-mono">
-            לקוח #{result.client_id}
-          </p>
-        </div>
+      {/* Client */}
+      <td className="py-3.5 pr-4">
+        <p className="text-sm font-semibold text-gray-900">{result.client_name ?? "—"}</p>
+        <p className="font-mono text-xs text-gray-400">#{result.client_id}</p>
       </td>
 
-      <td className="py-4 pr-4">
+      {/* Binder number */}
+      <td className="py-3.5 pr-4">
         {result.binder_number ? (
-          <span className="font-mono text-sm font-semibold text-gray-900">
-            {result.binder_number}
-          </span>
+          <span className="font-mono text-sm font-semibold text-gray-800">{result.binder_number}</span>
         ) : (
-          <span className="text-sm text-gray-400">—</span>
+          <span className="text-sm text-gray-300">—</span>
         )}
       </td>
 
-      <td className="py-4 pr-4">
-        <span className="text-sm text-gray-700">
+      {/* Work state */}
+      <td className="py-3.5 pr-4">
+        <span className={cn("text-sm", workStateStyles[result.work_state ?? ""] ?? "text-gray-500")}>
           {getWorkStateLabel(result.work_state ?? "")}
         </span>
       </td>
 
-      <td className="py-4 pr-4">
-        <span className="text-sm text-gray-700">
+      {/* SLA state */}
+      <td className="py-3.5 pr-4">
+        <span className={cn("text-sm", slaStateStyles[result.sla_state ?? ""] ?? "text-gray-500")}>
           {getSlaStateLabel(result.sla_state ?? "")}
         </span>
       </td>
 
-      <td className="py-4 pr-4">
-        {Array.isArray(result.signals) &&
-        result.signals.length > 0 ? (
-          <div className="flex flex-wrap gap-1.5">
+      {/* Signals */}
+      <td className="py-3.5 pr-4">
+        {Array.isArray(result.signals) && result.signals.length > 0 ? (
+          <div className="flex flex-wrap gap-1">
             {result.signals.map((signal) => (
               <Badge
                 key={`${index}-${signal}`}
-                variant="neutral"
+                variant={signalVariants[signal] ?? "neutral"}
                 className="text-xs"
               >
                 {getSignalLabel(signal)}
@@ -105,26 +113,27 @@ export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
             ))}
           </div>
         ) : (
-          <span className="text-sm text-gray-400">—</span>
+          <span className="text-sm text-gray-300">—</span>
         )}
       </td>
 
-      <td className="py-4 pr-4">
+      {/* Action */}
+      <td className="py-3.5 pr-4">
         {detailUrl ? (
           <Link
             to={detailUrl}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-lg",
-              "border border-gray-300 px-3 py-1.5 text-sm",
-              "text-gray-700 transition-all duration-200",
-              "hover:border-primary-400 hover:bg-primary-50 hover:text-primary-900",
-              "hover:shadow-sm hover:-translate-y-0.5",
+              "border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium",
+              "text-gray-600 shadow-sm transition-all duration-200",
+              "hover:border-primary-400 hover:bg-primary-50 hover:text-primary-800 hover:shadow-md",
             )}
           >
+            <ExternalLink className="h-3 w-3" />
             פירוט
           </Link>
         ) : (
-          <span className="text-sm text-gray-400">—</span>
+          <span className="text-sm text-gray-300">—</span>
         )}
       </td>
     </tr>
