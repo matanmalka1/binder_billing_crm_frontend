@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import {
+  devtools,
+  persist,
+  createJSONStorage,
+  type StateStorage,
+} from "zustand/middleware";
 import {
   AUTH_EXPIRED_EVENT,
   AUTH_TOKEN_STORAGE_KEY,
@@ -8,71 +13,136 @@ import {
 import { authApi } from "../api/auth.api";
 import { getErrorMessage } from "../utils/utils";
 import type { AuthState } from "./auth.types";
-import { clearStoredAuth, storedToken, storedUser } from "./auth.storage";
+
+const AUTH_STORAGE_NAME = "auth-storage";
+
+const clearLegacyAuthStorage = () => {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+    sessionStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+    localStorage.removeItem(AUTH_USER_STORAGE_KEY);
+  } catch {
+    // ignore storage access errors (e.g., SSR or disabled storage)
+  }
+};
+
+const getInitialTarget = (): "local" | "session" => {
+  if (typeof window === "undefined") return "local";
+  try {
+    if (localStorage.getItem(AUTH_STORAGE_NAME)) return "local";
+    if (sessionStorage.getItem(AUTH_STORAGE_NAME)) return "session";
+  } catch {
+    // fall back to local
+  }
+  return "local";
+};
+
+const storageTarget = { current: getInitialTarget() };
+
+const dynamicStorage: StateStorage = {
+  getItem: (name) => {
+    try {
+      return localStorage.getItem(name) ?? sessionStorage.getItem(name);
+    } catch {
+      return null;
+    }
+  },
+  setItem: (name, value) => {
+    try {
+      const primary =
+        storageTarget.current === "local" ? localStorage : sessionStorage;
+      const secondary =
+        storageTarget.current === "local" ? sessionStorage : localStorage;
+      primary.setItem(name, value);
+      secondary.removeItem(name);
+    } catch {
+      // ignore storage write failures
+    }
+  },
+  removeItem: (name) => {
+    try {
+      localStorage.removeItem(name);
+    } catch {}
+    try {
+      sessionStorage.removeItem(name);
+    } catch {}
+  },
+};
+
+clearLegacyAuthStorage();
 
 export const useAuthStore = create<AuthState>()(
   devtools(
-    (set, get) => ({
-      user: storedUser,
-      token: storedToken,
-      isLoading: false,
-      error: null,
+    persist(
+      (set) => ({
+        user: null,
+        token: null,
+        isLoading: false,
+        error: null,
 
-      login: async (email: string, password: string, rememberMe = false) => {
-        set({ isLoading: true, error: null });
+        login: async (email: string, password: string, rememberMe = false) => {
+          set({ isLoading: true, error: null });
+          storageTarget.current = rememberMe ? "local" : "session";
 
-        try {
-          const response = await authApi.login({ email, password, rememberMe });
-          const { token, user } = response;
+          try {
+            const response = await authApi.login({ email, password, rememberMe });
+            const { token, user } = response;
 
-          if (rememberMe) {
-            localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
-            sessionStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
-          } else {
-            sessionStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
-            localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+            set({
+              user,
+              token,
+              error: null,
+              isLoading: false,
+            });
+          } catch (error: unknown) {
+            set({
+              user: null,
+              token: null,
+              error: getErrorMessage(error, "שגיאה בהתחברות"),
+              isLoading: false,
+            });
           }
-          localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(user));
+        },
 
-          set({
-            user,
-            token,
-            error: null,
-            isLoading: false,
-          });
-        } catch (error: unknown) {
-          clearStoredAuth();
+        logout: () => {
           set({
             user: null,
             token: null,
-            error: getErrorMessage(error, "שגיאה בהתחברות"),
             isLoading: false,
+            error: null,
           });
-        }
-      },
+        },
 
-      logout: () => {
-        clearStoredAuth();
-        set({
-          user: null,
-          token: null,
-          isLoading: false,
-          error: null,
-        });
-      },
+        clearError: () => set({ error: null }),
 
-      clearError: () => set({ error: null }),
-
-      resetSession: () => {
-        clearStoredAuth();
-        set({
-          user: null,
-          token: null,
-          isLoading: false,
-          error: null,
-        });
+        resetSession: () => {
+          set({
+            user: null,
+            token: null,
+            isLoading: false,
+            error: null,
+          });
+        },
+      }),
+      {
+        name: AUTH_STORAGE_NAME,
+        storage: createJSONStorage(() => dynamicStorage),
+        partialize: (state) => ({ user: state.user, token: state.token }),
+        onRehydrateStorage: () => () => {
+          try {
+            if (typeof window === "undefined") return;
+            if (localStorage.getItem(AUTH_STORAGE_NAME)) {
+              storageTarget.current = "local";
+            } else if (sessionStorage.getItem(AUTH_STORAGE_NAME)) {
+              storageTarget.current = "session";
+            }
+          } catch {
+            // keep existing target
+          }
+        },
       },
-    }),
+    ),
     { name: "AuthStore" },
   ),
 );
