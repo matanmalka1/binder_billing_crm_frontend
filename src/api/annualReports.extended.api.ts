@@ -110,6 +110,24 @@ export interface AnnualReportListResponse {
   total: number;
 }
 
+export type StageKey =
+  | "material_collection"
+  | "in_progress"
+  | "final_review"
+  | "client_signature"
+  | "transmitted";
+
+export interface KanbanStage {
+  stage: StageKey;
+  reports: Array<{
+    id: number;
+    client_id: number;
+    client_name: string;
+    tax_year: number;
+    days_until_due: number | null;
+  }>;
+}
+
 export interface CreateAnnualReportPayload {
   client_id: number;
   tax_year: number;
@@ -181,6 +199,21 @@ export const annualReportsExtendedApi = {
     return res.data;
   },
 
+  submitReport: async (
+    reportId: number,
+    payload: { submitted_at?: string; ita_reference?: string | null; note?: string | null } = {}
+  ): Promise<AnnualReportFull> => {
+    const res = await api.post<AnnualReportFull>(`/annual-reports/${reportId}/submit`, payload);
+    return res.data;
+  },
+
+  transitionStage: async (reportId: number, toStage: StageKey): Promise<AnnualReportFull> => {
+    const res = await api.post<AnnualReportFull>(`/annual-reports/${reportId}/transition`, {
+      to_stage: toStage,
+    });
+    return res.data;
+  },
+
   updateDeadline: async (
     reportId: number,
     payload: { deadline_type: DeadlineType; custom_deadline_note?: string | null }
@@ -191,6 +224,14 @@ export const annualReportsExtendedApi = {
 
   getSchedules: async (reportId: number): Promise<ScheduleEntry[]> => {
     const res = await api.get<ScheduleEntry[]>(`/annual-reports/${reportId}/schedules`);
+    return res.data;
+  },
+
+  addSchedule: async (
+    reportId: number,
+    payload: { schedule: AnnualReportScheduleKey; notes?: string | null }
+  ): Promise<ScheduleEntry> => {
+    const res = await api.post<ScheduleEntry>(ENDPOINTS.annualReportAddSchedule(reportId), payload);
     return res.data;
   },
 
@@ -213,6 +254,11 @@ export const annualReportsExtendedApi = {
     const res = await api.get<AnnualReportFull[]>("/annual-reports/overdue", {
       params: taxYear ? { tax_year: taxYear } : undefined,
     });
+    return res.data;
+  },
+
+  getKanbanView: async (): Promise<{ stages: KanbanStage[] }> => {
+    const res = await api.get<{ stages: KanbanStage[] }>("/annual-reports/kanban/view");
     return res.data;
   },
 };

@@ -5,6 +5,7 @@ import { bindersApi } from "../../../api/binders.api";
 import { getErrorMessage } from "../../../utils/utils";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import type { BindersFilters } from "../types";
+import { QK } from "../../../lib/queryKeys";
 
 export const useBindersPage = () => {
   const queryClient = useQueryClient();
@@ -26,7 +27,7 @@ export const useBindersPage = () => {
   );
 
   const bindersQuery = useQuery({
-    queryKey: ["binders", "list", listParams] as const,
+    queryKey: QK.binders.list(listParams),
     queryFn: () => bindersApi.list(listParams),
   });
 
@@ -38,7 +39,7 @@ export const useBindersPage = () => {
     handleAction: onAction,
     pendingAction,
   } = useActionRunner({
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["binders", "list"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: QK.binders.all }),
     errorFallback: "שגיאה בביצוע פעולת קלסר",
     canonicalAction: true,
   });

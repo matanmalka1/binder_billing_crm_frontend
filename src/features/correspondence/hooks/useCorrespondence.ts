@@ -3,10 +3,11 @@ import { correspondenceApi } from "../../../api/correspondence.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
 import type { CorrespondenceFormValues } from "../components/correspondenceSchema";
+import { QK } from "../../../lib/queryKeys";
 
 export const useCorrespondence = (clientId: number) => {
   const queryClient = useQueryClient();
-  const qk = ["correspondence", "client", clientId] as const;
+  const qk = QK.correspondence.forClient(clientId);
 
   const listQuery = useQuery({
     enabled: clientId > 0,

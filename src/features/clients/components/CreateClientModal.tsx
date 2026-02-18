@@ -59,7 +59,7 @@ export const CreateClientModal: React.FC<Props> = ({ open, onClose, onSubmit, is
         <div className="space-y-4 border-t border-gray-200 pt-4">
           <p className="text-sm font-medium text-gray-700">פרטי התקשרות (אופציונלי)</p>
           <Input label="טלפון" type="tel" placeholder="050-1234567" error={errors.phone?.message} disabled={isLoading} {...register("phone")} />
-          <Input label="אימייל" type="email" placeholder="name@example.com" error={errors.email?.message} disabled={isLoading} {...register("email")} />
+          <Input label="אימייל" type="email" placeholder="הזן כתובת אימייל" error={errors.email?.message} disabled={isLoading} {...register("email")} />
         </div>
 
         <p className="text-xs text-gray-500">* שדות חובה</p>

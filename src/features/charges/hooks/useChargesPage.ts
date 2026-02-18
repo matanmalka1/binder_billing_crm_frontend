@@ -10,6 +10,7 @@ import {
 import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
 import { useRole } from "../../../hooks/useRole";
+import { QK } from "../../../lib/queryKeys";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
@@ -30,14 +31,7 @@ export const useChargesPage = () => {
   };
 
   const listQuery = useQuery({
-    queryKey: [
-      "charges",
-      "list",
-      apiParams.client_id ?? null,
-      apiParams.status ?? null,
-      apiParams.page,
-      apiParams.page_size,
-    ] as const,
+    queryKey: QK.charges.list(apiParams),
     queryFn: () => chargesApi.list(apiParams),
   });
   const { isAdvisor } = useRole();
@@ -46,7 +40,7 @@ export const useChargesPage = () => {
     mutationFn: (payload: CreateChargePayload) => chargesApi.create(payload),
     onSuccess: async () => {
       toast.success("חיוב נוצר בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: ["charges", "list"] });
+      await queryClient.invalidateQueries({ queryKey: QK.charges.all });
     },
   });
 
@@ -66,7 +60,7 @@ export const useChargesPage = () => {
     },
     onSuccess: async () => {
       toast.success("פעולת חיוב בוצעה בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: ["charges", "list"] });
+      await queryClient.invalidateQueries({ queryKey: QK.charges.all });
     },
   });
 

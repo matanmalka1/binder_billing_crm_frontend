@@ -1,17 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { taxDashboardApi } from "../../../api/taxDashboard.api";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
+import { QK } from "../../../lib/queryKeys";
 
 export const useTaxDashboard = () => {
   const currentYear = new Date().getFullYear();
 
   const submissionsQuery = useQuery({
-    queryKey: ["tax", "submissions", currentYear] as const,
+    queryKey: QK.taxDashboard.submissions(currentYear),
     queryFn: () => taxDashboardApi.getTaxSubmissionsWidget(currentYear),
   });
 
   const deadlinesQuery = useQuery({
-    queryKey: ["tax", "deadlines", "urgent"] as const,
+    queryKey: QK.taxDashboard.urgentDeadlines,
     queryFn: () => taxDeadlinesApi.getDashboardDeadlines(),
   });
 

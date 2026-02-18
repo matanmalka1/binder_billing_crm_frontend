@@ -1,7 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../../api/client";
+import { ENDPOINTS } from "../../../api/endpoints";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
+import { QK } from "../../../lib/queryKeys";
 
 export interface TaxProfileData {
   vat_type: "monthly" | "bimonthly" | "exempt" | null;
@@ -11,18 +13,18 @@ export interface TaxProfileData {
 }
 
 const fetchTaxProfile = async (clientId: number): Promise<TaxProfileData> => {
-  const response = await api.get<TaxProfileData>(`/clients/${clientId}/tax-profile`);
+  const response = await api.get<TaxProfileData>(ENDPOINTS.clientTaxProfile(clientId));
   return response.data;
 };
 
 const updateTaxProfile = async (clientId: number, data: Partial<TaxProfileData>): Promise<TaxProfileData> => {
-  const response = await api.patch<TaxProfileData>(`/clients/${clientId}/tax-profile`, data);
+  const response = await api.patch<TaxProfileData>(ENDPOINTS.clientTaxProfile(clientId), data);
   return response.data;
 };
 
 export const useTaxProfile = (clientId: number) => {
   const queryClient = useQueryClient();
-  const qk = ["clients", "tax-profile", clientId] as const;
+  const qk = QK.clients.taxProfile(clientId);
 
   const profileQuery = useQuery({
     enabled: clientId > 0,

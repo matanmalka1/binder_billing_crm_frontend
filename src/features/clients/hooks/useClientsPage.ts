@@ -1,9 +1,12 @@
 import { useMemo } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { clientsApi, type ListClientsParams } from "../../../api/clients.api";
 import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
+import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
+import type { CreateClientPayload } from "../../../api/clients.api";
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
@@ -30,8 +33,18 @@ export const useClientsPage = () => {
   );
 
   const listQuery = useQuery({
-    queryKey: ["clients", "list", apiParams] as const,
+    queryKey: QK.clients.list(apiParams),
     queryFn: () => clientsApi.list(apiParams),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (payload: CreateClientPayload) => clientsApi.create(payload),
+    onSuccess: () => {
+      toast.success("לקוח נוצר בהצלחה");
+      queryClient.invalidateQueries({ queryKey: QK.clients.all });
+    },
+    onError: (err) =>
+      toast.error(getErrorMessage(err, "שגיאה ביצירת לקוח")),
   });
 
   const {
@@ -42,7 +55,7 @@ export const useClientsPage = () => {
     handleAction: onAction,
     pendingAction,
   } = useActionRunner({
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["clients", "list"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: QK.clients.all }),
     errorFallback: "שגיאה בביצוע פעולת לקוח",
     canonicalAction: true,
   });
@@ -75,5 +88,7 @@ export const useClientsPage = () => {
     total: listQuery.data?.total ?? 0,
     cancelPendingAction,
     confirmPendingAction,
+    createClient: (payload: CreateClientPayload) => createMutation.mutateAsync(payload),
+    createLoading: createMutation.isPending,
   };
 };

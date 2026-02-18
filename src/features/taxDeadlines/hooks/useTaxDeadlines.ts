@@ -7,6 +7,7 @@ import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
 import { toast } from "../../../utils/toast";
 import type { TaxDeadlineFilters, CreateTaxDeadlineForm } from "../types";
+import { QK } from "../../../lib/queryKeys";
 
 export const useTaxDeadlines = () => {
   const queryClient = useQueryClient();
@@ -37,7 +38,7 @@ export const useTaxDeadlines = () => {
   );
 
   const deadlinesQuery = useQuery({
-    queryKey: ["tax", "deadlines", "list", apiParams],
+    queryKey: QK.tax.deadlines.list(apiParams),
     queryFn: () => taxDeadlinesApi.listTaxDeadlines(apiParams),
   });
 
@@ -51,7 +52,7 @@ export const useTaxDeadlines = () => {
     }) => taxDeadlinesApi.createTaxDeadline(payload),
     onSuccess: () => {
       toast.success("מועד נוצר בהצלחה");
-      queryClient.invalidateQueries({ queryKey: ["tax", "deadlines"] });
+      queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
       setShowCreateModal(false);
     },
     onError: (error) => {
@@ -63,7 +64,7 @@ export const useTaxDeadlines = () => {
     mutationFn: (deadlineId: number) => taxDeadlinesApi.completeTaxDeadline(deadlineId),
     onSuccess: () => {
       toast.success("מועד סומן כהושלם");
-      queryClient.invalidateQueries({ queryKey: ["tax", "deadlines"] });
+      queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, "שגיאה בסימון מועד"));

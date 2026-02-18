@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
-import { annualReportsApi } from "../../../api/annualReports.api";
+import { annualReportsExtendedApi } from "../../../api/annualReports.extended.api";
 import { remindersApi } from "../../../api/reminders.api";
 import { chargesApi } from "../../../api/charges.api";
 import { QK } from "../../../lib/queryKeys";
@@ -49,7 +49,7 @@ export const useAdvisorToday = () => {
     enabled: isAdvisor,
     queryKey: QK.advisorToday.reports,
     queryFn: () =>
-      annualReportsApi.listAnnualReports({ page: 1, page_size: 100 }),
+      annualReportsExtendedApi.listReports({ page: 1, page_size: 100 }),
     staleTime: 5 * 60 * 1000,
   });
 
@@ -82,9 +82,11 @@ export const useAdvisorToday = () => {
     (d) => d.due_date >= today && d.due_date <= weekEnd,
   );
 
-  const stuckReports = (reportsQuery.data?.items ?? []).filter(
-    (r) => r.created_at <= fourteenDaysAgo && r.stage !== "transmitted",
-  );
+  const stuckReports = (reportsQuery.data?.items ?? []).filter((r) => {
+    const stale = r.created_at <= fourteenDaysAgo;
+    const doneStatuses = ["submitted", "accepted", "assessment_issued", "closed"];
+    return stale && !doneStatuses.includes(r.status);
+  });
 
   const pendingReminders = (remindersQuery.data?.items ?? []).filter(
     (r) => r.created_at <= sevenDaysAgo,

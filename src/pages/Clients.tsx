@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
 import { PaginationCard } from "../components/ui/PaginationCard";
@@ -13,13 +12,10 @@ import { CreateClientModal } from "../features/clients/components/CreateClientMo
 import { buildClientColumns } from "../features/clients/components/clientColumns";
 import { useClientsPage } from "../features/clients/hooks/useClientsPage";
 import { useRole } from "../hooks/useRole";
-import { clientsApi, type CreateClientPayload } from "../api/clients.api";
-import { toast } from "../utils/toast";
-import { getErrorMessage } from "../utils/utils";
+import type { CreateClientPayload } from "../api/clients.api";
 
 export const Clients: React.FC = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { isAdvisor, can } = useRole();
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -37,19 +33,9 @@ export const Clients: React.FC = () => {
     confirmPendingAction,
     setPage,
     total,
+    createClient,
+    createLoading,
   } = useClientsPage();
-
-  const createMutation = useMutation({
-    mutationFn: (payload: CreateClientPayload) => clientsApi.create(payload),
-    onSuccess: async (client) => {
-      toast.success("לקוח נוצר בהצלחה");
-      setShowCreateModal(false);
-      await queryClient.invalidateQueries({ queryKey: ["clients"] });
-      navigate(`/clients/${client.id}`);
-    },
-    onError: (err) =>
-      toast.error(getErrorMessage(err, "שגיאה ביצירת לקוח")),
-  });
 
   const columns = useMemo(
     () => buildClientColumns({ activeActionKeyRef, onAction }),
@@ -135,9 +121,11 @@ export const Clients: React.FC = () => {
           open={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           onSubmit={async (data) => {
-            await createMutation.mutateAsync(data);
+            const client = await createClient(data);
+            setShowCreateModal(false);
+            navigate(`/clients/${client.id}`);
           }}
-          isLoading={createMutation.isPending}
+          isLoading={createLoading}
         />
       )}
 

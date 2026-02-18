@@ -8,6 +8,7 @@ import {
   type UploadDocumentPayload,
 } from "../../../api/documents.api";
 import { getErrorMessage, isPositiveInt } from "../../../utils/utils";
+import { QK } from "../../../lib/queryKeys";
 
 export const useDocumentsPage = () => {
   const queryClient = useQueryClient();
@@ -19,7 +20,7 @@ export const useDocumentsPage = () => {
   }, [searchParams]);
 
   const clientsQuery = useQuery({
-    queryKey: ["documents", "clients"] as const,
+    queryKey: QK.documents.clients,
     queryFn: async () => {
       const response = await clientsApi.list({ page: 1, page_size: 100 });
       return (response.items ?? []).map((item) => ({
@@ -31,13 +32,13 @@ export const useDocumentsPage = () => {
 
   const documentsQuery = useQuery({
     enabled: selectedClientId > 0,
-    queryKey: ["documents", "client", selectedClientId, "list"] as const,
+    queryKey: selectedClientId ? QK.documents.clientList(selectedClientId) : undefined,
     queryFn: () => documentsApi.listByClient(selectedClientId),
   });
 
   const signalsQuery = useQuery({
     enabled: selectedClientId > 0,
-    queryKey: ["documents", "client", selectedClientId, "signals"] as const,
+    queryKey: selectedClientId ? QK.documents.clientSignals(selectedClientId) : undefined,
     queryFn: () => documentsApi.getSignalsByClient(selectedClientId),
   });
 
@@ -47,10 +48,10 @@ export const useDocumentsPage = () => {
       toast.success("מסמך הועלה בהצלחה");
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ["documents", "client", variables.client_id, "list"],
+          queryKey: QK.documents.clientList(variables.client_id),
         }),
         queryClient.invalidateQueries({
-          queryKey: ["documents", "client", variables.client_id, "signals"],
+          queryKey: QK.documents.clientSignals(variables.client_id),
         }),
       ]);
     },

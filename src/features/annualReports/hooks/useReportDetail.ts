@@ -7,14 +7,15 @@ import {
 } from "../../../api/annualReports.extended.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
+import { QK } from "../../../lib/queryKeys";
 
 export const useReportDetail = (reportId: number | null) => {
   const queryClient = useQueryClient();
-  const qk = ["tax", "annual-reports", "detail-full", reportId] as const;
+  const qk = reportId ? QK.tax.annualReports.detail(reportId) : null;
 
   const reportQuery = useQuery({
     enabled: reportId !== null && reportId > 0,
-    queryKey: qk,
+    queryKey: qk ?? undefined,
     queryFn: () => annualReportsExtendedApi.getReport(reportId!),
     retry: false,
   });
@@ -24,8 +25,8 @@ export const useReportDetail = (reportId: number | null) => {
       annualReportsExtendedApi.transitionStatus(reportId!, payload),
     onSuccess: (updated: AnnualReportFull) => {
       toast.success("סטטוס עודכן בהצלחה");
-      queryClient.setQueryData(qk, updated);
-      queryClient.invalidateQueries({ queryKey: ["tax", "annual-reports"] });
+      if (qk) queryClient.setQueryData(qk, updated);
+      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
     },
     onError: (err) => toast.error(getErrorMessage(err, "שגיאה בעדכון סטטוס")),
   });
@@ -35,7 +36,7 @@ export const useReportDetail = (reportId: number | null) => {
       annualReportsExtendedApi.completeSchedule(reportId!, schedule),
     onSuccess: () => {
       toast.success("נספח סומן כהושלם");
-      queryClient.invalidateQueries({ queryKey: qk });
+      if (qk) queryClient.invalidateQueries({ queryKey: qk });
     },
     onError: (err) => toast.error(getErrorMessage(err, "שגיאה בעדכון נספח")),
   });

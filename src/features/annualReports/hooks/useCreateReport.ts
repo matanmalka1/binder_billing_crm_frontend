@@ -8,6 +8,7 @@ import {
 } from "../../../api/annualReports.extended.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
+import { QK } from "../../../lib/queryKeys";
 
 const schema = z.object({
   client_id: z.string().min(1, "שדה חובה"),
@@ -48,7 +49,7 @@ export const useCreateReport = (onSuccess?: () => void) => {
       annualReportsExtendedApi.createReport(payload),
     onSuccess: () => {
       toast.success("דוח שנתי נוצר בהצלחה");
-      queryClient.invalidateQueries({ queryKey: ["tax", "annual-reports"] });
+      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
       form.reset();
       onSuccess?.();
     },

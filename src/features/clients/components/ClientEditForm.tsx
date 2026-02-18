@@ -53,7 +53,7 @@ export const ClientEditForm: React.FC<Props> = ({ client, onSave, onCancel, isLo
         <h3 className="text-lg font-semibold text-gray-900">פרטי התקשרות</h3>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Input label="טלפון" type="tel" placeholder="050-1234567" error={errors.phone?.message} disabled={isLoading} {...register("phone")} />
-          <Input label="אימייל" type="email" placeholder="name@example.com" error={errors.email?.message} disabled={isLoading} {...register("email")} />
+          <Input label="אימייל" type="email" placeholder="הזן כתובת אימייל" error={errors.email?.message} disabled={isLoading} {...register("email")} />
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { reportsApi, type ExportFormat } from "../../../api/reports.api";
 import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
+import { QK } from "../../../lib/queryKeys";
 
 export const useAgingReport = () => {
   const [asOfDate, setAsOfDate] = useState<string>(
@@ -12,7 +13,7 @@ export const useAgingReport = () => {
   const [exporting, setExporting] = useState<ExportFormat | null>(null);
 
   const reportQuery = useQuery({
-    queryKey: ["reports", "aging", asOfDate],
+    queryKey: QK.reports.aging(asOfDate),
     queryFn: () => reportsApi.getAgingReport(asOfDate),
   });
 

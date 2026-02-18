@@ -2,10 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authorityContactsApi } from "../../../api/authorityContacts.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
+import { QK } from "../../../lib/queryKeys";
 
 export const useAuthorityContacts = (clientId: number) => {
   const queryClient = useQueryClient();
-  const qk = ["authority-contacts", "client", clientId] as const;
+  const qk = QK.authorityContacts.forClient(clientId);
 
   const listQuery = useQuery({
     enabled: clientId > 0,

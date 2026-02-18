@@ -9,6 +9,7 @@ import type {
   CreateReminderRequest,
   CreateReminderFormValues,
 } from "../reminder.types";
+import { QK } from "../../../lib/queryKeys";
 
 const defaultFormValues: CreateReminderFormValues = {
   reminder_type: "custom",
@@ -24,7 +25,7 @@ export const useReminders = () => {
   const [cancelingId, setCancelingId] = useState<number | null>(null);
 
   const remindersQuery = useQuery<RemindersListResponse, Error>({
-    queryKey: ["reminders", "list"],
+    queryKey: QK.reminders.list,
     queryFn: () => remindersApi.list(),
   });
 
@@ -32,7 +33,7 @@ export const useReminders = () => {
     mutationFn: remindersApi.create,
     onSuccess: () => {
       toast.success("תזכורת נוצרה בהצלחה");
-      queryClient.invalidateQueries({ queryKey: ["reminders"] });
+      queryClient.invalidateQueries({ queryKey: QK.reminders.all });
       setShowCreateModal(false);
       form.reset(defaultFormValues);
     },
@@ -45,7 +46,7 @@ export const useReminders = () => {
     mutationFn: remindersApi.cancel,
     onSuccess: () => {
       toast.success("תזכורת בוטלה");
-      queryClient.invalidateQueries({ queryKey: ["reminders"] });
+      queryClient.invalidateQueries({ queryKey: QK.reminders.all });
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, "שגיאה בביטול תזכורת"));

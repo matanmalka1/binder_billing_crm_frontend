@@ -9,6 +9,7 @@ import {
   authorityContactDefaults,
   type AuthorityContactFormValues,
 } from "../components/authorityContactSchema.ts";
+import { QK } from "../../../lib/queryKeys";
 
 export const useAuthorityContactForm = (
   clientId: number,
@@ -16,7 +17,7 @@ export const useAuthorityContactForm = (
   existing?: AuthorityContactResponse | null,
 ) => {
   const queryClient = useQueryClient();
-  const qk = ["authority-contacts", "client", clientId] as const;
+  const qk = QK.authorityContacts.forClient(clientId);
 
   const form = useForm<AuthorityContactFormValues>({
     resolver: zodResolver(authorityContactSchema),

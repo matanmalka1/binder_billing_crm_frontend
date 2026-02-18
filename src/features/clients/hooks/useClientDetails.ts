@@ -6,6 +6,7 @@ import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { useRole } from "../../../hooks/useRole";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
+import { QK } from "../../../lib/queryKeys";
 
 type UseClientDetailsParams = { clientId: number | null };
 
@@ -35,21 +36,21 @@ export const useClientDetails = ({
   const { isAdvisor } = useRole();
 
   const clientQuery = useQuery({
-    queryKey: ["clients", "detail", id],
+    queryKey: QK.clients.detail(id),
     queryFn: () => clientsApi.getById(id),
     enabled,
   });
 
   const bindersQuery = useQuery({
     // Include page/page_size in key so cache is scoped correctly
-    queryKey: ["binders", "client", id, BINDERS_PAGE.page, BINDERS_PAGE.page_size],
+    queryKey: QK.binders.forClientPage(id, BINDERS_PAGE.page, BINDERS_PAGE.page_size),
     queryFn: () => bindersApi.listClientBinders(id, BINDERS_PAGE),
     enabled,
   });
 
   const chargesQuery = useQuery({
     // Include page/page_size in key so cache is scoped correctly
-    queryKey: ["charges", "client", id, CHARGES_PAGE.page, CHARGES_PAGE.page_size],
+    queryKey: QK.charges.forClientPage(id, CHARGES_PAGE.page, CHARGES_PAGE.page_size),
     queryFn: () => chargesApi.list({ client_id: id, ...CHARGES_PAGE }),
     enabled: enabled && isAdvisor,
   });
@@ -59,8 +60,8 @@ export const useClientDetails = ({
       clientsApi.update(id, payload),
     onSuccess: async (updated) => {
       toast.success("פרטי הלקוח עודכנו");
-      queryClient.setQueryData(["clients", "detail", id], updated);
-      await queryClient.invalidateQueries({ queryKey: ["clients"] });
+      queryClient.setQueryData(QK.clients.detail(id), updated);
+      await queryClient.invalidateQueries({ queryKey: QK.clients.all });
     },
     onError: (err) =>
       toast.error(getErrorMessage(err, "שגיאה בעדכון פרטי לקוח")),

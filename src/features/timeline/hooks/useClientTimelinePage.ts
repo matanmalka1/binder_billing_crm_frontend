@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { timelineApi } from "../../../api/timeline.api";
 import { getErrorMessage, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
+import { QK } from "../../../lib/queryKeys";
 
 export const useClientTimelinePage = (clientId: string | undefined) => {
   const queryClient = useQueryClient();
@@ -20,7 +21,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
 
   const timelineQuery = useQuery({
     enabled: hasValidClient,
-    queryKey: ["timeline", "client", clientIdNumber, "events", timelineParams] as const,
+    queryKey: QK.timeline.clientEvents(clientIdNumber, timelineParams),
     queryFn: () => timelineApi.getClientTimeline(clientIdNumber, timelineParams),
   });
 
@@ -34,7 +35,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
   } = useActionRunner({
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ["timeline", "client", clientIdNumber],
+        queryKey: QK.timeline.clientRoot(clientIdNumber),
       }),
     errorFallback: "שגיאה בביצוע פעולה",
     canonicalAction: true,

@@ -9,6 +9,7 @@ import { getErrorMessage, getHttpStatus } from "../../../utils/utils";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { useRole } from "../../../hooks/useRole";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
+import { QK } from "../../../lib/queryKeys";
 
 type DashboardData =
   | (DashboardOverviewResponse & { role_view: "advisor" })
@@ -39,7 +40,7 @@ export const useDashboardPage = () => {
 
   const dashboardQuery = useQuery<DashboardOverviewResponse | DashboardSummaryResponse>({
     enabled: hasRole,
-    queryKey: ["dashboard", isAdvisor ? "overview" : "summary"] as const,
+    queryKey: isAdvisor ? QK.dashboard.overview : QK.dashboard.summary,
     queryFn: isAdvisor ? dashboardApi.getOverview : dashboardApi.getSummary,
   });
 
@@ -50,7 +51,7 @@ export const useDashboardPage = () => {
     confirmPendingAction: confirmPendingActionBase,
     cancelPendingAction: cancelPendingActionBase,
   } = useActionRunner({
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: QK.dashboard.all }),
     errorFallback: "שגיאה בביצוע פעולה מהירה",
     canonicalAction: true,
     onError: (err) => {

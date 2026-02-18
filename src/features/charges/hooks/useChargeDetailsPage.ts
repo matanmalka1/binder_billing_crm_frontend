@@ -4,6 +4,7 @@ import { chargesApi } from "../../../api/charges.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage, getHttpStatus, isPositiveInt } from "../../../utils/utils";
 import { useRole } from "../../../hooks/useRole";
+import { QK } from "../../../lib/queryKeys";
 
 export const useChargeDetailsPage = (chargeId: string | undefined) => {
   const queryClient = useQueryClient();
@@ -15,7 +16,7 @@ export const useChargeDetailsPage = (chargeId: string | undefined) => {
 
   const chargeQuery = useQuery({
     enabled: hasValidChargeId,
-    queryKey: ["charges", "detail", chargeIdNumber] as const,
+    queryKey: QK.charges.detail(chargeIdNumber),
     queryFn: () => chargesApi.getById(chargeIdNumber),
   });
 
@@ -49,8 +50,8 @@ export const useChargeDetailsPage = (chargeId: string | undefined) => {
     onSuccess: async () => {
       toast.success("פעולת חיוב בוצעה בהצלחה");
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["charges", "detail", chargeIdNumber] }),
-        queryClient.invalidateQueries({ queryKey: ["charges", "list"] }),
+        queryClient.invalidateQueries({ queryKey: QK.charges.detail(chargeIdNumber) }),
+        queryClient.invalidateQueries({ queryKey: QK.charges.all }),
       ]);
     },
   });
