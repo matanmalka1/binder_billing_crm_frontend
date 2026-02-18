@@ -3,6 +3,7 @@ import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
 import { annualReportsApi } from "../../../api/annualReports.api";
 import { remindersApi } from "../../../api/reminders.api";
 import { chargesApi } from "../../../api/charges.api";
+import { QK } from "../../../lib/queryKeys";
 
 const sevenDaysFromNow = () => {
   const d = new Date();
@@ -18,7 +19,7 @@ const daysAgo = (n: number) => {
 
 export const useAdvisorToday = () => {
   const deadlinesQuery = useQuery({
-    queryKey: ["advisor-today", "deadlines"] as const,
+    queryKey: QK.advisorToday.deadlines,
     queryFn: () =>
       taxDeadlinesApi.listTaxDeadlines({
         status: "pending",
@@ -28,18 +29,18 @@ export const useAdvisorToday = () => {
   });
 
   const reportsQuery = useQuery({
-    queryKey: ["advisor-today", "reports"] as const,
+    queryKey: QK.advisorToday.reports,
     queryFn: () =>
       annualReportsApi.listAnnualReports({ page: 1, page_size: 100 }),
   });
 
   const remindersQuery = useQuery({
-    queryKey: ["advisor-today", "reminders"] as const,
+    queryKey: QK.advisorToday.reminders,
     queryFn: () => remindersApi.list({ status: "pending", page_size: 100 }),
   });
 
   const chargesQuery = useQuery({
-    queryKey: ["advisor-today", "charges"] as const,
+    queryKey: QK.advisorToday.charges,
     queryFn: () =>
       chargesApi.list({ status: "issued", page: 1, page_size: 100 }),
   });

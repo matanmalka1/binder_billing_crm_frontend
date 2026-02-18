@@ -2,10 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { advancePaymentsApi } from "../../../api/advancePayments.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
+import { QK } from "../../../lib/queryKeys";
 
 export const useAdvancePayments = (clientId: number, year: number) => {
   const queryClient = useQueryClient();
-  const qk = ["advance-payments", clientId, year] as const;
+  const qk = QK.tax.advancePayments.forClientYear(clientId, year);
   const enabled = clientId > 0;
 
   const listQuery = useQuery({
