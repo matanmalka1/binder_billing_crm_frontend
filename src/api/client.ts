@@ -30,12 +30,19 @@ api.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error),
 );
 
+let isHandlingAuthExpiry = false;
+
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && !isHandlingAuthExpiry) {
+      isHandlingAuthExpiry = true;
       clearStoredTokens();
       window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
+
+      setTimeout(() => {
+        isHandlingAuthExpiry = false;
+      }, 5000);
     }
     return Promise.reject(error);
   },

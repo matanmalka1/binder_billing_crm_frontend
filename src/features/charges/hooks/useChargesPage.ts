@@ -30,7 +30,14 @@ export const useChargesPage = () => {
   };
 
   const listQuery = useQuery({
-    queryKey: ["charges", "list", apiParams] as const,
+    queryKey: [
+      "charges",
+      "list",
+      apiParams.client_id ?? null,
+      apiParams.status ?? null,
+      apiParams.page,
+      apiParams.page_size,
+    ] as const,
     queryFn: () => chargesApi.list(apiParams),
   });
   const { isAdvisor } = useRole();
@@ -64,23 +71,26 @@ export const useChargesPage = () => {
     },
   });
 
-  const runAction = useCallback(async (chargeId: number, action: "issue" | "markPaid" | "cancel") => {
-    if (!isAdvisor) {
-      toast.error("אין הרשאה לבצע פעולת חיוב זו");
-      return;
-    }
+  const runAction = useCallback(
+    async (chargeId: number, action: "issue" | "markPaid" | "cancel") => {
+      if (!isAdvisor) {
+        toast.error("אין הרשאה לבצע פעולת חיוב זו");
+        return;
+      }
 
-    try {
-      setActionLoadingId(chargeId);
-      actionLoadingIdRef.current = chargeId;
-      await actionMutation.mutateAsync({ action, chargeId });
-    } catch (requestError: unknown) {
-      toast.error(getErrorMessage(requestError, "שגיאה בביצוע פעולת חיוב"));
-    } finally {
-      setActionLoadingId(null);
-      actionLoadingIdRef.current = null;
-    }
-  }, [actionMutation, isAdvisor]);
+      try {
+        setActionLoadingId(chargeId);
+        actionLoadingIdRef.current = chargeId;
+        await actionMutation.mutateAsync({ action, chargeId });
+      } catch (requestError: unknown) {
+        toast.error(getErrorMessage(requestError, "שגיאה בביצוע פעולת חיוב"));
+      } finally {
+        setActionLoadingId(null);
+        actionLoadingIdRef.current = null;
+      }
+    },
+    [actionMutation, isAdvisor],
+  );
 
   const setFilter = (key: string, value: string) => {
     const next = new URLSearchParams(searchParams);
@@ -90,7 +100,9 @@ export const useChargesPage = () => {
     setSearchParams(next);
   };
 
-  const submitCreate = async (payload: CreateChargePayload): Promise<boolean> => {
+  const submitCreate = async (
+    payload: CreateChargePayload,
+  ): Promise<boolean> => {
     if (!isAdvisor) {
       return false;
     }
@@ -112,7 +124,9 @@ export const useChargesPage = () => {
       ? getErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")
       : null,
     createLoading: createMutation.isPending,
-    error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת רשימת חיובים") : null,
+    error: listQuery.error
+      ? getErrorMessage(listQuery.error, "שגיאה בטעינת רשימת חיובים")
+      : null,
     filters,
     isAdvisor,
     loading: listQuery.isPending,

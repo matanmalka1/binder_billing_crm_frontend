@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
 import { annualReportsApi } from "../../../api/annualReports.api";
@@ -6,20 +7,32 @@ import { chargesApi } from "../../../api/charges.api";
 import { QK } from "../../../lib/queryKeys";
 import { useRole } from "../../../hooks/useRole";
 
-const sevenDaysFromNow = () => {
-  const d = new Date();
-  d.setDate(d.getDate() + 7);
-  return d.toISOString().split("T")[0];
-};
+// Compute once per calendar day — stable across re-renders within the same day
+const getDateAnchors = () => {
+  const now = new Date();
 
-const daysAgo = (n: number) => {
-  const d = new Date();
-  d.setDate(d.getDate() - n);
-  return d.toISOString();
+  const offsetDate = (days: number, iso = false) => {
+    const d = new Date(now);
+    d.setDate(d.getDate() + days);
+    return iso ? d.toISOString() : d.toISOString().split("T")[0];
+  };
+
+  return {
+    today: offsetDate(0),
+    weekEnd: offsetDate(7),
+    sevenDaysAgo: offsetDate(-7, true),
+    fourteenDaysAgo: offsetDate(-14, true),
+    sixtyDaysAgo: offsetDate(-60, true),
+  };
 };
 
 export const useAdvisorToday = () => {
   const { isAdvisor } = useRole();
+
+  // Stable date anchors — only recomputed if the component remounts on a new day
+  const { today, weekEnd, sevenDaysAgo, fourteenDaysAgo, sixtyDaysAgo } =
+    useMemo(getDateAnchors, []);
+
   const deadlinesQuery = useQuery({
     enabled: isAdvisor,
     queryKey: QK.advisorToday.deadlines,
@@ -49,26 +62,21 @@ export const useAdvisorToday = () => {
 
   const chargesQuery = useQuery({
     enabled: isAdvisor,
+    // sixtyDaysAgo is now stable — same string reference across re-renders
     queryKey: QK.charges.list({
       status: "issued",
-      issued_before: daysAgo(60),
+      issued_before: sixtyDaysAgo,
       page_size: 20,
     }),
     queryFn: () =>
       chargesApi.list({
         status: "issued",
-        issued_before: daysAgo(60),
+        issued_before: sixtyDaysAgo,
         page: 1,
         page_size: 20,
       }),
     staleTime: 5 * 60 * 1000,
   });
-
-  const today = new Date().toISOString().split("T")[0];
-  const weekEnd = sevenDaysFromNow();
-  const fourteenDaysAgo = daysAgo(14);
-  const sevenDaysAgo = daysAgo(7);
-  const sixtyDaysAgo = daysAgo(60);
 
   const upcomingDeadlines = (deadlinesQuery.data?.items ?? []).filter(
     (d) => d.due_date >= today && d.due_date <= weekEnd,

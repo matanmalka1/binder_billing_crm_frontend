@@ -22,6 +22,9 @@ type UseClientDetailsResult = {
   isUpdating: boolean;
 };
 
+const BINDERS_PAGE = { page: 1, page_size: 5 } as const;
+const CHARGES_PAGE = { page: 1, page_size: 5 } as const;
+
 export const useClientDetails = ({
   clientId,
 }: UseClientDetailsParams): UseClientDetailsResult => {
@@ -36,14 +39,18 @@ export const useClientDetails = ({
     queryFn: () => clientsApi.getById(id),
     enabled,
   });
+
   const bindersQuery = useQuery({
-    queryKey: ["binders", "client", id],
-    queryFn: () => bindersApi.listClientBinders(id, { page: 1, page_size: 5 }),
+    // Include page/page_size in key so cache is scoped correctly
+    queryKey: ["binders", "client", id, BINDERS_PAGE.page, BINDERS_PAGE.page_size],
+    queryFn: () => bindersApi.listClientBinders(id, BINDERS_PAGE),
     enabled,
   });
+
   const chargesQuery = useQuery({
-    queryKey: ["charges", "client", id],
-    queryFn: () => chargesApi.list({ client_id: id, page: 1, page_size: 5 }),
+    // Include page/page_size in key so cache is scoped correctly
+    queryKey: ["charges", "client", id, CHARGES_PAGE.page, CHARGES_PAGE.page_size],
+    queryFn: () => chargesApi.list({ client_id: id, ...CHARGES_PAGE }),
     enabled: enabled && isAdvisor,
   });
 
