@@ -82,14 +82,10 @@ export const buildClientColumns = ({
       </Link>
     ),
   },
-  {
-    key: "actions",
+  buildActionsColumn<ClientResponse>({
     header: "פעולות",
-      render: buildActionsColumn<ClientResponse>({
-        header: "פעולות",
-        activeActionKeyRef,
-        onAction,
-        getActions: (client) => client.available_actions as BackendAction[] | null | undefined,
-      }).render,
-    },
+    activeActionKeyRef,
+    onAction,
+    getActions: (client) => client.available_actions as BackendAction[] | null | undefined,
+  }),
   ];
