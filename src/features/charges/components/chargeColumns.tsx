@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ExternalLink } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
@@ -8,6 +9,103 @@ import { formatDateTime } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 
 export type ChargeAction = "issue" | "markPaid" | "cancel";
+
+/* ─── Variant map ────────────────────────────────────────────── */
+
+const chargeStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+  draft: "neutral",
+  issued: "info",
+  paid: "success",
+  canceled: "error",
+};
+
+/* ─── Action cell ────────────────────────────────────────────── */
+
+interface ActionCellProps {
+  charge: ChargeResponse;
+  isAdvisor: boolean;
+  isLoading: boolean;
+  isDisabled: boolean;
+  runAction: (chargeId: number, action: ChargeAction) => Promise<void>;
+}
+
+const ActionCell: React.FC<ActionCellProps> = ({
+  charge,
+  isAdvisor,
+  isLoading,
+  isDisabled,
+  runAction,
+}) => {
+  const handleIssue = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    void runAction(charge.id, "issue");
+  };
+
+  const handleMarkPaid = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    void runAction(charge.id, "markPaid");
+  };
+
+  const handleCancel = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    void runAction(charge.id, "cancel");
+  };
+
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <Link
+        to={`/charges/${charge.id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 transition-colors hover:border-blue-400 hover:bg-blue-50 hover:text-blue-800"
+      >
+        פירוט
+        <ExternalLink className="h-3 w-3" />
+      </Link>
+
+      {isAdvisor && canIssue(charge.status) && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          isLoading={isLoading}
+          disabled={isDisabled}
+          onClick={handleIssue}
+        >
+          הנפקה
+        </Button>
+      )}
+
+      {isAdvisor && canMarkPaid(charge.status) && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          isLoading={isLoading}
+          disabled={isDisabled}
+          onClick={handleMarkPaid}
+        >
+          סימון שולם
+        </Button>
+      )}
+
+      {isAdvisor && canCancel(charge.status) && (
+        <Button
+          type="button"
+          variant="danger"
+          size="sm"
+          isLoading={isLoading}
+          disabled={isDisabled}
+          onClick={handleCancel}
+        >
+          ביטול
+        </Button>
+      )}
+    </div>
+  );
+};
+ActionCell.displayName = "ActionCell";
+
+/* ─── Column builder ─────────────────────────────────────────── */
 
 interface BuildChargeColumnsParams {
   isAdvisor: boolean;
@@ -24,26 +122,32 @@ export const buildChargeColumns = ({
     key: "id",
     header: "מזהה",
     render: (charge) => (
-      <span className="font-medium text-gray-900">#{charge.id}</span>
+      <span className="font-mono text-sm font-semibold text-gray-900">
+        #{charge.id}
+      </span>
     ),
   },
   {
     key: "client_id",
     header: "לקוח",
     render: (charge) => (
-      <span className="text-gray-700">#{charge.client_id}</span>
+      <span className="font-mono text-sm text-gray-700">
+        #{charge.client_id}
+      </span>
     ),
   },
   {
     key: "charge_type",
     header: "סוג",
     render: (charge) => {
-      const labels: Record<string, string> = {
+      const typeLabels: Record<string, string> = {
         one_time: "חד פעמי",
         retainer: "ריטיינר",
       };
       return (
-        <span className="text-gray-700">{labels[charge.charge_type] || charge.charge_type}</span>
+        <span className="text-sm text-gray-700">
+          {typeLabels[charge.charge_type] ?? charge.charge_type}
+        </span>
       );
     },
   },
@@ -54,12 +158,7 @@ export const buildChargeColumns = ({
       <StatusBadge
         status={charge.status}
         getLabel={getChargeStatusLabel}
-        variantMap={{
-          draft: "neutral",
-          issued: "info",
-          paid: "success",
-          canceled: "error",
-        }}
+        variantMap={chargeStatusVariants}
       />
     ),
   },
@@ -67,81 +166,31 @@ export const buildChargeColumns = ({
     key: "amount",
     header: "סכום",
     render: (charge) => (
-      <span className="font-medium text-gray-900">{getChargeAmountText(charge)}</span>
+      <span className="font-mono text-sm font-semibold text-gray-900 tabular-nums">
+        {getChargeAmountText(charge)}
+      </span>
     ),
   },
   {
     key: "created_at",
     header: "נוצר",
     render: (charge) => (
-      <span className="text-sm text-gray-600">{formatDateTime(charge.created_at)}</span>
+      <span className="text-sm text-gray-500 tabular-nums">
+        {formatDateTime(charge.created_at)}
+      </span>
     ),
   },
   {
     key: "actions",
     header: "פעולות",
-    render: (charge) => {
-      const loadingAction = actionLoadingId === charge.id;
-
-      return (
-        <div className="flex flex-wrap gap-2">
-          <Link
-            to={`/charges/${charge.id}`}
-            className="inline-flex items-center rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-            onClick={(e) => e.stopPropagation()}
-          >
-            פירוט
-          </Link>
-
-          {isAdvisor && canIssue(charge.status) && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              isLoading={loadingAction}
-              disabled={loadingAction}
-              onClick={(e) => {
-                e.stopPropagation();
-                void runAction(charge.id, "issue");
-              }}
-            >
-              הנפקה
-            </Button>
-          )}
-
-          {isAdvisor && canMarkPaid(charge.status) && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              isLoading={loadingAction}
-              disabled={loadingAction}
-              onClick={(e) => {
-                e.stopPropagation();
-                void runAction(charge.id, "markPaid");
-              }}
-            >
-              סימון שולם
-            </Button>
-          )}
-
-          {isAdvisor && canCancel(charge.status) && (
-            <Button
-              type="button"
-              variant="danger"
-              size="sm"
-              isLoading={loadingAction}
-              disabled={loadingAction}
-              onClick={(e) => {
-                e.stopPropagation();
-                void runAction(charge.id, "cancel");
-              }}
-            >
-              ביטול
-            </Button>
-          )}
-        </div>
-      );
-    },
+    render: (charge) => (
+      <ActionCell
+        charge={charge}
+        isAdvisor={isAdvisor}
+        isLoading={actionLoadingId === charge.id}
+        isDisabled={actionLoadingId !== null && actionLoadingId !== charge.id}
+        runAction={runAction}
+      />
+    ),
   },
 ];

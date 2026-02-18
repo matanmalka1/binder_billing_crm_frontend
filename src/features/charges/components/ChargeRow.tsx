@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
+import { ExternalLink } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
-import { ExternalLink } from "lucide-react";
-import { formatDateTime } from "../../../utils/utils";
+import { formatDateTime, cn } from "../../../utils/utils";
 import { getChargeAmountText, canCancel, canIssue, canMarkPaid } from "../utils/chargeStatus";
 import type { ChargeResponse } from "../../../api/charges.api";
-import { cn } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { staggerDelay } from "../../../utils/animation";
 
@@ -24,42 +23,61 @@ interface ChargeRowProps {
   onRunAction: (chargeId: number, action: "issue" | "markPaid" | "cancel") => Promise<void>;
 }
 
-export const ChargeRow: React.FC<ChargeRowProps> = ({
+ChargeRow.displayName = "ChargeRow";
+
+export function ChargeRow({
   charge,
   index,
   actionLoadingId,
   isAdvisor,
   onRunAction,
-}) => {
-  const loadingAction = actionLoadingId === charge.id;
+}: ChargeRowProps) {
+  const isLoading = actionLoadingId === charge.id;
+  const isDisabled = actionLoadingId !== null && actionLoadingId !== charge.id;
+
+  const handleIssue = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    void onRunAction(charge.id, "issue");
+  };
+
+  const handleMarkPaid = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    void onRunAction(charge.id, "markPaid");
+  };
+
+  const handleCancel = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    void onRunAction(charge.id, "cancel");
+  };
 
   return (
-    <tr 
+    <tr
       className={cn(
-        "group transition-all duration-200",
-        "hover:bg-gradient-to-r hover:from-primary-50/30 hover:to-transparent",
-        "animate-fade-in"
+        "group transition-colors hover:bg-gray-50 animate-fade-in"
       )}
       style={{ animationDelay: staggerDelay(index) }}
     >
-      <td className="py-4 pr-6">
-        <div className="flex items-center gap-2">
-          <div className="h-10 w-1 rounded-full bg-gradient-to-b from-accent-400 to-accent-600 opacity-0 transition-opacity group-hover:opacity-100" />
-          <span className="font-mono text-sm font-semibold text-gray-900">
-            #{charge.id}
-          </span>
-        </div>
+      {/* ID */}
+      <td className="py-3.5 pr-6">
+        <span className="font-mono text-sm font-semibold text-gray-900">
+          #{charge.id}
+        </span>
       </td>
 
-      <td className="py-4 pr-4">
-        <span className="text-sm text-gray-700">לקוח #{charge.client_id}</span>
+      {/* Client */}
+      <td className="py-3.5 pr-4">
+        <span className="font-mono text-sm text-gray-700">
+          #{charge.client_id}
+        </span>
       </td>
 
-      <td className="py-4 pr-4">
+      {/* Type */}
+      <td className="py-3.5 pr-4">
         <span className="text-sm text-gray-700">{charge.charge_type}</span>
       </td>
 
-      <td className="py-4 pr-4">
+      {/* Status */}
+      <td className="py-3.5 pr-4">
         <StatusBadge
           status={charge.status}
           getLabel={getChargeStatusLabel}
@@ -67,27 +85,27 @@ export const ChargeRow: React.FC<ChargeRowProps> = ({
         />
       </td>
 
-      <td className="py-4 pr-4">
-        <span className="font-mono text-sm font-semibold text-gray-900">
+      {/* Amount */}
+      <td className="py-3.5 pr-4">
+        <span className="font-mono text-sm font-semibold text-gray-900 tabular-nums">
           {getChargeAmountText(charge)}
         </span>
       </td>
 
-      <td className="py-4 pr-4">
-        <span className="text-sm text-gray-600">{formatDateTime(charge.created_at)}</span>
+      {/* Created */}
+      <td className="py-3.5 pr-4">
+        <span className="text-sm text-gray-500 tabular-nums">
+          {formatDateTime(charge.created_at)}
+        </span>
       </td>
 
-      <td className="py-4 pr-4">
-        <div className="flex flex-wrap gap-2">
+      {/* Actions */}
+      <td className="py-3.5 pr-4">
+        <div className="flex flex-wrap items-center gap-1.5">
           <Link
             to={`/charges/${charge.id}`}
-            className={cn(
-              "inline-flex items-center gap-1.5 rounded-lg",
-              "border border-gray-300 px-3 py-1.5 text-sm",
-              "text-gray-700 transition-all duration-200",
-              "hover:border-primary-400 hover:bg-primary-50 hover:text-primary-900",
-              "hover:shadow-sm hover:-translate-y-0.5"
-            )}
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 transition-colors hover:border-blue-400 hover:bg-blue-50 hover:text-blue-800"
           >
             פירוט
             <ExternalLink className="h-3 w-3" />
@@ -98,33 +116,35 @@ export const ChargeRow: React.FC<ChargeRowProps> = ({
               type="button"
               variant="outline"
               size="sm"
-              isLoading={loadingAction}
-              disabled={loadingAction}
-              onClick={() => onRunAction(charge.id, "issue")}
+              isLoading={isLoading}
+              disabled={isDisabled}
+              onClick={handleIssue}
             >
               הנפקה
             </Button>
           )}
+
           {isAdvisor && canMarkPaid(charge.status) && (
             <Button
               type="button"
               variant="outline"
               size="sm"
-              isLoading={loadingAction}
-              disabled={loadingAction}
-              onClick={() => onRunAction(charge.id, "markPaid")}
+              isLoading={isLoading}
+              disabled={isDisabled}
+              onClick={handleMarkPaid}
             >
               סימון שולם
             </Button>
           )}
+
           {isAdvisor && canCancel(charge.status) && (
             <Button
               type="button"
-              variant="outline"
+              variant="danger"
               size="sm"
-              isLoading={loadingAction}
-              disabled={loadingAction}
-              onClick={() => onRunAction(charge.id, "cancel")}
+              isLoading={isLoading}
+              disabled={isDisabled}
+              onClick={handleCancel}
             >
               ביטול
             </Button>
@@ -133,4 +153,4 @@ export const ChargeRow: React.FC<ChargeRowProps> = ({
       </td>
     </tr>
   );
-};
+}

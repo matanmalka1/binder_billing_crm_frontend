@@ -5,8 +5,15 @@ import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { buildActionsColumn } from "../../../components/ui/columnHelpers";
 import type { BinderResponse } from "../../../api/binders.types";
 import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
-import { getStatusLabel, getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
-import { formatDate } from "../../../utils/utils";
+import {
+  getStatusLabel,
+  getSignalLabel,
+  getSlaStateLabel,
+  getWorkStateLabel,
+} from "../../../utils/enums";
+import { formatDate, cn } from "../../../utils/utils";
+
+/* ─── Variant maps ───────────────────────────────────────────── */
 
 const binderStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   in_office: "info",
@@ -35,6 +42,41 @@ const signalVariants: Record<string, "error" | "warning" | "info" | "neutral"> =
   idle_binder: "neutral",
 };
 
+/* ─── Days-in-office cell ────────────────────────────────────── */
+
+const DaysCell: React.FC<{ days: number | null | undefined }> = ({ days }) => {
+  if (days == null) return <span className="text-gray-400">—</span>;
+
+  const urgency = days > 90 ? "text-red-700 font-bold" : days > 60 ? "text-orange-600 font-semibold" : "text-gray-900";
+
+  return (
+    <span className={cn("font-mono text-sm tabular-nums", urgency)}>
+      {days}
+    </span>
+  );
+};
+DaysCell.displayName = "DaysCell";
+
+/* ─── Signals cell ───────────────────────────────────────────── */
+
+const SignalsCell: React.FC<{ signals: string[] | null | undefined }> = ({ signals }) => {
+  if (!Array.isArray(signals) || signals.length === 0) {
+    return <span className="text-gray-400 text-sm">—</span>;
+  }
+  return (
+    <div className="flex flex-wrap gap-1">
+      {signals.map((signal) => (
+        <Badge key={signal} variant={signalVariants[signal] ?? "neutral"}>
+          {getSignalLabel(signal)}
+        </Badge>
+      ))}
+    </div>
+  );
+};
+SignalsCell.displayName = "SignalsCell";
+
+/* ─── Column builder ─────────────────────────────────────────── */
+
 interface BuildBindersColumnsParams {
   activeActionKeyRef: RefObject<string | null>;
   onAction: (action: ActionCommand) => void;
@@ -48,7 +90,9 @@ export const buildBindersColumns = ({
     key: "binder_number",
     header: "מספר קלסר",
     render: (binder) => (
-      <span className="font-mono text-sm font-semibold text-gray-900">{binder.binder_number}</span>
+      <span className="font-mono text-sm font-semibold text-gray-900">
+        {binder.binder_number}
+      </span>
     ),
   },
   {
@@ -66,63 +110,47 @@ export const buildBindersColumns = ({
     key: "received_at",
     header: "תאריך קבלה",
     render: (binder) => (
-      <span className="text-sm text-gray-600">{formatDate(binder.received_at)}</span>
+      <span className="text-sm text-gray-600 tabular-nums">
+        {formatDate(binder.received_at)}
+      </span>
     ),
   },
   {
     key: "expected_return_at",
     header: "החזרה צפויה",
     render: (binder) => (
-      <span className="text-sm text-gray-600">{formatDate(binder.expected_return_at)}</span>
+      <span className="text-sm text-gray-600 tabular-nums">
+        {formatDate(binder.expected_return_at)}
+      </span>
     ),
   },
   {
     key: "days_in_office",
     header: "ימים במשרד",
-    render: (binder) => (
-      <span className="font-mono text-sm font-medium text-gray-900">{binder.days_in_office ?? "—"}</span>
-    ),
+    render: (binder) => <DaysCell days={binder.days_in_office} />,
   },
   {
     key: "work_state",
     header: "מצב עבודה",
-    render: (binder) => {
-      const variant = workStateVariants[binder.work_state ?? ""] ?? "neutral";
-      return (
-        <Badge variant={variant}>{getWorkStateLabel(binder.work_state ?? "")}</Badge>
-      );
-    },
+    render: (binder) => (
+      <Badge variant={workStateVariants[binder.work_state ?? ""] ?? "neutral"}>
+        {getWorkStateLabel(binder.work_state ?? "")}
+      </Badge>
+    ),
   },
   {
     key: "sla_state",
     header: "מצב SLA",
-    render: (binder) => {
-      const variant = slaStateVariants[binder.sla_state ?? ""] ?? "neutral";
-      return (
-        <Badge variant={variant}>{getSlaStateLabel(binder.sla_state ?? "")}</Badge>
-      );
-    },
+    render: (binder) => (
+      <Badge variant={slaStateVariants[binder.sla_state ?? ""] ?? "neutral"}>
+        {getSlaStateLabel(binder.sla_state ?? "")}
+      </Badge>
+    ),
   },
   {
     key: "signals",
     header: "אותות",
-    render: (binder) => {
-      if (!Array.isArray(binder.signals) || binder.signals.length === 0) {
-        return <span className="text-gray-400">—</span>;
-      }
-      return (
-        <div className="flex flex-wrap gap-1">
-          {binder.signals.map((signal) => (
-            <Badge
-              key={`${binder.id}-${signal}`}
-              variant={signalVariants[signal] ?? "neutral"}
-            >
-              {getSignalLabel(signal)}
-            </Badge>
-          ))}
-        </div>
-      );
-    },
+    render: (binder) => <SignalsCell signals={binder.signals} />,
   },
   buildActionsColumn<BinderResponse>({
     header: "פעולות",

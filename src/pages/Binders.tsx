@@ -24,11 +24,7 @@ export const Binders: React.FC = () => {
   } = useBindersPage();
 
   const columns = useMemo(
-    () =>
-      buildBindersColumns({
-        activeActionKeyRef,
-        onAction,
-      }),
+    () => buildBindersColumns({ activeActionKeyRef, onAction }),
     [activeActionKeyRef, onAction],
   );
 
@@ -40,11 +36,8 @@ export const Binders: React.FC = () => {
         variant="gradient"
       />
 
-      <FilterBar>
-        <BindersFiltersBar
-          filters={filters}
-          onFilterChange={handleFilterChange}
-        />
+      <FilterBar title="סינון קלסרים">
+        <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </FilterBar>
 
       {error && <ErrorCard message={error} />}
@@ -54,15 +47,19 @@ export const Binders: React.FC = () => {
         columns={columns}
         getRowKey={(binder) => binder.id}
         isLoading={loading}
-        emptyMessage="אין קלסרים להצגה"
+        emptyMessage="אין קלסרים התואמים לסינון הנוכחי"
+        emptyState={{
+          title: "לא נמצאו קלסרים",
+          message: "נסה לאפס את הסינון או לחפש עם פרמטרים שונים",
+        }}
       />
 
       <ConfirmDialog
         open={Boolean(pendingAction)}
-        title={pendingAction?.confirm?.title || "אישור פעולה"}
-        message={pendingAction?.confirm?.message || "האם להמשיך בביצוע הפעולה?"}
-        confirmLabel={pendingAction?.confirm?.confirmLabel || "אישור"}
-        cancelLabel={pendingAction?.confirm?.cancelLabel || "ביטול"}
+        title={pendingAction?.confirm?.title ?? "אישור פעולה"}
+        message={pendingAction?.confirm?.message ?? "האם להמשיך בביצוע הפעולה?"}
+        confirmLabel={pendingAction?.confirm?.confirmLabel ?? "אישור"}
+        cancelLabel={pendingAction?.confirm?.cancelLabel ?? "ביטול"}
         isLoading={activeActionKey === pendingAction?.uiKey}
         onConfirm={confirmPendingAction}
         onCancel={cancelPendingAction}

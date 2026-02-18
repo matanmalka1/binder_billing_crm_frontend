@@ -1,5 +1,4 @@
-import { Card } from "../../../components/ui/Card";
-import { Zap, ChevronLeft, Info } from "lucide-react";
+import { Zap, ArrowLeft, Info } from "lucide-react";
 import { mapActions } from "../../../lib/actions/mapActions";
 import type { BackendAction, ActionCommand } from "../../../lib/actions/types";
 import { cn } from "../../../utils/utils";
@@ -11,106 +10,99 @@ interface OperationalPanelProps {
   onQuickAction: (action: ActionCommand) => void;
 }
 
-export const OperationalPanel: React.FC<OperationalPanelProps> = ({
+export const OperationalPanel = ({
   quickActions,
   activeActionKey,
   onQuickAction,
-}) => {
+}: OperationalPanelProps) => {
   const actions = mapActions(quickActions);
 
-  if (actions.length === 0) {
-    return null;
-  }
+  if (actions.length === 0) return null;
 
   return (
-    <Card 
-      variant="elevated"
-      title="פאנל תפעולי"
-      subtitle="פעולות מהירות לניהול יעיל"
-    >
-      <div className="space-y-4">
-        {/* Quick Actions Header */}
-        <div className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-accent-50 to-primary-50 p-3">
-          <div className="rounded-lg bg-white p-2 shadow-sm">
-            <Zap className="h-4 w-4 text-accent-600" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-900">פעולות מהירות</p>
-            <p className="text-xs text-gray-600">{actions.length} פעולות זמינות</p>
-          </div>
+    <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+      {/* Header */}
+      <div className="flex items-center gap-3 border-b border-gray-100 bg-gradient-to-l from-violet-50/60 to-transparent px-6 py-4">
+        <div className="rounded-xl bg-violet-100 p-2 text-violet-600">
+          <Zap className="h-5 w-5" />
         </div>
-
-        {/* Action Buttons Grid */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {actions.map((action, index) => {
-            const isLoading = activeActionKey === action.uiKey;
-            const isDisabled = activeActionKey !== null && !isLoading;
-
-            return (
-              <button
-                key={action.uiKey}
-                type="button"
-                onClick={() => onQuickAction(action)}
-                disabled={isDisabled}
-                className={cn(
-                  "group relative flex items-center justify-between gap-3",
-                  "rounded-xl border-2 p-4 text-right transition-all duration-200",
-                  "hover:shadow-lg hover:-translate-y-1",
-                  "focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2",
-                  "animate-scale-in",
-                  isLoading
-                    ? "border-primary-300 bg-primary-50"
-                    : isDisabled
-                    ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
-                    : "border-gray-200 bg-white hover:border-primary-300"
-                )}
-                style={{ animationDelay: staggerDelay(index) }}
-              >
-                {/* Action Content */}
-                <div className="flex-1">
-                  <p className="font-semibold text-gray-900 group-hover:text-primary-900 transition-colors">
-                    {action.label || "—"}
-                  </p>
-                  {action.key && (
-                    <p className="mt-1 text-xs text-gray-600 font-mono">
-                      {action.key}
-                    </p>
-                  )}
-                </div>
-
-                {/* Action Icon/Indicator */}
-                <div className={cn(
-                  "shrink-0 rounded-lg p-2 transition-all",
-                  isLoading
-                    ? "bg-primary-100"
-                    : "bg-gray-100 group-hover:bg-primary-100"
-                )}>
-                  {isLoading ? (
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-600 border-t-transparent" />
-                  ) : (
-                    <ChevronLeft className="h-4 w-4 text-gray-600 group-hover:text-primary-600 transition-colors" />
-                  )}
-                </div>
-
-                {/* Hover Accent Line */}
-                <div className={cn(
-                  "absolute bottom-0 left-0 h-1 w-0 rounded-t-lg transition-all duration-300",
-                  "bg-gradient-to-r from-primary-500 to-accent-500",
-                  "group-hover:w-full"
-                )} />
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Help Text */}
-        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
-          <p className="flex items-start gap-2">
-            <Info className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" />
-            <span>לחץ על פעולה לביצוע מהיר. פעולות מסוימות ידרשו אישור נוסף.</span>
-          </p>
+        <div>
+          <h2 className="text-base font-bold text-gray-900">פעולות מהירות</h2>
+          <p className="text-xs text-gray-400">{actions.length} פעולות זמינות לביצוע מיידי</p>
         </div>
       </div>
-    </Card>
+
+      {/* Action grid */}
+      <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2 lg:grid-cols-3">
+        {actions.map((action, index) => {
+          const isLoading = activeActionKey === action.uiKey;
+          const isDisabled = activeActionKey !== null && !isLoading;
+
+          return (
+            <button
+              key={action.uiKey}
+              type="button"
+              onClick={() => onQuickAction(action)}
+              disabled={isDisabled}
+              className={cn(
+                "group relative flex items-center justify-between gap-3 rounded-xl border-2 p-4 text-right",
+                "transition-all duration-200 focus:outline-none",
+                "focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2",
+                "animate-fade-in",
+                isLoading
+                  ? "border-violet-400 bg-violet-50 shadow-inner"
+                  : isDisabled
+                  ? "cursor-not-allowed border-gray-100 bg-gray-50 opacity-40"
+                  : "border-gray-200 bg-white hover:-translate-y-0.5 hover:border-violet-300 hover:shadow-lg hover:shadow-violet-50"
+              )}
+              style={{ animationDelay: staggerDelay(index, 50) }}
+            >
+              {/* Label */}
+              <div className="min-w-0 flex-1">
+                <p className={cn(
+                  "truncate text-sm font-semibold transition-colors",
+                  isLoading ? "text-violet-700" : "text-gray-800 group-hover:text-violet-700"
+                )}>
+                  {action.label || "—"}
+                </p>
+                {action.confirm && (
+                  <p className="mt-0.5 text-xs text-amber-600 font-medium">
+                    דורש אישור
+                  </p>
+                )}
+              </div>
+
+              {/* Arrow / spinner */}
+              <div className={cn(
+                "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all",
+                isLoading
+                  ? "bg-violet-200"
+                  : "bg-gray-100 group-hover:bg-violet-100"
+              )}>
+                {isLoading ? (
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-violet-600 border-t-transparent" />
+                ) : (
+                  <ArrowLeft className={cn(
+                    "h-4 w-4 transition-colors",
+                    "text-gray-400 group-hover:text-violet-600"
+                  )} />
+                )}
+              </div>
+
+              {/* Bottom accent line on hover */}
+              <div className="absolute bottom-0 right-0 h-0.5 w-0 rounded-full bg-gradient-to-l from-violet-500 to-blue-500 transition-all duration-300 group-hover:w-full" />
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Footer hint */}
+      <div className="flex items-start gap-2 border-t border-gray-100 bg-blue-50/40 px-5 py-3 text-xs text-blue-700">
+        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+        <span>פעולות המסומנות "דורש אישור" יציגו חלון אישור לפני הביצוע</span>
+      </div>
+    </div>
   );
 };
+
+OperationalPanel.displayName = "OperationalPanel";

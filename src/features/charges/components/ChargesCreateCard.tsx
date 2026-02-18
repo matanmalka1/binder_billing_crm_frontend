@@ -18,11 +18,18 @@ interface ChargesCreateCardProps {
   onSubmit: (payload: CreateChargePayload) => Promise<boolean>;
 }
 
-export const ChargesCreateCard: React.FC<ChargesCreateCardProps> = ({
+ChargesCreateCard.displayName = "ChargesCreateCard";
+
+const CHARGE_TYPE_OPTIONS = [
+  { value: "one_time", label: "חד פעמי" },
+  { value: "retainer", label: "ריטיינר" },
+];
+
+export function ChargesCreateCard({
   createError,
   createLoading,
   onSubmit,
-}) => {
+}: ChargesCreateCardProps) {
   const {
     formState: { errors },
     handleSubmit,
@@ -41,36 +48,51 @@ export const ChargesCreateCard: React.FC<ChargesCreateCardProps> = ({
   });
 
   return (
-    <Card title="יצירת חיוב חדש">
-      <form onSubmit={submitForm} className="grid grid-cols-1 gap-3 md:grid-cols-5">
-        <Input
-          label="מזהה לקוח"
-          type="number"
-          min={1}
-          error={errors.client_id?.message}
-          {...register("client_id")}
-        />
-        <Input
-          label="סכום"
-          type="number"
-          min={0.01}
-          step="0.01"
-          error={errors.amount?.message}
-          {...register("amount")}
-        />
-        <Select label="סוג חיוב" error={errors.charge_type?.message} {...register("charge_type")}>
-          <option value="one_time">חד פעמי</option>
-          <option value="retainer">ריטיינר</option>
-        </Select>
-        <Input
-          label="תקופה (YYYY-MM)"
-          placeholder="2026-02"
-          error={errors.period?.message}
-          {...register("period")}
-        />
-        <Input label="מטבע" error={errors.currency?.message} {...register("currency")} />
-        {createError && <p className="text-sm text-red-600 md:col-span-5">{createError}</p>}
-        <div className="md:col-span-5">
+    <Card title="יצירת חיוב חדש" subtitle="מלא את הפרטים הבאים ליצירת חיוב">
+      <form onSubmit={submitForm} className="space-y-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <Input
+            label="מזהה לקוח *"
+            type="number"
+            min={1}
+            placeholder="123"
+            error={errors.client_id?.message}
+            {...register("client_id")}
+          />
+          <Input
+            label="סכום *"
+            type="number"
+            min={0.01}
+            step="0.01"
+            placeholder="0.00"
+            error={errors.amount?.message}
+            {...register("amount")}
+          />
+          <Select
+            label="סוג חיוב *"
+            error={errors.charge_type?.message}
+            options={CHARGE_TYPE_OPTIONS}
+            {...register("charge_type")}
+          />
+          <Input
+            label="תקופה (YYYY-MM)"
+            placeholder="2026-02"
+            error={errors.period?.message}
+            {...register("period")}
+          />
+          <Input
+            label="מטבע *"
+            placeholder="ILS"
+            error={errors.currency?.message}
+            {...register("currency")}
+          />
+        </div>
+
+        {createError && (
+          <p className="text-sm text-red-600">{createError}</p>
+        )}
+
+        <div className="flex justify-end">
           <Button type="submit" isLoading={createLoading}>
             יצירת חיוב
           </Button>
@@ -78,4 +100,4 @@ export const ChargesCreateCard: React.FC<ChargesCreateCardProps> = ({
       </form>
     </Card>
   );
-};
+}
