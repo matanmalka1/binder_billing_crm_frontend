@@ -19,8 +19,11 @@ export const parseStoredUser = (): AuthUser | null => {
 
 export const clearStoredAuth = (): void => {
   localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+  sessionStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
   localStorage.removeItem(AUTH_USER_STORAGE_KEY);
 };
 
-export const storedToken = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
+export const storedToken =
+  localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) ??
+  sessionStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
 export const storedUser = parseStoredUser();

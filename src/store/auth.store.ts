@@ -23,9 +23,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const response = await authApi.login({ email, password, rememberMe });
       const { token, user } = response;
 
-      if (!rememberMe) {
+      if (rememberMe) {
         localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
+        sessionStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
       } else {
+        sessionStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
         localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
       }
       localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(user));
