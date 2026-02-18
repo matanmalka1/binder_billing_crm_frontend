@@ -13,7 +13,6 @@ import { clearStoredAuth, storedToken, storedUser } from "./auth.storage";
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: storedUser,
   token: storedToken,
-  isAuthenticated: Boolean(storedToken || storedUser),
   isLoading: false,
   error: null,
 
@@ -34,7 +33,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({
         user,
         token,
-        isAuthenticated: true,
         error: null,
         isLoading: false,
       });
@@ -43,7 +41,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({
         user: null,
         token: null,
-        isAuthenticated: false,
         error: getErrorMessage(error, "שגיאה בהתחברות"),
         isLoading: false,
       });
@@ -55,7 +52,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({
       user: null,
       token: null,
-      isAuthenticated: false,
       isLoading: false,
       error: null,
     });
@@ -71,7 +67,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({
       user: null,
       token: null,
-      isAuthenticated: false,
       isLoading: false,
       error: null,
     });

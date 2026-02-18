@@ -12,10 +12,11 @@ import {
   type LoginFormValues,
 } from "../features/auth/schemas";
 import { useAuthStore } from "../store/auth.store";
+import { selectIsAuthenticated } from "../store/auth.selectors";
 
 export const Login: React.FC = () => {
-  const { login, isAuthenticated, isLoading, error, clearError } =
-    useAuthStore();
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const { login, isLoading, error, clearError } = useAuthStore();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -37,7 +38,7 @@ export const Login: React.FC = () => {
     clearError();
     await login(values.email, values.password, rememberMe);
 
-    if (useAuthStore.getState().isAuthenticated) {
+    if (selectIsAuthenticated(useAuthStore.getState())) {
       navigate("/");
     }
   });

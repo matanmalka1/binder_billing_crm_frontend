@@ -3,7 +3,6 @@ import type { AuthUser ,UserRole } from "../types/store";
 export interface AuthState {
   user: AuthUser | null;
   token: string | null;
-  isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
