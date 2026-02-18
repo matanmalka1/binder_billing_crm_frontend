@@ -4,6 +4,7 @@ import { annualReportsApi } from "../../../api/annualReports.api";
 import { remindersApi } from "../../../api/reminders.api";
 import { chargesApi } from "../../../api/charges.api";
 import { QK } from "../../../lib/queryKeys";
+import { useRole } from "../../../hooks/useRole";
 
 const sevenDaysFromNow = () => {
   const d = new Date();
@@ -18,7 +19,9 @@ const daysAgo = (n: number) => {
 };
 
 export const useAdvisorToday = () => {
+  const { isAdvisor } = useRole();
   const deadlinesQuery = useQuery({
+    enabled: isAdvisor,
     queryKey: QK.advisorToday.deadlines,
     queryFn: () =>
       taxDeadlinesApi.listTaxDeadlines({
@@ -26,23 +29,39 @@ export const useAdvisorToday = () => {
         page: 1,
         page_size: 50,
       }),
+    staleTime: 5 * 60 * 1000,
   });
 
   const reportsQuery = useQuery({
+    enabled: isAdvisor,
     queryKey: QK.advisorToday.reports,
     queryFn: () =>
       annualReportsApi.listAnnualReports({ page: 1, page_size: 100 }),
+    staleTime: 5 * 60 * 1000,
   });
 
   const remindersQuery = useQuery({
+    enabled: isAdvisor,
     queryKey: QK.advisorToday.reminders,
-    queryFn: () => remindersApi.list({ status: "pending", page_size: 100 }),
+    queryFn: () => remindersApi.list({ status: "pending", page_size: 50 }),
+    staleTime: 5 * 60 * 1000,
   });
 
   const chargesQuery = useQuery({
-    queryKey: QK.advisorToday.charges,
+    enabled: isAdvisor,
+    queryKey: QK.charges.list({
+      status: "issued",
+      issued_before: daysAgo(60),
+      page_size: 20,
+    }),
     queryFn: () =>
-      chargesApi.list({ status: "issued", page: 1, page_size: 100 }),
+      chargesApi.list({
+        status: "issued",
+        issued_before: daysAgo(60),
+        page: 1,
+        page_size: 20,
+      }),
+    staleTime: 5 * 60 * 1000,
   });
 
   const today = new Date().toISOString().split("T")[0];
@@ -68,10 +87,11 @@ export const useAdvisorToday = () => {
   );
 
   const isLoading =
-    deadlinesQuery.isPending ||
-    reportsQuery.isPending ||
-    remindersQuery.isPending ||
-    chargesQuery.isPending;
+    isAdvisor &&
+    (deadlinesQuery.isPending ||
+      reportsQuery.isPending ||
+      remindersQuery.isPending ||
+      chargesQuery.isPending);
 
   return {
     isLoading,
