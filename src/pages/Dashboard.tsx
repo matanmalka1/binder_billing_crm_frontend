@@ -18,8 +18,8 @@ export const Dashboard: React.FC = () => {
     denied,
     handleQuickAction,
     confirmPendingAction,
+    cancelPendingAction,
     pendingQuickAction,
-    setPendingQuickAction,
   } = useDashboardPage();
 
   return (
@@ -72,7 +72,7 @@ export const Dashboard: React.FC = () => {
         cancelLabel={pendingQuickAction?.confirm?.cancelLabel || "ביטול"}
         isLoading={activeQuickAction === pendingQuickAction?.uiKey}
         onConfirm={confirmPendingAction}
-        onCancel={() => setPendingQuickAction(null)}
+        onCancel={cancelPendingAction}
       />
     </div>
   );

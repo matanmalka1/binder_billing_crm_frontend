@@ -1,15 +1,14 @@
 import { useCallback, useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "../../../utils/toast";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { dashboardApi } from "../../../api/dashboard.api";
 import type {
   DashboardOverviewResponse,
   DashboardSummaryResponse,
 } from "../../../api/dashboard.api";
-import { getErrorMessage, getHttpStatus, showErrorToast } from "../../../utils/utils";
-import { executeAction } from "../../../lib/actions/runtime";
+import { getErrorMessage, getHttpStatus } from "../../../utils/utils";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { useRole } from "../../../hooks/useRole";
+import { useActionRunner } from "../../actions/hooks/useActionRunner";
 
 type DashboardData =
   | (DashboardOverviewResponse & { role_view: "advisor" })
@@ -34,8 +33,6 @@ const isSummaryData = (
 export const useDashboardPage = () => {
   const queryClient = useQueryClient();
   const { role, isAdvisor, isSecretary } = useRole();
-  const [activeQuickAction, setActiveQuickAction] = useState<string | null>(null);
-  const [pendingQuickAction, setPendingQuickAction] = useState<ActionCommand | null>(null);
   const [actionDenied, setActionDenied] = useState(false);
 
   const hasRole = Boolean(role);
@@ -46,13 +43,20 @@ export const useDashboardPage = () => {
     queryFn: isAdvisor ? dashboardApi.getOverview : dashboardApi.getSummary,
   });
 
-  const actionMutation = useMutation({
-    mutationFn: (action: ActionCommand) => executeAction(action),
-    onSuccess: async () => {
-      toast.success("הפעולה המהירה בוצעה בהצלחה");
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
-      ]);
+  const {
+    activeActionKey: activeQuickAction,
+    handleAction: handleQuickActionBase,
+    pendingAction: pendingQuickAction,
+    confirmPendingAction: confirmPendingActionBase,
+    cancelPendingAction: cancelPendingActionBase,
+  } = useActionRunner({
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+    errorFallback: "שגיאה בביצוע פעולה מהירה",
+    canonicalAction: true,
+    onError: (err) => {
+      if (getHttpStatus(err) === 403) {
+        setActionDenied(true);
+      }
     },
   });
 
@@ -117,39 +121,23 @@ export const useDashboardPage = () => {
 
   const attentionItems = dashboardQuery.data?.attention.items ?? [];
 
-  const runQuickAction = useCallback(
-    async (action: ActionCommand) => {
-      setActiveQuickAction(action.uiKey);
-      try {
-        setActionDenied(false);
-        await actionMutation.mutateAsync(action);
-      } catch (requestError: unknown) {
-        if (getHttpStatus(requestError) === 403) {
-          setActionDenied(true);
-        }
-        showErrorToast(requestError, "שגיאה בביצוע פעולה מהירה", {
-          canonicalAction: true,
-        });
-      } finally {
-        setActiveQuickAction(null);
-      }
+  const handleQuickAction = useCallback(
+    (action: ActionCommand) => {
+      setActionDenied(false);
+      handleQuickActionBase(action);
     },
-    [actionMutation],
+    [handleQuickActionBase],
   );
 
-  const handleQuickAction = (action: ActionCommand) => {
-    if (action.confirm) return setPendingQuickAction(action);
-    void runQuickAction(action);
-  };
-
   const confirmPendingAction = useCallback(async () => {
-    if (!pendingQuickAction) return;
-    try {
-      await runQuickAction(pendingQuickAction);
-    } finally {
-      setPendingQuickAction(null);
-    }
-  }, [pendingQuickAction, runQuickAction]);
+    setActionDenied(false);
+    await confirmPendingActionBase();
+  }, [confirmPendingActionBase]);
+
+  const cancelPendingAction = useCallback(() => {
+    setActionDenied(false);
+    cancelPendingActionBase();
+  }, [cancelPendingActionBase]);
 
   return {
     activeQuickAction,
@@ -159,7 +147,6 @@ export const useDashboardPage = () => {
     handleQuickAction,
     confirmPendingAction,
     pendingQuickAction,
-    runQuickAction,
-    setPendingQuickAction,
+    cancelPendingAction,
   };
 };

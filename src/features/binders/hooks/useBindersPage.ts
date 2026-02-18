@@ -1,12 +1,9 @@
-import { useCallback, useMemo, useRef } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "../../../utils/toast";
 import { bindersApi } from "../../../api/binders.api";
-import { getErrorMessage, showErrorToast } from "../../../utils/utils";
-import { executeAction } from "../../../lib/actions/runtime";
-import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
-import type { ActionCommand } from "../../../lib/actions/types";
+import { getErrorMessage } from "../../../utils/utils";
+import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import type { BindersFilters } from "../types";
 
 export const useBindersPage = () => {
@@ -33,12 +30,17 @@ export const useBindersPage = () => {
     queryFn: () => bindersApi.list(listParams),
   });
 
-  const actionMutation = useMutation({
-    mutationFn: (action: ActionCommand) => executeAction(action),
-    onSuccess: async () => {
-      toast.success("הפעולה הושלמה בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: ["binders", "list"] });
-    },
+  const {
+    activeActionKey,
+    activeActionKeyRef,
+    cancelPendingAction,
+    confirmPendingAction,
+    handleAction: onAction,
+    pendingAction,
+  } = useActionRunner({
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["binders", "list"] }),
+    errorFallback: "שגיאה בביצוע פעולת קלסר",
+    canonicalAction: true,
   });
 
   const handleFilterChange = (name: keyof BindersFilters, value: string) => {
@@ -47,32 +49,6 @@ export const useBindersPage = () => {
     else next.delete(name);
     setSearchParams(next);
   };
-
-  const runAction = useCallback(
-    async (action: ActionCommand) => {
-      try {
-        await actionMutation.mutateAsync(action);
-      } catch (requestError: unknown) {
-      showErrorToast(requestError, "שגיאה בביצוע פעולת קלסר", { canonicalAction: true });
-      }
-    },
-    [actionMutation],
-  );
-
-  const {
-    cancelPendingAction,
-    confirmPendingAction,
-    handleAction: onAction,
-    pendingAction,
-  } = useConfirmableAction(runAction, (action) => Boolean(action.confirm));
-
-  const activeActionKey =
-    actionMutation.isPending && actionMutation.variables
-      ? actionMutation.variables.uiKey ?? null
-      : null;
-
-  const activeActionKeyRef = useRef<string | null>(null);
-  activeActionKeyRef.current = activeActionKey;
 
   return {
     activeActionKey,

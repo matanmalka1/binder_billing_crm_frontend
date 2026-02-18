@@ -1,13 +1,9 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "../../../utils/toast";
 import { clientsApi, type ListClientsParams } from "../../../api/clients.api";
-import { getErrorMessage, showErrorToast } from "../../../utils/utils";
-import { parsePositiveInt } from "../../../utils/utils";
-import { executeAction } from "../../../lib/actions/runtime";
-import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
-import type { ActionCommand } from "../../../lib/actions/types";
+import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
+import { useActionRunner } from "../../actions/hooks/useActionRunner";
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
@@ -37,16 +33,18 @@ export const useClientsPage = () => {
     queryKey: ["clients", "list", apiParams] as const,
     queryFn: () => clientsApi.list(apiParams),
   });
-  const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
-  const activeActionKeyRef = useRef<string | null>(null);
-  activeActionKeyRef.current = activeActionKey;
 
-  const actionMutation = useMutation({
-    mutationFn: (action: ActionCommand) => executeAction(action),
-    onSuccess: async () => {
-      toast.success("הפעולה הושלמה בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: ["clients", "list"] });
-    },
+  const {
+    activeActionKey,
+    activeActionKeyRef,
+    cancelPendingAction,
+    confirmPendingAction,
+    handleAction: onAction,
+    pendingAction,
+  } = useActionRunner({
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["clients", "list"] }),
+    errorFallback: "שגיאה בביצוע פעולת לקוח",
+    canonicalAction: true,
   });
 
   const handleFilterChange = (name: "has_signals" | "status" | "page_size", value: string) => {
@@ -63,27 +61,6 @@ export const useClientsPage = () => {
     setSearchParams(next);
   };
 
-  const runAction = useCallback(
-    async (action: ActionCommand) => {
-      setActiveActionKey(action.uiKey);
-      try {
-        await actionMutation.mutateAsync(action);
-      } catch (requestError: unknown) {
-        showErrorToast(requestError, "שגיאה בביצוע פעולת לקוח", { canonicalAction: true });
-      } finally {
-        setActiveActionKey(null);
-      }
-    },
-    [actionMutation],
-  );
-
-  const {
-    cancelPendingAction,
-    confirmPendingAction,
-    handleAction: onAction,
-    pendingAction,
-  } = useConfirmableAction(runAction, (action) => Boolean(action.confirm));
-
   return {
     activeActionKey,
     activeActionKeyRef,
@@ -96,7 +73,6 @@ export const useClientsPage = () => {
     pendingAction,
     setPage,
     total: listQuery.data?.total ?? 0,
-    runAction,
     cancelPendingAction,
     confirmPendingAction,
   };

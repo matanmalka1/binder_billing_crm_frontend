@@ -1,17 +1,13 @@
-import { useCallback, useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "../../../utils/toast";
 import { timelineApi } from "../../../api/timeline.api";
-import { getErrorMessage, showErrorToast, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
-import { executeAction } from "../../../lib/actions/runtime";
-import { useConfirmableAction } from "../../actions/hooks/useConfirmableAction";
-import type { ActionCommand } from "../../../lib/actions/types";
+import { getErrorMessage, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
+import { useActionRunner } from "../../actions/hooks/useActionRunner";
 
 export const useClientTimelinePage = (clientId: string | undefined) => {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
   const page = parsePositiveInt(searchParams.get("page"), 1);
   const pageSize = parsePositiveInt(searchParams.get("page_size"), 50);
   const clientIdNumber = Number(clientId || 0);
@@ -28,14 +24,20 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     queryFn: () => timelineApi.getClientTimeline(clientIdNumber, timelineParams),
   });
 
-  const actionMutation = useMutation({
-    mutationFn: (action: ActionCommand) => executeAction(action),
-    onSuccess: async () => {
-      toast.success("הפעולה בוצעה בהצלחה");
-      await queryClient.invalidateQueries({
+  const {
+    activeActionKey,
+    activeActionKeyRef,
+    cancelPendingAction,
+    confirmPendingAction,
+    handleAction,
+    pendingAction,
+  } = useActionRunner({
+    onSuccess: () =>
+      queryClient.invalidateQueries({
         queryKey: ["timeline", "client", clientIdNumber],
-      });
-    },
+      }),
+    errorFallback: "שגיאה בביצוע פעולה",
+    canonicalAction: true,
   });
 
   const setPage = (nextPage: number) => {
@@ -50,29 +52,9 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     setSearchParams(next);
   };
 
-  const runAction = useCallback(
-    async (action: ActionCommand) => {
-      setActiveActionKey(action.uiKey);
-      try {
-        await actionMutation.mutateAsync(action);
-      } catch (requestError: unknown) {
-        showErrorToast(requestError, "שגיאה בביצוע פעולה", { canonicalAction: true });
-      } finally {
-        setActiveActionKey(null);
-      }
-    },
-    [actionMutation],
-  );
-
-  const {
-    cancelPendingAction,
-    confirmPendingAction,
-    handleAction,
-    pendingAction,
-  } = useConfirmableAction(runAction, (action) => Boolean(action.confirm));
-
   return {
     activeActionKey,
+    activeActionKeyRef,
     error:
       !hasValidClient
         ? "מזהה לקוח חסר"
