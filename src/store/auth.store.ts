@@ -78,7 +78,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 const attachAuthExpiredListener = () => {
   if (typeof window === "undefined") return;
   const handler = () => useAuthStore.getState().resetSession();
-  window.addEventListener(AUTH_EXPIRED_EVENT, handler, { once: true });
+  window.addEventListener(AUTH_EXPIRED_EVENT, handler);
 };
 
 attachAuthExpiredListener();
