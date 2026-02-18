@@ -5,6 +5,7 @@ import { chargesApi } from "../../../api/charges.api";
 import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { useRole } from "../../../hooks/useRole";
+import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 
 type UseClientDetailsParams = { clientId: number | null };
 
@@ -13,9 +14,9 @@ type UseClientDetailsResult = {
   isValidId: boolean;
   isLoading: boolean;
   error: string | null;
-  binders: { id: number; binder_number: string; received_at: string }[];
+  binders: ClientBinderSummary[];
   bindersTotal: number;
-  charges: { id: number; charge_type: string; status: string }[];
+  charges: ClientChargeSummary[];
   chargesTotal: number;
   updateClient: (payload: UpdateClientPayload) => Promise<void>;
   isUpdating: boolean;

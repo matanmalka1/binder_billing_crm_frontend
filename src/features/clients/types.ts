@@ -15,3 +15,15 @@ export interface ClientsTableCardProps {
   activeActionKey: string | null;
   onActionClick: (action: ActionCommand) => void;
 }
+
+export interface ClientBinderSummary {
+  id: number;
+  binder_number: string;
+  received_at: string;
+}
+
+export interface ClientChargeSummary {
+  id: number;
+  charge_type: string;
+  status: string;
+}
