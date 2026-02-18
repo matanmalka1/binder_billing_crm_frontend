@@ -1,3 +1,4 @@
+import { useCallback, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
@@ -43,6 +44,9 @@ export const useChargesPage = () => {
     },
   });
 
+  const [actionLoadingId, setActionLoadingId] = useState<number | null>(null);
+  const actionLoadingIdRef = useRef<number | null>(null);
+
   const actionMutation = useMutation({
     mutationFn: async ({
       action,
@@ -61,18 +65,23 @@ export const useChargesPage = () => {
     },
   });
 
-  const runAction = async (chargeId: number, action: "issue" | "markPaid" | "cancel") => {
+  const runAction = useCallback(async (chargeId: number, action: "issue" | "markPaid" | "cancel") => {
     if (!isAdvisor) {
       toast.error("אין הרשאה לבצע פעולת חיוב זו");
       return;
     }
 
     try {
+      setActionLoadingId(chargeId);
+      actionLoadingIdRef.current = chargeId;
       await actionMutation.mutateAsync({ action, chargeId });
     } catch (requestError: unknown) {
       toast.error(getErrorMessage(requestError, "שגיאה בביצוע פעולת חיוב"));
+    } finally {
+      setActionLoadingId(null);
+      actionLoadingIdRef.current = null;
     }
-  };
+  }, [actionMutation, isAdvisor]);
 
   const setFilter = (key: string, value: string) => {
     const next = new URLSearchParams(searchParams);
@@ -97,7 +106,8 @@ export const useChargesPage = () => {
   };
 
   return {
-    actionLoadingId: actionMutation.isPending ? (actionMutation.variables?.chargeId ?? null) : null,
+    actionLoadingId,
+    actionLoadingIdRef,
     charges: listQuery.data?.items ?? [],
     createError: createMutation.error
       ? getErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")

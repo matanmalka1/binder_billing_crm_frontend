@@ -1,3 +1,4 @@
+import { type RefObject } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/Button";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
@@ -11,13 +12,13 @@ export type ChargeAction = "issue" | "markPaid" | "cancel";
 
 interface BuildChargeColumnsParams {
   isAdvisor: boolean;
-  actionLoadingId: number | null;
+  actionLoadingIdRef: RefObject<number | null>;
   runAction: (chargeId: number, action: ChargeAction) => Promise<void>;
 }
 
 export const buildChargeColumns = ({
   isAdvisor,
-  actionLoadingId,
+  actionLoadingIdRef,
   runAction,
 }: BuildChargeColumnsParams): Column<ChargeResponse>[] => [
   {
@@ -81,7 +82,7 @@ export const buildChargeColumns = ({
     key: "actions",
     header: "פעולות",
     render: (charge) => {
-      const loadingAction = actionLoadingId === charge.id;
+      const loadingAction = actionLoadingIdRef.current === charge.id;
 
       return (
         <div className="flex flex-wrap gap-2">

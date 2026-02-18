@@ -1,3 +1,4 @@
+import { type RefObject } from "react";
 import { Link } from "react-router-dom";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
@@ -14,12 +15,12 @@ const clientStatusVariants: Record<string, "success" | "warning" | "error" | "in
 };
 
 interface BuildClientColumnsParams {
-  activeActionKey: string | null;
+  activeActionKeyRef: RefObject<string | null>;
   onAction: (action: ActionCommand) => void;
 }
 
 export const buildClientColumns = ({
-  activeActionKey,
+  activeActionKeyRef,
   onAction,
 }: BuildClientColumnsParams): Column<ClientResponse>[] => [
   {
@@ -86,7 +87,7 @@ export const buildClientColumns = ({
     header: "פעולות",
       render: buildActionsColumn<ClientResponse>({
         header: "פעולות",
-        activeActionKey,
+        activeActionKeyRef,
         onAction,
         getActions: (client) => client.available_actions as BackendAction[] | null | undefined,
       }).render,

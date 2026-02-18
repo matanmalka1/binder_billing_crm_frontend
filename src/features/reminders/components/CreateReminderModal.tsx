@@ -58,6 +58,51 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           <option value="custom">התאמה אישית</option>
         </Select>
 
+        {formData.reminder_type === "tax_deadline_approaching" && (
+          <Input
+            type="number"
+            label="מזהה מועד מס"
+            value={formData.tax_deadline_id || ""}
+            onChange={(e) =>
+              onFormChange({
+                tax_deadline_id: parseInt(e.target.value) || undefined,
+              })
+            }
+            required
+            min={1}
+          />
+        )}
+
+        {formData.reminder_type === "binder_idle" && (
+          <Input
+            type="number"
+            label="מזהה תיק"
+            value={formData.binder_id || ""}
+            onChange={(e) =>
+              onFormChange({
+                binder_id: parseInt(e.target.value) || undefined,
+              })
+            }
+            required
+            min={1}
+          />
+        )}
+
+        {formData.reminder_type === "unpaid_charge" && (
+          <Input
+            type="number"
+            label="מזהה חשבונית"
+            value={formData.charge_id || ""}
+            onChange={(e) =>
+              onFormChange({
+                charge_id: parseInt(e.target.value) || undefined,
+              })
+            }
+            required
+            min={1}
+          />
+        )}
+
         <Input
           type="number"
           label="מזהה לקוח"
@@ -90,15 +135,22 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            הודעה <span className="text-red-500">*</span>
+            הודעה{" "}
+            {formData.reminder_type === "custom" && (
+              <span className="text-red-500">*</span>
+            )}
           </label>
           <textarea
             rows={3}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="הזן הודעת תזכורת..."
+            placeholder={
+              formData.reminder_type === "custom"
+                ? "הזן הודעת תזכורת..."
+                : "אופציונלי (אם ריק תופק הודעת ברירת מחדל)"
+            }
             value={formData.message}
             onChange={(e) => onFormChange({ message: e.target.value })}
-            required
+            required={formData.reminder_type === "custom"}
           />
         </div>
       </form>

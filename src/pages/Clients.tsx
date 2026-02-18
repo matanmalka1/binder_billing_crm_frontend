@@ -26,6 +26,7 @@ export const Clients: React.FC = () => {
 
   const {
     activeActionKey,
+    activeActionKeyRef,
     clients,
     error,
     filters,
@@ -52,8 +53,8 @@ export const Clients: React.FC = () => {
   });
 
   const columns = useMemo(
-    () => buildClientColumns({ activeActionKey, onAction }),
-    [activeActionKey, onAction],
+    () => buildClientColumns({ activeActionKeyRef, onAction }),
+    [activeActionKeyRef, onAction],
   );
 
   const totalPages = Math.max(

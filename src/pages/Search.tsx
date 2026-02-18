@@ -39,64 +39,67 @@ export const Search: React.FC = () => {
     debouncedBinderNumber,
   ]);
 
-  const columns: Column<SearchResult>[] = [
-    {
-      key: "result_type",
-      header: "סוג תוצאה",
-      render: (result) => (
-        <Badge variant="info">
-          {getResultTypeLabel(result.result_type)}
-        </Badge>
-      ),
-    },
-    {
-      key: "client_name",
-      header: "לקוח",
-      render: (result) => (
-        <span className="font-medium text-gray-900">{result.client_name ?? "—"}</span>
-      ),
-    },
-    {
-      key: "binder_number",
-      header: "מספר קלסר",
-      render: (result) => (
-        <span className="font-mono text-sm text-gray-700">{result.binder_number ?? "—"}</span>
-      ),
-    },
-    {
-      key: "work_state",
-      header: "מצב עבודה",
-      render: (result) => (
-        <span className="text-gray-600">{getWorkStateLabel(result.work_state ?? "")}</span>
-      ),
-    },
-    {
-      key: "sla_state",
-      header: "מצב SLA",
-      render: (result) => (
-        <span className="text-gray-600">{getSlaStateLabel(result.sla_state ?? "")}</span>
-      ),
-    },
-    {
-      key: "signals",
-      header: "אותות",
-      render: (result) => {
-        if (!Array.isArray(result.signals) || result.signals.length === 0) {
-          return <span className="text-gray-500">—</span>;
-        }
-
-        return (
-          <div className="flex flex-wrap gap-1">
-            {result.signals.map((signal, idx) => (
-              <Badge key={`${result.client_id}-${signal}-${idx}`} variant="neutral">
-                {getSignalLabel(signal)}
-              </Badge>
-            ))}
-          </div>
-        );
+  const columns: Column<SearchResult>[] = useMemo(
+    () => [
+      {
+        key: "result_type",
+        header: "סוג תוצאה",
+        render: (result) => (
+          <Badge variant="info">
+            {getResultTypeLabel(result.result_type)}
+          </Badge>
+        ),
       },
-    },
-  ];
+      {
+        key: "client_name",
+        header: "לקוח",
+        render: (result) => (
+          <span className="font-medium text-gray-900">{result.client_name ?? "—"}</span>
+        ),
+      },
+      {
+        key: "binder_number",
+        header: "מספר קלסר",
+        render: (result) => (
+          <span className="font-mono text-sm text-gray-700">{result.binder_number ?? "—"}</span>
+        ),
+      },
+      {
+        key: "work_state",
+        header: "מצב עבודה",
+        render: (result) => (
+          <span className="text-gray-600">{getWorkStateLabel(result.work_state ?? "")}</span>
+        ),
+      },
+      {
+        key: "sla_state",
+        header: "מצב SLA",
+        render: (result) => (
+          <span className="text-gray-600">{getSlaStateLabel(result.sla_state ?? "")}</span>
+        ),
+      },
+      {
+        key: "signals",
+        header: "אותות",
+        render: (result) => {
+          if (!Array.isArray(result.signals) || result.signals.length === 0) {
+            return <span className="text-gray-500">—</span>;
+          }
+
+          return (
+            <div className="flex flex-wrap gap-1">
+              {result.signals.map((signal, idx) => (
+                <Badge key={`${result.client_id}-${signal}-${idx}`} variant="neutral">
+                  {getSignalLabel(signal)}
+                </Badge>
+              ))}
+            </div>
+          );
+        },
+      },
+    ],
+    [],
+  );
 
   const totalPages = Math.max(
     1,

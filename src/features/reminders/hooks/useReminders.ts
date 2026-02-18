@@ -64,13 +64,29 @@ export const useReminders = () => {
       toast.error("נא לבחור תאריך יעד");
       return;
     }
-    if (!formData.message || formData.message.trim() === "") {
-      toast.error("נא להזין הודעת תזכורת");
-      return;
-    }
     if (formData.days_before < 0) {
       toast.error("מספר ימים לפני חייב להיות חיובי");
       return;
+    }
+
+    // Per-type required fields
+    if (formData.reminder_type === "tax_deadline_approaching" && !formData.tax_deadline_id) {
+      toast.error("נא להזין מזהה מועד מס");
+      return;
+    }
+    if (formData.reminder_type === "binder_idle" && !formData.binder_id) {
+      toast.error("נא להזין מזהה תיק");
+      return;
+    }
+    if (formData.reminder_type === "unpaid_charge" && !formData.charge_id) {
+      toast.error("נא להזין מזהה חשבונית");
+      return;
+    }
+    if (formData.reminder_type === "custom") {
+      if (!formData.message || formData.message.trim() === "") {
+        toast.error("נא להזין הודעת תזכורת");
+        return;
+      }
     }
 
     createMutation.mutate(formData);

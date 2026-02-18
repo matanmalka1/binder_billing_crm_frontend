@@ -10,6 +10,7 @@ import { useBindersPage } from "../features/binders/hooks/useBindersPage";
 export const Binders: React.FC = () => {
   const {
     activeActionKey,
+    activeActionKeyRef,
     binders,
     cancelPendingAction,
     confirmPendingAction,
@@ -24,10 +25,10 @@ export const Binders: React.FC = () => {
   const columns = useMemo(
     () =>
       buildBindersColumns({
-        activeActionKey,
+        activeActionKeyRef,
         onAction,
       }),
-    [activeActionKey, onAction],
+    [activeActionKeyRef, onAction],
   );
 
   return (

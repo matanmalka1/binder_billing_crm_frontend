@@ -1,3 +1,4 @@
+import { type RefObject } from "react";
 import { Button } from "./Button";
 import { mapActions } from "../../lib/actions/mapActions";
 import type { Column } from "./DataTable";
@@ -6,14 +7,14 @@ import { cn } from "../../utils/utils";
 
 type ActionsColumnParams<T> = {
   header?: string;
-  activeActionKey: string | null;
+  activeActionKeyRef: RefObject<string | null>;
   onAction: (action: ActionCommand) => void;
   getActions: (row: T) => BackendAction[] | null | undefined;
 };
 
 export const buildActionsColumn = <T,>({
   header = "פעולות",
-  activeActionKey,
+  activeActionKeyRef,
   onAction,
   getActions,
 }: ActionsColumnParams<T>): Column<T> => ({
@@ -38,8 +39,11 @@ export const buildActionsColumn = <T,>({
               e.stopPropagation();
               onAction(action);
             }}
-            isLoading={activeActionKey === action.uiKey}
-            disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
+            isLoading={activeActionKeyRef.current === action.uiKey}
+            disabled={
+              activeActionKeyRef.current !== null &&
+              activeActionKeyRef.current !== action.uiKey
+            }
             className={cn(
               "min-w-[90px]",
               action.confirm && "border-orange-200 text-orange-700 hover:bg-orange-50",

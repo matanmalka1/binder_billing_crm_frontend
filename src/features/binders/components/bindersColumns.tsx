@@ -1,3 +1,4 @@
+import { type RefObject } from "react";
 import { Badge } from "../../../components/ui/Badge";
 import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
@@ -14,12 +15,12 @@ const binderStatusVariants: Record<string, "success" | "warning" | "error" | "in
 };
 
 interface BuildBindersColumnsParams {
-  activeActionKey: string | null;
+  activeActionKeyRef: RefObject<string | null>;
   onAction: (action: ActionCommand) => void;
 }
 
 export const buildBindersColumns = ({
-  activeActionKey,
+  activeActionKeyRef,
   onAction,
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
   {
@@ -96,7 +97,7 @@ export const buildBindersColumns = ({
   },
     buildActionsColumn<BinderResponse>({
       header: "פעולות",
-      activeActionKey,
+      activeActionKeyRef,
       onAction,
       getActions: (binder) => binder.available_actions as BackendAction[] | null | undefined,
     }),

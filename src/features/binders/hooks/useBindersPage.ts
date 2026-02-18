@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
@@ -71,8 +71,12 @@ export const useBindersPage = () => {
       ? actionMutation.variables.uiKey ?? null
       : null;
 
+  const activeActionKeyRef = useRef<string | null>(null);
+  activeActionKeyRef.current = activeActionKey;
+
   return {
     activeActionKey,
+    activeActionKeyRef,
     binders: bindersQuery.data?.items ?? [],
     error: bindersQuery.error
       ? getErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת קלסרים")

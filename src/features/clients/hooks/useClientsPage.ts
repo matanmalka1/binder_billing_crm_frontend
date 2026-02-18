@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
@@ -38,6 +38,8 @@ export const useClientsPage = () => {
     queryFn: () => clientsApi.list(apiParams),
   });
   const [activeActionKey, setActiveActionKey] = useState<string | null>(null);
+  const activeActionKeyRef = useRef<string | null>(null);
+  activeActionKeyRef.current = activeActionKey;
 
   const actionMutation = useMutation({
     mutationFn: (action: ActionCommand) => executeAction(action),
@@ -84,6 +86,7 @@ export const useClientsPage = () => {
 
   return {
     activeActionKey,
+    activeActionKeyRef,
     clients: listQuery.data?.items ?? [],
     error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת רשימת לקוחות") : null,
     filters,
