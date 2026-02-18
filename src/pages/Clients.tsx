@@ -12,7 +12,7 @@ import { ClientsFiltersBar } from "../features/clients/components/ClientsFilters
 import { CreateClientModal } from "../features/clients/components/CreateClientModal";
 import { buildClientColumns } from "../features/clients/components/clientColumns";
 import { useClientsPage } from "../features/clients/hooks/useClientsPage";
-import { useAuthStore } from "../store/auth.store";
+import { useRole } from "../hooks/useRole";
 import { clientsApi, type CreateClientPayload } from "../api/clients.api";
 import { toast } from "../utils/toast";
 import { getErrorMessage } from "../utils/utils";
@@ -20,8 +20,7 @@ import { getErrorMessage } from "../utils/utils";
 export const Clients: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { user } = useAuthStore();
-  const isAdvisor = user?.role === "advisor";
+  const { isAdvisor, can } = useRole();
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const {
@@ -68,7 +67,7 @@ export const Clients: React.FC = () => {
         title="לקוחות"
         description="רשימת כל הלקוחות במערכת"
         actions={
-          isAdvisor ? (
+          can.createClients ? (
             <Button
               variant="primary"
               onClick={() => setShowCreateModal(true)}
@@ -80,7 +79,7 @@ export const Clients: React.FC = () => {
         }
       />
 
-      {!isAdvisor && (
+      {!can.editClients && (
         <AccessBanner
           variant="info"
           message="יצירה ועריכה של לקוחות זמינה ליועצים בלבד."

@@ -7,9 +7,9 @@ import {
   type ChargesListParams,
   type CreateChargePayload,
 } from "../../../api/charges.api";
-import { useAuthStore } from "../../../store/auth.store";
 import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
+import { useRole } from "../../../hooks/useRole";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
@@ -33,8 +33,7 @@ export const useChargesPage = () => {
     queryKey: ["charges", "list", apiParams] as const,
     queryFn: () => chargesApi.list(apiParams),
   });
-  const { user } = useAuthStore();
-  const isAdvisor = user?.role === "advisor";
+  const { isAdvisor } = useRole();
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateChargePayload) => chargesApi.create(payload),

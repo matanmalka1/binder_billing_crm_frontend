@@ -6,17 +6,16 @@ import { Button } from "../components/ui/Button";
 import { DescriptionList } from "../components/ui/DescriptionList";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { PageLoading } from "../components/ui/PageLoading";
-import { useAuthStore } from "../store/auth.store";
 import { useChargeDetailsPage } from "../features/charges/hooks/useChargeDetailsPage";
 import { getChargeAmountText } from "../features/charges/utils/chargeStatus";
 import { formatDateTime } from "../utils/utils";
+import { useRole } from "../hooks/useRole";
 
 export const ChargeDetails: React.FC = () => {
   const { chargeId } = useParams();
-  const { user } = useAuthStore();
-  const isAdvisor = user?.role === "advisor";
+  const { isAdvisor } = useRole();
   const { actionLoading, charge, denied, error, loading, runAction } =
-    useChargeDetailsPage(chargeId, isAdvisor);
+    useChargeDetailsPage(chargeId);
 
   return (
     <div className="space-y-6">

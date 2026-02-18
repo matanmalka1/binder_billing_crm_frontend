@@ -4,8 +4,9 @@ import { bindersApi } from "../../../api/binders.api";
 import { chargesApi } from "../../../api/charges.api";
 import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
+import { useRole } from "../../../hooks/useRole";
 
-type UseClientDetailsParams = { clientId: number | null; isAdvisor: boolean };
+type UseClientDetailsParams = { clientId: number | null };
 
 type UseClientDetailsResult = {
   client: ClientResponse | null;
@@ -22,12 +23,12 @@ type UseClientDetailsResult = {
 
 export const useClientDetails = ({
   clientId,
-  isAdvisor,
 }: UseClientDetailsParams): UseClientDetailsResult => {
   const id = Number(clientId);
   const isValidId = Number.isFinite(id) && id > 0;
   const enabled = isValidId;
   const queryClient = useQueryClient();
+  const { isAdvisor } = useRole();
 
   const clientQuery = useQuery({
     queryKey: ["clients", "detail", id],

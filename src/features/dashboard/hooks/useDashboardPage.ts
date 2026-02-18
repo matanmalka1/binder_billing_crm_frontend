@@ -6,10 +6,10 @@ import type {
   DashboardOverviewResponse,
   DashboardSummaryResponse,
 } from "../../../api/dashboard.api";
-import { useAuthStore } from "../../../store/auth.store";
 import { getErrorMessage, getHttpStatus, showErrorToast } from "../../../utils/utils";
 import { executeAction } from "../../../lib/actions/runtime";
 import type { ActionCommand } from "../../../lib/actions/types";
+import { useRole } from "../../../hooks/useRole";
 
 type DashboardData =
   | (DashboardOverviewResponse & { role_view: "advisor" })
@@ -33,14 +33,12 @@ const isSummaryData = (
 
 export const useDashboardPage = () => {
   const queryClient = useQueryClient();
-  const { user } = useAuthStore();
+  const { role, isAdvisor, isSecretary } = useRole();
   const [activeQuickAction, setActiveQuickAction] = useState<string | null>(null);
   const [pendingQuickAction, setPendingQuickAction] = useState<ActionCommand | null>(null);
   const [actionDenied, setActionDenied] = useState(false);
 
-  const hasRole = Boolean(user?.role);
-  const isAdvisor = user?.role === "advisor";
-  const isSecretary = user?.role === "secretary";
+  const hasRole = Boolean(role);
 
   const dashboardQuery = useQuery<DashboardOverviewResponse | DashboardSummaryResponse>({
     enabled: hasRole,

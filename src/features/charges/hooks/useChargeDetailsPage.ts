@@ -3,13 +3,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { chargesApi } from "../../../api/charges.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage, getHttpStatus, isPositiveInt } from "../../../utils/utils";
+import { useRole } from "../../../hooks/useRole";
 
-export const useChargeDetailsPage = (chargeId: string | undefined, isAdvisor: boolean) => {
+export const useChargeDetailsPage = (chargeId: string | undefined) => {
   const queryClient = useQueryClient();
   const [actionError, setActionError] = useState<string | null>(null);
   const [denied, setDenied] = useState(false);
   const chargeIdNumber = Number(chargeId || 0);
   const hasValidChargeId = isPositiveInt(chargeIdNumber);
+  const { isAdvisor } = useRole();
 
   const chargeQuery = useQuery({
     enabled: hasValidChargeId,
