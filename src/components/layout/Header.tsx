@@ -8,6 +8,9 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const { user, logout } = useAuthStore();
+  const handleLogout = () => {
+    void logout();
+  };
 
   return (
     <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 z-10 shrink-0">
@@ -38,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           </span>
         </div>
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-medium"
         >
           <LogOut className="w-4 h-4" />

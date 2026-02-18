@@ -2,25 +2,31 @@ import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
-import type { Reminder, CreateReminderRequest } from "../reminder.types";
+import type { UseFormReturn } from "react-hook-form";
+import type { CreateReminderFormValues } from "../reminder.types";
 
 interface CreateReminderModalProps {
   open: boolean;
-  formData: CreateReminderRequest;
+  form: UseFormReturn<CreateReminderFormValues>;
   isSubmitting: boolean;
   onClose: () => void;
-  onSubmit: (e: React.FormEvent) => void;
-  onFormChange: (updates: Partial<CreateReminderRequest>) => void;
+  onSubmit: (e?: React.BaseSyntheticEvent) => void;
 }
 
 export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   open,
-  formData,
+  form,
   isSubmitting,
   onClose,
   onSubmit,
-  onFormChange,
 }) => {
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = form;
+  const reminderType = watch("reminder_type");
+
   return (
     <Modal
       open={open}
@@ -45,12 +51,8 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
       <form onSubmit={onSubmit} className="space-y-4">
         <Select
           label="סוג תזכורת"
-          value={formData.reminder_type}
-          onChange={(e) =>
-            onFormChange({
-              reminder_type: e.target.value as Reminder["reminder_type"],
-            })
-          }
+          error={errors.reminder_type?.message}
+          {...register("reminder_type", { required: "נא לבחור סוג תזכורת" })}
         >
           <option value="tax_deadline_approaching">מועד מס מתקרב</option>
           <option value="binder_idle">תיק לא פעיל</option>
@@ -58,100 +60,86 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           <option value="custom">התאמה אישית</option>
         </Select>
 
-        {formData.reminder_type === "tax_deadline_approaching" && (
+        {reminderType === "tax_deadline_approaching" && (
           <Input
             type="number"
             label="מזהה מועד מס"
-            value={formData.tax_deadline_id || ""}
-            onChange={(e) =>
-              onFormChange({
-                tax_deadline_id: parseInt(e.target.value) || undefined,
-              })
-            }
-            required
+            error={errors.tax_deadline_id?.message}
             min={1}
+            {...register("tax_deadline_id", { required: "נא להזין מזהה מועד מס" })}
           />
         )}
 
-        {formData.reminder_type === "binder_idle" && (
+        {reminderType === "binder_idle" && (
           <Input
             type="number"
             label="מזהה תיק"
-            value={formData.binder_id || ""}
-            onChange={(e) =>
-              onFormChange({
-                binder_id: parseInt(e.target.value) || undefined,
-              })
-            }
-            required
+            error={errors.binder_id?.message}
             min={1}
+            {...register("binder_id", { required: "נא להזין מזהה תיק" })}
           />
         )}
 
-        {formData.reminder_type === "unpaid_charge" && (
+        {reminderType === "unpaid_charge" && (
           <Input
             type="number"
             label="מזהה חשבונית"
-            value={formData.charge_id || ""}
-            onChange={(e) =>
-              onFormChange({
-                charge_id: parseInt(e.target.value) || undefined,
-              })
-            }
-            required
+            error={errors.charge_id?.message}
             min={1}
+            {...register("charge_id", { required: "נא להזין מזהה חשבונית" })}
           />
         )}
 
         <Input
           type="number"
           label="מזהה לקוח"
-          value={formData.client_id || ""}
-          onChange={(e) =>
-            onFormChange({ client_id: parseInt(e.target.value) || 0 })
-          }
-          required
+          error={errors.client_id?.message}
           min={1}
+          {...register("client_id", {
+            required: "נא להזין מזהה לקוח",
+            min: { value: 1, message: "נא להזין מזהה לקוח תקין" },
+          })}
         />
 
         <Input
           type="date"
           label="תאריך יעד"
-          value={formData.target_date}
-          onChange={(e) => onFormChange({ target_date: e.target.value })}
-          required
+          error={errors.target_date?.message}
+          {...register("target_date", { required: "נא לבחור תאריך יעד" })}
         />
 
         <Input
           type="number"
           label="ימים לפני"
-          value={formData.days_before}
-          onChange={(e) =>
-            onFormChange({ days_before: parseInt(e.target.value) || 0 })
-          }
-          required
+          error={errors.days_before?.message}
           min={0}
+          {...register("days_before", {
+            required: "נא להזין מספר ימים",
+            min: { value: 0, message: "מספר ימים לפני חייב להיות חיובי" },
+            valueAsNumber: true,
+          })}
         />
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             הודעה{" "}
-            {formData.reminder_type === "custom" && (
-              <span className="text-red-500">*</span>
-            )}
+            {reminderType === "custom" && <span className="text-red-500">*</span>}
           </label>
           <textarea
             rows={3}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder={
-              formData.reminder_type === "custom"
+              reminderType === "custom"
                 ? "הזן הודעת תזכורת..."
                 : "אופציונלי (אם ריק תופק הודעת ברירת מחדל)"
             }
-            value={formData.message}
-            onChange={(e) => onFormChange({ message: e.target.value })}
-            required={formData.reminder_type === "custom"}
+            {...register("message", {
+              required: reminderType === "custom" ? "נא להזין הודעת תזכורת" : false,
+            })}
           />
+          {errors.message?.message && (
+            <p className="text-xs text-red-600 mt-1">{errors.message.message}</p>
+          )}
         </div>
       </form>
     </Modal>

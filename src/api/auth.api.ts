@@ -9,7 +9,6 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string;
   user: AuthUser;
 }
 
@@ -20,5 +19,8 @@ export const authApi = {
       payload,
     );
     return response.data;
+  },
+  logout: async (): Promise<void> => {
+    await api.post(ENDPOINTS.authLogout);
   },
 };

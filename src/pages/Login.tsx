@@ -41,7 +41,7 @@ export const Login: React.FC = () => {
   const onSubmit = handleSubmit(async (values) => {
     clearError();
     await login(values.email, values.password, rememberMe);
-    // Navigation is handled reactively: once login() sets token+user in the
+    // Navigation is handled reactively: once login() sets the user in the
     // Zustand store, isAuthenticated becomes true and the guard above
     // redirects on the next render — no imperative navigate() needed.
   });

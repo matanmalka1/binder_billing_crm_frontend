@@ -12,7 +12,6 @@ import { useChargesPage } from "../features/charges/hooks/useChargesPage";
 export const Charges: React.FC = () => {
   const {
     actionLoadingId,
-    actionLoadingIdRef,
     charges,
     createError,
     createLoading,
@@ -31,10 +30,10 @@ export const Charges: React.FC = () => {
     () =>
       buildChargeColumns({
         isAdvisor,
-        actionLoadingIdRef,
+        actionLoadingId,
         runAction,
       }),
-    [actionLoadingIdRef, isAdvisor, runAction],
+    [actionLoadingId, isAdvisor, runAction],
   );
 
   const totalPages = Math.max(

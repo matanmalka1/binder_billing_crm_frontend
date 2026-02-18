@@ -26,19 +26,21 @@ import { AdvancePayments } from "../pages/tax/AdvancePayments";
 
 const AuthExpiredNavigationHandler: React.FC = () => {
   const navigate = useNavigate();
+  const resetSession = useAuthStore((s) => s.resetSession);
   const navigateRef = useRef(navigate);
 
   useEffect(() => { navigateRef.current = navigate; }, [navigate]);
 
   useEffect(() => {
     const handleAuthExpired = () => {
+      resetSession();
       if (!window.location.pathname.startsWith("/login")) {
         navigateRef.current("/login", { replace: true });
       }
     };
     window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
     return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
-  }, []);
+  }, [resetSession]);
 
   return null;
 };

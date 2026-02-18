@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "../../../utils/toast";
@@ -51,7 +51,6 @@ export const useChargesPage = () => {
   });
 
   const [actionLoadingId, setActionLoadingId] = useState<number | null>(null);
-  const actionLoadingIdRef = useRef<number | null>(null);
 
   const actionMutation = useMutation({
     mutationFn: async ({
@@ -80,13 +79,11 @@ export const useChargesPage = () => {
 
       try {
         setActionLoadingId(chargeId);
-        actionLoadingIdRef.current = chargeId;
         await actionMutation.mutateAsync({ action, chargeId });
       } catch (requestError: unknown) {
         toast.error(getErrorMessage(requestError, "שגיאה בביצוע פעולת חיוב"));
       } finally {
         setActionLoadingId(null);
-        actionLoadingIdRef.current = null;
       }
     },
     [actionMutation, isAdvisor],
@@ -118,7 +115,6 @@ export const useChargesPage = () => {
 
   return {
     actionLoadingId,
-    actionLoadingIdRef,
     charges: listQuery.data?.items ?? [],
     createError: createMutation.error
       ? getErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")

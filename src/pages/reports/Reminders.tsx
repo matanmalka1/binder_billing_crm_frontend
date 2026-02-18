@@ -14,9 +14,8 @@ export const RemindersPage: React.FC = () => {
     error,
     showCreateModal,
     setShowCreateModal,
-    formData,
-    handleFormChange,
-    handleCreateSubmit,
+    form,
+    onSubmit,
     isSubmitting,
     cancelingId,
     handleCancel,
@@ -60,11 +59,13 @@ export const RemindersPage: React.FC = () => {
 
         <CreateReminderModal
           open={showCreateModal}
-          formData={formData}
+          form={form}
           isSubmitting={isSubmitting}
-          onClose={() => setShowCreateModal(false)}
-          onSubmit={handleCreateSubmit}
-          onFormChange={handleFormChange}
+          onClose={() => {
+            form.reset();
+            setShowCreateModal(false);
+          }}
+          onSubmit={onSubmit}
         />
       </div>
     </PageStateGuard>

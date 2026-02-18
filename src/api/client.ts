@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { AxiosError, InternalAxiosRequestConfig } from "axios";
+import type { AxiosError } from "axios";
 
 export const AUTH_EXPIRED_EVENT = "auth:expired";
 
@@ -17,17 +17,6 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = readAuthToken();
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error: AxiosError) => Promise.reject(error),
-);
-
 let isHandlingAuthExpiry = false;
 
 api.interceptors.response.use(
@@ -35,7 +24,7 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status === 401 && !isHandlingAuthExpiry) {
       isHandlingAuthExpiry = true;
-      clearStoredTokens();
+      clearPersistedAuthState();
       window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
 
       setTimeout(() => {
@@ -46,20 +35,7 @@ api.interceptors.response.use(
   },
 );
 
-const readAuthToken = (): string | null => {
-  try {
-    const persisted =
-      localStorage.getItem(AUTH_PERSIST_STORAGE_KEY) ??
-      sessionStorage.getItem(AUTH_PERSIST_STORAGE_KEY);
-    if (!persisted) return null;
-    const parsed = JSON.parse(persisted);
-    return parsed?.state?.token ?? null;
-  } catch {
-    return null;
-  }
-};
-
-const clearStoredTokens = (): void => {
+const clearPersistedAuthState = (): void => {
   try {
     localStorage.removeItem(AUTH_PERSIST_STORAGE_KEY);
   } catch {

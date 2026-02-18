@@ -19,3 +19,14 @@ export const statusLabels: Record<string, string> = {
   sent: "נשלח",
   canceled: "בוטל",
 };
+
+export interface CreateReminderFormValues {
+  reminder_type: "tax_deadline_approaching" | "binder_idle" | "unpaid_charge" | "custom";
+  client_id: string;
+  target_date: string;
+  days_before: number;
+  tax_deadline_id?: string;
+  binder_id?: string;
+  charge_id?: string;
+  message: string;
+}

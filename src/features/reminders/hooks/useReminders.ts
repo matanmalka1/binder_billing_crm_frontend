@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { remindersApi } from "../../../api/reminders.api";
 import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
-import type { RemindersListResponse, CreateReminderRequest } from "../reminder.types";
+import { useForm } from "react-hook-form";
+import type {
+  RemindersListResponse,
+  CreateReminderRequest,
+  CreateReminderFormValues,
+} from "../reminder.types";
 
-// Start with a valid union variant to satisfy TS (custom has no required FK)
-const defaultFormData: CreateReminderRequest = {
-  client_id: 0,
+const defaultFormValues: CreateReminderFormValues = {
   reminder_type: "custom",
   target_date: "",
+  client_id: "",
   days_before: 7,
   message: "",
 };
@@ -17,7 +21,6 @@ const defaultFormData: CreateReminderRequest = {
 export const useReminders = () => {
   const queryClient = useQueryClient();
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [formData, setFormData] = useState<CreateReminderRequest>(defaultFormData);
   const [cancelingId, setCancelingId] = useState<number | null>(null);
 
   const remindersQuery = useQuery<RemindersListResponse, Error>({
@@ -31,7 +34,7 @@ export const useReminders = () => {
       toast.success("תזכורת נוצרה בהצלחה");
       queryClient.invalidateQueries({ queryKey: ["reminders"] });
       setShowCreateModal(false);
-      setFormData(defaultFormData);
+      form.reset(defaultFormValues);
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, "שגיאה ביצירת תזכורת"));
@@ -52,60 +55,101 @@ export const useReminders = () => {
     },
   });
 
-  const handleCreateSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<CreateReminderFormValues>({
+    defaultValues: defaultFormValues,
+  });
 
-    // Validation
-    if (!formData.client_id || formData.client_id <= 0) {
-      toast.error("נא להזין מזהה לקוח תקין");
-      return;
-    }
-    if (!formData.target_date) {
-      toast.error("נא לבחור תאריך יעד");
-      return;
-    }
-    if (formData.days_before < 0) {
-      toast.error("מספר ימים לפני חייב להיות חיובי");
-      return;
-    }
-
-    // Per-type required fields
-    if (formData.reminder_type === "tax_deadline_approaching" && !formData.tax_deadline_id) {
-      toast.error("נא להזין מזהה מועד מס");
-      return;
-    }
-    if (formData.reminder_type === "binder_idle" && !formData.binder_id) {
-      toast.error("נא להזין מזהה תיק");
-      return;
-    }
-    if (formData.reminder_type === "unpaid_charge" && !formData.charge_id) {
-      toast.error("נא להזין מזהה חשבונית");
-      return;
-    }
-    if (formData.reminder_type === "custom") {
-      if (!formData.message || formData.message.trim() === "") {
-        toast.error("נא להזין הודעת תזכורת");
-        return;
+  const buildPayload = useMemo(
+    () => (values: CreateReminderFormValues): CreateReminderRequest | null => {
+      const clientId = Number(values.client_id);
+      if (!clientId || clientId <= 0) {
+        form.setError("client_id", { message: "נא להזין מזהה לקוח תקין" });
+        return null;
       }
-    }
 
-    createMutation.mutate(formData);
-  };
+      if (!values.target_date) {
+        form.setError("target_date", { message: "נא לבחור תאריך יעד" });
+        return null;
+      }
+
+      if (values.days_before < 0) {
+        form.setError("days_before", { message: "מספר ימים לפני חייב להיות חיובי" });
+        return null;
+      }
+
+      if (values.reminder_type === "tax_deadline_approaching") {
+        const taxDeadlineId = Number(values.tax_deadline_id);
+        if (!taxDeadlineId) {
+          form.setError("tax_deadline_id", { message: "נא להזין מזהה מועד מס" });
+          return null;
+        }
+        return {
+          client_id: clientId,
+          target_date: values.target_date,
+          days_before: Number(values.days_before),
+          reminder_type: values.reminder_type,
+          tax_deadline_id: taxDeadlineId,
+          message: values.message || undefined,
+        };
+      }
+
+      if (values.reminder_type === "binder_idle") {
+        const binderId = Number(values.binder_id);
+        if (!binderId) {
+          form.setError("binder_id", { message: "נא להזין מזהה תיק" });
+          return null;
+        }
+        return {
+          client_id: clientId,
+          target_date: values.target_date,
+          days_before: Number(values.days_before),
+          reminder_type: values.reminder_type,
+          binder_id: binderId,
+          message: values.message || undefined,
+        };
+      }
+
+      if (values.reminder_type === "unpaid_charge") {
+        const chargeId = Number(values.charge_id);
+        if (!chargeId) {
+          form.setError("charge_id", { message: "נא להזין מזהה חשבונית" });
+          return null;
+        }
+        return {
+          client_id: clientId,
+          target_date: values.target_date,
+          days_before: Number(values.days_before),
+          reminder_type: values.reminder_type,
+          charge_id: chargeId,
+          message: values.message || undefined,
+        };
+      }
+
+      if (!values.message || values.message.trim() === "") {
+        form.setError("message", { message: "נא להזין הודעת תזכורת" });
+        return null;
+      }
+
+      return {
+        client_id: clientId,
+        target_date: values.target_date,
+        days_before: Number(values.days_before),
+        reminder_type: "custom",
+        message: values.message.trim(),
+      };
+    },
+    [form],
+  );
+
+  const onSubmit = form.handleSubmit(async (values) => {
+    const payload = buildPayload(values);
+    if (!payload) return;
+    await createMutation.mutateAsync(payload);
+  });
 
   const handleCancel = async (id: number) => {
     setCancelingId(id);
     await cancelMutation.mutateAsync(id);
-  };
-
-  const handleFormChange = (updates: Partial<CreateReminderRequest>) => {
-    setFormData((prev) => {
-      // If reminder type changes, clear incompatible FK fields to keep the union valid
-      if (updates.reminder_type && updates.reminder_type !== prev.reminder_type) {
-        const reset = { binder_id: undefined, charge_id: undefined, tax_deadline_id: undefined } as Partial<CreateReminderRequest>;
-        return { ...prev, ...reset, ...updates } as CreateReminderRequest;
-      }
-      return { ...prev, ...updates } as CreateReminderRequest;
-    });
   };
 
   return {
@@ -116,9 +160,8 @@ export const useReminders = () => {
       : null,
     showCreateModal,
     setShowCreateModal,
-    formData,
-    handleFormChange,
-    handleCreateSubmit,
+    form,
+    onSubmit,
     isSubmitting: createMutation.isPending,
     cancelingId,
     handleCancel,

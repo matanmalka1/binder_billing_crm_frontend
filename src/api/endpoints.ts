@@ -4,6 +4,7 @@ export const ENDPOINTS = {
   health: "/health",
   info: "/info",
   authLogin: "/auth/login",
+  authLogout: "/auth/logout",
   clients: "/clients",
   clientById: (clientId: number | string) => `/clients/${clientId}`,
   clientBinders: (clientId: number | string) => `/clients/${clientId}/binders`,
