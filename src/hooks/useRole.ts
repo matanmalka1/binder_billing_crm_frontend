@@ -2,8 +2,7 @@ import { useMemo } from "react";
 import { useAuthStore } from "../store/auth.store";
 
 export const useRole = () => {
-  const { user } = useAuthStore();
-  const role = user?.role ?? null;
+  const role = useAuthStore((s) => s.user?.role ?? null);
 
   return useMemo(
     () => ({

@@ -5,7 +5,6 @@ import {
   AUTH_USER_STORAGE_KEY,
 } from "../api/client";
 import { authApi } from "../api/auth.api";
-import type { UserRole } from "../types/store";
 import { getErrorMessage } from "../utils/utils";
 import type { AuthState } from "./auth.types";
 import { clearStoredAuth, storedToken, storedUser } from "./auth.storage";
@@ -60,9 +59,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
-
-  isAdvisor: () => get().user?.role === "advisor",
-  hasRole: (role: UserRole) => get().user?.role === role,
 
   resetSession: () => {
     clearStoredAuth();

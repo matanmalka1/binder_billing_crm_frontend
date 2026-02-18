@@ -1,4 +1,4 @@
-import type { AuthUser ,UserRole } from "../types/store";
+import type { AuthUser } from "../types/store";
 
 export interface AuthState {
   user: AuthUser | null;
@@ -8,7 +8,5 @@ export interface AuthState {
   login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
   logout: () => void;
   clearError: () => void;
-  isAdvisor: () => boolean;
-  hasRole: (role: UserRole) => boolean;
   resetSession: () => void;
 }
