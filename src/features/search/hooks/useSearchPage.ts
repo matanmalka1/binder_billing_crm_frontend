@@ -24,26 +24,26 @@ export const useSearchPage = () => {
     [searchParams],
   );
 
-  const searchParamsForQuery = useMemo(
-    () => ({
-      query: filters.query || undefined,
-      client_name: filters.client_name || undefined,
-      id_number: filters.id_number || undefined,
-      binder_number: filters.binder_number || undefined,
-      work_state: filters.work_state || undefined,
-      sla_state: filters.sla_state || undefined,
-      signal_type: filters.signal_type.length ? filters.signal_type : undefined,
-      has_signals:
-        filters.has_signals === "true" ? true : filters.has_signals === "false" ? false : undefined,
-      page: filters.page,
-      page_size: filters.page_size,
-    }),
-    [filters],
-  );
-
   const searchQuery = useQuery({
-    queryKey: ["search", "results", searchParamsForQuery] as const,
-    queryFn: () => searchApi.search(searchParamsForQuery),
+    queryKey: ["search", "results", filters] as const,
+    queryFn: () =>
+      searchApi.search({
+        query: filters.query || undefined,
+        client_name: filters.client_name || undefined,
+        id_number: filters.id_number || undefined,
+        binder_number: filters.binder_number || undefined,
+        work_state: filters.work_state || undefined,
+        sla_state: filters.sla_state || undefined,
+        signal_type: filters.signal_type.length ? filters.signal_type : undefined,
+        has_signals:
+          filters.has_signals === "true"
+            ? true
+            : filters.has_signals === "false"
+              ? false
+              : undefined,
+        page: filters.page,
+        page_size: filters.page_size,
+      }),
   });
 
   const handleFilterChange = (name: keyof SearchFilters, value: string | string[]) => {
