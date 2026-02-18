@@ -1,10 +1,8 @@
 import axios from "axios";
 import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-export const AUTH_TOKEN_STORAGE_KEY = "auth_token";
-export const AUTH_USER_STORAGE_KEY = "auth_user";
 export const AUTH_EXPIRED_EVENT = "auth:expired";
-// Zustand persist key defined in auth.store.ts
+
 const AUTH_PERSIST_STORAGE_KEY = "auth-storage";
 
 const baseURL =
@@ -49,15 +47,6 @@ api.interceptors.response.use(
 );
 
 const readAuthToken = (): string | null => {
-  // Legacy direct token storage (remember-me localStorage)
-  try {
-    const legacyToken = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
-    if (legacyToken) return legacyToken;
-  } catch {
-    /* ignore */
-  }
-
-  // Persist middleware storage (localStorage or sessionStorage)
   try {
     const persisted =
       localStorage.getItem(AUTH_PERSIST_STORAGE_KEY) ??
@@ -72,8 +61,6 @@ const readAuthToken = (): string | null => {
 
 const clearStoredTokens = (): void => {
   try {
-    localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
-    localStorage.removeItem(AUTH_USER_STORAGE_KEY);
     localStorage.removeItem(AUTH_PERSIST_STORAGE_KEY);
   } catch {
     /* ignore */

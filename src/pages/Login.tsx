@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
@@ -20,9 +20,8 @@ export const Login: React.FC = () => {
   const login = useAuthStore((s) => s.login);
   const clearError = useAuthStore((s) => s.clearError);
   const { isLoading, error } = useAuthStore(
-    useShallow((s) => ({ isLoading: s.isLoading, error: s.error }))
+    useShallow((s) => ({ isLoading: s.isLoading, error: s.error })),
   );
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -42,17 +41,15 @@ export const Login: React.FC = () => {
   const onSubmit = handleSubmit(async (values) => {
     clearError();
     await login(values.email, values.password, rememberMe);
-
-    if (selectIsAuthenticated(useAuthStore.getState())) {
-      navigate("/");
-    }
+    // Navigation is handled reactively: once login() sets token+user in the
+    // Zustand store, isAuthenticated becomes true and the guard above
+    // redirects on the next render — no imperative navigate() needed.
   });
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="w-full max-w-md">
         <Card className="shadow-xl border-gray-200">
-          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               ברוכים הבאים
@@ -83,7 +80,7 @@ export const Login: React.FC = () => {
                   סיסמה
                 </label>
               </div>
-              
+
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="הזן את הסיסמה שלך"
@@ -97,14 +94,17 @@ export const Login: React.FC = () => {
                     className="text-gray-400 hover:text-gray-600"
                     disabled={isLoading}
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 }
                 {...register("password")}
               />
             </div>
 
-            {/* Remember Me */}
             <div className="flex">
               <label className="flex flex-row-reverse items-center gap-2 cursor-pointer text-sm text-gray-700">
                 <input
@@ -117,14 +117,12 @@ export const Login: React.FC = () => {
               </label>
             </div>
 
-            {/* Error Message */}
             {error && (
               <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-600 text-right">{error}</p>
               </div>
             )}
 
-            {/* Submit Button */}
             <Button
               type="submit"
               className="w-full py-3 text-base font-semibold shadow-lg hover:shadow-xl transition-shadow"

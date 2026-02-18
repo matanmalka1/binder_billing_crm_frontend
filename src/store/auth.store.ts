@@ -5,27 +5,12 @@ import {
   createJSONStorage,
   type StateStorage,
 } from "zustand/middleware";
-import {
-  AUTH_EXPIRED_EVENT,
-  AUTH_TOKEN_STORAGE_KEY,
-  AUTH_USER_STORAGE_KEY,
-} from "../api/client";
+import { AUTH_EXPIRED_EVENT } from "../api/client";
 import { authApi } from "../api/auth.api";
 import { getErrorMessage } from "../utils/utils";
 import type { AuthState } from "./auth.types";
 
 const AUTH_STORAGE_NAME = "auth-storage";
-
-const clearLegacyAuthStorage = () => {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
-    sessionStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
-    localStorage.removeItem(AUTH_USER_STORAGE_KEY);
-  } catch {
-    // ignore storage access errors (e.g., SSR or disabled storage)
-  }
-};
 
 const getInitialTarget = (): "local" | "session" => {
   if (typeof window === "undefined") return "local";
@@ -69,8 +54,6 @@ const dynamicStorage: StateStorage = {
     } catch {}
   },
 };
-
-clearLegacyAuthStorage();
 
 export const useAuthStore = create<AuthState>()(
   devtools(
