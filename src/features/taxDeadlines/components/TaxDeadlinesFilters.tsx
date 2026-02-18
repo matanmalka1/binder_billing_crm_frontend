@@ -8,8 +8,6 @@ interface TaxDeadlinesFiltersProps {
   onChange: (key: string, value: string) => void;
 }
 
-TaxDeadlinesFilters.displayName = "TaxDeadlinesFilters";
-
 const DEADLINE_TYPE_OPTIONS = [
   { value: "", label: "כל הסוגים" },
   { value: "vat", label: "מע״מ" },
@@ -31,7 +29,7 @@ const PAGE_SIZE_OPTIONS = [
   { value: "100", label: "100 בעמוד" },
 ];
 
-export function TaxDeadlinesFilters({ filters, onChange }: TaxDeadlinesFiltersProps) {
+export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersProps) => {
   const handleReset = () => {
     onChange("client_id", "");
     onChange("deadline_type", "");
@@ -69,4 +67,6 @@ export function TaxDeadlinesFilters({ filters, onChange }: TaxDeadlinesFiltersPr
       </div>
     </FilterBar>
   );
-}
+};
+
+TaxDeadlinesFilters.displayName = "TaxDeadlinesFilters";

@@ -23,15 +23,13 @@ interface ChargeRowProps {
   onRunAction: (chargeId: number, action: "issue" | "markPaid" | "cancel") => Promise<void>;
 }
 
-ChargeRow.displayName = "ChargeRow";
-
-export function ChargeRow({
+export const ChargeRow = ({
   charge,
   index,
   actionLoadingId,
   isAdvisor,
   onRunAction,
-}: ChargeRowProps) {
+}: ChargeRowProps) => {
   const isLoading = actionLoadingId === charge.id;
   const isDisabled = actionLoadingId !== null && actionLoadingId !== charge.id;
 
@@ -153,4 +151,6 @@ export function ChargeRow({
       </td>
     </tr>
   );
-}
+};
+
+ChargeRow.displayName = "ChargeRow";

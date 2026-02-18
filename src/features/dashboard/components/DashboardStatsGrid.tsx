@@ -17,8 +17,6 @@ interface DashboardStatsGridProps {
   stats: StatItem[];
 }
 
-DashboardStatsGrid.displayName = "DashboardStatsGrid";
-
 /* ── Variant maps (const objects, never ternaries) ─────────────────────── */
 
 const borderMap: Record<StatItem["variant"], string> = {
@@ -55,7 +53,7 @@ const glowMap: Record<StatItem["variant"], string> = {
 
 /* ── Animated counter ───────────────────────────────────────────────────── */
 
-function useAnimatedCount(target: number, delay: number = 0): number {
+const useAnimatedCount = (target: number, delay: number = 0): number => {
   const [display, setDisplay] = useState(0);
   const frameRef = useRef<number>(0);
 
@@ -81,7 +79,7 @@ function useAnimatedCount(target: number, delay: number = 0): number {
   }, [target, delay]);
 
   return display;
-}
+};
 
 /* ── Single stat card ───────────────────────────────────────────────────── */
 
@@ -147,7 +145,7 @@ StatCard.displayName = "StatCard";
 
 /* ── Grid ───────────────────────────────────────────────────────────────── */
 
-export function DashboardStatsGrid({ stats }: DashboardStatsGridProps) {
+export const DashboardStatsGrid = ({ stats }: DashboardStatsGridProps) => {
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-5">
       {stats.map((stat, index) => (
@@ -155,4 +153,6 @@ export function DashboardStatsGrid({ stats }: DashboardStatsGridProps) {
       ))}
     </div>
   );
-}
+};
+
+DashboardStatsGrid.displayName = "DashboardStatsGrid";

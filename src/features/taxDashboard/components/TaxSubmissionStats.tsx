@@ -6,9 +6,7 @@ interface TaxSubmissionStatsProps {
   data?: TaxSubmissionWidgetResponse;
 }
 
-TaxSubmissionStats.displayName = "TaxSubmissionStats";
-
-export function TaxSubmissionStats({ data }: TaxSubmissionStatsProps) {
+export const TaxSubmissionStats = ({ data }: TaxSubmissionStatsProps) => {
   if (!data) return null;
 
   return (
@@ -44,4 +42,6 @@ export function TaxSubmissionStats({ data }: TaxSubmissionStatsProps) {
       />
     </div>
   );
-}
+};
+
+TaxSubmissionStats.displayName = "TaxSubmissionStats";

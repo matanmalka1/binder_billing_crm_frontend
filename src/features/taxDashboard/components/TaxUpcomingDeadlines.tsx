@@ -15,9 +15,7 @@ interface TaxUpcomingDeadlinesProps {
   items: TaxDeadlineResponse[];
 }
 
-TaxUpcomingDeadlines.displayName = "TaxUpcomingDeadlines";
-
-export function TaxUpcomingDeadlines({ items }: TaxUpcomingDeadlinesProps) {
+export const TaxUpcomingDeadlines = ({ items }: TaxUpcomingDeadlinesProps) => {
   return (
     <Card
       variant="elevated"
@@ -83,4 +81,6 @@ export function TaxUpcomingDeadlines({ items }: TaxUpcomingDeadlinesProps) {
       )}
     </Card>
   );
-}
+};
+
+TaxUpcomingDeadlines.displayName = "TaxUpcomingDeadlines";

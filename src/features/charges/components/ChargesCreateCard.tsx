@@ -18,18 +18,16 @@ interface ChargesCreateCardProps {
   onSubmit: (payload: CreateChargePayload) => Promise<boolean>;
 }
 
-ChargesCreateCard.displayName = "ChargesCreateCard";
-
 const CHARGE_TYPE_OPTIONS = [
   { value: "one_time", label: "חד פעמי" },
   { value: "retainer", label: "ריטיינר" },
 ];
 
-export function ChargesCreateCard({
+export const ChargesCreateCard = ({
   createError,
   createLoading,
   onSubmit,
-}: ChargesCreateCardProps) {
+}: ChargesCreateCardProps) => {
   const {
     formState: { errors },
     handleSubmit,
@@ -100,4 +98,6 @@ export function ChargesCreateCard({
       </form>
     </Card>
   );
-}
+};
+
+ChargesCreateCard.displayName = "ChargesCreateCard";

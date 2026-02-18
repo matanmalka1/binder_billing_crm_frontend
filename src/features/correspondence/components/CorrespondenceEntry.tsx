@@ -47,9 +47,7 @@ interface CorrespondenceEntryItemProps {
   entry: CorrespondenceEntryType;
 }
 
-CorrespondenceEntryItem.displayName = "CorrespondenceEntryItem";
-
-export function CorrespondenceEntryItem({ entry }: CorrespondenceEntryItemProps) {
+export const CorrespondenceEntryItem = ({ entry }: CorrespondenceEntryItemProps) => {
   const config = TYPE_CONFIG[entry.correspondence_type] ?? DEFAULT_CONFIG;
 
   return (
@@ -86,4 +84,6 @@ export function CorrespondenceEntryItem({ entry }: CorrespondenceEntryItemProps)
       </div>
     </li>
   );
-}
+};
+
+CorrespondenceEntryItem.displayName = "CorrespondenceEntryItem";

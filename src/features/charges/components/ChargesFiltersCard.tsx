@@ -11,8 +11,6 @@ interface ChargesFiltersCardProps {
   onFilterChange: (key: string, value: string) => void;
 }
 
-ChargesFiltersCard.displayName = "ChargesFiltersCard";
-
 const STATUS_OPTIONS = [
   { value: "", label: "כל הסטטוסים" },
   { value: "draft", label: "טיוטה" },
@@ -27,11 +25,11 @@ const PAGE_SIZE_OPTIONS = [
   { value: "100", label: "100 בעמוד" },
 ];
 
-export function ChargesFiltersCard({
+export const ChargesFiltersCard = ({
   filters,
   onClear,
   onFilterChange,
-}: ChargesFiltersCardProps) {
+}: ChargesFiltersCardProps) => {
   const hasActive = Boolean(filters.client_id || filters.status);
 
   return (
@@ -73,4 +71,6 @@ export function ChargesFiltersCard({
       </div>
     </Card>
   );
-}
+};
+
+ChargesFiltersCard.displayName = "ChargesFiltersCard";

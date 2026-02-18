@@ -13,8 +13,6 @@ interface TaxDeadlineFormProps {
   isSubmitting: boolean;
 }
 
-TaxDeadlineForm.displayName = "TaxDeadlineForm";
-
 const DEADLINE_TYPE_OPTIONS = [
   { value: "vat", label: "מע״מ" },
   { value: "advance_payment", label: "מקדמות" },
@@ -23,13 +21,13 @@ const DEADLINE_TYPE_OPTIONS = [
   { value: "other", label: "אחר" },
 ];
 
-export function TaxDeadlineForm({
+export const TaxDeadlineForm = ({
   open,
   onClose,
   onSubmit,
   form,
   isSubmitting,
-}: TaxDeadlineFormProps) {
+}: TaxDeadlineFormProps) => {
   const { register, formState: { errors }, reset } = form;
 
   const handleClose = () => {
@@ -109,4 +107,6 @@ export function TaxDeadlineForm({
       </div>
     </Modal>
   );
-}
+};
+
+TaxDeadlineForm.displayName = "TaxDeadlineForm";

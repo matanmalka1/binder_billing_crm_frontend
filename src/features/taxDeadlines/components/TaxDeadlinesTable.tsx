@@ -19,19 +19,17 @@ interface TaxDeadlinesTableProps {
   completingId: number | null;
 }
 
-TaxDeadlinesTable.displayName = "TaxDeadlinesTable";
-
 const urgencyRowMap: Record<string, string> = {
   overdue: "bg-red-50/40",
   red: "bg-orange-50/30",
   yellow: "bg-yellow-50/30",
 };
 
-export function TaxDeadlinesTable({
+export const TaxDeadlinesTable = ({
   deadlines,
   onComplete,
   completingId,
-}: TaxDeadlinesTableProps) {
+}: TaxDeadlinesTableProps) => {
   if (deadlines.length === 0) {
     return (
       <EmptyState
@@ -169,4 +167,6 @@ export function TaxDeadlinesTable({
       </div>
     </Card>
   );
-}
+};
+
+TaxDeadlinesTable.displayName = "TaxDeadlinesTable";

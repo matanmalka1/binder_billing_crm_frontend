@@ -5,9 +5,7 @@ import { SLA_STATE_OPTIONS, WORK_STATE_OPTIONS } from "../../../constants/filter
 import type { BindersFiltersBarProps } from "../types";
 import { cn } from "../../../utils/utils";
 
-BindersFiltersBar.displayName = "BindersFiltersBar";
-
-export function BindersFiltersBar({ filters, onFilterChange }: BindersFiltersBarProps) {
+export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBarProps) => {
   const activeCount = [filters.work_state, filters.sla_state].filter(Boolean).length;
   const hasActive = activeCount > 0;
 
@@ -81,7 +79,9 @@ export function BindersFiltersBar({ filters, onFilterChange }: BindersFiltersBar
       )}
     </div>
   );
-}
+};
+
+BindersFiltersBar.displayName = "BindersFiltersBar";
 
 /* ─── Sub-component ─────────────────────────────────────────── */
 

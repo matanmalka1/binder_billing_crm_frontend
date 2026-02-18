@@ -17,15 +17,13 @@ interface TaxUrgentDeadlinesProps {
   items: DeadlineUrgentItem[];
 }
 
-TaxUrgentDeadlines.displayName = "TaxUrgentDeadlines";
-
 const urgencyBorderMap: Record<string, string> = {
   overdue: "border-r-4 border-r-red-600",
   red: "border-r-4 border-r-red-400",
   yellow: "border-r-4 border-r-yellow-400",
 };
 
-export function TaxUrgentDeadlines({ items }: TaxUrgentDeadlinesProps) {
+export const TaxUrgentDeadlines = ({ items }: TaxUrgentDeadlinesProps) => {
   return (
     <Card
       variant="elevated"
@@ -127,7 +125,9 @@ export function TaxUrgentDeadlines({ items }: TaxUrgentDeadlinesProps) {
       )}
     </Card>
   );
-}
+};
+
+TaxUrgentDeadlines.displayName = "TaxUrgentDeadlines";
 
 /* ─── Sub-component ─────────────────────────────────────────────────── */
 

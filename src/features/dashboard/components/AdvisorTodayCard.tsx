@@ -4,9 +4,7 @@ import { useAdvisorToday } from "../hooks/useAdvisorToday";
 import { formatDate, cn } from "../../../utils/utils";
 import { getStatusLabel } from "../../../api/Annualreports.extended.utils";
 
-AdvisorTodayCard.displayName = "AdvisorTodayCard";
-
-export function AdvisorTodayCard() {
+export const AdvisorTodayCard = () => {
   const {
     isLoading,
     upcomingDeadlines,
@@ -95,4 +93,6 @@ export function AdvisorTodayCard() {
       )}
     </div>
   );
-}
+};
+
+AdvisorTodayCard.displayName = "AdvisorTodayCard";

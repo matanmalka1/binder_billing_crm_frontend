@@ -12,9 +12,7 @@ interface CorrespondenceCardProps {
   clientId: number;
 }
 
-CorrespondenceCard.displayName = "CorrespondenceCard";
-
-export function CorrespondenceCard({ clientId }: CorrespondenceCardProps) {
+export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const { entries, isLoading, error, createEntry, isCreating } =
     useCorrespondence(clientId);
@@ -83,4 +81,6 @@ export function CorrespondenceCard({ clientId }: CorrespondenceCardProps) {
       />
     </>
   );
-}
+};
+
+CorrespondenceCard.displayName = "CorrespondenceCard";
