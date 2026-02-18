@@ -1,0 +1,74 @@
+import { Card } from "../../../components/ui/Card";
+import type { SeasonSummary } from "../../../api/annualReports.extended.api";
+import { SEASON_PROGRESS_STAGES } from "../../../api/annualReports.extended.utils";
+import { cn } from "../../../utils/utils";
+
+interface Props {
+  summary: SeasonSummary;
+}
+
+const summaryKey: Record<string, keyof SeasonSummary> = {
+  not_started: "not_started",
+  collecting_docs: "collecting_docs",
+  in_preparation: "in_preparation",
+  pending_client: "pending_client",
+  submitted: "submitted",
+  closed: "closed",
+};
+
+export const SeasonProgressBar: React.FC<Props> = ({ summary }) => {
+  const total = summary.total || 1;
+
+  return (
+    <Card variant="elevated" title="התקדמות עונת הגשה" subtitle={`שנת מס ${summary.tax_year}`}>
+      {/* Stacked progress bar */}
+      <div className="mb-6 h-5 w-full overflow-hidden rounded-full bg-gray-100 flex">
+        {SEASON_PROGRESS_STAGES.map((stage) => {
+          const count = (summary[summaryKey[stage.key] as keyof SeasonSummary] as number) ?? 0;
+          const pct = (count / total) * 100;
+          if (pct === 0) return null;
+          return (
+            <div
+              key={stage.key}
+              className={cn("transition-all duration-700", stage.color)}
+              style={{ width: `${pct}%` }}
+              title={`${stage.label}: ${count}`}
+            />
+          );
+        })}
+      </div>
+
+      {/* Legend */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        {SEASON_PROGRESS_STAGES.map((stage) => {
+          const count = (summary[summaryKey[stage.key] as keyof SeasonSummary] as number) ?? 0;
+          const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+          return (
+            <div key={stage.key} className="flex flex-col gap-1">
+              <div className="flex items-center gap-1.5">
+                <div className={cn("h-3 w-3 rounded-full flex-shrink-0", stage.color)} />
+                <span className="text-xs text-gray-600 truncate">{stage.label}</span>
+              </div>
+              <div className="flex items-baseline gap-1 pr-4">
+                <span className="text-lg font-bold text-gray-900">{count}</span>
+                <span className="text-xs text-gray-500">({pct}%)</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Additional stats row */}
+      {(summary.assessment_issued > 0 || summary.objection_filed > 0) && (
+        <div className="mt-4 flex gap-4 border-t border-gray-100 pt-4 text-sm text-gray-600">
+          {summary.assessment_issued > 0 && (
+            <span>שומות שהוצאו: <strong>{summary.assessment_issued}</strong></span>
+          )}
+          {summary.objection_filed > 0 && (
+            <span>השגות: <strong className="text-red-600">{summary.objection_filed}</strong></span>
+          )}
+        </div>
+      )}
+    </Card>
+  );
+};
