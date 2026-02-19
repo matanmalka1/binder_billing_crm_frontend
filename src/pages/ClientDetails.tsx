@@ -12,6 +12,7 @@ import { ClientInfoSection } from "../features/clients/components/ClientInfoSect
 import { ClientRelatedData } from "../features/clients/components/ClientRelatedData";
 import { useRole } from "../hooks/useRole";
 import { useClientDetails } from "../features/clients/hooks/useClientDetails";
+import { SignatureRequestsCard } from "../features/signatureRequests/components/SignatureRequestsCard";
 
 export const ClientDetails: React.FC = () => {
   const { clientId } = useParams<{ clientId: string }>();
@@ -78,6 +79,8 @@ export const ClientDetails: React.FC = () => {
             <AuthorityContactsCard clientId={client.id} />
 
             <CorrespondenceCard clientId={client.id} />
+
+            <SignatureRequestsCard client={client} canManage={can.editClients} />
           </>
         )}
       </PageStateGuard>

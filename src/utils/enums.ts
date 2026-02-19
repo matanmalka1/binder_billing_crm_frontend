@@ -96,3 +96,26 @@ const ACTION_LABELS: Record<string, string> = {
 export const getActionLabel = (action: string): string => {
   return ACTION_LABELS[action] || "—";
 };
+
+export const getSignatureRequestStatusLabel = (status: string): string => {
+  const labels: Record<string, string> = {
+    draft: 'טיוטה',
+    pending_signature: 'ממתין לחתימה',
+    signed: 'נחתם',
+    declined: 'נדחה',
+    expired: 'פג תוקף',
+    canceled: 'בוטל',
+  };
+  return labels[status] || '—';
+};
+
+export const getSignatureRequestTypeLabel = (type: string): string => {
+  const labels: Record<string, string> = {
+    engagement_agreement: 'הסכם התקשרות',
+    annual_report_approval: 'אישור דוח שנתי',
+    power_of_attorney: 'ייפוי כוח',
+    vat_return_approval: 'אישור דוח מע"מ',
+    custom: 'מותאם אישית',
+  };
+  return labels[type] || '—';
+};

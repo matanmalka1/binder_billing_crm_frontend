@@ -68,7 +68,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     page,
     pageSize,
     pendingAction,
-    runAction,
+    runAction: handleAction,
     setPage,
     setPageSize,
     total: timelineQuery.data?.total ?? 0,

@@ -24,6 +24,7 @@ import { AgingReportPage } from "../pages/reports/AgingReport";
 import { RemindersPage } from "../pages/reports/Reminders";
 import { ExcelImportExportPage } from "../pages/reports/ExcelImportExportPage";
 import { AdvancePayments } from "../pages/tax/AdvancePayments";
+import { SigningPage } from "../pages/SigningPage";
 
 const AuthExpiredNavigationHandler: React.FC = () => {
   const navigate = useNavigate();
@@ -97,6 +98,7 @@ export const AppRoutes: React.FC = () => {
           </Route>
         </Route>
 
+        <Route path="/sign/:token" element={<SigningPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
