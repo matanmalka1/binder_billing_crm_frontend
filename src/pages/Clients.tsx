@@ -12,7 +12,6 @@ import { CreateClientModal } from "../features/clients/components/CreateClientMo
 import { buildClientColumns } from "../features/clients/components/clientColumns";
 import { useClientsPage } from "../features/clients/hooks/useClientsPage";
 import { useRole } from "../hooks/useRole";
-import type { CreateClientPayload } from "../api/clients.api";
 
 export const Clients: React.FC = () => {
   const navigate = useNavigate();
