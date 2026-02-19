@@ -5,6 +5,7 @@ export interface BinderResponse {
   id: number;
   client_id: number;
   binder_number: string;
+  binder_type: string;
   status: string;
   received_at: string;
   expected_return_at: string;
@@ -66,6 +67,7 @@ export interface ListOperationalBindersParams {
 export interface ReceiveBinderPayload {
   client_id: number;
   binder_number: string;
+  binder_type: string;
   received_at: string;
   received_by: number;
   notes?: string | null;

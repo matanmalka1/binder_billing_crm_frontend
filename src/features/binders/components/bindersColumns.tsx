@@ -10,6 +10,7 @@ import {
   getSignalLabel,
   getSlaStateLabel,
   getWorkStateLabel,
+  getBinderTypeLabel,
 } from "../../../utils/enums";
 import { formatDate, cn } from "../../../utils/utils";
 
@@ -92,6 +93,15 @@ export const buildBindersColumns = ({
     render: (binder) => (
       <span className="font-mono text-sm font-semibold text-gray-900">
         {binder.binder_number}
+      </span>
+    ),
+  },
+  {
+    key: "binder_type",
+    header: "סוג חומר",
+    render: (binder) => (
+      <span className="text-sm text-gray-700">
+        {getBinderTypeLabel(binder.binder_type)}
       </span>
     ),
   },

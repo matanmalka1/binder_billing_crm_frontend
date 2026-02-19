@@ -3,10 +3,13 @@ import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
 import { DataTable } from "../components/ui/DataTable";
 import { ErrorCard } from "../components/ui/ErrorCard";
+import { Button } from "../components/ui/Button";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { BindersFiltersBar } from "../features/binders/components/BindersFiltersBar";
 import { buildBindersColumns } from "../features/binders/components/bindersColumns";
+import { ReceiveBinderModal } from "../features/binders/components/ReceiveBinderModal";
 import { useBindersPage } from "../features/binders/hooks/useBindersPage";
+import { useReceiveBinderModal } from "../features/binders/hooks/useReceiveBinderModal";
 
 export const Binders: React.FC = () => {
   const {
@@ -23,6 +26,8 @@ export const Binders: React.FC = () => {
     pendingAction,
   } = useBindersPage();
 
+  const receiveModal = useReceiveBinderModal();
+
   const columns = useMemo(
     () => buildBindersColumns({ activeActionKeyRef, onAction }),
     [activeActionKeyRef, onAction],
@@ -34,6 +39,11 @@ export const Binders: React.FC = () => {
         title="קלסרים"
         description="רשימת כל הקלסרים במערכת — סינון לפי מצב עבודה ו-SLA"
         variant="gradient"
+        actions={
+          <Button variant="primary" onClick={receiveModal.handleOpen}>
+            קליטת חומר
+          </Button>
+        }
       />
 
       <FilterBar title="סינון קלסרים">
@@ -52,6 +62,18 @@ export const Binders: React.FC = () => {
           title: "לא נמצאו קלסרים",
           message: "נסה לאפס את הסינון או לחפש עם פרמטרים שונים",
         }}
+      />
+
+      <ReceiveBinderModal
+        open={receiveModal.open}
+        form={receiveModal.form}
+        clientQuery={receiveModal.clientQuery}
+        selectedClient={receiveModal.selectedClient}
+        isSubmitting={receiveModal.isSubmitting}
+        onClose={receiveModal.handleClose}
+        onSubmit={receiveModal.handleSubmit}
+        onClientSelect={receiveModal.handleClientSelect}
+        onClientQueryChange={receiveModal.handleClientQueryChange}
       />
 
       <ConfirmDialog

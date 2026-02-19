@@ -1,10 +1,4 @@
-/**
- * Label mappers for enum values
- *
- * IMPORTANT: These are the canonical source for display labels.
- * When you update these, also update the corresponding constants
- * in src/constants/filterOptions.constants.ts
- */
+
 export const getStatusLabel = (status: string): string => {
   const labels: Record<string, string> = {
     in_office: "במשרד",
@@ -95,6 +89,20 @@ const ACTION_LABELS: Record<string, string> = {
 
 export const getActionLabel = (action: string): string => {
   return ACTION_LABELS[action] || "—";
+};
+
+export const getBinderTypeLabel = (binderType: string): string => {
+  const labels: Record<string, string> = {
+    vat: 'מע"מ',
+    income_tax: "מס הכנסה",
+    national_insurance: "ביטוח לאומי",
+    capital_declaration: "הצהרת הון",
+    annual_report: "דוח שנתי",
+    salary: "שכר",
+    bookkeeping: "הנהלת חשבונות",
+    other: "אחר",
+  };
+  return labels[binderType] || "—";
 };
 
 export const getSignatureRequestStatusLabel = (status: string): string => {
