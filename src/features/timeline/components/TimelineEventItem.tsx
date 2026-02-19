@@ -1,6 +1,5 @@
-import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
-import { Clock, ChevronLeft, FileText, DollarSign } from "lucide-react";
+import { ChevronLeft, FileText, CreditCard, Tag } from "lucide-react";
 import { mapActions } from "../../../lib/actions/mapActions";
 import type { TimelineEvent } from "../../../api/timeline.api";
 import type { ActionCommand } from "../../../lib/actions/types";
@@ -33,82 +32,133 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
 
   return (
     <li
-      className={cn("relative pr-16 animate-fade-in")}
+      className="relative flex gap-3 animate-fade-in"
       style={{ animationDelay: staggerDelay(index) }}
     >
-      <div
-        className={cn(
-          "absolute right-6 top-0 z-10",
-          "rounded-full p-2 shadow-md",
-          "transition-transform hover:scale-110",
-          colors.bg,
-          colors.border,
-          "border-2",
-        )}
-      >
-        <div className={colors.icon}>{getEventIcon(event.event_type)}</div>
+      {/* Timeline dot */}
+      <div className="relative z-10 flex-shrink-0 mt-3.5">
+        <div
+          className={cn(
+            "h-[10px] w-[10px] rounded-full border-2 bg-white shadow-sm",
+            colors.dotBorder,
+          )}
+        >
+          <div className={cn("absolute inset-0 m-auto h-[4px] w-[4px] rounded-full", colors.dotBg)} />
+        </div>
       </div>
 
+      {/* Event card */}
       <div
         className={cn(
-          "rounded-xl border-2 p-4 transition-all duration-200",
-          "hover:shadow-lg hover:-translate-y-1",
-          colors.border,
-          "bg-white",
+          "flex-1 mb-1 rounded-xl border border-gray-200/80 bg-white overflow-hidden",
+          "border-r-2",
+          colors.cardBorder,
+          "transition-all duration-200 hover:shadow-md hover:-translate-y-0.5",
         )}
       >
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <Badge variant="info" className="flex items-center gap-1.5">
-            {getEventIcon(event.event_type)}
-            {getEventTypeLabel(event.event_type)}
-          </Badge>
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <Clock className="h-3 w-3" />
-            {formatTimestamp(event.timestamp)}
+        {/* Subtle top tint */}
+        <div className={cn("h-0.5 w-full bg-gradient-to-l", colors.cardTint, "to-transparent")} />
+
+        <div className="px-4 py-3 space-y-2.5">
+          {/* Header: badge + time */}
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <span
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold",
+                colors.badgeBg,
+                colors.badgeText,
+              )}
+            >
+              <span className={colors.iconColor}>{getEventIcon(event.event_type)}</span>
+              {getEventTypeLabel(event.event_type)}
+            </span>
+
+            <time
+              dateTime={event.timestamp}
+              className="text-xs text-gray-400 font-mono tabular-nums"
+            >
+              {formatTimestamp(event.timestamp)}
+            </time>
           </div>
-        </div>
 
-        <p className="text-sm leading-relaxed text-gray-800 mb-3">
-          {event.description || "—"}
-        </p>
+          {/* Description */}
+          {event.description && (
+            <p className="text-sm leading-relaxed text-gray-700">
+              {event.description}
+            </p>
+          )}
 
-        <div className="flex flex-wrap gap-3 text-xs text-gray-600 mb-3">
-          {event.binder_id && (
-            <div className="flex items-center gap-1.5 rounded-lg bg-gray-50 px-2 py-1">
-              <FileText className="h-3 w-3 text-gray-500" />
-              <span className="font-mono">קלסר #{event.binder_id}</span>
+          {/* Meta chips */}
+          {(event.binder_id || event.charge_id || event.metadata) && (
+            <div className="flex flex-wrap gap-2">
+              {event.binder_id && (
+                <MetaChip
+                  icon={<FileText className="h-3 w-3" />}
+                  label={`קלסר #${event.binder_id}`}
+                  className="bg-slate-50 text-slate-600 border-slate-200"
+                />
+              )}
+              {event.charge_id && (
+                <MetaChip
+                  icon={<CreditCard className="h-3 w-3" />}
+                  label={`חיוב #${event.charge_id}`}
+                  className="bg-amber-50 text-amber-700 border-amber-200"
+                />
+              )}
+              {event.metadata && (
+                <MetaChip
+                  icon={<Tag className="h-3 w-3" />}
+                  label="מטא"
+                  className="bg-indigo-50 text-indigo-600 border-indigo-200"
+                />
+              )}
             </div>
           )}
-          {event.charge_id && (
-            <div className="flex items-center gap-1.5 rounded-lg bg-gray-50 px-2 py-1">
-              <DollarSign className="h-3 w-3 text-gray-500" />
-              <span className="font-mono">חיוב #{event.charge_id}</span>
+
+          {/* Actions */}
+          {resolvedActions.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100/80">
+              {resolvedActions.map((action) => (
+                <Button
+                  key={action.uiKey}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onAction(action)}
+                  isLoading={activeActionKey === action.uiKey}
+                  disabled={
+                    activeActionKey !== null && activeActionKey !== action.uiKey
+                  }
+                  className="text-xs h-7 px-3 bg-white shadow-sm"
+                  data-scope={scopeKey}
+                >
+                  {action.label || "—"}
+                  <ChevronLeft className="h-3 w-3 opacity-60" />
+                </Button>
+              ))}
             </div>
           )}
         </div>
-
-        {resolvedActions.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-3 border-top border-gray-100">
-            {resolvedActions.map((action) => (
-              <Button
-                key={action.uiKey}
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => onAction(action)}
-                isLoading={activeActionKey === action.uiKey}
-                disabled={
-                  activeActionKey !== null &&
-                  activeActionKey !== action.uiKey
-                }
-              >
-                {action.label || "—"}
-                <ChevronLeft className="h-3 w-3" />
-              </Button>
-            ))}
-          </div>
-        )}
       </div>
     </li>
   );
 };
+
+// ── Inline sub-component ──
+interface MetaChipProps {
+  icon: React.ReactNode;
+  label: string;
+  className?: string;
+}
+
+const MetaChip: React.FC<MetaChipProps> = ({ icon, label, className }) => (
+  <span
+    className={cn(
+      "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-mono",
+      className,
+    )}
+  >
+    {icon}
+    {label}
+  </span>
+);
