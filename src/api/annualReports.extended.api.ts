@@ -33,6 +33,7 @@ export type AnnualReportScheduleKey =
 export interface AnnualReportFull {
   id: number;
   client_id: number;
+  client_name?: string | null;
   tax_year: number;
   client_type: ClientTypeForReport;
   form_type: string;

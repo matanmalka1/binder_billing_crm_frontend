@@ -2,7 +2,7 @@ import { CalendarClock, Clock, Bell, Receipt } from "lucide-react";
 import { AdvisorTodaySection } from "./AdvisorTodaySection";
 import { useAdvisorToday } from "../hooks/useAdvisorToday";
 import { formatDate, cn } from "../../../utils/utils";
-import { getStatusLabel } from "../../../api/Annualreports.extended.utils";
+import { getStatusLabel } from "../../../api/annualReports.extended.utils";
 
 export const AdvisorTodayCard = () => {
   const {
