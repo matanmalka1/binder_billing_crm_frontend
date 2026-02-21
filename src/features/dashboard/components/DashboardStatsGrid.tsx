@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
@@ -11,6 +12,7 @@ export interface StatItem {
   icon: LucideIcon;
   variant: "blue" | "green" | "red" | "amber" | "purple";
   urgent?: boolean;
+  href?: string;
 }
 
 interface DashboardStatsGridProps {
@@ -92,18 +94,18 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
   const count = useAnimatedCount(stat.value, index * 80);
   const IconComponent = stat.icon;
 
-  return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-2xl border border-gray-100 bg-white",
-        "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
-        "animate-fade-in",
-        borderMap[stat.variant],
-        glowMap[stat.variant],
-        stat.urgent && "ring-2 ring-red-200 ring-offset-1",
-      )}
-      style={{ animationDelay: staggerDelay(index, 60) }}
-    >
+  const cardClass = cn(
+    "relative overflow-hidden rounded-2xl border border-gray-100 bg-white",
+    "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+    "animate-fade-in",
+    borderMap[stat.variant],
+    glowMap[stat.variant],
+    stat.urgent && "ring-2 ring-red-200 ring-offset-1",
+    stat.href && "cursor-pointer",
+  );
+
+  const inner = (
+    <>
       {/* Subtle background texture */}
       <div className="absolute inset-0 opacity-[0.025]"
         style={{
@@ -138,6 +140,27 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
         {/* Description */}
         <p className="text-xs text-gray-400 leading-relaxed">{stat.description}</p>
       </div>
+    </>
+  );
+
+  if (stat.href) {
+    return (
+      <Link
+        to={stat.href}
+        className={cardClass}
+        style={{ animationDelay: staggerDelay(index, 60) }}
+      >
+        {inner}
+      </Link>
+    );
+  }
+
+  return (
+    <div
+      className={cardClass}
+      style={{ animationDelay: staggerDelay(index, 60) }}
+    >
+      {inner}
     </div>
   );
 };

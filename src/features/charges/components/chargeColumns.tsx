@@ -131,9 +131,13 @@ export const buildChargeColumns = ({
     key: "client_id",
     header: "לקוח",
     render: (charge) => (
-      <span className="font-mono text-sm text-gray-700">
-        #{charge.client_id}
-      </span>
+      <Link
+        to={`/clients/${charge.client_id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="text-sm font-medium text-gray-900 hover:text-blue-700 hover:underline"
+      >
+        {charge.client_name ?? `#${charge.client_id}`}
+      </Link>
     ),
   },
   {

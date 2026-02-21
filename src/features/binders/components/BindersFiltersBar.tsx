@@ -5,35 +5,49 @@ import { SLA_STATE_OPTIONS, WORK_STATE_OPTIONS } from "../../../constants/filter
 import type { BindersFiltersBarProps } from "../types";
 import { cn } from "../../../utils/utils";
 
+const BINDER_STATUS_OPTIONS = [
+  { value: "", label: "כל הסטטוסים" },
+  { value: "in_office", label: "במשרד" },
+  { value: "ready_for_pickup", label: "מוכן לאיסוף" },
+  { value: "overdue", label: "באיחור" },
+];
+
 export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBarProps) => {
-  const activeCount = [filters.work_state, filters.sla_state].filter(Boolean).length;
+  const activeCount = [filters.status, filters.work_state, filters.sla_state].filter(Boolean).length;
   const hasActive = activeCount > 0;
 
   const handleReset = () => {
+    onFilterChange("status", "");
     onFilterChange("work_state", "");
     onFilterChange("sla_state", "");
   };
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Select
+          label="סטטוס"
+          value={filters.status ?? ""}
+          onChange={(e) => onFilterChange("status", e.target.value)}
+          className={cn(filters.status && "border-blue-400 ring-1 ring-blue-200")}
+        >
+          {BINDER_STATUS_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>{o.label}</option>
+          ))}
+        </Select>
         <Select
           label="מצב עבודה"
           value={filters.work_state}
           onChange={(e) => onFilterChange("work_state", e.target.value)}
           options={WORK_STATE_OPTIONS}
-          className={cn(
-            filters.work_state && "border-blue-400 ring-1 ring-blue-200"
-          )}
+          className={cn(filters.work_state && "border-blue-400 ring-1 ring-blue-200")}
         />
         <Select
           label="מצב SLA"
           value={filters.sla_state}
           onChange={(e) => onFilterChange("sla_state", e.target.value)}
           options={SLA_STATE_OPTIONS}
-          className={cn(
-            filters.sla_state && "border-blue-400 ring-1 ring-blue-200"
-          )}
+          className={cn(filters.sla_state && "border-blue-400 ring-1 ring-blue-200")}
         />
 
         {/* Reset button aligned to bottom of grid */}
@@ -63,6 +77,12 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
       {/* Active filter pills */}
       {hasActive && (
         <div className="flex flex-wrap gap-2 animate-fade-in">
+          {filters.status && (
+            <ActivePill
+              label={BINDER_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status}
+              onRemove={() => onFilterChange("status", "")}
+            />
+          )}
           {filters.work_state && (
             <ActivePill
               label={WORK_STATE_OPTIONS.find((o) => o.value === filters.work_state)?.label ?? filters.work_state}

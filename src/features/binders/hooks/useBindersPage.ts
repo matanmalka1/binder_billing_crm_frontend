@@ -12,6 +12,7 @@ export const useBindersPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = useMemo<BindersFilters>(
     () => ({
+      status: searchParams.get("status") ?? "",
       work_state: searchParams.get("work_state") ?? "",
       sla_state: searchParams.get("sla_state") ?? "",
     }),
@@ -20,10 +21,11 @@ export const useBindersPage = () => {
 
   const listParams = useMemo(
     () => ({
+      status: filters.status || undefined,
       work_state: filters.work_state || undefined,
       sla_state: filters.sla_state || undefined,
     }),
-    [filters.sla_state, filters.work_state],
+    [filters.status, filters.sla_state, filters.work_state],
   );
 
   const bindersQuery = useQuery({

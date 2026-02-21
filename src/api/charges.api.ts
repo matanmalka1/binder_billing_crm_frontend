@@ -6,6 +6,7 @@ import { api } from "./client";
 export interface ChargeBase {
   id: number;
   client_id: number;
+  client_name: string | null;
   charge_type: string;
   period: string | null;
   status: string;

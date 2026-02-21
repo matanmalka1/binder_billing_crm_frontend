@@ -16,6 +16,7 @@ export const useClientsPage = () => {
     () => ({
       has_signals: searchParams.get("has_signals") ?? "",
       status: searchParams.get("status") ?? "",
+      search: searchParams.get("search") ?? "",
       page: parsePositiveInt(searchParams.get("page"), 1),
       page_size: parsePositiveInt(searchParams.get("page_size"), 20),
     }),
@@ -26,6 +27,7 @@ export const useClientsPage = () => {
     () => ({
       has_signals: filters.has_signals ? filters.has_signals === "true" : undefined,
       status: filters.status || undefined,
+      search: filters.search || undefined,
       page: filters.page,
       page_size: filters.page_size,
     }),
@@ -60,7 +62,7 @@ export const useClientsPage = () => {
     canonicalAction: true,
   });
 
-  const handleFilterChange = (name: "has_signals" | "status" | "page_size", value: string) => {
+  const handleFilterChange = (name: "has_signals" | "status" | "page_size" | "search", value: string) => {
     const next = new URLSearchParams(searchParams);
     if (value) next.set(name, value);
     else next.delete(name);

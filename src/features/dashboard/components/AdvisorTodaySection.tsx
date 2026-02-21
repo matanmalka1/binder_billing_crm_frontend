@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
@@ -6,6 +7,7 @@ export interface SectionItem {
   id: number;
   label: string;
   sublabel?: string;
+  href?: string;
 }
 
 type Severity = "critical" | "warning" | "info" | "success";
@@ -75,28 +77,49 @@ export const AdvisorTodaySection = ({
       {/* Items list */}
       {hasItems ? (
         <ul className="max-h-40 space-y-1.5 overflow-y-auto">
-          {items.slice(0, 6).map((item, index) => (
-            <li
-              key={item.id}
-              className="flex items-start gap-2.5 rounded-lg px-2.5 py-2 transition-colors hover:bg-gray-50 animate-fade-in"
-              style={{ animationDelay: staggerDelay(index, 35) }}
-            >
-              <span className={cn(
-                "mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full",
-                severityDotMap[severity]
-              )} />
-              <div className="min-w-0">
-                <p className="truncate text-xs font-medium text-gray-800 leading-tight">
-                  {item.label}
-                </p>
-                {item.sublabel && (
-                  <p className="mt-0.5 truncate text-xs text-gray-400">
-                    {item.sublabel}
+          {items.slice(0, 6).map((item, index) => {
+            const rowContent = (
+              <>
+                <span className={cn(
+                  "mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full",
+                  severityDotMap[severity]
+                )} />
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-medium text-gray-800 leading-tight">
+                    {item.label}
                   </p>
-                )}
-              </div>
-            </li>
-          ))}
+                  {item.sublabel && (
+                    <p className="mt-0.5 truncate text-xs text-gray-400">
+                      {item.sublabel}
+                    </p>
+                  )}
+                </div>
+              </>
+            );
+
+            if (item.href) {
+              return (
+                <li key={item.id} style={{ animationDelay: staggerDelay(index, 35) }}>
+                  <Link
+                    to={item.href}
+                    className="flex items-start gap-2.5 rounded-lg px-2.5 py-2 transition-colors hover:bg-gray-50 animate-fade-in"
+                  >
+                    {rowContent}
+                  </Link>
+                </li>
+              );
+            }
+
+            return (
+              <li
+                key={item.id}
+                className="flex items-start gap-2.5 rounded-lg px-2.5 py-2 animate-fade-in"
+                style={{ animationDelay: staggerDelay(index, 35) }}
+              >
+                {rowContent}
+              </li>
+            );
+          })}
           {items.length > 6 && (
             <li className="py-1 text-center text-xs text-gray-400">
               ועוד {items.length - 6}...

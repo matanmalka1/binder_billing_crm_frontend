@@ -6,6 +6,7 @@ import type { PaginatedResponse } from "../types/common";
 export interface TaxDeadlineResponse {
   id: number;
   client_id: number;
+  client_name: string | null;
   deadline_type: string;
   due_date: string;
   status: string;

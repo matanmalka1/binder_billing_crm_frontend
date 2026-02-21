@@ -14,6 +14,7 @@ const sections = [
     icon: AlertTriangle,
     types: ["overdue", "overdue_binder", "idle_binder"],
     severity: "critical" as const,
+    viewAllHref: "/binders?sla_state=overdue",
   },
   {
     key: "unpaid",
@@ -21,6 +22,7 @@ const sections = [
     icon: DollarSign,
     types: ["unpaid_charge", "unpaid_charges"],
     severity: "warning" as const,
+    viewAllHref: "/charges?status=issued",
   },
   {
     key: "ready",
@@ -28,6 +30,7 @@ const sections = [
     icon: Package,
     types: ["ready_for_pickup"],
     severity: "success" as const,
+    viewAllHref: "/binders?status=ready_for_pickup",
   },
 ] as const;
 

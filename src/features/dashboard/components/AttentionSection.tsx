@@ -1,4 +1,5 @@
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import type { AttentionItem } from "../../../api/dashboard.api";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
@@ -11,6 +12,7 @@ interface SectionDef {
   icon: React.ElementType;
   types: readonly string[];
   severity: Severity;
+  viewAllHref: string;
 }
 
 interface AttentionSectionProps {
@@ -18,6 +20,22 @@ interface AttentionSectionProps {
   items: AttentionItem[];
   sectionIndex: number;
 }
+
+/* ── Route map per item_type ────────────────────────────────────────────── */
+
+const itemHrefMap: Record<string, (item: AttentionItem) => string> = {
+  overdue:        (item) => item.client_id ? `/clients/${item.client_id}` : "/binders?sla_state=overdue",
+  overdue_binder: (item) => item.client_id ? `/clients/${item.client_id}` : "/binders?sla_state=overdue",
+  idle_binder:    (item) => item.client_id ? `/clients/${item.client_id}` : "/binders?work_state=waiting_for_work",
+  unpaid_charge:  (item) => item.client_id ? `/clients/${item.client_id}` : "/charges?status=issued",
+  unpaid_charges: (item) => item.client_id ? `/clients/${item.client_id}` : "/charges?status=issued",
+  ready_for_pickup: (item) => item.client_id ? `/clients/${item.client_id}` : "/binders?status=ready_for_pickup",
+};
+
+const getItemHref = (item: AttentionItem): string => {
+  const fn = itemHrefMap[item.item_type];
+  return fn ? fn(item) : (item.client_id ? `/clients/${item.client_id}` : "/binders");
+};
 
 /* ── Variant maps ───────────────────────────────────────────────────────── */
 
@@ -43,6 +61,12 @@ const severityItemMap: Record<Severity, string> = {
   critical: "border-r-2 border-r-red-300 bg-red-50/40 hover:bg-red-50",
   warning:  "border-r-2 border-r-amber-300 bg-amber-50/30 hover:bg-amber-50",
   success:  "border-r-2 border-r-emerald-300 bg-emerald-50/30 hover:bg-emerald-50",
+};
+
+const severityViewAllMap: Record<Severity, string> = {
+  critical: "text-red-600 hover:text-red-800",
+  warning:  "text-amber-600 hover:text-amber-800",
+  success:  "text-emerald-600 hover:text-emerald-800",
 };
 
 /* ── Component ──────────────────────────────────────────────────────────── */
@@ -76,11 +100,12 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
       {/* Items */}
       <div className="flex-1 space-y-1.5 overflow-y-auto p-4" style={{ maxHeight: "260px" }}>
         {hasItems ? (
-          items.map((item, index) => (
-            <div
+          items.slice(0, 6).map((item, index) => (
+            <Link
               key={`${section.key}-${item.client_id}-${item.binder_id}-${index}`}
+              to={getItemHref(item)}
               className={cn(
-                "rounded-lg border border-transparent px-3 py-2.5 transition-colors duration-150",
+                "block rounded-lg border border-transparent px-3 py-2.5 transition-colors duration-150",
                 "animate-fade-in",
                 severityItemMap[section.severity]
               )}
@@ -100,7 +125,7 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
                   <span className="font-mono text-gray-400">קלסר #{item.binder_id}</span>
                 )}
               </div>
-            </div>
+            </Link>
           ))
         ) : (
           <div className="flex flex-col items-center justify-center py-8 text-center opacity-50">
@@ -115,6 +140,22 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
           </p>
         )}
       </div>
+
+      {/* View all link */}
+      {hasItems && (
+        <div className="border-t border-gray-100 px-5 py-2.5">
+          <Link
+            to={section.viewAllHref}
+            className={cn(
+              "flex items-center gap-1 text-xs font-medium transition-colors",
+              severityViewAllMap[section.severity]
+            )}
+          >
+            צפה בכולם
+            <ArrowLeft className="h-3 w-3 rtl:rotate-180" />
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

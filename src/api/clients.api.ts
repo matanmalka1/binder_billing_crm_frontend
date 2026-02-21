@@ -22,6 +22,7 @@ export type ClientListResponse = PaginatedResponse<ClientResponse>;
 export interface ListClientsParams {
   status?: string;
   has_signals?: boolean;
+  search?: string;
   page?: number;
   page_size?: number;
 }

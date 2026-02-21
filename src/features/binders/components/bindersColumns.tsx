@@ -1,5 +1,7 @@
 import { type RefObject } from "react";
+import { Link } from "react-router-dom";
 import { Badge } from "../../../components/ui/Badge";
+import { Button } from "../../../components/ui/Button";
 import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { buildActionsColumn } from "../../../components/ui/columnHelpers";
@@ -76,6 +78,79 @@ const SignalsCell: React.FC<{ signals: string[] | null | undefined }> = ({ signa
 };
 SignalsCell.displayName = "SignalsCell";
 
+/* ─── Inline quick-actions cell ──────────────────────────────── */
+
+interface QuickActionsCellProps {
+  binder: BinderResponse;
+  activeActionKeyRef: RefObject<string | null>;
+  onAction: (action: ActionCommand) => void;
+}
+
+const QuickActionsCell: React.FC<QuickActionsCellProps> = ({ binder, activeActionKeyRef, onAction }) => {
+  const canMarkReady = binder.status === "in_office";
+  const canReturn = binder.status === "ready_for_pickup";
+
+  const isActive = (key: string) => activeActionKeyRef.current === key;
+
+  const handleReady = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onAction({
+      key: "mark_ready",
+      id: String(binder.id),
+      method: "POST",
+      endpoint: `/api/v1/binders/${binder.id}/ready`,
+      uiKey: `binder-ready-${binder.id}`,
+      label: "מוכן לאיסוף",
+    });
+  };
+
+  const handleReturn = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onAction({
+      key: "return_binder",
+      id: String(binder.id),
+      method: "POST",
+      endpoint: `/api/v1/binders/${binder.id}/return`,
+      uiKey: `binder-return-${binder.id}`,
+      label: "החזר קלסר",
+      confirm: {
+        title: "החזרת קלסר",
+        message: "האם לאשר את החזרת הקלסר ללקוח?",
+        confirmLabel: "אישור",
+        cancelLabel: "ביטול",
+      },
+    });
+  };
+
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {canMarkReady && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          isLoading={isActive(`binder-ready-${binder.id}`)}
+          onClick={handleReady}
+        >
+          מוכן לאיסוף
+        </Button>
+      )}
+      {canReturn && (
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          isLoading={isActive(`binder-return-${binder.id}`)}
+          onClick={handleReturn}
+        >
+          החזר
+        </Button>
+      )}
+    </div>
+  );
+};
+QuickActionsCell.displayName = "QuickActionsCell";
+
 /* ─── Column builder ─────────────────────────────────────────── */
 
 interface BuildBindersColumnsParams {
@@ -87,6 +162,19 @@ export const buildBindersColumns = ({
   activeActionKeyRef,
   onAction,
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
+  {
+    key: "client_name",
+    header: "לקוח",
+    render: (binder) => (
+      <Link
+        to={`/clients/${binder.client_id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="text-sm font-medium text-gray-900 hover:text-blue-700 hover:underline"
+      >
+        {binder.client_name ?? `#${binder.client_id}`}
+      </Link>
+    ),
+  },
   {
     key: "binder_number",
     header: "מספר קלסר",
@@ -162,8 +250,19 @@ export const buildBindersColumns = ({
     header: "אותות",
     render: (binder) => <SignalsCell signals={binder.signals} />,
   },
+  {
+    key: "quick_actions",
+    header: "פעולות מהירות",
+    render: (binder) => (
+      <QuickActionsCell
+        binder={binder}
+        activeActionKeyRef={activeActionKeyRef}
+        onAction={onAction}
+      />
+    ),
+  },
   buildActionsColumn<BinderResponse>({
-    header: "פעולות",
+    header: "",
     activeActionKeyRef,
     onAction,
     getActions: (binder) => binder.available_actions as BackendAction[] | null | undefined,

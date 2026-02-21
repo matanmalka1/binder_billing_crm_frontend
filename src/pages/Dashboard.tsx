@@ -62,6 +62,7 @@ export const Dashboard: React.FC = () => {
                 description: "סך הכל לקוחות פעילים",
                 icon: Users,
                 variant: "blue",
+                href: "/clients",
               },
               {
                 key: "active_binders",
@@ -70,6 +71,7 @@ export const Dashboard: React.FC = () => {
                 description: "טרם הוחזרו ללקוח",
                 icon: FolderOpen,
                 variant: "green",
+                href: "/binders?status=in_office",
               },
               {
                 key: "overdue_binders",
@@ -79,6 +81,7 @@ export const Dashboard: React.FC = () => {
                 icon: AlertTriangle,
                 variant: "red",
                 urgent: dashboard.data.overdue_binders > 0,
+                href: "/binders?sla_state=overdue",
               },
               {
                 key: "due_today",
@@ -87,6 +90,7 @@ export const Dashboard: React.FC = () => {
                 description: "מועד החזרה הוא היום",
                 icon: Calendar,
                 variant: "amber",
+                href: "/binders?sla_state=overdue",
               },
               {
                 key: "due_week",
@@ -95,6 +99,7 @@ export const Dashboard: React.FC = () => {
                 description: "מועד החזרה תוך 7 ימים",
                 icon: CalendarClock,
                 variant: "purple",
+                href: "/binders?sla_state=approaching",
               },
             ]}
           />
@@ -120,6 +125,7 @@ export const Dashboard: React.FC = () => {
                 description: "כלל הקלסרים הפעילים",
                 icon: FolderOpen,
                 variant: "blue",
+                href: "/binders?status=in_office",
               },
               {
                 key: "ready",
@@ -128,6 +134,7 @@ export const Dashboard: React.FC = () => {
                 description: "ממתינים לאיסוף לקוח",
                 icon: Users,
                 variant: "green",
+                href: "/binders?status=ready_for_pickup",
               },
               {
                 key: "overdue",
@@ -137,6 +144,7 @@ export const Dashboard: React.FC = () => {
                 icon: AlertTriangle,
                 variant: "red",
                 urgent: dashboard.data.binders_overdue > 0,
+                href: "/binders?sla_state=overdue",
               },
             ]}
           />

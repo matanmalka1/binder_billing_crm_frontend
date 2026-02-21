@@ -7,6 +7,7 @@ import { ErrorCard } from "../components/ui/ErrorCard";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { ChargesCreateCard } from "../features/charges/components/ChargesCreateCard";
 import { ChargesFiltersCard } from "../features/charges/components/ChargesFiltersCard";
+import { ChargesSummaryBar } from "../features/charges/components/ChargesSummaryBar";
 import { buildChargeColumns } from "../features/charges/components/chargeColumns";
 import { useChargesPage } from "../features/charges/hooks/useChargesPage";
 
@@ -61,6 +62,8 @@ export const Charges: React.FC = () => {
         onFilterChange={setFilter}
         onClear={() => setSearchParams(new URLSearchParams())}
       />
+
+      {!loading && <ChargesSummaryBar charges={charges} isAdvisor={isAdvisor} />}
 
       {error && <ErrorCard message={error} />}
 

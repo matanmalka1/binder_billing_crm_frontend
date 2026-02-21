@@ -52,8 +52,9 @@ export const AdvisorTodayCard = () => {
             severity="critical"
             items={upcomingDeadlines.map((d) => ({
               id: d.id,
-              label: `לקוח #${d.client_id} — ${d.deadline_type}`,
-              sublabel: formatDate(d.due_date),
+              label: d.client_name ?? `לקוח #${d.client_id}`,
+              sublabel: `${d.deadline_type} — ${formatDate(d.due_date)}`,
+              href: `/clients/${d.client_id}`,
             }))}
           />
           <AdvisorTodaySection
@@ -63,8 +64,9 @@ export const AdvisorTodayCard = () => {
             severity="warning"
             items={stuckReports.map((r) => ({
               id: r.id,
-              label: `לקוח #${r.client_id} — ${r.tax_year}`,
-              sublabel: `סטטוס: ${getStatusLabel(r.status)}`,
+              label: r.client_name ?? `לקוח #${r.client_id}`,
+              sublabel: `${r.tax_year} — ${getStatusLabel(r.status)}`,
+              href: `/clients/${r.client_id}`,
             }))}
           />
           <AdvisorTodaySection
@@ -76,6 +78,7 @@ export const AdvisorTodayCard = () => {
               id: r.id,
               label: `לקוח #${r.client_id}`,
               sublabel: r.message.slice(0, 48),
+              href: `/clients/${r.client_id}`,
             }))}
           />
           <AdvisorTodaySection
@@ -87,6 +90,7 @@ export const AdvisorTodayCard = () => {
               id: c.id,
               label: `חיוב #${c.id} — לקוח #${c.client_id}`,
               sublabel: c.issued_at ? formatDate(c.issued_at) : "",
+              href: `/charges/${c.id}`,
             }))}
           />
         </div>

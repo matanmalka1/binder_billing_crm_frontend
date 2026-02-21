@@ -4,6 +4,7 @@ import type { PaginatedResponse } from "../types/common";
 export interface BinderResponse {
   id: number;
   client_id: number;
+  client_name: string | null;
   binder_number: string;
   binder_type: string;
   status: string;
