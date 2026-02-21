@@ -51,6 +51,14 @@ export const QK = {
         ["tax", "annual-reports", "season", taxYear, "list"] as const,
       overdue: (taxYear: number) => ["tax", "annual-reports", "overdue", taxYear] as const,
     },
+    vatWorkItems: {
+      all: ["tax", "vat-work-items"] as const,
+      list: (params: object) => ["tax", "vat-work-items", "list", params] as const,
+      detail: (id: number) => ["tax", "vat-work-items", "detail", id] as const,
+      forClient: (clientId: number) => ["tax", "vat-work-items", "client", clientId] as const,
+      invoices: (id: number) => ["tax", "vat-work-items", "invoices", id] as const,
+      audit: (id: number) => ["tax", "vat-work-items", "audit", id] as const,
+    },
     advancePayments: {
       all: ["tax", "advance-payments"] as const,
       forClientYear: (clientId: number, year: number) =>

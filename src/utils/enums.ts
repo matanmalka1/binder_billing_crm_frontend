@@ -127,3 +127,36 @@ export const getSignatureRequestTypeLabel = (type: string): string => {
   };
   return labels[type] || '—';
 };
+
+export const getVatWorkItemStatusLabel = (status: string): string => {
+  const labels: Record<string, string> = {
+    pending_materials: "ממתין לחומרים",
+    material_received: "חומרים התקבלו",
+    data_entry_in_progress: "הקלדה בתהליך",
+    ready_for_review: "ממתין לבדיקה",
+    filed: "הוגש",
+  };
+  return labels[status] || "—";
+};
+
+export const getVatInvoiceTypeLabel = (type: string): string => {
+  const labels: Record<string, string> = {
+    income: "עסקאות",
+    expense: "תשומות",
+  };
+  return labels[type] || "—";
+};
+
+export const getVatExpenseCategoryLabel = (category: string): string => {
+  const labels: Record<string, string> = {
+    office: "משרד",
+    travel: "נסיעות",
+    professional_services: "שירותים מקצועיים",
+    equipment: "ציוד",
+    rent: "שכירות",
+    salary: "שכר",
+    marketing: "שיווק",
+    other: "אחר",
+  };
+  return labels[category] || "—";
+};

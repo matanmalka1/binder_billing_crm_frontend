@@ -24,6 +24,7 @@ import { AgingReportPage } from "../pages/reports/AgingReport";
 import { RemindersPage } from "../pages/reports/Reminders";
 import { ExcelImportExportPage } from "../pages/reports/ExcelImportExportPage";
 import { AdvancePayments } from "../pages/tax/AdvancePayments";
+import { VatWorkItems } from "../pages/tax/VatWorkItems";
 import { SigningPage } from "../pages/SigningPage";
 
 const AuthExpiredNavigationHandler: React.FC = () => {
@@ -92,6 +93,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax/reports" element={<AnnualReportsKanban />} />
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
             <Route path="tax/advance-payments" element={<AdvancePayments />} />
+            <Route path="tax/vat" element={<VatWorkItems />} />
             <Route path="reports/aging" element={<AgingReportPage />} />
             <Route path="reports/reminders" element={<RemindersPage />} />
             <Route path="reports/import-export" element={<ExcelImportExportPage entityType="clients" />} />

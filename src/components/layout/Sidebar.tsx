@@ -14,6 +14,7 @@ import {
   BarChart3,
   Bell,
   KanbanSquare,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "../../utils/utils";
 
@@ -35,6 +36,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     { to: "/tax/reports/season", label: "עונת הגשה", icon: FileSpreadsheet },
     { to: "/tax/deadlines", label: "מועדי מס", icon: CalendarClock },
     { to: "/tax/advance-payments", label: "מקדמות", icon: CalendarDays },
+    { to: "/tax/vat", label: 'דוחות מע"מ', icon: ClipboardList },
     { to: "/reports/aging", label: "דוח חובות", icon: BarChart3 },
     { to: "/reports/reminders", label: "תזכורות", icon: Bell },
     { to: "/reports/import-export", label: "ייבוא/ייצוא", icon: FileSpreadsheet },
