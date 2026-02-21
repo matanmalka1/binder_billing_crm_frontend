@@ -8,6 +8,7 @@ import { api } from "./client";
 export interface VatWorkItemResponse {
   id: number;
   client_id: number;
+  client_name: string | null;
   period: string;
   status: string;
   pending_materials_note: string | null;

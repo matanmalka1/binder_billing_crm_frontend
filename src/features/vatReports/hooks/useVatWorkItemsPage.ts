@@ -51,8 +51,8 @@ export const useVatWorkItemsPage = () => {
       if (action === "materialsComplete") return vatReportsApi.markMaterialsComplete(itemId);
       if (action === "readyForReview") return vatReportsApi.markReadyForReview(itemId);
       if (action === "file") return vatReportsApi.fileVatReturn(itemId, { filing_method: "online" });
-      // sendBack requires a note — handled separately via modal
-      return vatReportsApi.markReadyForReview(itemId);
+      // sendBack requires a correction note — must be triggered via the dedicated sendBackWithNote flow
+      throw new Error("sendBack must be called via sendBackWithNote");
     },
     onSuccess: async () => {
       toast.success("הפעולה בוצעה בהצלחה");
@@ -76,6 +76,26 @@ export const useVatWorkItemsPage = () => {
       }
     },
     [actionMutation, isAdvisor],
+  );
+
+  const sendBackWithNote = useCallback(
+    async (itemId: number, correctionNote: string): Promise<void> => {
+      if (!isAdvisor) {
+        toast.error("פעולה זו זמינה ליועץ בלבד");
+        return;
+      }
+      try {
+        setActionLoadingId(itemId);
+        await vatReportsApi.sendBack(itemId, correctionNote);
+        toast.success("התיק הוחזר לתיקון");
+        await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+      } catch (requestError: unknown) {
+        toast.error(getErrorMessage(requestError, "שגיאה בהחזרת התיק לתיקון"));
+      } finally {
+        setActionLoadingId(null);
+      }
+    },
+    [isAdvisor, queryClient],
   );
 
   const setFilter = (key: string, value: string) => {
@@ -111,6 +131,7 @@ export const useVatWorkItemsPage = () => {
     isAdvisor,
     loading: listQuery.isPending,
     runAction,
+    sendBackWithNote,
     setFilter,
     setSearchParams,
     submitCreate,

@@ -106,7 +106,9 @@ export const buildVatWorkItemColumns = ({
     key: "client_id",
     header: "לקוח",
     render: (item) => (
-      <span className="font-mono text-sm text-gray-700">#{item.client_id}</span>
+      <span className="text-sm text-gray-900">
+        {item.client_name ?? `#${item.client_id}`}
+      </span>
     ),
   },
   {
