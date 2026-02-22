@@ -121,6 +121,7 @@ const QuickActionsCell: React.FC<QuickActionsCellProps> = ({ binder, activeActio
           variant="outline"
           size="sm"
           isLoading={isActive(`binder-ready-${binder.id}`)}
+          title="מסמן את הקלסר כמוכן לאיסוף על ידי הלקוח"
           onClick={handleReady}
         >
           מוכן לאיסוף
@@ -132,6 +133,7 @@ const QuickActionsCell: React.FC<QuickActionsCellProps> = ({ binder, activeActio
           variant="primary"
           size="sm"
           isLoading={isActive(`binder-return-${binder.id}`)}
+          title="מאשר שהקלסר הוחזר ללקוח ומסמן כהוחזר"
           onClick={handleReturn}
         >
           החזר
