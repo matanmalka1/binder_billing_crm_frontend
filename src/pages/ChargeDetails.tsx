@@ -8,12 +8,10 @@ import { PageStateGuard } from "../components/ui/PageStateGuard";
 import { useChargeDetailsPage } from "../features/charges/hooks/useChargeDetailsPage";
 import { getChargeAmountText } from "../features/charges/utils/chargeStatus";
 import { formatDateTime } from "../utils/utils";
-import { useRole } from "../hooks/useRole";
 
 export const ChargeDetails: React.FC = () => {
   const { chargeId } = useParams();
-  const { isAdvisor } = useRole();
-  const { actionLoading, charge, denied, error, loading, runAction } =
+  const { actionLoading, charge, denied, error, loading, runAction, isAdvisor } =
     useChargeDetailsPage(chargeId);
 
   const header = (

@@ -7,10 +7,12 @@ import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import type { CreateClientPayload } from "../../../api/clients.api";
+import { useRole } from "../../../hooks/useRole";
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { isAdvisor, can } = useRole();
 
   const filters = useMemo(
     () => ({
@@ -92,5 +94,7 @@ export const useClientsPage = () => {
     confirmPendingAction,
     createClient: (payload: CreateClientPayload) => createMutation.mutateAsync(payload),
     createLoading: createMutation.isPending,
+    isAdvisor,
+    can,
   };
 };

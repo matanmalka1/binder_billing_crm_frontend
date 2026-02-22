@@ -4,9 +4,9 @@ import { bindersApi } from "../../../api/binders.api";
 import { chargesApi } from "../../../api/charges.api";
 import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
-import { useRole } from "../../../hooks/useRole";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 import { QK } from "../../../lib/queryKeys";
+import { useRole } from "../../../hooks/useRole";
 
 type UseClientDetailsParams = { clientId: number | null };
 
@@ -21,6 +21,7 @@ type UseClientDetailsResult = {
   chargesTotal: number;
   updateClient: (payload: UpdateClientPayload) => Promise<void>;
   isUpdating: boolean;
+  can: ReturnType<typeof useRole>["can"];
 };
 
 const BINDERS_PAGE = { page: 1, page_size: 5 } as const;
@@ -33,7 +34,7 @@ export const useClientDetails = ({
   const isValidId = Number.isFinite(id) && id > 0;
   const enabled = isValidId;
   const queryClient = useQueryClient();
-  const { isAdvisor } = useRole();
+  const { isAdvisor, can } = useRole();
 
   const clientQuery = useQuery({
     queryKey: QK.clients.detail(id),
@@ -84,5 +85,6 @@ export const useClientDetails = ({
     chargesTotal: chargesQuery.data?.total ?? 0,
     updateClient,
     isUpdating: updateMutation.isPending,
+    can,
   };
 };

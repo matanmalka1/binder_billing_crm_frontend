@@ -10,18 +10,16 @@ import { TaxProfileCard } from "../features/taxProfile/components/TaxProfileCard
 import { CorrespondenceCard } from "../features/correspondence/components/CorrespondenceCard";
 import { ClientInfoSection } from "../features/clients/components/ClientInfoSection";
 import { ClientRelatedData } from "../features/clients/components/ClientRelatedData";
-import { useRole } from "../hooks/useRole";
 import { useClientDetails } from "../features/clients/hooks/useClientDetails";
 import { SignatureRequestsCard } from "../features/signatureRequests/components/SignatureRequestsCard";
 
 export const ClientDetails: React.FC = () => {
   const { clientId } = useParams<{ clientId: string }>();
   const navigate = useNavigate();
-  const { can } = useRole();
   const [isEditing, setIsEditing] = useState(false);
   const clientIdNum = clientId ? Number(clientId) : null;
 
-  const { client, isValidId, isLoading, error, binders, bindersTotal, charges, chargesTotal, updateClient, isUpdating } =
+  const { client, isValidId, isLoading, error, binders, bindersTotal, charges, chargesTotal, updateClient, isUpdating, can } =
     useClientDetails({ clientId: clientIdNum });
 
   if (!isValidId) return (<div className="space-y-6"><PageHeader title="פרטי לקוח" /><ErrorCard message="מזהה לקוח לא תקין" /></div>);

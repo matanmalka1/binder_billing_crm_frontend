@@ -11,11 +11,9 @@ import { ClientsFiltersBar } from "../features/clients/components/ClientsFilters
 import { CreateClientModal } from "../features/clients/components/CreateClientModal";
 import { buildClientColumns } from "../features/clients/components/clientColumns";
 import { useClientsPage } from "../features/clients/hooks/useClientsPage";
-import { useRole } from "../hooks/useRole";
 
 export const Clients: React.FC = () => {
   const navigate = useNavigate();
-  const { isAdvisor, can } = useRole();
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const {
@@ -34,6 +32,8 @@ export const Clients: React.FC = () => {
     total,
     createClient,
     createLoading,
+    isAdvisor,
+    can,
   } = useClientsPage();
 
   const columns = useMemo(

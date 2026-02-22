@@ -6,6 +6,7 @@ import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { buildActionsColumn } from "../../../components/ui/columnHelpers";
 import type { BinderResponse } from "../../../api/binders.types";
+import { ENDPOINTS } from "../../../api/endpoints";
 import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
 import {
   getStatusLabel,
@@ -88,7 +89,7 @@ const QuickActionsCell: React.FC<QuickActionsCellProps> = ({ binder, activeActio
       key: "mark_ready",
       id: String(binder.id),
       method: "post",
-      endpoint: `/api/v1/binders/${binder.id}/ready`,
+      endpoint: ENDPOINTS.binderReady(binder.id),
       uiKey: `binder-ready-${binder.id}`,
       label: "מוכן לאיסוף",
     });
@@ -100,7 +101,7 @@ const QuickActionsCell: React.FC<QuickActionsCellProps> = ({ binder, activeActio
       key: "return_binder",
       id: String(binder.id),
       method: "post",
-      endpoint: `/api/v1/binders/${binder.id}/return`,
+      endpoint: ENDPOINTS.binderReturn(binder.id),
       uiKey: `binder-return-${binder.id}`,
       label: "החזר קלסר",
       confirm: {
