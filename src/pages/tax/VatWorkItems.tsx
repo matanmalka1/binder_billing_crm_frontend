@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { AccessBanner } from "../../components/ui/AccessBanner";
 import { DataTable } from "../../components/ui/DataTable";
@@ -7,7 +7,9 @@ import { PaginationCard } from "../../components/ui/PaginationCard";
 import { VatWorkItemsCreateCard } from "../../features/vatReports/components/VatWorkItemsCreateCard";
 import { VatWorkItemsFiltersCard } from "../../features/vatReports/components/VatWorkItemsFiltersCard";
 import { buildVatWorkItemColumns } from "../../features/vatReports/components/vatWorkItemColumns";
+import { VatWorkItemDrawer } from "../../features/vatReports/components/VatWorkItemDrawer";
 import { useVatWorkItemsPage } from "../../features/vatReports/hooks/useVatWorkItemsPage";
+import type { VatWorkItemResponse } from "../../api/vatReports.api";
 
 export const VatWorkItems: React.FC = () => {
   const {
@@ -25,6 +27,8 @@ export const VatWorkItems: React.FC = () => {
     submitCreate,
     total,
   } = useVatWorkItemsPage();
+
+  const [selectedItem, setSelectedItem] = useState<VatWorkItemResponse | null>(null);
 
   const columns = useMemo(
     () => buildVatWorkItemColumns({ isAdvisor, actionLoadingId, runAction }),
@@ -66,6 +70,7 @@ export const VatWorkItems: React.FC = () => {
         columns={columns}
         getRowKey={(item) => item.id}
         isLoading={loading}
+        onRowClick={setSelectedItem}
         emptyMessage='אין תיקי מע"מ להצגה'
         emptyState={{
           title: 'לא נמצאו תיקי מע"מ',
@@ -86,6 +91,11 @@ export const VatWorkItems: React.FC = () => {
           onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
         />
       )}
+
+      <VatWorkItemDrawer
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+      />
     </div>
   );
 };
