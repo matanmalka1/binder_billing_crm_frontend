@@ -3,6 +3,8 @@ import type { VatWorkItemResponse } from "../../../api/vatReports.api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { useVatWorkItemDetail, type VatCategorySummaryRow } from "../hooks/useVatWorkItemDetail";
 import { PageLoading } from "../../../components/ui/PageLoading";
+import { CategoryDataEntryForm } from "./CategoryDataEntryForm";
+import { canAddInvoice } from "../utils/vatWorkItemStatus";
 
 interface VatWorkItemDrawerProps {
   item: VatWorkItemResponse | null;
@@ -167,6 +169,20 @@ export const VatWorkItemDrawer: React.FC<VatWorkItemDrawerProps> = ({ item, onCl
                 totalVat={summary.totalInputVat}
                 netLabel="עלות נטו"
               />
+
+              {item && canAddInvoice(item.status) && (
+                <>
+                  <div className="border-t border-gray-200" />
+                  <div>
+                    <h4 className="mb-3 text-sm font-semibold text-gray-700">הקלדת נתונים</h4>
+                    <CategoryDataEntryForm
+                      workItemId={item.id}
+                      period={item.period}
+                      onSaved={() => {}}
+                    />
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
