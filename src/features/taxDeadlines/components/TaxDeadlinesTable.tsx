@@ -17,6 +17,7 @@ interface TaxDeadlinesTableProps {
   deadlines: TaxDeadlineResponse[];
   onComplete: (id: number) => void;
   completingId: number | null;
+  onRowClick?: (deadline: TaxDeadlineResponse) => void;
 }
 
 const urgencyRowMap: Record<string, string> = {
@@ -29,6 +30,7 @@ export const TaxDeadlinesTable = ({
   deadlines,
   onComplete,
   completingId,
+  onRowClick,
 }: TaxDeadlinesTableProps) => {
   if (deadlines.length === 0) {
     return (
@@ -88,23 +90,20 @@ export const TaxDeadlinesTable = ({
                   key={deadline.id}
                   className={cn(
                     "transition-colors hover:bg-gray-50 animate-fade-in",
+                    onRowClick && "cursor-pointer",
                     !isCompleted && urgencyRowMap[urgency]
                   )}
                   style={{ animationDelay: staggerDelay(index) }}
+                  onClick={() => onRowClick?.(deadline)}
                 >
-                  {/* Client */}
                   <td className="py-3.5 pr-4">
                     <span className="font-mono text-sm font-semibold text-gray-800">
                       #{deadline.client_id}
                     </span>
                   </td>
-
-                  {/* Type */}
                   <td className="py-3.5 pr-4 text-sm text-gray-700">
                     {getDeadlineTypeLabel(deadline.deadline_type)}
                   </td>
-
-                  {/* Due date */}
                   <td className="py-3.5 pr-4">
                     <div className="flex items-center gap-1.5 text-sm">
                       <Calendar className="h-3.5 w-3.5 shrink-0 text-gray-400" />
@@ -113,8 +112,6 @@ export const TaxDeadlinesTable = ({
                       </span>
                     </div>
                   </td>
-
-                  {/* Days remaining */}
                   <td className="py-3.5 pr-4">
                     {isCompleted ? (
                       <span className="text-sm text-gray-400">—</span>
@@ -126,13 +123,9 @@ export const TaxDeadlinesTable = ({
                       </Badge>
                     )}
                   </td>
-
-                  {/* Amount */}
                   <td className="py-3.5 pr-4 text-sm font-medium text-gray-800">
                     {formatCurrency(deadline.payment_amount, deadline.currency)}
                   </td>
-
-                  {/* Status */}
                   <td className="py-3.5 pr-4">
                     {isCompleted ? (
                       <div className="flex items-center gap-1 text-green-700">
@@ -143,15 +136,13 @@ export const TaxDeadlinesTable = ({
                       <Badge variant="warning">ממתין</Badge>
                     )}
                   </td>
-
-                  {/* Actions */}
                   <td className="py-3.5 pr-4">
                     {!isCompleted && (
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => onComplete(deadline.id)}
+                        onClick={(e) => { e.stopPropagation(); onComplete(deadline.id); }}
                         isLoading={completingId === deadline.id}
                         disabled={completingId !== null && completingId !== deadline.id}
                       >
