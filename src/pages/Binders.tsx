@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
 import { DataTable } from "../components/ui/DataTable";
@@ -7,9 +7,11 @@ import { Button } from "../components/ui/Button";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { BindersFiltersBar } from "../features/binders/components/BindersFiltersBar";
 import { buildBindersColumns } from "../features/binders/components/bindersColumns";
+import { BinderDrawer } from "../features/binders/components/BinderDrawer";
 import { ReceiveBinderModal } from "../features/binders/components/ReceiveBinderModal";
 import { useBindersPage } from "../features/binders/hooks/useBindersPage";
 import { useReceiveBinderModal } from "../features/binders/hooks/useReceiveBinderModal";
+import type { BinderResponse } from "../api/binders.types";
 
 export const Binders: React.FC = () => {
   const {
@@ -27,6 +29,7 @@ export const Binders: React.FC = () => {
   } = useBindersPage();
 
   const receiveModal = useReceiveBinderModal();
+  const [selectedBinder, setSelectedBinder] = useState<BinderResponse | null>(null);
 
   const columns = useMemo(
     () => buildBindersColumns({ activeActionKeyRef, onAction }),
@@ -57,6 +60,7 @@ export const Binders: React.FC = () => {
         columns={columns}
         getRowKey={(binder) => binder.id}
         isLoading={loading}
+        onRowClick={setSelectedBinder}
         emptyMessage="אין קלסרים התואמים לסינון הנוכחי"
         emptyState={{
           title: "לא נמצאו קלסרים",
@@ -85,6 +89,11 @@ export const Binders: React.FC = () => {
         isLoading={activeActionKey === pendingAction?.uiKey}
         onConfirm={confirmPendingAction}
         onCancel={cancelPendingAction}
+      />
+
+      <BinderDrawer
+        binder={selectedBinder}
+        onClose={() => setSelectedBinder(null)}
       />
     </div>
   );
