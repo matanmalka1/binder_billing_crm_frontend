@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { PaginationCard } from "../components/ui/PaginationCard";
@@ -8,7 +9,9 @@ import { getErrorMessage } from "../utils/utils";
 import { TaxDeadlinesFilters } from "../features/taxDeadlines/components/TaxDeadlinesFilters";
 import { TaxDeadlinesTable } from "../features/taxDeadlines/components/TaxDeadlinesTable";
 import { TaxDeadlineForm } from "../features/taxDeadlines/components/TaxDeadlineForm";
+import { TaxDeadlineDrawer } from "../features/taxDeadlines/components/TaxDeadlineDrawer";
 import { useTaxDeadlines } from "../features/taxDeadlines/hooks/useTaxDeadlines";
+import type { TaxDeadlineResponse } from "../api/taxDeadlines.api";
 
 export const TaxDeadlines: React.FC = () => {
   const {
@@ -26,6 +29,8 @@ export const TaxDeadlines: React.FC = () => {
     total,
     totalPages,
   } = useTaxDeadlines();
+
+  const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
 
   const header = (
     <PageHeader
@@ -78,6 +83,7 @@ export const TaxDeadlines: React.FC = () => {
         deadlines={deadlines}
         onComplete={handleComplete}
         completingId={completingId}
+        onRowClick={setSelectedDeadline}
       />
 
       {total > 0 && (
@@ -96,6 +102,11 @@ export const TaxDeadlines: React.FC = () => {
         onSubmit={onSubmit}
         form={form}
         isSubmitting={createMutation.isPending}
+      />
+
+      <TaxDeadlineDrawer
+        deadline={selectedDeadline}
+        onClose={() => setSelectedDeadline(null)}
       />
     </div>
   );
