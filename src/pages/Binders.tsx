@@ -37,7 +37,7 @@ export const Binders: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="קלסרים"
-        description="רשימת כל הקלסרים במערכת — סינון לפי מצב עבודה ו-SLA"
+        description="רשימת כל הקלסרים במערכת — סינון לפי סטטוס ומצב עבודה"
         variant="gradient"
         actions={
           <Button variant="primary" onClick={receiveModal.handleOpen}>

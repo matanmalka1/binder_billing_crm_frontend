@@ -3,7 +3,7 @@ import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Button } from "../../../components/ui/Button";
 import type { SearchFiltersBarProps } from "../types";
-import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
+import { getSignalLabel, getWorkStateLabel } from "../../../utils/enums";
 import { cn } from "../../../utils/utils";
 
 const WORK_STATE_OPTIONS = [
@@ -13,25 +13,14 @@ const WORK_STATE_OPTIONS = [
   { value: "completed", label: getWorkStateLabel("completed") },
 ];
 
-const SLA_STATE_OPTIONS = [
-  { value: "", label: "הכל" },
-  { value: "on_track", label: getSlaStateLabel("on_track") },
-  { value: "approaching", label: getSlaStateLabel("approaching") },
-  { value: "overdue", label: getSlaStateLabel("overdue") },
-];
-
 const SIGNAL_OPTIONS = [
   { value: "missing_permanent_documents", label: getSignalLabel("missing_permanent_documents") },
-  { value: "near_sla",                    label: getSignalLabel("near_sla") },
-  { value: "overdue",                     label: getSignalLabel("overdue") },
   { value: "ready_for_pickup",            label: getSignalLabel("ready_for_pickup") },
   { value: "unpaid_charges",              label: getSignalLabel("unpaid_charges") },
   { value: "idle_binder",                 label: getSignalLabel("idle_binder") },
 ];
 
 const SIGNAL_CHIP_STYLES: Record<string, string> = {
-  overdue:                     "border-red-300 bg-red-50 text-red-700 hover:bg-red-100",
-  near_sla:                    "border-orange-300 bg-orange-50 text-orange-700 hover:bg-orange-100",
   missing_permanent_documents: "border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100",
   unpaid_charges:              "border-yellow-300 bg-yellow-50 text-yellow-700 hover:bg-yellow-100",
   ready_for_pickup:            "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100",
@@ -39,8 +28,6 @@ const SIGNAL_CHIP_STYLES: Record<string, string> = {
 };
 
 const SIGNAL_CHIP_ACTIVE: Record<string, string> = {
-  overdue:                     "bg-red-200 border-red-500",
-  near_sla:                    "bg-orange-200 border-orange-500",
   missing_permanent_documents: "bg-amber-200 border-amber-500",
   unpaid_charges:              "bg-yellow-200 border-yellow-500",
   ready_for_pickup:            "bg-blue-200 border-blue-500",
@@ -49,7 +36,7 @@ const SIGNAL_CHIP_ACTIVE: Record<string, string> = {
 
 export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({ filters, onFilterChange }) => {
   const activeCount =
-    [filters.query, filters.client_name, filters.id_number, filters.binder_number, filters.work_state, filters.sla_state, filters.has_signals]
+    [filters.query, filters.client_name, filters.id_number, filters.binder_number, filters.work_state, filters.has_signals]
       .filter(Boolean).length + filters.signal_type.length;
 
   const handleReset = () => {
@@ -58,7 +45,6 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({ filters, onF
     onFilterChange("id_number", "");
     onFilterChange("binder_number", "");
     onFilterChange("work_state", "");
-    onFilterChange("sla_state", "");
     onFilterChange("signal_type", []);
     onFilterChange("has_signals", "");
   };
@@ -110,18 +96,12 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({ filters, onF
       {/* Status selects */}
       <div>
         <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-gray-400">סינון סטטוס</p>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Select
             label="מצב עבודה"
             value={filters.work_state}
             onChange={(e) => onFilterChange("work_state", e.target.value)}
             options={WORK_STATE_OPTIONS}
-          />
-          <Select
-            label="מצב SLA"
-            value={filters.sla_state}
-            onChange={(e) => onFilterChange("sla_state", e.target.value)}
-            options={SLA_STATE_OPTIONS}
           />
           <Select
             label="יש אותות"

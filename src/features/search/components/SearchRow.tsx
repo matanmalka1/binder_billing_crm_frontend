@@ -5,7 +5,7 @@ import type { SearchResult } from "../../../api/search.api";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
 import { getResultColor, getResultIcon, getResultLabel } from "./searchResultMeta";
-import { getSignalLabel, getSlaStateLabel, getWorkStateLabel } from "../../../utils/enums";
+import { getSignalLabel, getWorkStateLabel } from "../../../utils/enums";
 
 interface SearchRowProps {
   result: SearchResult;
@@ -15,18 +15,10 @@ interface SearchRowProps {
 type BadgeVariant = "error" | "warning" | "info" | "neutral";
 
 const signalVariants: Record<string, BadgeVariant> = {
-  overdue:                     "error",
-  near_sla:                    "warning",
   missing_permanent_documents: "warning",
   unpaid_charges:              "warning",
   ready_for_pickup:            "info",
   idle_binder:                 "neutral",
-};
-
-const slaStateStyles: Record<string, string> = {
-  on_track:   "text-green-700",
-  approaching: "text-orange-600 font-semibold",
-  overdue:    "text-red-600 font-semibold",
 };
 
 const workStateStyles: Record<string, string> = {
@@ -88,13 +80,6 @@ export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
       <td className="py-3.5 pr-4">
         <span className={cn("text-sm", workStateStyles[result.work_state ?? ""] ?? "text-gray-500")}>
           {getWorkStateLabel(result.work_state ?? "")}
-        </span>
-      </td>
-
-      {/* SLA state */}
-      <td className="py-3.5 pr-4">
-        <span className={cn("text-sm", slaStateStyles[result.sla_state ?? ""] ?? "text-gray-500")}>
-          {getSlaStateLabel(result.sla_state ?? "")}
         </span>
       </td>
 

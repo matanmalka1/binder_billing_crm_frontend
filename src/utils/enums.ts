@@ -4,7 +4,6 @@ export const getStatusLabel = (status: string): string => {
     in_office: "במשרד",
     ready_for_pickup: "מוכן לאיסוף",
     returned: "הוחזר",
-    overdue: "באיחור",
   };
   return labels[status] || "—"; // Safe fallback, no English
 };
@@ -55,19 +54,8 @@ export const getWorkStateLabel = (workState: string): string => {
   return labels[workState] || "—";
 };
 
-export const getSlaStateLabel = (slaState: string): string => {
-  const labels: Record<string, string> = {
-    on_track: "במסלול",
-    approaching: "מתקרב ליעד",
-    overdue: "באיחור",
-  };
-  return labels[slaState] || "—";
-};
-
 export const getSignalLabel = (signal: string): string => {
   const labels: Record<string, string> = {
-    overdue: "באיחור",
-    near_sla: "קרוב ליעד",
     ready_for_pickup: "מוכן לאיסוף",
     idle_binder: "קלסר לא פעיל",
     missing_permanent_documents: "חסרים מסמכים קבועים",

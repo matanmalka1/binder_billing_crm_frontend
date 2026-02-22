@@ -24,8 +24,8 @@ interface AttentionSectionProps {
 /* ── Route map per item_type ────────────────────────────────────────────── */
 
 const itemHrefMap: Record<string, (item: AttentionItem) => string> = {
-  overdue:        (item) => item.client_id ? `/clients/${item.client_id}` : "/binders?sla_state=overdue",
-  overdue_binder: (item) => item.client_id ? `/clients/${item.client_id}` : "/binders?sla_state=overdue",
+  overdue:        (item) => item.client_id ? `/clients/${item.client_id}` : "/binders",
+  overdue_binder: (item) => item.client_id ? `/clients/${item.client_id}` : "/binders",
   idle_binder:    (item) => item.client_id ? `/clients/${item.client_id}` : "/binders?work_state=waiting_for_work",
   unpaid_charge:  (item) => item.client_id ? `/clients/${item.client_id}` : "/charges?status=issued",
   unpaid_charges: (item) => item.client_id ? `/clients/${item.client_id}` : "/charges?status=issued",

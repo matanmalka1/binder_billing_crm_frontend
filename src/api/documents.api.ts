@@ -18,8 +18,6 @@ export interface PermanentDocumentListResponse {
 export interface OperationalSignalsResponse {
   client_id: number;
   missing_documents: string[];
-  binders_nearing_sla: Array<Record<string, unknown>>;
-  binders_overdue: Array<Record<string, unknown>>;
 }
 
 export interface UploadDocumentPayload {

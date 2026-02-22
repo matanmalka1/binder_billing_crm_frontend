@@ -14,7 +14,7 @@ const sections = [
     icon: AlertTriangle,
     types: ["overdue", "overdue_binder", "idle_binder"],
     severity: "critical" as const,
-    viewAllHref: "/binders?sla_state=overdue",
+    viewAllHref: "/binders",
   },
   {
     key: "unpaid",

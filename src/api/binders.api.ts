@@ -65,30 +65,6 @@ export const bindersApi = {
     return response.data;
   },
 
-  listOverdue: async (
-    params: ListOperationalBindersParams,
-  ): Promise<BinderExtendedListResponse> => {
-    const response = await api.get<BinderExtendedListResponse>(
-      ENDPOINTS.bindersOverdue,
-      {
-        params: toQueryParams(params),
-      },
-    );
-    return response.data;
-  },
-
-  listDueToday: async (
-    params: ListOperationalBindersParams,
-  ): Promise<BinderExtendedListResponse> => {
-    const response = await api.get<BinderExtendedListResponse>(
-      ENDPOINTS.bindersDueToday,
-      {
-        params: toQueryParams(params),
-      },
-    );
-    return response.data;
-  },
-
   listClientBinders: async (
     clientId: number,
     params: ListOperationalBindersParams,

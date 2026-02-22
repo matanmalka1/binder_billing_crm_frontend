@@ -7,11 +7,7 @@ import { api } from "./client";
 export interface DashboardOverviewResponse {
   total_clients: number;
   active_binders: number;
-  overdue_binders: number;
-  binders_due_today: number;
-  binders_due_this_week: number;
   work_state?: string | null;
-  sla_state?: string | null;
   signals?: string[] | null;
   quick_actions?: BackendAction[] | null;
   attention: AttentionResponse;
@@ -20,7 +16,6 @@ export interface DashboardOverviewResponse {
 export interface DashboardSummaryResponse {
   binders_in_office: number;
   binders_ready_for_pickup: number;
-  binders_overdue: number;
   attention: AttentionResponse;
 }
 
@@ -37,21 +32,6 @@ export interface AttentionResponse {
   total: number;
 }
 
-export interface AlertItem {
-  binder_id: number;
-  client_id: number;
-  client_name: string;
-  binder_number: string;
-  alert_type: string;
-  days_overdue: number | null;
-  days_remaining: number | null;
-}
-
-export interface AlertsResponse {
-  items: AlertItem[];
-  total: number;
-}
-
 export interface WorkQueueItem {
   binder_id: number;
   client_id: number;
@@ -60,7 +40,6 @@ export interface WorkQueueItem {
   work_state: string;
   signals: string[];
   days_since_received: number;
-  expected_return_at: string;
 }
 
 export type WorkQueueResponse = PaginatedResponse<WorkQueueItem>;
@@ -89,11 +68,6 @@ export const dashboardApi = {
     const response = await api.get<AttentionResponse>(
       ENDPOINTS.dashboardAttention,
     );
-    return response.data;
-  },
-
-  getAlerts: async (): Promise<AlertsResponse> => {
-    const response = await api.get<AlertsResponse>(ENDPOINTS.dashboardAlerts);
     return response.data;
   },
 

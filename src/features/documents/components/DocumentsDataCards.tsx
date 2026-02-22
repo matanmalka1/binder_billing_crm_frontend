@@ -38,7 +38,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({ document
       )}
     </Card>
     <Card title="אותות תפעוליים">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4">
         <section>
           <h4 className="text-sm font-semibold text-gray-800">מסמכים חסרים</h4>
           {signals.missing_documents.length === 0 ? (
@@ -50,14 +50,6 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({ document
               ))}
             </ul>
           )}
-        </section>
-        <section>
-          <h4 className="text-sm font-semibold text-gray-800">קלסרים מתקרבים ל-SLA</h4>
-          <p className="mt-2 text-sm text-gray-700">{signals.binders_nearing_sla.length}</p>
-        </section>
-        <section>
-          <h4 className="text-sm font-semibold text-gray-800">קלסרים באיחור</h4>
-          <p className="mt-2 text-sm text-gray-700">{signals.binders_overdue.length}</p>
         </section>
       </div>
     </Card>

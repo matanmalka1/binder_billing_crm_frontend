@@ -10,7 +10,6 @@ import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
 import {
   getStatusLabel,
   getSignalLabel,
-  getSlaStateLabel,
   getWorkStateLabel,
   getBinderTypeLabel,
 } from "../../../utils/enums";
@@ -21,13 +20,6 @@ import { formatDate, cn } from "../../../utils/utils";
 const binderStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   in_office: "info",
   ready_for_pickup: "success",
-  overdue: "error",
-};
-
-const slaStateVariants: Record<string, "success" | "warning" | "error" | "neutral"> = {
-  on_track: "success",
-  approaching: "warning",
-  overdue: "error",
 };
 
 const workStateVariants: Record<string, "neutral" | "info" | "success"> = {
@@ -37,8 +29,6 @@ const workStateVariants: Record<string, "neutral" | "info" | "success"> = {
 };
 
 const signalVariants: Record<string, "error" | "warning" | "info" | "neutral"> = {
-  overdue: "error",
-  near_sla: "warning",
   missing_permanent_documents: "warning",
   unpaid_charges: "warning",
   ready_for_pickup: "info",
@@ -97,7 +87,7 @@ const QuickActionsCell: React.FC<QuickActionsCellProps> = ({ binder, activeActio
     onAction({
       key: "mark_ready",
       id: String(binder.id),
-      method: "POST",
+      method: "post",
       endpoint: `/api/v1/binders/${binder.id}/ready`,
       uiKey: `binder-ready-${binder.id}`,
       label: "מוכן לאיסוף",
@@ -109,7 +99,7 @@ const QuickActionsCell: React.FC<QuickActionsCellProps> = ({ binder, activeActio
     onAction({
       key: "return_binder",
       id: String(binder.id),
-      method: "POST",
+      method: "post",
       endpoint: `/api/v1/binders/${binder.id}/return`,
       uiKey: `binder-return-${binder.id}`,
       label: "החזר קלסר",
@@ -214,15 +204,6 @@ export const buildBindersColumns = ({
     ),
   },
   {
-    key: "expected_return_at",
-    header: "החזרה צפויה",
-    render: (binder) => (
-      <span className="text-sm text-gray-600 tabular-nums">
-        {formatDate(binder.expected_return_at)}
-      </span>
-    ),
-  },
-  {
     key: "days_in_office",
     header: "ימים במשרד",
     render: (binder) => <DaysCell days={binder.days_in_office} />,
@@ -233,15 +214,6 @@ export const buildBindersColumns = ({
     render: (binder) => (
       <Badge variant={workStateVariants[binder.work_state ?? ""] ?? "neutral"}>
         {getWorkStateLabel(binder.work_state ?? "")}
-      </Badge>
-    ),
-  },
-  {
-    key: "sla_state",
-    header: "מצב SLA",
-    render: (binder) => (
-      <Badge variant={slaStateVariants[binder.sla_state ?? ""] ?? "neutral"}>
-        {getSlaStateLabel(binder.sla_state ?? "")}
       </Badge>
     ),
   },

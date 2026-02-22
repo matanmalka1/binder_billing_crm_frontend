@@ -24,10 +24,6 @@ export const SecretaryDashboardContent: React.FC<SecretaryDashboardContentProps>
           </div>
           <p className="mt-1 text-sm text-gray-600">קלסרים הממתינים לאיסוף לקוח</p>
         </Card>
-        <Card title="קלסרים באיחור">
-          <div className="text-3xl font-bold text-red-600">{data.binders_overdue}</div>
-          <p className="mt-1 text-sm text-gray-600">קלסרים בחריגה ממועד החזרה</p>
-        </Card>
       </div>
 
       <AttentionPanel items={attentionItems} />

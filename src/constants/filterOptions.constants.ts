@@ -1,6 +1,5 @@
 import {
   getSignalLabel,
-  getSlaStateLabel,
   getWorkStateLabel,
 } from "../utils/enums";
 
@@ -17,17 +16,8 @@ export const WORK_STATE_OPTIONS: Option[] = [
   { value: "completed", label: getWorkStateLabel("completed") },
 ];
 
-export const SLA_STATE_OPTIONS: Option[] = [
-  { value: "", label: "הכל" },
-  { value: "on_track", label: getSlaStateLabel("on_track") },
-  { value: "approaching", label: getSlaStateLabel("approaching") },
-  { value: "overdue", label: getSlaStateLabel("overdue") },
-];
-
 export const SIGNAL_TYPE_OPTIONS: Option[] = [
   { value: "missing_permanent_documents", label: getSignalLabel("missing_permanent_documents") },
-  { value: "near_sla", label: getSignalLabel("near_sla") },
-  { value: "overdue", label: getSignalLabel("overdue") },
   { value: "ready_for_pickup", label: getSignalLabel("ready_for_pickup") },
   { value: "unpaid_charges", label: getSignalLabel("unpaid_charges") },
   { value: "idle_binder", label: getSignalLabel("idle_binder") },

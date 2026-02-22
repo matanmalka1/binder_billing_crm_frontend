@@ -16,7 +16,6 @@ export const useSearchPage = () => {
       id_number: searchParams.get("id_number") ?? "",
       binder_number: searchParams.get("binder_number") ?? "",
       work_state: searchParams.get("work_state") ?? "",
-      sla_state: searchParams.get("sla_state") ?? "",
       signal_type: searchParams.getAll("signal_type"),
       has_signals: searchParams.get("has_signals") ?? "",
       page: parsePositiveInt(searchParams.get("page"), 1),
@@ -34,7 +33,6 @@ export const useSearchPage = () => {
         id_number: filters.id_number || undefined,
         binder_number: filters.binder_number || undefined,
         work_state: filters.work_state || undefined,
-        sla_state: filters.sla_state || undefined,
         signal_type: filters.signal_type.length ? filters.signal_type : undefined,
         has_signals:
           filters.has_signals === "true"

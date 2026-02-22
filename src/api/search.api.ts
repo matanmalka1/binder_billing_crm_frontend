@@ -9,7 +9,6 @@ export interface SearchResult {
   binder_id: number | null;
   binder_number: string | null;
   work_state?: string | null;
-  sla_state?: string | null;
   signals?: string[] | null;
 }
 
@@ -26,7 +25,6 @@ export interface SearchParams {
   id_number?: string;
   binder_number?: string;
   work_state?: string;
-  sla_state?: string;
   signal_type?: string[];
   has_signals?: boolean;
   page?: number;

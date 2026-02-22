@@ -1,9 +1,6 @@
 import {
   Users,
   FolderOpen,
-  AlertTriangle,
-  Calendar,
-  CalendarClock,
 } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { AccessBanner } from "../components/ui/AccessBanner";
@@ -73,34 +70,6 @@ export const Dashboard: React.FC = () => {
                 variant: "green",
                 href: "/binders?status=in_office",
               },
-              {
-                key: "overdue_binders",
-                title: "קלסרים באיחור",
-                value: dashboard.data.overdue_binders,
-                description: "חרגו מ-90 יום",
-                icon: AlertTriangle,
-                variant: "red",
-                urgent: dashboard.data.overdue_binders > 0,
-                href: "/binders?sla_state=overdue",
-              },
-              {
-                key: "due_today",
-                title: "החזרה היום",
-                value: dashboard.data.binders_due_today,
-                description: "מועד החזרה הוא היום",
-                icon: Calendar,
-                variant: "amber",
-                href: "/binders?sla_state=overdue",
-              },
-              {
-                key: "due_week",
-                title: "החזרה השבוע",
-                value: dashboard.data.binders_due_this_week,
-                description: "מועד החזרה תוך 7 ימים",
-                icon: CalendarClock,
-                variant: "purple",
-                href: "/binders?sla_state=approaching",
-              },
             ]}
           />
 
@@ -135,16 +104,6 @@ export const Dashboard: React.FC = () => {
                 icon: Users,
                 variant: "green",
                 href: "/binders?status=ready_for_pickup",
-              },
-              {
-                key: "overdue",
-                title: "באיחור",
-                value: dashboard.data.binders_overdue,
-                description: "חריגה ממועד החזרה",
-                icon: AlertTriangle,
-                variant: "red",
-                urgent: dashboard.data.binders_overdue > 0,
-                href: "/binders?sla_state=overdue",
               },
             ]}
           />

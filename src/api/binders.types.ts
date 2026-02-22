@@ -9,12 +9,10 @@ export interface BinderResponse {
   binder_type: string;
   status: string;
   received_at: string;
-  expected_return_at: string;
   returned_at: string | null;
   pickup_person_name?: string | null;
   days_in_office?: number | null;
   work_state?: string | null;
-  sla_state?: string | null;
   signals?: string[] | null;
   available_actions?: BackendAction[] | null;
 }
@@ -29,11 +27,8 @@ export interface BinderExtended {
   binder_number: string;
   status: string;
   received_at: string;
-  expected_return_at: string;
   returned_at: string | null;
   pickup_person_name?: string | null;
-  is_overdue: boolean;
-  days_overdue: number;
   work_state?: string | null;
   signals?: string[] | null;
 }
@@ -57,7 +52,6 @@ export interface ListBindersParams {
   status?: string;
   client_id?: number;
   work_state?: string;
-  sla_state?: string;
 }
 
 export interface ListOperationalBindersParams {

@@ -6,6 +6,8 @@ import { clientsApi } from "../../../api/clients.api";
 import {
   documentsApi,
   type UploadDocumentPayload,
+  type OperationalSignalsResponse,
+  type PermanentDocumentListResponse,
 } from "../../../api/documents.api";
 import { getErrorMessage, isPositiveInt } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
@@ -30,15 +32,15 @@ export const useDocumentsPage = () => {
     },
   });
 
-  const documentsQuery = useQuery({
+  const documentsQuery = useQuery<PermanentDocumentListResponse>({
     enabled: selectedClientId > 0,
-    queryKey: selectedClientId ? QK.documents.clientList(selectedClientId) : undefined,
+    queryKey: QK.documents.clientList(selectedClientId),
     queryFn: () => documentsApi.listByClient(selectedClientId),
   });
 
-  const signalsQuery = useQuery({
+  const signalsQuery = useQuery<OperationalSignalsResponse>({
     enabled: selectedClientId > 0,
-    queryKey: selectedClientId ? QK.documents.clientSignals(selectedClientId) : undefined,
+    queryKey: QK.documents.clientSignals(selectedClientId),
     queryFn: () => documentsApi.getSignalsByClient(selectedClientId),
   });
 
@@ -105,8 +107,6 @@ export const useDocumentsPage = () => {
       signalsQuery.data ?? {
         client_id: 0,
         missing_documents: [],
-        binders_nearing_sla: [],
-        binders_overdue: [],
       },
     submitUpload,
     uploadError,

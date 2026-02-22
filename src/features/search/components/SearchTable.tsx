@@ -27,9 +27,6 @@ export const SearchTable: React.FC<SearchTableProps> = ({ results }) => {
                 מצב עבודה
               </th>
               <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">
-                מצב SLA
-              </th>
-              <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">
                 אותות
               </th>
               <th className="pb-4 pr-4 pt-4 text-sm font-semibold text-gray-700">

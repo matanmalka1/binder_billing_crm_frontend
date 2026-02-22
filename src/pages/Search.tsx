@@ -32,7 +32,7 @@ export const Search: React.FC = () => {
 
   const hasAnyFilter = Boolean(
     filters.query || filters.client_name || filters.id_number || filters.binder_number ||
-    filters.work_state || filters.sla_state || filters.signal_type.length || filters.has_signals
+    filters.work_state || filters.signal_type.length || filters.has_signals
   );
 
   const handleReset = () => {
@@ -41,7 +41,6 @@ export const Search: React.FC = () => {
     handleFilterChange("id_number", "");
     handleFilterChange("binder_number", "");
     handleFilterChange("work_state", "");
-    handleFilterChange("sla_state", "");
     handleFilterChange("signal_type", []);
     handleFilterChange("has_signals", "");
   };
