@@ -1,107 +1,56 @@
-import { DataTable, type Column } from "../../../components/ui/DataTable";
+import { useNavigate } from "react-router-dom";
 import type { AgingReportItem } from "../../../api/reports.api";
-import { cn } from "../../../utils/utils";
 
 interface AgingReportTableProps {
   items: AgingReportItem[];
 }
 
-const buildAgingColumns = (): Column<AgingReportItem>[] => [
-  {
-    key: "client_name",
-    header: "לקוח",
-    render: (item) => (
-      <div>
-        <div className="font-medium text-gray-900">{item.client_name}</div>
-        <div className="text-xs text-gray-500">לקוח #{item.client_id}</div>
-      </div>
-    ),
-  },
-  {
-    key: "total",
-    header: 'סה"כ חוב',
-    render: (item) => (
-      <span className="font-bold text-gray-900">
-        ₪
-        {item.total_outstanding.toLocaleString("he-IL", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
-      </span>
-    ),
-  },
-  {
-    key: "current",
-    header: "שוטף (0-30)",
-    render: (item) => (
-      <span className="text-green-700">
-        ₪{item.current.toLocaleString("he-IL", { minimumFractionDigits: 2 })}
-      </span>
-    ),
-  },
-  {
-    key: "days_30",
-    header: "31-60 ימים",
-    render: (item) => (
-      <span className="text-yellow-700">
-        ₪{item.days_30.toLocaleString("he-IL", { minimumFractionDigits: 2 })}
-      </span>
-    ),
-  },
-  {
-    key: "days_60",
-    header: "61-90 ימים",
-    render: (item) => (
-      <span className="text-orange-700">
-        ₪{item.days_60.toLocaleString("he-IL", { minimumFractionDigits: 2 })}
-      </span>
-    ),
-  },
-  {
-    key: "days_90",
-    header: "90+ ימים",
-    render: (item) => (
-      <span className="text-red-700 font-semibold">
-        ₪
-        {item.days_90_plus.toLocaleString("he-IL", {
-          minimumFractionDigits: 2,
-        })}
-      </span>
-    ),
-  },
-  {
-    key: "oldest",
-    header: "חוב עתיק ביותר",
-    render: (item) =>
-      item.oldest_invoice_days ? (
-        <div className="text-sm">
-          <div className="text-gray-700">{item.oldest_invoice_days} ימים</div>
-          <div className="text-xs text-gray-500">
-            {item.oldest_invoice_date
-              ? new Date(item.oldest_invoice_date).toLocaleDateString("he-IL")
-              : "—"}
-          </div>
-        </div>
-      ) : (
-        <span className="text-gray-500">—</span>
-      ),
-  },
-];
+const fmt = (n: number) =>
+  `₪${n.toLocaleString("he-IL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-export const AgingReportTable: React.FC<AgingReportTableProps> = ({
-  items,
-}) => {
-  const columns = buildAgingColumns();
+export const AgingReportTable: React.FC<AgingReportTableProps> = ({ items }) => {
+  const navigate = useNavigate();
+
+  if (items.length === 0) {
+    return <p className="text-sm text-gray-400 text-center py-8">אין חובות פתוחים</p>;
+  }
 
   return (
-    <DataTable
-      data={items}
-      columns={columns}
-      getRowKey={(item) => item.client_id}
-      emptyMessage="אין חובות פתוחים"
-      rowClassName={(item) =>
-        cn("animate-fade-in", item.days_90_plus > 0 && "bg-red-50/30")
-      }
-    />
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" dir="rtl">
+      {items.map((item) => (
+        <div
+          key={item.client_id}
+          onClick={() => navigate(`/clients/${item.client_id}`)}
+          className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm animate-fade-in cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+        >
+          {/* Client */}
+          <div className="mb-4 flex items-start justify-between">
+            <div>
+              <p className="font-semibold text-gray-900">{item.client_name}</p>
+              <p className="text-xs text-gray-500">לקוח #{item.client_id}</p>
+            </div>
+            {item.days_90_plus > 0 && (
+              <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
+                דורש טיפול
+              </span>
+            )}
+          </div>
+
+          {/* Total */}
+          <p className="text-2xl font-bold text-gray-900 tabular-nums">
+            {fmt(item.total_outstanding)}
+          </p>
+          <p className="mt-0.5 text-xs text-gray-500">סה"כ חוב פתוח</p>
+
+          {item.oldest_invoice_date && (
+            <div className="mt-4 border-t border-gray-100 pt-3 text-sm text-gray-500">
+              חוב מאז {new Date(item.oldest_invoice_date).toLocaleDateString("he-IL")}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
   );
 };
+
+AgingReportTable.displayName = "AgingReportTable";
