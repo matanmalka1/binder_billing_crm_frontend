@@ -21,7 +21,7 @@ export const AgingReportPage: React.FC = () => {
 
   const header = (
     <PageHeader
-      title="דוח חובות לקוחות (Aging Report)"
+      title="דוח חובות לקוחות"
       description="ניתוח חובות לפי גיל החוב"
       variant="gradient"
       actions={
