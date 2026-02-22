@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { Button } from "../../components/ui/Button";
 import { PageStateGuard } from "../../components/ui/PageStateGuard";
 import { RemindersSummaryCards } from "../../features/reminders/components/RemindersSummaryCards";
 import { RemindersTable } from "../../features/reminders/components/RemindersTable";
+import { ReminderDrawer } from "../../features/reminders/components/ReminderDrawer";
 import { CreateReminderModal } from "../../features/reminders/components/CreateReminderModal";
 import { useReminders } from "../../features/reminders/hooks/useReminders";
+import type { Reminder } from "../../api/reminders.api";
 
 export const RemindersPage: React.FC = () => {
   const {
@@ -20,6 +23,8 @@ export const RemindersPage: React.FC = () => {
     cancelingId,
     handleCancel,
   } = useReminders();
+
+  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
 
   const header = (
     <PageHeader
@@ -52,6 +57,7 @@ export const RemindersPage: React.FC = () => {
         reminders={reminders}
         cancelingId={cancelingId}
         onCancel={handleCancel}
+        onRowClick={setSelectedReminder}
       />
 
       <CreateReminderModal
@@ -63,6 +69,11 @@ export const RemindersPage: React.FC = () => {
           setShowCreateModal(false);
         }}
         onSubmit={onSubmit}
+      />
+
+      <ReminderDrawer
+        reminder={selectedReminder}
+        onClose={() => setSelectedReminder(null)}
       />
     </PageStateGuard>
   );
