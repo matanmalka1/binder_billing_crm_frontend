@@ -1,20 +1,20 @@
 import { useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
-import { toast } from "../../../utils/toast";
+import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   chargesApi,
   type ChargesListParams,
   type CreateChargePayload,
 } from "../../../api/charges.api";
-import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
+import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
 import { useRole } from "../../../hooks/useRole";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { searchParams, setFilter, setSearchParams } = useSearchParamFilters();
 
   const filters = {
     client_id: searchParams.get("client_id") ?? "",
@@ -75,7 +75,7 @@ export const useChargesPage = () => {
         setActionLoadingId(chargeId);
         await actionMutation.mutateAsync({ action, chargeId });
       } catch (requestError: unknown) {
-        toast.error(getErrorMessage(requestError, "שגיאה בביצוע פעולת חיוב"));
+        showErrorToast(requestError, "שגיאה בביצוע פעולת חיוב");
       } finally {
         setActionLoadingId(null);
       }
@@ -83,13 +83,7 @@ export const useChargesPage = () => {
     [actionMutation, isAdvisor],
   );
 
-  const setFilter = (key: string, value: string) => {
-    const next = new URLSearchParams(searchParams);
-    if (value) next.set(key, value);
-    else next.delete(key);
-    next.set("page", "1");
-    setSearchParams(next);
-  };
+  // setFilter provided by useSearchParamFilters
 
   const submitCreate = async (
     payload: CreateChargePayload,
@@ -102,7 +96,7 @@ export const useChargesPage = () => {
       await createMutation.mutateAsync(payload);
       return true;
     } catch (requestError: unknown) {
-      toast.error(getErrorMessage(requestError, "שגיאה ביצירת חיוב"));
+      showErrorToast(requestError, "שגיאה ביצירת חיוב");
       return false;
     }
   };

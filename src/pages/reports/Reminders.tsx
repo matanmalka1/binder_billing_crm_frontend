@@ -46,28 +46,24 @@ export const RemindersPage: React.FC = () => {
       header={header}
       loadingMessage="טוען תזכורות..."
     >
-      <div className="space-y-6">
-        {header}
+      <RemindersSummaryCards reminders={reminders} />
 
-        <RemindersSummaryCards reminders={reminders} />
+      <RemindersTable
+        reminders={reminders}
+        cancelingId={cancelingId}
+        onCancel={handleCancel}
+      />
 
-        <RemindersTable
-          reminders={reminders}
-          cancelingId={cancelingId}
-          onCancel={handleCancel}
-        />
-
-        <CreateReminderModal
-          open={showCreateModal}
-          form={form}
-          isSubmitting={isSubmitting}
-          onClose={() => {
-            form.reset();
-            setShowCreateModal(false);
-          }}
-          onSubmit={onSubmit}
-        />
-      </div>
+      <CreateReminderModal
+        open={showCreateModal}
+        form={form}
+        isSubmitting={isSubmitting}
+        onClose={() => {
+          form.reset();
+          setShowCreateModal(false);
+        }}
+        onSubmit={onSubmit}
+      />
     </PageStateGuard>
   );
 };

@@ -4,9 +4,9 @@ import {
   type CreateSignatureRequestPayload,
   type SendSignatureRequestResponse,
 } from "../../../api/signatureRequests.api";
-import { getErrorMessage } from "../../../utils/utils";
-import { toast } from "../../../utils/toast";
+import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const useSignatureRequestActions = (clientId: number) => {
   const queryClient = useQueryClient();
@@ -28,7 +28,7 @@ export const useSignatureRequestActions = (clientId: number) => {
       invalidate();
     },
     onError: (err) =>
-      toast.error(getErrorMessage(err, "שגיאה ביצירת בקשת חתימה")),
+      showErrorToast(err, "שגיאה ביצירת בקשת חתימה"),
   });
 
   const sendMutation = useMutation({
@@ -45,7 +45,7 @@ export const useSignatureRequestActions = (clientId: number) => {
       invalidate();
     },
     onError: (err) =>
-      toast.error(getErrorMessage(err, "שגיאה בשליחת בקשת חתימה")),
+      showErrorToast(err, "שגיאה בשליחת בקשת חתימה"),
   });
 
   const cancelMutation = useMutation({
@@ -56,7 +56,7 @@ export const useSignatureRequestActions = (clientId: number) => {
       invalidate();
     },
     onError: (err) =>
-      toast.error(getErrorMessage(err, "שגיאה בביטול בקשת חתימה")),
+      showErrorToast(err, "שגיאה בביטול בקשת חתימה"),
   });
 
   return {

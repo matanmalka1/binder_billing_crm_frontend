@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { correspondenceApi } from "../../../api/correspondence.api";
-import { toast } from "../../../utils/toast";
-import { getErrorMessage } from "../../../utils/utils";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { CorrespondenceFormValues } from "../components/correspondenceSchema";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const useCorrespondence = (clientId: number) => {
   const queryClient = useQueryClient();
@@ -27,7 +27,7 @@ export const useCorrespondence = (clientId: number) => {
       toast.success("רשומת התכתבות נוספה בהצלחה");
       queryClient.invalidateQueries({ queryKey: qk });
     },
-    onError: (err) => toast.error(getErrorMessage(err, "שגיאה בהוספת רשומה")),
+    onError: (err) => showErrorToast(err, "שגיאה בהוספת רשומה"),
   });
 
   return {

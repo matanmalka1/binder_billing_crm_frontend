@@ -1,17 +1,17 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { useForm } from "react-hook-form";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
-import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
+import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
-import { toast } from "../../../utils/toast";
 import type { TaxDeadlineFilters, CreateTaxDeadlineForm } from "../types";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const useTaxDeadlines = () => {
   const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { searchParams, setFilter } = useSearchParamFilters();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [completingId, setCompletingId] = useState<number | null>(null);
 
@@ -56,7 +56,7 @@ export const useTaxDeadlines = () => {
       setShowCreateModal(false);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "שגיאה ביצירת מועד"));
+      showErrorToast(error, "שגיאה ביצירת מועד");
     },
   });
 
@@ -67,7 +67,7 @@ export const useTaxDeadlines = () => {
       queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "שגיאה בסימון מועד"));
+      showErrorToast(error, "שגיאה בסימון מועד");
     },
     onSettled: () => {
       setCompletingId(null);
@@ -75,11 +75,7 @@ export const useTaxDeadlines = () => {
   });
 
   const handleFilterChange = (key: string, value: string) => {
-    const next = new URLSearchParams(searchParams);
-    if (value) next.set(key, value);
-    else next.delete(key);
-    next.set("page", "1");
-    setSearchParams(next);
+    setFilter(key, value);
   };
 
   const handleComplete = async (deadlineId: number) => {

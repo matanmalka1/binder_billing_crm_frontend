@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authorityContactsApi } from "../../../api/authorityContacts.api";
-import { toast } from "../../../utils/toast";
-import { getErrorMessage } from "../../../utils/utils";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const useAuthorityContacts = (clientId: number) => {
   const queryClient = useQueryClient();
@@ -22,7 +22,7 @@ export const useAuthorityContacts = (clientId: number) => {
       queryClient.invalidateQueries({ queryKey: qk });
     },
     onError: (err) =>
-      toast.error(getErrorMessage(err, "שגיאה במחיקת איש קשר")),
+      showErrorToast(err, "שגיאה במחיקת איש קשר"),
   });
 
   return {

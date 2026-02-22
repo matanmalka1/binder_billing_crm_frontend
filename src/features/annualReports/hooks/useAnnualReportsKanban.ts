@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { annualReportsApi } from "../../../api/annualReports.api";
-import { getErrorMessage } from "../../../utils/utils";
-import { toast } from "../../../utils/toast";
+import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const STAGE_ORDER = [
   "material_collection",
@@ -45,7 +45,7 @@ export const useAnnualReportsKanban = () => {
       queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "שגיאה בהעברת דוח"));
+      showErrorToast(error, "שגיאה בהעברת דוח");
     },
     onSettled: () => {
       setTransitioning(null);

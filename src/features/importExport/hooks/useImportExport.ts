@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { api } from "../../../api/client";
+import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
-import { getErrorMessage } from "../../../utils/utils";
 
 type EntityType = "clients" | "charges" | "binders";
 
@@ -38,7 +38,7 @@ export const useImportExport = (entityType: EntityType) => {
 
       toast.success(`ייצוא ${entityLabel} הושלם בהצלחה`);
     } catch (error) {
-      toast.error(getErrorMessage(error, `שגיאה בייצוא ${entityLabel}`));
+      showErrorToast(error, `שגיאה בייצוא ${entityLabel}`);
     } finally {
       setExporting(false);
     }
@@ -63,7 +63,7 @@ export const useImportExport = (entityType: EntityType) => {
 
       toast.success(`ייבוא ${entityLabel} הושלם בהצלחה`);
     } catch (error) {
-      toast.error(getErrorMessage(error, `שגיאה בייבוא ${entityLabel}`));
+      showErrorToast(error, `שגיאה בייבוא ${entityLabel}`);
     } finally {
       setImporting(false);
     }
@@ -89,7 +89,7 @@ export const useImportExport = (entityType: EntityType) => {
 
       toast.success("תבנית הורדה בהצלחה");
     } catch (error) {
-      toast.error(getErrorMessage(error, "שגיאה בהורדת תבנית"));
+      showErrorToast(error, "שגיאה בהורדת תבנית");
     }
   };
 

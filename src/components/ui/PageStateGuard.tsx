@@ -17,15 +17,12 @@ export const PageStateGuard: FC<PageStateGuardProps> = ({
   loadingMessage = "טוען...",
   children,
 }) => {
-  if (isLoading || error) {
-    return (
-      <div className="space-y-6">
-        {header}
-        {isLoading && <PageLoading message={loadingMessage} />}
-        {error && <ErrorCard message={error} />}
-      </div>
-    );
-  }
-
-  return <>{children}</>;
+  return (
+    <div className="space-y-6">
+      {header}
+      {isLoading && <PageLoading message={loadingMessage} />}
+      {error && <ErrorCard message={error} />}
+      {!isLoading && !error && children}
+    </div>
+  );
 };

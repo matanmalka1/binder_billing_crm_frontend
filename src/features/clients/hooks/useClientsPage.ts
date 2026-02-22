@@ -1,40 +1,33 @@
-import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { clientsApi, type ListClientsParams } from "../../../api/clients.api";
-import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
+import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import { QK } from "../../../lib/queryKeys";
-import { toast } from "../../../utils/toast";
 import type { CreateClientPayload } from "../../../api/clients.api";
 import { useRole } from "../../../hooks/useRole";
+import { toast } from "../../../utils/toast";
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { searchParams, setFilter, setPage } = useSearchParamFilters();
   const { isAdvisor, can } = useRole();
 
-  const filters = useMemo(
-    () => ({
-      has_signals: searchParams.get("has_signals") ?? "",
-      status: searchParams.get("status") ?? "",
-      search: searchParams.get("search") ?? "",
-      page: parsePositiveInt(searchParams.get("page"), 1),
-      page_size: parsePositiveInt(searchParams.get("page_size"), 20),
-    }),
-    [searchParams],
-  );
+  const filters = {
+    has_signals: searchParams.get("has_signals") ?? "",
+    status: searchParams.get("status") ?? "",
+    search: searchParams.get("search") ?? "",
+    page: parsePositiveInt(searchParams.get("page"), 1),
+    page_size: parsePositiveInt(searchParams.get("page_size"), 20),
+  };
 
-  const apiParams = useMemo<ListClientsParams>(
-    () => ({
-      has_signals: filters.has_signals ? filters.has_signals === "true" : undefined,
-      status: filters.status || undefined,
-      search: filters.search || undefined,
-      page: filters.page,
-      page_size: filters.page_size,
-    }),
-    [filters],
-  );
+  const apiParams: ListClientsParams = {
+    has_signals: filters.has_signals ? filters.has_signals === "true" : undefined,
+    status: filters.status || undefined,
+    search: filters.search || undefined,
+    page: filters.page,
+    page_size: filters.page_size,
+  };
 
   const listQuery = useQuery({
     queryKey: QK.clients.list(apiParams),
@@ -48,7 +41,7 @@ export const useClientsPage = () => {
       queryClient.invalidateQueries({ queryKey: QK.clients.all });
     },
     onError: (err) =>
-      toast.error(getErrorMessage(err, "שגיאה ביצירת לקוח")),
+      showErrorToast(err, "שגיאה ביצירת לקוח"),
   });
 
   const {
@@ -65,17 +58,7 @@ export const useClientsPage = () => {
   });
 
   const handleFilterChange = (name: "has_signals" | "status" | "page_size" | "search", value: string) => {
-    const next = new URLSearchParams(searchParams);
-    if (value) next.set(name, value);
-    else next.delete(name);
-    next.set("page", "1");
-    setSearchParams(next);
-  };
-
-  const setPage = (nextPage: number) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("page", String(nextPage));
-    setSearchParams(next);
+    setFilter(name, value);
   };
 
   return {

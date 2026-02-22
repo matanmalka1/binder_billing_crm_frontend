@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { remindersApi } from "../../../api/reminders.api";
-import { getErrorMessage } from "../../../utils/utils";
-import { toast } from "../../../utils/toast";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { useForm } from "react-hook-form";
 import type {
   RemindersListResponse,
@@ -10,6 +9,7 @@ import type {
   CreateReminderFormValues,
 } from "../reminder.types";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 const defaultFormValues: CreateReminderFormValues = {
   reminder_type: "custom",
@@ -38,7 +38,7 @@ export const useReminders = () => {
       form.reset(defaultFormValues);
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "שגיאה ביצירת תזכורת"));
+      showErrorToast(error, "שגיאה ביצירת תזכורת");
     },
   });
 
@@ -49,7 +49,7 @@ export const useReminders = () => {
       queryClient.invalidateQueries({ queryKey: QK.reminders.all });
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error, "שגיאה בביטול תזכורת"));
+      showErrorToast(error, "שגיאה בביטול תזכורת");
     },
     onSettled: () => {
       setCancelingId(null);

@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { advancePaymentsApi } from "../../../api/advancePayments.api";
-import { toast } from "../../../utils/toast";
-import { getErrorMessage } from "../../../utils/utils";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const useAdvancePayments = (clientId: number, year: number) => {
   const queryClient = useQueryClient();
@@ -30,7 +30,7 @@ export const useAdvancePayments = (clientId: number, year: number) => {
       toast.success("מקדמה עודכנה בהצלחה");
       queryClient.invalidateQueries({ queryKey: qk });
     },
-    onError: (err) => toast.error(getErrorMessage(err, "שגיאה בעדכון מקדמה")),
+    onError: (err) => showErrorToast(err, "שגיאה בעדכון מקדמה"),
   });
 
   const rows = enabled ? listQuery.data?.items ?? [] : [];

@@ -1,13 +1,13 @@
 import { useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
-import { toast } from "../../../utils/toast";
+import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   vatReportsApi,
   type CreateVatWorkItemPayload,
   type VatWorkItemsListParams,
 } from "../../../api/vatReports.api";
-import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
+import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
+import { toast } from "../../../utils/toast";
 import { toOptionalString } from "../../../utils/filters";
 import { useRole } from "../../../hooks/useRole";
 import { QK } from "../../../lib/queryKeys";
@@ -16,7 +16,7 @@ export type VatWorkItemAction = "materialsComplete" | "readyForReview" | "sendBa
 
 export const useVatWorkItemsPage = () => {
   const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { searchParams, setFilter, setSearchParams } = useSearchParamFilters();
   const { isAdvisor } = useRole();
 
   const filters = {
@@ -70,7 +70,7 @@ export const useVatWorkItemsPage = () => {
         setActionLoadingId(itemId);
         await actionMutation.mutateAsync({ action, itemId });
       } catch (requestError: unknown) {
-        toast.error(getErrorMessage(requestError, "שגיאה בביצוע הפעולה"));
+        showErrorToast(requestError, "שגיאה בביצוע הפעולה");
       } finally {
         setActionLoadingId(null);
       }
@@ -90,7 +90,7 @@ export const useVatWorkItemsPage = () => {
         toast.success("התיק הוחזר לתיקון");
         await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
       } catch (requestError: unknown) {
-        toast.error(getErrorMessage(requestError, "שגיאה בהחזרת התיק לתיקון"));
+        showErrorToast(requestError, "שגיאה בהחזרת התיק לתיקון");
       } finally {
         setActionLoadingId(null);
       }
@@ -98,13 +98,7 @@ export const useVatWorkItemsPage = () => {
     [isAdvisor, queryClient],
   );
 
-  const setFilter = (key: string, value: string) => {
-    const next = new URLSearchParams(searchParams);
-    if (value) next.set(key, value);
-    else next.delete(key);
-    next.set("page", "1");
-    setSearchParams(next);
-  };
+  // setFilter provided by useSearchParamFilters
 
   const submitCreate = async (payload: CreateVatWorkItemPayload): Promise<boolean> => {
     if (!isAdvisor) return false;
@@ -112,7 +106,7 @@ export const useVatWorkItemsPage = () => {
       await createMutation.mutateAsync(payload);
       return true;
     } catch (requestError: unknown) {
-      toast.error(getErrorMessage(requestError, 'שגיאה ביצירת תיק מע"מ'));
+      showErrorToast(requestError, 'שגיאה ביצירת תיק מע"מ');
       return false;
     }
   };

@@ -2,14 +2,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authorityContactsApi, type AuthorityContactResponse } from "../../../api/authorityContacts.api";
-import { toast } from "../../../utils/toast";
-import { getErrorMessage } from "../../../utils/utils";
+import { showErrorToast } from "../../../utils/utils";
 import {
   authorityContactSchema,
   authorityContactDefaults,
   type AuthorityContactFormValues,
 } from "../components/authorityContactSchema.ts";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const useAuthorityContactForm = (
   clientId: number,
@@ -53,7 +53,7 @@ export const useAuthorityContactForm = (
       onSuccess();
     },
     onError: (err) =>
-      toast.error(getErrorMessage(err, "שגיאה בשמירת איש קשר")),
+      showErrorToast(err, "שגיאה בשמירת איש קשר"),
   });
 
   const onSubmit = form.handleSubmit((values) => saveMutation.mutate(values));

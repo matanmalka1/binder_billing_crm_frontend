@@ -3,9 +3,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { annualReportsApi, type CreateAnnualReportPayload } from "../../../api/annualReports.api";
-import { toast } from "../../../utils/toast";
-import { getErrorMessage } from "../../../utils/utils";
+import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 const schema = z.object({
   client_id: z.string().min(1, "שדה חובה"),
@@ -50,7 +50,7 @@ export const useCreateReport = (onSuccess?: () => void) => {
       form.reset();
       onSuccess?.();
     },
-    onError: (err) => toast.error(getErrorMessage(err, "שגיאה ביצירת דוח")),
+    onError: (err) => showErrorToast(err, "שגיאה ביצירת דוח"),
   });
 
   const onSubmit = form.handleSubmit((values) => {

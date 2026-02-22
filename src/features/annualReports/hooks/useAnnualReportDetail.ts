@@ -1,8 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../../api/client";
+import { ENDPOINTS } from "../../../api/endpoints";
 import { annualReportsApi, type AnnualReportFull as AnnualReportResponse, type StageKey } from "../../../api/annualReports.api";
+import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
-import { getErrorMessage } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 
 export interface AnnualReportDetail extends AnnualReportResponse {
@@ -16,13 +17,17 @@ export interface AnnualReportDetail extends AnnualReportResponse {
 
 const fetchDetail = async (reportId: number): Promise<AnnualReportDetail> => {
   const base = await annualReportsApi.getReport(reportId);
-  // Merge with extra fields (backend may extend the response)
-  const ext = await api.get<Partial<AnnualReportDetail>>(`/annual-reports/${reportId}/details`).catch(() => ({ data: {} }));
-  return { ...base, tax_refund_amount: null, tax_due_amount: null, client_approved_at: null, internal_notes: null, ...ext.data };
+  return {
+    tax_refund_amount: null,
+    tax_due_amount: null,
+    client_approved_at: null,
+    internal_notes: null,
+    ...base,
+  };
 };
 
 const updateDetail = async (reportId: number, payload: Partial<AnnualReportDetail>): Promise<AnnualReportDetail> => {
-  const response = await api.patch<AnnualReportDetail>(`/annual-reports/${reportId}/details`, payload);
+  const response = await api.patch<AnnualReportDetail>(ENDPOINTS.annualReportDetails(reportId), payload);
   return response.data;
 };
 
@@ -46,7 +51,7 @@ export const useAnnualReportDetail = (reportId: number | null) => {
       }
       queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
     },
-    onError: (err) => toast.error(getErrorMessage(err, "שגיאה בעדכון דוח")),
+    onError: (err) => showErrorToast(err, "שגיאה בעדכון דוח"),
   });
 
   return {

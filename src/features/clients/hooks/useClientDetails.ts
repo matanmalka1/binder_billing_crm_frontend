@@ -2,11 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { clientsApi, type UpdateClientPayload, type ClientResponse } from "../../../api/clients.api";
 import { bindersApi } from "../../../api/binders.api";
 import { chargesApi } from "../../../api/charges.api";
-import { getErrorMessage } from "../../../utils/utils";
-import { toast } from "../../../utils/toast";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 import { QK } from "../../../lib/queryKeys";
 import { useRole } from "../../../hooks/useRole";
+import { toast } from "../../../utils/toast";
 
 type UseClientDetailsParams = { clientId: number | null };
 
@@ -65,7 +65,7 @@ export const useClientDetails = ({
       await queryClient.invalidateQueries({ queryKey: QK.clients.all });
     },
     onError: (err) =>
-      toast.error(getErrorMessage(err, "שגיאה בעדכון פרטי לקוח")),
+      showErrorToast(err, "שגיאה בעדכון פרטי לקוח"),
   });
 
   const updateClient = async (payload: UpdateClientPayload) => {

@@ -156,12 +156,12 @@ export interface StatusTransitionPayload {
 
 export const annualReportsApi = {
   createReport: async (payload: CreateAnnualReportPayload): Promise<AnnualReportFull> => {
-    const res = await api.post<AnnualReportFull>("/annual-reports", payload);
+    const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReports, payload);
     return res.data;
   },
 
   getReport: async (reportId: number): Promise<AnnualReportFull> => {
-    const res = await api.get<AnnualReportFull>(`/annual-reports/${reportId}`);
+    const res = await api.get<AnnualReportFull>(ENDPOINTS.annualReportById(reportId));
     return res.data;
   },
 
@@ -170,17 +170,17 @@ export const annualReportsApi = {
     page?: number;
     page_size?: number;
   }): Promise<AnnualReportListResponse> => {
-    const res = await api.get<AnnualReportListResponse>("/annual-reports", { params });
+    const res = await api.get<AnnualReportListResponse>(ENDPOINTS.annualReports, { params });
     return res.data;
   },
 
   listClientReports: async (clientId: number): Promise<AnnualReportFull[]> => {
-    const res = await api.get<AnnualReportFull[]>(`/clients/${clientId}/annual-reports`);
+    const res = await api.get<AnnualReportFull[]>(ENDPOINTS.clientAnnualReports(clientId));
     return res.data;
   },
 
   getSeasonSummary: async (taxYear: number): Promise<SeasonSummary> => {
-    const res = await api.get<SeasonSummary>(`/tax-year/${taxYear}/summary`);
+    const res = await api.get<SeasonSummary>(ENDPOINTS.taxYearSummary(taxYear));
     return res.data;
   },
 
@@ -188,7 +188,7 @@ export const annualReportsApi = {
     taxYear: number,
     params: { page?: number; page_size?: number }
   ): Promise<AnnualReportListResponse> => {
-    const res = await api.get<AnnualReportListResponse>(`/tax-year/${taxYear}/reports`, { params });
+    const res = await api.get<AnnualReportListResponse>(ENDPOINTS.taxYearReports(taxYear), { params });
     return res.data;
   },
 
@@ -196,7 +196,7 @@ export const annualReportsApi = {
     reportId: number,
     payload: StatusTransitionPayload
   ): Promise<AnnualReportFull> => {
-    const res = await api.post<AnnualReportFull>(`/annual-reports/${reportId}/status`, payload);
+    const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReportTransitionStatus(reportId), payload);
     return res.data;
   },
 
@@ -204,12 +204,12 @@ export const annualReportsApi = {
     reportId: number,
     payload: { submitted_at?: string; ita_reference?: string | null; note?: string | null } = {}
   ): Promise<AnnualReportFull> => {
-    const res = await api.post<AnnualReportFull>(`/annual-reports/${reportId}/submit`, payload);
+    const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReportSubmit(reportId), payload);
     return res.data;
   },
 
   transitionStage: async (reportId: number, toStage: StageKey): Promise<AnnualReportFull> => {
-    const res = await api.post<AnnualReportFull>(`/annual-reports/${reportId}/transition`, {
+    const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReportTransition(reportId), {
       to_stage: toStage,
     });
     return res.data;
@@ -219,12 +219,12 @@ export const annualReportsApi = {
     reportId: number,
     payload: { deadline_type: DeadlineType; custom_deadline_note?: string | null }
   ): Promise<AnnualReportFull> => {
-    const res = await api.post<AnnualReportFull>(`/annual-reports/${reportId}/deadline`, payload);
+    const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReportDeadline(reportId), payload);
     return res.data;
   },
 
   getSchedules: async (reportId: number): Promise<ScheduleEntry[]> => {
-    const res = await api.get<ScheduleEntry[]>(`/annual-reports/${reportId}/schedules`);
+    const res = await api.get<ScheduleEntry[]>(ENDPOINTS.annualReportSchedules(reportId));
     return res.data;
   },
 
@@ -240,26 +240,26 @@ export const annualReportsApi = {
     reportId: number,
     schedule: AnnualReportScheduleKey
   ): Promise<ScheduleEntry> => {
-    const res = await api.post<ScheduleEntry>(`/annual-reports/${reportId}/schedules/complete`, {
+    const res = await api.post<ScheduleEntry>(ENDPOINTS.annualReportSchedulesComplete(reportId), {
       schedule,
     });
     return res.data;
   },
 
   getHistory: async (reportId: number): Promise<StatusHistoryEntry[]> => {
-    const res = await api.get<StatusHistoryEntry[]>(`/annual-reports/${reportId}/history`);
+    const res = await api.get<StatusHistoryEntry[]>(ENDPOINTS.annualReportHistory(reportId));
     return res.data;
   },
 
   getOverdue: async (taxYear?: number): Promise<AnnualReportFull[]> => {
-    const res = await api.get<AnnualReportFull[]>("/annual-reports/overdue", {
+    const res = await api.get<AnnualReportFull[]>(ENDPOINTS.annualReportOverdue, {
       params: taxYear ? { tax_year: taxYear } : undefined,
     });
     return res.data;
   },
 
   getKanbanView: async (): Promise<{ stages: KanbanStage[] }> => {
-    const res = await api.get<{ stages: KanbanStage[] }>("/annual-reports/kanban/view");
+    const res = await api.get<{ stages: KanbanStage[] }>(ENDPOINTS.annualReportsKanban);
     return res.data;
   },
 };

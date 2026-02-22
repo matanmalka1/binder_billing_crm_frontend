@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { reportsApi, type ExportFormat } from "../../../api/reports.api";
-import { getErrorMessage } from "../../../utils/utils";
-import { toast } from "../../../utils/toast";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const useAgingReport = () => {
   const [asOfDate, setAsOfDate] = useState<string>(
@@ -28,7 +28,7 @@ export const useAgingReport = () => {
         window.open(result.download_url, "_blank");
       }
     } catch (error) {
-      toast.error(getErrorMessage(error, "שגיאה בייצוא דוח"));
+      showErrorToast(error, "שגיאה בייצוא דוח");
     } finally {
       setExporting(null);
     }

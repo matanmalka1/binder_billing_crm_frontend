@@ -60,10 +60,8 @@ export const AgingReportPage: React.FC = () => {
       header={header}
       loadingMessage="טוען דוח..."
     >
-      {data ? (
-        <div className="space-y-6">
-          {header}
-
+      {data && (
+        <>
           <AgingReportFilters asOfDate={asOfDate} onDateChange={setAsOfDate} />
 
           <AgingReportSummary data={data} />
@@ -71,8 +69,8 @@ export const AgingReportPage: React.FC = () => {
           <AgingReportTable items={data.items} />
 
           <AgingReportMetadata data={data} />
-        </div>
-      ) : null}
+        </>
+      )}
     </PageStateGuard>
   );
 };

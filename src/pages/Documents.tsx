@@ -1,7 +1,9 @@
 import { FolderOpen } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
-import { PaginatedTableView } from "../components/ui/PaginatedTableView";
+import { TableSkeleton } from "../components/ui/TableSkeleton";
+import { EmptyState } from "../components/ui/EmptyState";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { DocumentsClientCard } from "../features/documents/components/DocumentsClientCard";
 import { DocumentsDataCards } from "../features/documents/components/DocumentsDataCards";
 import { DocumentsUploadCard } from "../features/documents/components/DocumentsUploadCard";
@@ -45,27 +47,17 @@ export const Documents: React.FC = () => {
         uploading={uploading}
       />
 
-      {/* Standardized Table View with Pagination */}
-      <PaginatedTableView
-        data={selectedClientId > 0 ? documents : []}
-        loading={loading}
-        error={error}
-        pagination={{
-          page: 1,
-          pageSize: Math.max(documents.length, 1),
-          total: documents.length,
-          onPageChange: () => {},
-        }}
-        renderTable={() => (
-          <DocumentsDataCards documents={documents} signals={signals} />
-        )}
-        emptyState={{
-          icon: FolderOpen,
-          message: selectedClientId > 0 
-            ? "אין מסמכים להצגה" 
-            : "בחר לקוח להצגת מסמכים",
-        }}
-      />
+      {loading && <TableSkeleton rows={5} columns={4} />}
+      {!loading && error && <ErrorCard message={error} />}
+      {!loading && !error && selectedClientId > 0 && documents.length === 0 && (
+        <EmptyState icon={FolderOpen} message="אין מסמכים להצגה" />
+      )}
+      {!loading && !error && selectedClientId <= 0 && (
+        <EmptyState icon={FolderOpen} message="בחר לקוח להצגת מסמכים" />
+      )}
+      {!loading && !error && selectedClientId > 0 && documents.length > 0 && (
+        <DocumentsDataCards documents={documents} signals={signals} />
+      )}
     </div>
   );
 };

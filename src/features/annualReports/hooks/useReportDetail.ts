@@ -5,9 +5,9 @@ import {
   type StatusTransitionPayload,
   type AnnualReportScheduleKey,
 } from "../../../api/annualReports.api";
-import { toast } from "../../../utils/toast";
-import { getErrorMessage } from "../../../utils/utils";
+import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const useReportDetail = (reportId: number | null) => {
   const queryClient = useQueryClient();
@@ -27,7 +27,7 @@ export const useReportDetail = (reportId: number | null) => {
       if (qk) queryClient.setQueryData(qk, updated);
       queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
     },
-    onError: (err) => toast.error(getErrorMessage(err, "שגיאה בעדכון סטטוס")),
+    onError: (err) => showErrorToast(err, "שגיאה בעדכון סטטוס"),
   });
 
   const completeScheduleMutation = useMutation({
@@ -36,7 +36,7 @@ export const useReportDetail = (reportId: number | null) => {
       toast.success("נספח סומן כהושלם");
       if (qk) queryClient.invalidateQueries({ queryKey: qk });
     },
-    onError: (err) => toast.error(getErrorMessage(err, "שגיאה בעדכון נספח")),
+    onError: (err) => showErrorToast(err, "שגיאה בעדכון נספח"),
   });
 
   return {

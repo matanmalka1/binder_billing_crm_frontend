@@ -32,17 +32,18 @@ export const ClientDetails: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6">
-      {!can.editClients && <AccessBanner variant="info" message="צפייה בלבד. עריכת פרטי לקוח זמינה ליועצים בלבד." />}
-
-      <PageStateGuard
-        isLoading={isLoading}
-        error={error || (!client ? "שגיאה בטעינת פרטי לקוח" : null)}
-        header={header}
-        loadingMessage="טוען פרטי לקוח..."
-      >
-        {header}
-        {client && (
+    <PageStateGuard
+      isLoading={isLoading}
+      error={error || (!client ? "שגיאה בטעינת פרטי לקוח" : null)}
+      header={
+        <>
+          {!can.editClients && <AccessBanner variant="info" message="צפייה בלבד. עריכת פרטי לקוח זמינה ליועצים בלבד." />}
+          {header}
+        </>
+      }
+      loadingMessage="טוען פרטי לקוח..."
+    >
+      {client && (
           <>
             {isEditing && can.editClients ? (
               <ClientEditForm
@@ -81,7 +82,6 @@ export const ClientDetails: React.FC = () => {
             <SignatureRequestsCard client={client} canManage={can.editClients} />
           </>
         )}
-      </PageStateGuard>
-    </div>
+    </PageStateGuard>
   );
 };
