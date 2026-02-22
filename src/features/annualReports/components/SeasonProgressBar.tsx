@@ -1,5 +1,5 @@
 import { Card } from "../../../components/ui/Card";
-import type { SeasonSummary } from "../../../api/annualReports.extended.api";
+import type { SeasonSummary } from "../../../api/annualReports.api";
 import { SEASON_PROGRESS_STAGES } from "../../../api/annualReports.extended.utils";
 import { cn } from "../../../utils/utils";
 

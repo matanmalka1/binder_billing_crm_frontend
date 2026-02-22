@@ -42,7 +42,9 @@ export const AnnualReportDetailModal: React.FC<Props> = ({
       {detail && (
         <div className="space-y-6">
           <div className="flex flex-wrap gap-2">
-            <Badge variant="info">{getReportStageLabel(detail.stage)}</Badge>
+            <Badge variant="info">
+              {detail.stage ? getReportStageLabel(detail.stage) : "שלב לא ידוע"}
+            </Badge>
             <Badge variant="neutral">שנת מס {detail.tax_year}</Badge>
             {detail.due_date && (
               <Badge variant="warning">מועד: {formatDate(detail.due_date)}</Badge>

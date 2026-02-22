@@ -2,10 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  annualReportsExtendedApi,
-  type CreateAnnualReportPayload,
-} from "../../../api/annualReports.extended.api";
+import { annualReportsApi, type CreateAnnualReportPayload } from "../../../api/annualReports.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
@@ -23,12 +20,13 @@ const schema = z.object({
   has_exempt_rental: z.boolean().default(false),
 });
 
-export type CreateReportFormValues = z.infer<typeof schema>;
+export type CreateReportFormValues = z.input<typeof schema>;
+type CreateReportFormOutput = z.output<typeof schema>;
 
 export const useCreateReport = (onSuccess?: () => void) => {
   const queryClient = useQueryClient();
 
-  const form = useForm<CreateReportFormValues>({
+  const form = useForm<CreateReportFormValues, undefined, CreateReportFormOutput>({
     resolver: zodResolver(schema),
     defaultValues: {
       client_id: "",
@@ -45,8 +43,7 @@ export const useCreateReport = (onSuccess?: () => void) => {
   });
 
   const mutation = useMutation({
-    mutationFn: (payload: CreateAnnualReportPayload) =>
-      annualReportsExtendedApi.createReport(payload),
+    mutationFn: (payload: CreateAnnualReportPayload) => annualReportsApi.createReport(payload),
     onSuccess: () => {
       toast.success("דוח שנתי נוצר בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });

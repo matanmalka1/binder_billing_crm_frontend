@@ -1,10 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  annualReportsExtendedApi,
+  annualReportsApi,
   type AnnualReportFull,
   type StatusTransitionPayload,
   type AnnualReportScheduleKey,
-} from "../../../api/annualReports.extended.api";
+} from "../../../api/annualReports.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
@@ -13,16 +13,15 @@ export const useReportDetail = (reportId: number | null) => {
   const queryClient = useQueryClient();
   const qk = reportId ? QK.tax.annualReports.detail(reportId) : null;
 
-  const reportQuery = useQuery({
+  const reportQuery = useQuery<AnnualReportFull>({
     enabled: reportId !== null && reportId > 0,
-    queryKey: qk ?? undefined,
-    queryFn: () => annualReportsExtendedApi.getReport(reportId!),
+    queryKey: qk ?? ["annual-reports", "detail", null],
+    queryFn: () => annualReportsApi.getReport(reportId!),
     retry: false,
   });
 
   const transitionMutation = useMutation({
-    mutationFn: (payload: StatusTransitionPayload) =>
-      annualReportsExtendedApi.transitionStatus(reportId!, payload),
+    mutationFn: (payload: StatusTransitionPayload) => annualReportsApi.transitionStatus(reportId!, payload),
     onSuccess: (updated: AnnualReportFull) => {
       toast.success("סטטוס עודכן בהצלחה");
       if (qk) queryClient.setQueryData(qk, updated);
@@ -32,8 +31,7 @@ export const useReportDetail = (reportId: number | null) => {
   });
 
   const completeScheduleMutation = useMutation({
-    mutationFn: (schedule: AnnualReportScheduleKey) =>
-      annualReportsExtendedApi.completeSchedule(reportId!, schedule),
+    mutationFn: (schedule: AnnualReportScheduleKey) => annualReportsApi.completeSchedule(reportId!, schedule),
     onSuccess: () => {
       toast.success("נספח סומן כהושלם");
       if (qk) queryClient.invalidateQueries({ queryKey: qk });

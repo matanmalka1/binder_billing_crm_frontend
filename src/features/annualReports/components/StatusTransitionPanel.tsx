@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ArrowLeft} from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Badge } from "../../../components/ui/Badge";
 import { Card } from "../../../components/ui/Card";
-import type { AnnualReportFull, AnnualReportStatus, StatusTransitionPayload } from "../../../api/annualReports.extended.api";
+import type { AnnualReportFull, AnnualReportStatus, StatusTransitionPayload } from "../../../api/annualReports.api";
 import {
   getStatusLabel,
   getStatusVariant,
@@ -16,9 +16,6 @@ interface Props {
   onTransition: (payload: StatusTransitionPayload) => void;
   isLoading: boolean;
 }
-
-const needsExtra = (status: AnnualReportStatus) =>
-  status === "submitted" || status === "assessment_issued";
 
 export const StatusTransitionPanel: React.FC<Props> = ({ report, onTransition, isLoading }) => {
   const allowed = getAllowedTransitions(report.status);

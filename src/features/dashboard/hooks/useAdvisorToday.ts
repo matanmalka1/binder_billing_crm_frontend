@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
-import { annualReportsExtendedApi } from "../../../api/annualReports.extended.api";
+import { annualReportsApi } from "../../../api/annualReports.api";
 import { remindersApi } from "../../../api/reminders.api";
 import { chargesApi } from "../../../api/charges.api";
 import { QK } from "../../../lib/queryKeys";
@@ -49,7 +49,7 @@ export const useAdvisorToday = () => {
     enabled: isAdvisor,
     queryKey: QK.advisorToday.reports,
     queryFn: () =>
-      annualReportsExtendedApi.listReports({ page: 1, page_size: 100 }),
+      annualReportsApi.listReports({ page: 1, page_size: 100 }),
     staleTime: 5 * 60 * 1000,
   });
 

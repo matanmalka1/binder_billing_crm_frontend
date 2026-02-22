@@ -1,6 +1,6 @@
 import { DataTable, type Column } from "../../../components/ui/DataTable";
 import { Badge } from "../../../components/ui/Badge";
-import type { AnnualReportFull } from "../../../api/annualReports.extended.api";
+import type { AnnualReportFull } from "../../../api/annualReports.api";
 import {
   getStatusLabel,
   getStatusVariant,

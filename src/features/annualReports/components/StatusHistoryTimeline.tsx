@@ -1,7 +1,7 @@
 import { Clock, ArrowLeft } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
-import type { StatusHistoryEntry } from "../../../api/annualReports.extended.api";
+import type { StatusHistoryEntry } from "../../../api/annualReports.api";
 import { getStatusLabel, getStatusVariant } from "../../../api/annualReports.extended.utils";
 import { staggerDelay } from "../../../utils/animation";
 

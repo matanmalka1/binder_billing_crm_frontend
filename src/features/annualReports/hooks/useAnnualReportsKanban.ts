@@ -1,9 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import {
-  annualReportsExtendedApi,
-  type StageKey,
-} from "../../../api/annualReports.extended.api";
+import { annualReportsApi } from "../../../api/annualReports.api";
 import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { QK } from "../../../lib/queryKeys";
@@ -37,12 +34,12 @@ export const useAnnualReportsKanban = () => {
 
   const kanbanQuery = useQuery({
     queryKey: QK.tax.annualReports.kanban,
-    queryFn: () => annualReportsExtendedApi.getKanbanView(),
+    queryFn: () => annualReportsApi.getKanbanView(),
   });
 
   const transitionMutation = useMutation({
     mutationFn: async ({ reportId, newStage }: { reportId: number; newStage: StageKey }) =>
-      annualReportsExtendedApi.transitionStage(reportId, newStage),
+      annualReportsApi.transitionStage(reportId, newStage),
     onSuccess: () => {
       toast.success("דוח הועבר בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });

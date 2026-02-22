@@ -1,9 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../../api/client";
-import {
-  annualReportsExtendedApi,
-  type AnnualReportFull as AnnualReportResponse,
-} from "../../../api/annualReports.extended.api";
+import { annualReportsApi, type AnnualReportFull as AnnualReportResponse, type StageKey } from "../../../api/annualReports.api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
@@ -13,10 +10,12 @@ export interface AnnualReportDetail extends AnnualReportResponse {
   tax_due_amount: number | null;
   client_approved_at: string | null;
   internal_notes: string | null;
+  stage?: StageKey;
+  due_date?: string | null;
 }
 
 const fetchDetail = async (reportId: number): Promise<AnnualReportDetail> => {
-  const base = await annualReportsExtendedApi.getReport(reportId);
+  const base = await annualReportsApi.getReport(reportId);
   // Merge with extra fields (backend may extend the response)
   const ext = await api.get<Partial<AnnualReportDetail>>(`/annual-reports/${reportId}/details`).catch(() => ({ data: {} }));
   return { ...base, tax_refund_amount: null, tax_due_amount: null, client_approved_at: null, internal_notes: null, ...ext.data };
@@ -31,9 +30,9 @@ export const useAnnualReportDetail = (reportId: number | null) => {
   const queryClient = useQueryClient();
   const qk = reportId ? QK.tax.annualReports.detail(reportId) : null;
 
-  const detailQuery = useQuery({
+  const detailQuery = useQuery<AnnualReportDetail>({
     enabled: reportId !== null && reportId > 0,
-    queryKey: qk ?? undefined,
+    queryKey: qk ?? ["annual-reports", "detail", null],
     queryFn: () => fetchDetail(reportId!), // eslint-disable-line @typescript-eslint/no-non-null-assertion
     retry: false,
   });

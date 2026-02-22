@@ -1,7 +1,7 @@
 import { CheckCircle2, Circle } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
-import type { ScheduleEntry, AnnualReportScheduleKey } from "../../../api/annualReports.extended.api";
+import type { ScheduleEntry, AnnualReportScheduleKey } from "../../../api/annualReports.api";
 import { getScheduleLabel } from "../../../api/annualReports.extended.utils";
 import { cn } from "../../../utils/utils";
 

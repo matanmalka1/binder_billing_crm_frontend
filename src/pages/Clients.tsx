@@ -74,6 +74,7 @@ export const Clients: React.FC = () => {
       <FilterBar>
         <ClientsFiltersBar
           filters={{
+            search: filters.search,
             has_signals: filters.has_signals,
             status: filters.status,
             page: filters.page,

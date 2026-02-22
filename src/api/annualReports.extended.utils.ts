@@ -1,4 +1,4 @@
-import type { AnnualReportStatus, ClientTypeForReport, AnnualReportScheduleKey } from "./annualReports.extended.api";
+import type { AnnualReportStatus, ClientTypeForReport, AnnualReportScheduleKey } from "./annualReports.api";
 
 // ── Status labels ──────────────────────────────────────────────────────────
 

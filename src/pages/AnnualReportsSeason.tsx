@@ -7,7 +7,7 @@ import { Button } from "../components/ui/Button";
 import { SeasonSummaryCards } from "../features/annualReports/components/SeasonSummaryCards";
 import { SeasonProgressBar } from "../features/annualReports/components/SeasonProgressBar";
 import { SeasonReportsTable } from "../features/annualReports/components/SeasonReportsTable";
-import type { AnnualReportFull } from "../api/annualReports.extended.api";
+import type { AnnualReportFull } from "../api/annualReports.api";
 import { ReportDetailModal } from "../features/annualReports/components/ReportDetailModal";
 import { CreateReportModal } from "../features/annualReports/components/CreateReportModal";
 import { useSeasonDashboard } from "../features/annualReports/hooks/useSeasonDashboard";

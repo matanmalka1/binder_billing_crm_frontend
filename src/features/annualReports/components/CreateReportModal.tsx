@@ -19,7 +19,7 @@ const FLAG_FIELDS = [
 
 export const CreateReportModal: React.FC<Props> = ({ open, onClose }) => {
   const { form, onSubmit, isSubmitting } = useCreateReport(onClose);
-  const { register, formState: { errors }, watch, setValue } = form;
+  const { register, formState: { errors } } = form;
 
   return (
     <Modal

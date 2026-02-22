@@ -1,6 +1,6 @@
 import { FileText, CheckCircle2, AlertTriangle, Clock, Users, TrendingUp } from "lucide-react";
 import { StatsCard } from "../../../components/ui/StatsCard";
-import type { SeasonSummary } from "../../../api/annualReports.extended.api";
+import type { SeasonSummary } from "../../../api/annualReports.api";
 
 interface Props {
   summary: SeasonSummary;

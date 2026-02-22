@@ -10,7 +10,7 @@ import { ScheduleChecklist } from "./ScheduleChecklist";
 import { StatusHistoryTimeline } from "./StatusHistoryTimeline";
 import { getStatusLabel, getStatusVariant, getClientTypeLabel, getDeadlineTypeLabel } from "../../../api/annualReports.extended.utils";
 import { formatDate } from "../../../utils/utils";
-import type { AnnualReportScheduleKey } from "../../../api/annualReports.extended.api";
+import type { AnnualReportScheduleKey } from "../../../api/annualReports.api";
 
 type Tab = "details" | "schedules" | "history" | "transition";
 
