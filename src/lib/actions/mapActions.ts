@@ -28,6 +28,8 @@ export const mapActions = (
         endpoint: action.endpoint,
         payload: action.payload ?? undefined,
         confirm: mapConfirm(action.confirm),
+        clientName: action.client_name ?? null,
+        binderNumber: action.binder_number ?? null,
       } as ActionCommand;
     })
     .filter((a): a is ActionCommand => Boolean(a));

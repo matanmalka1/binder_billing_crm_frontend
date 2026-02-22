@@ -65,6 +65,12 @@ export const OperationalPanel = ({
                 )}>
                   {action.label || "—"}
                 </p>
+                {action.clientName && (
+                  <p className="mt-0.5 truncate text-xs text-gray-500">
+                    {action.clientName}
+                    {action.binderNumber && ` · ${action.binderNumber}`}
+                  </p>
+                )}
                 {action.confirm && (
                   <p className="mt-0.5 text-xs text-amber-600 font-medium">
                     דורש אישור

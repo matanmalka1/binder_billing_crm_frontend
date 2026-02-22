@@ -18,6 +18,8 @@ export interface BackendAction {
   binder_id?: number | null;
   charge_id?: number | null;
   client_id?: number | null;
+  client_name?: string | null;
+  binder_number?: string | null;
 }
 
 export type BackendActionInput = BackendAction;
@@ -38,4 +40,6 @@ export interface ActionCommand {
   endpoint: string;
   payload?: Record<string, unknown>;
   confirm?: ActionConfirmConfig;
+  clientName?: string | null;
+  binderNumber?: string | null;
 }
