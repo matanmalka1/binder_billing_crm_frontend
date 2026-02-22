@@ -23,6 +23,7 @@ The following rules must not be violated without explicit approval:
 - **All API paths must be declared in `src/api/endpoints.ts`** — no hardcoded URL strings anywhere else in the codebase
 - **No business logic in page components** — pages render; hooks decide
 - **No cross-feature imports at the component level** — features are self-contained; shared code belongs in `src/components/`, `src/hooks/`, or `src/utils/`
+- **All functions use arrow syntax** — no `function` declarations; components, helpers, and callbacks are `const foo = () => {}`
 - **No direct `localStorage` / `sessionStorage` access** outside `src/store/`
 - **No authorization logic outside `useRole()`** — role checks belong in hooks, never in API files or utility functions
 - **All user-facing text is in Hebrew** — no English strings in UI output (labels, toasts, error messages, placeholders)
