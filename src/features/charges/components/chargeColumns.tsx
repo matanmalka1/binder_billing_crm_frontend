@@ -69,6 +69,7 @@ const ActionCell: React.FC<ActionCellProps> = ({
           size="sm"
           isLoading={isLoading}
           disabled={isDisabled}
+          title="מנפיק את החשבונית וממיר אותה מטיוטה לפעיל"
           onClick={handleIssue}
         >
           הנפקה
@@ -82,6 +83,7 @@ const ActionCell: React.FC<ActionCellProps> = ({
           size="sm"
           isLoading={isLoading}
           disabled={isDisabled}
+          title="מסמן את החשבונית כשולמה על ידי הלקוח"
           onClick={handleMarkPaid}
         >
           סימון שולם
@@ -95,6 +97,7 @@ const ActionCell: React.FC<ActionCellProps> = ({
           size="sm"
           isLoading={isLoading}
           disabled={isDisabled}
+          title="מבטל את החשבונית לצמיתות — לא ניתן לבטל פעולה זו"
           onClick={handleCancel}
         >
           ביטול
