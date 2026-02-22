@@ -1,0 +1,99 @@
+import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
+import { Badge } from "../../../components/ui/Badge";
+import type { BinderResponse } from "../../../api/binders.types";
+import {
+  getStatusLabel,
+  getWorkStateLabel,
+  getSignalLabel,
+  getBinderTypeLabel,
+} from "../../../utils/enums";
+import { formatDate, cn } from "../../../utils/utils";
+
+interface BinderDrawerProps {
+  binder: BinderResponse | null;
+  onClose: () => void;
+}
+
+const workStateVariants: Record<string, "neutral" | "info" | "success"> = {
+  waiting_for_work: "neutral",
+  in_progress: "info",
+  completed: "success",
+};
+
+const signalVariants: Record<string, "error" | "warning" | "info" | "neutral"> = {
+  missing_permanent_documents: "warning",
+  unpaid_charges: "warning",
+  ready_for_pickup: "info",
+  idle_binder: "neutral",
+};
+
+export const BinderDrawer: React.FC<BinderDrawerProps> = ({ binder, onClose }) => (
+  <DetailDrawer
+    open={binder !== null}
+    title={binder ? `קלסר ${binder.binder_number}` : ""}
+    subtitle={binder?.client_name ?? (binder ? `לקוח #${binder.client_id}` : undefined)}
+    onClose={onClose}
+  >
+    {binder && (
+      <>
+        <DrawerSection title="פרטי קלסר">
+          <DrawerField label="מספר קלסר" value={binder.binder_number} />
+          <DrawerField label="סוג חומר" value={getBinderTypeLabel(binder.binder_type)} />
+          <DrawerField label="סטטוס" value={getStatusLabel(binder.status)} />
+          <DrawerField label="תאריך קבלה" value={formatDate(binder.received_at)} />
+          {binder.returned_at && (
+            <DrawerField label="תאריך החזרה" value={formatDate(binder.returned_at)} />
+          )}
+          {binder.pickup_person_name && (
+            <DrawerField label="נאסף על ידי" value={binder.pickup_person_name} />
+          )}
+        </DrawerSection>
+
+        <DrawerSection title="מצב עבודה">
+          <DrawerField
+            label="מצב"
+            value={
+              <Badge variant={workStateVariants[binder.work_state ?? ""] ?? "neutral"}>
+                {getWorkStateLabel(binder.work_state ?? "")}
+              </Badge>
+            }
+          />
+          <DrawerField
+            label="ימים במשרד"
+            value={
+              binder.days_in_office != null ? (
+                <span
+                  className={cn(
+                    "font-mono font-semibold",
+                    binder.days_in_office > 90
+                      ? "text-red-700"
+                      : binder.days_in_office > 60
+                      ? "text-orange-600"
+                      : "text-gray-900",
+                  )}
+                >
+                  {binder.days_in_office}
+                </span>
+              ) : (
+                "—"
+              )
+            }
+          />
+        </DrawerSection>
+
+        {Array.isArray(binder.signals) && binder.signals.length > 0 && (
+          <DrawerSection title="אותות">
+            <div className="flex flex-wrap gap-1.5 py-3">
+              {binder.signals.map((signal) => (
+                <Badge key={signal} variant={signalVariants[signal] ?? "neutral"}>
+                  {getSignalLabel(signal)}
+                </Badge>
+              ))}
+            </div>
+          </DrawerSection>
+        )}
+      </>
+    )}
+  </DetailDrawer>
+);
+BinderDrawer.displayName = "BinderDrawer";
