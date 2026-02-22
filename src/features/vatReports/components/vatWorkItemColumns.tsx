@@ -47,6 +47,7 @@ const ActionCell: React.FC<ActionCellProps> = ({
           size="sm"
           isLoading={isLoading}
           disabled={isDisabled}
+          title="מאשר שהחומרים התקבלו במשרד ומעביר לשלב הקלדה"
           onClick={stop(() => void runAction(item.id, "materialsComplete"))}
         >
           אישור קבלה
@@ -59,6 +60,7 @@ const ActionCell: React.FC<ActionCellProps> = ({
           size="sm"
           isLoading={isLoading}
           disabled={isDisabled}
+          title="מסמן את התיק כמוכן לבדיקת היועץ"
           onClick={stop(() => void runAction(item.id, "readyForReview"))}
         >
           שלח לבדיקה
@@ -71,9 +73,10 @@ const ActionCell: React.FC<ActionCellProps> = ({
           size="sm"
           isLoading={isLoading}
           disabled={isDisabled}
+          title="מסמן את הדוח כהוגש ידנית — יש להגיש בנפרד לרשות המסים"
           onClick={stop(() => void runAction(item.id, "file"))}
         >
-          הגשה
+          סמן כהוגש
         </Button>
       )}
       {isFiled(item.status) && (
