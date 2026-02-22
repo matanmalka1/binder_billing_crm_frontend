@@ -10,6 +10,7 @@ interface RemindersTableProps {
   reminders: Reminder[];
   cancelingId: number | null;
   onCancel: (id: number) => void;
+  onRowClick?: (reminder: Reminder) => void;
 }
 
 const buildRemindersColumns = (
@@ -93,7 +94,7 @@ const buildRemindersColumns = (
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => onCancel(reminder.id)}
+          onClick={(e) => { e.stopPropagation(); onCancel(reminder.id); }}
           isLoading={cancelingId === reminder.id}
           disabled={cancelingId !== null}
         >
@@ -109,6 +110,7 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
   reminders,
   cancelingId,
   onCancel,
+  onRowClick,
 }) => {
   const columns = buildRemindersColumns(cancelingId, onCancel);
 
@@ -117,6 +119,7 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
       data={reminders}
       columns={columns}
       getRowKey={(reminder) => reminder.id}
+      onRowClick={onRowClick}
       emptyMessage="אין תזכורות להצגה"
     />
   );
