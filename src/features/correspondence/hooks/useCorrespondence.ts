@@ -5,14 +5,17 @@ import type { CorrespondenceFormValues } from "../components/correspondenceSchem
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
+const DEFAULT_PAGE_SIZE = 50;
+
 export const useCorrespondence = (clientId: number) => {
   const queryClient = useQueryClient();
-  const qk = QK.correspondence.forClient(clientId);
+  const qk = [...QK.correspondence.forClient(clientId), { page: 1, page_size: DEFAULT_PAGE_SIZE }];
 
   const listQuery = useQuery({
     enabled: clientId > 0,
     queryKey: qk,
-    queryFn: () => correspondenceApi.list(clientId),
+    queryFn: () =>
+      correspondenceApi.list(clientId, { page: 1, page_size: DEFAULT_PAGE_SIZE }),
     retry: false,
   });
 
@@ -32,6 +35,9 @@ export const useCorrespondence = (clientId: number) => {
 
   return {
     entries: listQuery.data?.items ?? [],
+    total: listQuery.data?.total ?? 0,
+    page: listQuery.data?.page ?? 1,
+    pageSize: listQuery.data?.page_size ?? DEFAULT_PAGE_SIZE,
     isLoading: listQuery.isPending,
     error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת התכתבויות") : null,
     createEntry: (values: CorrespondenceFormValues) => createMutation.mutate(values),

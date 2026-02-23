@@ -1,5 +1,6 @@
 import { api } from "./client";
 import { ENDPOINTS } from "./endpoints";
+import type { PaginatedResponse } from "../types/common";
 
 export interface CorrespondenceEntry {
   id: number;
@@ -12,10 +13,6 @@ export interface CorrespondenceEntry {
   created_by: number;
 }
 
-export interface CorrespondenceListResponse {
-  items: CorrespondenceEntry[];
-}
-
 export interface CreateCorrespondencePayload {
   contact_id?: number | null;
   correspondence_type: CorrespondenceEntry["correspondence_type"];
@@ -25,9 +22,13 @@ export interface CreateCorrespondencePayload {
 }
 
 export const correspondenceApi = {
-  list: async (clientId: number): Promise<CorrespondenceListResponse> => {
-    const response = await api.get<CorrespondenceListResponse>(
+  list: async (
+    clientId: number,
+    params?: { page?: number; page_size?: number },
+  ): Promise<PaginatedResponse<CorrespondenceEntry>> => {
+    const response = await api.get<PaginatedResponse<CorrespondenceEntry>>(
       ENDPOINTS.correspondenceList(clientId),
+      { params },
     );
     return response.data;
   },

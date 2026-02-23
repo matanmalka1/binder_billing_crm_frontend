@@ -14,7 +14,7 @@ interface CorrespondenceCardProps {
 
 export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const { entries, isLoading, error, createEntry, isCreating } =
+  const { entries, total, isLoading, error, createEntry, isCreating } =
     useCorrespondence(clientId);
 
   const handleOpenModal = () => setModalOpen(true);
@@ -29,7 +29,7 @@ export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
     <>
       <Card
         title="יומן תקשורת עם רשויות"
-        subtitle={entries.length > 0 ? `${entries.length} רשומות` : undefined}
+        subtitle={total > 0 ? `${total} רשומות` : undefined}
       >
         <div className="space-y-4">
           <div className="flex justify-end">
