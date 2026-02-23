@@ -46,11 +46,11 @@ export interface AuditEvent {
   actor_name: string | null;
   ip_address: string | null;
   notes: string | null;
-  created_at: string;
+  occurred_at: string;
 }
 
 export interface SignatureRequestWithAudit extends SignatureRequestResponse {
-  audit_events: AuditEvent[];
+  audit_trail: AuditEvent[];
 }
 
 export interface CreateSignatureRequestPayload {
