@@ -96,7 +96,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax/vat" element={<VatWorkItems />} />
             <Route path="reports/aging" element={<AgingReportPage />} />
             <Route path="reports/reminders" element={<RemindersPage />} />
-            <Route path="reports/import-export" element={<ExcelImportExportPage entityType="clients" />} />
+            <Route path="reports/import-export" element={<ExcelImportExportPage />} />
           </Route>
         </Route>
 

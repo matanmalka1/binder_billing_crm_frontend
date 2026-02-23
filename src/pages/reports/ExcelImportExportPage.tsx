@@ -4,13 +4,7 @@ import { ImportCard } from "../../features/importExport/components/ImportCard";
 import { ImportExportInstructions } from "../../features/importExport/components/ImportExportInstructions";
 import { useImportExport } from "../../features/importExport/hooks/useImportExport";
 
-interface ExcelImportExportProps {
-  entityType: "clients" | "charges" | "binders";
-}
-
-export const ExcelImportExportPage: React.FC<ExcelImportExportProps> = ({
-  entityType,
-}) => {
+export const ExcelImportExportPage: React.FC = () => {
   const {
     importing,
     exporting,
@@ -18,7 +12,7 @@ export const ExcelImportExportPage: React.FC<ExcelImportExportProps> = ({
     handleExport,
     handleImport,
     handleDownloadTemplate,
-  } = useImportExport(entityType);
+  } = useImportExport();
 
   return (
     <div className="space-y-6">

@@ -4,16 +4,14 @@ import { api } from "../../../api/client";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
-type EntityType = "clients" | "charges" | "binders";
+type EntityType = "clients";
 
-export const useImportExport = (entityType: EntityType) => {
+export const useImportExport = (entityType: EntityType = "clients") => {
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
 
   const entityLabels: Record<EntityType, string> = {
     clients: "לקוחות",
-    charges: "חיובים",
-    binders: "קלסרים",
   };
 
   const entityLabel = entityLabels[entityType];
