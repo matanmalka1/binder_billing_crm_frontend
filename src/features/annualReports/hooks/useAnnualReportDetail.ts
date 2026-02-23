@@ -57,6 +57,7 @@ export const useAnnualReportDetail = (reportId: number | null) => {
   return {
     detail: detailQuery.data ?? null,
     isLoading: detailQuery.isPending,
+    error: detailQuery.error ? "שגיאה בטעינת פרטי דוח" : null,
     updateDetail: (payload: Partial<AnnualReportDetail>) => updateMutation.mutate(payload),
     isUpdating: updateMutation.isPending,
   };

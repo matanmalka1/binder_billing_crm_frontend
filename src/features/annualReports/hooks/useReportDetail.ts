@@ -42,6 +42,7 @@ export const useReportDetail = (reportId: number | null) => {
   return {
     report: reportQuery.data ?? null,
     isLoading: reportQuery.isPending,
+    error: reportQuery.error ? "שגיאה בטעינת דוח" : null,
     transition: (payload: StatusTransitionPayload) => transitionMutation.mutate(payload),
     isTransitioning: transitionMutation.isPending,
     completeSchedule: (schedule: AnnualReportScheduleKey) =>

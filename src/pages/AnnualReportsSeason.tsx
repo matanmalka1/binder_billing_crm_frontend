@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getYear } from "date-fns";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
@@ -9,20 +10,19 @@ import { SeasonSummaryCards } from "../features/annualReports/components/SeasonS
 import { SeasonProgressBar } from "../features/annualReports/components/SeasonProgressBar";
 import { SeasonReportsTable } from "../features/annualReports/components/SeasonReportsTable";
 import type { AnnualReportFull } from "../api/annualReports.api";
-import { ReportDetailModal } from "../features/annualReports/components/ReportDetailModal";
 import { CreateReportModal } from "../features/annualReports/components/CreateReportModal";
 import { useSeasonDashboard } from "../features/annualReports/hooks/useSeasonDashboard";
 
 export const AnnualReportsSeason: React.FC = () => {
   const currentYear = getYear(new Date());
+  const navigate = useNavigate();
   const [taxYear, setTaxYear] = useState(currentYear - 1);
-  const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
   const [showCreate, setShowCreate] = useState(false);
 
   const { summary, reports, isLoading, error } = useSeasonDashboard(taxYear);
 
   const handleSelect = (report: AnnualReportFull) => {
-    setSelectedReportId(report.id);
+    navigate(`/tax/reports/${report.id}`);
   };
 
   return (
@@ -96,12 +96,6 @@ export const AnnualReportsSeason: React.FC = () => {
           <p className="mt-1 text-sm">לחץ על "דוח חדש" כדי להתחיל</p>
         </div>
       )}
-
-      <ReportDetailModal
-        open={selectedReportId !== null}
-        reportId={selectedReportId}
-        onClose={() => setSelectedReportId(null)}
-      />
 
       <CreateReportModal
         open={showCreate}

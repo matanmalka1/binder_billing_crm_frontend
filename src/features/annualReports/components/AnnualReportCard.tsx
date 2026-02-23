@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, ArrowLeft, Info, Clock, AlertTriangle } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
@@ -6,7 +6,6 @@ import { Button } from "../../../components/ui/Button";
 import { staggerDelay } from "../../../utils/animation";
 import { cn } from "../../../utils/utils";
 import type { StageKey } from "../hooks/useAnnualReportsKanban";
-import { AnnualReportDetailModal } from "./AnnualReportDetailModal";
 
 interface Props {
   report: {
@@ -54,7 +53,7 @@ const DeadlinePill: React.FC<{ days: number | null }> = ({ days }) => {
 export const AnnualReportCard: React.FC<Props> = ({
   report, stageKey, isTransitioning, canMoveBack, canMoveForward, onTransition, animationIndex,
 }) => {
-  const [showDetail, setShowDetail] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -98,7 +97,7 @@ export const AnnualReportCard: React.FC<Props> = ({
             type="button"
             variant="ghost"
             size="sm"
-            onClick={() => setShowDetail(true)}
+            onClick={() => navigate(`/tax/reports/${report.id}`)}
             className="gap-1 text-xs px-2"
           >
             <Info className="h-3.5 w-3.5" />
@@ -124,13 +123,6 @@ export const AnnualReportCard: React.FC<Props> = ({
         </div>
       </Card>
 
-      <AnnualReportDetailModal
-        open={showDetail}
-        reportId={report.id}
-        clientName={report.client_name}
-        taxYear={report.tax_year}
-        onClose={() => setShowDetail(false)}
-      />
     </>
   );
 };

@@ -14,6 +14,7 @@ import { ChargeDetails } from "../pages/ChargeDetails";
 import { Documents } from "../pages/Documents";
 import { TaxDashboard } from "../pages/TaxDashboard";
 import { AnnualReportsKanban } from "../pages/AnnualReportsKanban";
+import { AnnualReportDetail } from "../pages/AnnualReportDetail";
 import { AnnualReportsSeason } from "../pages/AnnualReportsSeason";
 import { TaxDeadlines } from "../pages/TaxDeadlines";
 import { Login } from "../pages/Login";
@@ -91,6 +92,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="documents" element={<Documents />} />
             <Route path="tax" element={<TaxDashboard />} />
             <Route path="tax/reports/season" element={<AnnualReportsSeason />} />
+            <Route path="tax/reports/:reportId" element={<AnnualReportDetail />} />
 
             <Route path="tax/reports" element={<AnnualReportsKanban />} />
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
