@@ -53,6 +53,8 @@ export const ENDPOINTS = {
     `/clients/${clientId}/tax-profile`,
   clientSignatureRequests: (clientId: number | string) =>
     `/clients/${clientId}/signature-requests`,
+  correspondenceList: (clientId: number | string) => `/clients/${clientId}/correspondence`,
+  correspondenceCreate: (clientId: number | string) => `/clients/${clientId}/correspondence`,
   clientsExport: "/clients/export",
   clientsTemplate: "/clients/template",
   clientsImport: "/clients/import",

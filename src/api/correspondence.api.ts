@@ -1,4 +1,5 @@
 import { api } from "./client";
+import { ENDPOINTS } from "./endpoints";
 
 export interface CorrespondenceEntry {
   id: number;
@@ -26,7 +27,7 @@ export interface CreateCorrespondencePayload {
 export const correspondenceApi = {
   list: async (clientId: number): Promise<CorrespondenceListResponse> => {
     const response = await api.get<CorrespondenceListResponse>(
-      `/clients/${clientId}/correspondence`,
+      ENDPOINTS.correspondenceList(clientId),
     );
     return response.data;
   },
@@ -36,7 +37,7 @@ export const correspondenceApi = {
     payload: CreateCorrespondencePayload,
   ): Promise<CorrespondenceEntry> => {
     const response = await api.post<CorrespondenceEntry>(
-      `/clients/${clientId}/correspondence`,
+      ENDPOINTS.correspondenceCreate(clientId),
       payload,
     );
     return response.data;
