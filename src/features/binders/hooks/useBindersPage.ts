@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { bindersApi } from "../../../api/binders.api";
-import { getErrorMessage } from "../../../utils/utils";
+import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import type { BindersFilters } from "../types";
 import { QK } from "../../../lib/queryKeys";
@@ -14,16 +14,20 @@ export const useBindersPage = () => {
     () => ({
       status: searchParams.get("status") ?? "",
       work_state: searchParams.get("work_state") ?? "",
+      client_id: parsePositiveInt(searchParams.get("client_id"), 0) || undefined,
     }),
     [searchParams],
   );
 
+  const deepLinkBinderId = parsePositiveInt(searchParams.get("binder_id"), 0) || undefined;
+
   const listParams = useMemo(
     () => ({
       status: filters.status || undefined,
+      client_id: filters.client_id || undefined,
       work_state: filters.work_state || undefined,
     }),
-    [filters.status, filters.work_state],
+    [filters.status, filters.work_state, filters.client_id],
   );
 
   const bindersQuery = useQuery({
@@ -54,6 +58,7 @@ export const useBindersPage = () => {
   return {
     activeActionKey,
     activeActionKeyRef,
+    deepLinkBinderId,
     binders: bindersQuery.data?.items ?? [],
     error: bindersQuery.error
       ? getErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת קלסרים")

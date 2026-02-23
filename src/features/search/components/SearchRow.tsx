@@ -1,6 +1,7 @@
+import type { KeyboardEventHandler } from "react";
 import { Badge } from "../../../components/ui/Badge";
 import { ExternalLink } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { SearchResult } from "../../../api/search.api";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
@@ -28,15 +29,31 @@ const workStateStyles: Record<string, string> = {
 };
 
 export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
+  const navigate = useNavigate();
   const resultKey = `${result.result_type}-${result.client_id}-${result.binder_id}-${index}`;
   const isClient = result.result_type === "client";
   const isBinder = result.result_type === "binder";
-  const detailUrl =
-    isBinder && result.binder_id
-      ? `/binders/${result.binder_id}`
-      : isClient
-        ? `/clients/${result.client_id}/timeline`
-        : null;
+  const detailUrl = (() => {
+    if (isClient) return `/clients/${result.client_id}`;
+    if (isBinder && result.binder_id) {
+      const params = new URLSearchParams();
+      params.set("binder_id", String(result.binder_id));
+      params.set("client_id", String(result.client_id));
+      return `/binders?${params.toString()}`;
+    }
+    return null;
+  })();
+
+  const handleRowClick = () => {
+    if (detailUrl) navigate(detailUrl);
+  };
+
+  const handleKeyDown: KeyboardEventHandler<HTMLTableRowElement> = (event) => {
+    if ((event.key === "Enter" || event.key === " ") && detailUrl) {
+      event.preventDefault();
+      navigate(detailUrl);
+    }
+  };
 
   return (
     <tr
@@ -45,7 +62,11 @@ export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
         "group transition-all duration-200",
         "hover:bg-gradient-to-r hover:from-primary-50/30 hover:to-transparent",
         "animate-fade-in",
+        detailUrl && "cursor-pointer",
       )}
+      onClick={detailUrl ? handleRowClick : undefined}
+      onKeyDown={detailUrl ? handleKeyDown : undefined}
+      tabIndex={detailUrl ? 0 : -1}
       style={{ animationDelay: staggerDelay(index) }}
     >
       {/* Type */}

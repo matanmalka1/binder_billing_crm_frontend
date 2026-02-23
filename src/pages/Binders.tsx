@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
 import { DataTable } from "../components/ui/DataTable";
@@ -22,6 +22,7 @@ export const Binders: React.FC = () => {
     confirmPendingAction,
     error,
     filters,
+    deepLinkBinderId,
     onAction,
     handleFilterChange,
     loading,
@@ -30,6 +31,20 @@ export const Binders: React.FC = () => {
 
   const receiveModal = useReceiveBinderModal();
   const [selectedBinder, setSelectedBinder] = useState<BinderResponse | null>(null);
+  const [hasHandledDeepLink, setHasHandledDeepLink] = useState(false);
+
+  useEffect(() => {
+    setHasHandledDeepLink(false);
+  }, [deepLinkBinderId]);
+
+  useEffect(() => {
+    if (!deepLinkBinderId || hasHandledDeepLink) return;
+    const matched = binders.find((b) => b.id === deepLinkBinderId);
+    if (matched) {
+      setSelectedBinder(matched);
+      setHasHandledDeepLink(true);
+    }
+  }, [deepLinkBinderId, binders, hasHandledDeepLink]);
 
   const columns = useMemo(
     () => buildBindersColumns({ activeActionKeyRef, onAction }),

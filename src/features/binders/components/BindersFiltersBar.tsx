@@ -12,12 +12,13 @@ const BINDER_STATUS_OPTIONS = [
 ];
 
 export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBarProps) => {
-  const activeCount = [filters.status, filters.work_state].filter(Boolean).length;
+  const activeCount = [filters.status, filters.work_state, filters.client_id].filter(Boolean).length;
   const hasActive = activeCount > 0;
 
   const handleReset = () => {
     onFilterChange("status", "");
     onFilterChange("work_state", "");
+    onFilterChange("client_id", "");
   };
 
   return (
