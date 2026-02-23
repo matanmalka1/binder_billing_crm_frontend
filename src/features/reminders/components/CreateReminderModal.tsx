@@ -11,6 +11,7 @@ interface CreateReminderModalProps {
   isSubmitting: boolean;
   onClose: () => void;
   onSubmit: (e?: React.BaseSyntheticEvent) => void;
+  fixedClientId?: number;
 }
 
 export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
@@ -19,6 +20,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   isSubmitting,
   onClose,
   onSubmit,
+  fixedClientId,
 }) => {
   const {
     register,
@@ -90,16 +92,24 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           />
         )}
 
-        <Input
-          type="number"
-          label="מזהה לקוח"
-          error={errors.client_id?.message}
-          min={1}
-          {...register("client_id", {
-            required: "נא להזין מזהה לקוח",
-            min: { value: 1, message: "נא להזין מזהה לקוח תקין" },
-          })}
-        />
+        {!fixedClientId ? (
+          <Input
+            type="number"
+            label="מזהה לקוח"
+            error={errors.client_id?.message}
+            min={1}
+            {...register("client_id", {
+              required: "נא להזין מזהה לקוח",
+              min: { value: 1, message: "נא להזין מזהה לקוח תקין" },
+            })}
+          />
+        ) : (
+          <div>
+            <p className="text-sm font-medium text-gray-700 mb-1">לקוח</p>
+            <p className="text-sm text-gray-900 font-mono">#{fixedClientId}</p>
+            <input type="hidden" value={fixedClientId} {...register("client_id")} />
+          </div>
+        )}
 
         <Input
           type="date"

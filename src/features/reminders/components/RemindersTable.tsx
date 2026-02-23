@@ -11,11 +11,13 @@ interface RemindersTableProps {
   cancelingId: number | null;
   onCancel: (id: number) => void;
   onRowClick?: (reminder: Reminder) => void;
+  showClient?: boolean;
 }
 
 const buildRemindersColumns = (
   cancelingId: number | null,
   onCancel: (id: number) => void,
+  showClient: boolean,
 ): Column<Reminder>[] => [
   {
     key: "type",
@@ -26,13 +28,17 @@ const buildRemindersColumns = (
       </Badge>
     ),
   },
-  {
-    key: "client",
-    header: "לקוח",
-    render: (reminder) => (
-      <span className="font-mono text-sm">לקוח #{reminder.client_id}</span>
-    ),
-  },
+  ...(showClient
+    ? [
+        {
+          key: "client",
+          header: "לקוח",
+          render: (reminder: Reminder) => (
+            <span className="font-mono text-sm">לקוח #{reminder.client_id}</span>
+          ),
+        } as Column<Reminder>,
+      ]
+    : []),
   {
     key: "message",
     header: "הודעה",
@@ -111,8 +117,9 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
   cancelingId,
   onCancel,
   onRowClick,
+  showClient = true,
 }) => {
-  const columns = buildRemindersColumns(cancelingId, onCancel);
+  const columns = buildRemindersColumns(cancelingId, onCancel, showClient);
 
   return (
     <DataTable

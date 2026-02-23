@@ -67,7 +67,7 @@ export const QK = {
   },
   reminders: {
     all: ["reminders"] as const,
-    list: ["reminders", "list"] as const,
+    list: (clientId?: number) => ["reminders", "list", clientId ?? "all"] as const,
   },
   correspondence: {
     forClient: (clientId: number) => ["correspondence", "client", clientId] as const,

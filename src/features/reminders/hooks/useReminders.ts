@@ -11,22 +11,23 @@ import type {
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
-const defaultFormValues: CreateReminderFormValues = {
+const makeDefaultFormValues = (clientId?: number): CreateReminderFormValues => ({
   reminder_type: "custom",
   target_date: "",
-  client_id: "",
+  client_id: clientId ? String(clientId) : "",
   days_before: 7,
   message: "",
-};
+});
 
-export const useReminders = () => {
+export const useReminders = (opts?: { clientId?: number }) => {
+  const clientId = opts?.clientId;
   const queryClient = useQueryClient();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [cancelingId, setCancelingId] = useState<number | null>(null);
 
   const remindersQuery = useQuery<RemindersListResponse, Error>({
-    queryKey: QK.reminders.list,
-    queryFn: () => remindersApi.list(),
+    queryKey: QK.reminders.list(clientId),
+    queryFn: () => remindersApi.list(clientId ? { client_id: clientId } : undefined),
   });
 
   const createMutation = useMutation({
@@ -34,8 +35,9 @@ export const useReminders = () => {
     onSuccess: () => {
       toast.success("תזכורת נוצרה בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.reminders.all });
+      queryClient.invalidateQueries({ queryKey: QK.reminders.list(clientId) });
       setShowCreateModal(false);
-      form.reset(defaultFormValues);
+      form.reset(makeDefaultFormValues(clientId));
     },
     onError: (error) => {
       showErrorToast(error, "שגיאה ביצירת תזכורת");
@@ -57,13 +59,13 @@ export const useReminders = () => {
   });
 
   const form = useForm<CreateReminderFormValues>({
-    defaultValues: defaultFormValues,
+    defaultValues: makeDefaultFormValues(clientId),
   });
 
   const buildPayload = useMemo(
     () => (values: CreateReminderFormValues): CreateReminderRequest | null => {
-      const clientId = Number(values.client_id);
-      if (!clientId || clientId <= 0) {
+      const clientIdValue = clientId ?? Number(values.client_id);
+      if (!clientIdValue || clientIdValue <= 0) {
         form.setError("client_id", { message: "נא להזין מזהה לקוח תקין" });
         return null;
       }
@@ -85,7 +87,7 @@ export const useReminders = () => {
           return null;
         }
         return {
-          client_id: clientId,
+          client_id: clientIdValue,
           target_date: values.target_date,
           days_before: Number(values.days_before),
           reminder_type: values.reminder_type,
@@ -101,7 +103,7 @@ export const useReminders = () => {
           return null;
         }
         return {
-          client_id: clientId,
+          client_id: clientIdValue,
           target_date: values.target_date,
           days_before: Number(values.days_before),
           reminder_type: values.reminder_type,
@@ -117,7 +119,7 @@ export const useReminders = () => {
           return null;
         }
         return {
-          client_id: clientId,
+          client_id: clientIdValue,
           target_date: values.target_date,
           days_before: Number(values.days_before),
           reminder_type: values.reminder_type,
@@ -132,7 +134,7 @@ export const useReminders = () => {
       }
 
       return {
-        client_id: clientId,
+          client_id: clientIdValue,
         target_date: values.target_date,
         days_before: Number(values.days_before),
         reminder_type: "custom",

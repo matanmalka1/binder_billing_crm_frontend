@@ -82,6 +82,7 @@ export const remindersApi = {
     page?: number;
     page_size?: number;
     status?: ReminderStatus;
+    client_id?: number;
   }): Promise<RemindersListResponse> => {
     const response = await api.get<RemindersListResponse>(ENDPOINTS.reminders, {
       params,
