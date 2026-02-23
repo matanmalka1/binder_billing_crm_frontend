@@ -16,7 +16,7 @@ interface Props {
     expected_amount?: number | null;
     paid_amount?: number | null;
     tax_deadline_id?: number | null;
-  }) => Promise<void>;
+  }) => Promise<unknown>;
   isCreating: boolean;
 }
 

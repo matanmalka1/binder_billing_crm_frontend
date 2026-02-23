@@ -6,6 +6,7 @@ interface CardProps {
   className?: string;
   title?: string;
   subtitle?: string;
+  actions?: React.ReactNode;
   footer?: React.ReactNode;
   variant?: "default" | "elevated";
   interactive?: boolean;
@@ -17,6 +18,7 @@ export const Card: React.FC<CardProps> = ({
   className,
   title,
   subtitle,
+  actions,
   footer,
   variant = "default",
   interactive = false,
@@ -39,14 +41,17 @@ export const Card: React.FC<CardProps> = ({
       )}
     style={style}
     >
-      {(title || subtitle) && (
-        <div className="px-6 py-4 border-b border-gray-100/80 bg-gradient-to-r from-gray-50/50 to-transparent">
-          {title && (
-            <h3 className="text-lg font-semibold text-gray-900 tracking-tight">
-              {title}
-            </h3>
-          )}
-          {subtitle && <p className="mt-1 text-sm text-gray-600">{subtitle}</p>}
+      {(title || subtitle || actions) && (
+        <div className="px-6 py-4 border-b border-gray-100/80 bg-gradient-to-r from-gray-50/50 to-transparent flex items-start justify-between gap-4">
+          <div>
+            {title && (
+              <h3 className="text-lg font-semibold text-gray-900 tracking-tight">
+                {title}
+              </h3>
+            )}
+            {subtitle && <p className="mt-1 text-sm text-gray-600">{subtitle}</p>}
+          </div>
+          {actions && <div className="shrink-0">{actions}</div>}
         </div>
       )}
 

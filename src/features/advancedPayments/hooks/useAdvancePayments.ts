@@ -24,7 +24,7 @@ export const useAdvancePayments = (clientId: number, year: number) => {
     }: {
       id: number;
       paid_amount?: number | null;
-      status?: string;
+      status?: "pending" | "paid" | "partial" | "overdue";
     }) => advancePaymentsApi.update(id, payload),
     onSuccess: () => {
       toast.success("מקדמה עודכנה בהצלחה");
