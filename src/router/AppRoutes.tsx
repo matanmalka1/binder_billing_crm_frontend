@@ -23,6 +23,7 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { AgingReportPage } from "../pages/reports/AgingReport";
 import { RemindersPage } from "../pages/reports/Reminders";
 import { ExcelImportExportPage } from "../pages/reports/ExcelImportExportPage";
+import { SignatureRequestsPage } from "../pages/reports/SignatureRequests";
 import { AdvancePayments } from "../pages/tax/AdvancePayments";
 import { VatWorkItems } from "../pages/tax/VatWorkItems";
 import { Users } from "../pages/Users";
@@ -97,6 +98,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax/vat" element={<VatWorkItems />} />
             <Route path="reports/aging" element={<AgingReportPage />} />
             <Route path="reports/reminders" element={<RemindersPage />} />
+            <Route path="reports/signature-requests" element={<SignatureRequestsPage />} />
             <Route path="reports/import-export" element={<ExcelImportExportPage />} />
             <Route path="settings/users" element={<Users />} />
           </Route>

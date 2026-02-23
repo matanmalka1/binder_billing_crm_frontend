@@ -13,6 +13,7 @@ import {
   CalendarDays,
   BarChart3,
   Bell,
+  FileSignature,
   KanbanSquare,
   ClipboardList,
   Settings,
@@ -40,6 +41,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     { to: "/tax/vat", label: 'דוחות מע"מ', icon: ClipboardList },
     { to: "/reports/aging", label: "דוח חובות", icon: BarChart3 },
     { to: "/reports/reminders", label: "תזכורות", icon: Bell },
+    { to: "/reports/signature-requests", label: "בקשות חתימה", icon: FileSignature },
     { to: "/reports/import-export", label: "ייבוא/ייצוא", icon: FileSpreadsheet },
     { to: "/settings/users", label: "משתמשים", icon: Settings },
   ];
