@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { format } from "date-fns";
 import { api } from "../../../api/client";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
@@ -30,7 +31,7 @@ export const useImportExport = (entityType: EntityType) => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${entityType}_export_${new Date().toISOString().split("T")[0]}.xlsx`;
+      link.download = `${entityType}_export_${format(new Date(), "yyyy-MM-dd")}.xlsx`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getYear } from "date-fns";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { PageLoading } from "../components/ui/PageLoading";
@@ -13,7 +14,7 @@ import { CreateReportModal } from "../features/annualReports/components/CreateRe
 import { useSeasonDashboard } from "../features/annualReports/hooks/useSeasonDashboard";
 
 export const AnnualReportsSeason: React.FC = () => {
-  const currentYear = new Date().getFullYear();
+  const currentYear = getYear(new Date());
   const [taxYear, setTaxYear] = useState(currentYear - 1);
   const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
   const [showCreate, setShowCreate] = useState(false);

@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { format, parseISO } from "date-fns";
+import { he } from "date-fns/locale";
 import type { AgingReportItem } from "../../../api/reports.api";
 
 interface AgingReportTableProps {
@@ -44,7 +46,7 @@ export const AgingReportTable: React.FC<AgingReportTableProps> = ({ items }) => 
 
           {item.oldest_invoice_date && (
             <div className="mt-4 border-t border-gray-100 pt-3 text-sm text-gray-500">
-              חוב מאז {new Date(item.oldest_invoice_date).toLocaleDateString("he-IL")}
+              חוב מאז {format(parseISO(item.oldest_invoice_date), "d.M.yyyy", { locale: he })}
             </div>
           )}
         </div>

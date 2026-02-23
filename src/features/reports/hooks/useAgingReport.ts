@@ -1,5 +1,6 @@
 // src/features/reports/hooks/useAgingReport.ts
 import { useState } from "react";
+import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { reportsApi, type ExportFormat } from "../../../api/reports.api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
@@ -8,7 +9,7 @@ import { toast } from "../../../utils/toast";
 
 export const useAgingReport = () => {
   const [asOfDate, setAsOfDate] = useState<string>(
-    new Date().toISOString().split("T")[0],
+    format(new Date(), "yyyy-MM-dd"),
   );
   const [exporting, setExporting] = useState<ExportFormat | null>(null);
 

@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { getYear } from "date-fns";
 import { taxDashboardApi } from "../../../api/taxDashboard.api";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
 import { QK } from "../../../lib/queryKeys";
 
 export const useTaxDashboard = () => {
-  const currentYear = new Date().getFullYear();
+  const currentYear = getYear(new Date());
 
   const submissionsQuery = useQuery({
     queryKey: QK.taxDashboard.submissions(currentYear),

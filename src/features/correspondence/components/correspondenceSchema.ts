@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { format } from "date-fns";
 
 export const correspondenceSchema = z.object({
   correspondence_type: z.enum(["call", "letter", "email", "meeting"]),
@@ -13,5 +14,5 @@ export const correspondenceDefaults: CorrespondenceFormValues = {
   correspondence_type: "call",
   subject: "",
   notes: "",
-  occurred_at: new Date().toISOString().split("T")[0],
+  occurred_at: format(new Date(), "yyyy-MM-dd"),
 };

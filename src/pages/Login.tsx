@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getYear } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
@@ -269,7 +270,7 @@ export const Login: React.FC = () => {
 
         {/* Bottom: legal */}
         <p className="relative z-10 text-xs text-slate-700">
-          © {new Date().getFullYear()} יוסף מאיר — כל הזכויות שמורות
+          © {getYear(new Date())} יוסף מאיר — כל הזכויות שמורות
         </p>
       </div>
     </div>

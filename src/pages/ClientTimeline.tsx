@@ -1,4 +1,6 @@
 import { useParams } from "react-router-dom";
+import { format, parseISO } from "date-fns";
+import { he } from "date-fns/locale";
 import {
   Search,
   RefreshCw,
@@ -66,12 +68,7 @@ export const ClientTimeline: React.FC = () => {
   const activeFilterCount = filters.typeFilters.length + (filters.searchTerm ? 1 : 0);
 
   const lastUpdated = summary.lastEventTimestamp
-    ? new Date(summary.lastEventTimestamp).toLocaleString("he-IL", {
-        day: "2-digit",
-        month: "short",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+    ? format(parseISO(summary.lastEventTimestamp), "d MMM HH:mm", { locale: he })
     : null;
 
   return (

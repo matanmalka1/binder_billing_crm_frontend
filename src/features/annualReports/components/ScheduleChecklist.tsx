@@ -1,4 +1,6 @@
 import { CheckCircle2, Circle } from "lucide-react";
+import { format, parseISO } from "date-fns";
+import { he } from "date-fns/locale";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import type { ScheduleEntry, AnnualReportScheduleKey } from "../../../api/annualReports.api";
@@ -59,7 +61,7 @@ export const ScheduleChecklist: React.FC<Props> = ({
                 )}
                 {entry.completed_at && (
                   <p className="text-xs text-green-600">
-                    הושלם: {new Date(entry.completed_at).toLocaleDateString("he-IL")}
+                    הושלם: {format(parseISO(entry.completed_at), "d.M.yyyy", { locale: he })}
                   </p>
                 )}
               </div>

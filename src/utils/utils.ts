@@ -22,25 +22,20 @@ export const isPositiveInt = (value: number | null | undefined): value is number
   return value != null && value > 0;
 };
 
-// ============================================================================
-// DATETIME UTILITIES
-// ============================================================================
 
-const HE_LOCALE = "he-IL";
+import { format, parseISO } from "date-fns";
+import { he } from "date-fns/locale";
 
 export const formatDate = (value: string | null): string => {
   if (!value) return "—";
-  return new Date(value).toLocaleDateString(HE_LOCALE);
+  return format(parseISO(value), "d.M.yyyy", { locale: he });
 };
 
 export const formatDateTime = (value: string | null): string => {
   if (!value) return "—";
-  return new Date(value).toLocaleString(HE_LOCALE);
+  return format(parseISO(value), "d.M.yyyy HH:mm", { locale: he });
 };
 
-// ============================================================================
-// ERROR HANDLING (PUBLIC API)
-// ============================================================================
 
 export const getHttpStatus = (error: unknown): number | null => {
   if (!axios.isAxiosError(error)) return null;

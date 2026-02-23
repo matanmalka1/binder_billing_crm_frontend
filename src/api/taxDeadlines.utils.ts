@@ -1,4 +1,5 @@
 import { makeClassGetter, makeLabelGetter } from "../utils/labels";
+import { parseISO, differenceInCalendarDays } from "date-fns";
 
 const deadlineTypeLabels = {
   vat: "מע״מ",
@@ -45,10 +46,8 @@ export const formatCurrency = (amount: number | null, currency = "ILS"): string 
 };
 
 export const calculateDaysRemaining = (dueDate: string): number => {
-  const due = new Date(dueDate);
-  const now = new Date();
-  const diff = due.getTime() - now.getTime();
-  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  const due = parseISO(dueDate);
+  return differenceInCalendarDays(due, new Date());
 };
 
 export type DeadlineTypeKey = keyof typeof deadlineIcons;

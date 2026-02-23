@@ -7,6 +7,8 @@ import {
   CreditCard,
 } from "lucide-react";
 import React from "react";
+import { format, parseISO } from "date-fns";
+import { he } from "date-fns/locale";
 
 export const getEventTypeLabel = (eventType: string) => {
   const labels: Record<string, string> = {
@@ -170,15 +172,7 @@ export const getEventColor = (eventType: string): EventColorConfig => {
 };
 
 export const formatTimestamp = (timestamp: string) =>
-  new Date(timestamp).toLocaleString("he-IL", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  format(parseISO(timestamp), "HH:mm", { locale: he });
 
 export const formatDateHeading = (timestamp: string) =>
-  new Date(timestamp).toLocaleDateString("he-IL", {
-    weekday: "long",
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+  format(parseISO(timestamp), "EEEE, d MMMM yyyy", { locale: he });

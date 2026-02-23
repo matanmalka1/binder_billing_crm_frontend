@@ -8,6 +8,7 @@ import {
   getDeadlineTypeLabel,
 } from "../../../api/annualReports.extended.utils";
 import { formatDate } from "../../../utils/utils";
+import { differenceInCalendarDays, parseISO } from "date-fns";
 import { AlertTriangle, Clock } from "lucide-react";
 import { cn } from "../../../utils/utils";
 
@@ -21,7 +22,7 @@ const TERMINAL_STATUSES = new Set(["submitted", "accepted", "closed"]);
 
 const daysUntil = (dateStr: string | null): number | null => {
   if (!dateStr) return null;
-  return Math.ceil((new Date(dateStr).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  return differenceInCalendarDays(parseISO(dateStr), new Date());
 };
 
 const DeadlineCell: React.FC<{ report: AnnualReportFull }> = ({ report }) => {

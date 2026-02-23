@@ -1,4 +1,6 @@
 import { Clock, ArrowLeft } from "lucide-react";
+import { format, parseISO } from "date-fns";
+import { he } from "date-fns/locale";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import type { StatusHistoryEntry } from "../../../api/annualReports.api";
@@ -53,13 +55,7 @@ export const StatusHistoryTimeline: React.FC<Props> = ({ history }) => {
                   <span className="font-medium text-gray-700">{entry.changed_by_name}</span>
                   <div className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    {new Date(entry.occurred_at).toLocaleString("he-IL", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {format(parseISO(entry.occurred_at), "d MMM yyyy HH:mm", { locale: he })}
                   </div>
                 </div>
 

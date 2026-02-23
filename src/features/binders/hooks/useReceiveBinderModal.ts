@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bindersApi } from "../../../api/binders.api";
@@ -20,7 +21,7 @@ export const useReceiveBinderModal = () => {
       client_id: undefined,
       binder_type: "",
       binder_number: "",
-      received_at: new Date().toISOString().slice(0, 10),
+      received_at: format(new Date(), "yyyy-MM-dd"),
     },
   });
 
@@ -49,7 +50,7 @@ export const useReceiveBinderModal = () => {
       client_id: undefined,
       binder_type: "",
       binder_number: "",
-      received_at: new Date().toISOString().slice(0, 10),
+      received_at: format(new Date(), "yyyy-MM-dd"),
     });
     setClientQuery("");
     setSelectedClient(null);

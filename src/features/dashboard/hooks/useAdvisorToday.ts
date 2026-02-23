@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { format, addDays, subDays } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
 import { annualReportsApi } from "../../../api/annualReports.api";
@@ -10,19 +11,12 @@ import { useRole } from "../../../hooks/useRole";
 // Compute once per calendar day — stable across re-renders within the same day
 const getDateAnchors = () => {
   const now = new Date();
-
-  const offsetDate = (days: number, iso = false) => {
-    const d = new Date(now);
-    d.setDate(d.getDate() + days);
-    return iso ? d.toISOString() : d.toISOString().split("T")[0];
-  };
-
   return {
-    today: offsetDate(0),
-    weekEnd: offsetDate(7),
-    sevenDaysAgo: offsetDate(-7, true),
-    fourteenDaysAgo: offsetDate(-14, true),
-    sixtyDaysAgo: offsetDate(-60, true),
+    today: format(now, "yyyy-MM-dd"),
+    weekEnd: format(addDays(now, 7), "yyyy-MM-dd"),
+    sevenDaysAgo: subDays(now, 7).toISOString(),
+    fourteenDaysAgo: subDays(now, 14).toISOString(),
+    sixtyDaysAgo: subDays(now, 60).toISOString(),
   };
 };
 

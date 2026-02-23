@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { getYear } from "date-fns";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -30,7 +31,7 @@ export const useCreateReport = (onSuccess?: () => void) => {
     resolver: zodResolver(schema),
     defaultValues: {
       client_id: "",
-      tax_year: String(new Date().getFullYear() - 1),
+      tax_year: String(getYear(new Date()) - 1),
       client_type: "individual",
       deadline_type: "standard",
       notes: "",

@@ -1,4 +1,20 @@
+import { useState } from "react";
 import { AlertTriangle, DollarSign, Package, CheckCircle2, Sparkles } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  horizontalListSortingStrategy,
+  useSortable,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import type { AttentionItem } from "../../../api/dashboard.api";
 import { AttentionSection } from "./AttentionSection";
 import { cn } from "../../../utils/utils";
@@ -11,7 +27,7 @@ interface AttentionPanelProps {
 
 /* ── Section registry ───────────────────────────────────────────────────── */
 
-const sections = [
+const SECTIONS = [
   {
     key: "overdue",
     title: "קלסרים באיחור",
@@ -38,19 +54,66 @@ const sections = [
   },
 ] as const;
 
+type SectionKey = (typeof SECTIONS)[number]["key"];
+
+/* ── Sortable wrapper ───────────────────────────────────────────────────── */
+
+interface SortableCardProps {
+  id: SectionKey;
+  children: React.ReactNode;
+}
+
+const SortableCard = ({ id, children }: SortableCardProps) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+        cursor: "grab",
+      }}
+      {...attributes}
+      {...listeners}
+    >
+      {children}
+    </div>
+  );
+};
+
 /* ── Component ──────────────────────────────────────────────────────────── */
 
 export const AttentionPanel = ({ items }: AttentionPanelProps) => {
+  const [order, setOrder] = useState<SectionKey[]>(SECTIONS.map((s) => s.key));
+
+  const sensors = useSensors(useSensor(PointerSensor));
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setOrder((prev) => {
+        const oldIndex = prev.indexOf(active.id as SectionKey);
+        const newIndex = prev.indexOf(over.id as SectionKey);
+        return arrayMove(prev, oldIndex, newIndex);
+      });
+    }
+  };
+
   const totalItems = items.length;
   const hasUrgent = items.some((i) =>
-    (sections[0].types as readonly string[]).includes(i.item_type)
+    (SECTIONS[0].types as readonly string[]).includes(i.item_type)
   );
   const allClear = totalItems === 0;
 
-  const sectionCounts = sections.map((s) => ({
+  const sectionCounts = SECTIONS.map((s) => ({
     ...s,
     count: items.filter((i) => (s.types as readonly string[]).includes(i.item_type)).length,
   }));
+
+  const orderedSections = order.map((key) => SECTIONS.find((s) => s.key === key)!);
 
   return (
     <div className="flex flex-col gap-0 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-elevation-2">
@@ -124,22 +187,27 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
           </div>
         </div>
       ) : (
-        /* ── Three-column sections grid ──────────────────────────────── */
-        <div className="grid grid-cols-1 gap-4 bg-gray-50/70 p-4 md:grid-cols-3">
-          {sections.map((section, sectionIndex) => {
-            const sectionItems = items.filter((item) =>
-              (section.types as readonly string[]).includes(item.item_type)
-            );
-            return (
-              <AttentionSection
-                key={section.key}
-                section={section}
-                items={sectionItems}
-                sectionIndex={sectionIndex}
-              />
-            );
-          })}
-        </div>
+        /* ── Draggable three-column sections grid ─────────────────────── */
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={order} strategy={horizontalListSortingStrategy}>
+            <div className="grid grid-cols-1 gap-4 bg-gray-50/70 p-4 md:grid-cols-3">
+              {orderedSections.map((section, sectionIndex) => {
+                const sectionItems = items.filter((item) =>
+                  (section.types as readonly string[]).includes(item.item_type)
+                );
+                return (
+                  <SortableCard key={section.key} id={section.key}>
+                    <AttentionSection
+                      section={section}
+                      items={sectionItems}
+                      sectionIndex={sectionIndex}
+                    />
+                  </SortableCard>
+                );
+              })}
+            </div>
+          </SortableContext>
+        </DndContext>
       )}
     </div>
   );

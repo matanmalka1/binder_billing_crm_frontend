@@ -1,4 +1,6 @@
 import { useForm } from "react-hook-form";
+import { format, parseISO } from "date-fns";
+import { he } from "date-fns/locale";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
@@ -72,7 +74,7 @@ export const ClientEditForm: React.FC<Props> = ({ client, onSave, onCancel, isLo
           <div><span className="text-gray-600">מזהה לקוח:</span> <span className="font-medium">#{client.id}</span></div>
           <div><span className="text-gray-600">מספר זהות/ח.פ:</span> <span className="font-medium">{client.id_number}</span></div>
           <div><span className="text-gray-600">סוג לקוח:</span> <span className="font-medium">{client.client_type}</span></div>
-          <div><span className="text-gray-600">תאריך פתיחה:</span> <span className="font-medium">{new Date(client.opened_at).toLocaleDateString("he-IL")}</span></div>
+          <div><span className="text-gray-600">תאריך פתיחה:</span> <span className="font-medium">{format(parseISO(client.opened_at), "d.M.yyyy", { locale: he })}</span></div>
         </div>
         <p className="mt-2 text-xs text-gray-500">שדות אלה לא ניתנים לעריכה. לשינויים, פנה למנהל המערכת.</p>
       </div>
