@@ -29,11 +29,8 @@ export interface AgingReportResponse {
 
 export type ExportFormat = "excel" | "pdf";
 
-export interface ReportExportResponse {
-  download_url: string;
+export interface ReportExportResult {
   filename: string;
-  format: ExportFormat;
-  generated_at: string;
 }
 
 export const reportsApi = {
@@ -46,12 +43,38 @@ export const reportsApi = {
     return response.data;
   },
 
-  exportAgingReport: async (format: ExportFormat): Promise<ReportExportResponse> => {
-    const response = await api.get<ReportExportResponse>(
-      ENDPOINTS.reportsAgingExport,
-      { params: { format } }
-    );
-    return response.data;
+  exportAgingReport: async (
+    format: ExportFormat,
+    asOfDate?: string,
+  ): Promise<ReportExportResult> => {
+    const response = await api.get<Blob>(ENDPOINTS.reportsAgingExport, {
+      params: { format, ...(asOfDate ? { as_of_date: asOfDate } : {}) },
+      responseType: "blob",
+    });
+
+    const contentDisposition = response.headers["content-disposition"];
+    const filenameMatch = contentDisposition?.match(/filename=\"?([^\";]+)\"?/);
+    const filename =
+      filenameMatch?.[1] ||
+      `aging_report.${format === "excel" ? "xlsx" : "pdf"}`;
+
+    const blob = new Blob([response.data], {
+      type:
+        response.headers["content-type"] ||
+        (format === "excel"
+          ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          : "application/pdf"),
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    return { filename };
   },
 
   downloadExport: (downloadUrl: string): void => {

@@ -21,13 +21,8 @@ export const useAgingReport = () => {
   const handleExport = async (format: ExportFormat) => {
     setExporting(format);
     try {
-      const result = await reportsApi.exportAgingReport(format);
+      const result = await reportsApi.exportAgingReport(format, asOfDate);
       toast.success(`דוח יוצא בהצלחה: ${result.filename}`);
-
-      // Open download URL in new tab
-      if (result.download_url) {
-        window.open(result.download_url, "_blank");
-      }
     } catch (error) {
       showErrorToast(error, "שגיאה בייצוא דוח");
     } finally {
