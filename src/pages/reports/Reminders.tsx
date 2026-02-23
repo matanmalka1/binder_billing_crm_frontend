@@ -53,12 +53,23 @@ export const RemindersPage: React.FC = () => {
     >
       <RemindersSummaryCards reminders={reminders} />
 
-      <RemindersTable
-        reminders={reminders}
-        cancelingId={cancelingId}
-        onCancel={handleCancel}
-        onRowClick={setSelectedReminder}
-      />
+      {reminders.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
+          <p className="text-lg font-semibold mb-2">אין תזכורות להצגה</p>
+          <p className="text-sm mb-4">צור תזכורת חדשה כדי להופיע כאן.</p>
+          <Button variant="primary" className="gap-2" onClick={() => setShowCreateModal(true)}>
+            <Plus className="h-4 w-4" />
+            תזכורת חדשה
+          </Button>
+        </div>
+      ) : (
+        <RemindersTable
+          reminders={reminders}
+          cancelingId={cancelingId}
+          onCancel={handleCancel}
+          onRowClick={setSelectedReminder}
+        />
+      )}
 
       <CreateReminderModal
         open={showCreateModal}
