@@ -172,4 +172,11 @@ export const vatReportsApi = {
     const response = await api.get<VatAuditTrailResponse>(ENDPOINTS.vatWorkItemAudit(id));
     return response.data;
   },
+
+  listByClient: async (clientId: number): Promise<VatWorkItemListResponse> => {
+    const response = await api.get<VatWorkItemListResponse>(
+      ENDPOINTS.vatWorkItemsByClient(clientId),
+    );
+    return response.data;
+  },
 };

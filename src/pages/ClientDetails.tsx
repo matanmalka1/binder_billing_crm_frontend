@@ -20,7 +20,8 @@ export const ClientDetails: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const clientIdNum = clientId ? Number(clientId) : null;
 
-  const { client, isValidId, isLoading, error, binders, bindersTotal, charges, chargesTotal, updateClient, isUpdating, can } =
+  const { client, isValidId, isLoading, error, binders, bindersTotal, charges, chargesTotal,
+    annualReportsTotal, vatWorkItemsTotal, documentsTotal, updateClient, isUpdating, can } =
     useClientDetails({ clientId: clientIdNum });
 
   if (!isValidId) return (<div className="space-y-6"><PageHeader title="פרטי לקוח" /><ErrorCard message="מזהה לקוח לא תקין" /></div>);
@@ -72,6 +73,9 @@ export const ClientDetails: React.FC = () => {
               charges={charges}
               chargesTotal={chargesTotal}
               canViewCharges={can.viewChargeAmounts}
+              annualReportsTotal={annualReportsTotal}
+              vatWorkItemsTotal={vatWorkItemsTotal}
+              documentsTotal={documentsTotal}
             />
 
             {can.editClients && <TaxProfileCard clientId={client.id} />}

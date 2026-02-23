@@ -2,6 +2,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { clientsApi, type UpdateClientPayload, type ClientResponse } from "../../../api/clients.api";
 import { bindersApi } from "../../../api/binders.api";
 import { chargesApi } from "../../../api/charges.api";
+import { annualReportsApi } from "../../../api/annualReports.api";
+import { vatReportsApi } from "../../../api/vatReports.api";
+import { documentsApi } from "../../../api/documents.api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 import { QK } from "../../../lib/queryKeys";
@@ -19,6 +22,9 @@ type UseClientDetailsResult = {
   bindersTotal: number;
   charges: ClientChargeSummary[];
   chargesTotal: number;
+  annualReportsTotal: number;
+  vatWorkItemsTotal: number;
+  documentsTotal: number;
   updateClient: (payload: UpdateClientPayload) => Promise<void>;
   isUpdating: boolean;
   can: ReturnType<typeof useRole>["can"];
@@ -56,6 +62,24 @@ export const useClientDetails = ({
     enabled: enabled && isAdvisor,
   });
 
+  const annualReportsQuery = useQuery({
+    queryKey: QK.tax.annualReportsForClient(id),
+    queryFn: () => annualReportsApi.listClientReports(id),
+    enabled,
+  });
+
+  const vatWorkItemsQuery = useQuery({
+    queryKey: QK.tax.vatWorkItems.forClient(id),
+    queryFn: () => vatReportsApi.listByClient(id),
+    enabled,
+  });
+
+  const documentsQuery = useQuery({
+    queryKey: QK.documents.clientList(id),
+    queryFn: () => documentsApi.listByClient(id),
+    enabled,
+  });
+
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateClientPayload) =>
       clientsApi.update(id, payload),
@@ -83,6 +107,9 @@ export const useClientDetails = ({
     bindersTotal: bindersQuery.data?.total ?? 0,
     charges: chargesQuery.data?.items ?? [],
     chargesTotal: chargesQuery.data?.total ?? 0,
+    annualReportsTotal: annualReportsQuery.data?.length ?? 0,
+    vatWorkItemsTotal: vatWorkItemsQuery.data?.total ?? 0,
+    documentsTotal: documentsQuery.data?.items?.length ?? 0,
     updateClient,
     isUpdating: updateMutation.isPending,
     can,

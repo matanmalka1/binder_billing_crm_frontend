@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { ChevronRight, FolderOpen, Receipt } from "lucide-react";
+import { ChevronRight, FolderOpen, Receipt, FileText, Calculator, FileArchive } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
@@ -14,6 +14,9 @@ type ClientRelatedDataProps = {
   charges: ClientChargeSummary[];
   chargesTotal: number;
   canViewCharges: boolean;
+  annualReportsTotal: number;
+  vatWorkItemsTotal: number;
+  documentsTotal: number;
 };
 
 export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
@@ -23,10 +26,13 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
   charges,
   chargesTotal,
   canViewCharges,
+  annualReportsTotal,
+  vatWorkItemsTotal,
+  documentsTotal,
 }) => {
   return (
     <>
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
       <Card>
         <div className="flex items-center gap-3">
           <div className="bg-blue-100 rounded-lg p-3">
@@ -38,6 +44,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           </div>
         </div>
       </Card>
+
       {canViewCharges && (
         <Card>
           <div className="flex items-center gap-3">
@@ -51,6 +58,48 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           </div>
         </Card>
       )}
+
+      <Link to={`/tax/reports/season?client_id=${clientId}`} className="block">
+        <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+          <div className="flex items-center gap-3">
+            <div className="bg-purple-100 rounded-lg p-3">
+              <FileText className="h-6 w-6 text-purple-600" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-900">{annualReportsTotal}</div>
+              <div className="text-sm text-gray-600">דוחות שנתיים</div>
+            </div>
+          </div>
+        </Card>
+      </Link>
+
+      <Link to={`/tax/vat?client_id=${clientId}`} className="block">
+        <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+          <div className="flex items-center gap-3">
+            <div className="bg-orange-100 rounded-lg p-3">
+              <Calculator className="h-6 w-6 text-orange-600" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-900">{vatWorkItemsTotal}</div>
+              <div className="text-sm text-gray-600">תיקי מע"מ</div>
+            </div>
+          </div>
+        </Card>
+      </Link>
+
+      <Link to={`/documents?client_id=${clientId}`} className="block">
+        <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+          <div className="flex items-center gap-3">
+            <div className="bg-teal-100 rounded-lg p-3">
+              <FileArchive className="h-6 w-6 text-teal-600" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-900">{documentsTotal}</div>
+              <div className="text-sm text-gray-600">מסמכים קבועים</div>
+            </div>
+          </div>
+        </Card>
+      </Link>
     </div>
 
     {binders.length > 0 && (
