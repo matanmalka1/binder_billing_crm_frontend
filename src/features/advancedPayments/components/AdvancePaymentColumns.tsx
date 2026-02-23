@@ -1,5 +1,8 @@
 import type { Column } from "../../../components/ui/DataTable";
-import type { AdvancePaymentRow } from "../../../api/advancePayments.api";
+import type {
+  AdvancePaymentRow,
+  AdvancePaymentStatus,
+} from "../../../api/advancePayments.api";
 import { Badge } from "../../../components/ui/Badge";
 import { formatDate } from "../../../utils/utils";
 
@@ -19,7 +22,7 @@ const monthNames = [
 ];
 
 const statusMap: Record<
-  string,
+  AdvancePaymentStatus,
   "success" | "warning" | "error" | "neutral" | "info"
 > = {
   paid: "success",
@@ -28,7 +31,7 @@ const statusMap: Record<
   pending: "neutral",
 };
 
-const statusLabels: Record<string, string> = {
+const statusLabels: Record<AdvancePaymentStatus, string> = {
   paid: "שולם",
   partial: "חלקי",
   overdue: "באיחור",
