@@ -72,6 +72,7 @@ export const ENDPOINTS = {
   userActivate: (id: number | string) => `/users/${id}/activate`,
   userDeactivate: (id: number | string) => `/users/${id}/deactivate`,
   userResetPassword: (id: number | string) => `/users/${id}/reset-password`,
+  userAuditLogs: "/users/audit-logs",
   dashboardTaxSubmissions: "/dashboard/tax-submissions",
   reportsAging: "/reports/aging",
   reportsAgingExport: "/reports/aging/export",

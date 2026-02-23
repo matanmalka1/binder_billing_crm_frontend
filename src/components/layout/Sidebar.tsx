@@ -15,6 +15,7 @@ import {
   Bell,
   KanbanSquare,
   ClipboardList,
+  Settings,
 } from "lucide-react";
 import { cn } from "../../utils/utils";
 
@@ -40,6 +41,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     { to: "/reports/aging", label: "דוח חובות", icon: BarChart3 },
     { to: "/reports/reminders", label: "תזכורות", icon: Bell },
     { to: "/reports/import-export", label: "ייבוא/ייצוא", icon: FileSpreadsheet },
+    { to: "/settings/users", label: "משתמשים", icon: Settings },
   ];
 
   return (

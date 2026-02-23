@@ -94,6 +94,11 @@ export const QK = {
   search: {
     results: (filters: object) => ["search", "results", filters] as const,
   },
+  users: {
+    all: ["users"] as const,
+    list: (params: object) => ["users", "list", params] as const,
+    auditLogs: (params: object) => ["users", "audit-logs", params] as const,
+  },
   reports: {
     aging: (asOfDate: string) => ["reports", "aging", asOfDate] as const,
   },

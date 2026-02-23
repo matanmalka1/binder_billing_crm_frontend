@@ -25,6 +25,7 @@ import { RemindersPage } from "../pages/reports/Reminders";
 import { ExcelImportExportPage } from "../pages/reports/ExcelImportExportPage";
 import { AdvancePayments } from "../pages/tax/AdvancePayments";
 import { VatWorkItems } from "../pages/tax/VatWorkItems";
+import { Users } from "../pages/Users";
 import { SigningPage } from "../pages/SigningPage";
 
 const AuthExpiredNavigationHandler: React.FC = () => {
@@ -97,6 +98,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="reports/aging" element={<AgingReportPage />} />
             <Route path="reports/reminders" element={<RemindersPage />} />
             <Route path="reports/import-export" element={<ExcelImportExportPage />} />
+            <Route path="settings/users" element={<Users />} />
           </Route>
         </Route>
 
