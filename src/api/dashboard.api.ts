@@ -9,7 +9,7 @@ export interface DashboardOverviewResponse {
   active_binders: number;
   work_state?: string | null;
   signals?: string[] | null;
-  quick_actions?: BackendAction[] | null;
+  quick_actions: BackendAction[];
   attention: AttentionResponse;
 }
 

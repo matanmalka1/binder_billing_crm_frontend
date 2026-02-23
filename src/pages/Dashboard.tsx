@@ -76,7 +76,7 @@ export const Dashboard: React.FC = () => {
           <AdvisorTodayCard />
           <AttentionPanel items={attentionItems} />
           <OperationalPanel
-            quickActions={dashboard.data.quick_actions ?? []}
+            quickActions={dashboard.data.quick_actions}
             activeActionKey={activeQuickAction}
             onQuickAction={handleQuickAction}
           />
