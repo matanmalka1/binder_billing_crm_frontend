@@ -1,25 +1,20 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { api } from "../../../api/client";
+import { ENDPOINTS } from "../../../api/endpoints";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
-type EntityType = "clients";
-
-export const useImportExport = (entityType: EntityType = "clients") => {
+export const useImportExport = () => {
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
 
-  const entityLabels: Record<EntityType, string> = {
-    clients: "לקוחות",
-  };
-
-  const entityLabel = entityLabels[entityType];
+  const entityLabel = "לקוחות";
 
   const handleExport = async () => {
     setExporting(true);
     try {
-      const response = await api.get(`/${entityType}/export`, {
+      const response = await api.get(ENDPOINTS.clientsExport, {
         responseType: "blob",
       });
 
@@ -29,7 +24,7 @@ export const useImportExport = (entityType: EntityType = "clients") => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${entityType}_export_${format(new Date(), "yyyy-MM-dd")}.xlsx`;
+      link.download = `clients_export_${format(new Date(), "yyyy-MM-dd")}.xlsx`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -54,7 +49,7 @@ export const useImportExport = (entityType: EntityType = "clients") => {
       const formData = new FormData();
       formData.append("file", file);
 
-      await api.post(`/${entityType}/import`, formData, {
+      await api.post(ENDPOINTS.clientsImport, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -70,7 +65,7 @@ export const useImportExport = (entityType: EntityType = "clients") => {
 
   const handleDownloadTemplate = async () => {
     try {
-      const response = await api.get(`/${entityType}/template`, {
+      const response = await api.get(ENDPOINTS.clientsTemplate, {
         responseType: "blob",
       });
 
@@ -80,7 +75,7 @@ export const useImportExport = (entityType: EntityType = "clients") => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${entityType}_template.xlsx`;
+      link.download = "clients_template.xlsx";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
