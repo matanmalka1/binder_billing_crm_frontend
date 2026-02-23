@@ -81,10 +81,11 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
 
   const lastEventTimestamp = useMemo(() => {
     if (events.length === 0) return null;
-    return events.reduce((latest, current) => {
+    return events.reduce((latestStr, current) => {
       const currentTime = new Date(current.timestamp).getTime();
-      return currentTime > latest ? currentTime : latest;
-    }, new Date(events[0].timestamp).getTime());
+      const latestTime = new Date(latestStr).getTime();
+      return currentTime > latestTime ? current.timestamp : latestStr;
+    }, events[0].timestamp);
   }, [events]);
 
   const {
