@@ -48,8 +48,8 @@ export const useVatWorkItemDetail = (workItemId: number | null) => {
     const inputMap = new Map<string, VatCategorySummaryRow>();
 
     for (const inv of items) {
-      const net = Number(inv.net_amount);
-      const vat = Number(inv.vat_amount);
+      const net = inv.net_amount;
+      const vat = inv.vat_amount;
 
       if (inv.invoice_type === "income") {
         const key = "הכנסות";

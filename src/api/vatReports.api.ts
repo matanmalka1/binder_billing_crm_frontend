@@ -12,10 +12,10 @@ export interface VatWorkItemResponse {
   period: string;
   status: string;
   pending_materials_note: string | null;
-  total_output_vat: string;
-  total_input_vat: string;
-  net_vat: string;
-  final_vat_amount: string | null;
+  total_output_vat: number;
+  total_input_vat: number;
+  net_vat: number;
+  final_vat_amount: number | null;
   is_overridden: boolean;
   override_justification: string | null;
   filing_method: string | null;
@@ -53,8 +53,8 @@ export interface VatInvoiceResponse {
   invoice_date: string;
   counterparty_name: string;
   counterparty_id: string | null;
-  net_amount: string;
-  vat_amount: string;
+  net_amount: number;
+  vat_amount: number;
   expense_category: string | null;
   created_by: number;
   created_at: string;
@@ -69,8 +69,8 @@ export interface CreateVatInvoicePayload {
   invoice_number: string;
   invoice_date: string;
   counterparty_name: string;
-  net_amount: string;
-  vat_amount: string;
+  net_amount: number;
+  vat_amount: number;
   counterparty_id?: string | null;
   expense_category?: string | null;
 }

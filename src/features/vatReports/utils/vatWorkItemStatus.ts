@@ -17,9 +17,7 @@ export const canFile = (status: string): boolean =>
 
 export const isFiled = (status: string): boolean => status === "filed";
 
-export const formatVatAmount = (amount: string | null): string => {
-  if (amount === null || amount === undefined) return "—";
-  const n = Number(amount);
-  if (isNaN(n)) return "—";
-  return `₪${n.toFixed(2)}`;
+export const formatVatAmount = (amount: number | null): string => {
+  if (amount === null || amount === undefined || isNaN(Number(amount))) return "—";
+  return `₪${Number(amount).toFixed(2)}`;
 };

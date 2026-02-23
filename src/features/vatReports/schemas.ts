@@ -112,8 +112,8 @@ export const toCategoryInvoicePayloads = (
       invoice_number: `${period}-income-${ts}`,
       invoice_date: date,
       counterparty_name: "הכנסות",
-      net_amount: String(incomeNet),
-      vat_amount: String(incomeVat),
+      net_amount: incomeNet,
+      vat_amount: incomeVat,
     });
   }
 
@@ -127,8 +127,8 @@ export const toCategoryInvoicePayloads = (
         invoice_number: `${period}-${cat}-${ts}`,
         invoice_date: date,
         counterparty_name: CATEGORY_LABELS[cat],
-        net_amount: String(net),
-        vat_amount: String(vat),
+        net_amount: net,
+        vat_amount: vat,
         expense_category: cat,
       });
     }
