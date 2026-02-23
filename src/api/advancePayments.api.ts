@@ -28,6 +28,19 @@ export const advancePaymentsApi = {
     return response.data;
   },
 
+  create: async (payload: {
+    client_id: number;
+    year: number;
+    month: number;
+    due_date: string;
+    expected_amount?: number | null;
+    paid_amount?: number | null;
+    tax_deadline_id?: number | null;
+  }): Promise<AdvancePaymentRow> => {
+    const response = await api.post<AdvancePaymentRow>("/advance-payments", payload);
+    return response.data;
+  },
+
   update: async (
     id: number,
     payload: { paid_amount?: number | null; status?: string },

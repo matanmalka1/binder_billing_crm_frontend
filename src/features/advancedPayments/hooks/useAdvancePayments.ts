@@ -33,6 +33,15 @@ export const useAdvancePayments = (clientId: number, year: number) => {
     onError: (err) => showErrorToast(err, "שגיאה בעדכון מקדמה"),
   });
 
+  const createMutation = useMutation({
+    mutationFn: advancePaymentsApi.create,
+    onSuccess: () => {
+      toast.success("מקדמה נוצרה בהצלחה");
+      queryClient.invalidateQueries({ queryKey: qk });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה ביצירת מקדמה"),
+  });
+
   const rows = enabled ? listQuery.data?.items ?? [] : [];
   const totalExpected = enabled
     ? rows.reduce(
@@ -64,5 +73,7 @@ export const useAdvancePayments = (clientId: number, year: number) => {
     updatingId: updateMutation.isPending
       ? (updateMutation.variables?.id ?? null)
       : null,
+    create: createMutation.mutateAsync,
+    isCreating: createMutation.isPending,
   };
 };
