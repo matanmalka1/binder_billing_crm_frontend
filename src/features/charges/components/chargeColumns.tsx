@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ChargeResponse } from "../../../api/charges.api";
@@ -56,52 +55,46 @@ const ActionCell: React.FC<ActionCellProps> = ({
       <Link
         to={`/charges/${charge.id}`}
         onClick={(e) => e.stopPropagation()}
-        className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 transition-colors hover:border-blue-400 hover:bg-blue-50 hover:text-blue-800"
+        className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
       >
         פירוט
         <ExternalLink className="h-3 w-3" />
       </Link>
 
       {isAdvisor && canIssue(charge.status) && (
-        <Button
+        <button
           type="button"
-          variant="outline"
-          size="sm"
-          isLoading={isLoading}
-          disabled={isDisabled}
+          disabled={isLoading || isDisabled}
           title="מנפיק את החשבונית וממיר אותה מטיוטה לפעיל"
           onClick={handleIssue}
+          className="inline-flex items-center rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           הנפקה
-        </Button>
+        </button>
       )}
 
       {isAdvisor && canMarkPaid(charge.status) && (
-        <Button
+        <button
           type="button"
-          variant="outline"
-          size="sm"
-          isLoading={isLoading}
-          disabled={isDisabled}
+          disabled={isLoading || isDisabled}
           title="מסמן את החשבונית כשולמה על ידי הלקוח"
           onClick={handleMarkPaid}
+          className="inline-flex items-center rounded-md border border-green-200 bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 transition-colors hover:bg-green-100 disabled:cursor-not-allowed disabled:opacity-50"
         >
           סימון שולם
-        </Button>
+        </button>
       )}
 
       {isAdvisor && canCancel(charge.status) && (
-        <Button
+        <button
           type="button"
-          variant="danger"
-          size="sm"
-          isLoading={isLoading}
-          disabled={isDisabled}
+          disabled={isLoading || isDisabled}
           title="מבטל את החשבונית לצמיתות — לא ניתן לבטל פעולה זו"
           onClick={handleCancel}
+          className="inline-flex items-center rounded-md border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
         >
           ביטול
-        </Button>
+        </button>
       )}
     </div>
   );
@@ -125,7 +118,7 @@ export const buildChargeColumns = ({
     key: "id",
     header: "מזהה",
     render: (charge) => (
-      <span className="font-mono text-sm font-semibold text-gray-900">
+      <span className="font-mono text-sm text-gray-500 tabular-nums">
         #{charge.id}
       </span>
     ),
@@ -137,7 +130,7 @@ export const buildChargeColumns = ({
       <Link
         to={`/clients/${charge.client_id}`}
         onClick={(e) => e.stopPropagation()}
-        className="text-sm font-medium text-gray-900 hover:text-blue-700 hover:underline"
+        className="text-sm font-semibold text-gray-900 hover:text-blue-700 hover:underline"
       >
         {charge.client_name ?? `#${charge.client_id}`}
       </Link>
@@ -152,7 +145,7 @@ export const buildChargeColumns = ({
         retainer: "ריטיינר",
       };
       return (
-        <span className="text-sm text-gray-700">
+        <span className="text-sm text-gray-600">
           {typeLabels[charge.charge_type] ?? charge.charge_type}
         </span>
       );

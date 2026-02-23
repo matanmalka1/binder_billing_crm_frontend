@@ -22,10 +22,7 @@ const buildSigningUrl = (hint: string): string => {
   return `${base}${path}`;
 };
 
-export const SignatureRequestsCard: React.FC<Props> = ({
-  client,
-  canManage,
-}) => {
+export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) => {
   const [showCreate, setShowCreate] = useState(false);
   const [signingUrls, setSigningUrls] = useState<Record<number, string>>({});
 
@@ -40,42 +37,30 @@ export const SignatureRequestsCard: React.FC<Props> = ({
   const handleSend = async (id: number) => {
     const result = (await send(id)) as SendSignatureRequestResponse;
     if (result?.signing_url_hint) {
-      setSigningUrls((prev) => ({
-        ...prev,
-        [id]: buildSigningUrl(result.signing_url_hint),
-      }));
+      setSigningUrls((prev) => ({ ...prev, [id]: buildSigningUrl(result.signing_url_hint) }));
     }
   };
 
   return (
     <>
-      <Card title={undefined}>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">
-              בקשות חתימה {total > 0 ? `(${total})` : ""}
-            </h3>
-            {canManage && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowCreate(true)}
-              >
-                <Plus className="h-4 w-4" />
-                בקשה חדשה
-              </Button>
-            )}
-          </div>
-
+      <Card
+        title={`בקשות חתימה${total > 0 ? ` (${total})` : ""}`}
+        actions={
+          canManage ? (
+            <Button variant="outline" size="sm" onClick={() => setShowCreate(true)}>
+              <Plus className="h-3.5 w-3.5" />
+              בקשה חדשה
+            </Button>
+          ) : undefined
+        }
+      >
+        <div className="space-y-2">
           {error && <ErrorCard message={error} />}
 
           {isLoading && (
             <div className="space-y-2">
               {[1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="h-16 rounded-lg bg-gray-100 animate-pulse"
-                />
+                <div key={i} className="h-16 animate-pulse rounded-xl bg-gray-100" />
               ))}
             </div>
           )}

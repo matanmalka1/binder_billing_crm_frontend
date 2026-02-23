@@ -48,7 +48,7 @@ export const buildAdvancePaymentColumns = (): Column<AdvancePaymentRow>[] => [
     key: "month",
     header: "חודש",
     render: (row) => (
-      <span className="font-medium text-gray-900">
+      <span className="text-sm font-semibold text-gray-900">
         {monthNames[row.month - 1] ?? row.month}
       </span>
     ),
@@ -57,14 +57,14 @@ export const buildAdvancePaymentColumns = (): Column<AdvancePaymentRow>[] => [
     key: "due_date",
     header: "תאריך תשלום",
     render: (row) => (
-      <span className="text-gray-600">{formatDate(row.due_date)}</span>
+      <span className="text-sm text-gray-500 tabular-nums">{formatDate(row.due_date)}</span>
     ),
   },
   {
     key: "expected_amount",
     header: "סכום צפוי",
     render: (row) => (
-      <span className="font-medium text-gray-900">
+      <span className="font-mono text-sm font-medium text-gray-700 tabular-nums">
         {fmt(row.expected_amount)}
       </span>
     ),
@@ -73,7 +73,9 @@ export const buildAdvancePaymentColumns = (): Column<AdvancePaymentRow>[] => [
     key: "paid_amount",
     header: "שולם",
     render: (row) => (
-      <span className="font-medium text-green-700">{fmt(row.paid_amount)}</span>
+      <span className="font-mono text-sm font-semibold text-green-700 tabular-nums">
+        {fmt(row.paid_amount)}
+      </span>
     ),
   },
   {

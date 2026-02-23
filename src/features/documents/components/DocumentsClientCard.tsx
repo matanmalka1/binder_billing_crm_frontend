@@ -1,4 +1,3 @@
-import { Card } from "../../../components/ui/Card";
 import { Select } from "../../../components/ui/Select";
 
 interface DocumentsClientCardProps {
@@ -12,20 +11,18 @@ export const DocumentsClientCard: React.FC<DocumentsClientCardProps> = ({
   selectedClientId,
   setClient,
 }) => (
-  <Card title="בחירת לקוח">
-    <div className="max-w-md">
-      <Select
-        label="לקוח"
-        value={selectedClientId ? String(selectedClientId) : ""}
-        onChange={(event) => setClient(event.target.value)}
-      >
-        <option value="">בחר לקוח</option>
-        {clientOptions.map((client) => (
-          <option key={client.id} value={client.id}>
-            {client.full_name} (#{client.id})
-          </option>
-        ))}
-      </Select>
-    </div>
-  </Card>
+  <div className="max-w-sm">
+    <Select
+      label="בחירת לקוח"
+      value={selectedClientId ? String(selectedClientId) : ""}
+      onChange={(e) => setClient(e.target.value)}
+    >
+      <option value="">כל הלקוחות</option>
+      {clientOptions.map((client) => (
+        <option key={client.id} value={client.id}>
+          {client.full_name} (#{client.id})
+        </option>
+      ))}
+    </Select>
+  </div>
 );

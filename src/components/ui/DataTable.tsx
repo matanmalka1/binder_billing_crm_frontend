@@ -64,16 +64,16 @@ export const DataTable = <T,>({
   }
 
   return (
-    <Card className={className}>
+    <Card className={cn("overflow-hidden p-0", className)}>
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="border-b border-gray-200">
-            <tr className="text-right">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b border-gray-200 bg-gray-50 text-right">
               {columns.map((column) => (
                 <th
                   key={column.key}
                   className={cn(
-                    "pb-3 pr-4 font-semibold text-gray-700",
+                    "px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500",
                     column.headerClassName,
                   )}
                 >
@@ -82,14 +82,14 @@ export const DataTable = <T,>({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-gray-100 bg-white">
             {data.map((item, index) => (
               <tr
                 key={getRowKey(item)}
                 className={cn(
-                  "transition-colors",
-                  onRowClick && "cursor-pointer hover:bg-gray-50 active:bg-gray-100",
-                  !onRowClick && "hover:bg-gray-50",
+                  "transition-colors duration-100",
+                  onRowClick && "cursor-pointer hover:bg-blue-50/40 active:bg-blue-50/70",
+                  !onRowClick && "hover:bg-gray-50/60",
                   rowClassName?.(item, index),
                 )}
                 onClick={() => onRowClick?.(item)}
@@ -97,7 +97,7 @@ export const DataTable = <T,>({
                 {columns.map((column) => (
                   <td
                     key={column.key}
-                    className={cn("py-3 pr-4", column.className)}
+                    className={cn("px-4 py-3.5 align-middle", column.className)}
                   >
                     {column.render(item, index)}
                   </td>

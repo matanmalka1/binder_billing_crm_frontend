@@ -28,7 +28,7 @@ export const buildActionsColumn = <T,>({
     }
 
     return (
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
         {actions.map((action) => (
           <Button
             key={action.uiKey}
@@ -45,8 +45,9 @@ export const buildActionsColumn = <T,>({
               activeActionKeyRef.current !== action.uiKey
             }
             className={cn(
-              "min-w-[90px]",
-              action.confirm && "border-orange-200 text-orange-700 hover:bg-orange-50",
+              action.confirm
+                ? "border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100"
+                : "border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50",
             )}
           >
             {action.label || "—"}

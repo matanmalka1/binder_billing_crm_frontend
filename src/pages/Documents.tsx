@@ -25,13 +25,11 @@ export const Documents: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Standardized Header */}
       <PageHeader
         title="מסמכים קבועים"
         description="העלאה, צפייה ואותות תפעוליים לפי לקוח"
       />
 
-      {/* Standardized Filter Bar for Client Selection */}
       <FilterBar>
         <DocumentsClientCard
           clientOptions={clientOptions}
@@ -40,20 +38,19 @@ export const Documents: React.FC = () => {
         />
       </FilterBar>
 
-      {/* Upload Card */}
       <DocumentsUploadCard
         submitUpload={submitUpload}
         uploadError={uploadError}
         uploading={uploading}
       />
 
-      {loading && <TableSkeleton rows={5} columns={4} />}
+      {loading && <TableSkeleton rows={4} columns={3} />}
       {!loading && error && <ErrorCard message={error} />}
-      {!loading && !error && selectedClientId > 0 && documents.length === 0 && (
-        <EmptyState icon={FolderOpen} message="אין מסמכים להצגה" />
-      )}
       {!loading && !error && selectedClientId <= 0 && (
         <EmptyState icon={FolderOpen} message="בחר לקוח להצגת מסמכים" />
+      )}
+      {!loading && !error && selectedClientId > 0 && documents.length === 0 && (
+        <EmptyState icon={FolderOpen} message="אין מסמכים להצגה ללקוח זה" />
       )}
       {!loading && !error && selectedClientId > 0 && documents.length > 0 && (
         <DocumentsDataCards documents={documents} signals={signals} />

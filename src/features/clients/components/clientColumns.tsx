@@ -27,21 +27,21 @@ export const buildClientColumns = ({
     key: "full_name",
     header: "שם",
     render: (client) => (
-      <span className="font-medium text-gray-900">{client.full_name}</span>
+      <span className="text-sm font-semibold text-gray-900">{client.full_name}</span>
     ),
   },
   {
     key: "id_number",
     header: "ת.ז / ח.פ",
     render: (client) => (
-      <span className="font-mono text-sm text-gray-600">{client.id_number}</span>
+      <span className="font-mono text-sm text-gray-500 tabular-nums">{client.id_number}</span>
     ),
   },
   {
     key: "client_type",
     header: "סוג",
     render: (client) => (
-      <span className="text-gray-600">{getClientTypeLabel(client.client_type)}</span>
+      <span className="text-sm text-gray-600">{getClientTypeLabel(client.client_type)}</span>
     ),
   },
   {
@@ -59,14 +59,14 @@ export const buildClientColumns = ({
     key: "phone",
     header: "טלפון",
     render: (client) => (
-      <span className="font-mono text-sm text-gray-600">{client.phone || "—"}</span>
+      <span className="font-mono text-sm text-gray-500 tabular-nums">{client.phone || "—"}</span>
     ),
   },
   {
     key: "opened_at",
     header: "תאריך פתיחה",
     render: (client) => (
-      <span className="text-gray-600">{formatDate(client.opened_at)}</span>
+      <span className="text-sm text-gray-500 tabular-nums">{formatDate(client.opened_at)}</span>
     ),
   },
   {
@@ -75,8 +75,8 @@ export const buildClientColumns = ({
     render: (client) => (
       <Link
         to={`/clients/${client.id}/timeline`}
-        className="inline-flex items-center rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
         onClick={(e) => e.stopPropagation()}
+        className="inline-flex items-center rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
       >
         צפייה
       </Link>

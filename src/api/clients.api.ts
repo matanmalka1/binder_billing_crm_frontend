@@ -4,6 +4,9 @@ import type { PaginatedResponse } from "../types/common";
 import { toQueryParams } from "./queryParams";
 import { api } from "./client";
 
+/** ISO-8601 calendar date string `YYYY-MM-DD`. */
+export type ISODateString = `${number}${number}${number}${number}-${number}${number}-${number}${number}`;
+
 export interface ClientResponse {
   id: number;
   full_name: string;
@@ -12,7 +15,7 @@ export interface ClientResponse {
   status: string;
   phone: string | null;
   email: string | null;
-  opened_at: string;
+  opened_at: ISODateString;
   closed_at: string | null;
   available_actions?: BackendAction[] | null;
 }
@@ -33,7 +36,8 @@ export interface CreateClientPayload {
   client_type: string;
   phone?: string | null;
   email?: string | null;
-  opened_at: string;
+  /** Calendar date in `YYYY-MM-DD` format. */
+  opened_at: ISODateString;
 }
 
 export interface UpdateClientPayload {

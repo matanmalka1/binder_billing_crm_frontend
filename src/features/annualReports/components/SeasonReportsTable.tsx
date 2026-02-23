@@ -65,7 +65,7 @@ export const SeasonReportsTable: React.FC<Props> = ({ reports, isLoading, onSele
       key: "client_id",
       header: "לקוח",
       render: (r) => (
-        <span className="font-mono text-sm font-semibold text-gray-700">#{r.client_id}</span>
+        <span className="font-mono text-sm text-gray-500 tabular-nums">#{r.client_id}</span>
       ),
     },
     {
@@ -95,7 +95,7 @@ export const SeasonReportsTable: React.FC<Props> = ({ reports, isLoading, onSele
       key: "deadline_type",
       header: "סוג מועד",
       render: (r) => (
-        <span className="text-xs text-gray-500">{getDeadlineTypeLabel(r.deadline_type)}</span>
+        <span className="text-sm text-gray-500">{getDeadlineTypeLabel(r.deadline_type)}</span>
       ),
     },
     {
@@ -107,7 +107,7 @@ export const SeasonReportsTable: React.FC<Props> = ({ reports, isLoading, onSele
       key: "submitted_at",
       header: "הוגש",
       render: (r) => (
-        <span className="text-sm text-gray-500">{formatDate(r.submitted_at)}</span>
+        <span className="text-sm text-gray-500 tabular-nums">{formatDate(r.submitted_at)}</span>
       ),
     },
   ];

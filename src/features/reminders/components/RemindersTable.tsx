@@ -34,7 +34,7 @@ const buildRemindersColumns = (
           key: "client",
           header: "לקוח",
           render: (reminder: Reminder) => (
-            <span className="font-mono text-sm">לקוח #{reminder.client_id}</span>
+            <span className="font-mono text-sm text-gray-500">לקוח #{reminder.client_id}</span>
           ),
         } as Column<Reminder>,
       ]
@@ -44,7 +44,7 @@ const buildRemindersColumns = (
     header: "הודעה",
     render: (reminder) => (
       <div className="max-w-md">
-        <p className="text-sm text-gray-700 truncate" title={reminder.message}>
+        <p className="truncate text-sm text-gray-700" title={reminder.message}>
           {reminder.message}
         </p>
       </div>
@@ -54,11 +54,9 @@ const buildRemindersColumns = (
     key: "target_date",
     header: "תאריך יעד",
     render: (reminder) => (
-      <div className="text-sm">
-        <div className="text-gray-700">{formatDate(reminder.target_date)}</div>
-        <div className="text-xs text-gray-500">
-          {reminder.days_before} ימים לפני
-        </div>
+      <div>
+        <div className="text-sm text-gray-700 tabular-nums">{formatDate(reminder.target_date)}</div>
+        <div className="text-xs text-gray-400">{reminder.days_before} ימים לפני</div>
       </div>
     ),
   },
@@ -66,11 +64,9 @@ const buildRemindersColumns = (
     key: "send_on",
     header: "שליחה ב",
     render: (reminder) => (
-      <div className="flex items-center gap-2">
-        <Calendar className="h-4 w-4 text-gray-400" />
-        <span className="text-sm text-gray-700">
-          {formatDate(reminder.send_on)}
-        </span>
+      <div className="flex items-center gap-1.5 text-sm text-gray-500 tabular-nums">
+        <Calendar className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+        {formatDate(reminder.send_on)}
       </div>
     ),
   },
@@ -83,8 +79,8 @@ const buildRemindersColumns = (
           reminder.status === "sent"
             ? "success"
             : reminder.status === "canceled"
-            ? "error"
-            : "warning"
+              ? "error"
+              : "warning"
         }
       >
         {statusLabels[reminder.status]}
@@ -103,11 +99,12 @@ const buildRemindersColumns = (
           onClick={(e) => { e.stopPropagation(); onCancel(reminder.id); }}
           isLoading={cancelingId === reminder.id}
           disabled={cancelingId !== null}
+          className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100"
         >
           ביטול
         </Button>
       ) : (
-        <span className="text-gray-500 text-sm">—</span>
+        <span className="text-sm text-gray-400">—</span>
       ),
   },
 ];

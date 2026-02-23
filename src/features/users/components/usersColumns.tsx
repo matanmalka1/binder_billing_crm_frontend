@@ -27,14 +27,14 @@ export const buildUserColumns = ({
     key: "full_name",
     header: "שם מלא",
     render: (user) => (
-      <span className="font-medium text-gray-900">{user.full_name}</span>
+      <span className="text-sm font-semibold text-gray-900">{user.full_name}</span>
     ),
   },
   {
     key: "email",
     header: "אימייל",
     render: (user) => (
-      <span className="text-sm text-gray-600">{user.email}</span>
+      <span className="text-sm text-gray-500">{user.email}</span>
     ),
   },
   {
@@ -59,14 +59,14 @@ export const buildUserColumns = ({
     key: "last_login_at",
     header: "כניסה אחרונה",
     render: (user) => (
-      <span className="text-sm text-gray-500">{formatDateTime(user.last_login_at)}</span>
+      <span className="text-sm text-gray-500 tabular-nums">{formatDateTime(user.last_login_at)}</span>
     ),
   },
   {
     key: "created_at",
     header: "נוצר בתאריך",
     render: (user) => (
-      <span className="text-sm text-gray-500">{formatDateTime(user.created_at)}</span>
+      <span className="text-sm text-gray-500 tabular-nums">{formatDateTime(user.created_at)}</span>
     ),
   },
   {
@@ -75,22 +75,24 @@ export const buildUserColumns = ({
     render: (user) => {
       const isSelf = user.id === currentUserId;
       return (
-        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onEdit(user)}
             title="עריכה"
+            className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
           >
-            <Pencil className="w-4 h-4" />
+            <Pencil className="h-4 w-4" />
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onResetPassword(user)}
             title="איפוס סיסמה"
+            className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
           >
-            <KeyRound className="w-4 h-4" />
+            <KeyRound className="h-4 w-4" />
           </Button>
           {!isSelf && (
             <Button
@@ -98,11 +100,12 @@ export const buildUserColumns = ({
               size="sm"
               onClick={() => onToggleActive(user)}
               title={user.is_active ? "השבתה" : "הפעלה"}
+              className="rounded-md p-1.5 hover:bg-gray-100"
             >
               {user.is_active ? (
-                <UserX className="w-4 h-4 text-red-500" />
+                <UserX className="h-4 w-4 text-red-500" />
               ) : (
-                <UserCheck className="w-4 h-4 text-green-600" />
+                <UserCheck className="h-4 w-4 text-green-600" />
               )}
             </Button>
           )}

@@ -49,6 +49,7 @@ const ActionCell: React.FC<ActionCellProps> = ({
           disabled={isDisabled}
           title="מאשר שהחומרים התקבלו במשרד ומעביר לשלב הקלדה"
           onClick={stop(() => void runAction(item.id, "materialsComplete"))}
+          className="border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50"
         >
           אישור קבלה
         </Button>
@@ -62,6 +63,7 @@ const ActionCell: React.FC<ActionCellProps> = ({
           disabled={isDisabled}
           title="מסמן את התיק כמוכן לבדיקת היועץ"
           onClick={stop(() => void runAction(item.id, "readyForReview"))}
+          className="border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50"
         >
           שלח לבדיקה
         </Button>
@@ -69,18 +71,19 @@ const ActionCell: React.FC<ActionCellProps> = ({
       {isAdvisor && canFile(item.status) && (
         <Button
           type="button"
-          variant="primary"
+          variant="outline"
           size="sm"
           isLoading={isLoading}
           disabled={isDisabled}
           title="מסמן את הדוח כהוגש ידנית — יש להגיש בנפרד לרשות המסים"
           onClick={stop(() => void runAction(item.id, "file"))}
+          className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
         >
           סמן כהוגש
         </Button>
       )}
       {isFiled(item.status) && (
-        <span className="text-xs text-gray-500">הוגש</span>
+        <span className="text-xs text-gray-400">הוגש</span>
       )}
     </div>
   );
@@ -102,14 +105,14 @@ export const buildVatWorkItemColumns = ({
     key: "id",
     header: "מזהה",
     render: (item) => (
-      <span className="font-mono text-sm font-semibold text-gray-900">#{item.id}</span>
+      <span className="font-mono text-sm text-gray-500 tabular-nums">#{item.id}</span>
     ),
   },
   {
     key: "client_id",
     header: "לקוח",
     render: (item) => (
-      <span className="text-sm text-gray-900">
+      <span className="text-sm font-semibold text-gray-900">
         {item.client_name ?? `#${item.client_id}`}
       </span>
     ),
@@ -118,7 +121,7 @@ export const buildVatWorkItemColumns = ({
     key: "period",
     header: "תקופה",
     render: (item) => (
-      <span className="font-mono text-sm font-medium text-gray-900">{item.period}</span>
+      <span className="font-mono text-sm font-medium text-gray-700">{item.period}</span>
     ),
   },
   {
@@ -145,7 +148,7 @@ export const buildVatWorkItemColumns = ({
     key: "final_vat_amount",
     header: "סכום סופי",
     render: (item) => (
-      <span className="font-mono text-sm tabular-nums text-gray-700">
+      <span className="font-mono text-sm text-gray-600 tabular-nums">
         {formatVatAmount(item.final_vat_amount)}
       </span>
     ),

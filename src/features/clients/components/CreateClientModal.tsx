@@ -24,6 +24,7 @@ export const CreateClientModal: React.FC<Props> = ({ open, onClose, onSubmit, is
   const onFormSubmit = handleSubmit(async (data) => {
     const payload: CreateClientPayload = {
       ...data,
+      opened_at: data.opened_at as CreateClientPayload["opened_at"],
       phone: data.phone ? data.phone : null,
       email: data.email ? data.email : null,
     };
