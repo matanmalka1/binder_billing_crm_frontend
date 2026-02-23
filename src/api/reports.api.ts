@@ -27,6 +27,8 @@ export interface AgingReportResponse {
   summary: AgingBucket;
 }
 
+// Note: Backend uses float for bucket fields; TS `number` already covers both int/float.
+
 export type ExportFormat = "excel" | "pdf";
 
 export interface ReportExportResult {
