@@ -1,5 +1,8 @@
+import { useNavigate } from "react-router-dom";
+import { getYear } from "date-fns";
 import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
 import { Badge } from "../../../components/ui/Badge";
+import { Button } from "../../../components/ui/Button";
 import { CheckCircle2 } from "lucide-react";
 import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
 import {
@@ -16,6 +19,7 @@ interface TaxDeadlineDrawerProps {
 }
 
 export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, onClose }) => {
+  const navigate = useNavigate();
   const isCompleted = deadline?.status === "completed";
 
   const daysRemaining = deadline && !isCompleted
@@ -52,6 +56,20 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
     >
       {deadline && (
         <>
+          <DrawerSection title="פעולות">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const year = getYear(new Date(deadline.due_date));
+                navigate(`/tax/advance-payments?client_id=${deadline.client_id}&year=${year}`);
+                onClose();
+              }}
+            >
+              ראה תשלומי מקדמה
+            </Button>
+          </DrawerSection>
+
           <DrawerSection title="פרטי מועד">
             <DrawerField label="לקוח" value={deadline.client_name ?? `#${deadline.client_id}`} />
             <DrawerField label="סוג מועד" value={getDeadlineTypeLabel(deadline.deadline_type)} />
