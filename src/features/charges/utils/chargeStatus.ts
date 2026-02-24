@@ -11,3 +11,11 @@ export const getChargeAmountText = (charge: ChargeResponse): string => {
   if (!("amount" in charge) || typeof charge.amount !== "number") return "—";
   return `${charge.amount.toFixed(2)} ${charge.currency}`;
 };
+
+const CHARGE_TYPE_LABELS: Record<string, string> = {
+  one_time: "חד פעמי",
+  retainer: "ריטיינר",
+};
+
+export const getChargeTypeLabel = (type: string): string =>
+  CHARGE_TYPE_LABELS[type] ?? type;

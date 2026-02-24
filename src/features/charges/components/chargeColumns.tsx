@@ -2,13 +2,12 @@ import { Link } from "react-router-dom";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ChargeResponse } from "../../../api/charges.api";
-import { getChargeAmountText, canCancel, canIssue, canMarkPaid } from "../utils/chargeStatus";
+import { getChargeAmountText, getChargeTypeLabel } from "../utils/chargeStatus";
 import { formatDateTime } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
+import { ChargeActionButtons } from "./ChargeActionButtons"
 
 export type ChargeAction = "issue" | "markPaid" | "cancel";
-
-/* ─── Variant map ────────────────────────────────────────────── */
 
 const chargeStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   draft: "neutral",
@@ -16,97 +15,6 @@ const chargeStatusVariants: Record<string, "success" | "warning" | "error" | "in
   paid: "success",
   canceled: "error",
 };
-
-/* ─── Action cell ────────────────────────────────────────────── */
-
-interface ActionCellProps {
-  charge: ChargeResponse;
-  isAdvisor: boolean;
-  isLoading: boolean;
-  isDisabled: boolean;
-  runAction: (chargeId: number, action: ChargeAction) => Promise<void>;
-  onOpenDetail: (chargeId: number) => void;
-}
-
-const ActionCell: React.FC<ActionCellProps> = ({
-  charge,
-  isAdvisor,
-  isLoading,
-  isDisabled,
-  runAction,
-  onOpenDetail,
-}) => {
-  const handleIssue = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    void runAction(charge.id, "issue");
-  };
-
-  const handleMarkPaid = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    void runAction(charge.id, "markPaid");
-  };
-
-  const handleCancel = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    void runAction(charge.id, "cancel");
-  };
-
-  const handleOpenDetail = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onOpenDetail(charge.id);
-  };
-
-  return (
-    <div className="flex flex-wrap items-center gap-1.5">
-      <button
-        type="button"
-        onClick={handleOpenDetail}
-        className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-      >
-        פירוט
-      </button>
-
-      {isAdvisor && canIssue(charge.status) && (
-        <button
-          type="button"
-          disabled={isLoading || isDisabled}
-          title="מנפיק את החשבונית וממיר אותה מטיוטה לפעיל"
-          onClick={handleIssue}
-          className="inline-flex items-center rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          הנפקה
-        </button>
-      )}
-
-      {isAdvisor && canMarkPaid(charge.status) && (
-        <button
-          type="button"
-          disabled={isLoading || isDisabled}
-          title="מסמן את החשבונית כשולמה על ידי הלקוח"
-          onClick={handleMarkPaid}
-          className="inline-flex items-center rounded-md border border-green-200 bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 transition-colors hover:bg-green-100 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          סימון שולם
-        </button>
-      )}
-
-      {isAdvisor && canCancel(charge.status) && (
-        <button
-          type="button"
-          disabled={isLoading || isDisabled}
-          title="מבטל את החשבונית לצמיתות — לא ניתן לבטל פעולה זו"
-          onClick={handleCancel}
-          className="inline-flex items-center rounded-md border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          ביטול
-        </button>
-      )}
-    </div>
-  );
-};
-ActionCell.displayName = "ActionCell";
-
-/* ─── Column builder ─────────────────────────────────────────── */
 
 interface BuildChargeColumnsParams {
   isAdvisor: boolean;
@@ -125,9 +33,7 @@ export const buildChargeColumns = ({
     key: "id",
     header: "מזהה",
     render: (charge) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">
-        #{charge.id}
-      </span>
+      <span className="font-mono text-sm text-gray-500 tabular-nums">#{charge.id}</span>
     ),
   },
   {
@@ -146,17 +52,9 @@ export const buildChargeColumns = ({
   {
     key: "charge_type",
     header: "סוג",
-    render: (charge) => {
-      const typeLabels: Record<string, string> = {
-        one_time: "חד פעמי",
-        retainer: "ריטיינר",
-      };
-      return (
-        <span className="text-sm text-gray-600">
-          {typeLabels[charge.charge_type] ?? charge.charge_type}
-        </span>
-      );
-    },
+    render: (charge) => (
+      <span className="text-sm text-gray-600">{getChargeTypeLabel(charge.charge_type)}</span>
+    ),
   },
   {
     key: "status",
@@ -182,23 +80,37 @@ export const buildChargeColumns = ({
     key: "created_at",
     header: "נוצר",
     render: (charge) => (
-      <span className="text-sm text-gray-500 tabular-nums">
-        {formatDateTime(charge.created_at)}
-      </span>
+      <span className="text-sm text-gray-500 tabular-nums">{formatDateTime(charge.created_at)}</span>
     ),
   },
   {
     key: "actions",
     header: "פעולות",
-    render: (charge) => (
-      <ActionCell
-        charge={charge}
-        isAdvisor={isAdvisor}
-        isLoading={actionLoadingId === charge.id}
-        isDisabled={actionLoadingId !== null && actionLoadingId !== charge.id}
-        runAction={runAction}
-        onOpenDetail={onOpenDetail}
-      />
-    ),
+    render: (charge) => {
+      const isLoading = actionLoadingId === charge.id;
+      const isDisabled = actionLoadingId !== null && actionLoadingId !== charge.id;
+      const stop = (fn: () => void) => (e: React.MouseEvent) => { e.stopPropagation(); fn(); };
+
+      return (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <button
+            type="button"
+            onClick={stop(() => onOpenDetail(charge.id))}
+            className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+          >
+            פירוט
+          </button>
+          {isAdvisor && (
+            <ChargeActionButtons
+              status={charge.status}
+              disabled={isLoading || isDisabled}
+              onIssue={stop(() => void runAction(charge.id, "issue"))}
+              onMarkPaid={stop(() => void runAction(charge.id, "markPaid"))}
+              onCancel={stop(() => void runAction(charge.id, "cancel"))}
+            />
+          )}
+        </div>
+      );
+    },
   },
 ];

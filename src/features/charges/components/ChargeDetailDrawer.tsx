@@ -1,11 +1,12 @@
 import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
 import { AccessBanner } from "../../../components/ui/AccessBanner";
-import { getChargeAmountText, canCancel, canIssue, canMarkPaid } from "../utils/chargeStatus";
+import {
+  getChargeAmountText,
+  getChargeTypeLabel,
+} from "../utils/chargeStatus";
 import { formatDateTime } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
-
-const chargeTypeLabels: Record<string, string> = { one_time: "חד פעמי", retainer: "ריטיינר" };
-const getChargeTypeLabel = (type: string) => chargeTypeLabels[type] ?? type;
+import { ChargeActionButtons } from "./ChargeActionButtons";
 import { useChargeDetailsPage } from "../hooks/useChargeDetailsPage";
 
 interface ChargeDetailDrawerProps {
@@ -45,38 +46,14 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
 
           {isAdvisor && (
             <DrawerSection title="פעולות">
-              <div className="flex flex-wrap gap-2 py-2">
-                {canIssue(charge.status) && (
-                  <button
-                    type="button"
-                    disabled={actionLoading}
-                    onClick={() => void runAction("issue")}
-                    className="inline-flex items-center rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-50 disabled:opacity-50"
-                  >
-                    הנפקה
-                  </button>
-                )}
-                {canMarkPaid(charge.status) && (
-                  <button
-                    type="button"
-                    disabled={actionLoading}
-                    onClick={() => void runAction("markPaid")}
-                    className="inline-flex items-center rounded-md border border-green-200 bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 transition-colors hover:bg-green-100 disabled:opacity-50"
-                  >
-                    סימון שולם
-                  </button>
-                )}
-                {canCancel(charge.status) && (
-                  <button
-                    type="button"
-                    disabled={actionLoading}
-                    onClick={() => void runAction("cancel")}
-                    className="inline-flex items-center rounded-md border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 disabled:opacity-50"
-                  >
-                    ביטול
-                  </button>
-                )}
-              </div>
+              <ChargeActionButtons
+                status={charge.status}
+                disabled={actionLoading}
+                size="sm"
+                onIssue={() => void runAction("issue")}
+                onMarkPaid={() => void runAction("markPaid")}
+                onCancel={() => void runAction("cancel")}
+              />
             </DrawerSection>
           )}
         </>
