@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, DollarSign, Package, CheckCircle2, Sparkles } from "lucide-react";
+import { CheckCircle2, Sparkles } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -17,65 +17,18 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import type { AttentionItem } from "../../../api/dashboard.api";
 import { AttentionSection } from "./AttentionSection";
+import { SECTIONS, type SectionKey } from "./attentionSections";
 import { cn } from "../../../utils/utils";
-
-/* ── Props ──────────────────────────────────────────────────────────────── */
-
 interface AttentionPanelProps {
   items: AttentionItem[];
 }
 
-/* ── Section registry ───────────────────────────────────────────────────── */
-
-const SECTIONS = [
-  {
-    key: "overdue",
-    title: "קלסרים באיחור",
-    icon: AlertTriangle,
-    types: ["overdue", "overdue_binder", "idle_binder"] as const,
-    severity: "critical" as const,
-    viewAllHref: "/binders",
-  },
-  {
-    key: "unpaid",
-    title: "חיובים שלא שולמו",
-    icon: DollarSign,
-    types: ["unpaid_charge", "unpaid_charges"] as const,
-    severity: "warning" as const,
-    viewAllHref: "/charges?status=issued",
-  },
-  {
-    key: "ready",
-    title: "מוכן לאיסוף",
-    icon: Package,
-    types: ["ready_for_pickup"] as const,
-    severity: "success" as const,
-    viewAllHref: "/binders?status=ready_for_pickup",
-  },
-] as const;
-
-type SectionKey = (typeof SECTIONS)[number]["key"];
-
-/* ── Sortable wrapper ───────────────────────────────────────────────────── */
-
-interface SortableCardProps {
-  id: SectionKey;
-  children: React.ReactNode;
-}
-
-const SortableCard = ({ id, children }: SortableCardProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id });
-
+const SortableCard = ({ id, children }: { id: SectionKey; children: React.ReactNode }) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
   return (
     <div
       ref={setNodeRef}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.5 : 1,
-        cursor: "grab",
-      }}
+      style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1, cursor: "grab" }}
       {...attributes}
       {...listeners}
     >
@@ -84,43 +37,28 @@ const SortableCard = ({ id, children }: SortableCardProps) => {
   );
 };
 
-/* ── Component ──────────────────────────────────────────────────────────── */
-
 export const AttentionPanel = ({ items }: AttentionPanelProps) => {
   const [order, setOrder] = useState<SectionKey[]>(SECTIONS.map((s) => s.key));
-
   const sensors = useSensors(useSensor(PointerSensor));
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (over && active.id !== over.id) {
-      setOrder((prev) => {
-        const oldIndex = prev.indexOf(active.id as SectionKey);
-        const newIndex = prev.indexOf(over.id as SectionKey);
-        return arrayMove(prev, oldIndex, newIndex);
-      });
+      setOrder((prev) => arrayMove(prev, prev.indexOf(active.id as SectionKey), prev.indexOf(over.id as SectionKey)));
     }
   };
 
-  const totalItems = items.length;
-  const hasUrgent = items.some((i) =>
-    (SECTIONS[0].types as readonly string[]).includes(i.item_type)
-  );
-  const allClear = totalItems === 0;
-
+  const hasUrgent = items.some((i) => SECTIONS[0].types.includes(i.item_type));
   const sectionCounts = SECTIONS.map((s) => ({
     ...s,
-    count: items.filter((i) => (s.types as readonly string[]).includes(i.item_type)).length,
+    count: items.filter((i) => s.types.includes(i.item_type)).length,
   }));
-
   const orderedSections = order.map((key) => SECTIONS.find((s) => s.key === key)!);
+  const totalItems = items.length;
+  const allClear = totalItems === 0;
 
   return (
     <div className="flex flex-col gap-0 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-elevation-2">
-
-      {/* ── Panel header ──────────────────────────────────────────────── */}
       <div className="relative overflow-hidden bg-gradient-to-l from-slate-800 to-slate-900 px-6 py-5">
-        {/* Subtle dot pattern */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.04]"
           style={{
@@ -149,7 +87,6 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
             </div>
           </div>
 
-          {/* Summary pills */}
           <div className="flex items-center gap-1.5">
             {sectionCounts.map((s) => {
               const pillColor = s.severity === "critical"
@@ -175,7 +112,6 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
         </div>
       </div>
 
-      {/* ── All-clear state ──────────────────────────────────────────────── */}
       {allClear ? (
         <div className="flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-white to-emerald-50/40 py-12">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100">
@@ -187,14 +123,11 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
           </div>
         </div>
       ) : (
-        /* ── Draggable three-column sections grid ─────────────────────── */
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={order} strategy={horizontalListSortingStrategy}>
             <div className="grid grid-cols-1 gap-4 bg-gray-50/70 p-4 md:grid-cols-3">
               {orderedSections.map((section, sectionIndex) => {
-                const sectionItems = items.filter((item) =>
-                  (section.types as readonly string[]).includes(item.item_type)
-                );
+                const sectionItems = items.filter((item) => section.types.includes(item.item_type));
                 return (
                   <SortableCard key={section.key} id={section.key}>
                     <AttentionSection

@@ -1,24 +1,12 @@
 import { Link } from "react-router-dom";
-import type { LucideIcon } from "lucide-react";
 import { ArrowLeft, Inbox } from "lucide-react";
 import type { AttentionItem } from "../../../api/dashboard.api";
 import { cn } from "../../../utils/utils";
-
-/* ── Types ──────────────────────────────────────────────────────────────── */
-
-type Severity = "critical" | "warning" | "success";
-
-interface SectionConfig {
-  key: string;
-  title: string;
-  icon: LucideIcon;
-  types: readonly string[];
-  severity: Severity;
-  viewAllHref: string;
-}
+import type { SectionConfig } from "./sectionVariants";
+import { attentionSeverityCfg } from "./sectionVariants";
 
 interface AttentionSectionProps {
-  section: SectionConfig;
+  section: SectionConfig & { types: readonly string[]; viewAllHref: string };
   items: AttentionItem[];
   sectionIndex: number;
 }
@@ -39,64 +27,10 @@ const getItemHref = (item: AttentionItem): string => {
   return fn ? fn(item) : (item.client_id ? `/clients/${item.client_id}` : "/binders");
 };
 
-/* ── Variant maps ───────────────────────────────────────────────────────── */
-
-const severityConfig: Record<Severity, {
-  headerGradient: string;
-  iconBg: string;
-  iconText: string;
-  badge: string;
-  itemDot: string;
-  itemHover: string;
-  itemBorder: string;
-  viewAll: string;
-  emptyIcon: string;
-  countPill: string;
-}> = {
-  critical: {
-    headerGradient: "from-red-600 to-rose-500",
-    iconBg: "bg-red-100",
-    iconText: "text-red-600",
-    badge: "bg-red-600 text-white",
-    itemDot: "bg-red-400",
-    itemHover: "hover:bg-red-50/70",
-    itemBorder: "border-red-100",
-    viewAll: "text-red-600 hover:text-red-800",
-    emptyIcon: "text-red-200",
-    countPill: "bg-white/20 text-white",
-  },
-  warning: {
-    headerGradient: "from-amber-500 to-orange-400",
-    iconBg: "bg-amber-100",
-    iconText: "text-amber-600",
-    badge: "bg-amber-500 text-white",
-    itemDot: "bg-amber-400",
-    itemHover: "hover:bg-amber-50/70",
-    itemBorder: "border-amber-100",
-    viewAll: "text-amber-600 hover:text-amber-800",
-    emptyIcon: "text-amber-200",
-    countPill: "bg-white/20 text-white",
-  },
-  success: {
-    headerGradient: "from-emerald-500 to-teal-400",
-    iconBg: "bg-emerald-100",
-    iconText: "text-emerald-600",
-    badge: "bg-emerald-500 text-white",
-    itemDot: "bg-emerald-400",
-    itemHover: "hover:bg-emerald-50/70",
-    itemBorder: "border-emerald-100",
-    viewAll: "text-emerald-600 hover:text-emerald-800",
-    emptyIcon: "text-emerald-200",
-    countPill: "bg-white/20 text-white",
-  },
-};
-
-/* ── Component ──────────────────────────────────────────────────────────── */
-
 export const AttentionSection = ({ section, items, sectionIndex }: AttentionSectionProps) => {
   const hasItems = items.length > 0;
   const IconComponent = section.icon;
-  const cfg = severityConfig[section.severity];
+  const cfg = attentionSeverityCfg[section.severity];
 
   return (
     <div

@@ -10,11 +10,9 @@ import type { ActionCommand } from "../../../lib/actions/types";
 import { useRole } from "../../../hooks/useRole";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import { QK } from "../../../lib/queryKeys";
-
 type DashboardData =
   | (DashboardOverviewResponse & { role_view: "advisor" })
   | (DashboardSummaryResponse & { role_view: "secretary" });
-
 type DashboardState = {
   status: "idle" | "loading" | "ok" | "error";
   message: string;
@@ -35,9 +33,7 @@ export const useDashboardPage = () => {
   const queryClient = useQueryClient();
   const { role, isAdvisor, isSecretary } = useRole();
   const [actionDenied, setActionDenied] = useState(false);
-
   const hasRole = Boolean(role);
-
   const dashboardQuery = useQuery<DashboardOverviewResponse | DashboardSummaryResponse>({
     enabled: hasRole,
     queryKey: isAdvisor ? QK.dashboard.overview : QK.dashboard.summary,
