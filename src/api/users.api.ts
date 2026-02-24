@@ -12,7 +12,6 @@ export interface UserResponse {
   phone: string | null;
   role: "advisor" | "secretary";
   is_active: boolean;
-  token_version: number;
   created_at: string;
   last_login_at: string | null;
 }
