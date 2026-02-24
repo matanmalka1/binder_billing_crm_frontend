@@ -1,5 +1,4 @@
-import type { ClientResponse, ListClientsParams } from "../../api/clients.api";
-import type { ActionCommand } from "../../lib/actions/types";
+import type { ListClientsParams } from "../../api/clients.api";
 
 export interface ClientsFilters extends Omit<ListClientsParams, "has_signals"> {
   has_signals: string;
@@ -9,12 +8,6 @@ export interface ClientsFilters extends Omit<ListClientsParams, "has_signals"> {
 export interface ClientsFiltersBarProps {
   filters: ClientsFilters;
   onFilterChange: (name: "has_signals" | "status" | "page_size" | "search", value: string) => void;
-}
-
-export interface ClientsTableCardProps {
-  clients: ClientResponse[];
-  activeActionKey: string | null;
-  onActionClick: (action: ActionCommand) => void;
 }
 
 export interface ClientBinderSummary {

@@ -5,6 +5,7 @@ import { FilterBar } from "../components/ui/FilterBar";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { DataTable } from "../components/ui/DataTable";
 import { AccessBanner } from "../components/ui/AccessBanner";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { Button } from "../components/ui/Button";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { ClientsFiltersBar } from "../features/clients/components/ClientsFiltersBar";
@@ -41,10 +42,7 @@ export const Clients: React.FC = () => {
     [activeActionKeyRef, onAction],
   );
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(Math.max(total, 1) / filters.page_size),
-  );
+  const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
 
   return (
     <div className="space-y-6">
@@ -53,11 +51,7 @@ export const Clients: React.FC = () => {
         description="רשימת כל הלקוחות במערכת"
         actions={
           can.createClients ? (
-            <Button
-              variant="primary"
-              onClick={() => setShowCreateModal(true)}
-              className="gap-2"
-            >
+            <Button variant="primary" onClick={() => setShowCreateModal(true)}>
               לקוח חדש
             </Button>
           ) : null
@@ -72,49 +66,34 @@ export const Clients: React.FC = () => {
       )}
 
       <FilterBar>
-        <ClientsFiltersBar
-          filters={{
-            search: filters.search,
-            has_signals: filters.has_signals,
-            status: filters.status,
-            page: filters.page,
-            page_size: filters.page_size,
-          }}
-          onFilterChange={handleFilterChange}
-        />
+        <ClientsFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </FilterBar>
 
-      <div className="space-y-4">
-        {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-            <p className="text-sm text-red-600">{error}</p>
-          </div>
-        )}
+      {error && <ErrorCard message={error} />}
 
-        <DataTable
-          data={clients}
-          columns={columns}
-          getRowKey={(client) => client.id}
-          onRowClick={(client) => navigate(`/clients/${client.id}`)}
-          isLoading={loading}
-          emptyMessage="אין לקוחות להצגה"
+      <DataTable
+        data={clients}
+        columns={columns}
+        getRowKey={(client) => client.id}
+        onRowClick={(client) => navigate(`/clients/${client.id}`)}
+        isLoading={loading}
+        emptyMessage="אין לקוחות להצגה"
+      />
+
+      {!loading && clients.length > 0 && (
+        <PaginationCard
+          page={filters.page}
+          totalPages={totalPages}
+          total={total}
+          onPageChange={setPage}
+          showPageSizeSelect
+          pageSize={filters.page_size}
+          pageSizeOptions={[20, 50, 100]}
+          onPageSizeChange={(pageSize) =>
+            handleFilterChange("page_size", String(pageSize))
+          }
         />
-
-        {!loading && clients.length > 0 && (
-          <PaginationCard
-            page={filters.page}
-            totalPages={totalPages}
-            total={total}
-            onPageChange={setPage}
-            showPageSizeSelect
-            pageSize={filters.page_size}
-            pageSizeOptions={[20, 50, 100]}
-            onPageSizeChange={(pageSize) =>
-              handleFilterChange("page_size", String(pageSize))
-            }
-          />
-        )}
-      </div>
+      )}
 
       {isAdvisor && (
         <CreateClientModal
@@ -131,10 +110,10 @@ export const Clients: React.FC = () => {
 
       <ConfirmDialog
         open={Boolean(pendingAction)}
-        title={pendingAction?.confirm?.title || "אישור פעולה"}
-        message={pendingAction?.confirm?.message || "האם להמשיך בביצוע הפעולה?"}
-        confirmLabel={pendingAction?.confirm?.confirmLabel || "אישור"}
-        cancelLabel={pendingAction?.confirm?.cancelLabel || "ביטול"}
+        title={pendingAction?.confirm?.title ?? "אישור פעולה"}
+        message={pendingAction?.confirm?.message ?? "האם להמשיך בביצוע הפעולה?"}
+        confirmLabel={pendingAction?.confirm?.confirmLabel ?? "אישור"}
+        cancelLabel={pendingAction?.confirm?.cancelLabel ?? "ביטול"}
         isLoading={activeActionKey === pendingAction?.uiKey}
         onConfirm={confirmPendingAction}
         onCancel={cancelPendingAction}

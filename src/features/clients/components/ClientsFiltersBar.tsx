@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
+import { useDebounce } from "use-debounce";
 import { Select } from "../../../components/ui/Select";
 import { Input } from "../../../components/ui/Input";
 import type { ClientsFiltersBarProps } from "../types";
@@ -9,27 +10,27 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
   onFilterChange,
 }) => {
   const [searchDraft, setSearchDraft] = useState(filters.search);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [debouncedSearch] = useDebounce(searchDraft, 350);
 
-  // Keep local draft in sync when URL changes externally (e.g. reset)
+  // Sync draft when URL resets externally
   useEffect(() => {
     setSearchDraft(filters.search);
   }, [filters.search]);
 
-  const handleSearchChange = (value: string) => {
-    setSearchDraft(value);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      onFilterChange("search", value);
-    }, 350);
-  };
+  // Propagate debounced value
+  useEffect(() => {
+    if (debouncedSearch !== filters.search) {
+      onFilterChange("search", debouncedSearch);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
 
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
       <Input
         label="חיפוש לקוח"
         value={searchDraft}
-        onChange={(e) => handleSearchChange(e.target.value)}
+        onChange={(e) => setSearchDraft(e.target.value)}
         placeholder="שם, ת.ז. / ח.פ."
         leftIcon={<Search className="h-4 w-4" />}
       />
@@ -37,7 +38,7 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
       <Select
         label="אותות תפעוליים"
         value={filters.has_signals}
-        onChange={(event) => onFilterChange("has_signals", event.target.value)}
+        onChange={(e) => onFilterChange("has_signals", e.target.value)}
       >
         <option value="">הכל</option>
         <option value="true">עם אותות</option>
@@ -47,7 +48,7 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
       <Select
         label="סטטוס לקוח"
         value={filters.status}
-        onChange={(event) => onFilterChange("status", event.target.value)}
+        onChange={(e) => onFilterChange("status", e.target.value)}
       >
         <option value="">הכל</option>
         <option value="active">פעיל</option>
@@ -58,7 +59,7 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
       <Select
         label="גודל עמוד"
         value={String(filters.page_size)}
-        onChange={(event) => onFilterChange("page_size", event.target.value)}
+        onChange={(e) => onFilterChange("page_size", e.target.value)}
       >
         <option value="20">20</option>
         <option value="50">50</option>
