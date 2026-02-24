@@ -6,7 +6,7 @@ import { staggerDelay } from "../../../utils/animation";
 import { cn } from "../../../utils/utils";
 import type { StageKey } from "../hooks/useAnnualReportsKanban";
 
-interface Props {
+interface AnnualReportCardProps {
   report: {
     id: number;
     client_id: number;
@@ -50,77 +50,79 @@ const DeadlinePill: React.FC<{ days: number | null }> = ({ days }) => {
   );
 };
 
-export const AnnualReportCard: React.FC<Props> = ({
-  report, stageKey, isTransitioning, canMoveBack, canMoveForward, onTransition, onOpenDetail, animationIndex,
+export const AnnualReportCard: React.FC<AnnualReportCardProps> = ({
+  report,
+  stageKey,
+  isTransitioning,
+  canMoveBack,
+  canMoveForward,
+  onTransition,
+  onOpenDetail,
+  animationIndex,
 }) => {
   return (
-    <>
-      <Card
-        variant="elevated"
-        className="transition-all duration-200 animate-scale-in hover:shadow-md"
-        style={{ animationDelay: staggerDelay(animationIndex) }}
-      >
-        {/* Client name + year badge */}
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0">
-            <h4 className="truncate text-sm font-semibold text-gray-900 leading-tight">
-              {report.client_name}
-            </h4>
-            <DeadlinePill days={report.days_until_due} />
-          </div>
-          <Badge variant="info" className="shrink-0 font-mono text-xs">
-            {report.tax_year}
-          </Badge>
+    <Card
+      variant="elevated"
+      className="transition-all duration-200 animate-scale-in hover:shadow-md"
+      style={{ animationDelay: staggerDelay(animationIndex) }}
+    >
+      {/* Client name + year badge */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <h4 className="truncate text-sm font-semibold text-gray-900 leading-tight">
+            {report.client_name}
+          </h4>
+          <DeadlinePill days={report.days_until_due} />
         </div>
+        <Badge variant="info" className="shrink-0 font-mono text-xs">
+          {report.tax_year}
+        </Badge>
+      </div>
 
-        {/* Action row */}
-        <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-2">
-          {/* Back arrow */}
-          <button
-            type="button"
-            onClick={() => onTransition(report.id, stageKey, "back")}
-            disabled={!canMoveBack || isTransitioning}
-            aria-label="שלב קודם"
-            className={cn(
-              "rounded-lg p-1.5 transition-colors",
-              canMoveBack
-                ? "text-gray-400 hover:bg-gray-100 hover:text-gray-700"
-                : "invisible pointer-events-none"
-            )}
-          >
-            <ArrowRight className="h-4 w-4" />
-          </button>
+      {/* Action row */}
+      <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-2">
+        <button
+          type="button"
+          onClick={() => onTransition(report.id, stageKey, "back")}
+          disabled={!canMoveBack || isTransitioning}
+          aria-label="שלב קודם"
+          className={cn(
+            "rounded-lg p-1.5 transition-colors",
+            canMoveBack
+              ? "text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+              : "invisible pointer-events-none",
+          )}
+        >
+          <ArrowRight className="h-4 w-4" />
+        </button>
 
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => onOpenDetail(report.id)}
-            className="gap-1 text-xs px-2"
-          >
-            <Info className="h-3.5 w-3.5" />
-            פרטים
-          </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => onOpenDetail(report.id)}
+          className="gap-1 text-xs px-2"
+        >
+          <Info className="h-3.5 w-3.5" />
+          פרטים
+        </Button>
 
-          {/* Forward arrow */}
-          <button
-            type="button"
-            onClick={() => onTransition(report.id, stageKey, "forward")}
-            disabled={!canMoveForward || isTransitioning}
-            aria-label="שלב הבא"
-            className={cn(
-              "rounded-lg p-1.5 transition-colors",
-              canMoveForward
-                ? "text-primary-500 hover:bg-primary-50 hover:text-primary-700"
-                : "invisible pointer-events-none",
-              isTransitioning && "animate-pulse"
-            )}
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-        </div>
-      </Card>
-
-    </>
+        <button
+          type="button"
+          onClick={() => onTransition(report.id, stageKey, "forward")}
+          disabled={!canMoveForward || isTransitioning}
+          aria-label="שלב הבא"
+          className={cn(
+            "rounded-lg p-1.5 transition-colors",
+            canMoveForward
+              ? "text-primary-500 hover:bg-primary-50 hover:text-primary-700"
+              : "invisible pointer-events-none",
+            isTransitioning && "animate-pulse",
+          )}
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+      </div>
+    </Card>
   );
 };

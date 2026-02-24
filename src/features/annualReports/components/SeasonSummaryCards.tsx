@@ -2,11 +2,11 @@ import { FileText, CheckCircle2, AlertTriangle, Clock, Users, TrendingUp } from 
 import { StatsCard } from "../../../components/ui/StatsCard";
 import type { SeasonSummary } from "../../../api/annualReports.api";
 
-interface Props {
+interface SeasonSummaryCardsProps {
   summary: SeasonSummary;
 }
 
-export const SeasonSummaryCards: React.FC<Props> = ({ summary }) => {
+export const SeasonSummaryCards: React.FC<SeasonSummaryCardsProps> = ({ summary }) => {
   const inProgress =
     summary.collecting_docs +
     summary.docs_complete +
@@ -17,7 +17,6 @@ export const SeasonSummaryCards: React.FC<Props> = ({ summary }) => {
 
   return (
     <div className="space-y-3">
-      {/* Top row: key totals */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatsCard
           title="סה״כ דוחות"
@@ -43,7 +42,6 @@ export const SeasonSummaryCards: React.FC<Props> = ({ summary }) => {
         />
       </div>
 
-      {/* Bottom row: breakdown */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatsCard
           title="בתהליך"

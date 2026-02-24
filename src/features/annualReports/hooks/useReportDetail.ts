@@ -11,30 +11,33 @@ import { toast } from "../../../utils/toast";
 
 export const useReportDetail = (reportId: number | null) => {
   const queryClient = useQueryClient();
-  const qk = reportId ? QK.tax.annualReports.detail(reportId) : null;
+  const enabled = reportId !== null && reportId > 0;
+  const qk = enabled ? QK.tax.annualReports.detail(reportId) : null;
 
   const reportQuery = useQuery<AnnualReportFull>({
-    enabled: reportId !== null && reportId > 0,
+    enabled,
     queryKey: qk ?? ["annual-reports", "detail", null],
-    queryFn: () => annualReportsApi.getReport(reportId!),
+    queryFn: () => annualReportsApi.getReport(reportId as number),
     retry: false,
   });
 
   const transitionMutation = useMutation({
-    mutationFn: (payload: StatusTransitionPayload) => annualReportsApi.transitionStatus(reportId!, payload),
+    mutationFn: (payload: StatusTransitionPayload) =>
+      annualReportsApi.transitionStatus(reportId as number, payload),
     onSuccess: (updated: AnnualReportFull) => {
       toast.success("סטטוס עודכן בהצלחה");
       if (qk) queryClient.setQueryData(qk, updated);
-      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון סטטוס"),
   });
 
   const completeScheduleMutation = useMutation({
-    mutationFn: (schedule: AnnualReportScheduleKey) => annualReportsApi.completeSchedule(reportId!, schedule),
+    mutationFn: (schedule: AnnualReportScheduleKey) =>
+      annualReportsApi.completeSchedule(reportId as number, schedule),
     onSuccess: () => {
       toast.success("נספח סומן כהושלם");
-      if (qk) queryClient.invalidateQueries({ queryKey: qk });
+      if (qk) void queryClient.invalidateQueries({ queryKey: qk });
     },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון נספח"),
   });

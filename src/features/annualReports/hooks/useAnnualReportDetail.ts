@@ -1,7 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../../api/client";
 import { ENDPOINTS } from "../../../api/endpoints";
-import { annualReportsApi, type AnnualReportFull as AnnualReportResponse, type StageKey } from "../../../api/annualReports.api";
+import {
+  annualReportsApi,
+  type AnnualReportFull as AnnualReportResponse,
+  type StageKey,
+} from "../../../api/annualReports.api";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { QK } from "../../../lib/queryKeys";
@@ -26,30 +30,36 @@ const fetchDetail = async (reportId: number): Promise<AnnualReportDetail> => {
   };
 };
 
-const updateDetail = async (reportId: number, payload: Partial<AnnualReportDetail>): Promise<AnnualReportDetail> => {
-  const response = await api.patch<AnnualReportDetail>(ENDPOINTS.annualReportDetails(reportId), payload);
+const patchDetail = async (
+  reportId: number,
+  payload: Partial<AnnualReportDetail>,
+): Promise<AnnualReportDetail> => {
+  const response = await api.patch<AnnualReportDetail>(
+    ENDPOINTS.annualReportDetails(reportId),
+    payload,
+  );
   return response.data;
 };
 
 export const useAnnualReportDetail = (reportId: number | null) => {
   const queryClient = useQueryClient();
-  const qk = reportId ? QK.tax.annualReports.detail(reportId) : null;
+  const enabled = reportId !== null && reportId > 0;
+  const qk = enabled ? QK.tax.annualReports.detail(reportId) : null;
 
   const detailQuery = useQuery<AnnualReportDetail>({
-    enabled: reportId !== null && reportId > 0,
+    enabled,
     queryKey: qk ?? ["annual-reports", "detail", null],
-    queryFn: () => fetchDetail(reportId!), // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    queryFn: () => fetchDetail(reportId as number),
     retry: false,
   });
 
   const updateMutation = useMutation({
-    mutationFn: (payload: Partial<AnnualReportDetail>) => updateDetail(reportId!, payload), // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    mutationFn: (payload: Partial<AnnualReportDetail>) =>
+      patchDetail(reportId as number, payload),
     onSuccess: (updated) => {
       toast.success("דוח עודכן בהצלחה");
-      if (qk) {
-        queryClient.setQueryData(qk, updated);
-      }
-      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      if (qk) queryClient.setQueryData(qk, updated);
+      void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון דוח"),
   });

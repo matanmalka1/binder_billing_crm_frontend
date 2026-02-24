@@ -24,6 +24,11 @@ import type { AnnualReportFull } from "../api/annualReports.api";
 
 type ActiveTab = "kanban" | "season";
 
+const TAB_LABELS: Record<ActiveTab, string> = {
+  kanban: "קנבן",
+  season: "עונה",
+};
+
 export const AnnualReportsKanban: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("kanban");
   const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
@@ -43,13 +48,14 @@ export const AnnualReportsKanban: React.FC = () => {
     totalPages,
   } = useAnnualReportsKanban();
 
-  const { summary, reports, isLoading: seasonLoading, error: seasonError } = useSeasonDashboard(taxYear);
+  const { summary, reports, isLoading: seasonLoading, error: seasonError } =
+    useSeasonDashboard(taxYear);
 
   const handleSeasonSelect = (report: AnnualReportFull) => setSelectedReportId(report.id);
 
   const tabBar = (
     <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 self-start">
-      {(["kanban", "season"] as ActiveTab[]).map((tab) => (
+      {(Object.keys(TAB_LABELS) as ActiveTab[]).map((tab) => (
         <button
           key={tab}
           type="button"
@@ -61,7 +67,7 @@ export const AnnualReportsKanban: React.FC = () => {
               : "text-gray-500 hover:text-gray-700",
           )}
         >
-          {tab === "kanban" ? "קנבן" : "עונה"}
+          {TAB_LABELS[tab]}
         </button>
       ))}
     </div>
@@ -80,12 +86,10 @@ export const AnnualReportsKanban: React.FC = () => {
     return (
       <div className="space-y-6">
         <PageHeader title="לוח דוחות שנתיים" />
-        <ErrorCard message={"שגיאה בטעינת לוח דוחות"} />
+        <ErrorCard message="שגיאה בטעינת לוח דוחות" />
       </div>
     );
   }
-
-  const maxCount = Math.max(0, ...stages.map((stage) => stage.reports.length));
 
   return (
     <div className="space-y-6">
@@ -118,7 +122,11 @@ export const AnnualReportsKanban: React.FC = () => {
                   <ChevronLeft className="h-4 w-4" />
                 </button>
               </div>
-              <Button variant="primary" onClick={() => setShowCreate(true)} className="gap-2">
+              <Button
+                variant="primary"
+                onClick={() => setShowCreate(true)}
+                className="gap-2"
+              >
                 <Plus className="h-4 w-4" />
                 דוח חדש
               </Button>
@@ -134,11 +142,11 @@ export const AnnualReportsKanban: React.FC = () => {
           <div className="overflow-x-auto pb-4">
             <div className="flex gap-2">
               {STAGE_ORDER.map((stageKey, stageIndex) => {
-                const stageData = stages.find((s) => s.stage === stageKey as StageKey);
+                const stageData = stages.find((s) => s.stage === (stageKey as StageKey));
                 return (
                   <AnnualReportColumn
                     key={stageKey}
-                    stage={stageData || { stage: stageKey as StageKey, reports: [] }}
+                    stage={stageData ?? { stage: stageKey as StageKey, reports: [] }}
                     stageIndex={stageIndex}
                     page={page}
                     pageSize={PAGE_SIZE}
@@ -157,7 +165,7 @@ export const AnnualReportsKanban: React.FC = () => {
             <PaginationCard
               page={page}
               totalPages={totalPages}
-              total={maxCount}
+              total={Math.max(0, ...stages.map((s) => s.reports.length))}
               onPageChange={setPage}
             />
           )}
@@ -200,10 +208,7 @@ export const AnnualReportsKanban: React.FC = () => {
         onClose={() => setSelectedReportId(null)}
       />
 
-      <CreateReportModal
-        open={showCreate}
-        onClose={() => setShowCreate(false)}
-      />
+      <CreateReportModal open={showCreate} onClose={() => setShowCreate(false)} />
     </div>
   );
 };

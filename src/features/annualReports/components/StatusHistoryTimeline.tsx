@@ -7,11 +7,11 @@ import type { StatusHistoryEntry } from "../../../api/annualReports.api";
 import { getStatusLabel, getStatusVariant } from "../../../api/annualReports.extended.utils";
 import { staggerDelay } from "../../../utils/animation";
 
-interface Props {
+interface StatusHistoryTimelineProps {
   history: StatusHistoryEntry[];
 }
 
-export const StatusHistoryTimeline: React.FC<Props> = ({ history }) => {
+export const StatusHistoryTimeline: React.FC<StatusHistoryTimelineProps> = ({ history }) => {
   if (history.length === 0) {
     return (
       <Card title="היסטוריית סטטוס">
@@ -35,22 +35,20 @@ export const StatusHistoryTimeline: React.FC<Props> = ({ history }) => {
             >
               <div className="absolute right-2.5 top-1.5 h-3 w-3 rounded-full bg-blue-500 ring-2 ring-white" />
               <div className="rounded-lg border border-gray-100 bg-white p-3 shadow-sm hover:shadow-md transition-shadow">
-                {/* Status change */}
                 <div className="mb-1 flex flex-wrap items-center gap-1.5 text-sm">
-                  {entry.from_status ? (
+                  {entry.from_status && (
                     <>
                       <Badge variant={getStatusVariant(entry.from_status)} className="text-xs">
                         {getStatusLabel(entry.from_status)}
                       </Badge>
                       <ArrowLeft className="h-3 w-3 text-gray-400" />
                     </>
-                  ) : null}
+                  )}
                   <Badge variant={getStatusVariant(entry.to_status)} className="text-xs">
                     {getStatusLabel(entry.to_status)}
                   </Badge>
                 </div>
 
-                {/* Meta */}
                 <div className="flex items-center justify-between gap-2 text-xs text-gray-500">
                   <span className="font-medium text-gray-700">{entry.changed_by_name}</span>
                   <div className="flex items-center gap-1">

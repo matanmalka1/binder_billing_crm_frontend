@@ -3,20 +3,11 @@ import type { SeasonSummary } from "../../../api/annualReports.api";
 import { SEASON_PROGRESS_STAGES } from "../../../api/annualReports.extended.utils";
 import { cn } from "../../../utils/utils";
 
-interface Props {
+interface SeasonProgressBarProps {
   summary: SeasonSummary;
 }
 
-const summaryKey: Record<string, keyof SeasonSummary> = {
-  not_started: "not_started",
-  collecting_docs: "collecting_docs",
-  in_preparation: "in_preparation",
-  pending_client: "pending_client",
-  submitted: "submitted",
-  closed: "closed",
-};
-
-export const SeasonProgressBar: React.FC<Props> = ({ summary }) => {
+export const SeasonProgressBar: React.FC<SeasonProgressBarProps> = ({ summary }) => {
   const total = summary.total || 1;
 
   return (
@@ -24,7 +15,7 @@ export const SeasonProgressBar: React.FC<Props> = ({ summary }) => {
       {/* Stacked progress bar */}
       <div className="mb-6 h-5 w-full overflow-hidden rounded-full bg-gray-100 flex">
         {SEASON_PROGRESS_STAGES.map((stage) => {
-          const count = (summary[summaryKey[stage.key] as keyof SeasonSummary] as number) ?? 0;
+          const count = (summary[stage.key as keyof SeasonSummary] as number) ?? 0;
           const pct = (count / total) * 100;
           if (pct === 0) return null;
           return (
@@ -41,7 +32,7 @@ export const SeasonProgressBar: React.FC<Props> = ({ summary }) => {
       {/* Legend */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {SEASON_PROGRESS_STAGES.map((stage) => {
-          const count = (summary[summaryKey[stage.key] as keyof SeasonSummary] as number) ?? 0;
+          const count = (summary[stage.key as keyof SeasonSummary] as number) ?? 0;
           const pct = total > 0 ? Math.round((count / total) * 100) : 0;
           return (
             <div key={stage.key} className="flex flex-col gap-1">
@@ -62,10 +53,14 @@ export const SeasonProgressBar: React.FC<Props> = ({ summary }) => {
       {(summary.assessment_issued > 0 || summary.objection_filed > 0) && (
         <div className="mt-4 flex gap-4 border-t border-gray-100 pt-4 text-sm text-gray-600">
           {summary.assessment_issued > 0 && (
-            <span>שומות שהוצאו: <strong>{summary.assessment_issued}</strong></span>
+            <span>
+              שומות שהוצאו: <strong>{summary.assessment_issued}</strong>
+            </span>
           )}
           {summary.objection_filed > 0 && (
-            <span>השגות: <strong className="text-red-600">{summary.objection_filed}</strong></span>
+            <span>
+              השגות: <strong className="text-red-600">{summary.objection_filed}</strong>
+            </span>
           )}
         </div>
       )}

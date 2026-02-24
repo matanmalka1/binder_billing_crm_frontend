@@ -7,14 +7,14 @@ import type { ScheduleEntry, AnnualReportScheduleKey } from "../../../api/annual
 import { getScheduleLabel } from "../../../api/annualReports.extended.utils";
 import { cn } from "../../../utils/utils";
 
-interface Props {
+interface ScheduleChecklistProps {
   schedules: ScheduleEntry[];
   onComplete: (schedule: AnnualReportScheduleKey) => void;
   isLoading: boolean;
   completingKey?: AnnualReportScheduleKey | null;
 }
 
-export const ScheduleChecklist: React.FC<Props> = ({
+export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
   schedules,
   onComplete,
   isLoading,
@@ -28,12 +28,13 @@ export const ScheduleChecklist: React.FC<Props> = ({
     );
   }
 
-  const allDone = schedules.every((s) => s.is_complete);
+  const completed = schedules.filter((s) => s.is_complete).length;
+  const allDone = completed === schedules.length;
 
   return (
     <Card
       title="נספחים נדרשים"
-      subtitle={allDone ? "✅ כל הנספחים הושלמו" : `${schedules.filter((s) => s.is_complete).length}/${schedules.length} הושלמו`}
+      subtitle={allDone ? "✅ כל הנספחים הושלמו" : `${completed}/${schedules.length} הושלמו`}
     >
       <ul className="space-y-2">
         {schedules.map((entry) => (
@@ -43,7 +44,7 @@ export const ScheduleChecklist: React.FC<Props> = ({
               "flex items-center justify-between rounded-lg border p-3 transition-colors",
               entry.is_complete
                 ? "border-green-200 bg-green-50"
-                : "border-gray-200 bg-white hover:bg-gray-50"
+                : "border-gray-200 bg-white hover:bg-gray-50",
             )}
           >
             <div className="flex items-center gap-3">
@@ -53,15 +54,19 @@ export const ScheduleChecklist: React.FC<Props> = ({
                 <Circle className="h-5 w-5 flex-shrink-0 text-gray-400" />
               )}
               <div>
-                <p className={cn("text-sm font-medium", entry.is_complete ? "text-green-800" : "text-gray-800")}>
+                <p
+                  className={cn(
+                    "text-sm font-medium",
+                    entry.is_complete ? "text-green-800" : "text-gray-800",
+                  )}
+                >
                   {getScheduleLabel(entry.schedule)}
                 </p>
-                {entry.notes && (
-                  <p className="text-xs text-gray-500">{entry.notes}</p>
-                )}
+                {entry.notes && <p className="text-xs text-gray-500">{entry.notes}</p>}
                 {entry.completed_at && (
                   <p className="text-xs text-green-600">
-                    הושלם: {format(parseISO(entry.completed_at), "d.M.yyyy", { locale: he })}
+                    הושלם:{" "}
+                    {format(parseISO(entry.completed_at), "d.M.yyyy", { locale: he })}
                   </p>
                 )}
               </div>

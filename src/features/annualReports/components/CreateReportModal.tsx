@@ -2,36 +2,39 @@ import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
+import { Textarea } from "../../../components/ui/Textarea";
 import { useCreateReport } from "../hooks/useCreateReport";
 
-interface Props {
+interface CreateReportModalProps {
   open: boolean;
   onClose: () => void;
 }
 
 const FLAG_FIELDS = [
-  { name: "has_rental_income" as const, label: "הכנסת שכירות (נספח ב)" },
+  { name: "has_rental_income" as const, label: 'הכנסת שכירות (נספח ב)' },
   { name: "has_capital_gains" as const, label: "רווחי הון (נספח בית)" },
-  { name: "has_foreign_income" as const, label: "הכנסות מחו\"ל (נספח ג)" },
+  { name: "has_foreign_income" as const, label: 'הכנסות מחו"ל (נספח ג)' },
   { name: "has_depreciation" as const, label: "פחת (נספח ד)" },
   { name: "has_exempt_rental" as const, label: "שכר דירה פטור (נספח ה)" },
 ];
 
-export const CreateReportModal: React.FC<Props> = ({ open, onClose }) => {
+export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onClose }) => {
   const { form, onSubmit, isSubmitting } = useCreateReport(onClose);
   const { register, formState: { errors } } = form;
+
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
 
   return (
     <Modal
       open={open}
       title="דוח שנתי חדש"
-      onClose={() => {
-        form.reset();
-        onClose();
-      }}
+      onClose={handleClose}
       footer={
         <div className="flex items-center justify-end gap-2">
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button type="button" variant="outline" onClick={handleClose}>
             ביטול
           </Button>
           <Button type="button" onClick={onSubmit} isLoading={isSubmitting}>
@@ -79,7 +82,6 @@ export const CreateReportModal: React.FC<Props> = ({ open, onClose }) => {
           <option value="custom">מותאם אישית</option>
         </Select>
 
-        {/* Income flags */}
         <div>
           <p className="mb-2 text-sm font-medium text-gray-700">נספחים נדרשים</p>
           <div className="space-y-2 rounded-lg border border-gray-200 p-3">
@@ -96,14 +98,7 @@ export const CreateReportModal: React.FC<Props> = ({ open, onClose }) => {
           </div>
         </div>
 
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">הערות</label>
-          <textarea
-            rows={2}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-            {...register("notes")}
-          />
-        </div>
+        <Textarea label="הערות" rows={2} {...register("notes")} />
       </form>
     </Modal>
   );

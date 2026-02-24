@@ -6,7 +6,7 @@ import type { KanbanStage, StageKey } from "../hooks/useAnnualReportsKanban";
 import { AnnualReportCard } from "./AnnualReportCard";
 import { cn } from "../../../utils/utils";
 
-interface Props {
+interface AnnualReportColumnProps {
   stage: KanbanStage;
   stageIndex: number;
   page: number;
@@ -18,13 +18,13 @@ interface Props {
 
 const STAGE_ACCENT: Record<StageKey, string> = {
   material_collection: "from-gray-400 to-gray-500",
-  in_progress:         "from-blue-400 to-blue-500",
-  final_review:        "from-purple-400 to-purple-500",
-  client_signature:    "from-orange-400 to-orange-500",
-  transmitted:         "from-green-400 to-green-500",
+  in_progress: "from-blue-400 to-blue-500",
+  final_review: "from-purple-400 to-purple-500",
+  client_signature: "from-orange-400 to-orange-500",
+  transmitted: "from-green-400 to-green-500",
 };
 
-export const AnnualReportColumn: React.FC<Props> = ({
+export const AnnualReportColumn: React.FC<AnnualReportColumnProps> = ({
   stage,
   stageIndex,
   page,
@@ -45,7 +45,9 @@ export const AnnualReportColumn: React.FC<Props> = ({
       <div className="mb-3 rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
         <div className={cn("h-1 w-full bg-gradient-to-r", accent)} />
         <div className="flex items-center justify-between px-3 py-2.5">
-          <h3 className="text-sm font-semibold text-gray-800">{getReportStageLabel(stage.stage)}</h3>
+          <h3 className="text-sm font-semibold text-gray-800">
+            {getReportStageLabel(stage.stage)}
+          </h3>
           <Badge className={cn("text-xs font-bold tabular-nums", getStageColor(stage.stage))}>
             {stage.reports.length}
           </Badge>

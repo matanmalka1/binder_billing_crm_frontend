@@ -52,21 +52,24 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
         { label: "מספר אסמכתא", value: report.ita_reference ?? "—" },
         {
           label: "שומה",
-          value: report.assessment_amount != null
-            ? `₪${report.assessment_amount.toLocaleString("he-IL")}`
-            : "—",
+          value:
+            report.assessment_amount != null
+              ? `₪${report.assessment_amount.toLocaleString("he-IL")}`
+              : "—",
         },
         {
           label: "החזר מס",
-          value: report.refund_due != null
-            ? `₪${report.refund_due.toLocaleString("he-IL")}`
-            : "—",
+          value:
+            report.refund_due != null
+              ? `₪${report.refund_due.toLocaleString("he-IL")}`
+              : "—",
         },
         {
           label: "תשלום נוסף",
-          value: report.tax_due != null
-            ? `₪${report.tax_due.toLocaleString("he-IL")}`
-            : "—",
+          value:
+            report.tax_due != null
+              ? `₪${report.tax_due.toLocaleString("he-IL")}`
+              : "—",
         },
         { label: "הערות", value: report.notes ?? "—", fullWidth: true },
       ]
@@ -82,7 +85,9 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
         <>
           <DrawerSection title="סטטוס">
             <div className="flex flex-wrap gap-2 py-2">
-              <Badge variant={getStatusVariant(report.status)}>{getStatusLabel(report.status)}</Badge>
+              <Badge variant={getStatusVariant(report.status)}>
+                {getStatusLabel(report.status)}
+              </Badge>
               <Badge variant="neutral">שנת מס {report.tax_year}</Badge>
               <Badge variant="info">{getClientTypeLabel(report.client_type)}</Badge>
               <Badge variant="neutral">{report.form_type}</Badge>
