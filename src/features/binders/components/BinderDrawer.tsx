@@ -13,6 +13,7 @@ import {
 import { formatDate, cn } from "../../../utils/utils";
 
 interface BinderDrawerProps {
+  open: boolean;
   binder: BinderResponse | null;
   onClose: () => void;
 }
@@ -30,7 +31,7 @@ const signalVariants: Record<string, "error" | "warning" | "info" | "neutral"> =
   idle_binder: "neutral",
 };
 
-export const BinderDrawer: React.FC<BinderDrawerProps> = ({ binder, onClose }) => {
+export const BinderDrawer: React.FC<BinderDrawerProps> = ({ open, binder, onClose }) => {
   const navigate = useNavigate();
 
   const handleOpenClient = () => {
@@ -41,7 +42,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({ binder, onClose }) =
 
   return (
     <DetailDrawer
-      open={binder !== null}
+      open={open}
       title={binder ? `קלסר ${binder.binder_number}` : ""}
       subtitle={binder?.client_name ?? (binder ? `לקוח #${binder.client_id}` : undefined)}
       onClose={onClose}

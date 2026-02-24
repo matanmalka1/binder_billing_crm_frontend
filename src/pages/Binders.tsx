@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { FilterBar } from "../components/ui/FilterBar";
 import { DataTable } from "../components/ui/DataTable";
@@ -11,7 +11,6 @@ import { BinderDrawer } from "../features/binders/components/BinderDrawer";
 import { ReceiveBinderModal } from "../features/binders/components/ReceiveBinderModal";
 import { useBindersPage } from "../features/binders/hooks/useBindersPage";
 import { useReceiveBinderModal } from "../features/binders/hooks/useReceiveBinderModal";
-import type { BinderResponse } from "../api/binders.types";
 
 export const Binders: React.FC = () => {
   const {
@@ -25,26 +24,18 @@ export const Binders: React.FC = () => {
     deepLinkBinderId,
     onAction,
     handleFilterChange,
+    handleSelectBinder,
+    handleCloseDrawer,
     loading,
     pendingAction,
   } = useBindersPage();
 
   const receiveModal = useReceiveBinderModal();
-  const [selectedBinder, setSelectedBinder] = useState<BinderResponse | null>(null);
-  const [hasHandledDeepLink, setHasHandledDeepLink] = useState(false);
 
-  useEffect(() => {
-    setHasHandledDeepLink(false);
-  }, [deepLinkBinderId]);
-
-  useEffect(() => {
-    if (!deepLinkBinderId || hasHandledDeepLink) return;
-    const matched = binders.find((b) => b.id === deepLinkBinderId);
-    if (matched) {
-      setSelectedBinder(matched);
-      setHasHandledDeepLink(true);
-    }
-  }, [deepLinkBinderId, binders, hasHandledDeepLink]);
+  const selectedBinder = useMemo(
+    () => binders.find((b) => b.id === deepLinkBinderId) ?? null,
+    [binders, deepLinkBinderId],
+  );
 
   const columns = useMemo(
     () => buildBindersColumns({ activeActionKeyRef, onAction }),
@@ -75,7 +66,7 @@ export const Binders: React.FC = () => {
         columns={columns}
         getRowKey={(binder) => binder.id}
         isLoading={loading}
-        onRowClick={setSelectedBinder}
+        onRowClick={handleSelectBinder}
         emptyMessage="אין קלסרים התואמים לסינון הנוכחי"
         emptyState={{
           title: "לא נמצאו קלסרים",
@@ -107,8 +98,9 @@ export const Binders: React.FC = () => {
       />
 
       <BinderDrawer
+        open={deepLinkBinderId !== undefined}
         binder={selectedBinder}
-        onClose={() => setSelectedBinder(null)}
+        onClose={handleCloseDrawer}
       />
     </div>
   );

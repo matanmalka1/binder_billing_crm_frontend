@@ -9,7 +9,6 @@ Its purpose is to:
 
 - Preserve long-term architectural integrity
 - Prevent scope creep and hidden regressions
-- Ensure consistency across sprints and contributors
 - Serve as the highest-level frontend engineering contract
 
 If a conflict arises between this document and other documentation, **this document prevails** unless explicitly amended.

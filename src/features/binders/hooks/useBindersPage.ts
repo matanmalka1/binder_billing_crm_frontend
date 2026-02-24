@@ -55,6 +55,18 @@ export const useBindersPage = () => {
     setSearchParams(next);
   };
 
+  const handleSelectBinder = (binder: { id: number }) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("binder_id", String(binder.id));
+    setSearchParams(next, { replace: true });
+  };
+
+  const handleCloseDrawer = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete("binder_id");
+    setSearchParams(next, { replace: true });
+  };
+
   return {
     activeActionKey,
     activeActionKeyRef,
@@ -66,6 +78,8 @@ export const useBindersPage = () => {
     filters,
     onAction,
     handleFilterChange,
+    handleSelectBinder,
+    handleCloseDrawer,
     loading: bindersQuery.isPending,
     pendingAction,
     cancelPendingAction,
