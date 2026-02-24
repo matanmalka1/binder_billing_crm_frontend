@@ -2,14 +2,9 @@ import { Select } from "../../../components/ui/Select";
 import { Button } from "../../../components/ui/Button";
 import { RotateCcw } from "lucide-react";
 import { WORK_STATE_OPTIONS } from "../../../constants/filterOptions.constants";
+import { BINDER_STATUS_OPTIONS } from "../types";
 import type { BindersFiltersBarProps } from "../types";
 import { cn } from "../../../utils/utils";
-
-const BINDER_STATUS_OPTIONS = [
-  { value: "", label: "כל הסטטוסים" },
-  { value: "in_office", label: "במשרד" },
-  { value: "ready_for_pickup", label: "מוכן לאיסוף" },
-];
 
 export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBarProps) => {
   const activeCount = [filters.status, filters.work_state, filters.client_id].filter(Boolean).length;
@@ -28,12 +23,9 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
           label="סטטוס"
           value={filters.status ?? ""}
           onChange={(e) => onFilterChange("status", e.target.value)}
+          options={[...BINDER_STATUS_OPTIONS]}
           className={cn(filters.status && "border-blue-400 ring-1 ring-blue-200")}
-        >
-          {BINDER_STATUS_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
-          ))}
-        </Select>
+        />
         <Select
           label="מצב עבודה"
           value={filters.work_state}

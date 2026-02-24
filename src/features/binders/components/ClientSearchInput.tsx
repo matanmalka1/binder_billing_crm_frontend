@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Input } from "../../../components/ui/Input";
 import { searchApi } from "../../../api/search.api";
 import type { SearchResult } from "../../../api/search.api";
 
@@ -63,26 +64,20 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
   };
 
   return (
-    <div ref={containerRef} className="relative w-full space-y-1">
-      <label className="block text-sm font-medium text-gray-700">לקוח</label>
-      <div className="relative">
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => handleChange(e.target.value)}
-          placeholder="חפש לפי שם, ת.ז. / ח.פ..."
-          autoComplete="off"
-          className={`w-full rounded-lg border px-3 py-3 shadow-sm transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500 sm:text-sm bg-white ${
-            error ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {loading && (
-          <span className="absolute left-3 top-1/2 -translate-y-1/2">
+    <div ref={containerRef} className="relative w-full">
+      <Input
+        label="לקוח"
+        value={value}
+        onChange={(e) => handleChange(e.target.value)}
+        placeholder="חפש לפי שם, ת.ז. / ח.פ..."
+        autoComplete="off"
+        error={error}
+        rightIcon={
+          loading ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
-          </span>
-        )}
-      </div>
-      {error && <p className="text-xs text-red-600">{error}</p>}
+          ) : undefined
+        }
+      />
 
       {open && results.length > 0 && (
         <ul className="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg">

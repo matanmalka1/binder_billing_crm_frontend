@@ -5,18 +5,7 @@ import { Select } from "../../../components/ui/Select";
 import { ClientSearchInput } from "./ClientSearchInput";
 import type { UseFormReturn } from "react-hook-form";
 import type { ReceiveBinderFormValues } from "../types";
-
-const BINDER_TYPE_OPTIONS = [
-  { value: "", label: "בחר סוג חומר...", disabled: true },
-  { value: "vat", label: 'מע"מ' },
-  { value: "income_tax", label: "מס הכנסה" },
-  { value: "national_insurance", label: "ביטוח לאומי" },
-  { value: "capital_declaration", label: "הצהרת הון" },
-  { value: "annual_report", label: "דוח שנתי" },
-  { value: "salary", label: "שכר" },
-  { value: "bookkeeping", label: "הנהלת חשבונות" },
-  { value: "other", label: "אחר" },
-];
+import { BINDER_TYPE_OPTIONS } from "../types";
 
 interface ReceiveBinderModalProps {
   open: boolean;
@@ -87,7 +76,7 @@ export const ReceiveBinderModal: React.FC<ReceiveBinderModalProps> = ({
         <Select
           label="סוג חומר"
           error={errors.binder_type?.message}
-          options={BINDER_TYPE_OPTIONS}
+          options={[...BINDER_TYPE_OPTIONS]}
           {...register("binder_type", { required: "נא לבחור סוג חומר" })}
         />
 

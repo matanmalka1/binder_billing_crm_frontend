@@ -13,25 +13,13 @@ import {
 } from "../../../utils/enums";
 import { formatDate, cn } from "../../../utils/utils";
 import { type RefObject } from "react";
+import { BINDER_SIGNAL_VARIANTS, BINDER_WORK_STATE_VARIANTS } from "../types";
 
 /* ─── Variant maps ───────────────────────────────────────────── */
 
 const binderStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   in_office: "info",
   ready_for_pickup: "success",
-};
-
-const workStateVariants: Record<string, "neutral" | "info" | "success"> = {
-  waiting_for_work: "neutral",
-  in_progress: "info",
-  completed: "success",
-};
-
-const signalVariants: Record<string, "error" | "warning" | "info" | "neutral"> = {
-  missing_permanent_documents: "warning",
-  unpaid_charges: "warning",
-  ready_for_pickup: "info",
-  idle_binder: "neutral",
 };
 
 /* ─── Days-in-office cell ────────────────────────────────────── */
@@ -63,7 +51,7 @@ const SignalsCell: React.FC<{ signals: string[] | null | undefined }> = ({ signa
   return (
     <div className="flex flex-wrap gap-1">
       {signals.map((signal) => (
-        <Badge key={signal} variant={signalVariants[signal] ?? "neutral"}>
+        <Badge key={signal} variant={BINDER_SIGNAL_VARIANTS[signal] ?? "neutral"}>
           {getSignalLabel(signal)}
         </Badge>
       ))}
@@ -143,7 +131,7 @@ export const buildBindersColumns = ({
     key: "work_state",
     header: "מצב עבודה",
     render: (binder) => (
-      <Badge variant={workStateVariants[binder.work_state ?? ""] ?? "neutral"}>
+      <Badge variant={BINDER_WORK_STATE_VARIANTS[binder.work_state ?? ""] ?? "neutral"}>
         {getWorkStateLabel(binder.work_state ?? "")}
       </Badge>
     ),

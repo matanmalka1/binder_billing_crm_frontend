@@ -9,6 +9,18 @@ import { useAuthStore } from "../../../store/auth.store";
 import { QK } from "../../../lib/queryKeys";
 import type { ReceiveBinderFormValues } from "../types";
 
+const EMPTY_FORM_VALUES: ReceiveBinderFormValues = {
+  client_id: undefined as unknown as number,
+  binder_type: "",
+  binder_number: "",
+  received_at: "",
+};
+
+const getDefaultValues = (): ReceiveBinderFormValues => ({
+  ...EMPTY_FORM_VALUES,
+  received_at: format(new Date(), "yyyy-MM-dd"),
+});
+
 export const useReceiveBinderModal = () => {
   const [open, setOpen] = useState(false);
   const [clientQuery, setClientQuery] = useState("");
@@ -17,13 +29,14 @@ export const useReceiveBinderModal = () => {
   const userId = useAuthStore((s) => s.user?.id);
 
   const form = useForm<ReceiveBinderFormValues>({
-    defaultValues: {
-      client_id: undefined,
-      binder_type: "",
-      binder_number: "",
-      received_at: format(new Date(), "yyyy-MM-dd"),
-    },
+    defaultValues: getDefaultValues(),
   });
+
+  const resetState = () => {
+    form.reset(getDefaultValues());
+    setClientQuery("");
+    setSelectedClient(null);
+  };
 
   const mutation = useMutation({
     mutationFn: (values: ReceiveBinderFormValues) =>
@@ -38,27 +51,16 @@ export const useReceiveBinderModal = () => {
       toast.success("החומר נקלט בהצלחה");
       await queryClient.invalidateQueries({ queryKey: QK.binders.all });
       setOpen(false);
-      resetForm();
+      resetState();
     },
     onError: (err) => {
       showErrorToast(err, "שגיאה בקליטת חומר");
     },
   });
 
-  const resetForm = () => {
-    form.reset({
-      client_id: undefined,
-      binder_type: "",
-      binder_number: "",
-      received_at: format(new Date(), "yyyy-MM-dd"),
-    });
-    setClientQuery("");
-    setSelectedClient(null);
-  };
-
   const handleClientSelect = (client: { id: number; name: string; id_number: string }) => {
     setSelectedClient({ id: client.id, name: client.name });
-    setClientQuery(`${client.name}`);
+    setClientQuery(client.name);
     form.setValue("client_id", client.id, { shouldValidate: true });
   };
 
@@ -71,13 +73,13 @@ export const useReceiveBinderModal = () => {
   };
 
   const handleOpen = () => {
-    resetForm();
+    resetState();
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    resetForm();
+    resetState();
   };
 
   const handleSubmit = form.handleSubmit((values) => mutation.mutate(values));

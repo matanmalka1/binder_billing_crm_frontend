@@ -11,25 +11,13 @@ import {
   getBinderTypeLabel,
 } from "../../../utils/enums";
 import { formatDate, cn } from "../../../utils/utils";
+import { BINDER_WORK_STATE_VARIANTS, BINDER_SIGNAL_VARIANTS } from "../types";
 
 interface BinderDrawerProps {
   open: boolean;
   binder: BinderResponse | null;
   onClose: () => void;
 }
-
-const workStateVariants: Record<string, "neutral" | "info" | "success"> = {
-  waiting_for_work: "neutral",
-  in_progress: "info",
-  completed: "success",
-};
-
-const signalVariants: Record<string, "error" | "warning" | "info" | "neutral"> = {
-  missing_permanent_documents: "warning",
-  unpaid_charges: "warning",
-  ready_for_pickup: "info",
-  idle_binder: "neutral",
-};
 
 export const BinderDrawer: React.FC<BinderDrawerProps> = ({ open, binder, onClose }) => {
   const navigate = useNavigate();
@@ -78,7 +66,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({ open, binder, onClos
             <DrawerField
               label="מצב"
               value={
-                <Badge variant={workStateVariants[binder.work_state ?? ""] ?? "neutral"}>
+                <Badge variant={BINDER_WORK_STATE_VARIANTS[binder.work_state ?? ""] ?? "neutral"}>
                   {getWorkStateLabel(binder.work_state ?? "")}
                 </Badge>
               }
@@ -110,7 +98,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({ open, binder, onClos
             <DrawerSection title="אותות">
               <div className="flex flex-wrap gap-1.5 py-3">
                 {binder.signals.map((signal) => (
-                  <Badge key={signal} variant={signalVariants[signal] ?? "neutral"}>
+                  <Badge key={signal} variant={BINDER_SIGNAL_VARIANTS[signal] ?? "neutral"}>
                     {getSignalLabel(signal)}
                   </Badge>
                 ))}
