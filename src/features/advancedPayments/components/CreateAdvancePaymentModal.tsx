@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/Modal";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
+import { Select } from "../../../components/ui/Select";
+import {
+  createAdvancePaymentSchema,
+  type CreateAdvancePaymentFormValues,
+} from "../schemas";
 
-interface Props {
+interface CreateAdvancePaymentModalProps {
   open: boolean;
   clientId: number;
   year: number;
@@ -15,12 +21,33 @@ interface Props {
     due_date: string;
     expected_amount?: number | null;
     paid_amount?: number | null;
-    tax_deadline_id?: number | null;
   }) => Promise<unknown>;
   isCreating: boolean;
 }
 
-export const CreateAdvancePaymentModal: React.FC<Props> = ({
+const MONTH_OPTIONS = [
+  { value: "1", label: "ינואר" },
+  { value: "2", label: "פברואר" },
+  { value: "3", label: "מרץ" },
+  { value: "4", label: "אפריל" },
+  { value: "5", label: "מאי" },
+  { value: "6", label: "יוני" },
+  { value: "7", label: "יולי" },
+  { value: "8", label: "אוגוסט" },
+  { value: "9", label: "ספטמבר" },
+  { value: "10", label: "אוקטובר" },
+  { value: "11", label: "נובמבר" },
+  { value: "12", label: "דצמבר" },
+];
+
+const DEFAULT_VALUES: CreateAdvancePaymentFormValues = {
+  month: 1,
+  due_date: "",
+  expected_amount: null,
+  paid_amount: null,
+};
+
+export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps> = ({
   open,
   clientId,
   year,
@@ -28,80 +55,104 @@ export const CreateAdvancePaymentModal: React.FC<Props> = ({
   onCreate,
   isCreating,
 }) => {
-  const [month, setMonth] = useState<number | "">("");
-  const [dueDate, setDueDate] = useState("");
-  const [expectedAmount, setExpectedAmount] = useState<number | "">("");
-  const [paidAmount, setPaidAmount] = useState<number | "">("");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<CreateAdvancePaymentFormValues>({
+    resolver: zodResolver(createAdvancePaymentSchema),
+    defaultValues: DEFAULT_VALUES,
+  });
 
-  const reset = () => {
-    setMonth("");
-    setDueDate("");
-    setExpectedAmount("");
-    setPaidAmount("");
+  const handleClose = () => {
+    reset(DEFAULT_VALUES);
+    onClose();
   };
 
-  const handleCreate = async () => {
-    if (!month || month < 1 || month > 12) return;
-    if (!dueDate) return;
+  const onSubmit = handleSubmit(async (data) => {
     await onCreate({
       client_id: clientId,
       year,
-      month: Number(month),
-      due_date: dueDate,
-      expected_amount: expectedAmount === "" ? null : Number(expectedAmount),
-      paid_amount: paidAmount === "" ? null : Number(paidAmount),
+      month: data.month,
+      due_date: data.due_date,
+      expected_amount: data.expected_amount,
+      paid_amount: data.paid_amount,
     });
-    reset();
+    reset(DEFAULT_VALUES);
     onClose();
-  };
+  });
 
   return (
     <Modal
       open={open}
       title="מקדמה חדשה"
-      onClose={() => {
-        reset();
-        onClose();
-      }}
+      onClose={handleClose}
       footer={
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={onClose}>ביטול</Button>
-          <Button variant="primary" isLoading={isCreating} onClick={handleCreate}>
+          <Button variant="outline" onClick={handleClose} disabled={isCreating}>
+            ביטול
+          </Button>
+          <Button variant="primary" isLoading={isCreating} onClick={onSubmit}>
             יצירה
           </Button>
         </div>
       }
     >
-      <div className="space-y-4">
-        <Input
-          label="חודש (1-12)"
-          type="number"
-          min={1}
-          max={12}
-          value={month}
-          onChange={(e) => setMonth(e.target.value === "" ? "" : Number(e.target.value))}
+      <form onSubmit={onSubmit} className="space-y-4">
+        <Controller
+          name="month"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="חודש"
+              value={String(field.value)}
+              onChange={(e) => field.onChange(Number(e.target.value))}
+              options={MONTH_OPTIONS}
+              error={errors.month?.message}
+            />
+          )}
         />
         <Input
           label="תאריך יעד"
           type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
+          {...register("due_date")}
+          error={errors.due_date?.message}
         />
-        <Input
-          label="סכום צפוי"
-          type="number"
-          min={0}
-          value={expectedAmount}
-          onChange={(e) => setExpectedAmount(e.target.value === "" ? "" : Number(e.target.value))}
+        <Controller
+          name="expected_amount"
+          control={control}
+          render={({ field }) => (
+            <Input
+              label="סכום צפוי"
+              type="number"
+              min={0}
+              value={field.value ?? ""}
+              onChange={(e) =>
+                field.onChange(e.target.value === "" ? null : Number(e.target.value))
+              }
+              error={errors.expected_amount?.message}
+            />
+          )}
         />
-        <Input
-          label="סכום ששולם (אופציונלי)"
-          type="number"
-          min={0}
-          value={paidAmount}
-          onChange={(e) => setPaidAmount(e.target.value === "" ? "" : Number(e.target.value))}
+        <Controller
+          name="paid_amount"
+          control={control}
+          render={({ field }) => (
+            <Input
+              label="סכום ששולם (אופציונלי)"
+              type="number"
+              min={0}
+              value={field.value ?? ""}
+              onChange={(e) =>
+                field.onChange(e.target.value === "" ? null : Number(e.target.value))
+              }
+              error={errors.paid_amount?.message}
+            />
+          )}
         />
-      </div>
+      </form>
     </Modal>
   );
 };

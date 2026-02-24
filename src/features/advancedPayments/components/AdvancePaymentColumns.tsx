@@ -1,47 +1,22 @@
 import type { Column } from "../../../components/ui/DataTable";
-import type {
-  AdvancePaymentRow,
-  AdvancePaymentStatus,
-} from "../../../api/advancePayments.api";
+import type { AdvancePaymentRow, AdvancePaymentStatus } from "../../../api/advancePayments.api";
 import { Badge } from "../../../components/ui/Badge";
 import { formatDate } from "../../../utils/utils";
+import { fmtCurrency, MONTH_NAMES } from "../utils";
 
-const monthNames = [
-  "ינואר",
-  "פברואר",
-  "מרץ",
-  "אפריל",
-  "מאי",
-  "יוני",
-  "יולי",
-  "אוגוסט",
-  "ספטמבר",
-  "אוקטובר",
-  "נובמבר",
-  "דצמבר",
-];
-
-const statusMap: Record<
-  AdvancePaymentStatus,
-  "success" | "warning" | "error" | "neutral" | "info"
-> = {
+const STATUS_VARIANT: Record<AdvancePaymentStatus, "success" | "warning" | "error" | "neutral"> = {
   paid: "success",
   partial: "warning",
   overdue: "error",
   pending: "neutral",
 };
 
-const statusLabels: Record<AdvancePaymentStatus, string> = {
+const STATUS_LABEL: Record<AdvancePaymentStatus, string> = {
   paid: "שולם",
   partial: "חלקי",
   overdue: "באיחור",
   pending: "ממתין",
 };
-
-const fmt = (n: number | null) =>
-  n != null
-    ? `₪${n.toLocaleString("he-IL", { minimumFractionDigits: 0 })}`
-    : "—";
 
 export const buildAdvancePaymentColumns = (): Column<AdvancePaymentRow>[] => [
   {
@@ -49,7 +24,7 @@ export const buildAdvancePaymentColumns = (): Column<AdvancePaymentRow>[] => [
     header: "חודש",
     render: (row) => (
       <span className="text-sm font-semibold text-gray-900">
-        {monthNames[row.month - 1] ?? row.month}
+        {MONTH_NAMES[row.month - 1] ?? row.month}
       </span>
     ),
   },
@@ -65,7 +40,7 @@ export const buildAdvancePaymentColumns = (): Column<AdvancePaymentRow>[] => [
     header: "סכום צפוי",
     render: (row) => (
       <span className="font-mono text-sm font-medium text-gray-700 tabular-nums">
-        {fmt(row.expected_amount)}
+        {fmtCurrency(row.expected_amount)}
       </span>
     ),
   },
@@ -74,7 +49,7 @@ export const buildAdvancePaymentColumns = (): Column<AdvancePaymentRow>[] => [
     header: "שולם",
     render: (row) => (
       <span className="font-mono text-sm font-semibold text-green-700 tabular-nums">
-        {fmt(row.paid_amount)}
+        {fmtCurrency(row.paid_amount)}
       </span>
     ),
   },
@@ -82,8 +57,8 @@ export const buildAdvancePaymentColumns = (): Column<AdvancePaymentRow>[] => [
     key: "status",
     header: "סטטוס",
     render: (row) => (
-      <Badge variant={statusMap[row.status] ?? "neutral"}>
-        {statusLabels[row.status] ?? row.status}
+      <Badge variant={STATUS_VARIANT[row.status] ?? "neutral"}>
+        {STATUS_LABEL[row.status] ?? row.status}
       </Badge>
     ),
   },

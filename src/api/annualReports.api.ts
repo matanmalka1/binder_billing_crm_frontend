@@ -58,7 +58,6 @@ export interface AnnualReportFull {
   created_by: number;
   schedules?: ScheduleEntry[];
   status_history?: StatusHistoryEntry[];
-  // detail sub-entity
   tax_refund_amount?: number | null;
   tax_due_amount?: number | null;
   client_approved_at?: string | null;
