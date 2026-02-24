@@ -4,6 +4,7 @@ import { FilterBar } from "../components/ui/FilterBar";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { DataTable } from "../components/ui/DataTable";
 import { AccessBanner } from "../components/ui/AccessBanner";
+import { ErrorCard } from "../components/ui/ErrorCard";
 import { Button } from "../components/ui/Button";
 import { useRole } from "../hooks/useRole";
 import { useAuthStore } from "../store/auth.store";
@@ -89,6 +90,7 @@ export const Users: React.FC = () => {
       <PageHeader
         title="ניהול משתמשים"
         description="ניהול חשבונות משתמשים, תפקידים והרשאות"
+        variant="gradient"
         actions={
           <div className="flex items-center gap-2">
             <Button
@@ -112,11 +114,7 @@ export const Users: React.FC = () => {
       </FilterBar>
 
       <div className="space-y-4">
-        {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-            <p className="text-sm text-red-600">{error}</p>
-          </div>
-        )}
+        {error && <ErrorCard message={error} />}
 
         <DataTable
           data={users}

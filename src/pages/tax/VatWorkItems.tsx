@@ -42,6 +42,7 @@ export const VatWorkItems: React.FC = () => {
       <PageHeader
         title='דוחות מע"מ'
         description='ניהול תיקי מע"מ חודשיים — הקלדה, בדיקה והגשה'
+        variant="gradient"
       />
 
       {isAdvisor ? (
