@@ -1,21 +1,20 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { correspondenceApi } from "../../../api/correspondence.api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
-import type { CorrespondenceFormValues } from "../components/correspondenceSchema";
+import type { CorrespondenceFormValues } from "../schemas";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
-const DEFAULT_PAGE_SIZE = 50;
+const PAGE_SIZE = 50;
 
 export const useCorrespondence = (clientId: number) => {
   const queryClient = useQueryClient();
-  const qk = [...QK.correspondence.forClient(clientId), { page: 1, page_size: DEFAULT_PAGE_SIZE }];
+  const queryKey = [...QK.correspondence.forClient(clientId), { page: 1, page_size: PAGE_SIZE }];
 
   const listQuery = useQuery({
     enabled: clientId > 0,
-    queryKey: qk,
-    queryFn: () =>
-      correspondenceApi.list(clientId, { page: 1, page_size: DEFAULT_PAGE_SIZE }),
+    queryKey,
+    queryFn: () => correspondenceApi.list(clientId, { page: 1, page_size: PAGE_SIZE }),
     retry: false,
   });
 
@@ -24,11 +23,10 @@ export const useCorrespondence = (clientId: number) => {
       correspondenceApi.create(clientId, {
         ...values,
         notes: values.notes || null,
-        occurred_at: values.occurred_at,
       }),
     onSuccess: () => {
       toast.success("רשומת התכתבות נוספה בהצלחה");
-      queryClient.invalidateQueries({ queryKey: qk });
+      void queryClient.invalidateQueries({ queryKey });
     },
     onError: (err) => showErrorToast(err, "שגיאה בהוספת רשומה"),
   });
@@ -36,11 +34,9 @@ export const useCorrespondence = (clientId: number) => {
   return {
     entries: listQuery.data?.items ?? [],
     total: listQuery.data?.total ?? 0,
-    page: listQuery.data?.page ?? 1,
-    pageSize: listQuery.data?.page_size ?? DEFAULT_PAGE_SIZE,
     isLoading: listQuery.isPending,
     error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת התכתבויות") : null,
-    createEntry: (values: CorrespondenceFormValues) => createMutation.mutate(values),
+    createEntry: (values: CorrespondenceFormValues) => createMutation.mutateAsync(values),
     isCreating: createMutation.isPending,
   };
 };
