@@ -13,6 +13,7 @@ interface Props {
   pageSize: number;
   transitioningId: number | null;
   onTransition: (reportId: number, stageKey: StageKey, dir: "forward" | "back") => void;
+  onOpenDetail: (reportId: number) => void;
 }
 
 const STAGE_ACCENT: Record<StageKey, string> = {
@@ -30,6 +31,7 @@ export const AnnualReportColumn: React.FC<Props> = ({
   pageSize,
   transitioningId,
   onTransition,
+  onOpenDetail,
 }) => {
   const pagedReports = stage.reports.slice((page - 1) * pageSize, page * pageSize);
   const accent = STAGE_ACCENT[stage.stage] ?? "from-gray-400 to-gray-500";
@@ -67,6 +69,7 @@ export const AnnualReportColumn: React.FC<Props> = ({
               canMoveBack={stageIndex > 0}
               canMoveForward={stageIndex < 4}
               onTransition={onTransition}
+              onOpenDetail={onOpenDetail}
               animationIndex={index}
             />
           ))

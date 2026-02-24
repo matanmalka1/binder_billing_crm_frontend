@@ -8,22 +8,14 @@ import { Binders } from "../pages/Binders";
 import { Clients } from "../pages/Clients";
 import { ClientDetails } from "../pages/ClientDetails";
 import { Search } from "../pages/Search";
-import { ClientTimeline } from "../pages/ClientTimeline";
 import { Charges } from "../pages/Charges";
-import { ChargeDetails } from "../pages/ChargeDetails";
-import { Documents } from "../pages/Documents";
-import { TaxDashboard } from "../pages/TaxDashboard";
 import { AnnualReportsKanban } from "../pages/AnnualReportsKanban";
-import { AnnualReportDetail } from "../pages/AnnualReportDetail";
-import { AnnualReportsSeason } from "../pages/AnnualReportsSeason";
 import { TaxDeadlines } from "../pages/TaxDeadlines";
 import { Login } from "../pages/Login";
 import { Header } from "../components/layout/Header";
 import { Sidebar } from "../components/layout/Sidebar";
 import { PageLayout } from "../components/layout/PageLayout";
-import { AgingReportPage } from "../pages/reports/AgingReport";
 import { RemindersPage } from "../pages/reports/Reminders";
-import { ExcelImportExportPage } from "../pages/reports/ExcelImportExportPage";
 import { SignatureRequestsPage } from "../pages/reports/SignatureRequests";
 import { AdvancePayments } from "../pages/tax/AdvancePayments";
 import { VatWorkItems } from "../pages/tax/VatWorkItems";
@@ -85,23 +77,15 @@ export const AppRoutes: React.FC = () => {
             <Route path="binders" element={<Binders />} />
             <Route path="clients" element={<Clients />} />
             <Route path="clients/:clientId" element={<ClientDetails />} />
-            <Route path="clients/:clientId/timeline" element={<ClientTimeline />} />
             <Route path="search" element={<Search />} />
             <Route path="charges" element={<Charges />} />
-            <Route path="charges/:chargeId" element={<ChargeDetails />} />
-            <Route path="documents" element={<Documents />} />
-            <Route path="tax" element={<TaxDashboard />} />
-            <Route path="tax/reports/season" element={<AnnualReportsSeason />} />
-            <Route path="tax/reports/:reportId" element={<AnnualReportDetail />} />
-
+            <Route path="tax" element={<Navigate to="/tax/deadlines" replace />} />
             <Route path="tax/reports" element={<AnnualReportsKanban />} />
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
             <Route path="tax/advance-payments" element={<AdvancePayments />} />
             <Route path="tax/vat" element={<VatWorkItems />} />
-            <Route path="reports/aging" element={<AgingReportPage />} />
             <Route path="reports/reminders" element={<RemindersPage />} />
             <Route path="reports/signature-requests" element={<SignatureRequestsPage />} />
-            <Route path="reports/import-export" element={<ExcelImportExportPage />} />
             <Route path="settings/users" element={<Users />} />
           </Route>
         </Route>

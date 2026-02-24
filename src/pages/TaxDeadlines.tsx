@@ -11,6 +11,10 @@ import { TaxDeadlinesTable } from "../features/taxDeadlines/components/TaxDeadli
 import { TaxDeadlineForm } from "../features/taxDeadlines/components/TaxDeadlineForm";
 import { TaxDeadlineDrawer } from "../features/taxDeadlines/components/TaxDeadlineDrawer";
 import { useTaxDeadlines } from "../features/taxDeadlines/hooks/useTaxDeadlines";
+import { useTaxDashboard } from "../features/taxDashboard/hooks/useTaxDashboard";
+import { TaxSubmissionStats } from "../features/taxDashboard/components/TaxSubmissionStats";
+import { TaxUrgentDeadlines } from "../features/taxDashboard/components/TaxUrgentDeadlines";
+import { TaxUpcomingDeadlines } from "../features/taxDashboard/components/TaxUpcomingDeadlines";
 import type { TaxDeadlineResponse } from "../api/taxDeadlines.api";
 
 export const TaxDeadlines: React.FC = () => {
@@ -32,14 +36,13 @@ export const TaxDeadlines: React.FC = () => {
 
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
 
+  const { currentYear, submissionsQuery, deadlinesQuery: dashDeadlinesQuery } = useTaxDashboard();
+
   const header = (
     <PageHeader
-      title="מועדי מס"
-      description="ניהול ומעקב אחר כל מועדי המס"
-      breadcrumbs={[
-        { label: "דוחות מס", to: "/tax" },
-        { label: "מועדי מס", to: "/tax/deadlines" },
-      ]}
+      title="דוחות מס"
+      description={`ניהול מועדי מס ומעקב הגשה לשנת ${currentYear}`}
+      variant="gradient"
       actions={
         <Button
           variant="primary"
@@ -76,6 +79,20 @@ export const TaxDeadlines: React.FC = () => {
   return (
     <div className="space-y-6">
       {header}
+
+      {/* Dashboard summary section */}
+      <TaxSubmissionStats data={submissionsQuery.data} />
+
+      {dashDeadlinesQuery.data && (
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+          <div className="xl:col-span-2">
+            <TaxUrgentDeadlines items={dashDeadlinesQuery.data.urgent} />
+          </div>
+          <div>
+            <TaxUpcomingDeadlines items={dashDeadlinesQuery.data.upcoming} />
+          </div>
+        </div>
+      )}
 
       <TaxDeadlinesFilters filters={filters} onChange={handleFilterChange} />
 

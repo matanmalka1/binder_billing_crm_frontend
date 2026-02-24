@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { ArrowRight, ArrowLeft, Info, Clock, AlertTriangle } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
@@ -20,6 +19,7 @@ interface Props {
   canMoveBack: boolean;
   canMoveForward: boolean;
   onTransition: (reportId: number, stageKey: StageKey, dir: "forward" | "back") => void;
+  onOpenDetail: (reportId: number) => void;
   animationIndex: number;
 }
 
@@ -51,10 +51,8 @@ const DeadlinePill: React.FC<{ days: number | null }> = ({ days }) => {
 };
 
 export const AnnualReportCard: React.FC<Props> = ({
-  report, stageKey, isTransitioning, canMoveBack, canMoveForward, onTransition, animationIndex,
+  report, stageKey, isTransitioning, canMoveBack, canMoveForward, onTransition, onOpenDetail, animationIndex,
 }) => {
-  const navigate = useNavigate();
-
   return (
     <>
       <Card
@@ -97,7 +95,7 @@ export const AnnualReportCard: React.FC<Props> = ({
             type="button"
             variant="ghost"
             size="sm"
-            onClick={() => navigate(`/tax/reports/${report.id}`)}
+            onClick={() => onOpenDetail(report.id)}
             className="gap-1 text-xs px-2"
           >
             <Info className="h-3.5 w-3.5" />

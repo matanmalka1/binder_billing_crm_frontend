@@ -7,11 +7,8 @@ import {
   ChevronRight,
   ChevronLeft,
   ReceiptText,
-  FileText,
   FileSpreadsheet,
-  CalendarClock,
   CalendarDays,
-  BarChart3,
   Bell,
   FileSignature,
   KanbanSquare,
@@ -32,17 +29,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     { to: "/clients", label: "לקוחות", icon: Users },
     { to: "/search", label: "חיפוש", icon: Search },
     { to: "/charges", label: "חיובים", icon: ReceiptText },
-    { to: "/documents", label: "מסמכים", icon: FileText },
-    { to: "/tax", label: "דוחות מס", icon: FileSpreadsheet },
+    { to: "/tax/deadlines", label: "דוחות מס", icon: FileSpreadsheet },
     { to: "/tax/reports", label: "קנבן דוחות", icon: KanbanSquare },
-    { to: "/tax/reports/season", label: "עונת הגשה", icon: FileSpreadsheet },
-    { to: "/tax/deadlines", label: "מועדי מס", icon: CalendarClock },
     { to: "/tax/advance-payments", label: "מקדמות", icon: CalendarDays },
     { to: "/tax/vat", label: 'דוחות מע"מ', icon: ClipboardList },
-    { to: "/reports/aging", label: "דוח חובות", icon: BarChart3 },
     { to: "/reports/reminders", label: "תזכורות", icon: Bell },
     { to: "/reports/signature-requests", label: "בקשות חתימה", icon: FileSignature },
-    { to: "/reports/import-export", label: "ייבוא/ייצוא", icon: FileSpreadsheet },
     { to: "/settings/users", label: "משתמשים", icon: Settings },
   ];
 
@@ -61,7 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
           <NavLink
             key={link.to}
             to={link.to}
-            end={link.to === "/tax" || link.to === "/tax/reports"}
+            end={link.to === "/tax/reports"}
             className={({ isActive }) =>
               cn(
                 "flex items-center gap-3 px-3 py-3 rounded-lg group",

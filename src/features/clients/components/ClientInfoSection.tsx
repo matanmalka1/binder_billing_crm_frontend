@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { Edit2, FileText } from "lucide-react";
+import { Edit2 } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
@@ -12,7 +12,6 @@ type ClientInfoSectionProps = {
   client: ClientResponse;
   canEdit: boolean;
   onEditStart: () => void;
-  onTimeline: () => void;
 };
 
 const statusBadge = (status: string) => (
@@ -25,7 +24,6 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   client,
   canEdit,
   onEditStart,
-  onTimeline,
 }) => {
   const infoItems = [
     { label: "מזהה לקוח", value: `#${client.id}` },
@@ -41,18 +39,14 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
 
   return (
     <>
-      <div className="flex flex-wrap gap-2">
-        {canEdit && (
+      {canEdit && (
+        <div className="flex flex-wrap gap-2">
           <Button variant="primary" onClick={onEditStart} className="gap-2">
             <Edit2 className="h-4 w-4" />
             ערוך פרטים
           </Button>
-        )}
-        <Button variant="outline" className="gap-2" onClick={onTimeline}>
-          <FileText className="h-4 w-4" />
-          ציר זמן
-        </Button>
-      </div>
+        </div>
+      )}
 
       <Card title="פרטי לקוח">
         <DescriptionList columns={2} items={infoItems} />

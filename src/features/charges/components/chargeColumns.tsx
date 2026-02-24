@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { ExternalLink } from "lucide-react";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ChargeResponse } from "../../../api/charges.api";
@@ -26,6 +25,7 @@ interface ActionCellProps {
   isLoading: boolean;
   isDisabled: boolean;
   runAction: (chargeId: number, action: ChargeAction) => Promise<void>;
+  onOpenDetail: (chargeId: number) => void;
 }
 
 const ActionCell: React.FC<ActionCellProps> = ({
@@ -34,6 +34,7 @@ const ActionCell: React.FC<ActionCellProps> = ({
   isLoading,
   isDisabled,
   runAction,
+  onOpenDetail,
 }) => {
   const handleIssue = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -50,16 +51,20 @@ const ActionCell: React.FC<ActionCellProps> = ({
     void runAction(charge.id, "cancel");
   };
 
+  const handleOpenDetail = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onOpenDetail(charge.id);
+  };
+
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      <Link
-        to={`/charges/${charge.id}`}
-        onClick={(e) => e.stopPropagation()}
+      <button
+        type="button"
+        onClick={handleOpenDetail}
         className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
       >
         פירוט
-        <ExternalLink className="h-3 w-3" />
-      </Link>
+      </button>
 
       {isAdvisor && canIssue(charge.status) && (
         <button
@@ -107,12 +112,14 @@ interface BuildChargeColumnsParams {
   isAdvisor: boolean;
   actionLoadingId: number | null;
   runAction: (chargeId: number, action: ChargeAction) => Promise<void>;
+  onOpenDetail: (chargeId: number) => void;
 }
 
 export const buildChargeColumns = ({
   isAdvisor,
   actionLoadingId,
   runAction,
+  onOpenDetail,
 }: BuildChargeColumnsParams): Column<ChargeResponse>[] => [
   {
     key: "id",
@@ -190,6 +197,7 @@ export const buildChargeColumns = ({
         isLoading={actionLoadingId === charge.id}
         isDisabled={actionLoadingId !== null && actionLoadingId !== charge.id}
         runAction={runAction}
+        onOpenDetail={onOpenDetail}
       />
     ),
   },

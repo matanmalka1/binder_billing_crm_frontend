@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { ErrorCard } from "../components/ui/ErrorCard";
@@ -13,11 +13,22 @@ import { ClientRelatedData } from "../features/clients/components/ClientRelatedD
 import { useClientDetails } from "../features/clients/hooks/useClientDetails";
 import { SignatureRequestsCard } from "../features/signatureRequests/components/SignatureRequestsCard";
 import { ClientRemindersCard } from "../features/reminders/components/ClientRemindersCard";
+import { ClientDocumentsTab } from "../features/documents/components/ClientDocumentsTab";
+import { ClientTimelineTab } from "../features/timeline/components/ClientTimelineTab";
+import { cn } from "../utils/utils";
+
+type ActiveTab = "details" | "documents" | "timeline";
+
+const TAB_LABELS: Record<ActiveTab, string> = {
+  details: "פרטים",
+  documents: "מסמכים",
+  timeline: "ציר זמן",
+};
 
 export const ClientDetails: React.FC = () => {
   const { clientId } = useParams<{ clientId: string }>();
-  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState<ActiveTab>("details");
   const clientIdNum = clientId ? Number(clientId) : null;
 
   const { client, isValidId, isLoading, error, binders, bindersTotal, charges, chargesTotal,
@@ -33,6 +44,26 @@ export const ClientDetails: React.FC = () => {
     />
   );
 
+  const tabBar = (
+    <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 self-start">
+      {(["details", "documents", "timeline"] as ActiveTab[]).map((tab) => (
+        <button
+          key={tab}
+          type="button"
+          onClick={() => setActiveTab(tab)}
+          className={cn(
+            "rounded-md px-4 py-1.5 text-sm font-medium transition-all",
+            activeTab === tab
+              ? "bg-white text-gray-900 shadow-sm"
+              : "text-gray-500 hover:text-gray-700",
+          )}
+        >
+          {TAB_LABELS[tab]}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <PageStateGuard
       isLoading={isLoading}
@@ -46,49 +77,62 @@ export const ClientDetails: React.FC = () => {
       loadingMessage="טוען פרטי לקוח..."
     >
       {client && (
-          <>
-            {isEditing && can.editClients ? (
-              <ClientEditForm
-                client={client}
-                onSave={async (data) => {
-                  await updateClient(data);
-                  setIsEditing(false);
-                }}
-                onCancel={() => setIsEditing(false)}
-                isLoading={isUpdating}
+        <>
+          {tabBar}
+
+          {activeTab === "details" && (
+            <>
+              {isEditing && can.editClients ? (
+                <ClientEditForm
+                  client={client}
+                  onSave={async (data) => {
+                    await updateClient(data);
+                    setIsEditing(false);
+                  }}
+                  onCancel={() => setIsEditing(false)}
+                  isLoading={isUpdating}
+                />
+              ) : (
+                <ClientInfoSection
+                  client={client}
+                  canEdit={can.editClients}
+                  onEditStart={() => setIsEditing(true)}
+                />
+              )}
+
+              <ClientRelatedData
+                clientId={client.id}
+                binders={binders}
+                bindersTotal={bindersTotal}
+                charges={charges}
+                chargesTotal={chargesTotal}
+                canViewCharges={can.viewChargeAmounts}
+                annualReportsTotal={annualReportsTotal}
+                vatWorkItemsTotal={vatWorkItemsTotal}
+                documentsTotal={documentsTotal}
               />
-            ) : (
-              <ClientInfoSection
-                client={client}
-                canEdit={can.editClients}
-                onEditStart={() => setIsEditing(true)}
-                onTimeline={() => navigate(`/clients/${clientId}/timeline`)}
-              />
-            )}
 
-            <ClientRelatedData
-              clientId={client.id}
-              binders={binders}
-              bindersTotal={bindersTotal}
-              charges={charges}
-              chargesTotal={chargesTotal}
-              canViewCharges={can.viewChargeAmounts}
-              annualReportsTotal={annualReportsTotal}
-              vatWorkItemsTotal={vatWorkItemsTotal}
-              documentsTotal={documentsTotal}
-            />
+              {can.editClients && <TaxProfileCard clientId={client.id} />}
 
-            {can.editClients && <TaxProfileCard clientId={client.id} />}
+              <AuthorityContactsCard clientId={client.id} />
 
-            <AuthorityContactsCard clientId={client.id} />
+              <CorrespondenceCard clientId={client.id} />
 
-            <CorrespondenceCard clientId={client.id} />
+              <ClientRemindersCard clientId={client.id} />
 
-            <ClientRemindersCard clientId={client.id} />
+              <SignatureRequestsCard client={client} canManage={can.editClients} />
+            </>
+          )}
 
-            <SignatureRequestsCard client={client} canManage={can.editClients} />
-          </>
-        )}
+          {activeTab === "documents" && (
+            <ClientDocumentsTab clientId={client.id} />
+          )}
+
+          {activeTab === "timeline" && (
+            <ClientTimelineTab clientId={String(client.id)} />
+          )}
+        </>
+      )}
     </PageStateGuard>
   );
 };

@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
 import {
@@ -11,19 +10,48 @@ import {
   ChevronDown,
   X,
 } from "lucide-react";
-import { PageHeader } from "../components/layout/PageHeader";
-import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
-import { TimelineCard } from "../features/timeline/components/TimelineCard";
-import { useClientTimelinePage } from "../features/timeline/hooks/useClientTimelinePage";
-import { Button } from "../components/ui/Button";
-import { PaginationCard } from "../components/ui/PaginationCard";
-import { Select } from "../components/ui/Select";
-import { ErrorCard } from "../components/ui/ErrorCard";
-import { getEventTypeLabel, getEventColor } from "../features/timeline/components/timelineEventMeta";
-import { cn } from "../utils/utils";
+import { ConfirmDialog } from "../../actions/components/ConfirmDialog";
+import { TimelineCard } from "./TimelineCard";
+import { useClientTimelinePage } from "../hooks/useClientTimelinePage";
+import { Button } from "../../../components/ui/Button";
+import { PaginationCard } from "../../../components/ui/PaginationCard";
+import { Select } from "../../../components/ui/Select";
+import { ErrorCard } from "../../../components/ui/ErrorCard";
+import { getEventTypeLabel, getEventColor } from "./timelineEventMeta";
+import { cn } from "../../../utils/utils";
 
-export const ClientTimeline: React.FC = () => {
-  const { clientId } = useParams();
+interface ClientTimelineTabProps {
+  clientId: string;
+}
+
+interface StatPillProps {
+  icon: React.ReactNode;
+  value: number;
+  label: string;
+  color: "blue" | "purple" | "orange" | "neutral";
+}
+
+const colorMap: Record<StatPillProps["color"], string> = {
+  blue: "bg-blue-50 text-blue-700 border-blue-100",
+  purple: "bg-purple-50 text-purple-700 border-purple-100",
+  orange: "bg-orange-50 text-orange-700 border-orange-100",
+  neutral: "bg-gray-50 text-gray-600 border-gray-200",
+};
+
+const StatPill: React.FC<StatPillProps> = ({ icon, value, label, color }) => (
+  <div
+    className={cn(
+      "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium",
+      colorMap[color],
+    )}
+  >
+    {icon}
+    <span className="font-bold">{value.toLocaleString("he-IL")}</span>
+    <span className="opacity-70">{label}</span>
+  </div>
+);
+
+export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }) => {
   const {
     activeActionKey,
     error,
@@ -73,15 +101,8 @@ export const ClientTimeline: React.FC = () => {
 
   return (
     <div className="space-y-5">
-      <PageHeader
-        title="ציר זמן לקוח"
-        description={`מזהה לקוח: ${clientId ?? "—"}`}
-        breadcrumbs={[{ label: "לקוחות", to: "/clients" }]}
-      />
-
       {/* ── Command Bar ── */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200/60 bg-white/95 px-5 py-3.5 shadow-sm backdrop-blur-sm">
-        {/* Left cluster: stats pills */}
         <div className="flex items-center gap-2 flex-wrap">
           <StatPill
             icon={<Activity className="h-3.5 w-3.5" />}
@@ -103,7 +124,6 @@ export const ClientTimeline: React.FC = () => {
           />
         </div>
 
-        {/* Right cluster: last updated + refresh */}
         <div className="flex items-center gap-3">
           {lastUpdated && (
             <div className="hidden sm:flex items-center gap-1.5 text-xs text-gray-500">
@@ -127,7 +147,6 @@ export const ClientTimeline: React.FC = () => {
 
       {/* ── Filter Panel ── */}
       <div className="rounded-2xl border border-gray-200/60 bg-white/95 shadow-sm backdrop-blur-sm overflow-hidden">
-        {/* Search row */}
         <div className="flex flex-col gap-3 px-5 py-4 md:flex-row md:items-center border-b border-gray-100">
           <div className="flex-1 relative">
             <Search className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -165,7 +184,6 @@ export const ClientTimeline: React.FC = () => {
           </div>
         </div>
 
-        {/* Type filter chips row */}
         <div className="flex flex-wrap items-center gap-2 px-5 py-3">
           <span className="text-xs font-medium text-gray-500 ml-1">סנן לפי סוג:</span>
           {filterTypes.map(({ type, label, count }) => {
@@ -211,21 +229,18 @@ export const ClientTimeline: React.FC = () => {
 
       {error && <ErrorCard message={error} />}
 
-      {/* ── Loading bar ── */}
       {loading && (
         <div className="h-1 w-full overflow-hidden rounded-full bg-gray-100">
           <div className="h-full animate-loading-bar bg-gradient-to-r from-blue-400 via-indigo-500 to-blue-400" />
         </div>
       )}
 
-      {/* ── Timeline Content ── */}
       <TimelineCard
         events={filteredEvents}
         activeActionKey={activeActionKey}
         onAction={handleAction}
       />
 
-      {/* ── Footer: count + pagination ── */}
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between rounded-xl border border-gray-200/60 bg-white/80 px-5 py-3 shadow-sm">
         <p className="text-sm text-gray-500">
           מציג{" "}
@@ -257,31 +272,3 @@ export const ClientTimeline: React.FC = () => {
     </div>
   );
 };
-
-// ── Inline sub-component: small stat pill ──
-interface StatPillProps {
-  icon: React.ReactNode;
-  value: number;
-  label: string;
-  color: "blue" | "purple" | "orange" | "neutral";
-}
-
-const colorMap: Record<StatPillProps["color"], string> = {
-  blue: "bg-blue-50 text-blue-700 border-blue-100",
-  purple: "bg-purple-50 text-purple-700 border-purple-100",
-  orange: "bg-orange-50 text-orange-700 border-orange-100",
-  neutral: "bg-gray-50 text-gray-600 border-gray-200",
-};
-
-const StatPill: React.FC<StatPillProps> = ({ icon, value, label, color }) => (
-  <div
-    className={cn(
-      "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium",
-      colorMap[color],
-    )}
-  >
-    {icon}
-    <span className="font-bold">{value.toLocaleString("he-IL")}</span>
-    <span className="opacity-70">{label}</span>
-  </div>
-);
