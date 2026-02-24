@@ -3,11 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authorityContactsApi, type AuthorityContactResponse } from "../../../api/authorityContacts.api";
 import { showErrorToast } from "../../../utils/utils";
-import {
-  authorityContactSchema,
-  authorityContactDefaults,
-  type AuthorityContactFormValues,
-} from "../components/authorityContactSchema.ts";
+import { authorityContactSchema, authorityContactDefaults, type AuthorityContactFormValues } from "../schemas";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
@@ -42,18 +38,16 @@ export const useAuthorityContactForm = (
         email: values.email || null,
         notes: values.notes || null,
       };
-      if (existing) {
-        return authorityContactsApi.updateAuthorityContact(existing.id, payload);
-      }
-      return authorityContactsApi.createAuthorityContact(clientId, payload);
+      return existing
+        ? authorityContactsApi.updateAuthorityContact(existing.id, payload)
+        : authorityContactsApi.createAuthorityContact(clientId, payload);
     },
     onSuccess: () => {
       toast.success(existing ? "איש קשר עודכן בהצלחה" : "איש קשר נוצר בהצלחה");
       queryClient.invalidateQueries({ queryKey: qk });
       onSuccess();
     },
-    onError: (err) =>
-      showErrorToast(err, "שגיאה בשמירת איש קשר"),
+    onError: (err) => showErrorToast(err, "שגיאה בשמירת איש קשר"),
   });
 
   const onSubmit = form.handleSubmit((values) => saveMutation.mutate(values));

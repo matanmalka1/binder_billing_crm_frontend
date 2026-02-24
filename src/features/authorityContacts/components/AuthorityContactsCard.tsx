@@ -1,23 +1,25 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { ErrorCard } from "../../../components/ui/ErrorCard";
+import { EmptyState } from "../../../components/ui/EmptyState";
 import type { AuthorityContactResponse } from "../../../api/authorityContacts.api";
 import { useAuthorityContacts } from "../hooks/useAuthorityContacts";
 import { AuthorityContactRow } from "./AuthorityContactRow";
 import { AuthorityContactModal } from "./AuthorityContactModal";
 
-interface Props { clientId: number }
+interface AuthorityContactsCardProps {
+  clientId: number;
+}
 
-export const AuthorityContactsCard: React.FC<Props> = ({ clientId }) => {
-  const { contacts, isLoading, error, deleteContact, deletingId } =
-    useAuthorityContacts(clientId);
+export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ clientId }) => {
+  const { contacts, isLoading, error, deleteContact, deletingId } = useAuthorityContacts(clientId);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<AuthorityContactResponse | null>(null);
 
-  const handleEdit = (c: AuthorityContactResponse) => {
-    setEditing(c);
+  const handleEdit = (contact: AuthorityContactResponse) => {
+    setEditing(contact);
     setModalOpen(true);
   };
 
@@ -30,33 +32,34 @@ export const AuthorityContactsCard: React.FC<Props> = ({ clientId }) => {
     <Card
       title="אנשי קשר ברשויות"
       subtitle="גורמי קשר ממשלתיים ורגולטוריים"
+      actions={
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          className="gap-2"
+          onClick={() => setModalOpen(true)}
+        >
+          <Plus className="h-4 w-4" />
+          הוסף
+        </Button>
+      }
     >
-      <div className="space-y-4">
-        <div className="flex justify-end">
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            className="gap-2"
-            onClick={() => setModalOpen(true)}
-          >
-            <Plus className="h-4 w-4" />
-            הוסף איש קשר
-          </Button>
-        </div>
+      {error && <ErrorCard message={error} />}
 
-        {error && <ErrorCard message={error} />}
+      {isLoading && (
+        <p className="text-sm text-gray-500 text-center py-4">טוען אנשי קשר...</p>
+      )}
 
-        {isLoading && (
-          <p className="text-sm text-gray-500 text-center py-4">טוען אנשי קשר...</p>
-        )}
+      {!isLoading && !error && contacts.length === 0 && (
+        <EmptyState
+          icon={Users}
+          message="לא נוספו עדיין אנשי קשר ברשויות"
+          variant="minimal"
+        />
+      )}
 
-        {!isLoading && contacts.length === 0 && !error && (
-          <p className="text-sm text-gray-500 text-center py-6">
-            לא נוספו עדיין אנשי קשר ברשויות
-          </p>
-        )}
-
+      {contacts.length > 0 && (
         <div className="space-y-3">
           {contacts.map((contact) => (
             <AuthorityContactRow
@@ -68,7 +71,7 @@ export const AuthorityContactsCard: React.FC<Props> = ({ clientId }) => {
             />
           ))}
         </div>
-      </div>
+      )}
 
       <AuthorityContactModal
         open={modalOpen}

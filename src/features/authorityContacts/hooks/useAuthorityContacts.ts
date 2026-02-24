@@ -15,24 +15,19 @@ export const useAuthorityContacts = (clientId: number) => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (contactId: number) =>
-      authorityContactsApi.deleteAuthorityContact(contactId),
+    mutationFn: (contactId: number) => authorityContactsApi.deleteAuthorityContact(contactId),
     onSuccess: () => {
       toast.success("איש קשר נמחק בהצלחה");
       queryClient.invalidateQueries({ queryKey: qk });
     },
-    onError: (err) =>
-      showErrorToast(err, "שגיאה במחיקת איש קשר"),
+    onError: (err) => showErrorToast(err, "שגיאה במחיקת איש קשר"),
   });
 
   return {
     contacts: listQuery.data?.items ?? [],
     isLoading: listQuery.isPending,
-    error: listQuery.error
-      ? getErrorMessage(listQuery.error, "שגיאה בטעינת אנשי קשר")
-      : null,
+    error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת אנשי קשר") : null,
     deleteContact: (id: number) => deleteMutation.mutate(id),
-    isDeleting: deleteMutation.isPending,
     deletingId: deleteMutation.isPending ? (deleteMutation.variables ?? null) : null,
   };
 };
