@@ -19,15 +19,31 @@ interface TimelineEventItemProps {
   activeActionKey: string | null;
 }
 
+interface MetaChipProps {
+  icon: React.ReactNode;
+  label: string;
+  className?: string;
+}
+
+const MetaChip: React.FC<MetaChipProps> = ({ icon, label, className }) => (
+  <span
+    className={cn(
+      "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-mono",
+      className,
+    )}
+  >
+    {icon}
+    {label}
+  </span>
+);
+
 export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
   event,
   index,
   onAction,
   activeActionKey,
 }) => {
-  const eventActions = event.actions || event.available_actions || [];
-  const scopeKey = `timeline-${event.timestamp}-${event.event_type}`;
-  const resolvedActions = mapActions(eventActions);
+  const resolvedActions = mapActions(event.actions ?? event.available_actions);
   const colors = getEventColor(event.event_type);
 
   return (
@@ -56,7 +72,6 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
           "transition-all duration-200 hover:shadow-md hover:-translate-y-0.5",
         )}
       >
-        {/* Subtle top tint */}
         <div className={cn("h-0.5 w-full bg-gradient-to-l", colors.cardTint, "to-transparent")} />
 
         <div className="px-4 py-3 space-y-2.5">
@@ -83,13 +98,11 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
 
           {/* Description */}
           {event.description && (
-            <p className="text-sm leading-relaxed text-gray-700">
-              {event.description}
-            </p>
+            <p className="text-sm leading-relaxed text-gray-700">{event.description}</p>
           )}
 
           {/* Meta chips */}
-          {(event.binder_id || event.charge_id || event.metadata) && (
+          {(event.binder_id ?? event.charge_id ?? event.metadata) && (
             <div className="flex flex-wrap gap-2">
               {event.binder_id && (
                 <MetaChip
@@ -126,11 +139,8 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
                   size="sm"
                   onClick={() => onAction(action)}
                   isLoading={activeActionKey === action.uiKey}
-                  disabled={
-                    activeActionKey !== null && activeActionKey !== action.uiKey
-                  }
+                  disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
                   className="text-xs h-7 px-3 bg-white shadow-sm"
-                  data-scope={scopeKey}
                 >
                   {action.label || "—"}
                   <ChevronLeft className="h-3 w-3 opacity-60" />
@@ -143,22 +153,3 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
     </li>
   );
 };
-
-// ── Inline sub-component ──
-interface MetaChipProps {
-  icon: React.ReactNode;
-  label: string;
-  className?: string;
-}
-
-const MetaChip: React.FC<MetaChipProps> = ({ icon, label, className }) => (
-  <span
-    className={cn(
-      "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-mono",
-      className,
-    )}
-  >
-    {icon}
-    {label}
-  </span>
-);

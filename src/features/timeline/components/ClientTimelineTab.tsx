@@ -24,25 +24,29 @@ interface ClientTimelineTabProps {
   clientId: string;
 }
 
-interface StatPillProps {
-  icon: React.ReactNode;
-  value: number;
-  label: string;
-  color: "blue" | "purple" | "orange" | "neutral";
-}
+// ── Stat pill ─────────────────────────────────────────────────────────────────
 
-const colorMap: Record<StatPillProps["color"], string> = {
+type StatPillColor = "blue" | "purple" | "orange" | "neutral";
+
+const STAT_PILL_COLORS: Record<StatPillColor, string> = {
   blue: "bg-blue-50 text-blue-700 border-blue-100",
   purple: "bg-purple-50 text-purple-700 border-purple-100",
   orange: "bg-orange-50 text-orange-700 border-orange-100",
   neutral: "bg-gray-50 text-gray-600 border-gray-200",
 };
 
+interface StatPillProps {
+  icon: React.ReactNode;
+  value: number;
+  label: string;
+  color: StatPillColor;
+}
+
 const StatPill: React.FC<StatPillProps> = ({ icon, value, label, color }) => (
   <div
     className={cn(
       "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium",
-      colorMap[color],
+      STAT_PILL_COLORS[color],
     )}
   >
     {icon}
@@ -50,6 +54,8 @@ const StatPill: React.FC<StatPillProps> = ({ icon, value, label, color }) => (
     <span className="opacity-70">{label}</span>
   </div>
 );
+
+// ── Main component ─────────────────────────────────────────────────────────────
 
 export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }) => {
   const {
@@ -75,25 +81,17 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }
   } = useClientTimelinePage(clientId);
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
-
-  const filterTypes = (() => {
-    const rawTypes =
-      eventTypeStats.length > 0
-        ? eventTypeStats.map((item) => item.type)
-        : ["binder_received", "binder_returned", "charge_created", "notification"];
-
-    const uniqueByLabel = new Map<string, { type: string; label: string; count: number }>();
-    rawTypes.forEach((type) => {
-      const label = getEventTypeLabel(type);
-      if (!uniqueByLabel.has(label)) {
-        const stat = eventTypeStats.find((s) => s.type === type);
-        uniqueByLabel.set(label, { type, label, count: stat?.count ?? 0 });
-      }
-    });
-    return Array.from(uniqueByLabel.values());
-  })();
-
   const activeFilterCount = filters.typeFilters.length + (filters.searchTerm ? 1 : 0);
+
+  // Deduplicate filter chips by label
+  const filterTypes = (() => {
+    const seen = new Map<string, { type: string; label: string; count: number }>();
+    eventTypeStats.forEach(({ type, count }) => {
+      const label = getEventTypeLabel(type);
+      if (!seen.has(label)) seen.set(label, { type, label, count });
+    });
+    return Array.from(seen.values());
+  })();
 
   const lastUpdated = summary.lastEventTimestamp
     ? format(parseISO(summary.lastEventTimestamp), "d MMM HH:mm", { locale: he })
@@ -196,7 +194,7 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150 border",
                   isActive
-                    ? `${colors.chipActiveBg} ${colors.chipActiveText} ${colors.chipActiveBorder} shadow-sm`
+                    ? cn(colors.chipActiveBg, colors.chipActiveText, colors.chipActiveBorder, "shadow-sm")
                     : "bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-100",
                 )}
               >

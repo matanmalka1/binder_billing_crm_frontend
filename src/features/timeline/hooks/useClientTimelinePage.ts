@@ -35,62 +35,39 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     events.forEach((event) => {
       counts[event.event_type] = (counts[event.event_type] || 0) + 1;
     });
-
-    return Object.entries(counts).map(([type, count]) => ({
-      type,
-      count,
-    }));
+    return Object.entries(counts).map(([type, count]) => ({ type, count }));
   }, [events]);
 
   const filteredEvents = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
-
     return events.filter((event) => {
-      const matchesType =
-        typeFilters.length === 0 || typeFilters.includes(event.event_type);
-
+      const matchesType = typeFilters.length === 0 || typeFilters.includes(event.event_type);
       const matchesQuery =
         !query ||
         event.description?.toLowerCase().includes(query) ||
         (event.binder_id !== null && String(event.binder_id).includes(query)) ||
         (event.charge_id !== null && String(event.charge_id).includes(query));
-
       return matchesType && matchesQuery;
     });
   }, [events, searchTerm, typeFilters]);
 
-  const totalAvailableActions = useMemo(
-    () =>
-      events.reduce((totalActions, event) => {
-        const actionCount =
-          (event.actions?.length || 0) + (event.available_actions?.length || 0);
-        return totalActions + actionCount;
-      }, 0),
-    [events],
-  );
-
   const filteredAvailableActions = useMemo(
     () =>
-      filteredEvents.reduce((totalActions, event) => {
-        const actionCount =
-          (event.actions?.length || 0) + (event.available_actions?.length || 0);
-        return totalActions + actionCount;
+      filteredEvents.reduce((total, event) => {
+        return total + (event.actions?.length ?? 0) + (event.available_actions?.length ?? 0);
       }, 0),
     [filteredEvents],
   );
 
   const lastEventTimestamp = useMemo(() => {
     if (events.length === 0) return null;
-    return events.reduce((latestStr, current) => {
-      const currentTime = new Date(current.timestamp).getTime();
-      const latestTime = new Date(latestStr).getTime();
-      return currentTime > latestTime ? current.timestamp : latestStr;
+    return events.reduce((latest, current) => {
+      return new Date(current.timestamp) > new Date(latest) ? current.timestamp : latest;
     }, events[0].timestamp);
   }, [events]);
 
   const {
     activeActionKey,
-    activeActionKeyRef,
     cancelPendingAction,
     confirmPendingAction,
     handleAction,
@@ -109,6 +86,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     next.set("page", String(nextPage));
     setSearchParams(next);
   };
+
   const setPageSize = (nextPageSize: string) => {
     const next = new URLSearchParams(searchParams);
     next.set("page_size", nextPageSize);
@@ -118,9 +96,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
 
   const toggleTypeFilter = (type: string) => {
     setTypeFilters((prev) =>
-      prev.includes(type)
-        ? prev.filter((item) => item !== type)
-        : [...prev, type],
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
     );
   };
 
@@ -131,13 +107,11 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
 
   return {
     activeActionKey,
-    activeActionKeyRef,
-    error:
-      !hasValidClient
-        ? "מזהה לקוח חסר"
-        : timelineQuery.error
-          ? getErrorMessage(timelineQuery.error, "שגיאה בטעינת ציר זמן")
-          : null,
+    error: !hasValidClient
+      ? "מזהה לקוח חסר"
+      : timelineQuery.error
+        ? getErrorMessage(timelineQuery.error, "שגיאה בטעינת ציר זמן")
+        : null,
     events,
     filteredEvents,
     handleAction,
@@ -146,7 +120,6 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     page,
     pageSize,
     pendingAction,
-    runAction: handleAction,
     setPage,
     setPageSize,
     total: timelineQuery.data?.total ?? 0,
@@ -164,7 +137,6 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     summary: {
       filteredTotal: filteredEvents.length,
       totalOnPage: events.length,
-      totalAvailableActions,
       filteredAvailableActions,
       lastEventTimestamp,
     },
