@@ -19,8 +19,11 @@ export const useActionRunner = (options: UseActionRunnerOptions = {}) => {
 
   const actionMutation = useMutation({
     mutationFn: (action: ActionCommand) => executeAction(action),
-    onSuccess: async () => {
-      toast.success("הפעולה הושלמה בהצלחה");
+    onSuccess: async (_, action) => {
+      const message = action.label
+        ? `הפעולה "${action.label}" הושלמה בהצלחה`
+        : "הפעולה הושלמה בהצלחה";
+      toast.success(message);
       await options.onSuccess?.();
     },
   });
