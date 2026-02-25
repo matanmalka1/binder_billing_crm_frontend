@@ -37,6 +37,8 @@ const MetaChip: React.FC<MetaChipProps> = ({ icon, label, className }) => (
   </span>
 );
 
+MetaChip.displayName = "MetaChip";
+
 export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
   event,
   index,
@@ -153,3 +155,5 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
     </li>
   );
 };
+
+TimelineEventItem.displayName = "TimelineEventItem";

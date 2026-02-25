@@ -9,18 +9,17 @@ import { QK } from "../../../lib/queryKeys";
 export const useClientTimelinePage = (clientId: string | undefined) => {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
+
   const page = parsePositiveInt(searchParams.get("page"), 1);
   const pageSize = parsePositiveInt(searchParams.get("page_size"), 50);
+
   const clientIdNumber = Number(clientId || 0);
   const hasValidClient = isPositiveInt(clientIdNumber);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilters, setTypeFilters] = useState<string[]>([]);
 
-  const timelineParams = useMemo(
-    () => ({ page, page_size: pageSize }),
-    [page, pageSize],
-  );
+  const timelineParams = useMemo(() => ({ page, page_size: pageSize }), [page, pageSize]);
 
   const timelineQuery = useQuery({
     enabled: hasValidClient,
@@ -38,7 +37,11 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     return Object.entries(counts).map(([type, count]) => ({ type, count }));
   }, [events]);
 
+  const hasActiveFilters = typeFilters.length > 0 || searchTerm.trim().length > 0;
+
   const filteredEvents = useMemo(() => {
+    if (!hasActiveFilters) return events;
+
     const query = searchTerm.trim().toLowerCase();
     return events.filter((event) => {
       const matchesType = typeFilters.length === 0 || typeFilters.includes(event.event_type);
@@ -49,25 +52,29 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
         (event.charge_id !== null && String(event.charge_id).includes(query));
       return matchesType && matchesQuery;
     });
-  }, [events, searchTerm, typeFilters]);
+  }, [events, searchTerm, typeFilters, hasActiveFilters]);
 
   const filteredAvailableActions = useMemo(
     () =>
-      filteredEvents.reduce((total, event) => {
-        return total + (event.actions?.length ?? 0) + (event.available_actions?.length ?? 0);
-      }, 0),
+      filteredEvents.reduce(
+        (total, event) =>
+          total + (event.actions?.length ?? 0) + (event.available_actions?.length ?? 0),
+        0,
+      ),
     [filteredEvents],
   );
 
   const lastEventTimestamp = useMemo(() => {
     if (events.length === 0) return null;
-    return events.reduce((latest, current) => {
-      return new Date(current.timestamp) > new Date(latest) ? current.timestamp : latest;
-    }, events[0].timestamp);
+    return events.reduce((latest, current) =>
+      new Date(current.timestamp) > new Date(latest) ? current.timestamp : latest,
+      events[0].timestamp,
+    );
   }, [events]);
 
   const {
     activeActionKey,
+    activeActionKeyRef,
     cancelPendingAction,
     confirmPendingAction,
     handleAction,
@@ -87,9 +94,9 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     setSearchParams(next);
   };
 
-  const setPageSize = (nextPageSize: string) => {
+  const setPageSize = (value: string) => {
     const next = new URLSearchParams(searchParams);
-    next.set("page_size", nextPageSize);
+    next.set("page_size", value);
     next.set("page", "1");
     setSearchParams(next);
   };
@@ -105,35 +112,45 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     setTypeFilters([]);
   };
 
+  const error = !hasValidClient
+    ? "מזהה לקוח חסר"
+    : timelineQuery.error
+      ? getErrorMessage(timelineQuery.error, "שגיאה בטעינת ציר זמן")
+      : null;
+
   return {
-    activeActionKey,
-    error: !hasValidClient
-      ? "מזהה לקוח חסר"
-      : timelineQuery.error
-        ? getErrorMessage(timelineQuery.error, "שגיאה בטעינת ציר זמן")
-        : null,
-    events,
-    filteredEvents,
-    handleAction,
+    // Query state
     loading: timelineQuery.isPending,
     refreshing: timelineQuery.isRefetching,
+    error,
+    // Pagination
     page,
     pageSize,
-    pendingAction,
+    total: timelineQuery.data?.total ?? 0,
     setPage,
     setPageSize,
-    total: timelineQuery.data?.total ?? 0,
-    cancelPendingAction,
+    // Events
+    events,
+    filteredEvents,
+    eventTypeStats,
+    // Actions
+    activeActionKey,
+    activeActionKeyRef,
+    handleAction,
+    pendingAction,
     confirmPendingAction,
+    cancelPendingAction,
     refresh: () => timelineQuery.refetch(),
+    // Filters (grouped for readability)
     filters: {
       searchTerm,
       setSearchTerm,
       typeFilters,
       toggleTypeFilter,
       clearFilters,
+      hasActiveFilters,
     },
-    eventTypeStats,
+    // Derived summary for CommandBar
     summary: {
       filteredTotal: filteredEvents.length,
       totalOnPage: events.length,

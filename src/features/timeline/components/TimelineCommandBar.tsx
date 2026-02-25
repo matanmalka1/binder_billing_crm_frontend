@@ -3,10 +3,9 @@ import { he } from "date-fns/locale";
 import { RefreshCw, Activity, Filter, Zap, Calendar } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { cn } from "../../../utils/utils";
+import type { StatPillColor } from "../types";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-type StatPillColor = "blue" | "purple" | "orange" | "neutral";
+// ── StatPill ──────────────────────────────────────────────────────────────────
 
 const STAT_PILL_COLORS: Record<StatPillColor, string> = {
   blue: "bg-blue-50 text-blue-700 border-blue-100",
@@ -14,8 +13,6 @@ const STAT_PILL_COLORS: Record<StatPillColor, string> = {
   orange: "bg-orange-50 text-orange-700 border-orange-100",
   neutral: "bg-gray-50 text-gray-600 border-gray-200",
 };
-
-// ── StatPill ──────────────────────────────────────────────────────────────────
 
 interface StatPillProps {
   icon: React.ReactNode;

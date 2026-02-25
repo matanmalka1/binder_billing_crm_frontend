@@ -42,7 +42,6 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({
     <div className="space-y-2 animate-fade-in">
       {groupedEvents.map((group, groupIndex) => (
         <section key={group.date}>
-          {/* Date header */}
           <div
             className={cn(
               "flex items-center gap-3 px-1 py-2",
@@ -59,11 +58,8 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({
             </span>
           </div>
 
-          {/* Event list — clean vertical rail */}
           <div className="relative pr-5">
-            {/* Rail line */}
             <div className="pointer-events-none absolute top-3 bottom-3 right-[9px] w-px bg-gradient-to-b from-slate-200 via-slate-200/70 to-transparent" />
-
             <ul className="space-y-3">
               {group.items.map((event, index) => (
                 <TimelineEventItem
@@ -81,3 +77,5 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({
     </div>
   );
 };
+
+TimelineCard.displayName = "TimelineCard";

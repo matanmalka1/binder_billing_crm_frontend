@@ -6,21 +6,25 @@ import {
   FolderOutput,
   CreditCard,
 } from "lucide-react";
-import React from "react";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
+import type { EventColorConfig } from "../types";
 
-export const getEventTypeLabel = (eventType: string): string => {
-  const labels: Record<string, string> = {
-    binder_received: "קליטת קלסר",
-    binder_returned: "החזרת קלסר",
-    invoice_created: "יצירת חשבונית",
-    charge_created: "יצירת חיוב",
-    notification: "התראה",
-    notification_sent: "התראה נשלחה",
-  };
-  return labels[eventType] ?? "אירוע";
+export type { EventColorConfig };
+
+// ── Labels & Icons ─────────────────────────────────────────────────────────────
+
+const EVENT_LABELS: Record<string, string> = {
+  binder_received: "קליטת קלסר",
+  binder_returned: "החזרת קלסר",
+  invoice_created: "יצירת חשבונית",
+  charge_created: "יצירת חיוב",
+  notification: "התראה",
+  notification_sent: "התראה נשלחה",
 };
+
+export const getEventTypeLabel = (eventType: string): string =>
+  EVENT_LABELS[eventType] ?? "אירוע";
 
 export const getEventIcon = (eventType: string): React.ReactNode => {
   const icons: Record<string, React.ReactNode> = {
@@ -34,18 +38,7 @@ export const getEventIcon = (eventType: string): React.ReactNode => {
   return icons[eventType] ?? <AlertCircle className="h-3.5 w-3.5" />;
 };
 
-export interface EventColorConfig {
-  dotBg: string;
-  dotBorder: string;
-  cardBorder: string;
-  cardTint: string;
-  badgeBg: string;
-  badgeText: string;
-  chipActiveBg: string;
-  chipActiveText: string;
-  chipActiveBorder: string;
-  iconColor: string;
-}
+// ── Colors ─────────────────────────────────────────────────────────────────────
 
 const EVENT_COLORS: Record<string, EventColorConfig> = {
   binder_received: {
@@ -90,7 +83,7 @@ const EVENT_COLORS: Record<string, EventColorConfig> = {
     cardBorder: "border-r-amber-400",
     cardTint: "from-amber-50/60",
     badgeBg: "bg-amber-100",
-    badgeText: "text-amber-700",
+    badgeText: "bg-amber-700",
     chipActiveBg: "bg-amber-100",
     chipActiveText: "text-amber-800",
     chipActiveBorder: "border-amber-300",
@@ -127,6 +120,8 @@ const DEFAULT_EVENT_COLOR: EventColorConfig = {
 
 export const getEventColor = (eventType: string): EventColorConfig =>
   EVENT_COLORS[eventType] ?? DEFAULT_EVENT_COLOR;
+
+// ── Formatters ─────────────────────────────────────────────────────────────────
 
 export const formatTimestamp = (timestamp: string): string =>
   format(parseISO(timestamp), "HH:mm", { locale: he });
