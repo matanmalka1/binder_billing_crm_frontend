@@ -6,6 +6,17 @@ import { getSignatureRequestTypeLabel } from "../../../utils/enums";
 import { formatDate, formatDateTime } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
+// ── Shared field row for expanded details ─────────────────────────────────────
+
+const FieldRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
+  <div className="flex gap-2 text-xs">
+    <span className="w-20 shrink-0 font-medium text-gray-600">{label}</span>
+    <span className="text-gray-700">{value}</span>
+  </div>
+);
+
+// ── Main component ────────────────────────────────────────────────────────────
+
 interface Props {
   request: SignatureRequestResponse;
   signingUrl?: string;
@@ -46,15 +57,11 @@ export const SignatureRequestRow: React.FC<Props> = ({
       <div className="flex items-center gap-3 px-4 py-3">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold text-gray-900 truncate">{request.title}</span>
+            <span className="truncate text-sm font-semibold text-gray-900">{request.title}</span>
             <SignatureStatusBadge status={request.status} />
           </div>
           <p className="mt-0.5 text-xs text-gray-500">
-            {getSignatureRequestTypeLabel(request.request_type)}
-            {" · "}
-            {request.signer_name}
-            {" · "}
-            {formatDate(request.created_at)}
+            {getSignatureRequestTypeLabel(request.request_type)} · {request.signer_name} · {formatDate(request.created_at)}
           </p>
         </div>
 
@@ -64,7 +71,6 @@ export const SignatureRequestRow: React.FC<Props> = ({
               type="button"
               disabled={isSending}
               onClick={() => void onSend(request.id)}
-              title="שלח לחתימה"
               className="inline-flex items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:opacity-50"
             >
               <Send className="h-3 w-3" />
@@ -79,11 +85,7 @@ export const SignatureRequestRow: React.FC<Props> = ({
               title="העתק קישור חתימה"
               className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
             >
-              {copied ? (
-                <Check className="h-3.5 w-3.5 text-green-600" />
-              ) : (
-                <Copy className="h-3.5 w-3.5" />
-              )}
+              {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
             </button>
           )}
 
@@ -111,43 +113,13 @@ export const SignatureRequestRow: React.FC<Props> = ({
 
       {/* Expanded details */}
       {expanded && (
-        <div className="border-t border-gray-100 bg-gray-50/60 px-4 pb-4 pt-3 space-y-2">
-          {request.description && (
-            <div className="flex gap-2 text-xs">
-              <span className="w-20 shrink-0 font-medium text-gray-600">תיאור</span>
-              <span className="text-gray-700">{request.description}</span>
-            </div>
-          )}
-          {request.signer_email && (
-            <div className="flex gap-2 text-xs">
-              <span className="w-20 shrink-0 font-medium text-gray-600">דוא"ל</span>
-              <span className="text-gray-700">{request.signer_email}</span>
-            </div>
-          )}
-          {request.expires_at && (
-            <div className="flex gap-2 text-xs">
-              <span className="w-20 shrink-0 font-medium text-gray-600">תפוגה</span>
-              <span className="text-gray-700">{formatDate(request.expires_at)}</span>
-            </div>
-          )}
-          {request.sent_at && (
-            <div className="flex gap-2 text-xs">
-              <span className="w-20 shrink-0 font-medium text-gray-600">נשלח</span>
-              <span className="text-gray-700 tabular-nums">{formatDateTime(request.sent_at)}</span>
-            </div>
-          )}
-          {request.signed_at && (
-            <div className="flex gap-2 text-xs">
-              <span className="w-20 shrink-0 font-medium text-gray-600">נחתם</span>
-              <span className="text-gray-700 tabular-nums">{formatDateTime(request.signed_at)}</span>
-            </div>
-          )}
-          {request.decline_reason && (
-            <div className="flex gap-2 text-xs">
-              <span className="w-20 shrink-0 font-medium text-gray-600">סיבת דחייה</span>
-              <span className="text-gray-700">{request.decline_reason}</span>
-            </div>
-          )}
+        <div className="space-y-2 border-t border-gray-100 bg-gray-50/60 px-4 pb-4 pt-3">
+          {request.description && <FieldRow label="תיאור" value={request.description} />}
+          {request.signer_email && <FieldRow label='דוא"ל' value={request.signer_email} />}
+          {request.expires_at && <FieldRow label="תפוגה" value={formatDate(request.expires_at)} />}
+          {request.sent_at && <FieldRow label="נשלח" value={<span className="tabular-nums">{formatDateTime(request.sent_at)}</span>} />}
+          {request.signed_at && <FieldRow label="נחתם" value={<span className="tabular-nums">{formatDateTime(request.signed_at)}</span>} />}
+          {request.decline_reason && <FieldRow label="סיבת דחייה" value={request.decline_reason} />}
           {isPending && signingUrl && (
             <div className="flex items-center gap-2 pt-1">
               <Link2 className="h-3.5 w-3.5 shrink-0 text-gray-400" />
@@ -165,3 +137,4 @@ export const SignatureRequestRow: React.FC<Props> = ({
     </div>
   );
 };
+SignatureRequestRow.displayName = "SignatureRequestRow";

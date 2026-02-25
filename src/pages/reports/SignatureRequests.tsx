@@ -8,14 +8,16 @@ import { StatsCard } from "../../components/ui/StatsCard";
 import { SignatureStatusBadge } from "../../features/signatureRequests/components/SignatureStatusBadge";
 import { SignatureRequestAuditDrawer } from "../../features/signatureRequests/components/SignatureRequestAuditDrawer";
 import { usePendingSignatureRequests } from "../../features/signatureRequests/hooks/usePendingSignatureRequests";
-import { usePendingSignatureRequestActions } from "../../features/signatureRequests/hooks/usePendingSignatureRequestActions";
+import { useSignatureRequestActions } from "../../features/signatureRequests/hooks/useSignatureRequestActions";
+import { buildSigningUrl } from "../../features/signatureRequests/utils/signingUrl";
 import type { SignatureRequestResponse } from "../../api/signatureRequests.api";
 import { getSignatureRequestTypeLabel } from "../../utils/enums";
 import { formatDate } from "../../utils/utils";
+import type { SendSignatureRequestResponse } from "../../api/signatureRequests.api";
 
 export const SignatureRequestsPage: React.FC = () => {
   const { items, total, clientNames, isLoading, error } = usePendingSignatureRequests();
-  const { send, isSending, cancel, isCanceling } = usePendingSignatureRequestActions();
+  const { send, isSending, cancel, isCanceling } = useSignatureRequestActions();
 
   const [signingUrls, setSigningUrls] = useState<Record<number, string>>({});
   const [auditRequestId, setAuditRequestId] = useState<number | null>(null);
@@ -25,11 +27,9 @@ export const SignatureRequestsPage: React.FC = () => {
   const terminal = items.filter((r) => ["expired", "declined"].includes(r.status)).length;
 
   const handleSend = async (id: number) => {
-    const result = await send(id);
+    const result = (await send(id)) as SendSignatureRequestResponse;
     if (result?.signing_url_hint) {
-      const hint = result.signing_url_hint;
-      const path = hint.startsWith("/") ? hint : `/${hint}`;
-      setSigningUrls((prev) => ({ ...prev, [id]: `${window.location.origin}${path}` }));
+      setSigningUrls((prev) => ({ ...prev, [id]: buildSigningUrl(result.signing_url_hint) }));
     }
   };
 
@@ -72,9 +72,7 @@ export const SignatureRequestsPage: React.FC = () => {
       {
         key: "status",
         header: "סטטוס",
-        render: (req: SignatureRequestResponse) => (
-          <SignatureStatusBadge status={req.status} />
-        ),
+        render: (req: SignatureRequestResponse) => <SignatureStatusBadge status={req.status} />,
       },
       {
         key: "created_at",
@@ -97,7 +95,6 @@ export const SignatureRequestsPage: React.FC = () => {
                   type="button"
                   disabled={isSending}
                   onClick={() => void handleSend(req.id)}
-                  title="שלח לחתימה"
                   className="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:opacity-50"
                 >
                   <Send className="h-3 w-3" />
@@ -120,7 +117,6 @@ export const SignatureRequestsPage: React.FC = () => {
                   type="button"
                   disabled={isCanceling}
                   onClick={() => void cancel(req.id)}
-                  title="בטל בקשה"
                   className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
                 >
                   <X className="h-3.5 w-3.5" />

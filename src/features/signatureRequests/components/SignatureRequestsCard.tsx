@@ -8,6 +8,7 @@ import { SignatureRequestRow } from "./SignatureRequestRow";
 import { CreateSignatureRequestModal } from "./CreateSignatureRequestModal";
 import { useClientSignatureRequests } from "../hooks/useClientSignatureRequests";
 import { useSignatureRequestActions } from "../hooks/useSignatureRequestActions";
+import { buildSigningUrl } from "../utils/signingUrl";
 import type { ClientResponse } from "../../../api/clients.api";
 import type { SendSignatureRequestResponse } from "../../../api/signatureRequests.api";
 
@@ -16,23 +17,12 @@ interface Props {
   canManage: boolean;
 }
 
-const buildSigningUrl = (hint: string): string => {
-  const base = window.location.origin;
-  const path = hint.startsWith("/") ? hint : `/${hint}`;
-  return `${base}${path}`;
-};
-
 export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) => {
   const [showCreate, setShowCreate] = useState(false);
   const [signingUrls, setSigningUrls] = useState<Record<number, string>>({});
 
-  const { items, total, isLoading, error } = useClientSignatureRequests({
-    clientId: client.id,
-    pageSize: 10,
-  });
-
-  const { create, isCreating, send, isSending, cancel, isCanceling } =
-    useSignatureRequestActions(client.id);
+  const { items, total, isLoading, error } = useClientSignatureRequests({ clientId: client.id });
+  const { create, isCreating, send, isSending, cancel, isCanceling } = useSignatureRequestActions(client.id);
 
   const handleSend = async (id: number) => {
     const result = (await send(id)) as SendSignatureRequestResponse;
@@ -69,11 +59,7 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) =>
             <EmptyState
               icon={FileSignature}
               message="אין בקשות חתימה עבור לקוח זה"
-              action={
-                canManage
-                  ? { label: "יצירת בקשה ראשונה", onClick: () => setShowCreate(true) }
-                  : undefined
-              }
+              action={canManage ? { label: "יצירת בקשה ראשונה", onClick: () => setShowCreate(true) } : undefined}
             />
           )}
 
@@ -88,7 +74,7 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) =>
                   isCanceling={isCanceling}
                   canManage={canManage}
                   onSend={handleSend}
-                  onCancel={(id) => cancel(id)}
+                  onCancel={cancel}
                 />
               ))}
             </div>
@@ -109,3 +95,4 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) =>
     </>
   );
 };
+SignatureRequestsCard.displayName = "SignatureRequestsCard";
