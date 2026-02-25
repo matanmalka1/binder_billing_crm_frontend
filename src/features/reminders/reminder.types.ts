@@ -7,6 +7,9 @@ export type {
   RemindersListResponse,
 } from "../../api/reminders.api";
 
+// Form value type is derived from the Zod schema — single source of truth
+export type { CreateReminderFormValues } from "./schemas";
+
 export const reminderTypeLabels: Record<string, string> = {
   tax_deadline_approaching: "מועד מס מתקרב",
   binder_idle: "תיק לא פעיל",
@@ -19,14 +22,3 @@ export const statusLabels: Record<string, string> = {
   sent: "נשלח",
   canceled: "בוטל",
 };
-
-export interface CreateReminderFormValues {
-  reminder_type: "tax_deadline_approaching" | "binder_idle" | "unpaid_charge" | "custom";
-  client_id: string;
-  target_date: string;
-  days_before: number;
-  tax_deadline_id?: string;
-  binder_id?: string;
-  charge_id?: string;
-  message: string;
-}

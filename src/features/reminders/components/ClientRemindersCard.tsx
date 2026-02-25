@@ -12,7 +12,9 @@ interface ClientRemindersCardProps {
   clientId: number;
 }
 
-export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({ clientId }) => {
+export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
+  clientId,
+}) => {
   const {
     reminders,
     isLoading,
@@ -26,14 +28,20 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({ client
     handleCancel,
   } = useReminders({ clientId });
 
-  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
+  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(
+    null,
+  );
 
   return (
     <Card
       title="תזכורות לקוח"
       subtitle="תזכורות פתוחות ומאוחרות עבור הלקוח"
       actions={
-        <Button variant="outline" size="sm" onClick={() => setShowCreateModal(true)}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowCreateModal(true)}
+        >
           <Plus className="h-4 w-4" />
           תזכורת חדשה
         </Button>
@@ -63,7 +71,10 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({ client
         onSubmit={onSubmit}
       />
 
-      <ReminderDrawer reminder={selectedReminder} onClose={() => setSelectedReminder(null)} />
+      <ReminderDrawer
+        reminder={selectedReminder}
+        onClose={() => setSelectedReminder(null)}
+      />
     </Card>
   );
 };

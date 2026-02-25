@@ -1,8 +1,9 @@
+import type { UseFormReturn } from "react-hook-form";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
-import type { UseFormReturn } from "react-hook-form";
+import { Textarea } from "../../../components/ui/Textarea";
 import type { CreateReminderFormValues } from "../reminder.types";
 
 interface CreateReminderModalProps {
@@ -22,12 +23,9 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   onSubmit,
   fixedClientId,
 }) => {
-  const {
-    register,
-    watch,
-    formState: { errors },
-  } = form;
+  const { register, watch, formState: { errors } } = form;
   const reminderType = watch("reminder_type");
+  const isCustom = reminderType === "custom";
 
   return (
     <Modal
@@ -35,18 +33,9 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
       title="תזכורת חדשה"
       onClose={onClose}
       footer={
-        <div className="flex gap-2 justify-end">
-          <Button type="button" variant="outline" onClick={onClose}>
-            ביטול
-          </Button>
-          <Button
-            type="button"
-            variant="primary"
-            onClick={onSubmit}
-            isLoading={isSubmitting}
-          >
-            יצירה
-          </Button>
+        <div className="flex justify-end gap-2">
+          <Button type="button" variant="outline" onClick={onClose}>ביטול</Button>
+          <Button type="button" variant="primary" onClick={onSubmit} isLoading={isSubmitting}>יצירה</Button>
         </div>
       }
     >
@@ -66,49 +55,47 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           <Input
             type="number"
             label="מזהה מועד מס"
-            error={errors.tax_deadline_id?.message}
             min={1}
+            error={errors.tax_deadline_id?.message}
             {...register("tax_deadline_id", { required: "נא להזין מזהה מועד מס" })}
           />
         )}
-
         {reminderType === "binder_idle" && (
           <Input
             type="number"
             label="מזהה תיק"
-            error={errors.binder_id?.message}
             min={1}
+            error={errors.binder_id?.message}
             {...register("binder_id", { required: "נא להזין מזהה תיק" })}
           />
         )}
-
         {reminderType === "unpaid_charge" && (
           <Input
             type="number"
             label="מזהה חשבונית"
-            error={errors.charge_id?.message}
             min={1}
+            error={errors.charge_id?.message}
             {...register("charge_id", { required: "נא להזין מזהה חשבונית" })}
           />
         )}
 
-        {!fixedClientId ? (
+        {fixedClientId ? (
+          <div>
+            <p className="text-sm font-medium text-gray-700 mb-1">לקוח</p>
+            <p className="text-sm font-mono text-gray-900">#{fixedClientId}</p>
+            <input type="hidden" value={fixedClientId} {...register("client_id")} />
+          </div>
+        ) : (
           <Input
             type="number"
             label="מזהה לקוח"
-            error={errors.client_id?.message}
             min={1}
+            error={errors.client_id?.message}
             {...register("client_id", {
               required: "נא להזין מזהה לקוח",
               min: { value: 1, message: "נא להזין מזהה לקוח תקין" },
             })}
           />
-        ) : (
-          <div>
-            <p className="text-sm font-medium text-gray-700 mb-1">לקוח</p>
-            <p className="text-sm text-gray-900 font-mono">#{fixedClientId}</p>
-            <input type="hidden" value={fixedClientId} {...register("client_id")} />
-          </div>
         )}
 
         <Input
@@ -121,8 +108,8 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
         <Input
           type="number"
           label="ימים לפני"
-          error={errors.days_before?.message}
           min={0}
+          error={errors.days_before?.message}
           {...register("days_before", {
             required: "נא להזין מספר ימים",
             min: { value: 0, message: "מספר ימים לפני חייב להיות חיובי" },
@@ -130,27 +117,15 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           })}
         />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            הודעה{" "}
-            {reminderType === "custom" && <span className="text-red-500">*</span>}
-          </label>
-          <textarea
-            rows={3}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder={
-              reminderType === "custom"
-                ? "הזן הודעת תזכורת..."
-                : "אופציונלי (אם ריק תופק הודעת ברירת מחדל)"
-            }
-            {...register("message", {
-              required: reminderType === "custom" ? "נא להזין הודעת תזכורת" : false,
-            })}
-          />
-          {errors.message?.message && (
-            <p className="text-xs text-red-600 mt-1">{errors.message.message}</p>
-          )}
-        </div>
+        <Textarea
+          label={isCustom ? "הודעה *" : "הודעה"}
+          rows={3}
+          placeholder={isCustom ? "הזן הודעת תזכורת..." : "אופציונלי — אם ריק תופק הודעת ברירת מחדל"}
+          error={errors.message?.message}
+          {...register("message", {
+            required: isCustom ? "נא להזין הודעת תזכורת" : false,
+          })}
+        />
       </form>
     </Modal>
   );

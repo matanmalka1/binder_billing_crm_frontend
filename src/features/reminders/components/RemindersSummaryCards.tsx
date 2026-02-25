@@ -1,6 +1,17 @@
 import { Bell, Calendar, AlertTriangle } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import type { Reminder } from "../reminder.types";
+
+interface StatConfig {
+  icon: LucideIcon;
+  colorBg: string;
+  iconBg: string;
+  iconColor: string;
+  textColor: string;
+  count: number;
+  label: string;
+}
 
 interface RemindersSummaryCardsProps {
   reminders: Reminder[];
@@ -9,56 +20,61 @@ interface RemindersSummaryCardsProps {
 export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
   reminders,
 }) => {
-  const pendingCount = reminders.filter((r) => r.status === "pending").length;
-  const sentCount = reminders.filter((r) => r.status === "sent").length;
-  const totalCount = reminders.length;
+  const stats: StatConfig[] = [
+    {
+      icon: Bell,
+      colorBg: "bg-gradient-to-br from-blue-50 to-blue-100",
+      iconBg: "bg-blue-200",
+      iconColor: "text-blue-700",
+      textColor: "text-blue-900",
+      count: reminders.filter((r) => r.status === "pending").length,
+      label: "תזכורות ממתינות",
+    },
+    {
+      icon: Calendar,
+      colorBg: "bg-gradient-to-br from-green-50 to-green-100",
+      iconBg: "bg-green-200",
+      iconColor: "text-green-700",
+      textColor: "text-green-900",
+      count: reminders.filter((r) => r.status === "sent").length,
+      label: "תזכורות שנשלחו",
+    },
+    {
+      icon: AlertTriangle,
+      colorBg: "bg-gradient-to-br from-purple-50 to-purple-100",
+      iconBg: "bg-purple-200",
+      iconColor: "text-purple-700",
+      textColor: "text-purple-900",
+      count: reminders.length,
+      label: 'סה"כ תזכורות',
+    },
+  ];
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <Card
-        variant="elevated"
-        className="bg-gradient-to-br from-blue-50 to-blue-100"
-      >
-        <div className="flex items-center gap-4">
-          <div className="rounded-lg bg-blue-200 p-3">
-            <Bell className="h-6 w-6 text-blue-700" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-blue-900">{pendingCount}</div>
-            <div className="text-sm text-blue-700">תזכורות ממתינות</div>
-          </div>
-        </div>
-      </Card>
-
-      <Card
-        variant="elevated"
-        className="bg-gradient-to-br from-green-50 to-green-100"
-      >
-        <div className="flex items-center gap-4">
-          <div className="rounded-lg bg-green-200 p-3">
-            <Calendar className="h-6 w-6 text-green-700" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-green-900">{sentCount}</div>
-            <div className="text-sm text-green-700">תזכורות שנשלחו</div>
-          </div>
-        </div>
-      </Card>
-
-      <Card
-        variant="elevated"
-        className="bg-gradient-to-br from-purple-50 to-purple-100"
-      >
-        <div className="flex items-center gap-4">
-          <div className="rounded-lg bg-purple-200 p-3">
-            <AlertTriangle className="h-6 w-6 text-purple-700" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-purple-900">{totalCount}</div>
-            <div className="text-sm text-purple-700">סה״כ תזכורות</div>
-          </div>
-        </div>
-      </Card>
+      {stats.map(
+        ({
+          icon: Icon,
+          colorBg,
+          iconBg,
+          iconColor,
+          textColor,
+          count,
+          label,
+        }) => (
+          <Card key={label} variant="elevated" className={colorBg}>
+            <div className="flex items-center gap-4">
+              <div className={`rounded-lg p-3 ${iconBg}`}>
+                <Icon className={`h-6 w-6 ${iconColor}`} />
+              </div>
+              <div>
+                <div className={`text-2xl font-bold ${textColor}`}>{count}</div>
+                <div className={`text-sm ${iconColor}`}>{label}</div>
+              </div>
+            </div>
+          </Card>
+        ),
+      )}
     </div>
   );
 };
