@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
+import { EmptyState } from "../../../components/ui/EmptyState";
+import { Inbox } from "lucide-react";
 import type { AgingReportItem } from "../../../api/reports.api";
 
 interface AgingReportTableProps {
@@ -14,7 +16,7 @@ export const AgingReportTable: React.FC<AgingReportTableProps> = ({ items }) => 
   const navigate = useNavigate();
 
   if (items.length === 0) {
-    return <p className="text-sm text-gray-400 text-center py-8">אין חובות פתוחים</p>;
+    return <EmptyState icon={Inbox} message="אין חובות פתוחים" />;
   }
 
   return (
@@ -25,7 +27,6 @@ export const AgingReportTable: React.FC<AgingReportTableProps> = ({ items }) => 
           onClick={() => navigate(`/clients/${item.client_id}`)}
           className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm animate-fade-in cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
         >
-          {/* Client */}
           <div className="mb-4 flex items-start justify-between">
             <div>
               <p className="font-semibold text-gray-900">{item.client_name}</p>
@@ -38,7 +39,6 @@ export const AgingReportTable: React.FC<AgingReportTableProps> = ({ items }) => 
             )}
           </div>
 
-          {/* Total */}
           <p className="text-2xl font-bold text-gray-900 tabular-nums">
             {fmt(item.total_outstanding)}
           </p>

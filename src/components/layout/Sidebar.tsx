@@ -14,6 +14,7 @@ import {
   KanbanSquare,
   ClipboardList,
   Settings,
+  TrendingDown,
 } from "lucide-react";
 import { cn } from "../../utils/utils";
 
@@ -33,6 +34,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     { to: "/tax/reports", label: "קנבן דוחות", icon: KanbanSquare },
     { to: "/tax/advance-payments", label: "מקדמות", icon: CalendarDays },
     { to: "/tax/vat", label: 'דוחות מע"מ', icon: ClipboardList },
+    { to: "/reports/aging", label: "דוח חובות", icon: TrendingDown },
     { to: "/reports/reminders", label: "תזכורות", icon: Bell },
     { to: "/reports/signature-requests", label: "בקשות חתימה", icon: FileSignature },
     { to: "/settings/users", label: "משתמשים", icon: Settings },

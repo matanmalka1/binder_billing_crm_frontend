@@ -17,6 +17,7 @@ import { Sidebar } from "../components/layout/Sidebar";
 import { PageLayout } from "../components/layout/PageLayout";
 import { RemindersPage } from "../pages/reports/Reminders";
 import { SignatureRequestsPage } from "../pages/reports/SignatureRequests";
+import { AgingReport } from "../pages/reports/AgingReport";
 import { AdvancePayments } from "../pages/tax/AdvancePayments";
 import { VatWorkItems } from "../pages/tax/VatWorkItems";
 import { Users } from "../pages/Users";
@@ -84,6 +85,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
             <Route path="tax/advance-payments" element={<AdvancePayments />} />
             <Route path="tax/vat" element={<VatWorkItems />} />
+            <Route path="reports/aging" element={<AgingReport />} />
             <Route path="reports/reminders" element={<RemindersPage />} />
             <Route path="reports/signature-requests" element={<SignatureRequestsPage />} />
             <Route path="settings/users" element={<Users />} />
