@@ -1,21 +1,19 @@
-import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "../../../utils/toast";
 import { clientsApi } from "../../../api/clients.api";
 import {
   documentsApi,
-  type UploadDocumentPayload,
   type OperationalSignalsResponse,
   type PermanentDocumentListResponse,
 } from "../../../api/documents.api";
 import { getErrorMessage, isPositiveInt } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
+import { useDocumentUpload } from "./useDocumentUpload";
 
 export const useDocumentsPage = () => {
-  const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [uploadError, setUploadError] = useState<string | null>(null);
+
   const selectedClientId = useMemo(() => {
     const raw = Number(searchParams.get("client_id") || 0);
     return isPositiveInt(raw) ? raw : 0;
@@ -25,10 +23,7 @@ export const useDocumentsPage = () => {
     queryKey: QK.documents.clients,
     queryFn: async () => {
       const response = await clientsApi.list({ page: 1, page_size: 100 });
-      return (response.items ?? []).map((item) => ({
-        id: item.id,
-        full_name: item.full_name,
-      }));
+      return (response.items ?? []).map(({ id, full_name }) => ({ id, full_name }));
     },
   });
 
@@ -44,20 +39,7 @@ export const useDocumentsPage = () => {
     queryFn: () => documentsApi.getSignalsByClient(selectedClientId),
   });
 
-  const uploadMutation = useMutation({
-    mutationFn: (payload: UploadDocumentPayload) => documentsApi.upload(payload),
-    onSuccess: async (_, variables) => {
-      toast.success("מסמך הועלה בהצלחה");
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: QK.documents.clientList(variables.client_id),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: QK.documents.clientSignals(variables.client_id),
-        }),
-      ]);
-    },
-  });
+  const { submitUpload, uploadError, uploading } = useDocumentUpload(selectedClientId);
 
   const setClient = (clientId: string) => {
     const next = new URLSearchParams(searchParams);
@@ -66,50 +48,22 @@ export const useDocumentsPage = () => {
     setSearchParams(next);
   };
 
-  const submitUpload = async (
-    payload: Pick<UploadDocumentPayload, "document_type" | "file">,
-  ): Promise<boolean> => {
-    if (!selectedClientId) {
-      setUploadError("יש לבחור לקוח לפני העלאה");
-      return false;
-    }
-    try {
-      setUploadError(null);
-      await uploadMutation.mutateAsync({
-        client_id: selectedClientId,
-        document_type: payload.document_type,
-        file: payload.file,
-      });
-      return true;
-    } catch (requestError: unknown) {
-      setUploadError(getErrorMessage(requestError, "שגיאה בהעלאת מסמך"));
-      return false;
-    }
-  };
-
   const loading =
     clientsQuery.isPending ||
     (selectedClientId > 0 && (documentsQuery.isPending || signalsQuery.isPending));
 
-  const errorSource = clientsQuery.error || documentsQuery.error || signalsQuery.error;
-  const error = errorSource
-    ? getErrorMessage(errorSource, "שגיאה בטעינת מסמכים")
-    : null;
+  const errorSource = clientsQuery.error ?? documentsQuery.error ?? signalsQuery.error;
 
   return {
     clientOptions: clientsQuery.data ?? [],
     documents: documentsQuery.data?.items ?? [],
-    error,
+    error: errorSource ? getErrorMessage(errorSource, "שגיאה בטעינת מסמכים") : null,
     loading,
     selectedClientId,
     setClient,
-    signals:
-      signalsQuery.data ?? {
-        client_id: 0,
-        missing_documents: [],
-      },
+    signals: signalsQuery.data ?? { client_id: 0, missing_documents: [] },
     submitUpload,
     uploadError,
-    uploading: uploadMutation.isPending,
+    uploading,
   };
 };

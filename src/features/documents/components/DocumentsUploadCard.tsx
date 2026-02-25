@@ -1,6 +1,7 @@
 import { Upload } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { Select } from "../../../components/ui/Select";
 import type { UploadDocumentPayload } from "../../../api/documents.api";
@@ -42,11 +43,8 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
   });
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-      <div className="border-b border-gray-100 bg-gray-50 px-4 py-3">
-        <p className="text-sm font-semibold text-gray-700">העלאת מסמך</p>
-      </div>
-      <form onSubmit={onSubmit} className="p-4">
+    <Card title="העלאת מסמך">
+      <form onSubmit={onSubmit}>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Select
             label="סוג מסמך"
@@ -58,7 +56,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
             <option value="engagement_agreement">הסכם התקשרות</option>
           </Select>
 
-          <label className="space-y-1">
+          <div className="space-y-1">
             <span className="block text-sm font-medium text-gray-700">קובץ</span>
             <input
               type="file"
@@ -68,14 +66,10 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
             {errors.file?.message && (
               <p className="text-xs text-red-600">{errors.file.message}</p>
             )}
-          </label>
+          </div>
 
           <div className="flex items-end">
-            <Button
-              type="submit"
-              isLoading={uploading}
-              className="w-full gap-2"
-            >
+            <Button type="submit" isLoading={uploading} className="w-full gap-2">
               <Upload className="h-4 w-4" />
               העלאה
             </Button>
@@ -86,6 +80,8 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
           <p className="mt-3 text-sm text-red-600">{uploadError}</p>
         )}
       </form>
-    </div>
+    </Card>
   );
 };
+
+DocumentsUploadCard.displayName = "DocumentsUploadCard";

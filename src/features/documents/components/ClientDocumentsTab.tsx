@@ -1,7 +1,7 @@
 import { FolderOpen } from "lucide-react";
-import { TableSkeleton } from "../../../components/ui/TableSkeleton";
 import { EmptyState } from "../../../components/ui/EmptyState";
 import { ErrorCard } from "../../../components/ui/ErrorCard";
+import { TableSkeleton } from "../../../components/ui/TableSkeleton";
 import { DocumentsDataCards } from "./DocumentsDataCards";
 import { DocumentsUploadCard } from "./DocumentsUploadCard";
 import { useClientDocumentsTab } from "../hooks/useClientDocumentsTab";
@@ -33,3 +33,5 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
     </div>
   );
 };
+
+ClientDocumentsTab.displayName = "ClientDocumentsTab";

@@ -1,19 +1,14 @@
-import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   documentsApi,
-  type UploadDocumentPayload,
   type OperationalSignalsResponse,
   type PermanentDocumentListResponse,
 } from "../../../api/documents.api";
 import { getErrorMessage } from "../../../utils/utils";
-import { toast } from "../../../utils/toast";
 import { QK } from "../../../lib/queryKeys";
+import { useDocumentUpload } from "./useDocumentUpload";
 
 export const useClientDocumentsTab = (clientId: number) => {
-  const queryClient = useQueryClient();
-  const [uploadError, setUploadError] = useState<string | null>(null);
-
   const documentsQuery = useQuery<PermanentDocumentListResponse>({
     enabled: clientId > 0,
     queryKey: QK.documents.clientList(clientId),
@@ -26,29 +21,7 @@ export const useClientDocumentsTab = (clientId: number) => {
     queryFn: () => documentsApi.getSignalsByClient(clientId),
   });
 
-  const uploadMutation = useMutation({
-    mutationFn: (payload: UploadDocumentPayload) => documentsApi.upload(payload),
-    onSuccess: async () => {
-      toast.success("מסמך הועלה בהצלחה");
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) }),
-        queryClient.invalidateQueries({ queryKey: QK.documents.clientSignals(clientId) }),
-      ]);
-    },
-  });
-
-  const submitUpload = async (
-    payload: Pick<UploadDocumentPayload, "document_type" | "file">,
-  ): Promise<boolean> => {
-    try {
-      setUploadError(null);
-      await uploadMutation.mutateAsync({ client_id: clientId, ...payload });
-      return true;
-    } catch (requestError: unknown) {
-      setUploadError(getErrorMessage(requestError, "שגיאה בהעלאת מסמך"));
-      return false;
-    }
-  };
+  const { submitUpload, uploadError, uploading } = useDocumentUpload(clientId);
 
   const errorSource = documentsQuery.error ?? signalsQuery.error;
 
@@ -59,6 +32,6 @@ export const useClientDocumentsTab = (clientId: number) => {
     error: errorSource ? getErrorMessage(errorSource, "שגיאה בטעינת מסמכים") : null,
     submitUpload,
     uploadError,
-    uploading: uploadMutation.isPending,
+    uploading,
   };
 };
