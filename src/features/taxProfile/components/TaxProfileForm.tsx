@@ -4,7 +4,7 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import type { TaxProfileData } from "../hooks/useTaxProfile";
-import { taxProfileSchema, type TaxProfileFormValues } from "./taxProfileSchema";
+import { taxProfileSchema, taxProfileDefaults, type TaxProfileFormValues } from "../schemas";
 
 interface Props {
   profile: TaxProfileData | null;
@@ -16,12 +16,14 @@ interface Props {
 export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isSaving }) => {
   const { register, handleSubmit, formState: { errors } } = useForm<TaxProfileFormValues>({
     resolver: zodResolver(taxProfileSchema),
-    defaultValues: {
-      vat_type: profile?.vat_type ?? "monthly",
-      business_type: profile?.business_type ?? "",
-      tax_year_start: profile?.tax_year_start ? String(profile.tax_year_start) : "",
-      accountant_name: profile?.accountant_name ?? "",
-    },
+    defaultValues: profile
+      ? {
+          vat_type: profile.vat_type ?? taxProfileDefaults.vat_type,
+          business_type: profile.business_type ?? "",
+          tax_year_start: profile.tax_year_start ? String(profile.tax_year_start) : "",
+          accountant_name: profile.accountant_name ?? "",
+        }
+      : taxProfileDefaults,
   });
 
   const onSubmit = handleSubmit((values) => {
@@ -42,12 +44,23 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
           <option value="exempt">פטור</option>
         </Select>
         <Input label="תחום עיסוק" error={errors.business_type?.message} {...register("business_type")} />
-        <Input label="שנת מס ראשונה" type="number" min={1900} max={2100} error={errors.tax_year_start?.message} {...register("tax_year_start")} />
+        <Input
+          label="שנת מס ראשונה"
+          type="number"
+          min={1900}
+          max={2100}
+          error={errors.tax_year_start?.message}
+          {...register("tax_year_start")}
+        />
         <Input label="רואה חשבון מלווה" error={errors.accountant_name?.message} {...register("accountant_name")} />
       </div>
       <div className="flex gap-2 justify-end pt-2">
-        <Button type="button" variant="outline" disabled={isSaving} onClick={onCancel}>ביטול</Button>
-        <Button type="submit" isLoading={isSaving}>שמור</Button>
+        <Button type="button" variant="outline" disabled={isSaving} onClick={onCancel}>
+          ביטול
+        </Button>
+        <Button type="submit" isLoading={isSaving}>
+          שמור
+        </Button>
       </div>
     </form>
   );
