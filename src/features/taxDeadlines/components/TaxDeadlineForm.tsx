@@ -1,6 +1,7 @@
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
+import { Textarea } from "../../../components/ui/Textarea";
 import { Modal } from "../../../components/ui/Modal";
 import type { UseFormReturn } from "react-hook-form";
 import type { CreateTaxDeadlineForm } from "../types";
@@ -42,19 +43,10 @@ export const TaxDeadlineForm = ({
       onClose={handleClose}
       footer={
         <div className="flex items-center justify-end gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={isSubmitting}
-            onClick={handleClose}
-          >
+          <Button type="button" variant="outline" disabled={isSubmitting} onClick={handleClose}>
             ביטול
           </Button>
-          <Button
-            type="button"
-            onClick={onSubmit}
-            isLoading={isSubmitting}
-          >
+          <Button type="button" onClick={onSubmit} isLoading={isSubmitting}>
             צור מועד
           </Button>
         </div>
@@ -93,17 +85,12 @@ export const TaxDeadlineForm = ({
           error={errors.payment_amount?.message}
         />
 
-        <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">
-            הערות
-          </label>
-          <textarea
-            {...register("description")}
-            rows={3}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="הערות נוספות על המועד..."
-          />
-        </div>
+        <Textarea
+          label="הערות"
+          rows={3}
+          placeholder="הערות נוספות על המועד..."
+          {...register("description")}
+        />
       </div>
     </Modal>
   );

@@ -5,11 +5,11 @@ import { Button } from "../../../components/ui/Button";
 import { EmptyState } from "../../../components/ui/EmptyState";
 import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
 import {
-  calculateDaysRemaining,
   formatCurrency,
   getDeadlineTypeLabel,
   getUrgencyColor,
 } from "../../../api/taxDeadlines.utils";
+import { getDeadlineUrgency, getDeadlineDaysLabelShort } from "../utils/deadlineUrgency";
 import { staggerDelay } from "../../../utils/animation";
 import { formatDate, cn } from "../../../utils/utils";
 
@@ -25,6 +25,8 @@ const urgencyRowMap: Record<string, string> = {
   red: "bg-orange-50/30",
   yellow: "bg-yellow-50/30",
 };
+
+const TABLE_HEADERS = ["לקוח", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", "פעולות"];
 
 export const TaxDeadlinesTable = ({
   deadlines,
@@ -49,41 +51,22 @@ export const TaxDeadlinesTable = ({
         <table className="w-full min-w-[640px]">
           <thead>
             <tr className="border-b border-gray-200 text-right">
-              {["לקוח", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", "פעולות"].map(
-                (col) => (
-                  <th
-                    key={col}
-                    className="pb-3 pr-4 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-500"
-                  >
-                    {col}
-                  </th>
-                )
-              )}
+              {TABLE_HEADERS.map((col) => (
+                <th
+                  key={col}
+                  className="pb-3 pr-4 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-500"
+                >
+                  {col}
+                </th>
+              ))}
             </tr>
           </thead>
 
           <tbody className="divide-y divide-gray-100">
             {deadlines.map((deadline, index) => {
-              const daysRemaining = calculateDaysRemaining(deadline.due_date);
               const isCompleted = deadline.status === "completed";
-
-              const urgency = isCompleted
-                ? "green"
-                : daysRemaining < 0
-                ? "overdue"
-                : daysRemaining <= 2
-                ? "red"
-                : daysRemaining <= 7
-                ? "yellow"
-                : "green";
-
-              const daysLabel = isCompleted
-                ? "—"
-                : daysRemaining < 0
-                ? `איחור ${Math.abs(daysRemaining)}י׳`
-                : daysRemaining === 0
-                ? "היום"
-                : `${daysRemaining} ימים`;
+              const { urgency, daysRemaining } = getDeadlineUrgency(deadline.due_date, isCompleted);
+              const daysLabel = getDeadlineDaysLabelShort(daysRemaining, isCompleted);
 
               return (
                 <tr
@@ -91,7 +74,7 @@ export const TaxDeadlinesTable = ({
                   className={cn(
                     "transition-colors hover:bg-gray-50 animate-fade-in",
                     onRowClick && "cursor-pointer",
-                    !isCompleted && urgencyRowMap[urgency]
+                    !isCompleted && urgencyRowMap[urgency],
                   )}
                   style={{ animationDelay: staggerDelay(index) }}
                   onClick={() => onRowClick?.(deadline)}
@@ -116,9 +99,7 @@ export const TaxDeadlinesTable = ({
                     {isCompleted ? (
                       <span className="text-sm text-gray-400">—</span>
                     ) : (
-                      <Badge
-                        className={cn("border font-semibold text-xs", getUrgencyColor(urgency))}
-                      >
+                      <Badge className={cn("border font-semibold text-xs", getUrgencyColor(urgency))}>
                         {daysLabel}
                       </Badge>
                     )}

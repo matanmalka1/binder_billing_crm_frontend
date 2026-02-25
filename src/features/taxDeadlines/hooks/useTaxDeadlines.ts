@@ -8,6 +8,7 @@ import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
 import type { TaxDeadlineFilters, CreateTaxDeadlineForm } from "../types";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
+import { getErrorMessage } from "../../../utils/utils";
 
 export const useTaxDeadlines = () => {
   const queryClient = useQueryClient();
@@ -55,9 +56,7 @@ export const useTaxDeadlines = () => {
       queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
       setShowCreateModal(false);
     },
-    onError: (error) => {
-      showErrorToast(error, "שגיאה ביצירת מועד");
-    },
+    onError: (error) => showErrorToast(error, "שגיאה ביצירת מועד"),
   });
 
   const completeMutation = useMutation({
@@ -66,22 +65,9 @@ export const useTaxDeadlines = () => {
       toast.success("מועד סומן כהושלם");
       queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
     },
-    onError: (error) => {
-      showErrorToast(error, "שגיאה בסימון מועד");
-    },
-    onSettled: () => {
-      setCompletingId(null);
-    },
+    onError: (error) => showErrorToast(error, "שגיאה בסימון מועד"),
+    onSettled: () => setCompletingId(null),
   });
-
-  const handleFilterChange = (key: string, value: string) => {
-    setFilter(key, value);
-  };
-
-  const handleComplete = async (deadlineId: number) => {
-    setCompletingId(deadlineId);
-    await completeMutation.mutateAsync(deadlineId);
-  };
 
   const form = useForm<CreateTaxDeadlineForm>({
     defaultValues: {
@@ -104,25 +90,37 @@ export const useTaxDeadlines = () => {
     form.reset();
   });
 
+  const handleFilterChange = (key: string, value: string) => setFilter(key, value);
+
+  const handleComplete = async (deadlineId: number) => {
+    setCompletingId(deadlineId);
+    await completeMutation.mutateAsync(deadlineId);
+  };
+
   const deadlines = deadlinesQuery.data?.items ?? [];
   const total = deadlinesQuery.data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
 
   return {
-    filters,
-    deadlinesQuery,
-    createMutation,
-    completeMutation,
-    handleFilterChange,
-    handleComplete,
-    showCreateModal,
-    setShowCreateModal,
-    completingId,
-    setCompletingId,
-    form,
-    onSubmit,
+    // Data
     deadlines,
     total,
     totalPages,
+    filters,
+    // State
+    isLoading: deadlinesQuery.isPending,
+    error: deadlinesQuery.error
+      ? getErrorMessage(deadlinesQuery.error, "שגיאה בטעינת מועדים")
+      : null,
+    isCreating: createMutation.isPending,
+    completingId,
+    showCreateModal,
+    // Actions
+    setShowCreateModal,
+    handleFilterChange,
+    handleComplete,
+    // Form
+    form,
+    onSubmit,
   };
 };

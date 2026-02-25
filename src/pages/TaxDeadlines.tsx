@@ -5,7 +5,6 @@ import { PaginationCard } from "../components/ui/PaginationCard";
 import { PageLoading } from "../components/ui/PageLoading";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { Button } from "../components/ui/Button";
-import { getErrorMessage } from "../utils/utils";
 import { TaxDeadlinesFilters } from "../features/taxDeadlines/components/TaxDeadlinesFilters";
 import { TaxDeadlinesTable } from "../features/taxDeadlines/components/TaxDeadlinesTable";
 import { TaxDeadlineForm } from "../features/taxDeadlines/components/TaxDeadlineForm";
@@ -20,8 +19,9 @@ import type { TaxDeadlineResponse } from "../api/taxDeadlines.api";
 export const TaxDeadlines: React.FC = () => {
   const {
     filters,
-    deadlinesQuery,
-    createMutation,
+    isLoading,
+    error,
+    isCreating,
     handleFilterChange,
     handleComplete,
     showCreateModal,
@@ -35,13 +35,7 @@ export const TaxDeadlines: React.FC = () => {
   } = useTaxDeadlines();
 
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
-
-  const {
-    currentYear,
-    submissions,
-    urgentDeadlines,
-    upcomingDeadlines,
-  } = useTaxDashboard();
+  const { currentYear, submissions, urgentDeadlines, upcomingDeadlines } = useTaxDashboard();
 
   const header = (
     <PageHeader
@@ -57,7 +51,7 @@ export const TaxDeadlines: React.FC = () => {
     />
   );
 
-  if (deadlinesQuery.isPending) {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         {header}
@@ -66,11 +60,11 @@ export const TaxDeadlines: React.FC = () => {
     );
   }
 
-  if (deadlinesQuery.error) {
+  if (error) {
     return (
       <div className="space-y-6">
         {header}
-        <ErrorCard message={getErrorMessage(deadlinesQuery.error, "שגיאה בטעינת מועדים")} />
+        <ErrorCard message={error} />
       </div>
     );
   }
@@ -116,7 +110,7 @@ export const TaxDeadlines: React.FC = () => {
         onClose={() => setShowCreateModal(false)}
         onSubmit={onSubmit}
         form={form}
-        isSubmitting={createMutation.isPending}
+        isSubmitting={isCreating}
       />
 
       <TaxDeadlineDrawer

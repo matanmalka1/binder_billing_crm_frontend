@@ -6,11 +6,11 @@ import { Button } from "../../../components/ui/Button";
 import { CheckCircle2 } from "lucide-react";
 import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
 import {
-  calculateDaysRemaining,
   formatCurrency,
   getDeadlineTypeLabel,
   getUrgencyColor,
 } from "../../../api/taxDeadlines.utils";
+import { getDeadlineUrgency } from "../utils/deadlineUrgency";
 import { formatDate, cn } from "../../../utils/utils";
 
 interface TaxDeadlineDrawerProps {
@@ -21,31 +21,9 @@ interface TaxDeadlineDrawerProps {
 export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, onClose }) => {
   const navigate = useNavigate();
   const isCompleted = deadline?.status === "completed";
-
-  const daysRemaining = deadline && !isCompleted
-    ? calculateDaysRemaining(deadline.due_date)
-    : null;
-
-  const urgency = isCompleted
-    ? "green"
-    : daysRemaining == null
-    ? "green"
-    : daysRemaining < 0
-    ? "overdue"
-    : daysRemaining <= 2
-    ? "red"
-    : daysRemaining <= 7
-    ? "yellow"
-    : "green";
-
-  const daysLabel =
-    daysRemaining == null
-      ? "—"
-      : daysRemaining < 0
-      ? `איחור של ${Math.abs(daysRemaining)} ימים`
-      : daysRemaining === 0
-      ? "היום"
-      : `${daysRemaining} ימים`;
+  const { urgency, daysLabel } = deadline
+    ? getDeadlineUrgency(deadline.due_date, isCompleted ?? false)
+    : { urgency: "green" as const, daysLabel: "—" };
 
   return (
     <DetailDrawer
@@ -101,11 +79,11 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
                 )
               }
             />
-            {!isCompleted && daysRemaining !== null && (
+            {!isCompleted && (
               <DrawerField
                 label="זמן נותר"
                 value={
-                  <span className={cn("font-semibold text-sm", getUrgencyColor(urgency), "px-2 py-0.5 rounded-full border text-xs")}>
+                  <span className={cn("font-semibold text-sm px-2 py-0.5 rounded-full border text-xs", getUrgencyColor(urgency))}>
                     {daysLabel}
                   </span>
                 }
@@ -121,4 +99,5 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
     </DetailDrawer>
   );
 };
+
 TaxDeadlineDrawer.displayName = "TaxDeadlineDrawer";
