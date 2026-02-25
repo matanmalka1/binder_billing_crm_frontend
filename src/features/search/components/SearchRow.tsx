@@ -3,6 +3,7 @@ import { Badge } from "../../../components/ui/Badge";
 import { ExternalLink } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import type { SearchResult } from "../../../api/search.api";
+import { toQueryParams } from "../../../api/queryParams";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
 import { getResultColor, getResultIcon, getResultLabel } from "./searchResultMeta";
@@ -15,34 +16,31 @@ interface SearchRowProps {
 
 type BadgeVariant = "error" | "warning" | "info" | "neutral";
 
-const signalVariants: Record<string, BadgeVariant> = {
+const SIGNAL_VARIANTS: Record<string, BadgeVariant> = {
   missing_permanent_documents: "warning",
   unpaid_charges:              "warning",
   ready_for_pickup:            "info",
   idle_binder:                 "neutral",
 };
 
-const workStateStyles: Record<string, string> = {
+const WORK_STATE_STYLES: Record<string, string> = {
   waiting_for_work: "text-gray-500",
   in_progress:      "text-blue-700",
   completed:        "text-green-700",
 };
 
+const buildDetailUrl = (result: SearchResult): string | null => {
+  if (result.result_type === "client") return `/clients/${result.client_id}`;
+  if (result.result_type === "binder" && result.binder_id) {
+    const params = toQueryParams({ binder_id: result.binder_id, client_id: result.client_id });
+    return `/binders?${params.toString()}`;
+  }
+  return null;
+};
+
 export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
   const navigate = useNavigate();
-  const resultKey = `${result.result_type}-${result.client_id}-${result.binder_id}-${index}`;
-  const isClient = result.result_type === "client";
-  const isBinder = result.result_type === "binder";
-  const detailUrl = (() => {
-    if (isClient) return `/clients/${result.client_id}`;
-    if (isBinder && result.binder_id) {
-      const params = new URLSearchParams();
-      params.set("binder_id", String(result.binder_id));
-      params.set("client_id", String(result.client_id));
-      return `/binders?${params.toString()}`;
-    }
-    return null;
-  })();
+  const detailUrl = buildDetailUrl(result);
 
   const handleRowClick = () => {
     if (detailUrl) navigate(detailUrl);
@@ -57,7 +55,6 @@ export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
 
   return (
     <tr
-      key={resultKey}
       className={cn(
         "group transition-all duration-200",
         "hover:bg-gradient-to-r hover:from-primary-50/30 hover:to-transparent",
@@ -69,7 +66,6 @@ export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
       tabIndex={detailUrl ? 0 : -1}
       style={{ animationDelay: staggerDelay(index) }}
     >
-      {/* Type */}
       <td className="py-3.5 pr-6">
         <div className="flex items-center gap-2">
           <div className="h-8 w-1 rounded-full bg-gradient-to-b from-primary-400 to-primary-600 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -82,13 +78,11 @@ export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
         </div>
       </td>
 
-      {/* Client */}
       <td className="py-3.5 pr-4">
         <p className="text-sm font-semibold text-gray-900">{result.client_name ?? "—"}</p>
         <p className="font-mono text-xs text-gray-400">#{result.client_id}</p>
       </td>
 
-      {/* Binder number */}
       <td className="py-3.5 pr-4">
         {result.binder_number ? (
           <span className="font-mono text-sm font-semibold text-gray-800">{result.binder_number}</span>
@@ -97,21 +91,19 @@ export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
         )}
       </td>
 
-      {/* Work state */}
       <td className="py-3.5 pr-4">
-        <span className={cn("text-sm", workStateStyles[result.work_state ?? ""] ?? "text-gray-500")}>
+        <span className={cn("text-sm", WORK_STATE_STYLES[result.work_state ?? ""] ?? "text-gray-500")}>
           {getWorkStateLabel(result.work_state ?? "")}
         </span>
       </td>
 
-      {/* Signals */}
       <td className="py-3.5 pr-4">
         {Array.isArray(result.signals) && result.signals.length > 0 ? (
           <div className="flex flex-wrap gap-1">
             {result.signals.map((signal) => (
               <Badge
                 key={`${index}-${signal}`}
-                variant={signalVariants[signal] ?? "neutral"}
+                variant={SIGNAL_VARIANTS[signal] ?? "neutral"}
                 className="text-xs"
               >
                 {getSignalLabel(signal)}
@@ -123,7 +115,6 @@ export const SearchRow: React.FC<SearchRowProps> = ({ result, index }) => {
         )}
       </td>
 
-      {/* Action */}
       <td className="py-3.5 pr-4">
         {detailUrl ? (
           <Link

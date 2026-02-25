@@ -12,16 +12,10 @@ export interface SearchFilters extends Omit<SearchParams, "has_signals" | "signa
   page_size: number;
 }
 
-export interface SearchContentProps {
-  total: number;
-  filters: SearchFilters;
-  results: SearchResult[];
-  onFilterChange: (name: keyof SearchFilters, value: string | string[]) => void;
-}
-
 export interface SearchFiltersBarProps {
   filters: SearchFilters;
   onFilterChange: (name: keyof SearchFilters, value: string | string[]) => void;
+  onReset?: () => void;
 }
 
 export interface SearchTableProps {

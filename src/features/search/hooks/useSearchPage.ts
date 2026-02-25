@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { searchApi } from "../../../api/search.api";
@@ -45,20 +45,28 @@ export const useSearchPage = () => {
       }),
   });
 
-  const handleFilterChange = (name: keyof SearchFilters, value: string | string[]) => {
-    const next = new URLSearchParams(searchParams);
-    if (name === "page") next.set("page", String(value));
-    else if (name === "signal_type") {
-      next.delete("signal_type");
-      if (Array.isArray(value)) value.forEach((signal) => signal && next.append("signal_type", signal));
-      next.set("page", "1");
-    } else {
-      if (String(value)) next.set(name, String(value));
-      else next.delete(name);
-      next.set("page", "1");
-    }
-    setSearchParams(next);
-  };
+  const handleFilterChange = useCallback(
+    (name: keyof SearchFilters, value: string | string[]) => {
+      const next = new URLSearchParams(searchParams);
+      if (name === "page") {
+        next.set("page", String(value));
+      } else if (name === "signal_type") {
+        next.delete("signal_type");
+        if (Array.isArray(value)) value.forEach((s) => s && next.append("signal_type", s));
+        next.set("page", "1");
+      } else {
+        if (String(value)) next.set(name, String(value));
+        else next.delete(name);
+        next.set("page", "1");
+      }
+      setSearchParams(next);
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const handleReset = useCallback(() => {
+    setSearchParams(new URLSearchParams());
+  }, [setSearchParams]);
 
   return {
     error: searchQuery.error
@@ -66,6 +74,7 @@ export const useSearchPage = () => {
       : null,
     filters,
     handleFilterChange,
+    handleReset,
     loading: searchQuery.isPending,
     results: searchQuery.data?.results ?? [],
     total: searchQuery.data?.total ?? 0,

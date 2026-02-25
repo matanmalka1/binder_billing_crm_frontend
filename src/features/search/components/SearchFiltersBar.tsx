@@ -3,22 +3,12 @@ import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Button } from "../../../components/ui/Button";
 import type { SearchFiltersBarProps } from "../types";
-import { getSignalLabel, getWorkStateLabel } from "../../../utils/enums";
+import { getSignalLabel } from "../../../utils/enums";
 import { cn } from "../../../utils/utils";
-
-const WORK_STATE_OPTIONS = [
-  { value: "", label: "הכל" },
-  { value: "waiting_for_work", label: getWorkStateLabel("waiting_for_work") },
-  { value: "in_progress", label: getWorkStateLabel("in_progress") },
-  { value: "completed", label: getWorkStateLabel("completed") },
-];
-
-const SIGNAL_OPTIONS = [
-  { value: "missing_permanent_documents", label: getSignalLabel("missing_permanent_documents") },
-  { value: "ready_for_pickup",            label: getSignalLabel("ready_for_pickup") },
-  { value: "unpaid_charges",              label: getSignalLabel("unpaid_charges") },
-  { value: "idle_binder",                 label: getSignalLabel("idle_binder") },
-];
+import {
+  WORK_STATE_OPTIONS,
+  SIGNAL_TYPE_OPTIONS,
+} from "../../../constants/filterOptions.constants";
 
 const SIGNAL_CHIP_STYLES: Record<string, string> = {
   missing_permanent_documents: "border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100",
@@ -34,20 +24,16 @@ const SIGNAL_CHIP_ACTIVE: Record<string, string> = {
   idle_binder:                 "bg-gray-200 border-gray-500",
 };
 
-export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({ filters, onFilterChange }) => {
+const HAS_SIGNALS_OPTIONS = [
+  { value: "", label: "הכל" },
+  { value: "true", label: "כן" },
+  { value: "false", label: "לא" },
+];
+
+export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({ filters, onFilterChange, onReset }) => {
   const activeCount =
     [filters.query, filters.client_name, filters.id_number, filters.binder_number, filters.work_state, filters.has_signals]
       .filter(Boolean).length + filters.signal_type.length;
-
-  const handleReset = () => {
-    onFilterChange("query", "");
-    onFilterChange("client_name", "");
-    onFilterChange("id_number", "");
-    onFilterChange("binder_number", "");
-    onFilterChange("work_state", "");
-    onFilterChange("signal_type", []);
-    onFilterChange("has_signals", "");
-  };
 
   const toggleSignal = (value: string) => {
     const next = filters.signal_type.includes(value)
@@ -58,7 +44,6 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({ filters, onF
 
   return (
     <div className="space-y-5">
-      {/* Text search row */}
       <div>
         <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-gray-400">חיפוש טקסט</p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -93,7 +78,6 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({ filters, onF
         </div>
       </div>
 
-      {/* Status selects */}
       <div>
         <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-gray-400">סינון סטטוס</p>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -107,20 +91,15 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({ filters, onF
             label="יש אותות"
             value={filters.has_signals}
             onChange={(e) => onFilterChange("has_signals", e.target.value)}
-            options={[
-              { value: "", label: "הכל" },
-              { value: "true", label: "כן" },
-              { value: "false", label: "לא" },
-            ]}
+            options={HAS_SIGNALS_OPTIONS}
           />
         </div>
       </div>
 
-      {/* Signal toggle chips */}
       <div>
         <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-gray-400">סינון לפי אות</p>
         <div className="flex flex-wrap gap-2">
-          {SIGNAL_OPTIONS.map(({ value, label }) => {
+          {SIGNAL_TYPE_OPTIONS.map(({ value }) => {
             const active = filters.signal_type.includes(value);
             return (
               <button
@@ -134,18 +113,17 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({ filters, onF
                     : (SIGNAL_CHIP_STYLES[value] ?? "border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100"),
                 )}
               >
-                {label}
+                {getSignalLabel(value)}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Reset footer */}
-      {activeCount > 0 && (
+      {activeCount > 0 && onReset && (
         <div className="flex items-center justify-between border-t border-gray-100 pt-3">
           <span className="text-xs text-gray-500">{activeCount} פילטרים פעילים</span>
-          <Button type="button" variant="ghost" size="sm" onClick={handleReset} className="gap-1.5 text-xs">
+          <Button type="button" variant="ghost" size="sm" onClick={onReset} className="gap-1.5 text-xs">
             <RotateCcw className="h-3.5 w-3.5" />
             איפוס הכל
           </Button>
