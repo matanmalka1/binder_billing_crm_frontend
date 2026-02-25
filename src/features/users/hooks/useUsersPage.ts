@@ -10,13 +10,15 @@ import { parsePositiveInt } from "../../../utils/utils";
 
 const PAGE_SIZE = 20;
 
+const invalidateUsers = (queryClient: ReturnType<typeof useQueryClient>) =>
+  queryClient.invalidateQueries({ queryKey: QK.users.all });
+
 export const useUsersPage = () => {
   const queryClient = useQueryClient();
   const { searchParams, setFilter, setPage } = useSearchParamFilters();
 
   const page = parsePositiveInt(searchParams.get("page"), 1);
   const page_size = parsePositiveInt(searchParams.get("page_size"), PAGE_SIZE);
-
   const filters = { page, page_size };
 
   const listQuery = useQuery({
@@ -24,86 +26,97 @@ export const useUsersPage = () => {
     queryFn: () => usersApi.list(filters),
   });
 
-  const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
+  // ── Modal state ──────────────────────────────────────────────────────────────
+
+  const [editUser, setEditUser] = useState<UserResponse | null>(null);
+  const [resetUser, setResetUser] = useState<UserResponse | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [showAuditLogs, setShowAuditLogs] = useState(false);
+
+  // ── Mutations ────────────────────────────────────────────────────────────────
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateUserPayload) => usersApi.create(payload),
-    onSuccess: () => {
-      toast.success("משתמש נוצר בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.users.all });
-    },
+    onSuccess: () => { toast.success("משתמש נוצר בהצלחה"); void invalidateUsers(queryClient); },
     onError: (err) => showErrorToast(err, "שגיאה ביצירת משתמש"),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ userId, payload }: { userId: number; payload: UpdateUserPayload }) =>
       usersApi.update(userId, payload),
-    onSuccess: () => {
-      toast.success("פרטי המשתמש עודכנו");
-      queryClient.invalidateQueries({ queryKey: QK.users.all });
-    },
+    onSuccess: () => { toast.success("פרטי המשתמש עודכנו"); void invalidateUsers(queryClient); },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון המשתמש"),
   });
 
-  const activateMutation = useMutation({
-    mutationFn: (userId: number) => usersApi.activate(userId),
-    onSuccess: () => {
-      toast.success("המשתמש הופעל בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.users.all });
+  const toggleActiveMutation = useMutation({
+    mutationFn: ({ userId, isActive }: { userId: number; isActive: boolean }) =>
+      isActive ? usersApi.deactivate(userId) : usersApi.activate(userId),
+    onSuccess: (_, { isActive }) => {
+      toast.success(isActive ? "המשתמש הושבת בהצלחה" : "המשתמש הופעל בהצלחה");
+      void invalidateUsers(queryClient);
     },
-    onError: (err) => showErrorToast(err, "שגיאה בהפעלת המשתמש"),
-  });
-
-  const deactivateMutation = useMutation({
-    mutationFn: (userId: number) => usersApi.deactivate(userId),
-    onSuccess: () => {
-      toast.success("המשתמש הושבת בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.users.all });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בהשבתת המשתמש"),
+    onError: (err) => showErrorToast(err, "שגיאה בשינוי סטטוס המשתמש"),
   });
 
   const resetPasswordMutation = useMutation({
     mutationFn: ({ userId, newPassword }: { userId: number; newPassword: string }) =>
       usersApi.resetPassword(userId, { new_password: newPassword }),
-    onSuccess: () => {
-      toast.success("הסיסמה אופסה בהצלחה");
-    },
+    onSuccess: () => toast.success("הסיסמה אופסה בהצלחה"),
     onError: (err) => showErrorToast(err, "שגיאה באיפוס הסיסמה"),
   });
 
-  const handleFilterChange = (key: string, value: string) => setFilter(key, value);
+  // ── Actions ──────────────────────────────────────────────────────────────────
+
+  const createUser = async (payload: CreateUserPayload) => {
+    await createMutation.mutateAsync(payload);
+    setShowCreateModal(false);
+  };
+
+  const updateUser = async (userId: number, payload: UpdateUserPayload) => {
+    await updateMutation.mutateAsync({ userId, payload });
+    setEditUser(null);
+  };
+
+  const toggleActive = (user: UserResponse) => {
+    toggleActiveMutation.mutate({ userId: user.id, isActive: user.is_active });
+  };
+
+  const resetPassword = async (userId: number, newPassword: string) => {
+    await resetPasswordMutation.mutateAsync({ userId, newPassword });
+    setResetUser(null);
+  };
 
   return {
+    // Data
     users: listQuery.data?.items ?? [],
     total: listQuery.data?.total ?? 0,
     loading: listQuery.isPending,
     error: listQuery.isError ? "שגיאה בטעינת המשתמשים" : null,
     filters,
-    handleFilterChange,
+    handleFilterChange: (key: string, value: string) => setFilter(key, value),
     setPage,
 
-    selectedUser,
-    setSelectedUser,
+    // Modal state
+    editUser,
+    setEditUser,
+    resetUser,
+    setResetUser,
+    showCreateModal,
+    setShowCreateModal,
     showAuditLogs,
     setShowAuditLogs,
 
-    createUser: (payload: CreateUserPayload) => createMutation.mutateAsync(payload),
+    // Actions
+    createUser,
     createLoading: createMutation.isPending,
 
-    updateUser: (userId: number, payload: UpdateUserPayload) =>
-      updateMutation.mutateAsync({ userId, payload }),
+    updateUser,
     updateLoading: updateMutation.isPending,
 
-    activateUser: (userId: number) => activateMutation.mutateAsync(userId),
-    activateLoading: activateMutation.isPending,
+    toggleActive,
+    toggleActiveLoading: toggleActiveMutation.isPending,
 
-    deactivateUser: (userId: number) => deactivateMutation.mutateAsync(userId),
-    deactivateLoading: deactivateMutation.isPending,
-
-    resetPassword: (userId: number, newPassword: string) =>
-      resetPasswordMutation.mutateAsync({ userId, newPassword }),
+    resetPassword,
     resetPasswordLoading: resetPasswordMutation.isPending,
   };
 };

@@ -5,7 +5,7 @@ import type { Column } from "../../../components/ui/DataTable";
 import type { UserResponse } from "../../../api/users.api";
 import { formatDateTime } from "../../../utils/utils";
 
-const roleLabel: Record<string, string> = {
+const ROLE_LABELS: Record<string, string> = {
   advisor: "יועץ",
   secretary: "מזכירה",
 };
@@ -33,16 +33,14 @@ export const buildUserColumns = ({
   {
     key: "email",
     header: "אימייל",
-    render: (user) => (
-      <span className="text-sm text-gray-500">{user.email}</span>
-    ),
+    render: (user) => <span className="text-sm text-gray-500">{user.email}</span>,
   },
   {
     key: "role",
     header: "תפקיד",
     render: (user) => (
       <Badge variant={user.role === "advisor" ? "info" : "neutral"}>
-        {roleLabel[user.role] ?? user.role}
+        {ROLE_LABELS[user.role] ?? user.role}
       </Badge>
     ),
   },
@@ -59,58 +57,59 @@ export const buildUserColumns = ({
     key: "last_login_at",
     header: "כניסה אחרונה",
     render: (user) => (
-      <span className="text-sm text-gray-500 tabular-nums">{formatDateTime(user.last_login_at)}</span>
+      <span className="text-sm text-gray-500 tabular-nums">
+        {formatDateTime(user.last_login_at)}
+      </span>
     ),
   },
   {
     key: "created_at",
     header: "נוצר בתאריך",
     render: (user) => (
-      <span className="text-sm text-gray-500 tabular-nums">{formatDateTime(user.created_at)}</span>
+      <span className="text-sm text-gray-500 tabular-nums">
+        {formatDateTime(user.created_at)}
+      </span>
     ),
   },
   {
     key: "actions",
     header: "פעולות",
-    render: (user) => {
-      const isSelf = user.id === currentUserId;
-      return (
-        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+    render: (user) => (
+      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onEdit(user)}
+          title="עריכה"
+          className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+        >
+          <Pencil className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onResetPassword(user)}
+          title="איפוס סיסמה"
+          className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+        >
+          <KeyRound className="h-4 w-4" />
+        </Button>
+        {user.id !== currentUserId && (
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => onEdit(user)}
-            title="עריכה"
-            className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+            onClick={() => onToggleActive(user)}
+            title={user.is_active ? "השבתה" : "הפעלה"}
+            className="rounded-md p-1.5 hover:bg-gray-100"
           >
-            <Pencil className="h-4 w-4" />
+            {user.is_active ? (
+              <UserX className="h-4 w-4 text-red-500" />
+            ) : (
+              <UserCheck className="h-4 w-4 text-green-600" />
+            )}
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onResetPassword(user)}
-            title="איפוס סיסמה"
-            className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-          >
-            <KeyRound className="h-4 w-4" />
-          </Button>
-          {!isSelf && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onToggleActive(user)}
-              title={user.is_active ? "השבתה" : "הפעלה"}
-              className="rounded-md p-1.5 hover:bg-gray-100"
-            >
-              {user.is_active ? (
-                <UserX className="h-4 w-4 text-red-500" />
-              ) : (
-                <UserCheck className="h-4 w-4 text-green-600" />
-              )}
-            </Button>
-          )}
-        </div>
-      );
-    },
+        )}
+      </div>
+    ),
   },
 ];
