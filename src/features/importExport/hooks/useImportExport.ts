@@ -5,34 +5,30 @@ import { ENDPOINTS } from "../../../api/endpoints";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
+const downloadBlob = (data: unknown, filename: string) => {
+  const blob = new Blob([data as BlobPart], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = Object.assign(document.createElement("a"), { href: url, download: filename });
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
 export const useImportExport = () => {
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
 
-  const entityLabel = "לקוחות";
-
   const handleExport = async () => {
     setExporting(true);
     try {
-      const response = await api.get(ENDPOINTS.clientsExport, {
-        responseType: "blob",
-      });
-
-      const blob = new Blob([response.data], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `clients_export_${format(new Date(), "yyyy-MM-dd")}.xlsx`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-
-      toast.success(`ייצוא ${entityLabel} הושלם בהצלחה`);
+      const { data } = await api.get(ENDPOINTS.clientsExport, { responseType: "blob" });
+      downloadBlob(data, `clients_export_${format(new Date(), "yyyy-MM-dd")}.xlsx`);
+      toast.success("ייצוא לקוחות הושלם בהצלחה");
     } catch (error) {
-      showErrorToast(error, `שגיאה בייצוא ${entityLabel}`);
+      showErrorToast(error, "שגיאה בייצוא לקוחות");
     } finally {
       setExporting(false);
     }
@@ -43,21 +39,16 @@ export const useImportExport = () => {
       toast.error("יש לבחור קובץ Excel (.xlsx או .xls)");
       return;
     }
-
     setImporting(true);
     try {
       const formData = new FormData();
       formData.append("file", file);
-
       await api.post(ENDPOINTS.clientsImport, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
-      toast.success(`ייבוא ${entityLabel} הושלם בהצלחה`);
+      toast.success("ייבוא לקוחות הושלם בהצלחה");
     } catch (error) {
-      showErrorToast(error, `שגיאה בייבוא ${entityLabel}`);
+      showErrorToast(error, "שגיאה בייבוא לקוחות");
     } finally {
       setImporting(false);
     }
@@ -65,34 +56,13 @@ export const useImportExport = () => {
 
   const handleDownloadTemplate = async () => {
     try {
-      const response = await api.get(ENDPOINTS.clientsTemplate, {
-        responseType: "blob",
-      });
-
-      const blob = new Blob([response.data], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "clients_template.xlsx";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-
+      const { data } = await api.get(ENDPOINTS.clientsTemplate, { responseType: "blob" });
+      downloadBlob(data, "clients_template.xlsx");
       toast.success("תבנית הורדה בהצלחה");
     } catch (error) {
       showErrorToast(error, "שגיאה בהורדת תבנית");
     }
   };
 
-  return {
-    importing,
-    exporting,
-    entityLabel,
-    handleExport,
-    handleImport,
-    handleDownloadTemplate,
-  };
+  return { importing, exporting, handleExport, handleImport, handleDownloadTemplate };
 };
