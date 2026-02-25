@@ -36,7 +36,12 @@ export const TaxDeadlines: React.FC = () => {
 
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
 
-  const { currentYear, submissionsQuery, deadlinesQuery: dashDeadlinesQuery } = useTaxDashboard();
+  const {
+    currentYear,
+    submissions,
+    urgentDeadlines,
+    upcomingDeadlines,
+  } = useTaxDashboard();
 
   const header = (
     <PageHeader
@@ -44,11 +49,7 @@ export const TaxDeadlines: React.FC = () => {
       description={`ניהול מועדי מס ומעקב הגשה לשנת ${currentYear}`}
       variant="gradient"
       actions={
-        <Button
-          variant="primary"
-          onClick={() => setShowCreateModal(true)}
-          className="gap-2"
-        >
+        <Button variant="primary" onClick={() => setShowCreateModal(true)} className="gap-2">
           <Plus className="h-4 w-4" />
           מועד חדש
         </Button>
@@ -69,9 +70,7 @@ export const TaxDeadlines: React.FC = () => {
     return (
       <div className="space-y-6">
         {header}
-        <ErrorCard
-          message={getErrorMessage(deadlinesQuery.error, "שגיאה בטעינת מועדים")}
-        />
+        <ErrorCard message={getErrorMessage(deadlinesQuery.error, "שגיאה בטעינת מועדים")} />
       </div>
     );
   }
@@ -80,16 +79,15 @@ export const TaxDeadlines: React.FC = () => {
     <div className="space-y-6">
       {header}
 
-      {/* Dashboard summary section */}
-      <TaxSubmissionStats data={submissionsQuery.data} />
+      <TaxSubmissionStats data={submissions} />
 
-      {dashDeadlinesQuery.data && (
+      {(urgentDeadlines.length > 0 || upcomingDeadlines.length > 0) && (
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
           <div className="xl:col-span-2">
-            <TaxUrgentDeadlines items={dashDeadlinesQuery.data.urgent} />
+            <TaxUrgentDeadlines items={urgentDeadlines} />
           </div>
           <div>
-            <TaxUpcomingDeadlines items={dashDeadlinesQuery.data.upcoming} />
+            <TaxUpcomingDeadlines items={upcomingDeadlines} />
           </div>
         </div>
       )}

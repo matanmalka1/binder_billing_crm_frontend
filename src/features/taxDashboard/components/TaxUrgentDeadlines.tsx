@@ -21,6 +21,7 @@ const urgencyBorderMap: Record<string, string> = {
   overdue: "border-r-4 border-r-red-600",
   red: "border-r-4 border-r-red-400",
   yellow: "border-r-4 border-r-yellow-400",
+  green: "border-r-4 border-r-gray-300",
 };
 
 export const TaxUrgentDeadlines = ({ items }: TaxUrgentDeadlinesProps) => {
@@ -28,11 +29,7 @@ export const TaxUrgentDeadlines = ({ items }: TaxUrgentDeadlinesProps) => {
     <Card
       variant="elevated"
       title="מועדים דחופים"
-      subtitle={
-        items.length > 0
-          ? `${items.length} מועדים דורשים תשומת לב מיידית`
-          : undefined
-      }
+      subtitle={items.length > 0 ? `${items.length} מועדים דורשים תשומת לב מיידית` : undefined}
     >
       {items.length === 0 ? (
         <EmptyState
@@ -56,13 +53,11 @@ export const TaxUrgentDeadlines = ({ items }: TaxUrgentDeadlinesProps) => {
                 key={item.id}
                 className={cn(
                   "rounded-xl border border-gray-200 bg-white p-4",
-                  "transition-all duration-200 hover:shadow-md hover:-translate-y-0.5",
-                  "animate-fade-in",
-                  urgencyBorderMap[item.urgency] ?? "border-r-4 border-r-gray-300"
+                  "transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 animate-fade-in",
+                  urgencyBorderMap[item.urgency] ?? urgencyBorderMap.green,
                 )}
                 style={{ animationDelay: staggerDelay(index) }}
               >
-                {/* Header row */}
                 <div className="mb-3 flex items-start justify-between gap-3">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-2xl leading-none shrink-0">
@@ -77,45 +72,45 @@ export const TaxUrgentDeadlines = ({ items }: TaxUrgentDeadlinesProps) => {
                       </p>
                     </div>
                   </div>
-
-                  <Badge
-                    className={cn("shrink-0 font-semibold border", getUrgencyColor(item.urgency))}
-                  >
+                  <Badge className={cn("shrink-0 font-semibold border", getUrgencyColor(item.urgency))}>
                     {getUrgencyLabel(item.urgency)}
                   </Badge>
                 </div>
 
-                {/* Meta row */}
                 <div className="flex flex-wrap gap-4 text-sm">
-                  <DeadlineMeta icon={<Calendar className="h-4 w-4 text-gray-400" />} label="מועד">
-                    {formatDate(item.due_date)}
-                  </DeadlineMeta>
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="h-4 w-4 text-gray-400" />
+                    <div>
+                      <p className="text-xs text-gray-400 leading-none mb-0.5">מועד</p>
+                      <p className="text-sm font-medium text-gray-900">{formatDate(item.due_date)}</p>
+                    </div>
+                  </div>
 
-                  <DeadlineMeta
-                    icon={<AlertTriangle className="h-4 w-4 text-gray-400" />}
-                    label="זמן נותר"
-                  >
-                    <span
-                      className={cn(
-                        "font-semibold",
-                        item.days_remaining < 0
-                          ? "text-red-600"
-                          : item.days_remaining <= 2
-                          ? "text-orange-600"
+                  <div className="flex items-center gap-1.5">
+                    <AlertTriangle className="h-4 w-4 text-gray-400" />
+                    <div>
+                      <p className="text-xs text-gray-400 leading-none mb-0.5">זמן נותר</p>
+                      <p className={cn(
+                        "text-sm font-semibold",
+                        item.days_remaining < 0 ? "text-red-600"
+                          : item.days_remaining <= 2 ? "text-orange-600"
                           : "text-gray-900"
-                      )}
-                    >
-                      {daysText}
-                    </span>
-                  </DeadlineMeta>
+                      )}>
+                        {daysText}
+                      </p>
+                    </div>
+                  </div>
 
                   {item.payment_amount != null && (
-                    <DeadlineMeta
-                      icon={<span className="text-gray-400 text-base leading-none">₪</span>}
-                      label="סכום"
-                    >
-                      {formatCurrency(item.payment_amount)}
-                    </DeadlineMeta>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-gray-400 text-base leading-none">₪</span>
+                      <div>
+                        <p className="text-xs text-gray-400 leading-none mb-0.5">סכום</p>
+                        <p className="text-sm font-medium text-gray-900">
+                          {formatCurrency(item.payment_amount)}
+                        </p>
+                      </div>
+                    </div>
                   )}
                 </div>
               </li>
@@ -128,22 +123,3 @@ export const TaxUrgentDeadlines = ({ items }: TaxUrgentDeadlinesProps) => {
 };
 
 TaxUrgentDeadlines.displayName = "TaxUrgentDeadlines";
-
-/* ─── Sub-component ─────────────────────────────────────────────────── */
-
-interface DeadlineMetaProps {
-  icon: React.ReactNode;
-  label: string;
-  children: React.ReactNode;
-}
-
-const DeadlineMeta: React.FC<DeadlineMetaProps> = ({ icon, label, children }) => (
-  <div className="flex items-center gap-1.5">
-    {icon}
-    <div>
-      <p className="text-xs text-gray-400 leading-none mb-0.5">{label}</p>
-      <p className="text-sm font-medium text-gray-900 leading-tight">{children}</p>
-    </div>
-  </div>
-);
-DeadlineMeta.displayName = "DeadlineMeta";

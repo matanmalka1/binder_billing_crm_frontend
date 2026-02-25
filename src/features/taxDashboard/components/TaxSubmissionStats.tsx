@@ -34,7 +34,7 @@ export const TaxSubmissionStats = ({ data }: TaxSubmissionStatsProps) => {
         variant="orange"
       />
       <StatsCard
-        title="סה״כ לקוחות"
+        title='סה"כ לקוחות'
         value={data.total_clients}
         description="מסד לקוחות פעיל"
         icon={Users}
