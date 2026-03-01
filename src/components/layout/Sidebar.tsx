@@ -92,13 +92,13 @@ const NavGroupSection: React.FC<NavGroupSectionProps> = ({
   onToggle,
 }) => {
   return (
-    <div className="mb-1">
+    <div className="mb-2">
       {isSidebarOpen ? (
         <button
           onClick={onToggle}
-          className="flex w-full items-center justify-between px-3 py-1.5 text-left"
+          className="flex w-full items-center justify-between px-4 py-2 text-left text-gray-400 hover:text-white transition-colors"
         >
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 select-none">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-gray-500 select-none">
             {group.label}
           </span>
           <ChevronDown
@@ -109,7 +109,7 @@ const NavGroupSection: React.FC<NavGroupSectionProps> = ({
           />
         </button>
       ) : (
-        <div className="my-2 mx-3 border-t border-gray-800" />
+        <div className="my-3 mx-3 border-t border-gray-800/80" />
       )}
 
       <div
@@ -118,7 +118,7 @@ const NavGroupSection: React.FC<NavGroupSectionProps> = ({
           isExpanded || !isSidebarOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
         )}
       >
-        <div className="space-y-0.5">
+        <div className="space-y-1">
           {group.items.map((link) => (
             <NavLink
               key={link.to}
@@ -126,19 +126,21 @@ const NavGroupSection: React.FC<NavGroupSectionProps> = ({
               end={link.end ?? link.to === "/"}
               className={({ isActive }) =>
                 cn(
-                  "relative flex items-center gap-3 rounded-lg px-3 py-2.5 group",
+                  "relative flex flex-row-reverse items-center justify-start gap-3 rounded-xl px-4 py-2.5 group transition-colors text-right",
                   isActive
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
-                    : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                    ? "bg-[#4f7dff] text-white shadow-[0_12px_28px_rgba(79,125,255,0.25)]"
+                    : "text-gray-400 hover:bg-white/5 hover:text-white",
                 )
               }
             >
-              <link.icon className="h-4 w-4 shrink-0" />
+              <link.icon className="h-5 w-5 shrink-0 stroke-[1.6]" />
               {isSidebarOpen && (
-                <span className="text-sm font-medium">{link.label}</span>
+                <span className="text-sm font-medium text-right tracking-tight flex-1">
+                  {link.label}
+                </span>
               )}
               {!isSidebarOpen && (
-                <div className="pointer-events-none absolute right-full mr-2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 z-50">
+                <div className="pointer-events-none absolute left-full ml-2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 z-50 text-left">
                   {link.label}
                 </div>
               )}
@@ -165,21 +167,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
   return (
     <aside
       className={cn(
-        "bg-gray-900 text-white flex flex-col relative transition-all duration-200",
+        "bg-gradient-to-b from-[#101b2f] via-[#0c1526] to-[#0a0f1f] text-white flex flex-col relative transition-all duration-200 shadow-xl shadow-black/30 border-r border-white/5",
         isSidebarOpen ? "w-64" : "w-16",
       )}
     >
       {/* Logo */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-gray-800 shrink-0">
+      <div className="h-16 flex items-center justify-between px-4 border-b border-white/5 shrink-0">
         {isSidebarOpen ? (
           <span className="font-bold tracking-wider text-xl">YM Tax Crm</span>
         ) : (
-          <span className="font-bold mx-auto text-sm">ב׳</span>
+          <span className="font-bold mx-auto text-sm">YM</span>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-4 px-2">
+      <nav className="flex-1 overflow-y-auto py-5 px-2">
         {NAV_GROUPS.map((group) => (
           <NavGroupSection
             key={group.key}
@@ -194,7 +196,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
       {/* Collapse toggle */}
       <button
         onClick={toggleSidebar}
-        className="p-4 border-t border-gray-800 hover:bg-gray-800 flex items-center justify-center shrink-0"
+        className="p-4 border-t border-white/5 hover:bg-white/5 flex items-center justify-center shrink-0 text-gray-400 hover:text-white transition-colors"
         aria-label={isSidebarOpen ? "כווץ תפריט" : "הרחב תפריט"}
       >
         {isSidebarOpen ? (

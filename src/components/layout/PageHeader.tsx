@@ -21,7 +21,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   description,
   breadcrumbs,
   actions,
-  variant = "default",
+  variant = "gradient",
 }) => {
   return (
     <header className="space-y-4 animate-fade-in">
