@@ -1,23 +1,19 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bindersApi } from "../../../api/binders.api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import { useAuthStore } from "../../../store/auth.store";
 import { QK } from "../../../lib/queryKeys";
-import type { ReceiveBinderFormValues } from "../types";
+import { receiveBinderSchema, type ReceiveBinderFormValues } from "../schemas";
 
-const EMPTY_FORM_VALUES: ReceiveBinderFormValues = {
+const getDefaultValues = (): ReceiveBinderFormValues => ({
   client_id: undefined as unknown as number,
   binder_type: "",
   binder_number: "",
-  received_at: "",
-};
-
-const getDefaultValues = (): ReceiveBinderFormValues => ({
-  ...EMPTY_FORM_VALUES,
   received_at: format(new Date(), "yyyy-MM-dd"),
 });
 
@@ -29,6 +25,7 @@ export const useReceiveBinderModal = () => {
   const userId = useAuthStore((s) => s.user?.id);
 
   const form = useForm<ReceiveBinderFormValues>({
+    resolver: zodResolver(receiveBinderSchema),
     defaultValues: getDefaultValues(),
   });
 

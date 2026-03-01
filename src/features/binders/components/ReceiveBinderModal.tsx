@@ -4,7 +4,7 @@ import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { ClientSearchInput } from "./ClientSearchInput";
 import type { UseFormReturn } from "react-hook-form";
-import type { ReceiveBinderFormValues } from "../types";
+import type { ReceiveBinderFormValues } from "../schemas";
 import { BINDER_TYPE_OPTIONS } from "../types";
 
 interface ReceiveBinderModalProps {
@@ -77,21 +77,21 @@ export const ReceiveBinderModal: React.FC<ReceiveBinderModalProps> = ({
           label="סוג חומר"
           error={errors.binder_type?.message}
           options={[...BINDER_TYPE_OPTIONS]}
-          {...register("binder_type", { required: "נא לבחור סוג חומר" })}
+          {...register("binder_type")}
         />
 
         <Input
           label="מספר קלסר"
           error={errors.binder_number?.message}
           placeholder="לדוגמה: 2024-003"
-          {...register("binder_number", { required: "נא להזין מספר קלסר" })}
+          {...register("binder_number")}
         />
 
         <Input
           type="date"
           label="תאריך קבלה"
           error={errors.received_at?.message}
-          {...register("received_at", { required: "נא לבחור תאריך קבלה" })}
+          {...register("received_at")}
         />
       </form>
     </Modal>

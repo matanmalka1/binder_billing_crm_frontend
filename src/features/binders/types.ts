@@ -7,13 +7,6 @@ export interface BindersFiltersBarProps {
   onFilterChange: (name: keyof BindersFilters, value: string) => void;
 }
 
-export interface ReceiveBinderFormValues {
-  client_id: number;
-  binder_type: string;
-  binder_number: string;
-  received_at: string;
-}
-
 // ── Shared variant maps (used by both table columns and drawer) ────────────
 
 export const BINDER_WORK_STATE_VARIANTS: Record<string, "neutral" | "info" | "success"> = {
