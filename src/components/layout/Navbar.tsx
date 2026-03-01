@@ -2,11 +2,11 @@ import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "../../store/auth.store";
 import { getRoleLabel } from "../../utils/enums";
 
-interface HeaderProps {
+interface NavbarProps {
   toggleSidebar: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
+export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   const { user, logout } = useAuthStore();
   const handleLogout = () => {
     void logout();
@@ -35,7 +35,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
             </span>
             {user?.role && (
               <span className="mr-1 text-gray-500">
-                ({getRoleLabel(user.role)}) 
+                ({getRoleLabel(user.role)})
               </span>
             )}
           </span>
