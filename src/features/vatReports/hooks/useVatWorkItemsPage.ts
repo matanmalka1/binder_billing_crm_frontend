@@ -47,15 +47,22 @@ export const useVatWorkItemsPage = () => {
   const [actionLoadingId, setActionLoadingId] = useState<number | null>(null);
 
   const actionMutation = useMutation({
-    mutationFn: async ({ action, itemId }: { action: VatWorkItemAction; itemId: number }) => {
+    mutationFn: ({ action, itemId }: { action: Exclude<VatWorkItemAction, "sendBack">; itemId: number }) => {
       if (action === "materialsComplete") return vatReportsApi.markMaterialsComplete(itemId);
       if (action === "readyForReview") return vatReportsApi.markReadyForReview(itemId);
-      if (action === "file") return vatReportsApi.fileVatReturn(itemId, { filing_method: "online" });
-      // sendBack requires a correction note — must be triggered via the dedicated sendBackWithNote flow
-      throw new Error("sendBack must be called via sendBackWithNote");
+      return vatReportsApi.fileVatReturn(itemId, { filing_method: "online" });
     },
     onSuccess: async () => {
       toast.success("הפעולה בוצעה בהצלחה");
+      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+    },
+  });
+
+  const sendBackMutation = useMutation({
+    mutationFn: ({ itemId, note }: { itemId: number; note: string }) =>
+      vatReportsApi.sendBack(itemId, note),
+    onSuccess: async () => {
+      toast.success("התיק הוחזר לתיקון");
       await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
     },
   });
@@ -66,11 +73,12 @@ export const useVatWorkItemsPage = () => {
         toast.error("פעולה זו זמינה ליועץ בלבד");
         return;
       }
+      if (action === "sendBack") return; // handled by sendBackWithNote
       try {
         setActionLoadingId(itemId);
         await actionMutation.mutateAsync({ action, itemId });
-      } catch (requestError: unknown) {
-        showErrorToast(requestError, "שגיאה בביצוע הפעולה");
+      } catch (err: unknown) {
+        showErrorToast(err, "שגיאה בביצוע הפעולה");
       } finally {
         setActionLoadingId(null);
       }
@@ -79,34 +87,30 @@ export const useVatWorkItemsPage = () => {
   );
 
   const sendBackWithNote = useCallback(
-    async (itemId: number, correctionNote: string): Promise<void> => {
+    async (itemId: number, note: string): Promise<void> => {
       if (!isAdvisor) {
         toast.error("פעולה זו זמינה ליועץ בלבד");
         return;
       }
       try {
         setActionLoadingId(itemId);
-        await vatReportsApi.sendBack(itemId, correctionNote);
-        toast.success("התיק הוחזר לתיקון");
-        await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
-      } catch (requestError: unknown) {
-        showErrorToast(requestError, "שגיאה בהחזרת התיק לתיקון");
+        await sendBackMutation.mutateAsync({ itemId, note });
+      } catch (err: unknown) {
+        showErrorToast(err, "שגיאה בהחזרת התיק לתיקון");
       } finally {
         setActionLoadingId(null);
       }
     },
-    [isAdvisor, queryClient],
+    [isAdvisor, sendBackMutation],
   );
-
-  // setFilter provided by useSearchParamFilters
 
   const submitCreate = async (payload: CreateVatWorkItemPayload): Promise<boolean> => {
     if (!isAdvisor) return false;
     try {
       await createMutation.mutateAsync(payload);
       return true;
-    } catch (requestError: unknown) {
-      showErrorToast(requestError, 'שגיאה ביצירת תיק מע"מ');
+    } catch (err: unknown) {
+      showErrorToast(err, 'שגיאה ביצירת תיק מע"מ');
       return false;
     }
   };

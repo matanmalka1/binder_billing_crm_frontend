@@ -22,6 +22,7 @@ export const VatWorkItems: React.FC = () => {
     isAdvisor,
     loading,
     runAction,
+    sendBackWithNote,
     setFilter,
     setSearchParams,
     submitCreate,
@@ -93,7 +94,11 @@ export const VatWorkItems: React.FC = () => {
         />
       )}
 
-      <VatWorkItemDrawer item={selectedItem} onClose={() => setSelectedItem(null)} />
+      <VatWorkItemDrawer
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+        onSendBack={sendBackWithNote}
+      />
     </div>
   );
 };
