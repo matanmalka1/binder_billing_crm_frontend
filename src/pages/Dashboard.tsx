@@ -29,7 +29,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="לוח בקרה" variant="gradient" />
+      <PageHeader title="לוח בקרה" />
 
       {denied && (
         <AccessBanner variant="warning" message="אין הרשאה לצפות בנתוני לוח בקרה זה" />

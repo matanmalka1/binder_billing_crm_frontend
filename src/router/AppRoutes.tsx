@@ -12,7 +12,7 @@ import { Charges } from "../pages/Charges";
 import { AnnualReportsKanban } from "../pages/AnnualReportsKanban";
 import { TaxDeadlines } from "../pages/TaxDeadlines";
 import { Login } from "../pages/Login";
-import { Header } from "../components/layout/Header";
+import { Navbar } from "../components/layout/Navbar";
 import { Sidebar } from "../components/layout/Sidebar";
 import { PageLayout } from "../components/layout/PageLayout";
 import { RemindersPage } from "../pages/reports/Reminders";
@@ -58,7 +58,7 @@ const AuthenticatedLayout: React.FC = () => {
     <div className="flex flex-1 overflow-hidden h-screen">
       <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header toggleSidebar={toggleSidebar} />
+        <Navbar toggleSidebar={toggleSidebar} />
         <PageLayout><Outlet /></PageLayout>
       </div>
     </div>

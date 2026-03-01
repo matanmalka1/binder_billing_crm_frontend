@@ -48,7 +48,7 @@ const buildAdvisorStats = (data: DashboardOverviewResponse): StatItem[] => [
     value: data.active_binders,
     description: "טרם הוחזרו ללקוח",
     icon: FolderOpen,
-    variant: "green",
+    variant: "blue",
     href: "/binders?status=in_office",
   },
 ];

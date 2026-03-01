@@ -108,7 +108,7 @@ export const useAdvisorToday = () => {
         .filter((r) => r.created_at <= sevenDaysAgo)
         .map((r) => ({
           id: r.id,
-          label: `לקוח #${r.client_id}`,
+          label: r.client_name ?? `לקוח #${r.client_id}`,
           sublabel: r.message.slice(0, 48),
           href: `/clients/${r.client_id}`,
         })),

@@ -19,38 +19,17 @@ interface DashboardStatsGridProps {
   stats: StatItem[];
 }
 
-/* ── Variant maps ───────────────────────────────────────────────────────── */
+/* ── Variant styles ─────────────────────────────────────────────────────── */
 
-const borderMap: Record<StatItem["variant"], string> = {
-  blue:   "border-r-4 border-r-blue-500",
-  green:  "border-r-4 border-r-emerald-500",
-  red:    "border-r-4 border-r-red-500",
-  amber:  "border-r-4 border-r-amber-500",
-  purple: "border-r-4 border-r-violet-500",
-};
-
-const valueColorMap: Record<StatItem["variant"], string> = {
-  blue:   "text-blue-600",
-  green:  "text-emerald-600",
-  red:    "text-red-600",
-  amber:  "text-amber-600",
-  purple: "text-violet-600",
-};
-
-const iconBgMap: Record<StatItem["variant"], string> = {
-  blue:   "bg-blue-50 text-blue-500",
-  green:  "bg-emerald-50 text-emerald-500",
-  red:    "bg-red-50 text-red-500",
-  amber:  "bg-amber-50 text-amber-500",
-  purple: "bg-violet-50 text-violet-500",
-};
-
-const stripMap: Record<StatItem["variant"], string> = {
-  blue:   "from-blue-500/10 to-transparent",
-  green:  "from-emerald-500/10 to-transparent",
-  red:    "from-red-500/10 to-transparent",
-  amber:  "from-amber-500/10 to-transparent",
-  purple: "from-violet-500/10 to-transparent",
+const variantStyles: Record<
+  StatItem["variant"],
+  { border: string; value: string; iconBg: string; strip: string }
+> = {
+  blue:   { border: "border-r-4 border-r-blue-500",   value: "text-blue-600",    iconBg: "bg-blue-50 text-blue-500",     strip: "from-blue-500/10 to-transparent"   },
+  green:  { border: "border-r-4 border-r-emerald-500", value: "text-emerald-600", iconBg: "bg-emerald-50 text-emerald-500", strip: "from-emerald-500/10 to-transparent" },
+  red:    { border: "border-r-4 border-r-red-500",     value: "text-red-600",     iconBg: "bg-red-50 text-red-500",       strip: "from-red-500/10 to-transparent"    },
+  amber:  { border: "border-r-4 border-r-amber-500",   value: "text-amber-600",   iconBg: "bg-amber-50 text-amber-500",   strip: "from-amber-500/10 to-transparent"  },
+  purple: { border: "border-r-4 border-r-violet-500",  value: "text-violet-600",  iconBg: "bg-violet-50 text-violet-500", strip: "from-violet-500/10 to-transparent" },
 };
 
 /* ── Animated counter ───────────────────────────────────────────────────── */
@@ -94,11 +73,13 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
   const count = useAnimatedCount(stat.value, index * 80);
   const IconComponent = stat.icon;
 
+  const styles = variantStyles[stat.variant];
+
   const cardClass = cn(
     "group relative overflow-hidden rounded-2xl border border-gray-100 bg-white",
     "transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-gray-200/60",
     "animate-fade-in",
-    borderMap[stat.variant],
+    styles.border,
     stat.urgent && "ring-2 ring-red-200 ring-offset-1",
     stat.href && "cursor-pointer",
   );
@@ -108,7 +89,7 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
       {/* Top color wash */}
       <div className={cn(
         "absolute top-0 left-0 right-0 h-24 bg-gradient-to-b opacity-60",
-        stripMap[stat.variant]
+        styles.strip
       )} />
 
       <div className="relative p-6">
@@ -116,7 +97,7 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
         <div className="mb-5 flex items-start justify-between">
           <div className={cn(
             "rounded-xl p-3 shadow-sm transition-transform duration-300 group-hover:scale-110",
-            iconBgMap[stat.variant]
+            styles.iconBg
           )}>
             <IconComponent className="h-5 w-5" />
           </div>
@@ -132,7 +113,7 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
         {/* Value */}
         <div className={cn(
           "mb-1 text-4xl font-black tabular-nums tracking-tight leading-none",
-          valueColorMap[stat.variant]
+          styles.value
         )}>
           {count.toLocaleString("he-IL")}
         </div>

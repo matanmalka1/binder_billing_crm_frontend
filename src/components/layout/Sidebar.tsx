@@ -171,13 +171,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
         isSidebarOpen ? "w-64" : "w-16",
       )}
     >
-      {/* Logo */}
+      {/* Logo + Collapse */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-white/5 shrink-0">
         {isSidebarOpen ? (
           <span className="font-bold tracking-wider text-xl">YM Tax Crm</span>
         ) : (
           <span className="font-bold mx-auto text-sm">YM</span>
         )}
+        <button
+          onClick={toggleSidebar}
+          className="rounded-lg p-1.5 text-gray-400 hover:bg-white/5 hover:text-white transition-colors shrink-0"
+          aria-label={isSidebarOpen ? "כווץ תפריט" : "הרחב תפריט"}
+        >
+          {isSidebarOpen ? (
+            <ChevronRight className="w-4 h-4" />
+          ) : (
+            <ChevronLeft className="w-4 h-4" />
+          )}
+        </button>
       </div>
 
       {/* Nav */}
@@ -192,19 +203,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
           />
         ))}
       </nav>
-
-      {/* Collapse toggle */}
-      <button
-        onClick={toggleSidebar}
-        className="p-4 border-t border-white/5 hover:bg-white/5 flex items-center justify-center shrink-0 text-gray-400 hover:text-white transition-colors"
-        aria-label={isSidebarOpen ? "כווץ תפריט" : "הרחב תפריט"}
-      >
-        {isSidebarOpen ? (
-          <ChevronRight className="w-4 h-4" />
-        ) : (
-          <ChevronLeft className="w-4 h-4" />
-        )}
-      </button>
     </aside>
   );
 };

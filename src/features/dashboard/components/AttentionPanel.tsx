@@ -48,7 +48,6 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
     }
   };
 
-  const hasUrgent = items.some((i) => SECTIONS[0].types.includes(i.item_type));
   const sectionCounts = SECTIONS.map((s) => ({
     ...s,
     count: items.filter((i) => s.types.includes(i.item_type)).length,
@@ -58,72 +57,42 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
   const allClear = totalItems === 0;
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-md">
+    <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       {/* ── Header ────────────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden bg-gradient-to-l from-slate-700 to-slate-900 px-6 py-4">
-        {/* Dot pattern */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
-            backgroundSize: "18px 18px",
-          }}
-        />
-        {/* Glow orb */}
-        {hasUrgent && (
-          <div className="pointer-events-none absolute -top-8 -right-8 h-32 w-32 rounded-full bg-red-600 opacity-20 blur-2xl" />
-        )}
-
-        <div className="relative flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 border-b border-gray-100 px-4 py-2.5">
           <div className="flex items-center gap-3">
-            <div className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-xl backdrop-blur-sm",
-              hasUrgent ? "bg-red-500/25" : "bg-white/10"
-            )}>
-              <ShieldAlert className={cn(
-                "h-4.5 w-4.5",
-                hasUrgent ? "text-red-300" : "text-white/60"
-              )} />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100">
+              <ShieldAlert className="h-3.5 w-3.5 text-gray-500" />
             </div>
             <div>
-              <h2 className="text-sm font-bold tracking-wide text-white">לוח תשומת לב</h2>
-              <p className="mt-0.5 text-xs text-white/50">
+              <h2 className="text-xs font-bold tracking-wide text-gray-700">לוח תשומת לב</h2>
+              <p className="text-[11px] text-gray-400">
                 {allClear ? "הכל תקין — אין דברים ממתינים" : `${totalItems} פריטים ממתינים לטיפול`}
               </p>
             </div>
           </div>
 
-          {/* Section count pills */}
           <div className="flex items-center gap-1.5">
-            {sectionCounts.map((s) => {
-              const pillColor = s.severity === "critical"
-                ? "bg-red-500/80 text-white"
-                : s.severity === "warning"
-                ? "bg-amber-400/80 text-white"
-                : "bg-emerald-400/80 text-white";
-
-              return (
-                <div
-                  key={s.key}
-                  className={cn(
-                    "flex h-6 min-w-[1.5rem] items-center justify-center rounded-full px-2 text-[11px] font-bold tabular-nums",
-                    s.count > 0 ? pillColor : "bg-white/10 text-white/30"
-                  )}
-                  title={s.title}
-                >
-                  {s.count}
-                </div>
-              );
-            })}
+            {sectionCounts.map((s) => (
+              <div
+                key={s.key}
+                className={cn(
+                  "flex h-6 min-w-[1.5rem] items-center justify-center rounded-full px-2 text-[11px] font-bold tabular-nums",
+                  s.count > 0 ? "bg-gray-100 text-gray-600" : "bg-gray-50 text-gray-300"
+                )}
+                title={s.title}
+              >
+                {s.count}
+              </div>
+            ))}
           </div>
-        </div>
       </div>
 
       {/* ── Content ───────────────────────────────────────────────────── */}
       {allClear ? (
-        <div className="flex flex-col items-center justify-center gap-3 py-14 bg-gradient-to-b from-white to-emerald-50/30">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 shadow-sm">
-            <CheckCircle2 className="h-6 w-6 text-emerald-500" />
+        <div className="flex flex-col items-center justify-center gap-3 py-14">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-100 shadow-sm">
+            <CheckCircle2 className="h-6 w-6 text-gray-400" />
           </div>
           <div className="text-center">
             <p className="text-sm font-semibold text-gray-700">כל הפריטים תחת שליטה</p>

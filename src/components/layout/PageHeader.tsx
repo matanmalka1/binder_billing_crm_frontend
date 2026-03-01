@@ -13,7 +13,6 @@ export interface PageHeaderProps {
   description?: string;
   breadcrumbs?: Breadcrumb[];
   actions?: React.ReactNode;
-  variant?: "default" | "gradient" | "minimal";
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({
@@ -21,7 +20,6 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   description,
   breadcrumbs,
   actions,
-  variant = "gradient",
 }) => {
   return (
     <header className="space-y-4 animate-fade-in">
@@ -52,15 +50,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-2">
           {/* Title */}
-          <h1
-            className={cn(
-              "text-3xl md:text-4xl font-bold tracking-tight",
-              variant === "gradient" && "gradient-text",
-              variant === "default" && "text-gray-900",
-              variant === "minimal" && "text-gray-800"
-            )}
-            style={variant === "default" ? { fontFamily: 'var(--font-display)' } : undefined}
-          >
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-black">
             {title}
           </h1>
 
@@ -82,11 +72,6 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           </div>
         )}
       </div>
-
-      {/* Decorative underline for gradient variant */}
-      {variant === "gradient" && (
-        <div className="h-1 w-24 bg-gradient-to-r from-primary-500 via-purple-500 to-accent-500 rounded-full" />
-      )}
     </header>
   );
 };

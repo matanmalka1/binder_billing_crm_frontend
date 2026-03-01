@@ -15,6 +15,7 @@ export type ReminderStatus = "pending" | "sent" | "canceled";
 export interface Reminder {
   id: number;
   client_id: number;
+  client_name: string | null;
   reminder_type: ReminderType;
   status: ReminderStatus;
   target_date: string; // ISO date string (YYYY-MM-DD)
