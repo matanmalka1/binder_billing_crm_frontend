@@ -3,15 +3,8 @@ import type { LucideIcon } from "lucide-react";
 import { ArrowLeft, Inbox } from "lucide-react";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
-import type { AdvisorSeverity } from "./sectionVariants";
-import { advisorSeverityCfg } from "./sectionVariants";
-
-export interface SectionItem {
-  id: number;
-  label: string;
-  sublabel?: string;
-  href?: string;
-}
+import type { AdvisorSeverity, SectionItem } from "../utils";
+import { advisorSeverityCfg } from "../utils";
 
 interface AdvisorTodaySectionProps {
   icon: LucideIcon;

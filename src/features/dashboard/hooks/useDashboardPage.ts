@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Users, FolderOpen } from "lucide-react";
 import { dashboardApi } from "../../../api/dashboard.api";
 import type {
   DashboardOverviewResponse,
@@ -10,6 +11,8 @@ import type { ActionCommand } from "../../../lib/actions/types";
 import { useRole } from "../../../hooks/useRole";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import { QK } from "../../../lib/queryKeys";
+import type { StatItem } from "../components/DashboardStatsGrid";
+
 type DashboardData =
   | (DashboardOverviewResponse & { role_view: "advisor" })
   | (DashboardSummaryResponse & { role_view: "secretary" });
@@ -28,6 +31,48 @@ const isSummaryData = (
   data: DashboardOverviewResponse | DashboardSummaryResponse | undefined,
 ): data is DashboardSummaryResponse =>
   Boolean(data && "binders_in_office" in data);
+
+const buildAdvisorStats = (data: DashboardOverviewResponse): StatItem[] => [
+  {
+    key: "total_clients",
+    title: "לקוחות",
+    value: data.total_clients,
+    description: "סך הכל לקוחות פעילים",
+    icon: Users,
+    variant: "blue",
+    href: "/clients",
+  },
+  {
+    key: "active_binders",
+    title: "קלסרים פעילים",
+    value: data.active_binders,
+    description: "טרם הוחזרו ללקוח",
+    icon: FolderOpen,
+    variant: "green",
+    href: "/binders?status=in_office",
+  },
+];
+
+const buildSecretaryStats = (data: DashboardSummaryResponse): StatItem[] => [
+  {
+    key: "in_office",
+    title: "קלסרים במשרד",
+    value: data.binders_in_office,
+    description: "כלל הקלסרים הפעילים",
+    icon: FolderOpen,
+    variant: "blue",
+    href: "/binders?status=in_office",
+  },
+  {
+    key: "ready",
+    title: "מוכן לאיסוף",
+    value: data.binders_ready_for_pickup,
+    description: "ממתינים לאיסוף לקוח",
+    icon: Users,
+    variant: "green",
+    href: "/binders?status=ready_for_pickup",
+  },
+];
 
 export const useDashboardPage = () => {
   const queryClient = useQueryClient();
@@ -118,6 +163,12 @@ export const useDashboardPage = () => {
 
   const attentionItems = dashboardQuery.data?.attention.items ?? [];
 
+  const stats = useMemo<StatItem[]>(() => {
+    if (dashboard.status !== "ok" || !dashboard.data) return [];
+    if (dashboard.data.role_view === "advisor") return buildAdvisorStats(dashboard.data);
+    return buildSecretaryStats(dashboard.data);
+  }, [dashboard]);
+
   const handleQuickAction = useCallback(
     (action: ActionCommand) => {
       setActionDenied(false);
@@ -145,5 +196,6 @@ export const useDashboardPage = () => {
     confirmPendingAction,
     pendingQuickAction,
     cancelPendingAction,
+    stats,
   };
 };

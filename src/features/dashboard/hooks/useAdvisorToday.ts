@@ -7,6 +7,9 @@ import { remindersApi } from "../../../api/reminders.api";
 import { chargesApi } from "../../../api/charges.api";
 import { QK } from "../../../lib/queryKeys";
 import { useRole } from "../../../hooks/useRole";
+import { formatDate } from "../../../utils/utils";
+import { getStatusLabel } from "../../../api/annualReports.extended.utils";
+import type { SectionItem } from "../utils";
 
 // Compute once per calendar day — stable across re-renders within the same day
 const getDateAnchors = () => {
@@ -19,6 +22,8 @@ const getDateAnchors = () => {
     sixtyDaysAgo: subDays(now, 60).toISOString(),
   };
 };
+
+const DONE_STATUSES = ["submitted", "accepted", "assessment_issued", "closed"];
 
 export const useAdvisorToday = () => {
   const { isAdvisor } = useRole();
@@ -56,7 +61,6 @@ export const useAdvisorToday = () => {
 
   const chargesQuery = useQuery({
     enabled: isAdvisor,
-    // sixtyDaysAgo is now stable — same string reference across re-renders
     queryKey: QK.charges.list({
       status: "issued",
       issued_before: sixtyDaysAgo,
@@ -72,22 +76,56 @@ export const useAdvisorToday = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  const upcomingDeadlines = (deadlinesQuery.data?.items ?? []).filter(
-    (d) => d.due_date >= today && d.due_date <= weekEnd,
+  const deadlineItems = useMemo<SectionItem[]>(
+    () =>
+      (deadlinesQuery.data?.items ?? [])
+        .filter((d) => d.due_date >= today && d.due_date <= weekEnd)
+        .map((d) => ({
+          id: d.id,
+          label: d.client_name ?? `לקוח #${d.client_id}`,
+          sublabel: `${d.deadline_type} — ${formatDate(d.due_date)}`,
+          href: `/clients/${d.client_id}`,
+        })),
+    [deadlinesQuery.data, today, weekEnd],
   );
 
-  const stuckReports = (reportsQuery.data?.items ?? []).filter((r) => {
-    const stale = r.created_at <= fourteenDaysAgo;
-    const doneStatuses = ["submitted", "accepted", "assessment_issued", "closed"];
-    return stale && !doneStatuses.includes(r.status);
-  });
-
-  const pendingReminders = (remindersQuery.data?.items ?? []).filter(
-    (r) => r.created_at <= sevenDaysAgo,
+  const stuckReportItems = useMemo<SectionItem[]>(
+    () =>
+      (reportsQuery.data?.items ?? [])
+        .filter((r) => r.created_at <= fourteenDaysAgo && !DONE_STATUSES.includes(r.status))
+        .map((r) => ({
+          id: r.id,
+          label: r.client_name ?? `לקוח #${r.client_id}`,
+          sublabel: `${r.tax_year} — ${getStatusLabel(r.status)}`,
+          href: `/clients/${r.client_id}`,
+        })),
+    [reportsQuery.data, fourteenDaysAgo],
   );
 
-  const openCharges = (chargesQuery.data?.items ?? []).filter(
-    (c) => c.issued_at !== null && c.issued_at! <= sixtyDaysAgo,
+  const reminderItems = useMemo<SectionItem[]>(
+    () =>
+      (remindersQuery.data?.items ?? [])
+        .filter((r) => r.created_at <= sevenDaysAgo)
+        .map((r) => ({
+          id: r.id,
+          label: `לקוח #${r.client_id}`,
+          sublabel: r.message.slice(0, 48),
+          href: `/clients/${r.client_id}`,
+        })),
+    [remindersQuery.data, sevenDaysAgo],
+  );
+
+  const chargeItems = useMemo<SectionItem[]>(
+    () =>
+      (chargesQuery.data?.items ?? [])
+        .filter((c) => c.issued_at !== null && c.issued_at! <= sixtyDaysAgo)
+        .map((c) => ({
+          id: c.id,
+          label: c.client_name ?? `לקוח #${c.client_id}`,
+          sublabel: `חיוב #${c.id}${c.issued_at ? ` — ${formatDate(c.issued_at)}` : ""}`,
+          href: `/charges/${c.id}`,
+        })),
+    [chargesQuery.data, sixtyDaysAgo],
   );
 
   const isLoading =
@@ -99,9 +137,9 @@ export const useAdvisorToday = () => {
 
   return {
     isLoading,
-    upcomingDeadlines,
-    stuckReports,
-    pendingReminders,
-    openCharges,
+    deadlineItems,
+    stuckReportItems,
+    reminderItems,
+    chargeItems,
   };
 };

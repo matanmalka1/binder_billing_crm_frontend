@@ -1,7 +1,3 @@
-import {
-  Users,
-  FolderOpen,
-} from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { AccessBanner } from "../components/ui/AccessBanner";
 import { PageLoading } from "../components/ui/PageLoading";
@@ -23,6 +19,7 @@ export const Dashboard: React.FC = () => {
     confirmPendingAction,
     cancelPendingAction,
     pendingQuickAction,
+    stats,
   } = useDashboardPage();
 
   return (
@@ -50,29 +47,7 @@ export const Dashboard: React.FC = () => {
 
       {dashboard.status === "ok" && dashboard.data?.role_view === "advisor" && (
         <>
-          <DashboardStatsGrid
-            stats={[
-              {
-                key: "total_clients",
-                title: "לקוחות",
-                value: dashboard.data.total_clients,
-                description: "סך הכל לקוחות פעילים",
-                icon: Users,
-                variant: "blue",
-                href: "/clients",
-              },
-              {
-                key: "active_binders",
-                title: "קלסרים פעילים",
-                value: dashboard.data.active_binders,
-                description: "טרם הוחזרו ללקוח",
-                icon: FolderOpen,
-                variant: "green",
-                href: "/binders?status=in_office",
-              },
-            ]}
-          />
-
+          <DashboardStatsGrid stats={stats} />
           <AdvisorTodayCard />
           <AttentionPanel items={attentionItems} />
           <OperationalPanel
@@ -85,28 +60,7 @@ export const Dashboard: React.FC = () => {
 
       {dashboard.status === "ok" && dashboard.data?.role_view === "secretary" && (
         <>
-          <DashboardStatsGrid
-            stats={[
-              {
-                key: "in_office",
-                title: "קלסרים במשרד",
-                value: dashboard.data.binders_in_office,
-                description: "כלל הקלסרים הפעילים",
-                icon: FolderOpen,
-                variant: "blue",
-                href: "/binders?status=in_office",
-              },
-              {
-                key: "ready",
-                title: "מוכן לאיסוף",
-                value: dashboard.data.binders_ready_for_pickup,
-                description: "ממתינים לאיסוף לקוח",
-                icon: Users,
-                variant: "green",
-                href: "/binders?status=ready_for_pickup",
-              },
-            ]}
-          />
+          <DashboardStatsGrid stats={stats} />
           <AttentionPanel items={attentionItems} />
         </>
       )}

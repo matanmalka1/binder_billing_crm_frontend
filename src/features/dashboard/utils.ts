@@ -1,4 +1,7 @@
+import { AlertTriangle, DollarSign, Package } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+
+// ── Section variant configs ─────────────────────────────────────────────────
 
 export type AdvisorSeverity = "critical" | "warning" | "info" | "success";
 export type AttentionSeverity = "critical" | "warning" | "success";
@@ -81,3 +84,46 @@ export const attentionSeverityCfg = {
     countPill: "bg-white/20 text-white",
   },
 } as const;
+
+// ── Attention sections config ───────────────────────────────────────────────
+
+export const SECTIONS: Array<SectionConfig & {
+  types: readonly string[];
+  viewAllHref: string;
+}> = [
+  {
+    key: "overdue",
+    title: "קלסרים באיחור",
+    icon: AlertTriangle,
+    types: ["overdue", "overdue_binder", "idle_binder"],
+    severity: "critical",
+    viewAllHref: "/binders",
+  },
+  {
+    key: "unpaid",
+    title: "חיובים שלא שולמו",
+    icon: DollarSign,
+    types: ["unpaid_charge", "unpaid_charges"],
+    severity: "warning",
+    viewAllHref: "/charges?status=issued",
+  },
+  {
+    key: "ready",
+    title: "מוכן לאיסוף",
+    icon: Package,
+    types: ["ready_for_pickup"],
+    severity: "success",
+    viewAllHref: "/binders?status=ready_for_pickup",
+  },
+] as const;
+
+export type SectionKey = (typeof SECTIONS)[number]["key"];
+
+// ── Advisor today section items ─────────────────────────────────────────────
+
+export interface SectionItem {
+  id: number;
+  label: string;
+  sublabel?: string;
+  href?: string;
+}

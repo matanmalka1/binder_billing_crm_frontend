@@ -17,7 +17,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import type { AttentionItem } from "../../../api/dashboard.api";
 import { AttentionSection } from "./AttentionSection";
-import { SECTIONS, type SectionKey } from "./attentionSections";
+import { SECTIONS, type SectionKey } from "../utils";
 import { cn } from "../../../utils/utils";
 interface AttentionPanelProps {
   items: AttentionItem[];

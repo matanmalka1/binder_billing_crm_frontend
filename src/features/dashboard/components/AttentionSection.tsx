@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Inbox } from "lucide-react";
 import type { AttentionItem } from "../../../api/dashboard.api";
 import { cn } from "../../../utils/utils";
-import type { SectionConfig } from "./sectionVariants";
-import { attentionSeverityCfg } from "./sectionVariants";
+import type { SectionConfig } from "../utils";
+import { attentionSeverityCfg } from "../utils";
 
 interface AttentionSectionProps {
   section: SectionConfig & { types: readonly string[]; viewAllHref: string };

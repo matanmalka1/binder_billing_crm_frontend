@@ -1,23 +1,22 @@
 import { CalendarClock, Clock, Bell, Receipt, Sparkles } from "lucide-react";
 import { AdvisorTodaySection } from "./AdvisorTodaySection";
 import { useAdvisorToday } from "../hooks/useAdvisorToday";
-import { formatDate, cn } from "../../../utils/utils";
-import { getStatusLabel } from "../../../api/annualReports.extended.utils";
+import { cn } from "../../../utils/utils";
 
 export const AdvisorTodayCard = () => {
   const {
     isLoading,
-    upcomingDeadlines,
-    stuckReports,
-    pendingReminders,
-    openCharges,
+    deadlineItems,
+    stuckReportItems,
+    reminderItems,
+    chargeItems,
   } = useAdvisorToday();
 
   const totalTasks =
-    upcomingDeadlines.length +
-    stuckReports.length +
-    pendingReminders.length +
-    openCharges.length;
+    deadlineItems.length +
+    stuckReportItems.length +
+    reminderItems.length +
+    chargeItems.length;
 
   return (
     <div className="flex flex-col gap-3 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-elevation-2">
@@ -70,12 +69,7 @@ export const AdvisorTodayCard = () => {
             emptyLabel="אין מועדים קרובים"
             severity="critical"
             sectionIndex={0}
-            items={upcomingDeadlines.map((d) => ({
-              id: d.id,
-            label: d.client_name ?? `לקוח #${d.client_id}`,
-              sublabel: `${d.deadline_type} — ${formatDate(d.due_date)}`,
-              href: `/clients/${d.client_id}`,
-            }))}
+            items={deadlineItems}
           />
           <AdvisorTodaySection
             icon={Clock}
@@ -83,12 +77,7 @@ export const AdvisorTodayCard = () => {
             emptyLabel="אין דוחות תקועים"
             severity="warning"
             sectionIndex={1}
-            items={stuckReports.map((r) => ({
-              id: r.id,
-              label: r.client_name ?? `לקוח #${r.client_id}`,
-              sublabel: `${r.tax_year} — ${getStatusLabel(r.status)}`,
-              href: `/clients/${r.client_id}`,
-            }))}
+            items={stuckReportItems}
           />
           <AdvisorTodaySection
             icon={Bell}
@@ -96,12 +85,7 @@ export const AdvisorTodayCard = () => {
             emptyLabel="אין תזכורות תלויות"
             severity="info"
             sectionIndex={2}
-            items={pendingReminders.map((r) => ({
-              id: r.id,
-              label: `לקוח #${r.client_id}`,
-              sublabel: r.message.slice(0, 48),
-              href: `/clients/${r.client_id}`,
-            }))}
+            items={reminderItems}
           />
           <AdvisorTodaySection
             icon={Receipt}
@@ -109,12 +93,7 @@ export const AdvisorTodayCard = () => {
             emptyLabel="אין חיובים ישנים"
             severity="warning"
             sectionIndex={3}
-            items={openCharges.map((c) => ({
-              id: c.id,
-              label: c.client_name ?? `לקוח #${c.client_id}`,
-              sublabel: `חיוב #${c.id}${c.issued_at ? ` — ${formatDate(c.issued_at)}` : ""}`,
-              href: `/charges/${c.id}`,
-            }))}
+            items={chargeItems}
           />
         </div>
       )}
