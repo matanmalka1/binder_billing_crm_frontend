@@ -172,7 +172,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
       {/* Logo */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-gray-800 shrink-0">
         {isSidebarOpen ? (
-          <span className="font-bold tracking-wider text-xl">בינדר</span>
+          <span className="font-bold tracking-wider text-xl">YM Tax Crm</span>
         ) : (
           <span className="font-bold mx-auto text-sm">ב׳</span>
         )}

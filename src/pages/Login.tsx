@@ -204,7 +204,7 @@ export const Login: React.FC = () => {
         {/* Large watermark */}
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 flex items-end justify-center overflow-hidden pb-0">
           <span className="select-none text-[200px] font-black leading-none tracking-tighter text-white/[0.03]">
-            בינדר
+            YM
           </span>
         </div>
 
@@ -214,7 +214,7 @@ export const Login: React.FC = () => {
             <span className="text-base font-black text-white">ב</span>
           </div>
           <div>
-            <p className="text-base font-bold tracking-tight text-white">בינדר ■ חיוב</p>
+            <p className="text-base font-bold tracking-tight text-white">יוסף מאיר יועץ מס</p>
             <p className="text-xs text-slate-500">מערכת ניהול</p>
           </div>
         </div>
