@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../components/layout/PageHeader";
-import { FilterBar } from "../components/ui/FilterBar";
+import { InlineToolbar } from "../components/ui/InlineToolbar";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { DataTable } from "../components/ui/DataTable";
 import { AccessBanner } from "../components/ui/AccessBanner";
@@ -65,9 +65,9 @@ export const Clients: React.FC = () => {
         />
       )}
 
-      <FilterBar>
+      <InlineToolbar>
         <ClientsFiltersBar filters={filters} onFilterChange={handleFilterChange} />
-      </FilterBar>
+      </InlineToolbar>
 
       {error && <ErrorCard message={error} />}
 
@@ -77,7 +77,15 @@ export const Clients: React.FC = () => {
         getRowKey={(client) => client.id}
         onRowClick={(client) => navigate(`/clients/${client.id}`)}
         isLoading={loading}
-        emptyMessage="אין לקוחות להצגה"
+        emptyState={{
+          title: "אין לקוחות להצגה",
+          message: can.createClients
+            ? "עדיין לא נוספו לקוחות. הוסף את הלקוח הראשון כדי להתחיל."
+            : "לא נמצאו לקוחות התואמים את הסינון הנוכחי.",
+          action: can.createClients
+            ? { label: "לקוח חדש", onClick: () => setShowCreateModal(true) }
+            : undefined,
+        }}
       />
 
       {!loading && clients.length > 0 && (

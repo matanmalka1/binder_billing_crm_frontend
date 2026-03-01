@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
-import { FilterBar } from "../components/ui/FilterBar";
+import { InlineToolbar } from "../components/ui/InlineToolbar";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { DataTable } from "../components/ui/DataTable";
 import { AccessBanner } from "../components/ui/AccessBanner";
@@ -68,9 +68,9 @@ export const Users: React.FC = () => {
         }
       />
 
-      <FilterBar>
+      <InlineToolbar>
         <UsersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
-      </FilterBar>
+      </InlineToolbar>
 
       {error && <ErrorCard message={error} />}
 
@@ -79,7 +79,11 @@ export const Users: React.FC = () => {
         columns={columns}
         getRowKey={(user) => user.id}
         isLoading={loading}
-        emptyMessage="אין משתמשים להצגה"
+        emptyState={{
+          title: "אין משתמשים להצגה",
+          message: "לא נמצאו משתמשים. הוסף משתמש חדש למערכת.",
+          action: { label: "משתמש חדש", onClick: () => setShowCreateModal(true) },
+        }}
       />
 
       {!loading && users.length > 0 && (

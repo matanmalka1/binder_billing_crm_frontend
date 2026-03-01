@@ -15,19 +15,13 @@ If a conflict arises between this document and other documentation, **this docum
 
 ---
 
-### 2. Non-Negotiable Engineering Rules
+### 2. Non-Negotiable Engineering Rules (deduplicated)
 
-The following rules must not be violated without explicit approval:
+The items below are the non-negotiables that are **not** already spelled out in later sections or in `CLAUDE.md`. Everything else is defined once in its dedicated section to avoid duplication.
 
-- **All API paths must be declared in `src/api/endpoints.ts`** — no hardcoded URL strings anywhere else in the codebase
-- **No business logic in page components** — pages render; hooks decide
-- **No cross-feature imports at the component level** — features are self-contained; shared code belongs in `src/components/`, `src/hooks/`, or `src/utils/`
-- **All functions use arrow syntax** — no `function` declarations; components, helpers, and callbacks are `const foo = () => {}`
 - **No direct `localStorage` / `sessionStorage` access** outside `src/store/`
-- **No authorization logic outside `useRole()`** — role checks belong in hooks, never in API files or utility functions
 - **All user-facing text is in Hebrew** — no English strings in UI output (labels, toasts, error messages, placeholders)
 - **All API calls go through the Axios instance in `src/api/client.ts`** — no raw `fetch()` calls
-- **TypeScript strict mode must pass cleanly** — `noUnusedLocals`, `noUnusedParameters`, and `strict` are enabled and must not be suppressed
 
 ---
 

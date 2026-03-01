@@ -4,6 +4,8 @@ import { PageHeader } from "../components/layout/PageHeader";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { AccessBanner } from "../components/ui/AccessBanner";
 import { PageStateGuard } from "../components/ui/PageStateGuard";
+import { DetailDrawer } from "../components/ui/DetailDrawer";
+import { Button } from "../components/ui/Button";
 import { ClientEditForm } from "../features/clients/components/ClientEditForm";
 import { AuthorityContactsCard } from "../features/authorityContacts/components/AuthorityContactsCard";
 import { TaxProfileCard } from "../features/taxProfile/components/TaxProfileCard";
@@ -24,6 +26,8 @@ const TAB_LABELS: Record<ActiveTab, string> = {
   documents: "מסמכים",
   timeline: "ציר זמן",
 };
+
+const EDIT_FORM_ID = "client-edit-form";
 
 export const ClientDetails: React.FC = () => {
   const { clientId } = useParams<{ clientId: string }>();
@@ -82,23 +86,11 @@ export const ClientDetails: React.FC = () => {
 
           {activeTab === "details" && (
             <>
-              {isEditing && can.editClients ? (
-                <ClientEditForm
-                  client={client}
-                  onSave={async (data) => {
-                    await updateClient(data);
-                    setIsEditing(false);
-                  }}
-                  onCancel={() => setIsEditing(false)}
-                  isLoading={isUpdating}
-                />
-              ) : (
-                <ClientInfoSection
-                  client={client}
-                  canEdit={can.editClients}
-                  onEditStart={() => setIsEditing(true)}
-                />
-              )}
+              <ClientInfoSection
+                client={client}
+                canEdit={can.editClients}
+                onEditStart={() => setIsEditing(true)}
+              />
 
               <ClientRelatedData
                 clientId={client.id}
@@ -130,6 +122,49 @@ export const ClientDetails: React.FC = () => {
 
           {activeTab === "timeline" && (
             <ClientTimelineTab clientId={String(client.id)} />
+          )}
+
+          {/* Edit drawer — overlays page so client context stays visible */}
+          {can.editClients && (
+            <DetailDrawer
+              open={isEditing}
+              title="עריכת פרטי לקוח"
+              subtitle={client.full_name}
+              onClose={() => setIsEditing(false)}
+              footer={
+                <div className="flex items-center justify-end gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsEditing(false)}
+                    disabled={isUpdating}
+                  >
+                    ביטול
+                  </Button>
+                  <Button
+                    type="submit"
+                    form={EDIT_FORM_ID}
+                    variant="primary"
+                    isLoading={isUpdating}
+                    disabled={isUpdating}
+                  >
+                    שמור שינויים
+                  </Button>
+                </div>
+              }
+            >
+              <ClientEditForm
+                client={client}
+                formId={EDIT_FORM_ID}
+                hideFooter
+                onSave={async (data) => {
+                  await updateClient(data);
+                  setIsEditing(false);
+                }}
+                onCancel={() => setIsEditing(false)}
+                isLoading={isUpdating}
+              />
+            </DetailDrawer>
           )}
         </>
       )}

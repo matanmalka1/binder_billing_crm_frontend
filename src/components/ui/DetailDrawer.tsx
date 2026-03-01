@@ -6,6 +6,8 @@ interface DetailDrawerProps {
   subtitle?: React.ReactNode;
   onClose: () => void;
   children: React.ReactNode;
+  /** Optional sticky footer — rendered below the scrollable content area. */
+  footer?: React.ReactNode;
 }
 
 export const DetailDrawer: React.FC<DetailDrawerProps> = ({
@@ -14,6 +16,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   subtitle,
   onClose,
   children,
+  footer,
 }) => (
   <>
     <div
@@ -30,9 +33,9 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
         "transition-transform duration-300 ease-in-out",
         open ? "translate-x-0" : "translate-x-full",
       )}
-      dir="rtl"
     >
-      <div className="flex items-start justify-between border-b border-gray-100 px-6 py-4">
+      {/* Header */}
+      <div className="flex shrink-0 items-start justify-between border-b border-gray-100 px-6 py-4">
         <div>
           <h3 className="text-base font-semibold text-gray-900">{title}</h3>
           {subtitle && <p className="mt-0.5 text-sm text-gray-500">{subtitle}</p>}
@@ -46,7 +49,16 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
           ✕
         </button>
       </div>
+
+      {/* Scrollable body */}
       <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">{children}</div>
+
+      {/* Sticky footer (optional) */}
+      {footer && (
+        <div className="shrink-0 border-t border-gray-200 bg-white px-6 py-4">
+          {footer}
+        </div>
+      )}
     </div>
   </>
 );

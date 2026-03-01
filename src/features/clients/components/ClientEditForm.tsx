@@ -12,6 +12,10 @@ interface ClientEditFormProps {
   onSave: (data: UpdateClientPayload) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;
+  /** When true, the form renders without its own action buttons (parent renders them). */
+  hideFooter?: boolean;
+  /** Exposed form id so a parent can submit via <button form="...">. */
+  formId?: string;
 }
 
 export const ClientEditForm: React.FC<ClientEditFormProps> = ({
@@ -19,6 +23,8 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
   onSave,
   onCancel,
   isLoading = false,
+  hideFooter = false,
+  formId,
 }) => {
   const {
     register,
@@ -45,7 +51,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
   });
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form id={formId} onSubmit={onSubmit} className="space-y-6">
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900">מידע בסיסי</h3>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -99,22 +105,26 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
         {...register("notes")}
       />
 
-      <div className="flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
-          ביטול
-        </Button>
-        <Button
-          type="submit"
-          variant="primary"
-          isLoading={isLoading}
-          disabled={isLoading || !isDirty}
-        >
-          שמור שינויים
-        </Button>
-      </div>
+      {!hideFooter && (
+        <>
+          <div className="flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
+            <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
+              ביטול
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              isLoading={isLoading}
+              disabled={isLoading || !isDirty}
+            >
+              שמור שינויים
+            </Button>
+          </div>
 
-      {!isDirty && (
-        <p className="text-center text-sm text-gray-500">לא בוצעו שינויים בטופס</p>
+          {!isDirty && (
+            <p className="text-center text-sm text-gray-500">לא בוצעו שינויים בטופס</p>
+          )}
+        </>
       )}
     </form>
   );

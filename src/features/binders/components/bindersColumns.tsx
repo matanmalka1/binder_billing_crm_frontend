@@ -44,17 +44,37 @@ DaysCell.displayName = "DaysCell";
 
 /* ─── Signals cell ───────────────────────────────────────────── */
 
+// Priority: lower index = higher severity shown first
+const SIGNAL_PRIORITY = ["unpaid_charges", "missing_permanent_documents", "ready_for_pickup", "idle_binder"];
+
+const sortByPriority = (signals: string[]) =>
+  [...signals].sort((a, b) => {
+    const ai = SIGNAL_PRIORITY.indexOf(a);
+    const bi = SIGNAL_PRIORITY.indexOf(b);
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
+
 const SignalsCell: React.FC<{ signals: string[] | null | undefined }> = ({ signals }) => {
   if (!Array.isArray(signals) || signals.length === 0) {
     return <span className="text-sm text-gray-400">—</span>;
   }
+
+  const sorted = sortByPriority(signals);
+  const [primary, ...rest] = sorted;
+
   return (
-    <div className="flex flex-wrap gap-1">
-      {signals.map((signal) => (
-        <Badge key={signal} variant={BINDER_SIGNAL_VARIANTS[signal] ?? "neutral"}>
-          {getSignalLabel(signal)}
-        </Badge>
-      ))}
+    <div className="flex items-center gap-1">
+      <Badge variant={BINDER_SIGNAL_VARIANTS[primary] ?? "neutral"}>
+        {getSignalLabel(primary)}
+      </Badge>
+      {rest.length > 0 && (
+        <span
+          className="inline-flex h-5 items-center rounded-full bg-gray-100 px-1.5 text-[11px] font-semibold text-gray-500 cursor-default"
+          title={rest.map(getSignalLabel).join(" · ")}
+        >
+          +{rest.length}
+        </span>
+      )}
     </div>
   );
 };

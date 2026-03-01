@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
-import { FilterBar } from "../components/ui/FilterBar";
+import { InlineToolbar } from "../components/ui/InlineToolbar";
 import { DataTable } from "../components/ui/DataTable";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { Button } from "../components/ui/Button";
@@ -55,9 +55,9 @@ export const Binders: React.FC = () => {
         }
       />
 
-      <FilterBar title="סינון קלסרים">
+      <InlineToolbar>
         <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
-      </FilterBar>
+      </InlineToolbar>
 
       {error && <ErrorCard message={error} />}
 
@@ -70,7 +70,8 @@ export const Binders: React.FC = () => {
         emptyMessage="אין קלסרים התואמים לסינון הנוכחי"
         emptyState={{
           title: "לא נמצאו קלסרים",
-          message: "נסה לאפס את הסינון או לחפש עם פרמטרים שונים",
+          message: "נסה לאפס את הסינון, או קלוט חומר חדש.",
+          action: { label: "קליטת חומר", onClick: receiveModal.handleOpen },
         }}
       />
 
