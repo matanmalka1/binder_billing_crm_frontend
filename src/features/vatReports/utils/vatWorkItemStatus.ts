@@ -17,7 +17,8 @@ export const canFile = (status: string): boolean =>
 
 export const isFiled = (status: string): boolean => status === "filed";
 
-export const formatVatAmount = (amount: number | null): string => {
+/** Formats a VAT amount as ₪X.XX, or "—" for null/NaN */
+export const formatVatAmount = (amount: number | null | undefined): string => {
   if (amount === null || amount === undefined || isNaN(Number(amount))) return "—";
   return `₪${Number(amount).toFixed(2)}`;
 };

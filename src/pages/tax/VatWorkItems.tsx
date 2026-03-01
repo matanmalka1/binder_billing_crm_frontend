@@ -2,13 +2,13 @@ import { useMemo, useState } from "react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { AccessBanner } from "../../components/ui/AccessBanner";
 import { DataTable } from "../../components/ui/DataTable";
-import { ErrorCard } from "../../components/ui/ErrorCard";
 import { PaginationCard } from "../../components/ui/PaginationCard";
 import { VatWorkItemsCreateCard } from "../../features/vatReports/components/VatWorkItemsCreateCard";
 import { VatWorkItemsFiltersCard } from "../../features/vatReports/components/VatWorkItemsFiltersCard";
 import { buildVatWorkItemColumns } from "../../features/vatReports/components/vatWorkItemColumns";
 import { VatWorkItemDrawer } from "../../features/vatReports/components/VatWorkItemDrawer";
 import { useVatWorkItemsPage } from "../../features/vatReports/hooks/useVatWorkItemsPage";
+import { ErrorCard } from "../../components/ui/ErrorCard";
 import type { VatWorkItemResponse } from "../../api/vatReports.api";
 
 export const VatWorkItems: React.FC = () => {
@@ -35,7 +35,7 @@ export const VatWorkItems: React.FC = () => {
     [isAdvisor, actionLoadingId, runAction],
   );
 
-  const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
+  const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
 
   return (
     <div className="space-y-6">
@@ -93,10 +93,7 @@ export const VatWorkItems: React.FC = () => {
         />
       )}
 
-      <VatWorkItemDrawer
-        item={selectedItem}
-        onClose={() => setSelectedItem(null)}
-      />
+      <VatWorkItemDrawer item={selectedItem} onClose={() => setSelectedItem(null)} />
     </div>
   );
 };

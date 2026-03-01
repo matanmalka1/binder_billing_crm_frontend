@@ -1,5 +1,16 @@
 import { z } from "zod";
 import type { CreateVatWorkItemPayload, CreateVatInvoicePayload } from "../../api/vatReports.api";
+import {
+  INCOME_KEY,
+  EXPENSE_CATEGORIES,
+  CATEGORY_LABELS,
+  type ExpenseCategoryKey,
+} from "./constants";
+
+// Re-export so existing imports from schemas.ts keep working
+export { INCOME_KEY, EXPENSE_CATEGORIES, CATEGORY_LABELS, type ExpenseCategoryKey };
+
+// ── Create work item ──────────────────────────────────────────────────────────
 
 const periodPattern = /^\d{4}-(0[1-9]|1[0-2])$/;
 
@@ -8,14 +19,14 @@ export const vatWorkItemCreateSchema = z.object({
     .string()
     .trim()
     .min(1, "יש להזין מזהה לקוח")
-    .refine((value) => Number.isInteger(Number(value)) && Number(value) > 0, {
+    .refine((v) => Number.isInteger(Number(v)) && Number(v) > 0, {
       message: "יש להזין מזהה לקוח חיובי",
     }),
   period: z
     .string()
     .trim()
     .min(1, "יש להזין תקופה")
-    .refine((value) => periodPattern.test(value), {
+    .refine((v) => periodPattern.test(v), {
       message: "פורמט תקופה חייב להיות YYYY-MM",
     }),
   mark_pending: z.boolean(),
@@ -42,7 +53,7 @@ export const toCreateVatWorkItemPayload = (
 
 // ── Category-based data entry ─────────────────────────────────────────────────
 
-const amountField = z
+export const amountField = z
   .string()
   .trim()
   .refine((v) => v === "" || (!isNaN(Number(v)) && Number(v) >= 0), {
@@ -55,31 +66,6 @@ export const categoryRowSchema = z.object({
 });
 
 export type CategoryRowValues = z.infer<typeof categoryRowSchema>;
-
-export const INCOME_KEY = "income";
-export const EXPENSE_CATEGORIES = [
-  "office",
-  "travel",
-  "professional_services",
-  "equipment",
-  "rent",
-  "salary",
-  "marketing",
-  "other",
-] as const;
-export type ExpenseCategoryKey = (typeof EXPENSE_CATEGORIES)[number];
-
-export const CATEGORY_LABELS: Record<string, string> = {
-  [INCOME_KEY]: "הכנסות",
-  office: "משרד",
-  travel: "נסיעות",
-  professional_services: "שירותים מקצועיים",
-  equipment: "ציוד",
-  rent: "שכירות",
-  salary: "שכר עבודה",
-  marketing: "שיווק",
-  other: "אחר",
-};
 
 export type CategoryEntryFormValues = {
   income: CategoryRowValues;

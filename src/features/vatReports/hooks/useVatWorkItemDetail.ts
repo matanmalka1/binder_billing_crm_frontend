@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { vatReportsApi } from "../../../api/vatReports.api";
 import { QK } from "../../../lib/queryKeys";
+import { CATEGORY_LABELS } from "../constants";
 
 export interface VatCategorySummaryRow {
   label: string;
@@ -18,21 +19,8 @@ export interface VatWorkItemSummary {
   totalInputVat: number;
 }
 
-const EXPENSE_CATEGORY_LABELS: Record<string, string> = {
-  office: "משרד",
-  travel: "נסיעות",
-  professional_services: "שירותים מקצועיים",
-  equipment: "ציוד",
-  rent: "שכירות",
-  salary: "שכר עבודה",
-  marketing: "שיווק",
-  other: "אחר",
-};
-
-const getCategoryLabel = (category: string | null): string => {
-  if (!category) return "כללי";
-  return EXPENSE_CATEGORY_LABELS[category] ?? category;
-};
+const getCategoryLabel = (category: string | null): string =>
+  CATEGORY_LABELS[category ?? ""] ?? category ?? "כללי";
 
 export const useVatWorkItemDetail = (workItemId: number | null) => {
   const invoicesQuery = useQuery({
@@ -48,27 +36,15 @@ export const useVatWorkItemDetail = (workItemId: number | null) => {
     const inputMap = new Map<string, VatCategorySummaryRow>();
 
     for (const inv of items) {
-      const net = inv.net_amount;
-      const vat = inv.vat_amount;
-
-      if (inv.invoice_type === "income") {
-        const key = "הכנסות";
-        const existing = outputMap.get(key);
-        if (existing) {
-          existing.netAmount += net;
-          existing.vatAmount += vat;
-        } else {
-          outputMap.set(key, { label: key, netAmount: net, vatAmount: vat });
-        }
+      const map = inv.invoice_type === "income" ? outputMap : inputMap;
+      const key =
+        inv.invoice_type === "income" ? "הכנסות" : getCategoryLabel(inv.expense_category);
+      const existing = map.get(key);
+      if (existing) {
+        existing.netAmount += inv.net_amount;
+        existing.vatAmount += inv.vat_amount;
       } else {
-        const key = getCategoryLabel(inv.expense_category);
-        const existing = inputMap.get(key);
-        if (existing) {
-          existing.netAmount += net;
-          existing.vatAmount += vat;
-        } else {
-          inputMap.set(key, { label: key, netAmount: net, vatAmount: vat });
-        }
+        map.set(key, { label: key, netAmount: inv.net_amount, vatAmount: inv.vat_amount });
       }
     }
 

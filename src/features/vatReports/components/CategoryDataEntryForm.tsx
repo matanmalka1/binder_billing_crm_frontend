@@ -6,6 +6,7 @@ import {
   CATEGORY_LABELS,
   EXPENSE_CATEGORIES,
   INCOME_KEY,
+  amountField,
   categoryEntryDefaultValues,
   type CategoryEntryFormValues,
   type ExpenseCategoryKey,
@@ -14,16 +15,9 @@ import { useAddCategoryInvoices } from "../hooks/useAddCategoryInvoices";
 
 const VAT_RATE = 0.18;
 
-const amountField = z
-  .string()
-  .trim()
-  .refine((v) => v === "" || (!isNaN(Number(v)) && Number(v) >= 0), {
-    message: "סכום לא תקין",
-  });
-
 const rowSchema = z.object({ net_amount: amountField, vat_amount: amountField });
 
-const flatSchema = z.object({
+const categoryEntrySchema = z.object({
   income: rowSchema,
   categories: z.object(
     Object.fromEntries(EXPENSE_CATEGORIES.map((k) => [k, rowSchema])) as Record<
@@ -48,6 +42,9 @@ interface AmountRowProps {
   onNetChange: (net: string) => void;
 }
 
+const inputClass =
+  "w-full rounded border border-gray-300 px-2 py-1.5 text-sm font-mono tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
+
 const AmountRow: React.FC<AmountRowProps> = ({
   label,
   netProps,
@@ -56,7 +53,10 @@ const AmountRow: React.FC<AmountRowProps> = ({
   vatError,
   onNetChange,
 }) => {
-  const { onChange: originalNetOnChange, ...restNetProps } = netProps as React.InputHTMLAttributes<HTMLInputElement> & { onChange?: React.ChangeEventHandler<HTMLInputElement> };
+  const { onChange: originalNetOnChange, ...restNetProps } =
+    netProps as React.InputHTMLAttributes<HTMLInputElement> & {
+      onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    };
 
   const handleNetChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     originalNetOnChange?.(e);
@@ -65,33 +65,29 @@ const AmountRow: React.FC<AmountRowProps> = ({
 
   return (
     <tr className="border-b border-gray-50">
-      <td className="py-2 pr-1 text-sm text-gray-700 font-medium">{label}</td>
-      <td className="py-1 px-1">
-        <div>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="0.00"
-            className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm font-mono tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            {...restNetProps}
-            onChange={handleNetChange}
-          />
-          {netError && <p className="mt-0.5 text-xs text-red-600">{netError}</p>}
-        </div>
+      <td className="py-2 pr-1 text-sm font-medium text-gray-700">{label}</td>
+      <td className="px-1 py-1">
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="0.00"
+          className={inputClass}
+          {...restNetProps}
+          onChange={handleNetChange}
+        />
+        {netError && <p className="mt-0.5 text-xs text-red-600">{netError}</p>}
       </td>
-      <td className="py-1 px-1">
-        <div>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="0.00"
-            className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm font-mono tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            {...vatProps}
-          />
-          {vatError && <p className="mt-0.5 text-xs text-red-600">{vatError}</p>}
-        </div>
+      <td className="px-1 py-1">
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="0.00"
+          className={inputClass}
+          {...vatProps}
+        />
+        {vatError && <p className="mt-0.5 text-xs text-red-600">{vatError}</p>}
       </td>
     </tr>
   );
@@ -109,14 +105,12 @@ export const CategoryDataEntryForm: React.FC<Props> = ({ workItemId, period, onS
     formState: { errors },
   } = useForm<CategoryEntryFormValues>({
     defaultValues: categoryEntryDefaultValues(),
-    resolver: zodResolver(flatSchema),
+    resolver: zodResolver(categoryEntrySchema),
   });
 
   const autoVat = (net: string, field: Parameters<typeof setValue>[0]) => {
     const n = Number(net);
-    if (!isNaN(n) && n >= 0) {
-      setValue(field, String((n * VAT_RATE).toFixed(2)));
-    }
+    if (!isNaN(n) && n >= 0) setValue(field, String((n * VAT_RATE).toFixed(2)));
   };
 
   const onSubmit = handleSubmit(async (values) => {
@@ -137,14 +131,17 @@ export const CategoryDataEntryForm: React.FC<Props> = ({ workItemId, period, onS
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 text-right text-xs text-gray-500">
-              <th className="py-1.5 pr-1 font-medium w-1/3">קטגוריה</th>
-              <th className="py-1.5 px-1 font-medium">נטו (₪)</th>
-              <th className="py-1.5 px-1 font-medium">מע"מ (₪)</th>
+              <th className="w-1/3 py-1.5 pr-1 font-medium">קטגוריה</th>
+              <th className="px-1 py-1.5 font-medium">נטו (₪)</th>
+              <th className="px-1 py-1.5 font-medium">מע"מ (₪)</th>
             </tr>
           </thead>
           <tbody>
             <tr className="bg-blue-50/50">
-              <td colSpan={3} className="pt-2 pb-1 pr-1 text-xs font-semibold text-blue-700 uppercase tracking-wide">
+              <td
+                colSpan={3}
+                className="pb-1 pr-1 pt-2 text-xs font-semibold uppercase tracking-wide text-blue-700"
+              >
                 עסקאות
               </td>
             </tr>
@@ -158,7 +155,10 @@ export const CategoryDataEntryForm: React.FC<Props> = ({ workItemId, period, onS
             />
 
             <tr className="bg-orange-50/50">
-              <td colSpan={3} className="pt-3 pb-1 pr-1 text-xs font-semibold text-orange-700 uppercase tracking-wide">
+              <td
+                colSpan={3}
+                className="pb-1 pr-1 pt-3 text-xs font-semibold uppercase tracking-wide text-orange-700"
+              >
                 תשומות
               </td>
             </tr>

@@ -1,193 +1,189 @@
-import { cn } from "../../../utils/utils";
-import type { VatWorkItemResponse } from "../../../api/vatReports.api";
-import { getVatWorkItemStatusLabel } from "../../../utils/enums";
-import { useVatWorkItemDetail, type VatCategorySummaryRow } from "../hooks/useVatWorkItemDetail";
-import { PageLoading } from "../../../components/ui/PageLoading";
-import { CategoryDataEntryForm } from "./CategoryDataEntryForm";
-import { canAddInvoice } from "../utils/vatWorkItemStatus";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "../../../components/ui/Button";
+import {
+  CATEGORY_LABELS,
+  EXPENSE_CATEGORIES,
+  INCOME_KEY,
+  amountField,
+  categoryEntryDefaultValues,
+  type CategoryEntryFormValues,
+  type ExpenseCategoryKey,
+} from "../schemas";
+import { useAddCategoryInvoices } from "../hooks/useAddCategoryInvoices";
 
-interface VatWorkItemDrawerProps {
-  item: VatWorkItemResponse | null;
-  onClose: () => void;
+const VAT_RATE = 0.18;
+
+const rowSchema = z.object({ net_amount: amountField, vat_amount: amountField });
+
+const categoryEntrySchema = z.object({
+  income: rowSchema,
+  categories: z.object(
+    Object.fromEntries(EXPENSE_CATEGORIES.map((k) => [k, rowSchema])) as Record<
+      ExpenseCategoryKey,
+      typeof rowSchema
+    >,
+  ),
+});
+
+interface Props {
+  workItemId: number;
+  period: string;
+  onSaved: () => void;
 }
 
-const formatAmount = (n: number): string => `₪${n.toFixed(2)}`;
-
-interface SectionTableProps {
-  title: string;
-  rows: VatCategorySummaryRow[];
-  totalNet: number;
-  totalVat: number;
-  netLabel: string;
+interface AmountRowProps {
+  label: string;
+  netProps: React.InputHTMLAttributes<HTMLInputElement>;
+  vatProps: React.InputHTMLAttributes<HTMLInputElement>;
+  netError?: string;
+  vatError?: string;
+  onNetChange: (net: string) => void;
 }
 
-const SectionTable: React.FC<SectionTableProps> = ({
-  title,
-  rows,
-  totalNet,
-  totalVat,
-  netLabel,
-}) => (
-  <div>
-    <h4 className="mb-2 text-sm font-semibold text-gray-700">{title}</h4>
-    {rows.length === 0 ? (
-      <p className="text-sm text-gray-400">אין נתונים</p>
-    ) : (
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-gray-100 text-right text-xs text-gray-500">
-            <th className="py-1.5 font-medium">קטגוריה</th>
-            <th className="py-1.5 font-medium">{netLabel}</th>
-            <th className="py-1.5 font-medium">מע"מ</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.label} className="border-b border-gray-50">
-              <td className="py-1.5 text-gray-800">{row.label}</td>
-              <td className="py-1.5 font-mono tabular-nums text-gray-800">
-                {formatAmount(row.netAmount)}
-              </td>
-              <td className="py-1.5 font-mono tabular-nums text-gray-800">
-                {formatAmount(row.vatAmount)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr className="text-gray-900 font-semibold">
-            <td className="pt-2">סה"כ</td>
-            <td className="pt-2 font-mono tabular-nums">{formatAmount(totalNet)}</td>
-            <td className="pt-2 font-mono tabular-nums">{formatAmount(totalVat)}</td>
-          </tr>
-        </tfoot>
-      </table>
-    )}
-  </div>
-);
-SectionTable.displayName = "SectionTable";
+const inputClass =
+  "w-full rounded border border-gray-300 px-2 py-1.5 text-sm font-mono tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
 
-export const VatWorkItemDrawer: React.FC<VatWorkItemDrawerProps> = ({ item, onClose }) => {
-  const { summary, loading, error } = useVatWorkItemDetail(item?.id ?? null);
+const AmountRow: React.FC<AmountRowProps> = ({
+  label,
+  netProps,
+  vatProps,
+  netError,
+  vatError,
+  onNetChange,
+}) => {
+  const { onChange: originalNetOnChange, ...restNetProps } =
+    netProps as React.InputHTMLAttributes<HTMLInputElement> & {
+      onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    };
 
-  const isOpen = item !== null;
+  const handleNetChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    originalNetOnChange?.(e);
+    onNetChange(e.target.value);
+  };
 
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className={cn(
-          "fixed inset-0 z-40 bg-black/20 transition-opacity duration-200",
-          isOpen ? "opacity-100" : "pointer-events-none opacity-0",
-        )}
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Drawer panel */}
-      <div
-        className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col bg-white shadow-2xl",
-          "transition-transform duration-300 ease-in-out",
-          isOpen ? "translate-x-0" : "translate-x-full",
-        )}
-        dir="rtl"
-      >
-        {/* Header */}
-        <div className="flex items-start justify-between border-b border-gray-100 px-6 py-4">
-          <div>
-            <p className="text-xs text-gray-500">תיק מע"מ #{item?.id}</p>
-            <h3 className="mt-0.5 text-base font-semibold text-gray-900">
-              {item?.client_name ?? `לקוח #${item?.client_id}`}
-            </h3>
-            <div className="mt-1 flex items-center gap-3 text-sm text-gray-500">
-              <span>תקופה: {item?.period}</span>
-              <span>סטטוס: {item ? getVatWorkItemStatusLabel(item.status) : ""}</span>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-            aria-label="סגירה"
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* Summary totals bar */}
-        {item && (
-          <div className="grid grid-cols-3 divide-x divide-x-reverse divide-gray-100 border-b border-gray-100 bg-gray-50 px-6 py-3 text-center">
-            <div>
-              <p className="text-xs text-gray-500">מע"מ עסקאות</p>
-              <p className="mt-0.5 font-mono text-sm font-semibold tabular-nums text-gray-900">
-                {formatAmount(Number(item.total_output_vat))}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">מע"מ תשומות</p>
-              <p className="mt-0.5 font-mono text-sm font-semibold tabular-nums text-gray-900">
-                {formatAmount(Number(item.total_input_vat))}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">מע"מ לתשלום</p>
-              <p
-                className={cn(
-                  "mt-0.5 font-mono text-sm font-semibold tabular-nums",
-                  Number(item.net_vat) >= 0 ? "text-red-600" : "text-green-600",
-                )}
-              >
-                {formatAmount(Number(item.net_vat))}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
-          {loading && <PageLoading />}
-
-          {!loading && error && (
-            <p className="text-sm text-red-500">שגיאה בטעינת הנתונים</p>
-          )}
-
-          {!loading && !error && (
-            <>
-              <SectionTable
-                title='עסקאות (מע"מ עסקאות)'
-                rows={summary.outputRows}
-                totalNet={summary.totalOutputNet}
-                totalVat={summary.totalOutputVat}
-                netLabel="מחזור"
-              />
-              <div className="border-t border-gray-100" />
-              <SectionTable
-                title='תשומות (מע"מ תשומות)'
-                rows={summary.inputRows}
-                totalNet={summary.totalInputNet}
-                totalVat={summary.totalInputVat}
-                netLabel="עלות נטו"
-              />
-
-              {item && canAddInvoice(item.status) && (
-                <>
-                  <div className="border-t border-gray-200" />
-                  <div>
-                    <h4 className="mb-3 text-sm font-semibold text-gray-700">הקלדת נתונים</h4>
-                    <CategoryDataEntryForm
-                      workItemId={item.id}
-                      period={item.period}
-                      onSaved={() => {}}
-                    />
-                  </div>
-                </>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-    </>
+    <tr className="border-b border-gray-50">
+      <td className="py-2 pr-1 text-sm font-medium text-gray-700">{label}</td>
+      <td className="px-1 py-1">
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="0.00"
+          className={inputClass}
+          {...restNetProps}
+          onChange={handleNetChange}
+        />
+        {netError && <p className="mt-0.5 text-xs text-red-600">{netError}</p>}
+      </td>
+      <td className="px-1 py-1">
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="0.00"
+          className={inputClass}
+          {...vatProps}
+        />
+        {vatError && <p className="mt-0.5 text-xs text-red-600">{vatError}</p>}
+      </td>
+    </tr>
   );
 };
-VatWorkItemDrawer.displayName = "VatWorkItemDrawer";
+AmountRow.displayName = "AmountRow";
+
+export const CategoryDataEntryForm: React.FC<Props> = ({ workItemId, period, onSaved }) => {
+  const { submit, isLoading } = useAddCategoryInvoices(workItemId);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<CategoryEntryFormValues>({
+    defaultValues: categoryEntryDefaultValues(),
+    resolver: zodResolver(categoryEntrySchema),
+  });
+
+  const autoVat = (net: string, field: Parameters<typeof setValue>[0]) => {
+    const n = Number(net);
+    if (!isNaN(n) && n >= 0) setValue(field, String((n * VAT_RATE).toFixed(2)));
+  };
+
+  const onSubmit = handleSubmit(async (values) => {
+    const ok = await submit(values, period);
+    if (ok) {
+      reset(categoryEntryDefaultValues());
+      onSaved();
+    }
+  });
+
+  return (
+    <form onSubmit={onSubmit} className="space-y-3" dir="rtl">
+      <p className="text-xs text-gray-500">
+        הזן סכומים לפי קטגוריה. מע"מ מחושב אוטומטית (18%). שורות ריקות יתעלמו.
+      </p>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-gray-200 text-right text-xs text-gray-500">
+              <th className="w-1/3 py-1.5 pr-1 font-medium">קטגוריה</th>
+              <th className="px-1 py-1.5 font-medium">נטו (₪)</th>
+              <th className="px-1 py-1.5 font-medium">מע"מ (₪)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="bg-blue-50/50">
+              <td
+                colSpan={3}
+                className="pb-1 pr-1 pt-2 text-xs font-semibold uppercase tracking-wide text-blue-700"
+              >
+                עסקאות
+              </td>
+            </tr>
+            <AmountRow
+              label={CATEGORY_LABELS[INCOME_KEY]}
+              netProps={register("income.net_amount")}
+              vatProps={register("income.vat_amount")}
+              netError={errors.income?.net_amount?.message}
+              vatError={errors.income?.vat_amount?.message}
+              onNetChange={(net) => autoVat(net, "income.vat_amount")}
+            />
+
+            <tr className="bg-orange-50/50">
+              <td
+                colSpan={3}
+                className="pb-1 pr-1 pt-3 text-xs font-semibold uppercase tracking-wide text-orange-700"
+              >
+                תשומות
+              </td>
+            </tr>
+            {EXPENSE_CATEGORIES.map((cat) => (
+              <AmountRow
+                key={cat}
+                label={CATEGORY_LABELS[cat]}
+                netProps={register(`categories.${cat}.net_amount`)}
+                vatProps={register(`categories.${cat}.vat_amount`)}
+                netError={errors.categories?.[cat]?.net_amount?.message}
+                vatError={errors.categories?.[cat]?.vat_amount?.message}
+                onNetChange={(net) => autoVat(net, `categories.${cat}.vat_amount`)}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex justify-end pt-1">
+        <Button type="submit" size="sm" isLoading={isLoading}>
+          שמירה
+        </Button>
+      </div>
+    </form>
+  );
+};
+
+CategoryDataEntryForm.displayName = "CategoryDataEntryForm";
