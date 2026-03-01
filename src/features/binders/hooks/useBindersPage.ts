@@ -15,6 +15,8 @@ export const useBindersPage = () => {
       status: searchParams.get("status") ?? "",
       work_state: searchParams.get("work_state") ?? "",
       client_id: parsePositiveInt(searchParams.get("client_id"), 0) || undefined,
+      client_name: searchParams.get("client_name") ?? "",
+      binder_number: searchParams.get("binder_number") ?? "",
     }),
     [searchParams],
   );
@@ -26,8 +28,10 @@ export const useBindersPage = () => {
       status: filters.status || undefined,
       client_id: filters.client_id || undefined,
       work_state: filters.work_state || undefined,
+      client_name: filters.client_name || undefined,
+      binder_number: filters.binder_number || undefined,
     }),
-    [filters.status, filters.work_state, filters.client_id],
+    [filters.status, filters.work_state, filters.client_id, filters.client_name, filters.binder_number],
   );
 
   const bindersQuery = useQuery({

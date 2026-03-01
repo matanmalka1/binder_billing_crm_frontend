@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { AccessBanner } from "../components/ui/AccessBanner";
@@ -38,6 +38,16 @@ export const ClientDetails: React.FC = () => {
   const { client, isValidId, isLoading, error, binders, bindersTotal, charges, chargesTotal,
     annualReportsTotal, vatWorkItemsTotal, documentsTotal, updateClient, isUpdating, can } =
     useClientDetails({ clientId: clientIdNum });
+
+  // Lock background scroll when drawer is open
+  useEffect(() => {
+    if (isEditing) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isEditing]);
 
   if (!isValidId) return (<div className="space-y-6"><PageHeader title="פרטי לקוח" /><ErrorCard message="מזהה לקוח לא תקין" /></div>);
 
@@ -85,35 +95,36 @@ export const ClientDetails: React.FC = () => {
           {tabBar}
 
           {activeTab === "details" && (
-            <>
-              <ClientInfoSection
-                client={client}
-                canEdit={can.editClients}
-                onEditStart={() => setIsEditing(true)}
-              />
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              {/* Left column — info + tax profile + contacts */}
+              <div className="space-y-6 lg:col-span-2">
+                <ClientInfoSection
+                  client={client}
+                  canEdit={can.editClients}
+                  onEditStart={() => setIsEditing(true)}
+                />
+                <TaxProfileCard clientId={client.id} readOnly={!can.editClients} />
+                <AuthorityContactsCard clientId={client.id} />
+                <CorrespondenceCard clientId={client.id} />
+              </div>
 
-              <ClientRelatedData
-                clientId={client.id}
-                binders={binders}
-                bindersTotal={bindersTotal}
-                charges={charges}
-                chargesTotal={chargesTotal}
-                canViewCharges={can.viewChargeAmounts}
-                annualReportsTotal={annualReportsTotal}
-                vatWorkItemsTotal={vatWorkItemsTotal}
-                documentsTotal={documentsTotal}
-              />
-
-              {can.editClients && <TaxProfileCard clientId={client.id} />}
-
-              <AuthorityContactsCard clientId={client.id} />
-
-              <CorrespondenceCard clientId={client.id} />
-
-              <ClientRemindersCard clientId={client.id} />
-
-              <SignatureRequestsCard client={client} canManage={can.editClients} />
-            </>
+              {/* Right column — related counts + reminders + signatures */}
+              <div className="space-y-6">
+                <ClientRelatedData
+                  clientId={client.id}
+                  binders={binders}
+                  bindersTotal={bindersTotal}
+                  charges={charges}
+                  chargesTotal={chargesTotal}
+                  canViewCharges={can.viewChargeAmounts}
+                  annualReportsTotal={annualReportsTotal}
+                  vatWorkItemsTotal={vatWorkItemsTotal}
+                  documentsTotal={documentsTotal}
+                />
+                <ClientRemindersCard clientId={client.id} />
+                <SignatureRequestsCard client={client} canManage={can.editClients} />
+              </div>
+            </div>
           )}
 
           {activeTab === "documents" && (
@@ -124,7 +135,7 @@ export const ClientDetails: React.FC = () => {
             <ClientTimelineTab clientId={String(client.id)} />
           )}
 
-          {/* Edit drawer — overlays page so client context stays visible */}
+          {/* Edit drawer — overlays page, scroll locked */}
           {can.editClients && (
             <DetailDrawer
               open={isEditing}

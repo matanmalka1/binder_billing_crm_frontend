@@ -1,5 +1,7 @@
 import type { ActionCommand, BackendAction } from "./types";
 
+const HIDDEN_ACTION_KEYS = new Set<string>(["freeze", "activate"]);
+
 const mapConfirm = (confirm?: BackendAction["confirm"] | null): ActionCommand["confirm"] => {
   if (!confirm) return undefined;
   return {
@@ -16,6 +18,7 @@ export const mapActions = (
   if (!Array.isArray(actions)) return [];
 
   return actions
+    .filter((action) => !HIDDEN_ACTION_KEYS.has(action.key))
     .map((action) => {
       if (!action.endpoint) return null;
 

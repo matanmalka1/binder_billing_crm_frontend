@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { History, Send, X, FileSignature, Link2, ClipboardCheck, Clock, AlertCircle } from "lucide-react";
+import { History, Send, X, FileSignature, Link2, ClipboardCheck, Clock, AlertCircle, Copy, Check } from "lucide-react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { PageStateGuard } from "../../components/ui/PageStateGuard";
 import { DataTable } from "../../components/ui/DataTable";
 import { StatsCard } from "../../components/ui/StatsCard";
+import { Button } from "../../components/ui/Button";
 import { SignatureStatusBadge } from "../../features/signatureRequests/components/SignatureStatusBadge";
 import { SignatureRequestAuditDrawer } from "../../features/signatureRequests/components/SignatureRequestAuditDrawer";
 import { usePendingSignatureRequests } from "../../features/signatureRequests/hooks/usePendingSignatureRequests";
@@ -15,16 +16,49 @@ import { getSignatureRequestTypeLabel } from "../../utils/enums";
 import { formatDate } from "../../utils/utils";
 import type { SendSignatureRequestResponse } from "../../api/signatureRequests.api";
 
+const TERMINAL_STATUSES = new Set(["signed", "expired", "canceled", "declined"]);
+
+const CopyButton: React.FC<{ text: string }> = ({ text }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // clipboard not available
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      title="העתק קישור"
+      className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+    >
+      {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
+    </button>
+  );
+};
+
 export const SignatureRequestsPage: React.FC = () => {
   const { items, total, clientNames, isLoading, error } = usePendingSignatureRequests();
   const { send, isSending, cancel, isCanceling } = useSignatureRequestActions();
 
   const [signingUrls, setSigningUrls] = useState<Record<number, string>>({});
   const [auditRequestId, setAuditRequestId] = useState<number | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const draft = items.filter((r) => r.status === "draft").length;
   const pending = items.filter((r) => r.status === "pending_signature").length;
   const terminal = items.filter((r) => ["expired", "declined"].includes(r.status)).length;
+
+  const displayedItems = useMemo(
+    () => showAll ? items : items.filter((r) => !TERMINAL_STATUSES.has(r.status)),
+    [items, showAll],
+  );
 
   const handleSend = async (id: number) => {
     const result = (await send(id)) as SendSignatureRequestResponse;
@@ -86,7 +120,7 @@ export const SignatureRequestsPage: React.FC = () => {
         header: "פעולות",
         render: (req: SignatureRequestResponse) => {
           const isDraft = req.status === "draft";
-          const isTerminal = ["signed", "declined", "expired", "canceled"].includes(req.status);
+          const isTerminal = TERMINAL_STATUSES.has(req.status);
           const signingUrl = signingUrls[req.id];
           return (
             <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
@@ -102,15 +136,18 @@ export const SignatureRequestsPage: React.FC = () => {
                 </button>
               )}
               {req.status === "pending_signature" && signingUrl && (
-                <a
-                  href={signingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50"
-                >
-                  <Link2 className="h-3 w-3" />
-                  קישור
-                </a>
+                <>
+                  <a
+                    href={signingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50"
+                  >
+                    <Link2 className="h-3 w-3" />
+                    קישור
+                  </a>
+                  <CopyButton text={signingUrl} />
+                </>
               )}
               {!isTerminal && (
                 <button
@@ -157,15 +194,26 @@ export const SignatureRequestsPage: React.FC = () => {
           <StatsCard title="פג / נדחה" value={terminal} icon={AlertCircle} variant="orange" />
         </div>
 
+        <div className="flex items-center justify-end">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowAll((v) => !v)}
+          >
+            {showAll ? "הסתר סגורות" : "הצג הכל"}
+          </Button>
+        </div>
+
         <DataTable
-          data={items}
+          data={displayedItems}
           columns={columns}
           getRowKey={(req) => req.id}
           isLoading={false}
           emptyState={{
             icon: FileSignature,
             title: "אין בקשות חתימה",
-            message: "אין בקשות חתימה פעילות להצגה",
+            message: showAll ? "אין בקשות חתימה להצגה" : "אין בקשות חתימה פעילות — לחץ על 'הצג הכל' לצפייה בארכיון",
           }}
         />
       </div>

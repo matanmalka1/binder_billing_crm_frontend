@@ -61,7 +61,7 @@ export const Clients: React.FC = () => {
       {!can.editClients && (
         <AccessBanner
           variant="info"
-          message="יצירה ועריכה של לקוחות זמינה ליועצים בלבד."
+          message="צפייה בלבד. יצירה ועריכה של לקוחות זמינה ליועצים בלבד."
         />
       )}
 

@@ -12,8 +12,6 @@ import { TaxDeadlineDrawer } from "../features/taxDeadlines/components/TaxDeadli
 import { useTaxDeadlines } from "../features/taxDeadlines/hooks/useTaxDeadlines";
 import { useTaxDashboard } from "../features/taxDashboard/hooks/useTaxDashboard";
 import { TaxSubmissionStats } from "../features/taxDashboard/components/TaxSubmissionStats";
-import { TaxUrgentDeadlines } from "../features/taxDashboard/components/TaxUrgentDeadlines";
-import { TaxUpcomingDeadlines } from "../features/taxDashboard/components/TaxUpcomingDeadlines";
 import type { TaxDeadlineResponse } from "../api/taxDeadlines.api";
 
 export const TaxDeadlines: React.FC = () => {
@@ -35,7 +33,7 @@ export const TaxDeadlines: React.FC = () => {
   } = useTaxDeadlines();
 
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
-  const { currentYear, submissions, urgentDeadlines, upcomingDeadlines } = useTaxDashboard();
+  const { currentYear, submissions } = useTaxDashboard();
 
   const header = (
     <PageHeader
@@ -74,17 +72,6 @@ export const TaxDeadlines: React.FC = () => {
       {header}
 
       <TaxSubmissionStats data={submissions} />
-
-      {(urgentDeadlines.length > 0 || upcomingDeadlines.length > 0) && (
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-          <div className="xl:col-span-2">
-            <TaxUrgentDeadlines items={urgentDeadlines} />
-          </div>
-          <div>
-            <TaxUpcomingDeadlines items={upcomingDeadlines} />
-          </div>
-        </div>
-      )}
 
       <TaxDeadlinesFilters filters={filters} onChange={handleFilterChange} />
 

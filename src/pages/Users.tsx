@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { InlineToolbar } from "../components/ui/InlineToolbar";
 import { PaginationCard } from "../components/ui/PaginationCard";
@@ -6,6 +6,7 @@ import { DataTable } from "../components/ui/DataTable";
 import { AccessBanner } from "../components/ui/AccessBanner";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { Button } from "../components/ui/Button";
+import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { useRole } from "../hooks/useRole";
 import { useAuthStore } from "../store/auth.store";
 import { useUsersPage } from "../features/users/hooks/useUsersPage";
@@ -15,10 +16,12 @@ import { CreateUserModal } from "../features/users/components/CreateUserModal";
 import { EditUserModal } from "../features/users/components/EditUserModal";
 import { ResetPasswordModal } from "../features/users/components/ResetPasswordModal";
 import { AuditLogsDrawer } from "../features/users/components/AuditLogsDrawer";
+import type { UserResponse } from "../api/users.api";
 
 export const Users: React.FC = () => {
   const { isAdvisor } = useRole();
   const currentUserId = useAuthStore((s) => s.user?.id);
+  const [pendingToggle, setPendingToggle] = useState<UserResponse | null>(null);
 
   const {
     users, total, loading, error, filters,
@@ -29,19 +32,25 @@ export const Users: React.FC = () => {
     showAuditLogs, setShowAuditLogs,
     createUser, createLoading,
     updateUser, updateLoading,
-    toggleActive,
+    toggleActive, toggleActiveLoading,
     resetPassword, resetPasswordLoading,
   } = useUsersPage();
 
   const columns = useMemo(
     () => buildUserColumns({
       onEdit: setEditUser,
-      onToggleActive: toggleActive,
+      onToggleActive: (user) => setPendingToggle(user),
       onResetPassword: setResetUser,
       currentUserId,
     }),
-    [setEditUser, toggleActive, setResetUser, currentUserId],
+    [setEditUser, setResetUser, currentUserId],
   );
+
+  const filteredUsers = useMemo(() => {
+    if (filters.is_active === "true") return users.filter((u) => u.is_active);
+    if (filters.is_active === "false") return users.filter((u) => !u.is_active);
+    return users;
+  }, [users, filters.is_active]);
 
   const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
 
@@ -75,7 +84,7 @@ export const Users: React.FC = () => {
       {error && <ErrorCard message={error} />}
 
       <DataTable
-        data={users}
+        data={filteredUsers}
         columns={columns}
         getRowKey={(user) => user.id}
         isLoading={loading}
@@ -86,7 +95,7 @@ export const Users: React.FC = () => {
         }}
       />
 
-      {!loading && users.length > 0 && (
+      {!loading && filteredUsers.length > 0 && (
         <PaginationCard
           page={filters.page}
           totalPages={totalPages}
@@ -125,6 +134,26 @@ export const Users: React.FC = () => {
       <AuditLogsDrawer
         open={showAuditLogs}
         onClose={() => setShowAuditLogs(false)}
+      />
+
+      <ConfirmDialog
+        open={Boolean(pendingToggle)}
+        title={pendingToggle?.is_active ? "השבתת משתמש" : "הפעלת משתמש"}
+        message={
+          pendingToggle?.is_active
+            ? `האם להשבית את המשתמש ${pendingToggle?.full_name}? המשתמש לא יוכל להתחבר למערכת.`
+            : `האם להפעיל את המשתמש ${pendingToggle?.full_name}?`
+        }
+        confirmLabel={pendingToggle?.is_active ? "השבת" : "הפעל"}
+        cancelLabel="ביטול"
+        isLoading={toggleActiveLoading}
+        onConfirm={() => {
+          if (pendingToggle) {
+            toggleActive(pendingToggle);
+            setPendingToggle(null);
+          }
+        }}
+        onCancel={() => setPendingToggle(null)}
       />
     </div>
   );

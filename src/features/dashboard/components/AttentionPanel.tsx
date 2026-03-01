@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle2, Sparkles } from "lucide-react";
+import { CheckCircle2, ShieldAlert } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -19,6 +19,7 @@ import type { AttentionItem } from "../../../api/dashboard.api";
 import { AttentionSection } from "./AttentionSection";
 import { SECTIONS, type SectionKey } from "../utils";
 import { cn } from "../../../utils/utils";
+
 interface AttentionPanelProps {
   items: AttentionItem[];
 }
@@ -57,8 +58,10 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
   const allClear = totalItems === 0;
 
   return (
-    <div className="flex flex-col gap-0 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-elevation-2">
-      <div className="relative overflow-hidden bg-gradient-to-l from-slate-800 to-slate-900 px-6 py-5">
+    <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-md">
+      {/* ── Header ────────────────────────────────────────────────────── */}
+      <div className="relative overflow-hidden bg-gradient-to-l from-slate-700 to-slate-900 px-6 py-4">
+        {/* Dot pattern */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.04]"
           style={{
@@ -66,27 +69,31 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
             backgroundSize: "18px 18px",
           }}
         />
+        {/* Glow orb */}
+        {hasUrgent && (
+          <div className="pointer-events-none absolute -top-8 -right-8 h-32 w-32 rounded-full bg-red-600 opacity-20 blur-2xl" />
+        )}
 
         <div className="relative flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-xl",
-              hasUrgent ? "bg-red-500/20" : "bg-white/10"
+              "flex h-9 w-9 items-center justify-center rounded-xl backdrop-blur-sm",
+              hasUrgent ? "bg-red-500/25" : "bg-white/10"
             )}>
-              <Sparkles className={cn(
-                "h-5 w-5",
-                hasUrgent ? "text-red-300" : "text-white/70"
+              <ShieldAlert className={cn(
+                "h-4.5 w-4.5",
+                hasUrgent ? "text-red-300" : "text-white/60"
               )} />
             </div>
-
             <div>
-              <h2 className="text-sm font-bold text-white tracking-wide">לוח תשומת לב</h2>
-              <p className="text-xs text-white/50 mt-0.5">
+              <h2 className="text-sm font-bold tracking-wide text-white">לוח תשומת לב</h2>
+              <p className="mt-0.5 text-xs text-white/50">
                 {allClear ? "הכל תקין — אין דברים ממתינים" : `${totalItems} פריטים ממתינים לטיפול`}
               </p>
             </div>
           </div>
 
+          {/* Section count pills */}
           <div className="flex items-center gap-1.5">
             {sectionCounts.map((s) => {
               const pillColor = s.severity === "critical"
@@ -112,9 +119,10 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
         </div>
       </div>
 
+      {/* ── Content ───────────────────────────────────────────────────── */}
       {allClear ? (
-        <div className="flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-white to-emerald-50/40 py-12">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100">
+        <div className="flex flex-col items-center justify-center gap-3 py-14 bg-gradient-to-b from-white to-emerald-50/30">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 shadow-sm">
             <CheckCircle2 className="h-6 w-6 text-emerald-500" />
           </div>
           <div className="text-center">
@@ -125,7 +133,7 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
       ) : (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={order} strategy={horizontalListSortingStrategy}>
-            <div className="grid grid-cols-1 gap-4 bg-gray-50/70 p-4 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 bg-gray-50/50 p-4 md:grid-cols-3">
               {orderedSections.map((section, sectionIndex) => {
                 const sectionItems = items.filter((item) => section.types.includes(item.item_type));
                 return (

@@ -5,7 +5,7 @@ import { DataTable } from "../components/ui/DataTable";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { Button } from "../components/ui/Button";
-import { ChargesCreateCard } from "../features/charges/components/ChargesCreateCard";
+import { ChargesCreateModal } from "../features/charges/components/ChargesCreateModal";
 import { ChargesFiltersCard } from "../features/charges/components/ChargesFiltersCard";
 import { ChargesSummaryBar } from "../features/charges/components/ChargesSummaryBar";
 import { buildChargeColumns } from "../features/charges/components/chargeColumns";
@@ -16,6 +16,7 @@ import { ImportExportModal } from "../features/importExport/components/ImportExp
 export const Charges: React.FC = () => {
   const [selectedChargeId, setSelectedChargeId] = useState<number | null>(null);
   const [showImportExport, setShowImportExport] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const {
     actionLoadingId,
@@ -52,22 +53,23 @@ export const Charges: React.FC = () => {
         title="חיובים"
         description="רשימת חיובים ופעולות חיוב נתמכות"
         actions={
-          <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)}>
-            ייבוא / ייצוא
-          </Button>
+          <div className="flex items-center gap-2">
+            {isAdvisor && (
+              <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)}>
+                חיוב חדש
+              </Button>
+            )}
+            <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)}>
+              ייבוא / ייצוא
+            </Button>
+          </div>
         }
       />
 
-      {isAdvisor ? (
-        <ChargesCreateCard
-          createError={createError}
-          createLoading={createLoading}
-          onSubmit={submitCreate}
-        />
-      ) : (
+      {!isAdvisor && (
         <AccessBanner
           variant="info"
-          message="יצירה ושינוי חיובים זמינים ליועץ בלבד. ניתן לצפות ברשימה."
+          message="צפייה בלבד. יצירה ושינוי חיובים זמינים ליועץ בלבד."
         />
       )}
 
@@ -77,7 +79,7 @@ export const Charges: React.FC = () => {
         onClear={() => setSearchParams(new URLSearchParams())}
       />
 
-      {!loading && <ChargesSummaryBar charges={charges} isAdvisor={isAdvisor} />}
+      <ChargesSummaryBar charges={charges} isAdvisor={isAdvisor} />
 
       {error && <ErrorCard message={error} />}
 
@@ -87,6 +89,12 @@ export const Charges: React.FC = () => {
         getRowKey={(charge) => charge.id}
         onRowClick={(charge) => setSelectedChargeId(charge.id)}
         isLoading={loading}
+        rowClassName={(charge) => {
+          if (charge.status === "paid") return "bg-green-50/50";
+          if (charge.status === "canceled") return "opacity-60";
+          if (charge.status === "issued") return "bg-blue-50/30";
+          return "";
+        }}
         emptyMessage="אין חיובים להצגה"
         emptyState={{
           title: "לא נמצאו חיובים",
@@ -113,6 +121,14 @@ export const Charges: React.FC = () => {
       <ChargeDetailDrawer
         chargeId={selectedChargeId}
         onClose={() => setSelectedChargeId(null)}
+      />
+
+      <ChargesCreateModal
+        open={showCreateModal}
+        createError={createError}
+        createLoading={createLoading}
+        onClose={() => setShowCreateModal(false)}
+        onSubmit={submitCreate}
       />
 
       <ImportExportModal

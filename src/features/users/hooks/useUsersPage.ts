@@ -19,7 +19,8 @@ export const useUsersPage = () => {
 
   const page = parsePositiveInt(searchParams.get("page"), 1);
   const page_size = parsePositiveInt(searchParams.get("page_size"), PAGE_SIZE);
-  const filters = { page, page_size };
+  const is_active = searchParams.get("is_active") ?? "";
+  const filters = { page, page_size, is_active };
 
   const listQuery = useQuery({
     queryKey: QK.users.list(filters),

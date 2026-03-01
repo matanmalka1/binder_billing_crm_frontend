@@ -64,21 +64,6 @@ export const getSignalLabel = (signal: string): string => {
   return labels[signal] || "—";
 };
 
-const ACTION_LABELS: Record<string, string> = {
-  receive: "קליטת קלסר",
-  ready: "מוכן לאיסוף",
-  return: "החזרת קלסר",
-  freeze: "הקפאת לקוח",
-  activate: "הפעלת לקוח",
-  mark_paid: "סימון חיוב כשולם",
-  issue_charge: "הנפקת חיוב",
-  cancel_charge: "ביטול חיוב",
-};
-
-export const getActionLabel = (action: string): string => {
-  return ACTION_LABELS[action] || "—";
-};
-
 export const getBinderTypeLabel = (binderType: string): string => {
   const labels: Record<string, string> = {
     vat: 'מע"מ',
@@ -125,26 +110,4 @@ export const getVatWorkItemStatusLabel = (status: string): string => {
     filed: "הוגש",
   };
   return labels[status] || "—";
-};
-
-export const getVatInvoiceTypeLabel = (type: string): string => {
-  const labels: Record<string, string> = {
-    income: "עסקאות",
-    expense: "תשומות",
-  };
-  return labels[type] || "—";
-};
-
-export const getVatExpenseCategoryLabel = (category: string): string => {
-  const labels: Record<string, string> = {
-    office: "משרד",
-    travel: "נסיעות",
-    professional_services: "שירותים מקצועיים",
-    equipment: "ציוד",
-    rent: "שכירות",
-    salary: "שכר",
-    marketing: "שיווק",
-    other: "אחר",
-  };
-  return labels[category] || "—";
 };

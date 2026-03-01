@@ -52,6 +52,8 @@ export interface ListBindersParams {
   status?: string;
   client_id?: number;
   work_state?: string;
+  client_name?: string;
+  binder_number?: string;
 }
 
 export interface ListOperationalBindersParams {

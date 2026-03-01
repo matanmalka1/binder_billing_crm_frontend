@@ -64,19 +64,28 @@ export const AdvancePayments: React.FC = () => {
 
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-800">מקדמות חודשיות</h3>
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-2"
-          disabled={!hasClientSelected}
-          onClick={openCreateModal}
-        >
-          <Plus className="h-4 w-4" />
-          מקדמה חדשה
-        </Button>
+        <span title={!hasClientSelected ? "בחר לקוח תחילה" : undefined}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            disabled={!hasClientSelected}
+            onClick={openCreateModal}
+          >
+            <Plus className="h-4 w-4" />
+            מקדמה חדשה
+          </Button>
+        </span>
       </div>
 
-      <AdvancePaymentTable rows={rows} isLoading={isLoading} />
+      {!hasClientSelected ? (
+        <div className="rounded-xl border border-dashed border-gray-300 py-16 text-center text-gray-500">
+          <p className="text-base font-medium text-gray-700">בחר לקוח לצפייה במקדמות</p>
+          <p className="mt-1 text-sm">לאחר בחירת לקוח יוצג לוח המקדמות החודשי לשנה הנבחרת</p>
+        </div>
+      ) : (
+        <AdvancePaymentTable rows={rows} isLoading={isLoading} />
+      )}
 
       <CreateAdvancePaymentModal
         open={isCreateModalOpen}

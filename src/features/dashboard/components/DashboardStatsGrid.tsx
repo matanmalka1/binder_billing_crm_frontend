@@ -19,7 +19,7 @@ interface DashboardStatsGridProps {
   stats: StatItem[];
 }
 
-/* ── Variant maps (const objects, never ternaries) ─────────────────────── */
+/* ── Variant maps ───────────────────────────────────────────────────────── */
 
 const borderMap: Record<StatItem["variant"], string> = {
   blue:   "border-r-4 border-r-blue-500",
@@ -38,19 +38,19 @@ const valueColorMap: Record<StatItem["variant"], string> = {
 };
 
 const iconBgMap: Record<StatItem["variant"], string> = {
-  blue:   "bg-blue-50 text-blue-600",
-  green:  "bg-emerald-50 text-emerald-600",
-  red:    "bg-red-50 text-red-600",
-  amber:  "bg-amber-50 text-amber-600",
-  purple: "bg-violet-50 text-violet-600",
+  blue:   "bg-blue-50 text-blue-500",
+  green:  "bg-emerald-50 text-emerald-500",
+  red:    "bg-red-50 text-red-500",
+  amber:  "bg-amber-50 text-amber-500",
+  purple: "bg-violet-50 text-violet-500",
 };
 
-const glowMap: Record<StatItem["variant"], string> = {
-  blue:   "shadow-blue-100",
-  green:  "shadow-emerald-100",
-  red:    "shadow-red-100",
-  amber:  "shadow-amber-100",
-  purple: "shadow-violet-100",
+const stripMap: Record<StatItem["variant"], string> = {
+  blue:   "from-blue-500/10 to-transparent",
+  green:  "from-emerald-500/10 to-transparent",
+  red:    "from-red-500/10 to-transparent",
+  amber:  "from-amber-500/10 to-transparent",
+  purple: "from-violet-500/10 to-transparent",
 };
 
 /* ── Animated counter ───────────────────────────────────────────────────── */
@@ -95,34 +95,34 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
   const IconComponent = stat.icon;
 
   const cardClass = cn(
-    "relative overflow-hidden rounded-2xl border border-gray-100 bg-white",
-    "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+    "group relative overflow-hidden rounded-2xl border border-gray-100 bg-white",
+    "transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-gray-200/60",
     "animate-fade-in",
     borderMap[stat.variant],
-    glowMap[stat.variant],
     stat.urgent && "ring-2 ring-red-200 ring-offset-1",
     stat.href && "cursor-pointer",
   );
 
   const inner = (
     <>
-      {/* Subtle background texture */}
-      <div className="absolute inset-0 opacity-[0.025]"
-        style={{
-          backgroundImage: "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
-          backgroundSize: "20px 20px",
-        }}
-      />
+      {/* Top color wash */}
+      <div className={cn(
+        "absolute top-0 left-0 right-0 h-24 bg-gradient-to-b opacity-60",
+        stripMap[stat.variant]
+      )} />
 
       <div className="relative p-6">
-        {/* Top row: icon + urgent pulse */}
-        <div className="mb-4 flex items-start justify-between">
-          <div className={cn("rounded-xl p-2.5", iconBgMap[stat.variant])}>
+        {/* Icon row */}
+        <div className="mb-5 flex items-start justify-between">
+          <div className={cn(
+            "rounded-xl p-3 shadow-sm transition-transform duration-300 group-hover:scale-110",
+            iconBgMap[stat.variant]
+          )}>
             <IconComponent className="h-5 w-5" />
           </div>
 
           {stat.urgent && (
-            <span className="relative flex h-2.5 w-2.5">
+            <span className="relative flex h-2.5 w-2.5 mt-1">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
             </span>
@@ -130,14 +130,18 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
         </div>
 
         {/* Value */}
-        <div className={cn("mb-1 text-4xl font-black tabular-nums tracking-tight", valueColorMap[stat.variant])}>
+        <div className={cn(
+          "mb-1 text-4xl font-black tabular-nums tracking-tight leading-none",
+          valueColorMap[stat.variant]
+        )}>
           {count.toLocaleString("he-IL")}
         </div>
 
-        {/* Title */}
-        <p className="mb-0.5 text-sm font-semibold text-gray-800">{stat.title}</p>
+        {/* Divider */}
+        <div className="my-3 h-px bg-gray-100" />
 
-        {/* Description */}
+        {/* Title + description */}
+        <p className="text-sm font-semibold text-gray-800 mb-0.5">{stat.title}</p>
         <p className="text-xs text-gray-400 leading-relaxed">{stat.description}</p>
       </div>
     </>

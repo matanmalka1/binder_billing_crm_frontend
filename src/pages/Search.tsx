@@ -30,7 +30,7 @@ export const Search: React.FC = () => {
         <SearchFiltersBar
           filters={filters}
           onFilterChange={handleFilterChange}
-          onReset={hasAnyFilter ? handleReset : undefined}
+          onReset={handleReset}
         />
       </FilterBar>
 

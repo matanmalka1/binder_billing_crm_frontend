@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { Button } from "../../components/ui/Button";
@@ -25,6 +25,12 @@ export const RemindersPage: React.FC = () => {
   } = useReminders();
 
   const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
+  const [statusFilter, setStatusFilter] = useState("");
+
+  const filteredReminders = useMemo(() => {
+    if (!statusFilter) return reminders;
+    return reminders.filter((r) => r.status === statusFilter);
+  }, [reminders, statusFilter]);
 
   const header = (
     <PageHeader
@@ -51,7 +57,11 @@ export const RemindersPage: React.FC = () => {
       header={header}
       loadingMessage="טוען תזכורות..."
     >
-      <RemindersSummaryCards reminders={reminders} />
+      <RemindersSummaryCards
+        reminders={reminders}
+        activeFilter={statusFilter}
+        onFilter={setStatusFilter}
+      />
 
       {reminders.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
@@ -64,7 +74,7 @@ export const RemindersPage: React.FC = () => {
         </div>
       ) : (
         <RemindersTable
-          reminders={reminders}
+          reminders={filteredReminders}
           cancelingId={cancelingId}
           onCancel={handleCancel}
           onRowClick={setSelectedReminder}

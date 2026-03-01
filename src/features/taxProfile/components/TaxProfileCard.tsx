@@ -13,9 +13,9 @@ const VAT_TYPE_LABELS: Record<string, string> = {
   exempt: "פטור",
 };
 
-interface Props { clientId: number }
+interface Props { clientId: number; readOnly?: boolean }
 
-export const TaxProfileCard: React.FC<Props> = ({ clientId }) => {
+export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) => {
   const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(clientId);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -45,18 +45,20 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId }) => {
         ) : (
           <div className="space-y-4">
             <DescriptionList items={items} columns={2} />
-            <div className="flex justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setIsEditing(true)}
-                className="gap-2"
-              >
-                <Edit2 className="h-4 w-4" />
-                עריכה
-              </Button>
-            </div>
+            {!readOnly && (
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditing(true)}
+                  className="gap-2"
+                >
+                  <Edit2 className="h-4 w-4" />
+                  עריכה
+                </Button>
+              </div>
+            )}
           </div>
         )
       )}

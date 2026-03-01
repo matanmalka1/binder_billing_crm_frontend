@@ -11,7 +11,6 @@ export const SearchTable: React.FC<SearchTableProps> = ({ results }) => {
     <Card variant="elevated" className="overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          {/* Enhanced Header */}
           <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50">
             <tr className="text-right border-b-2 border-gray-200">
               <th className="pb-4 pr-6 pt-4 text-sm font-semibold text-gray-700">

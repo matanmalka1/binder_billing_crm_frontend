@@ -1,6 +1,7 @@
 import { Bell, Calendar, AlertTriangle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
+import { cn } from "../../../utils/utils";
 import type { Reminder } from "../reminder.types";
 
 interface StatConfig {
@@ -11,14 +12,19 @@ interface StatConfig {
   textColor: string;
   count: number;
   label: string;
+  filterValue: string;
 }
 
 interface RemindersSummaryCardsProps {
   reminders: Reminder[];
+  activeFilter?: string;
+  onFilter?: (status: string) => void;
 }
 
 export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
   reminders,
+  activeFilter,
+  onFilter,
 }) => {
   const stats: StatConfig[] = [
     {
@@ -29,6 +35,7 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
       textColor: "text-blue-900",
       count: reminders.filter((r) => r.status === "pending").length,
       label: "תזכורות ממתינות",
+      filterValue: "pending",
     },
     {
       icon: Calendar,
@@ -38,6 +45,7 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
       textColor: "text-green-900",
       count: reminders.filter((r) => r.status === "sent").length,
       label: "תזכורות שנשלחו",
+      filterValue: "sent",
     },
     {
       icon: AlertTriangle,
@@ -47,34 +55,34 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
       textColor: "text-purple-900",
       count: reminders.length,
       label: 'סה"כ תזכורות',
+      filterValue: "",
     },
   ];
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {stats.map(
-        ({
-          icon: Icon,
-          colorBg,
-          iconBg,
-          iconColor,
-          textColor,
-          count,
-          label,
-        }) => (
-          <Card key={label} variant="elevated" className={colorBg}>
-            <div className="flex items-center gap-4">
-              <div className={`rounded-lg p-3 ${iconBg}`}>
-                <Icon className={`h-6 w-6 ${iconColor}`} />
-              </div>
-              <div>
-                <div className={`text-2xl font-bold ${textColor}`}>{count}</div>
-                <div className={`text-sm ${iconColor}`}>{label}</div>
-              </div>
+      {stats.map(({ icon: Icon, colorBg, iconBg, iconColor, textColor, count, label, filterValue }) => (
+        <Card
+          key={label}
+          variant="elevated"
+          className={cn(
+            colorBg,
+            onFilter && "cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5",
+            activeFilter === filterValue && filterValue !== "" && "ring-2 ring-offset-1 ring-blue-400",
+          )}
+          onClick={onFilter ? () => onFilter(activeFilter === filterValue ? "" : filterValue) : undefined}
+        >
+          <div className="flex items-center gap-4">
+            <div className={`rounded-lg p-3 ${iconBg}`}>
+              <Icon className={`h-6 w-6 ${iconColor}`} />
             </div>
-          </Card>
-        ),
-      )}
+            <div>
+              <div className={`text-2xl font-bold ${textColor}`}>{count}</div>
+              <div className={`text-sm ${iconColor}`}>{label}</div>
+            </div>
+          </div>
+        </Card>
+      ))}
     </div>
   );
 };

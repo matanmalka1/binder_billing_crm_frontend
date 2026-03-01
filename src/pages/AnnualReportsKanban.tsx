@@ -64,55 +64,56 @@ export const AnnualReportsKanban: React.FC = () => {
         description="ניהול ומעקב אחר דוחות שנתיים"
         variant="gradient"
         actions={
-          activeTab === "season" ? (
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 rounded-lg border border-gray-300 bg-white px-2 py-1">
-                <button
-                  type="button"
-                  onClick={decrementYear}
-                  className="rounded p-1 hover:bg-gray-100"
-                  aria-label="שנה קודמת"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-                <span className="w-16 text-center text-sm font-bold text-gray-900">
-                  {taxYear}
-                </span>
-                <button
-                  type="button"
-                  onClick={incrementYear}
-                  disabled={!canIncrementYear}
-                  className="rounded p-1 hover:bg-gray-100 disabled:opacity-40"
-                  aria-label="שנה הבאה"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-              </div>
-              <Button variant="primary" onClick={openCreate} className="gap-2">
-                <Plus className="h-4 w-4" />
-                דוח חדש
-              </Button>
-            </div>
-          ) : undefined
+          <Button variant="primary" onClick={openCreate} className="gap-2">
+            <Plus className="h-4 w-4" />
+            דוח חדש
+          </Button>
         }
       />
 
-      <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 self-start">
-        {(Object.keys(TAB_LABELS) as ActiveTab[]).map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setActiveTab(tab)}
-            className={cn(
-              "rounded-md px-4 py-1.5 text-sm font-medium transition-all",
-              activeTab === tab
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700",
-            )}
-          >
-            {TAB_LABELS[tab]}
-          </button>
-        ))}
+      <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1">
+          {(Object.keys(TAB_LABELS) as ActiveTab[]).map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={cn(
+                "rounded-md px-4 py-1.5 text-sm font-medium transition-all",
+                activeTab === tab
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700",
+              )}
+            >
+              {TAB_LABELS[tab]}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === "season" && (
+          <div className="flex items-center gap-1 rounded-lg border border-gray-300 bg-white px-2 py-1">
+            <button
+              type="button"
+              onClick={decrementYear}
+              className="rounded p-1 hover:bg-gray-100"
+              aria-label="שנה קודמת"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <span className="w-16 text-center text-sm font-bold text-gray-900">
+              {taxYear}
+            </span>
+            <button
+              type="button"
+              onClick={incrementYear}
+              disabled={!canIncrementYear}
+              className="rounded p-1 hover:bg-gray-100 disabled:opacity-40"
+              aria-label="שנה הבאה"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {activeTab === "kanban" && (

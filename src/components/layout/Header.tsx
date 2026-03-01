@@ -35,7 +35,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
             </span>
             {user?.role && (
               <span className="mr-1 text-gray-500">
-                ({getRoleLabel(user.role)}) {/* ✅ Safe role display */}
+                ({getRoleLabel(user.role)}) 
               </span>
             )}
           </span>

@@ -1,4 +1,5 @@
 import { Select } from "../../../components/ui/Select";
+import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
 import { RotateCcw } from "lucide-react";
 import { WORK_STATE_OPTIONS } from "../../../constants/filterOptions.constants";
@@ -7,18 +8,40 @@ import type { BindersFiltersBarProps } from "../types";
 import { cn } from "../../../utils/utils";
 
 export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBarProps) => {
-  const activeCount = [filters.status, filters.work_state, filters.client_id].filter(Boolean).length;
+  const activeCount = [
+    filters.status,
+    filters.work_state,
+    filters.client_id,
+    filters.client_name,
+    filters.binder_number,
+  ].filter(Boolean).length;
   const hasActive = activeCount > 0;
 
   const handleReset = () => {
     onFilterChange("status", "");
     onFilterChange("work_state", "");
     onFilterChange("client_id", "");
+    onFilterChange("client_name", "");
+    onFilterChange("binder_number", "");
   };
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <Input
+          label="שם לקוח"
+          type="text"
+          value={filters.client_name ?? ""}
+          onChange={(e) => onFilterChange("client_name", e.target.value)}
+          placeholder="חיפוש לפי שם..."
+        />
+        <Input
+          label="מספר קלסר"
+          type="text"
+          value={filters.binder_number ?? ""}
+          onChange={(e) => onFilterChange("binder_number", e.target.value)}
+          placeholder="BND-..."
+        />
         <Select
           label="סטטוס"
           value={filters.status ?? ""}
@@ -72,6 +95,12 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
               label={WORK_STATE_OPTIONS.find((o) => o.value === filters.work_state)?.label ?? filters.work_state}
               onRemove={() => onFilterChange("work_state", "")}
             />
+          )}
+          {filters.client_name && (
+            <ActivePill label={`שם: ${filters.client_name}`} onRemove={() => onFilterChange("client_name", "")} />
+          )}
+          {filters.binder_number && (
+            <ActivePill label={`קלסר: ${filters.binder_number}`} onRemove={() => onFilterChange("binder_number", "")} />
           )}
         </div>
       )}

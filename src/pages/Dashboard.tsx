@@ -1,6 +1,5 @@
 import { PageHeader } from "../components/layout/PageHeader";
 import { AccessBanner } from "../components/ui/AccessBanner";
-import { PageLoading } from "../components/ui/PageLoading";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
 import { DashboardStatsGrid } from "../features/dashboard/components/DashboardStatsGrid";
@@ -23,57 +22,66 @@ export const Dashboard: React.FC = () => {
     stats,
   } = useDashboardPage();
 
+  const isAdvisor = dashboard.status === "ok" && dashboard.data?.role_view === "advisor";
+  const quickActions = isAdvisor && dashboard.data?.role_view === "advisor"
+    ? dashboard.data.quick_actions
+    : undefined;
+
   return (
-    <div className="space-y-8">
-      <PageHeader
-        title="לוח בקרה"
-        description="סקירה כוללת של המערכת ופעולות מהירות"
-        variant="gradient"
-      />
+    <div className="space-y-6">
+      <PageHeader title="לוח בקרה" variant="gradient" />
 
       {denied && (
-        <AccessBanner
-          variant="warning"
-          message="אין הרשאה לצפות בנתוני לוח בקרה זה"
-        />
-      )}
-
-      {dashboard.status === "loading" && (
-        <PageLoading message="טוען נתוני לוח בקרה..." rows={2} columns={5} />
+        <AccessBanner variant="warning" message="אין הרשאה לצפות בנתוני לוח בקרה זה" />
       )}
 
       {dashboard.status === "error" && !denied && (
         <ErrorCard message={dashboard.message} />
       )}
 
-      {dashboard.status === "ok" && dashboard.data?.role_view === "advisor" && (
-        <>
-          <UrgencyBar items={attentionItems} />
-          <DashboardStatsGrid stats={stats} />
-          <AdvisorTodayCard />
-          <AttentionPanel items={attentionItems} />
-          <OperationalPanel
-            quickActions={dashboard.data.quick_actions}
-            activeActionKey={activeQuickAction}
-            onQuickAction={handleQuickAction}
-          />
-        </>
+      {/* Urgency bar — pinned at top when attention items exist */}
+      {dashboard.status === "ok" && attentionItems.length > 0 && (
+        <UrgencyBar items={attentionItems} />
       )}
 
-      {dashboard.status === "ok" && dashboard.data?.role_view === "secretary" && (
+      {/* Stats — skeleton while loading */}
+      {dashboard.status === "loading" ? (
+        <div className="grid grid-cols-2 gap-4 animate-pulse sm:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-28 rounded-xl bg-gray-100" />
+          ))}
+        </div>
+      ) : dashboard.status === "ok" ? (
+        <DashboardStatsGrid stats={stats} />
+      ) : null}
+
+      {/* Advisor: today card + quick actions */}
+      {dashboard.status === "loading" ? (
+        <div className="h-32 animate-pulse rounded-xl bg-gray-100" />
+      ) : isAdvisor ? (
         <>
-          <UrgencyBar items={attentionItems} />
-          <DashboardStatsGrid stats={stats} />
-          <AttentionPanel items={attentionItems} />
+          <AdvisorTodayCard />
+          {quickActions && (
+            <OperationalPanel
+              quickActions={quickActions}
+              activeActionKey={activeQuickAction}
+              onQuickAction={handleQuickAction}
+            />
+          )}
         </>
-      )}
+      ) : null}
+
+      {/* Attention panel — shared by both roles */}
+      {dashboard.status === "loading" ? (
+        <div className="h-40 animate-pulse rounded-xl bg-gray-100" />
+      ) : dashboard.status === "ok" ? (
+        <AttentionPanel items={attentionItems} />
+      ) : null}
 
       <ConfirmDialog
         open={Boolean(pendingQuickAction)}
         title={pendingQuickAction?.confirm?.title || "אישור פעולה"}
-        message={
-          pendingQuickAction?.confirm?.message || "האם להמשיך בביצוע הפעולה?"
-        }
+        message={pendingQuickAction?.confirm?.message || "האם להמשיך בביצוע הפעולה?"}
         confirmLabel={pendingQuickAction?.confirm?.confirmLabel || "אישור"}
         cancelLabel={pendingQuickAction?.confirm?.cancelLabel || "ביטול"}
         isLoading={activeQuickAction === pendingQuickAction?.uiKey}
