@@ -19,7 +19,6 @@ export const useChargeDetailsPage = (chargeId: string | undefined) => {
     enabled: hasValidChargeId,
     queryKey: QK.charges.detail(chargeIdNumber),
     queryFn: () => chargesApi.getById(chargeIdNumber),
-    select: (data) => { setDenied(false); return data; },
   });
 
   // Reflect 403 from query into denied state
