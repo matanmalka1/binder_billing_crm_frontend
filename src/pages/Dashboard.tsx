@@ -7,6 +7,7 @@ import { DashboardStatsGrid } from "../features/dashboard/components/DashboardSt
 import { AdvisorTodayCard } from "../features/dashboard/components/AdvisorTodayCard";
 import { AttentionPanel } from "../features/dashboard/components/AttentionPanel";
 import { OperationalPanel } from "../features/dashboard/components/OperationalPanel";
+import { UrgencyBar } from "../features/dashboard/components/UrgencyBar";
 import { useDashboardPage } from "../features/dashboard/hooks/useDashboardPage";
 
 export const Dashboard: React.FC = () => {
@@ -47,6 +48,7 @@ export const Dashboard: React.FC = () => {
 
       {dashboard.status === "ok" && dashboard.data?.role_view === "advisor" && (
         <>
+          <UrgencyBar items={attentionItems} />
           <DashboardStatsGrid stats={stats} />
           <AdvisorTodayCard />
           <AttentionPanel items={attentionItems} />
@@ -60,6 +62,7 @@ export const Dashboard: React.FC = () => {
 
       {dashboard.status === "ok" && dashboard.data?.role_view === "secretary" && (
         <>
+          <UrgencyBar items={attentionItems} />
           <DashboardStatsGrid stats={stats} />
           <AttentionPanel items={attentionItems} />
         </>

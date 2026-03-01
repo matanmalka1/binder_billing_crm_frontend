@@ -19,28 +19,26 @@ export const AdvisorTodayCard = () => {
     chargeItems.length;
 
   return (
-    <div className="flex flex-col gap-3 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-elevation-2">
-      {/* Card header */}
-      <div className="relative overflow-hidden bg-gradient-to-l from-slate-800 to-slate-900 px-6 py-5">
+    <div className="flex flex-col gap-3 overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-elevation-2">
+      {/* Card header — blue accent, distinct from AttentionPanel's dark slate */}
+      <div className="relative overflow-hidden bg-gradient-to-l from-blue-600 to-indigo-600 px-6 py-5">
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+            backgroundSize: "20px 20px",
+          }}
         />
 
         <div className="relative flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-xl",
-              totalTasks > 0 ? "bg-blue-500/20" : "bg-white/10"
-            )}>
-              <Sparkles className={cn(
-                "h-5 w-5",
-                totalTasks > 0 ? "text-blue-200" : "text-white/70"
-              )} />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15">
+              <Sparkles className="h-5 w-5 text-white" />
             </div>
 
             <div>
               <h2 className="text-sm font-bold text-white tracking-wide">מה לעשות היום</h2>
-              <p className="text-xs text-white/50 mt-0.5">
+              <p className="text-xs text-blue-100/70 mt-0.5">
                 {isLoading ? "טוען משימות..." : `${totalTasks} פריטים ממתינים לטיפול`}
               </p>
             </div>
@@ -49,7 +47,7 @@ export const AdvisorTodayCard = () => {
           {!isLoading && (
             <div className={cn(
               "flex h-6 min-w-[1.5rem] items-center justify-center rounded-full px-2 text-xs font-bold tabular-nums",
-              totalTasks > 0 ? "bg-blue-500/80 text-white" : "bg-white/10 text-white/40"
+              totalTasks > 0 ? "bg-white/20 text-white" : "bg-white/10 text-white/40"
             )}>
               {totalTasks}
             </div>
