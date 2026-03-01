@@ -15,28 +15,13 @@ import {
   getAllowedTransitions,
 } from "../../../api/annualReports.extended.utils";
 import { cn } from "../../../utils/utils";
+import { type TransitionForm, EMPTY_FORM } from "../utils";
 
 interface StatusTransitionPanelProps {
   report: AnnualReportFull;
   onTransition: (payload: StatusTransitionPayload) => void;
   isLoading: boolean;
 }
-
-interface TransitionForm {
-  note: string;
-  itaRef: string;
-  assessmentAmount: string;
-  refundDue: string;
-  taxDue: string;
-}
-
-const EMPTY_FORM: TransitionForm = {
-  note: "",
-  itaRef: "",
-  assessmentAmount: "",
-  refundDue: "",
-  taxDue: "",
-};
 
 export const StatusTransitionPanel: React.FC<StatusTransitionPanelProps> = ({
   report,

@@ -11,12 +11,8 @@ import { SeasonSummaryCards } from "../features/annualReports/components/SeasonS
 import { SeasonProgressBar } from "../features/annualReports/components/SeasonProgressBar";
 import { SeasonReportsTable } from "../features/annualReports/components/SeasonReportsTable";
 import { CreateReportModal } from "../features/annualReports/components/CreateReportModal";
-import {
-  useAnnualReportsKanbanPage,
-  TAB_LABELS,
-  type ActiveTab,
-} from "../features/annualReports/hooks/useAnnualReportsKanbanPage";
-import { STAGE_ORDER } from "../features/annualReports/types";
+import { useAnnualReportsKanbanPage } from "../features/annualReports/hooks/useAnnualReportsKanbanPage";
+import { STAGE_ORDER, KANBAN_PAGE_SIZE, TAB_LABELS, type ActiveTab } from "../features/annualReports/types";
 import { cn } from "../utils/utils";
 
 export const AnnualReportsKanban: React.FC = () => {
@@ -38,8 +34,8 @@ export const AnnualReportsKanban: React.FC = () => {
     kanbanQuery,
     page,
     setPage,
-    PAGE_SIZE,
     totalPages,
+    maxCount,
     season,
   } = useAnnualReportsKanbanPage();
 
@@ -131,7 +127,7 @@ export const AnnualReportsKanban: React.FC = () => {
                     stage={stageData ?? { stage: stageKey, reports: [] }}
                     stageIndex={stageIndex}
                     page={page}
-                    pageSize={PAGE_SIZE}
+                    pageSize={KANBAN_PAGE_SIZE}
                     transitioningId={transitioning}
                     onTransition={handleTransition}
                     onOpenDetail={setSelectedReportId}
@@ -147,7 +143,7 @@ export const AnnualReportsKanban: React.FC = () => {
             <PaginationCard
               page={page}
               totalPages={totalPages}
-              total={Math.max(0, ...stages.map((s) => s.reports.length))}
+              total={maxCount}
               onPageChange={setPage}
             />
           )}

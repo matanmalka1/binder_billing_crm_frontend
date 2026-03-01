@@ -261,4 +261,12 @@ export const annualReportsApi = {
     const res = await api.get<{ stages: KanbanStage[] }>(ENDPOINTS.annualReportsKanban);
     return res.data;
   },
+
+  patchReportDetails: async (
+    reportId: number,
+    payload: Partial<AnnualReportFull>
+  ): Promise<AnnualReportFull> => {
+    const res = await api.patch<AnnualReportFull>(ENDPOINTS.annualReportDetails(reportId), payload);
+    return res.data;
+  },
 };

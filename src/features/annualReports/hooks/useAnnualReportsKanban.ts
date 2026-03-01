@@ -4,15 +4,12 @@ import { annualReportsApi } from "../../../api/annualReports.api";
 import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
-import { STAGE_ORDER, type StageKey, type KanbanStage } from "../types";
-
-export type { StageKey, KanbanStage };
+import { STAGE_ORDER, KANBAN_PAGE_SIZE, type StageKey, type KanbanStage } from "../types";
 
 export const useAnnualReportsKanban = () => {
   const queryClient = useQueryClient();
   const [transitioning, setTransitioning] = useState<number | null>(null);
   const [page, setPage] = useState(1);
-  const PAGE_SIZE = 6;
 
   const kanbanQuery = useQuery({
     queryKey: QK.tax.annualReports.kanban,
@@ -58,7 +55,7 @@ export const useAnnualReportsKanban = () => {
       })
       .filter((s): s is KanbanStage => Boolean(s)) ?? [];
   const maxCount = Math.max(0, ...stages.map((stage) => stage.reports.length));
-  const totalPages = Math.max(1, Math.ceil(maxCount / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(maxCount / KANBAN_PAGE_SIZE));
 
   return {
     stages,
@@ -68,7 +65,7 @@ export const useAnnualReportsKanban = () => {
     kanbanQuery,
     page,
     setPage,
-    PAGE_SIZE,
     totalPages,
+    maxCount,
   };
 };

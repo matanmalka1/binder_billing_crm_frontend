@@ -8,22 +8,15 @@ import {
   getDeadlineTypeLabel,
 } from "../../../api/annualReports.extended.utils";
 import { formatDate } from "../../../utils/utils";
-import { differenceInCalendarDays, parseISO } from "date-fns";
 import { AlertTriangle, Clock } from "lucide-react";
 import { cn } from "../../../utils/utils";
+import { TERMINAL_STATUSES, daysUntil } from "../utils";
 
 interface SeasonReportsTableProps {
   reports: AnnualReportFull[];
   isLoading?: boolean;
   onSelect?: (report: AnnualReportFull) => void;
 }
-
-const TERMINAL_STATUSES = new Set(["submitted", "accepted", "closed"]);
-
-const daysUntil = (dateStr: string | null): number | null => {
-  if (!dateStr) return null;
-  return differenceInCalendarDays(parseISO(dateStr), new Date());
-};
 
 const DeadlineCell: React.FC<{ report: AnnualReportFull }> = ({ report }) => {
   const days = daysUntil(report.filing_deadline);

@@ -3,6 +3,7 @@ import { Badge } from "../../../components/ui/Badge";
 import { getReportStageLabel, getStageColor } from "../../../api/annualReports.utils";
 import { staggerDelay } from "../../../utils/animation";
 import type { KanbanStage, StageKey } from "../types";
+import { STAGE_ACCENT } from "../utils";
 import { AnnualReportCard } from "./AnnualReportCard";
 import { cn } from "../../../utils/utils";
 
@@ -15,14 +16,6 @@ interface AnnualReportColumnProps {
   onTransition: (reportId: number, stageKey: StageKey, dir: "forward" | "back") => void;
   onOpenDetail: (reportId: number) => void;
 }
-
-const STAGE_ACCENT: Record<StageKey, string> = {
-  material_collection: "from-gray-400 to-gray-500",
-  in_progress: "from-blue-400 to-blue-500",
-  final_review: "from-purple-400 to-purple-500",
-  client_signature: "from-orange-400 to-orange-500",
-  transmitted: "from-green-400 to-green-500",
-};
 
 export const AnnualReportColumn: React.FC<AnnualReportColumnProps> = ({
   stage,

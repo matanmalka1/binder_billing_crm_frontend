@@ -15,6 +15,8 @@ export const createReportSchema = z.object({
   has_exempt_rental: z.boolean().default(false),
 });
 
+export type CreateReportFormValues = z.input<typeof createReportSchema>;
+
 // ── Report Detail ──────────────────────────────────────────────────────────
 
 export const annualReportDetailSchema = z.object({

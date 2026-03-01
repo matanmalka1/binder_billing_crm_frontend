@@ -6,9 +6,8 @@ import { annualReportsApi, type CreateAnnualReportPayload } from "../../../api/a
 import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
-import { createReportSchema } from "../schemas";
+import { createReportSchema, type CreateReportFormValues } from "../schemas";
 
-export type CreateReportFormValues = z.input<typeof createReportSchema>;
 type CreateReportFormOutput = z.output<typeof createReportSchema>;
 
 export const useCreateReport = (onSuccess?: () => void) => {

@@ -1,25 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   annualReportsApi,
-  type AnnualReportFull,
   type StatusTransitionPayload,
   type AnnualReportScheduleKey,
-  type StageKey,
 } from "../../../api/annualReports.api";
-import { api } from "../../../api/client";
-import { ENDPOINTS } from "../../../api/endpoints";
 import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
-
-export interface AnnualReportDetail extends AnnualReportFull {
-  tax_refund_amount: number | null;
-  tax_due_amount: number | null;
-  client_approved_at: string | null;
-  internal_notes: string | null;
-  stage?: StageKey;
-  due_date?: string | null;
-}
+import type { AnnualReportDetail } from "../types";
 
 const fetchDetail = async (reportId: number): Promise<AnnualReportDetail> => {
   const base = await annualReportsApi.getReport(reportId);
@@ -30,17 +18,6 @@ const fetchDetail = async (reportId: number): Promise<AnnualReportDetail> => {
     internal_notes: null,
     ...base,
   };
-};
-
-const patchDetail = async (
-  reportId: number,
-  payload: Partial<AnnualReportDetail>,
-): Promise<AnnualReportDetail> => {
-  const response = await api.patch<AnnualReportDetail>(
-    ENDPOINTS.annualReportDetails(reportId),
-    payload,
-  );
-  return response.data;
 };
 
 export const useReportDetail = (reportId: number | null) => {
@@ -78,7 +55,7 @@ export const useReportDetail = (reportId: number | null) => {
 
   const updateMutation = useMutation({
     mutationFn: (payload: Partial<AnnualReportDetail>) =>
-      patchDetail(reportId as number, payload),
+      annualReportsApi.patchReportDetails(reportId as number, payload),
     onSuccess: (updated) => {
       toast.success("דוח עודכן בהצלחה");
       if (qk) queryClient.setQueryData(qk, updated);

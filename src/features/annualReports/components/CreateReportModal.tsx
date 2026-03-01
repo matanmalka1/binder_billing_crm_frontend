@@ -4,19 +4,12 @@ import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
 import { useCreateReport } from "../hooks/useCreateReport";
+import { FLAG_FIELDS } from "../utils";
 
 interface CreateReportModalProps {
   open: boolean;
   onClose: () => void;
 }
-
-const FLAG_FIELDS = [
-  { name: "has_rental_income" as const, label: 'הכנסת שכירות (נספח ב)' },
-  { name: "has_capital_gains" as const, label: "רווחי הון (נספח בית)" },
-  { name: "has_foreign_income" as const, label: 'הכנסות מחו"ל (נספח ג)' },
-  { name: "has_depreciation" as const, label: "פחת (נספח ד)" },
-  { name: "has_exempt_rental" as const, label: "שכר דירה פטור (נספח ה)" },
-];
 
 export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onClose }) => {
   const { form, onSubmit, isSubmitting } = useCreateReport(onClose);

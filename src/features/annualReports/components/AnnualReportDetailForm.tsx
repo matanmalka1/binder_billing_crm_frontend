@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Textarea } from "../../../components/ui/Textarea";
-import type { AnnualReportDetail } from "../hooks/useReportDetail";
+import type { AnnualReportDetail } from "../types";
 import {
   annualReportDetailSchema,
   annualReportDetailDefaults,

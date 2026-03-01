@@ -1,7 +1,7 @@
 import { User } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { getReportStageLabel, getStageColor } from "../../../api/annualReports.utils";
-import { STAGE_ORDER } from "../hooks/useAnnualReportsKanban";
+import { STAGE_ORDER } from "../types";
 import { cn } from "../../../utils/utils";
 
 export const AnnualReportsLegend: React.FC = () => (

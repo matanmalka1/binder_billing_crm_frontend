@@ -1,15 +1,7 @@
 import { useState } from "react";
 import { useAnnualReportsKanban } from "./useAnnualReportsKanban";
 import { useSeasonDashboard } from "./useSeasonDashboard";
-
-export type ActiveTab = "kanban" | "season";
-
-export const TAB_LABELS: Record<ActiveTab, string> = {
-  kanban: "קנבן",
-  season: "עונה",
-};
-
-const CURRENT_YEAR = new Date().getFullYear();
+import { CURRENT_YEAR, type ActiveTab } from "../types";
 
 export const useAnnualReportsKanbanPage = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("kanban");
