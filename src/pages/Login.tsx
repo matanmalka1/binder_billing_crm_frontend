@@ -22,7 +22,6 @@ export const Login: React.FC = () => {
     useShallow((s) => ({ isLoading: s.isLoading, error: s.error })),
   );
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
 
   const {
     formState: { errors },
@@ -41,13 +40,9 @@ export const Login: React.FC = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleRememberMeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRememberMe(e.target.checked);
-  };
-
   const onSubmit = handleSubmit(async (values) => {
     clearError();
-    await login(values.email, values.password, rememberMe);
+    await login(values.email, values.password, true);
   });
 
   return (
@@ -61,7 +56,7 @@ export const Login: React.FC = () => {
 
         <div className="relative z-10 w-full max-w-md animate-fade-in">
 
-          {/* Logo mark (mobile only — full brand shown on left panel on desktop) */}
+          {/* Logo mark (mobile only) */}
           <div className="mb-10 flex items-center gap-3 lg:hidden">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-white">
               <span className="text-sm font-black tracking-tight">ב</span>
@@ -111,17 +106,9 @@ export const Login: React.FC = () => {
 
             {/* Password */}
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <button
-                  type="button"
-                  className="text-xs font-medium text-slate-400 hover:text-slate-700 transition-colors"
-                >
-                  שכחת סיסמה?
-                </button>
-                <label className="block text-xs font-semibold uppercase tracking-widest text-slate-500">
-                  סיסמה
-                </label>
-              </div>
+              <label className="block text-xs font-semibold uppercase tracking-widest text-slate-500">
+                סיסמה
+              </label>
               <div className="relative">
                 <Lock className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <input
@@ -152,17 +139,6 @@ export const Login: React.FC = () => {
                 <p className="text-xs font-medium text-red-500">{errors.password.message}</p>
               )}
             </div>
-
-            {/* Remember me */}
-            <label className="flex cursor-pointer items-center gap-3">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={handleRememberMeChange}
-                className="h-4 w-4 rounded border-slate-300 text-slate-900 accent-slate-900 focus:ring-slate-700"
-              />
-              <span className="text-sm text-slate-600">זכור אותי במכשיר זה</span>
-            </label>
 
             {/* Server error */}
             {error && (

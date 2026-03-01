@@ -5,7 +5,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["IBM Plex Sans", "Heebo", "system-ui", "sans-serif"],
-        display: ["Playfair Display", "serif"],
+        display: ["Heebo", "sans-serif"],
         mono: ["IBM Plex Mono", "monospace"],
       },
       colors: {
