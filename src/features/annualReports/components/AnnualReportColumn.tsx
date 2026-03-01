@@ -2,7 +2,7 @@ import { Inbox } from "lucide-react";
 import { Badge } from "../../../components/ui/Badge";
 import { getReportStageLabel, getStageColor } from "../../../api/annualReports.utils";
 import { staggerDelay } from "../../../utils/animation";
-import type { KanbanStage, StageKey } from "../hooks/useAnnualReportsKanban";
+import type { KanbanStage, StageKey } from "../types";
 import { AnnualReportCard } from "./AnnualReportCard";
 import { cn } from "../../../utils/utils";
 

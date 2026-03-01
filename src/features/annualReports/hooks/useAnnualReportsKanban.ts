@@ -4,27 +4,9 @@ import { annualReportsApi } from "../../../api/annualReports.api";
 import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
+import { STAGE_ORDER, type StageKey, type KanbanStage } from "../types";
 
-export const STAGE_ORDER = [
-  "material_collection",
-  "in_progress",
-  "final_review",
-  "client_signature",
-  "transmitted",
-] as const;
-
-export type StageKey = (typeof STAGE_ORDER)[number];
-
-export interface KanbanStage {
-  stage: StageKey;
-  reports: {
-    id: number;
-    client_id: number;
-    client_name: string;
-    tax_year: number;
-    days_until_due: number | null;
-  }[];
-}
+export type { StageKey, KanbanStage };
 
 export const useAnnualReportsKanban = () => {
   const queryClient = useQueryClient();
@@ -74,7 +56,7 @@ export const useAnnualReportsKanban = () => {
         if (!STAGE_ORDER.includes(key)) return null;
         return { stage: key, reports: stage.reports };
       })
-      .filter((s): s is KanbanStage => Boolean(s)) || [];
+      .filter((s): s is KanbanStage => Boolean(s)) ?? [];
   const maxCount = Math.max(0, ...stages.map((stage) => stage.reports.length));
   const totalPages = Math.max(1, Math.ceil(maxCount / PAGE_SIZE));
 

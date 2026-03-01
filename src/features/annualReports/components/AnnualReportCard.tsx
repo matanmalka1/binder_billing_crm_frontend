@@ -4,7 +4,7 @@ import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { staggerDelay } from "../../../utils/animation";
 import { cn } from "../../../utils/utils";
-import type { StageKey } from "../hooks/useAnnualReportsKanban";
+import type { StageKey } from "../types";
 
 interface AnnualReportCardProps {
   report: {

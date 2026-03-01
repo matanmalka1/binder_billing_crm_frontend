@@ -6,7 +6,6 @@ import { StatusTransitionPanel } from "./StatusTransitionPanel";
 import { AnnualReportDetailForm } from "./AnnualReportDetailForm";
 import { StatusHistoryTimeline } from "./StatusHistoryTimeline";
 import { useReportDetail } from "../hooks/useReportDetail";
-import { useAnnualReportDetail } from "../hooks/useAnnualReportDetail";
 import {
   getStatusLabel,
   getStatusVariant,
@@ -31,9 +30,11 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
     isTransitioning,
     completeSchedule,
     isCompletingSchedule,
+    updateDetail,
+    isUpdating,
   } = useReportDetail(reportId);
 
-  const { detail, updateDetail, isUpdating } = useAnnualReportDetail(reportId);
+  const detail = report;
 
   const title = report ? `דוח שנתי ${report.tax_year}` : "דוח שנתי";
   const subtitle = report?.client_name

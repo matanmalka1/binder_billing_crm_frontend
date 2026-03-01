@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getYear } from "date-fns";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -7,31 +6,19 @@ import { annualReportsApi, type CreateAnnualReportPayload } from "../../../api/a
 import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
+import { createReportSchema } from "../schemas";
 
-const schema = z.object({
-  client_id: z.string().min(1, "שדה חובה"),
-  tax_year: z.string().min(4, "שנה לא תקינה"),
-  client_type: z.enum(["individual", "self_employed", "corporation", "partnership"]),
-  deadline_type: z.enum(["standard", "extended", "custom"]).default("standard"),
-  notes: z.string().optional(),
-  has_rental_income: z.boolean().default(false),
-  has_capital_gains: z.boolean().default(false),
-  has_foreign_income: z.boolean().default(false),
-  has_depreciation: z.boolean().default(false),
-  has_exempt_rental: z.boolean().default(false),
-});
-
-export type CreateReportFormValues = z.input<typeof schema>;
-type CreateReportFormOutput = z.output<typeof schema>;
+export type CreateReportFormValues = z.input<typeof createReportSchema>;
+type CreateReportFormOutput = z.output<typeof createReportSchema>;
 
 export const useCreateReport = (onSuccess?: () => void) => {
   const queryClient = useQueryClient();
 
   const form = useForm<CreateReportFormValues, undefined, CreateReportFormOutput>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(createReportSchema),
     defaultValues: {
       client_id: "",
-      tax_year: String(getYear(new Date()) - 1),
+      tax_year: String(new Date().getFullYear() - 1),
       client_type: "individual",
       deadline_type: "standard",
       notes: "",
