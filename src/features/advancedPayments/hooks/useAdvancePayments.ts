@@ -1,9 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { advancePaymentsApi } from "../../../api/advancePayments.api";
-import type { AdvancePaymentStatus } from "../../../api/advancePayments.api";
+import type {
+  AdvancePaymentStatus,
+  CreateAdvancePaymentPayload,
+} from "../../../api/advancePayments.api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
+
+interface UpdatePayload {
+  id: number;
+  paid_amount?: number | null;
+  status?: AdvancePaymentStatus;
+}
 
 export const useAdvancePayments = (clientId: number, year: number) => {
   const queryClient = useQueryClient();
@@ -19,14 +28,8 @@ export const useAdvancePayments = (clientId: number, year: number) => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({
-      id,
-      ...payload
-    }: {
-      id: number;
-      paid_amount?: number | null;
-      status?: AdvancePaymentStatus;
-    }) => advancePaymentsApi.update(id, payload),
+    mutationFn: ({ id, ...payload }: UpdatePayload) =>
+      advancePaymentsApi.update(id, payload),
     onSuccess: () => {
       toast.success("מקדמה עודכנה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
@@ -35,7 +38,8 @@ export const useAdvancePayments = (clientId: number, year: number) => {
   });
 
   const createMutation = useMutation({
-    mutationFn: advancePaymentsApi.create,
+    mutationFn: (payload: CreateAdvancePaymentPayload) =>
+      advancePaymentsApi.create(payload),
     onSuccess: () => {
       toast.success("מקדמה נוצרה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
@@ -44,27 +48,25 @@ export const useAdvancePayments = (clientId: number, year: number) => {
   });
 
   const rows = enabled ? (listQuery.data?.items ?? []) : [];
-  const totalExpected = rows.reduce(
-    (sum, row) => sum + (row.expected_amount ?? 0),
-    0,
-  );
+  const totalExpected = rows.reduce((sum, row) => sum + (row.expected_amount ?? 0), 0);
   const totalPaid = rows.reduce((sum, row) => sum + (row.paid_amount ?? 0), 0);
+
+  const updatingId = updateMutation.isPending
+    ? (updateMutation.variables?.id ?? null)
+    : null;
 
   return {
     rows,
     isLoading: enabled && listQuery.isPending,
-    error:
-      enabled && listQuery.error
-        ? getErrorMessage(listQuery.error, "שגיאה בטעינת מקדמות")
-        : null,
+    error: enabled && listQuery.error
+      ? getErrorMessage(listQuery.error, "שגיאה בטעינת מקדמות")
+      : null,
     totalExpected,
     totalPaid,
     updateRow: (id: number, paid_amount: number | null) =>
       updateMutation.mutate({ id, paid_amount }),
     isUpdating: updateMutation.isPending,
-    updatingId: updateMutation.isPending
-      ? (updateMutation.variables?.id ?? null)
-      : null,
+    updatingId,
     create: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
   };

@@ -6,54 +6,28 @@ import { Button } from "../../../components/ui/Button";
 import { Select } from "../../../components/ui/Select";
 import {
   createAdvancePaymentSchema,
+  CREATE_ADVANCE_PAYMENT_DEFAULTS,
   type CreateAdvancePaymentFormValues,
 } from "../schemas";
+import { MONTH_OPTIONS } from "../utils";
+import type { CreateAdvancePaymentPayload } from "../../../api/advancePayments.api";
 
 interface CreateAdvancePaymentModalProps {
   open: boolean;
   clientId: number;
   year: number;
-  onClose: () => void;
-  onCreate: (payload: {
-    client_id: number;
-    year: number;
-    month: number;
-    due_date: string;
-    expected_amount?: number | null;
-    paid_amount?: number | null;
-  }) => Promise<unknown>;
   isCreating: boolean;
+  onClose: () => void;
+  onCreate: (payload: CreateAdvancePaymentPayload) => Promise<unknown>;
 }
-
-const MONTH_OPTIONS = [
-  { value: "1", label: "ינואר" },
-  { value: "2", label: "פברואר" },
-  { value: "3", label: "מרץ" },
-  { value: "4", label: "אפריל" },
-  { value: "5", label: "מאי" },
-  { value: "6", label: "יוני" },
-  { value: "7", label: "יולי" },
-  { value: "8", label: "אוגוסט" },
-  { value: "9", label: "ספטמבר" },
-  { value: "10", label: "אוקטובר" },
-  { value: "11", label: "נובמבר" },
-  { value: "12", label: "דצמבר" },
-];
-
-const DEFAULT_VALUES: CreateAdvancePaymentFormValues = {
-  month: 1,
-  due_date: "",
-  expected_amount: null,
-  paid_amount: null,
-};
 
 export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps> = ({
   open,
   clientId,
   year,
+  isCreating,
   onClose,
   onCreate,
-  isCreating,
 }) => {
   const {
     register,
@@ -63,11 +37,11 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
     formState: { errors },
   } = useForm<CreateAdvancePaymentFormValues>({
     resolver: zodResolver(createAdvancePaymentSchema),
-    defaultValues: DEFAULT_VALUES,
+    defaultValues: CREATE_ADVANCE_PAYMENT_DEFAULTS,
   });
 
   const handleClose = () => {
-    reset(DEFAULT_VALUES);
+    reset(CREATE_ADVANCE_PAYMENT_DEFAULTS);
     onClose();
   };
 
@@ -80,7 +54,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
       expected_amount: data.expected_amount,
       paid_amount: data.paid_amount,
     });
-    reset(DEFAULT_VALUES);
+    reset(CREATE_ADVANCE_PAYMENT_DEFAULTS);
     onClose();
   });
 
@@ -156,3 +130,5 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
     </Modal>
   );
 };
+
+CreateAdvancePaymentModal.displayName = "CreateAdvancePaymentModal";

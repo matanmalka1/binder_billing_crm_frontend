@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { getYear } from "date-fns";
 import { Plus } from "lucide-react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { Card } from "../../components/ui/Card";
@@ -10,32 +8,28 @@ import { ClientSearchField } from "../../features/advancedPayments/components/Cl
 import { AdvancePaymentSummary } from "../../features/advancedPayments/components/AdvancePaymentSummary";
 import { AdvancePaymentTable } from "../../features/advancedPayments/components/AdvancePaymentTable";
 import { CreateAdvancePaymentModal } from "../../features/advancedPayments/components/CreateAdvancePaymentModal";
-import { useAdvancePayments } from "../../features/advancedPayments/hooks/useAdvancePayments";
-import { useAdvancePaymentFilters } from "../../features/advancedPayments/hooks/useAdvancePaymentFilters";
-
-const CURRENT_YEAR = getYear(new Date());
-const YEAR_OPTIONS = Array.from({ length: 6 }, (_, i) => ({
-  value: String(CURRENT_YEAR - i),
-  label: String(CURRENT_YEAR - i),
-}));
+import { useAdvancePaymentsPage } from "../../features/advancedPayments/hooks/useAdvancePaymentsPage";
+import { YEAR_OPTIONS } from "../../features/advancedPayments/utils";
 
 export const AdvancePayments: React.FC = () => {
-  const { filters, setFilter } = useAdvancePaymentFilters();
-  const [selectedClientName, setSelectedClientName] = useState("");
-  const [showCreate, setShowCreate] = useState(false);
-
-  const { rows, isLoading, error, totalExpected, totalPaid, create, isCreating } =
-    useAdvancePayments(filters.client_id, filters.year);
-
-  const handleClientSelect = (id: number, name: string) => {
-    setSelectedClientName(name);
-    setFilter("client_id", id);
-  };
-
-  const handleClientClear = () => {
-    setSelectedClientName("");
-    setFilter("client_id", 0);
-  };
+  const {
+    filters,
+    setFilter,
+    selectedClientName,
+    isCreateModalOpen,
+    openCreateModal,
+    closeCreateModal,
+    handleClientSelect,
+    handleClientClear,
+    hasClientSelected,
+    rows,
+    isLoading,
+    error,
+    totalExpected,
+    totalPaid,
+    create,
+    isCreating,
+  } = useAdvancePaymentsPage();
 
   return (
     <div className="space-y-6">
@@ -64,7 +58,7 @@ export const AdvancePayments: React.FC = () => {
 
       {error && <ErrorCard message={error} />}
 
-      {filters.client_id > 0 && (
+      {hasClientSelected && (
         <AdvancePaymentSummary totalExpected={totalExpected} totalPaid={totalPaid} />
       )}
 
@@ -74,8 +68,8 @@ export const AdvancePayments: React.FC = () => {
           variant="outline"
           size="sm"
           className="gap-2"
-          disabled={filters.client_id <= 0}
-          onClick={() => setShowCreate(true)}
+          disabled={!hasClientSelected}
+          onClick={openCreateModal}
         >
           <Plus className="h-4 w-4" />
           מקדמה חדשה
@@ -85,10 +79,10 @@ export const AdvancePayments: React.FC = () => {
       <AdvancePaymentTable rows={rows} isLoading={isLoading} />
 
       <CreateAdvancePaymentModal
-        open={showCreate}
+        open={isCreateModalOpen}
         clientId={filters.client_id}
         year={filters.year}
-        onClose={() => setShowCreate(false)}
+        onClose={closeCreateModal}
         onCreate={create}
         isCreating={isCreating}
       />

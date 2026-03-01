@@ -1,4 +1,5 @@
 import { api } from "./client";
+import { ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "./queryParams";
 import type { PaginatedResponse } from "../types/common";
 
@@ -16,39 +17,55 @@ export interface AdvancePaymentRow {
   tax_deadline_id: number | null;
 }
 
+export interface ListAdvancePaymentsParams {
+  client_id: number;
+  year: number;
+  page?: number;
+  page_size?: number;
+}
+
+export interface CreateAdvancePaymentPayload {
+  client_id: number;
+  year: number;
+  month: number;
+  due_date: string;
+  expected_amount?: number | null;
+  paid_amount?: number | null;
+  tax_deadline_id?: number | null;
+}
+
+export interface UpdateAdvancePaymentPayload {
+  paid_amount?: number | null;
+  status?: AdvancePaymentStatus;
+}
+
 export const advancePaymentsApi = {
-  list: async (params: {
-    client_id: number;
-    year: number;
-    page?: number;
-    page_size?: number;
-  }): Promise<PaginatedResponse<AdvancePaymentRow>> => {
+  list: async (
+    params: ListAdvancePaymentsParams,
+  ): Promise<PaginatedResponse<AdvancePaymentRow>> => {
     const response = await api.get<PaginatedResponse<AdvancePaymentRow>>(
-      "/advance-payments",
+      ENDPOINTS.advancePayments,
       { params: toQueryParams(params) },
     );
     return response.data;
   },
 
-  create: async (payload: {
-    client_id: number;
-    year: number;
-    month: number;
-    due_date: string;
-    expected_amount?: number | null;
-    paid_amount?: number | null;
-    tax_deadline_id?: number | null;
-  }): Promise<AdvancePaymentRow> => {
-    const response = await api.post<AdvancePaymentRow>("/advance-payments", payload);
+  create: async (
+    payload: CreateAdvancePaymentPayload,
+  ): Promise<AdvancePaymentRow> => {
+    const response = await api.post<AdvancePaymentRow>(
+      ENDPOINTS.advancePayments,
+      payload,
+    );
     return response.data;
   },
 
   update: async (
     id: number,
-    payload: { paid_amount?: number | null; status?: AdvancePaymentStatus },
+    payload: UpdateAdvancePaymentPayload,
   ): Promise<AdvancePaymentRow> => {
     const response = await api.patch<AdvancePaymentRow>(
-      `/advance-payments/${id}`,
+      ENDPOINTS.advancePaymentById(id),
       payload,
     );
     return response.data;

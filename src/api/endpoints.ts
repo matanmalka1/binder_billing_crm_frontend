@@ -100,4 +100,6 @@ export const ENDPOINTS = {
   taxYearSummary: (taxYear: number | string) => `/tax-year/${taxYear}/summary`,
   taxYearReports: (taxYear: number | string) => `/tax-year/${taxYear}/reports`,
   annualReportDetails: (id: number | string) => `/annual-reports/${id}/details`,
+  advancePayments: "/advance-payments",
+  advancePaymentById: (id: number | string) => `/advance-payments/${id}`,
 } as const;
