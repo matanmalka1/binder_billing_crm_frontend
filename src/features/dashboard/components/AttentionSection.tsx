@@ -55,7 +55,7 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
       </div>
 
       {/* ── Items list ──────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto divide-y divide-gray-50" style={{ maxHeight: "240px" }}>
+      <div className="flex-1 overflow-y-auto divide-y divide-gray-50" style={{ maxHeight: "180px" }}>
         {hasItems ? (
           items.map((item, i) => (
             <Link
