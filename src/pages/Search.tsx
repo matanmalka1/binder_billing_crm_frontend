@@ -1,81 +1,142 @@
-import { Search as SearchIcon, FileSearch } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import { Search as SearchIcon, FileSearch, X } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
-import { FilterBar } from "../components/ui/FilterBar";
+import { InlineToolbar } from "../components/ui/InlineToolbar";
+import { DataTable } from "../components/ui/DataTable";
 import { ErrorCard } from "../components/ui/ErrorCard";
-import { PageLoading } from "../components/ui/PageLoading";
 import { PaginationCard } from "../components/ui/PaginationCard";
+import { EmptyState } from "../components/ui/EmptyState";
 import { SearchFiltersBar } from "../features/search/components/SearchFiltersBar";
-import { SearchTable } from "../features/search/components/SearchTable";
+import { searchColumns } from "../features/search/components/searchColumns";
 import { useSearchPage } from "../features/search/hooks/useSearchPage";
+import { cn } from "../utils/utils";
+import type { SearchResult } from "../api/search.api";
 
 export const Search: React.FC = () => {
   const { error, filters, handleFilterChange, handleReset, loading, results, total } = useSearchPage();
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const hasAnyFilter = Boolean(
-    filters.query || filters.client_name || filters.id_number || filters.binder_number ||
+  const hasAdvancedFilter = Boolean(
+    filters.client_name || filters.id_number || filters.binder_number ||
     filters.work_state || filters.signal_type.length || filters.has_signals,
   );
 
+  const [filtersOpen, setFiltersOpen] = useState(hasAdvancedFilter);
+
+  // Auto-open advanced panel when navigating here with existing advanced params
+  useEffect(() => {
+    if (hasAdvancedFilter) setFiltersOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const hasAnyFilter = Boolean(filters.query) || hasAdvancedFilter;
   const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
 
+  const handleResetAll = () => {
+    handleReset();
+    setFiltersOpen(false);
+    inputRef.current?.focus();
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <PageHeader
         title="חיפוש"
         description="חיפוש גלובלי על פני לקוחות, קלסרים ואותות"
       />
 
-      <FilterBar title="חיפוש וסינון">
+      {/* Hero search bar */}
+      <InlineToolbar className="flex items-center gap-3 py-3">
+        <SearchIcon className="h-5 w-5 shrink-0 text-gray-400" />
+        <input
+          ref={inputRef}
+          type="text"
+          value={filters.query}
+          onChange={(e) => handleFilterChange("query", e.target.value)}
+          placeholder="חיפוש חופשי — שם לקוח, מספר קלסר..."
+          className={cn(
+            "min-w-0 flex-1 bg-transparent text-sm text-gray-900 placeholder:text-gray-400",
+            "outline-none",
+          )}
+          autoFocus
+          dir="rtl"
+        />
+        {filters.query && (
+          <button
+            type="button"
+            onClick={() => handleFilterChange("query", "")}
+            className="shrink-0 rounded-md p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+            aria-label="נקה חיפוש"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </InlineToolbar>
+
+      {/* Advanced filters */}
+      <InlineToolbar>
         <SearchFiltersBar
           filters={filters}
           onFilterChange={handleFilterChange}
-          onReset={handleReset}
+          onReset={handleResetAll}
+          isOpen={filtersOpen}
+          onToggle={() => setFiltersOpen((o) => !o)}
         />
-      </FilterBar>
+      </InlineToolbar>
 
       {error && <ErrorCard message={error} />}
 
-      {loading && <PageLoading message="מחפש..." />}
-
+      {/* No filter active */}
       {!loading && !error && !hasAnyFilter && (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-200 bg-gray-50/60 py-20 text-center">
-          <SearchIcon className="h-10 w-10 text-gray-300" />
-          <p className="text-base font-medium text-gray-500">הזן מונח חיפוש או בחר פילטר</p>
-          <p className="text-sm text-gray-400">התוצאות יופיעו כאן</p>
-        </div>
+        <EmptyState
+          icon={SearchIcon}
+          title="מה תרצה למצוא?"
+          message="הקלד שם לקוח, מספר קלסר, או השתמש בפילטרים המתקדמים"
+          variant="illustration"
+        />
       )}
 
+      {/* Filter active, no results */}
       {!loading && !error && hasAnyFilter && results.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-200 bg-gray-50/60 py-16 text-center">
-          <FileSearch className="h-10 w-10 text-gray-300" />
-          <p className="text-base font-medium text-gray-500">לא נמצאו תוצאות</p>
-          <p className="text-sm text-gray-400">נסה להרחיב את קריטריוני החיפוש</p>
-        </div>
+        <EmptyState
+          icon={FileSearch}
+          title="לא נמצאו תוצאות"
+          message="נסה להרחיב את קריטריוני החיפוש או לאפס את הפילטרים"
+          action={{ label: "איפוס חיפוש", onClick: handleResetAll }}
+        />
       )}
 
-      {!loading && results.length > 0 && (
+      {/* Results */}
+      {(loading || results.length > 0) && (
         <>
-          <div className="flex items-center gap-2">
-            <SearchIcon className="h-4 w-4 text-gray-400" />
-            <span className="text-sm text-gray-600">
+          {!loading && (
+            <p className="px-1 text-sm text-gray-500">
               נמצאו{" "}
               <strong className="text-gray-900">{total.toLocaleString("he-IL")}</strong>{" "}
               תוצאות
-            </span>
-          </div>
+            </p>
+          )}
 
-          <SearchTable results={results} />
-
-          <PaginationCard
-            page={filters.page}
-            totalPages={totalPages}
-            total={total}
-            onPageChange={(page) => handleFilterChange("page", String(page))}
-            showPageSizeSelect
-            pageSize={filters.page_size}
-            pageSizeOptions={[20, 50, 100]}
-            onPageSizeChange={(pageSize) => handleFilterChange("page_size", String(pageSize))}
+          <DataTable<SearchResult>
+            data={results}
+            columns={searchColumns}
+            getRowKey={(r) => `${r.result_type}-${r.client_id}-${r.binder_id ?? "none"}`}
+            isLoading={loading}
+            emptyMessage="אין תוצאות"
           />
+
+          {!loading && total > 0 && (
+            <PaginationCard
+              page={filters.page}
+              totalPages={totalPages}
+              total={total}
+              onPageChange={(page) => handleFilterChange("page", String(page))}
+              showPageSizeSelect
+              pageSize={filters.page_size}
+              pageSizeOptions={[20, 50, 100]}
+              onPageSizeChange={(pageSize) => handleFilterChange("page_size", String(pageSize))}
+            />
+          )}
         </>
       )}
     </div>
