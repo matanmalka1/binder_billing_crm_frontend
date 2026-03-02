@@ -25,10 +25,10 @@ export const AccessBanner: React.FC<AccessBannerProps> = ({
       Icon: AlertTriangle,
     },
     info: {
-      container: "bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200/80",
-      icon: "text-blue-600",
-      text: "text-blue-900",
-      iconBg: "bg-blue-100",
+      container: "bg-gradient-to-r from-primary-50 to-cyan-50 border-primary-200/80",
+      icon: "text-primary-600",
+      text: "text-primary-900",
+      iconBg: "bg-primary-100",
       Icon: Info,
     },
     error: {

@@ -87,7 +87,7 @@ export const VatWorkItems: React.FC = () => {
               <p className="text-xs text-gray-500 mt-0.5">ממתין לחומרים</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600">{stats.typing}</p>
+              <p className="text-2xl font-bold text-primary-600">{stats.typing}</p>
               <p className="text-xs text-gray-500 mt-0.5">בהקלדה</p>
             </div>
             <div className="text-center">

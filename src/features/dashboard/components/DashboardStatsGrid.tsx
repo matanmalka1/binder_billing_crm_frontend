@@ -25,7 +25,7 @@ const variantStyles: Record<
   StatItem["variant"],
   { border: string; value: string; iconBg: string; strip: string }
 > = {
-  blue:   { border: "border-r-4 border-r-blue-500",   value: "text-blue-600",    iconBg: "bg-blue-50 text-blue-500",     strip: "from-blue-500/10 to-transparent"   },
+  blue:   { border: "border-r-4 border-r-primary-500",   value: "text-primary-600",    iconBg: "bg-primary-50 text-primary-500",     strip: "from-primary-500/10 to-transparent"   },
   green:  { border: "border-r-4 border-r-emerald-500", value: "text-emerald-600", iconBg: "bg-emerald-50 text-emerald-500", strip: "from-emerald-500/10 to-transparent" },
   red:    { border: "border-r-4 border-r-red-500",     value: "text-red-600",     iconBg: "bg-red-50 text-red-500",       strip: "from-red-500/10 to-transparent"    },
   amber:  { border: "border-r-4 border-r-amber-500",   value: "text-amber-600",   iconBg: "bg-amber-50 text-amber-500",   strip: "from-amber-500/10 to-transparent"  },

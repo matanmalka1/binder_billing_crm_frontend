@@ -57,8 +57,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
   const filteredAvailableActions = useMemo(
     () =>
       filteredEvents.reduce(
-        (total, event) =>
-          total + (event.actions?.length ?? 0) + (event.available_actions?.length ?? 0),
+        (total, event) => total + (event.actions?.length ?? event.available_actions?.length ?? 0),
         0,
       ),
     [filteredEvents],
@@ -141,7 +140,6 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     confirmPendingAction,
     cancelPendingAction,
     refresh: () => timelineQuery.refetch(),
-    // Filters (grouped for readability)
     filters: {
       searchTerm,
       setSearchTerm,
@@ -150,7 +148,6 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
       clearFilters,
       hasActiveFilters,
     },
-    // Derived summary for CommandBar
     summary: {
       filteredTotal: filteredEvents.length,
       totalOnPage: events.length,

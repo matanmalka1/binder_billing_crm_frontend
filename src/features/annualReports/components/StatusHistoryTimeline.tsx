@@ -33,7 +33,7 @@ export const StatusHistoryTimeline: React.FC<StatusHistoryTimelineProps> = ({ hi
               className="relative pr-10 animate-fade-in"
               style={{ animationDelay: staggerDelay(index, 40) }}
             >
-              <div className="absolute right-2.5 top-1.5 h-3 w-3 rounded-full bg-blue-500 ring-2 ring-white" />
+              <div className="absolute right-2.5 top-1.5 h-3 w-3 rounded-full bg-primary-500 ring-2 ring-white" />
               <div className="rounded-lg border border-gray-100 bg-white p-3 shadow-sm hover:shadow-md transition-shadow">
                 <div className="mb-1 flex flex-wrap items-center gap-1.5 text-sm">
                   {entry.from_status && (

@@ -25,7 +25,7 @@ const SIGNAL_VARIANTS: Record<string, BadgeVariant> = {
 
 const WORK_STATE_STYLES: Record<string, string> = {
   waiting_for_work: "text-gray-500",
-  in_progress:      "text-blue-700",
+  in_progress:      "text-primary-700",
   completed:        "text-green-700",
 };
 

@@ -15,7 +15,7 @@ const TYPE_CONFIG: Record<string, TypeConfig> = {
     label: "שיחה",
     icon: <Phone className="h-3.5 w-3.5" />,
     variant: "info",
-    dotColor: "bg-blue-500",
+    dotColor: "bg-primary-500",
   },
   letter: {
     label: "מכתב",

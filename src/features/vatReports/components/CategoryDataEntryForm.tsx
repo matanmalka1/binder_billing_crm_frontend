@@ -43,7 +43,7 @@ interface AmountRowProps {
 }
 
 const inputClass =
-  "w-full rounded border border-gray-300 px-2 py-1.5 text-sm font-mono tabular-nums focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500";
+  "w-full rounded border border-gray-300 px-2 py-1.5 text-sm font-mono tabular-nums focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500";
 
 const AmountRow: React.FC<AmountRowProps> = ({
   label,
@@ -137,10 +137,10 @@ export const CategoryDataEntryForm: React.FC<Props> = ({ workItemId, period, onS
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-blue-50/50">
+            <tr className="bg-primary-50/50">
               <td
                 colSpan={3}
-                className="pb-1 pr-1 pt-2 text-xs font-semibold uppercase tracking-wide text-blue-700"
+                className="pb-1 pr-1 pt-2 text-xs font-semibold uppercase tracking-wide text-primary-700"
               >
                 עסקאות
               </td>

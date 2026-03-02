@@ -43,7 +43,7 @@ export const buildChargeColumns = ({
       <Link
         to={`/clients/${charge.client_id}`}
         onClick={(e) => e.stopPropagation()}
-        className="text-sm font-semibold text-gray-900 hover:text-blue-700 hover:underline"
+        className="text-sm font-semibold text-gray-900 hover:text-primary-700 hover:underline"
       >
         {charge.client_name ?? `#${charge.client_id}`}
       </Link>
@@ -96,7 +96,7 @@ export const buildChargeColumns = ({
           <button
             type="button"
             onClick={stop(() => onOpenDetail(charge.id))}
-            className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+            className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700"
           >
             פירוט
           </button>

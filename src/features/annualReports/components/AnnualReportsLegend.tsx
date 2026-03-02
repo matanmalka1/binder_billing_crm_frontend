@@ -5,7 +5,7 @@ import { STAGE_ORDER } from "../types";
 import { cn } from "../../../utils/utils";
 
 export const AnnualReportsLegend: React.FC = () => (
-  <Card variant="elevated" className="bg-gradient-to-br from-blue-50 to-purple-50">
+  <Card variant="elevated" className="bg-gradient-to-br from-primary-50 to-purple-50">
     <div className="flex items-center gap-2 mb-3">
       <User className="h-5 w-5 text-primary-600" />
       <h4 className="text-sm font-semibold text-gray-900">מקרא</h4>

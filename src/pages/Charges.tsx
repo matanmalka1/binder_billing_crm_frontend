@@ -92,7 +92,7 @@ export const Charges: React.FC = () => {
         rowClassName={(charge) => {
           if (charge.status === "paid") return "bg-green-50/50";
           if (charge.status === "canceled") return "opacity-60";
-          if (charge.status === "issued") return "bg-blue-50/30";
+          if (charge.status === "issued") return "bg-primary-50/30";
           return "";
         }}
         emptyMessage="אין חיובים להצגה"

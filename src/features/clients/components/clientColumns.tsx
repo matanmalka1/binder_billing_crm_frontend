@@ -65,7 +65,7 @@ export const buildClientColumns = (): Column<ClientResponse>[] => [
       <Link
         to={`/clients/${client.id}/timeline`}
         onClick={(e) => e.stopPropagation()}
-        className="inline-flex items-center rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+        className="inline-flex items-center rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700"
       >
         ציר זמן ←
       </Link>

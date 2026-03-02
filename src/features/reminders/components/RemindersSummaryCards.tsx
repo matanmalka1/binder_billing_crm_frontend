@@ -29,10 +29,10 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
   const stats: StatConfig[] = [
     {
       icon: Bell,
-      colorBg: "bg-gradient-to-br from-blue-50 to-blue-100",
-      iconBg: "bg-blue-200",
-      iconColor: "text-blue-700",
-      textColor: "text-blue-900",
+      colorBg: "bg-gradient-to-br from-primary-50 to-primary-100",
+      iconBg: "bg-primary-200",
+      iconColor: "text-primary-700",
+      textColor: "text-primary-900",
       count: reminders.filter((r) => r.status === "pending").length,
       label: "תזכורות ממתינות",
       filterValue: "pending",
@@ -68,7 +68,7 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
           className={cn(
             colorBg,
             onFilter && "cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5",
-            activeFilter === filterValue && filterValue !== "" && "ring-2 ring-offset-1 ring-blue-400",
+            activeFilter === filterValue && filterValue !== "" && "ring-2 ring-offset-1 ring-primary-400",
           )}
           onClick={onFilter ? () => onFilter(activeFilter === filterValue ? "" : filterValue) : undefined}
         >

@@ -7,6 +7,7 @@ import type { LucideIcon } from "lucide-react";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 import { formatDate } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
+import { getChargeTypeLabel } from "../../charges/utils/chargeStatus";
 
 // ── Local primitive ────────────────────────────────────────────────────────────
 
@@ -66,7 +67,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
         <SummaryStatCard
           icon={FolderOpen}
-          iconColor="bg-blue-100 text-blue-600"
+          iconColor="bg-primary-100 text-primary-600"
           count={bindersTotal}
           label="קלסרים"
         />
@@ -110,7 +111,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           title="קלסרים אחרונים"
           footer={
             bindersTotal > 5 ? (
-              <Link to={`/binders?client_id=${clientId}`} className="text-sm text-blue-600">
+              <Link to={`/binders?client_id=${clientId}`} className="text-sm text-primary-600">
                 צפה בכל הקלסרים ({bindersTotal})
               </Link>
             ) : undefined
@@ -142,7 +143,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           title="חיובים אחרונים"
           footer={
             chargesTotal > 5 ? (
-              <Link to={`/charges?client_id=${clientId}`} className="text-sm text-blue-600">
+              <Link to={`/charges?client_id=${clientId}`} className="text-sm text-primary-600">
                 צפה בכל החיובים ({chargesTotal})
               </Link>
             ) : undefined
@@ -157,7 +158,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
                 <div>
                   <div className="font-medium text-gray-900">חיוב #{c.id}</div>
                   <div className="text-sm text-gray-600">
-                    {c.charge_type} • {getChargeStatusLabel(c.status)}
+                    {getChargeTypeLabel(c.charge_type)} • {getChargeStatusLabel(c.status)}
                   </div>
                 </div>
                 <Link to={`/charges/${c.id}`}>

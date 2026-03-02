@@ -69,10 +69,10 @@ export const SigningPage: React.FC = () => {
   const isExpired = data?.expires_at && new Date(data.expires_at) < new Date();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50 p-4" dir="rtl">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-primary-50/30 to-indigo-50 p-4" dir="rtl">
       {/* Branding */}
       <div className="mb-8 flex flex-col items-center gap-3 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 shadow-md">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-600 shadow-md">
           <FileSignature className="h-7 w-7 text-white" />
         </div>
         <div>
@@ -85,7 +85,7 @@ export const SigningPage: React.FC = () => {
       {effectiveState === "loading" && (
         <Shell>
           <div className="flex flex-col items-center gap-3 py-8">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent" />
             <p className="text-sm text-gray-500">טוען מסמך...</p>
           </div>
         </Shell>
@@ -175,9 +175,9 @@ export const SigningPage: React.FC = () => {
             {/* Disclaimer + Actions */}
             {!isExpired && (
               <>
-                <div className="flex gap-2.5 rounded-xl border border-blue-100 bg-blue-50 p-3">
-                  <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" />
-                  <p className="text-xs leading-relaxed text-blue-700">
+                <div className="flex gap-2.5 rounded-xl border border-primary-100 bg-primary-50 p-3">
+                  <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
+                  <p className="text-xs leading-relaxed text-primary-700">
                     בלחיצה על "אני מאשר/ת וחותם/ת" הנך מאשר/ת את תוכן המסמך ומסכים/ה לחתימה
                     דיגיטלית מחייבת בהתאם לחוק חתימה אלקטרונית (התשס"א-2001).
                   </p>

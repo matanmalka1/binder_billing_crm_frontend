@@ -95,7 +95,7 @@ export const getDeadlineTypeLabel = (type: string): string => {
 
 export const SEASON_PROGRESS_STAGES = [
   { key: "not_started" as AnnualReportStatus, label: "טרם התחיל", color: "bg-gray-400" },
-  { key: "collecting_docs" as AnnualReportStatus, label: "איסוף מסמכים", color: "bg-blue-400" },
+  { key: "collecting_docs" as AnnualReportStatus, label: "איסוף מסמכים", color: "bg-primary-400" },
   { key: "in_preparation" as AnnualReportStatus, label: "בהכנה", color: "bg-purple-400" },
   { key: "pending_client" as AnnualReportStatus, label: "ממתין ללקוח", color: "bg-amber-400" },
   { key: "submitted" as AnnualReportStatus, label: "הוגש", color: "bg-green-400" },

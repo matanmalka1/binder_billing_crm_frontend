@@ -134,7 +134,7 @@ export const VatWorkItemDrawer: React.FC<VatWorkItemDrawerProps> = ({
               {showSendBackForm ? (
                 <div className="space-y-2 py-2">
                   <textarea
-                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                     rows={3}
                     placeholder="הסבר מה יש לתקן..."
                     value={sendBackNote}

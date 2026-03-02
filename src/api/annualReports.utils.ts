@@ -17,7 +17,7 @@ const statusLabels = {
 
 const stageColors = {
   material_collection: "bg-gray-100 text-gray-700",
-  in_progress: "bg-blue-100 text-blue-700",
+  in_progress: "bg-primary-100 text-primary-700",
   final_review: "bg-purple-100 text-purple-700",
   client_signature: "bg-orange-100 text-orange-700",
   transmitted: "bg-green-100 text-green-700",

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ChevronLeft } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { cn } from "../../utils/utils";
 import { staggerDelay } from "../../utils/animation";
 
@@ -28,7 +28,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         <nav className="flex items-center gap-2 text-sm animate-slide-in">
           {breadcrumbs.map((crumb, index) => (
             <div key={crumb.to} className="flex items-center gap-2">
-              {index > 0 && <ChevronLeft className="h-4 w-4 text-gray-400" />}
+              {index > 0 && (
+                <ChevronRight className="h-4 w-4 text-gray-400" />
+              )}
               <Link
                 to={crumb.to}
                 className={cn(

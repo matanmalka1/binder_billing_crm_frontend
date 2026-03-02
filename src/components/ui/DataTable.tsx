@@ -89,7 +89,7 @@ export const DataTable = <T,>({
                 key={getRowKey(item)}
                 className={cn(
                   "transition-colors duration-100",
-                  onRowClick && "cursor-pointer hover:bg-blue-50/40 active:bg-blue-50/70",
+                  onRowClick && "cursor-pointer hover:bg-primary-50/40 active:bg-primary-50/70",
                   !onRowClick && "hover:bg-gray-50/60",
                   rowClassName?.(item, index),
                 )}

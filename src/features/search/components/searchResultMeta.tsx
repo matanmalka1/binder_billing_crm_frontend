@@ -8,7 +8,7 @@ export const getResultIcon = (resultType: string) => {
 };
 
 export const getResultColor = (resultType: string) => {
-  if (resultType === "binder") return "text-blue-600 bg-blue-50";
+  if (resultType === "binder") return "text-primary-600 bg-primary-50";
   if (resultType === "client") return "text-green-600 bg-green-50";
   return "text-gray-600 bg-gray-50";
 };

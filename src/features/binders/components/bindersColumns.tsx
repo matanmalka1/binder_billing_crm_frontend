@@ -147,7 +147,7 @@ export const buildBindersColumns = ({
       <Link
         to={`/clients/${binder.client_id}`}
         onClick={(e) => e.stopPropagation()}
-        className="text-sm font-semibold text-gray-900 hover:text-blue-700 hover:underline"
+        className="text-sm font-semibold text-gray-900 hover:text-primary-700 hover:underline"
       >
         {binder.client_name ?? `#${binder.client_id}`}
       </Link>

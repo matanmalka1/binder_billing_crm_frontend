@@ -83,7 +83,7 @@ export const SignatureRequestsPage: React.FC = () => {
           <Link
             to={`/clients/${req.client_id}`}
             onClick={(e) => e.stopPropagation()}
-            className="text-sm text-gray-700 hover:text-blue-600 hover:underline"
+            className="text-sm text-gray-700 hover:text-primary-600 hover:underline"
           >
             {clientNames[req.client_id] ?? `#${req.client_id}`}
           </Link>
@@ -129,7 +129,7 @@ export const SignatureRequestsPage: React.FC = () => {
                   type="button"
                   disabled={isSending}
                   onClick={() => void handleSend(req.id)}
-                  className="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:opacity-50"
+                  className="inline-flex items-center gap-1 rounded-md border border-primary-200 bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-700 transition-colors hover:bg-primary-100 disabled:opacity-50"
                 >
                   <Send className="h-3 w-3" />
                   שלח

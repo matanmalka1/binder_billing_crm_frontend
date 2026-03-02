@@ -77,7 +77,7 @@ const ActionCell: React.FC<ActionCellProps> = ({
           disabled={isDisabled}
           title="מסמן את הדוח כהוגש ידנית — יש להגיש בנפרד לרשות המסים"
           onClick={stop(() => void runAction(item.id, "file"))}
-          className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
+          className="border-primary-200 bg-primary-50 text-primary-700 hover:bg-primary-100"
         >
           סמן כהוגש
         </Button>

@@ -3,7 +3,7 @@ import type { StageKey } from "./types";
 
 export const STAGE_ACCENT: Record<StageKey, string> = {
   material_collection: "from-gray-400 to-gray-500",
-  in_progress: "from-blue-400 to-blue-500",
+  in_progress: "from-primary-400 to-primary-500",
   final_review: "from-purple-400 to-purple-500",
   client_signature: "from-orange-400 to-orange-500",
   transmitted: "from-green-400 to-green-500",

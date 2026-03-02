@@ -96,14 +96,14 @@ export const OperationalPanel = ({
               </div>
 
               {/* Bottom accent line on hover */}
-              <div className="absolute bottom-0 right-0 h-0.5 w-0 rounded-full bg-gradient-to-l from-violet-500 to-blue-500 transition-all duration-300 group-hover:w-full" />
+              <div className="absolute bottom-0 right-0 h-0.5 w-0 rounded-full bg-gradient-to-l from-violet-500 to-primary-500 transition-all duration-300 group-hover:w-full" />
             </button>
           );
         })}
       </div>
 
       {/* Footer hint */}
-      <div className="flex items-start gap-2 border-t border-gray-100 bg-blue-50/40 px-5 py-3 text-xs text-blue-700">
+      <div className="flex items-start gap-2 border-t border-gray-100 bg-primary-50/40 px-5 py-3 text-xs text-primary-700">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         <span>פעולות המסומנות "דורש אישור" יציגו חלון אישור לפני הביצוע</span>
       </div>

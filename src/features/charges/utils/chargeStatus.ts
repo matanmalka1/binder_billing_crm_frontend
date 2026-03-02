@@ -15,6 +15,7 @@ export const getChargeAmountText = (charge: ChargeResponse): string => {
 const CHARGE_TYPE_LABELS: Record<string, string> = {
   one_time: "חד פעמי",
   retainer: "ריטיינר",
+  hourly: "שעתי",
 };
 
 export const getChargeTypeLabel = (type: string): string =>

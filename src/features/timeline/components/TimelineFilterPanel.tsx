@@ -49,7 +49,7 @@ export const TimelineFilterPanel: React.FC<TimelineFilterPanelProps> = ({
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="חיפוש לפי תיאור, מספר קלסר או חיוב..."
-            className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 pr-10 text-sm placeholder:text-gray-400 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all"
+            className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 pr-10 text-sm placeholder:text-gray-400 focus:border-primary-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-100 transition-all"
           />
           {searchTerm && (
             <button

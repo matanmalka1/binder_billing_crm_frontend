@@ -40,8 +40,8 @@ export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, i
       label: "ממתין לגביה",
       value: formatAmount(totalIssued),
       icon: Clock,
-      colorClass: "text-blue-700 bg-blue-50 border-blue-200",
-      iconClass: "text-blue-500",
+      colorClass: "text-primary-700 bg-primary-50 border-primary-200",
+      iconClass: "text-primary-500",
       show: totalIssued > 0,
     },
     {

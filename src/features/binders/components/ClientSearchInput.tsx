@@ -74,7 +74,7 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
         error={error}
         rightIcon={
           loading ? (
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
           ) : undefined
         }
       />
@@ -85,7 +85,7 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
             <li
               key={result.client_id}
               onMouseDown={() => handleSelect(result)}
-              className="flex cursor-pointer items-center justify-between px-4 py-2.5 hover:bg-blue-50 text-sm"
+              className="flex cursor-pointer items-center justify-between px-4 py-2.5 hover:bg-primary-50 text-sm"
             >
               <span className="font-medium text-gray-900">{result.client_name}</span>
               <span className="text-xs text-gray-400">#{result.client_id}</span>

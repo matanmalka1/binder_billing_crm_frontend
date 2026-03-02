@@ -54,7 +54,7 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({
             </div>
             <div className="flex-1 h-px bg-gradient-to-l from-transparent to-slate-200" />
             <span className="text-[11px] text-gray-400 whitespace-nowrap">
-              {group.items.length} אירועים
+              {group.items.length} {group.items.length === 1 ? "אירוע" : "אירועים"}
             </span>
           </div>
 

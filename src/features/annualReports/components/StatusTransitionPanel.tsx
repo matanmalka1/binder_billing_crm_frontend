@@ -81,8 +81,8 @@ export const StatusTransitionPanel: React.FC<StatusTransitionPanelProps> = ({
                 className={cn(
                   "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium transition-all",
                   selected === s
-                    ? "border-blue-500 bg-blue-50 text-blue-700 shadow-sm"
-                    : "border-gray-300 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50/50",
+                    ? "border-primary-500 bg-primary-50 text-primary-700 shadow-sm"
+                    : "border-gray-300 bg-white text-gray-700 hover:border-primary-300 hover:bg-primary-50/50",
                 )}
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
@@ -93,7 +93,7 @@ export const StatusTransitionPanel: React.FC<StatusTransitionPanelProps> = ({
         </div>
 
         {selected && (
-          <div className="space-y-3 rounded-lg border border-blue-100 bg-blue-50/30 p-4 animate-fade-in">
+          <div className="space-y-3 rounded-lg border border-primary-100 bg-primary-50/30 p-4 animate-fade-in">
             <Input
               label="הערה (אופציונלי)"
               value={form.note}

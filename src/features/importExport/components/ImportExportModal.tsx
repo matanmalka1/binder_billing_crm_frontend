@@ -12,9 +12,9 @@ interface InfoBoxProps {
 }
 
 const InfoBox: React.FC<InfoBoxProps> = ({ items }) => (
-  <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
-    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
-    <ul className="space-y-1 text-sm text-blue-900">
+  <div className="flex items-start gap-3 rounded-lg border border-primary-200 bg-primary-50 p-3">
+    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary-600" />
+    <ul className="space-y-1 text-sm text-primary-900">
       {items.map((item) => (
         <li key={item}>• {item}</li>
       ))}

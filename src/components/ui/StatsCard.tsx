@@ -54,11 +54,11 @@ export const StatsCard: React.FC<StatsCardProps> = ({
 
   const variants = {
     blue: {
-      bg: "from-blue-500/10 to-indigo-500/10",
-      border: "border-blue-200/50",
-      text: "text-blue-700",
-      icon: "bg-blue-100 text-blue-600",
-      accent: "bg-gradient-to-br from-blue-400 to-indigo-600",
+      bg: "from-primary-500/10 to-indigo-500/10",
+      border: "border-primary-200/50",
+      text: "text-primary-700",
+      icon: "bg-primary-100 text-primary-600",
+      accent: "bg-gradient-to-br from-primary-400 to-indigo-600",
     },
     green: {
       bg: "from-emerald-500/10 to-teal-500/10",

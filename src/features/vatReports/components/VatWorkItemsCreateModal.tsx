@@ -90,7 +90,7 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
         <label className="flex items-center gap-2 cursor-pointer select-none">
           <input
             type="checkbox"
-            className="h-4 w-4 rounded border-gray-300 text-blue-600"
+            className="h-4 w-4 rounded border-gray-300 text-primary-600"
             {...register("mark_pending")}
           />
           <span className="text-sm font-medium text-gray-700">ממתין לחומרים</span>

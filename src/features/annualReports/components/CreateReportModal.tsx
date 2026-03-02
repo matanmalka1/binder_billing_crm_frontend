@@ -82,7 +82,7 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
               <label key={name} className="flex cursor-pointer items-center gap-2 text-sm">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                  className="h-4 w-4 rounded border-gray-300 text-primary-600"
                   {...register(name)}
                 />
                 <span className="text-gray-700">{label}</span>

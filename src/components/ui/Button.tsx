@@ -19,7 +19,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const variants = {
     primary:
-      "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 shadow-sm",
+      "bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 shadow-sm",
     secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300",
     outline:
       "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100",
@@ -37,7 +37,7 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       className={cn(
         "rounded-md font-medium disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2",
-        "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+        "focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2",
         "transition-all duration-200",
         variants[variant],
         sizes[size],

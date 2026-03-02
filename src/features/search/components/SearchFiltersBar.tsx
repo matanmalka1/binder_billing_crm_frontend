@@ -13,14 +13,14 @@ import {
 const SIGNAL_CHIP_STYLES: Record<string, string> = {
   missing_permanent_documents: "border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100",
   unpaid_charges:              "border-yellow-300 bg-yellow-50 text-yellow-700 hover:bg-yellow-100",
-  ready_for_pickup:            "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100",
+  ready_for_pickup:            "border-primary-300 bg-primary-50 text-primary-700 hover:bg-primary-100",
   idle_binder:                 "border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100",
 };
 
 const SIGNAL_CHIP_ACTIVE: Record<string, string> = {
   missing_permanent_documents: "bg-amber-200 border-amber-500",
   unpaid_charges:              "bg-yellow-200 border-yellow-500",
-  ready_for_pickup:            "bg-blue-200 border-blue-500",
+  ready_for_pickup:            "bg-primary-200 border-primary-500",
   idle_binder:                 "bg-gray-200 border-gray-500",
 };
 
