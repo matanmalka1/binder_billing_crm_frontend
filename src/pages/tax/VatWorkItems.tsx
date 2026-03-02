@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { AccessBanner } from "../../components/ui/AccessBanner";
 import { Button } from "../../components/ui/Button";
-import { Card } from "../../components/ui/Card";
+
 import { DataTable } from "../../components/ui/DataTable";
 import { PaginationCard } from "../../components/ui/PaginationCard";
 import { ErrorCard } from "../../components/ui/ErrorCard";
@@ -76,30 +76,8 @@ export const VatWorkItems: React.FC = () => {
         filters={filters}
         onFilterChange={setFilter}
         onClear={() => setSearchParams(new URLSearchParams())}
+        stats={!loading && workItems.length > 0 ? stats : undefined}
       />
-
-      {!loading && workItems.length > 0 && (
-        <Card>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-orange-600">{stats.pending}</p>
-              <p className="text-xs text-gray-500 mt-0.5">ממתין לחומרים</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-primary-600">{stats.typing}</p>
-              <p className="text-xs text-gray-500 mt-0.5">בהקלדה</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-yellow-600">{stats.review}</p>
-              <p className="text-xs text-gray-500 mt-0.5">ממתין לבדיקה</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">{stats.filed}</p>
-              <p className="text-xs text-gray-500 mt-0.5">הוגש</p>
-            </div>
-          </div>
-        </Card>
-      )}
 
       {error && <ErrorCard message={error} />}
 
