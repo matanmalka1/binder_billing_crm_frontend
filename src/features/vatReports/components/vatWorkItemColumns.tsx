@@ -29,6 +29,7 @@ interface ActionCellProps {
   runAction: (itemId: number, action: VatWorkItemAction) => Promise<void>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 const ActionCell: React.FC<ActionCellProps> = ({
   item,
   isAdvisor,

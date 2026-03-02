@@ -55,7 +55,7 @@ export const reportsApi = {
     });
 
     const contentDisposition = response.headers["content-disposition"];
-    const filenameMatch = contentDisposition?.match(/filename=\"?([^\";]+)\"?/);
+    const filenameMatch = contentDisposition?.match(/filename="?([^";]+)"?/);
     const filename =
       filenameMatch?.[1] ||
       `aging_report.${format === "excel" ? "xlsx" : "pdf"}`;

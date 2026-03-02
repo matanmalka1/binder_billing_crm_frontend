@@ -75,10 +75,14 @@ const dynamicStorage: StateStorage = {
   removeItem: (name) => {
     try {
       localStorage.removeItem(name);
-    } catch {}
+    } catch {
+      // ignore storage errors
+    }
     try {
       sessionStorage.removeItem(name);
-    } catch {}
+    } catch {
+      // ignore storage errors
+    }
   },
 };
 

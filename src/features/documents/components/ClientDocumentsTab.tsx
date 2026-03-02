@@ -3,7 +3,6 @@ import { EmptyState } from "../../../components/ui/EmptyState";
 import { ErrorCard } from "../../../components/ui/ErrorCard";
 import { TableSkeleton } from "../../../components/ui/TableSkeleton";
 import { DocumentsDataCards } from "./DocumentsDataCards";
-import { DocumentsUploadCard } from "./DocumentsUploadCard";
 import { useClientDocumentsTab } from "../hooks/useClientDocumentsTab";
 
 interface ClientDocumentsTabProps {
@@ -14,23 +13,19 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
   const { documents, signals, loading, error, submitUpload, uploadError, uploading } =
     useClientDocumentsTab(clientId);
 
-  return (
-    <div className="space-y-6">
-      <DocumentsUploadCard
-        submitUpload={submitUpload}
-        uploadError={uploadError}
-        uploading={uploading}
-      />
+  if (loading) return <TableSkeleton rows={4} columns={2} />;
+  if (error) return <ErrorCard message={error} />;
 
-      {loading && <TableSkeleton rows={4} columns={3} />}
-      {!loading && error && <ErrorCard message={error} />}
-      {!loading && !error && documents.length === 0 && (
-        <EmptyState icon={FolderOpen} message="אין מסמכים להצגה ללקוח זה" />
-      )}
-      {!loading && !error && documents.length > 0 && (
-        <DocumentsDataCards documents={documents} signals={signals} />
-      )}
-    </div>
+  if (documents.length === 0) return <EmptyState icon={FolderOpen} message="אין מסמכים להצגה ללקוח זה" />;
+
+  return (
+    <DocumentsDataCards
+      documents={documents}
+      signals={signals}
+      submitUpload={submitUpload}
+      uploadError={uploadError}
+      uploading={uploading}
+    />
   );
 };
 

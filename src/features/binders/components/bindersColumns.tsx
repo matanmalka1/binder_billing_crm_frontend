@@ -25,6 +25,7 @@ const binderStatusVariants: Record<string, "success" | "warning" | "error" | "in
 
 /* ─── Days-in-office cell ────────────────────────────────────── */
 
+// eslint-disable-next-line react-refresh/only-export-components
 const DaysCell: React.FC<{ days: number | null | undefined }> = ({ days }) => {
   if (days == null) return <span className="text-gray-400">—</span>;
 
@@ -51,6 +52,7 @@ interface ActionCellProps {
   onAction: (action: ActionCommand) => void;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 const ActionCell: React.FC<ActionCellProps> = ({ binder, activeActionKeyRef, onAction }) => {
   const actions = mapActions(binder.available_actions as BackendAction[] | null | undefined);
   const action = actions[0] ?? null;
@@ -101,6 +103,7 @@ interface SortableHeaderProps {
   onSort: (key: string) => void;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 const SortableHeader: React.FC<SortableHeaderProps> = ({ label, columnKey, sortBy, sortDir, onSort }) => {
   const isActive = sortBy === columnKey;
   const Icon = isActive ? (sortDir === "asc" ? ChevronUp : ChevronDown) : ChevronsUpDown;

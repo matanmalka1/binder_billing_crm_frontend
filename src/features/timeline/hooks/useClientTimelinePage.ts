@@ -27,7 +27,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     queryFn: () => timelineApi.getClientTimeline(clientIdNumber, timelineParams),
   });
 
-  const events = timelineQuery.data?.events ?? [];
+  const events = useMemo(() => timelineQuery.data?.events ?? [], [timelineQuery.data?.events]);
 
   const eventTypeStats = useMemo(() => {
     const counts: Record<string, number> = {};

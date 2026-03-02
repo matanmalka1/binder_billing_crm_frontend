@@ -1,9 +1,14 @@
-import { CheckCircle2, XCircle, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { DataTable, type Column } from "../../../components/ui/DataTable";
 import { AccessBanner } from "../../../components/ui/AccessBanner";
-import type { OperationalSignalsResponse, PermanentDocumentResponse } from "../../../api/documents.api";
-import { formatDateTime } from "../../../utils/utils";
+import { DocumentsUploadCard } from "./DocumentsUploadCard";
+import type {
+  OperationalSignalsResponse,
+  PermanentDocumentResponse,
+  UploadDocumentPayload,
+} from "../../../api/documents.api";
+import { formatDate } from "../../../utils/utils";
 
 const DOC_TYPE_LABELS: Record<string, string> = {
   id_copy: "צילום תעודה מזהה",
@@ -22,26 +27,10 @@ const COLUMNS: Column<PermanentDocumentResponse>[] = [
     ),
   },
   {
-    key: "is_present",
-    header: "קיים",
-    render: (doc) =>
-      doc.is_present ? (
-        <span className="inline-flex items-center gap-1.5 text-green-700">
-          <CheckCircle2 className="h-4 w-4" />
-          <span className="text-xs font-medium">קיים</span>
-        </span>
-      ) : (
-        <span className="inline-flex items-center gap-1.5 text-red-500">
-          <XCircle className="h-4 w-4" />
-          <span className="text-xs font-medium">חסר</span>
-        </span>
-      ),
-  },
-  {
     key: "uploaded_at",
-    header: "הועלה בתאריך",
+    header: "תאריך העלאה",
     render: (doc) => (
-      <span className="text-gray-500 tabular-nums">{formatDateTime(doc.uploaded_at)}</span>
+      <span className="text-gray-500 tabular-nums">{formatDate(doc.uploaded_at)}</span>
     ),
   },
 ];
@@ -49,9 +38,21 @@ const COLUMNS: Column<PermanentDocumentResponse>[] = [
 interface DocumentsDataCardsProps {
   documents: PermanentDocumentResponse[];
   signals: OperationalSignalsResponse;
+  submitUpload: (payload: {
+    document_type: UploadDocumentPayload["document_type"];
+    file: File;
+  }) => Promise<boolean>;
+  uploadError: string | null;
+  uploading: boolean;
 }
 
-export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({ documents, signals }) => (
+export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
+  documents,
+  signals,
+  submitUpload,
+  uploadError,
+  uploading,
+}) => (
   <div className="space-y-4">
     {signals.missing_documents.length > 0 && (
       <AccessBanner
@@ -60,7 +61,16 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({ document
       />
     )}
 
-    <Card title="מסמכים שהועלו">
+    <Card
+      title={`מסמכים (${documents.length})`}
+      actions={
+        <DocumentsUploadCard
+          submitUpload={submitUpload}
+          uploadError={uploadError}
+          uploading={uploading}
+        />
+      }
+    >
       <DataTable
         data={documents}
         columns={COLUMNS}

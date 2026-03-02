@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { cn } from "../../utils/utils";
 
 interface DetailDrawerProps {
@@ -24,13 +24,13 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
 }) => {
   const [showGuard, setShowGuard] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (isDirty) {
       setShowGuard(true);
     } else {
       onClose();
     }
-  };
+  }, [isDirty, onClose]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
