@@ -29,23 +29,20 @@ export const AdvisorTodaySection = ({
       className="flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-elevation-1 animate-fade-in"
       style={{ animationDelay: `${sectionIndex * 70}ms` }}
     >
-      <div className="flex items-center justify-between bg-gradient-to-l from-gray-700 to-gray-600 px-5 py-3">
-        <div className="flex items-center gap-2.5">
-          <div className="rounded-lg bg-white/20 p-1.5">
-            <Icon className="h-4 w-4 text-white" />
+      <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-4 py-2.5">
+        <div className="flex items-center gap-2">
+          <div className="rounded-lg bg-white p-1.5 shadow-sm">
+            <Icon className="h-3.5 w-3.5 text-gray-500" />
           </div>
-          <div>
-            <p className="text-sm font-bold text-white tracking-wide">{title}</p>
-            <p className="text-[11px] text-white/60">{hasItems ? "פריטים לטיפול" : emptyLabel}</p>
-          </div>
+          <p className="text-xs font-bold text-gray-700 tracking-wide">{title}</p>
         </div>
 
-        <span className="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full px-2 text-xs font-bold tabular-nums bg-white/20 text-white">
+        <span className={`inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1.5 text-[11px] font-bold tabular-nums ${hasItems ? "bg-gray-200 text-gray-700" : "bg-gray-100 text-gray-300"}`}>
           {items.length}
         </span>
       </div>
 
-      <div className="flex-1 divide-y divide-gray-50 overflow-y-auto" style={{ maxHeight: "230px" }}>
+      <div className="flex-1 divide-y divide-gray-50 overflow-y-auto" style={{ maxHeight: "180px" }}>
         {hasItems ? (
           items.map((item, index) => {
             const content = (
