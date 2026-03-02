@@ -42,7 +42,6 @@ export const AgingReportView: React.FC = () => {
     <PageHeader
       title="דוח חובות לקוחות"
       description="ניתוח חובות לפי גיל החוב"
-      variant="gradient"
       actions={actions}
     />
   );

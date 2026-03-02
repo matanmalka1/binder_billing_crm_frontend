@@ -14,9 +14,13 @@ export const createClientSchema = z.object({
 
 export const clientEditSchema = z.object({
   full_name: z.string().trim().min(1, "יש להזין שם מלא"),
+  client_type: z.enum(["osek_patur", "osek_murshe", "company", "employee"]),
   phone: z.string().trim().optional().or(z.literal("")),
   email: z.string().trim().email("כתובת אימייל לא תקינה").optional().or(z.literal("")),
   status: z.enum(["active", "frozen", "closed"]),
+  primary_binder_number: z.string().trim().optional().or(z.literal("")),
+  address: z.string().trim().optional().or(z.literal("")),
+  business_sector: z.string().trim().optional().or(z.literal("")),
   notes: z.string().trim().optional().or(z.literal("")),
 });
 

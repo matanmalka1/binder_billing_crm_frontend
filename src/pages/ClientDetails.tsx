@@ -99,35 +99,39 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
           {tabBar}
 
           {activeTab === "details" && (
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              {/* Left column — profile info + tax + contacts + correspondence + reminders + signatures */}
-              <div className="space-y-6 lg:col-span-2">
-                <ClientInfoSection
-                  client={client}
-                  canEdit={can.editClients}
-                  onEditStart={() => setIsEditing(true)}
-                />
-                <TaxProfileCard clientId={client.id} readOnly={!can.editClients} />
-                <AuthorityContactsCard clientId={client.id} />
-                <CorrespondenceCard clientId={client.id} />
-                <ClientRemindersCard clientId={client.id} />
-                <SignatureRequestsCard client={client} canManage={can.editClients} />
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                {/* Left column — profile info + tax + contacts + correspondence + signatures */}
+                <div className="space-y-6 lg:col-span-2">
+                  <ClientInfoSection
+                    client={client}
+                    canEdit={can.editClients}
+                    onEditStart={() => setIsEditing(true)}
+                  />
+                  <TaxProfileCard clientId={client.id} readOnly={!can.editClients} />
+                  <AuthorityContactsCard clientId={client.id} />
+                  <CorrespondenceCard clientId={client.id} />
+                  <SignatureRequestsCard client={client} canManage={can.editClients} />
+                </div>
+
+                {/* Right column — consolidated related data (stats + recent lists) */}
+                <div className="space-y-6">
+                  <ClientRelatedData
+                    clientId={client.id}
+                    binders={binders}
+                    bindersTotal={bindersTotal}
+                    charges={charges}
+                    chargesTotal={chargesTotal}
+                    canViewCharges={can.viewChargeAmounts}
+                    annualReportsTotal={annualReportsTotal}
+                    vatWorkItemsTotal={vatWorkItemsTotal}
+                    documentsTotal={documentsTotal}
+                  />
+                </div>
               </div>
 
-              {/* Right column — consolidated related data (stats + recent lists) */}
-              <div className="space-y-6">
-                <ClientRelatedData
-                  clientId={client.id}
-                  binders={binders}
-                  bindersTotal={bindersTotal}
-                  charges={charges}
-                  chargesTotal={chargesTotal}
-                  canViewCharges={can.viewChargeAmounts}
-                  annualReportsTotal={annualReportsTotal}
-                  vatWorkItemsTotal={vatWorkItemsTotal}
-                  documentsTotal={documentsTotal}
-                />
-              </div>
+              {/* Full-width reminders table */}
+              <ClientRemindersCard clientId={client.id} />
             </div>
           )}
 

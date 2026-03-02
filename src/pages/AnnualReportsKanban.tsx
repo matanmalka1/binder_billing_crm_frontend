@@ -62,7 +62,6 @@ export const AnnualReportsKanban: React.FC = () => {
       <PageHeader
         title="לוח דוחות שנתיים"
         description="ניהול ומעקב אחר דוחות שנתיים"
-        variant="gradient"
         actions={
           <Button variant="primary" onClick={openCreate} className="gap-2">
             <Plus className="h-4 w-4" />

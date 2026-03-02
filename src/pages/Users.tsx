@@ -68,7 +68,6 @@ export const Users: React.FC = () => {
       <PageHeader
         title="ניהול משתמשים"
         description="ניהול חשבונות משתמשים, תפקידים והרשאות"
-        variant="gradient"
         actions={
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={() => setShowAuditLogs(true)}>לוג ביקורת</Button>

@@ -36,7 +36,6 @@ export const AdvancePayments: React.FC = () => {
       <PageHeader
         title="מחשבון מקדמות"
         description="מעקב תשלומי מקדמה חודשיים לכל לקוח"
-        variant="gradient"
       />
 
       <Card title="בחירת לקוח ושנה">

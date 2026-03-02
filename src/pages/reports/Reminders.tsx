@@ -36,7 +36,6 @@ export const RemindersPage: React.FC = () => {
     <PageHeader
       title="ניהול תזכורות"
       description="תזכורות אוטומטיות למועדי מס, תיקים לא פעילים וחשבוניות שלא שולמו"
-      variant="gradient"
       actions={
         <Button
           variant="primary"

@@ -34,9 +34,13 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
     resolver: zodResolver(clientEditSchema),
     defaultValues: {
       full_name: client.full_name,
+      client_type: client.client_type as ClientEditFormValues["client_type"],
       phone: client.phone ?? "",
       email: client.email ?? "",
       status: client.status as ClientEditFormValues["status"],
+      primary_binder_number: client.primary_binder_number ?? "",
+      address: client.address ?? "",
+      business_sector: client.business_sector ?? "",
       notes: "",
     },
   });
@@ -46,14 +50,27 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       ...data,
       phone: data.phone || null,
       email: data.email || null,
+      primary_binder_number: data.primary_binder_number || null,
+      address: data.address || null,
+      business_sector: data.business_sector || null,
       notes: data.notes || null,
     });
   });
 
   return (
     <form id={formId} onSubmit={onSubmit} className="space-y-6">
+      {/* Basic info */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900">מידע בסיסי</h3>
+
+        {/* Read-only identity number */}
+        <div className="space-y-1">
+          <p className="text-xs font-medium text-gray-500">מספר זהות / ח.פ</p>
+          <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500">
+            {client.id_number}
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Input
             label="שם מלא *"
@@ -72,8 +89,30 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
             <option value="closed">סגור</option>
           </Select>
         </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <Select
+            label="סוג לקוח *"
+            error={errors.client_type?.message}
+            disabled={isLoading}
+            {...register("client_type")}
+          >
+            <option value="osek_patur">עוסק פטור</option>
+            <option value="osek_murshe">עוסק מורשה</option>
+            <option value="company">חברה</option>
+            <option value="employee">שכיר</option>
+          </Select>
+          <Input
+            label="תחום עיסוק"
+            placeholder="לדוגמה: בנייה, מסחר, שירותים"
+            error={errors.business_sector?.message}
+            disabled={isLoading}
+            {...register("business_sector")}
+          />
+        </div>
       </div>
 
+      {/* Contact details */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900">פרטי התקשרות</h3>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -94,16 +133,34 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
             {...register("email")}
           />
         </div>
+        <Input
+          label="כתובת למשלוח דואר"
+          placeholder="רחוב, עיר, מיקוד"
+          error={errors.address?.message}
+          disabled={isLoading}
+          {...register("address")}
+        />
       </div>
 
-      <Textarea
-        label="הערות לעדכון (אופציונלי)"
-        rows={4}
-        placeholder="הוסף הערות על העדכון..."
-        disabled={isLoading}
-        error={errors.notes?.message}
-        {...register("notes")}
-      />
+      {/* Admin fields */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900">נתונים אדמיניסטרטיביים</h3>
+        <Input
+          label="מספר תיק קלסר ראשי"
+          placeholder="לדוגמה: B-10001"
+          error={errors.primary_binder_number?.message}
+          disabled={isLoading}
+          {...register("primary_binder_number")}
+        />
+        <Textarea
+          label="הערות לעדכון (אופציונלי)"
+          rows={4}
+          placeholder="הוסף הערות על העדכון..."
+          disabled={isLoading}
+          error={errors.notes?.message}
+          {...register("notes")}
+        />
+      </div>
 
       {!hideFooter && (
         <>

@@ -39,7 +39,6 @@ export const TaxDeadlines: React.FC = () => {
     <PageHeader
       title="דוחות מס"
       description={`ניהול מועדי מס ומעקב הגשה לשנת ${currentYear}`}
-      variant="gradient"
       actions={
         <Button variant="primary" onClick={() => setShowCreateModal(true)} className="gap-2">
           <Plus className="h-4 w-4" />

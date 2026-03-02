@@ -23,7 +23,6 @@ export const Search: React.FC = () => {
       <PageHeader
         title="חיפוש"
         description="חיפוש גלובלי על פני לקוחות, קלסרים ואותות"
-        variant="gradient"
       />
 
       <FilterBar title="חיפוש וסינון">

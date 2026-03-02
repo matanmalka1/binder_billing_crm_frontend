@@ -13,8 +13,12 @@ export interface ClientResponse {
   id_number: string;
   client_type: string;
   status: string;
+  primary_binder_number: string | null;
   phone: string | null;
   email: string | null;
+  notes: string | null;
+  address: string | null;
+  business_sector: string | null;
   opened_at: ISODateString;
   closed_at: string | null;
   available_actions?: BackendAction[] | null;
@@ -46,6 +50,10 @@ export interface UpdateClientPayload {
   email?: string | null;
   notes?: string | null;
   status?: string;
+  client_type?: string;
+  primary_binder_number?: string | null;
+  address?: string | null;
+  business_sector?: string | null;
 }
 
 export const clientsApi = {

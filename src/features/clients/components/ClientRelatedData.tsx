@@ -21,12 +21,14 @@ interface StatPillProps {
 
 const StatPill: FC<StatPillProps> = ({ icon: Icon, iconColor, count, label, href }) => {
   const inner = (
-    <div className="flex flex-col items-center gap-1 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 text-center hover:bg-gray-100 transition-colors">
-      <div className={`rounded-lg p-2 ${iconColor}`}>
-        <Icon className="h-4 w-4" />
+    <div className="flex items-center gap-2.5 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 hover:bg-gray-100 transition-colors">
+      <div className={`shrink-0 rounded-md p-1.5 ${iconColor}`}>
+        <Icon className="h-3.5 w-3.5" />
       </div>
-      <div className="text-xl font-bold text-gray-900">{count}</div>
-      <div className="text-xs text-gray-500 leading-tight">{label}</div>
+      <div className="min-w-0">
+        <div className="text-base font-bold text-gray-900 leading-none">{count}</div>
+        <div className="text-xs text-gray-500 mt-0.5 leading-tight">{label}</div>
+      </div>
     </div>
   );
 
@@ -63,8 +65,8 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
 
   return (
     <Card title="נתונים קשורים">
-      {/* Stat pills row */}
-      <div className={`grid gap-3 ${canViewCharges ? "grid-cols-5" : "grid-cols-4"}`}>
+      {/* Stat pills — 3-col grid wraps to 2 rows in narrow right column */}
+      <div className="grid grid-cols-3 gap-2">
         <StatPill
           icon={FolderOpen}
           iconColor="bg-primary-100 text-primary-600"

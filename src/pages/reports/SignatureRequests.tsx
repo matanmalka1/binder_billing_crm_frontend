@@ -180,7 +180,6 @@ export const SignatureRequestsPage: React.FC = () => {
     <PageHeader
       title="בקשות חתימה"
       description="כל בקשות החתימה הפעילות בכלל הלקוחות"
-      variant="gradient"
     />
   );
 
