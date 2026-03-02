@@ -1,6 +1,7 @@
+import { RotateCcw } from "lucide-react";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
-import { FilterBar } from "../../../components/ui/FilterBar";
+import { Button } from "../../../components/ui/Button";
 import type { TaxDeadlineFilters } from "../types";
 
 interface TaxDeadlinesFiltersProps {
@@ -24,6 +25,8 @@ const STATUS_OPTIONS = [
 ];
 
 export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersProps) => {
+  const hasActive = Boolean(filters.client_id || filters.deadline_type || filters.status);
+
   const handleReset = () => {
     onChange("client_id", "");
     onChange("deadline_type", "");
@@ -31,8 +34,8 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
   };
 
   return (
-    <FilterBar title="סינון מועדים" onReset={handleReset}>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="flex flex-wrap items-end gap-3">
+      <div className="w-36">
         <Input
           label="מזהה לקוח"
           type="number"
@@ -40,12 +43,16 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
           onChange={(e) => onChange("client_id", e.target.value)}
           placeholder="לדוגמה: 123"
         />
+      </div>
+      <div className="w-40">
         <Select
           label="סוג מועד"
           value={filters.deadline_type}
           onChange={(e) => onChange("deadline_type", e.target.value)}
           options={DEADLINE_TYPE_OPTIONS}
         />
+      </div>
+      <div className="w-36">
         <Select
           label="סטטוס"
           value={filters.status}
@@ -53,7 +60,13 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
           options={STATUS_OPTIONS}
         />
       </div>
-    </FilterBar>
+      {hasActive && (
+        <Button variant="ghost" size="sm" onClick={handleReset} className="mb-0.5 gap-1.5">
+          <RotateCcw className="h-3.5 w-3.5" />
+          איפוס
+        </Button>
+      )}
+    </div>
   );
 };
 
