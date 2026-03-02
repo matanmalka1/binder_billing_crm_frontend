@@ -100,7 +100,7 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
 
           {activeTab === "details" && (
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              {/* Left column — info + tax profile + contacts */}
+              {/* Left column — profile info + tax + contacts + correspondence + reminders + signatures */}
               <div className="space-y-6 lg:col-span-2">
                 <ClientInfoSection
                   client={client}
@@ -110,9 +110,11 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
                 <TaxProfileCard clientId={client.id} readOnly={!can.editClients} />
                 <AuthorityContactsCard clientId={client.id} />
                 <CorrespondenceCard clientId={client.id} />
+                <ClientRemindersCard clientId={client.id} />
+                <SignatureRequestsCard client={client} canManage={can.editClients} />
               </div>
 
-              {/* Right column — related counts + reminders + signatures */}
+              {/* Right column — consolidated related data (stats + recent lists) */}
               <div className="space-y-6">
                 <ClientRelatedData
                   clientId={client.id}
@@ -125,8 +127,6 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
                   vatWorkItemsTotal={vatWorkItemsTotal}
                   documentsTotal={documentsTotal}
                 />
-                <ClientRemindersCard clientId={client.id} />
-                <SignatureRequestsCard client={client} canManage={can.editClients} />
               </div>
             </div>
           )}

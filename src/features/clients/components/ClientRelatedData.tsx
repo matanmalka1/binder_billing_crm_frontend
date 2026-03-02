@@ -9,9 +9,9 @@ import { formatDate } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { getChargeTypeLabel } from "../../charges/utils/chargeStatus";
 
-// ── Local primitive ────────────────────────────────────────────────────────────
+// ── Stat pill ───────────────────────────────────────────────────────────────
 
-interface SummaryStatCardProps {
+interface StatPillProps {
   icon: LucideIcon;
   iconColor: string;
   count: number;
@@ -19,25 +19,21 @@ interface SummaryStatCardProps {
   href?: string;
 }
 
-const SummaryStatCard: FC<SummaryStatCardProps> = ({ icon: Icon, iconColor, count, label, href }) => {
+const StatPill: FC<StatPillProps> = ({ icon: Icon, iconColor, count, label, href }) => {
   const inner = (
-    <Card className={href ? "hover:shadow-md transition-shadow cursor-pointer h-full" : "h-full"}>
-      <div className="flex items-center gap-3">
-        <div className={`rounded-lg p-3 ${iconColor}`}>
-          <Icon className="h-6 w-6" />
-        </div>
-        <div>
-          <div className="text-2xl font-bold text-gray-900">{count}</div>
-          <div className="text-sm text-gray-600">{label}</div>
-        </div>
+    <div className="flex flex-col items-center gap-1 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 text-center hover:bg-gray-100 transition-colors">
+      <div className={`rounded-lg p-2 ${iconColor}`}>
+        <Icon className="h-4 w-4" />
       </div>
-    </Card>
+      <div className="text-xl font-bold text-gray-900">{count}</div>
+      <div className="text-xs text-gray-500 leading-tight">{label}</div>
+    </div>
   );
 
   return href ? <Link to={href} className="block">{inner}</Link> : inner;
 };
 
-// ── Main component ─────────────────────────────────────────────────────────────
+// ── Main component ──────────────────────────────────────────────────────────
 
 type ClientRelatedDataProps = {
   clientId: number;
@@ -62,70 +58,70 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
   vatWorkItemsTotal,
   documentsTotal,
 }) => {
+  const hasBinderList = binders.length > 0;
+  const hasChargeList = canViewCharges && charges.length > 0;
+
   return (
-    <>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-        <SummaryStatCard
+    <Card title="נתונים קשורים">
+      {/* Stat pills row */}
+      <div className={`grid gap-3 ${canViewCharges ? "grid-cols-5" : "grid-cols-4"}`}>
+        <StatPill
           icon={FolderOpen}
           iconColor="bg-primary-100 text-primary-600"
           count={bindersTotal}
           label="קלסרים"
         />
-
         {canViewCharges && (
-          <SummaryStatCard
+          <StatPill
             icon={Receipt}
             iconColor="bg-green-100 text-green-600"
             count={chargesTotal}
             label="חיובים"
           />
         )}
-
-        <SummaryStatCard
+        <StatPill
           icon={FileText}
           iconColor="bg-purple-100 text-purple-600"
           count={annualReportsTotal}
           label="דוחות שנתיים"
           href={`/tax/reports/season?client_id=${clientId}`}
         />
-
-        <SummaryStatCard
+        <StatPill
           icon={Calculator}
           iconColor="bg-orange-100 text-orange-600"
           count={vatWorkItemsTotal}
-          label='תיקי מע"מ'
+          label='מע"מ'
           href={`/tax/vat?client_id=${clientId}`}
         />
-
-        <SummaryStatCard
+        <StatPill
           icon={FileArchive}
           iconColor="bg-teal-100 text-teal-600"
           count={documentsTotal}
-          label="מסמכים קבועים"
+          label="מסמכים"
           href={`/documents?client_id=${clientId}`}
         />
       </div>
 
-      {binders.length > 0 && (
-        <Card
-          title="קלסרים אחרונים"
-          footer={
-            bindersTotal > 5 ? (
-              <Link to={`/binders?client_id=${clientId}`} className="text-sm text-primary-600">
-                צפה בכל הקלסרים ({bindersTotal})
+      {/* Recent binders */}
+      {hasBinderList && (
+        <div className="mt-6">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-sm font-semibold text-gray-700">קלסרים אחרונים</span>
+            {bindersTotal > 5 && (
+              <Link to={`/binders?client_id=${clientId}`} className="text-xs text-primary-600 hover:underline">
+                הכל ({bindersTotal})
               </Link>
-            ) : undefined
-          }
-        >
-          <div className="space-y-3">
+            )}
+          </div>
+          <div className="space-y-2">
             {binders.slice(0, 5).map((b) => (
               <div
                 key={b.id}
-                className="flex items-center justify-between rounded-lg border border-gray-200 p-3 hover:bg-gray-50"
+                className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 hover:bg-gray-100 transition-colors"
               >
                 <div>
-                  <div className="font-medium text-gray-900">{b.binder_number}</div>
-                  <div className="text-sm text-gray-600">נקלט: {formatDate(b.received_at)}</div>
+                  <div className="text-sm font-medium text-gray-900">{b.binder_number}</div>
+                  <div className="text-xs text-gray-500">נקלט: {formatDate(b.received_at)}</div>
                 </div>
                 <Link to={`/binders/${b.id}`}>
                   <Button variant="ghost" size="sm">
@@ -135,29 +131,29 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       )}
 
-      {canViewCharges && charges.length > 0 && (
-        <Card
-          title="חיובים אחרונים"
-          footer={
-            chargesTotal > 5 ? (
-              <Link to={`/charges?client_id=${clientId}`} className="text-sm text-primary-600">
-                צפה בכל החיובים ({chargesTotal})
+      {/* Recent charges */}
+      {hasChargeList && (
+        <div className="mt-4">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-sm font-semibold text-gray-700">חיובים אחרונים</span>
+            {chargesTotal > 5 && (
+              <Link to={`/charges?client_id=${clientId}`} className="text-xs text-primary-600 hover:underline">
+                הכל ({chargesTotal})
               </Link>
-            ) : undefined
-          }
-        >
-          <div className="space-y-3">
+            )}
+          </div>
+          <div className="space-y-2">
             {charges.slice(0, 5).map((c) => (
               <div
                 key={c.id}
-                className="flex items-center justify-between rounded-lg border border-gray-200 p-3 hover:bg-gray-50"
+                className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 hover:bg-gray-100 transition-colors"
               >
                 <div>
-                  <div className="font-medium text-gray-900">חיוב #{c.id}</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm font-medium text-gray-900">חיוב #{c.id}</div>
+                  <div className="text-xs text-gray-500">
                     {getChargeTypeLabel(c.charge_type)} • {getChargeStatusLabel(c.status)}
                   </div>
                 </div>
@@ -169,8 +165,8 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       )}
-    </>
+    </Card>
   );
 };

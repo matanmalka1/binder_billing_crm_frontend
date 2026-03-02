@@ -26,8 +26,6 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   onEditStart,
 }) => {
   const infoItems = [
-    { label: "מזהה לקוח", value: `#${client.id}` },
-    { label: "שם מלא", value: client.full_name },
     { label: "מספר זהות / ח.פ", value: client.id_number },
     { label: "סוג לקוח", value: getClientTypeLabel(client.client_type) },
     { label: "סטטוס", value: statusBadge(client.status) },
@@ -38,19 +36,18 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   ];
 
   return (
-    <>
-      {canEdit && (
-        <div className="flex flex-wrap gap-2">
-          <Button variant="primary" onClick={onEditStart} className="gap-2">
+    <Card
+      title="פרטי לקוח"
+      actions={
+        canEdit ? (
+          <Button variant="outline" size="sm" onClick={onEditStart} className="gap-2">
             <Edit2 className="h-4 w-4" />
             ערוך פרטים
           </Button>
-        </div>
-      )}
-
-      <Card title="פרטי לקוח">
-        <DescriptionList columns={2} items={infoItems} />
-      </Card>
-    </>
+        ) : undefined
+      }
+    >
+      <DescriptionList columns={2} items={infoItems} />
+    </Card>
   );
 };
