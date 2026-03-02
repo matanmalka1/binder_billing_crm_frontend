@@ -1,6 +1,5 @@
 import { Plus } from "lucide-react";
 import { PageHeader } from "../../components/layout/PageHeader";
-import { Card } from "../../components/ui/Card";
 import { ErrorCard } from "../../components/ui/ErrorCard";
 import { Button } from "../../components/ui/Button";
 import { Select } from "../../components/ui/Select";
@@ -38,7 +37,11 @@ export const AdvancePayments: React.FC = () => {
         description="מעקב תשלומי מקדמה חודשיים לכל לקוח"
       />
 
-      <Card title="בחירת לקוח ושנה">
+      <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="px-6 py-4 border-b border-gray-100/80 bg-gradient-to-r from-gray-50/50 to-transparent">
+          <h3 className="text-lg font-semibold text-gray-900 tracking-tight">בחירת לקוח ושנה</h3>
+        </div>
+        <div className="p-6">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 max-w-md">
           <ClientSearchField
             selectedClientId={filters.client_id}
@@ -53,7 +56,8 @@ export const AdvancePayments: React.FC = () => {
             options={YEAR_OPTIONS}
           />
         </div>
-      </Card>
+        </div>
+      </div>
 
       {error && <ErrorCard message={error} />}
 
