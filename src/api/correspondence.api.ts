@@ -21,6 +21,14 @@ export interface CreateCorrespondencePayload {
   occurred_at: string;
 }
 
+export interface UpdateCorrespondencePayload {
+  contact_id?: number | null;
+  correspondence_type?: CorrespondenceEntry["correspondence_type"];
+  subject?: string;
+  notes?: string | null;
+  occurred_at?: string;
+}
+
 export const correspondenceApi = {
   list: async (
     clientId: number,
@@ -42,5 +50,21 @@ export const correspondenceApi = {
       payload,
     );
     return response.data;
+  },
+
+  update: async (
+    clientId: number,
+    id: number,
+    payload: UpdateCorrespondencePayload,
+  ): Promise<CorrespondenceEntry> => {
+    const response = await api.patch<CorrespondenceEntry>(
+      ENDPOINTS.correspondenceById(clientId, id),
+      payload,
+    );
+    return response.data;
+  },
+
+  delete: async (clientId: number, id: number): Promise<void> => {
+    await api.delete(ENDPOINTS.correspondenceById(clientId, id));
   },
 };

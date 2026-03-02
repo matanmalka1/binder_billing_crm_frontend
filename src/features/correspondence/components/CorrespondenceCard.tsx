@@ -7,6 +7,8 @@ import { EmptyState } from "../../../components/ui/EmptyState";
 import { CorrespondenceEntryItem } from "./CorrespondenceEntry";
 import { CorrespondenceModal } from "./CorrespondenceModal";
 import { useCorrespondence } from "../hooks/useCorrespondence";
+import type { CorrespondenceEntry } from "../../../api/correspondence.api";
+import type { CorrespondenceFormValues } from "../schemas";
 
 interface CorrespondenceCardProps {
   clientId: number;
@@ -14,12 +16,39 @@ interface CorrespondenceCardProps {
 
 export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const { entries, total, isLoading, error, createEntry, isCreating } =
-    useCorrespondence(clientId);
+  const [editing, setEditing] = useState<CorrespondenceEntry | null>(null);
 
-  const handleSubmit = async (data: Parameters<typeof createEntry>[0]) => {
-    await createEntry(data);
+  const {
+    entries,
+    total,
+    isLoading,
+    error,
+    createEntry,
+    isCreating,
+    updateEntry,
+    isUpdating,
+    deleteEntry,
+    deletingId,
+  } = useCorrespondence(clientId);
+
+  const handleSubmit = async (data: CorrespondenceFormValues) => {
+    if (editing) {
+      await updateEntry(editing.id, { ...data, notes: data.notes || null });
+    } else {
+      await createEntry(data);
+    }
     setModalOpen(false);
+    setEditing(null);
+  };
+
+  const handleEdit = (entry: CorrespondenceEntry) => {
+    setEditing(entry);
+    setModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
+    setEditing(null);
   };
 
   return (
@@ -59,7 +88,13 @@ export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
             <div className="absolute right-[18px] top-0 bottom-0 w-px bg-gray-200" />
             <ul className="space-y-1">
               {entries.map((entry) => (
-                <CorrespondenceEntryItem key={entry.id} entry={entry} />
+                <CorrespondenceEntryItem
+                  key={entry.id}
+                  entry={entry}
+                  isDeleting={deletingId === entry.id}
+                  onEdit={handleEdit}
+                  onDelete={deleteEntry}
+                />
               ))}
             </ul>
           </div>
@@ -68,9 +103,10 @@ export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
 
       <CorrespondenceModal
         open={modalOpen}
-        isCreating={isCreating}
-        onClose={() => setModalOpen(false)}
+        isCreating={isCreating || isUpdating}
+        onClose={handleClose}
         onSubmit={handleSubmit}
+        existing={editing}
       />
     </>
   );

@@ -1,5 +1,6 @@
-import { Phone, Mail, FileText, Users } from "lucide-react";
+import { Phone, Mail, FileText, Users, Edit2, Trash2 } from "lucide-react";
 import { Badge } from "../../../components/ui/Badge";
+import { Button } from "../../../components/ui/Button";
 import type { CorrespondenceEntry as CorrespondenceEntryType } from "../../../api/correspondence.api";
 import { formatDate } from "../../../utils/utils";
 
@@ -41,9 +42,17 @@ const DEFAULT_CONFIG: TypeConfig = TYPE_CONFIG.call;
 
 interface CorrespondenceEntryItemProps {
   entry: CorrespondenceEntryType;
+  isDeleting: boolean;
+  onEdit: (entry: CorrespondenceEntryType) => void;
+  onDelete: (id: number) => void;
 }
 
-export const CorrespondenceEntryItem = ({ entry }: CorrespondenceEntryItemProps) => {
+export const CorrespondenceEntryItem = ({
+  entry,
+  isDeleting,
+  onEdit,
+  onDelete,
+}: CorrespondenceEntryItemProps) => {
   const config = TYPE_CONFIG[entry.correspondence_type] ?? DEFAULT_CONFIG;
 
   return (
@@ -61,9 +70,30 @@ export const CorrespondenceEntryItem = ({ entry }: CorrespondenceEntryItemProps)
             </Badge>
             <p className="truncate text-sm font-semibold text-gray-900">{entry.subject}</p>
           </div>
-          <time className="shrink-0 text-xs text-gray-400 tabular-nums">
-            {formatDate(entry.occurred_at)}
-          </time>
+          <div className="flex items-center gap-1 shrink-0">
+            <time className="text-xs text-gray-400 tabular-nums">
+              {formatDate(entry.occurred_at)}
+            </time>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => onEdit(entry)}
+              className="h-6 w-6 p-0"
+            >
+              <Edit2 className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              isLoading={isDeleting}
+              onClick={() => onDelete(entry.id)}
+              className="h-6 w-6 p-0 text-red-600 hover:bg-red-50"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         </div>
 
         {entry.notes && (

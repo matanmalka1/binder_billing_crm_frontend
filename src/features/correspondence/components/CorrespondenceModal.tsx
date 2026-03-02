@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/Modal";
@@ -6,12 +7,15 @@ import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
 import { correspondenceSchema, correspondenceDefaults, type CorrespondenceFormValues } from "../schemas";
+import type { CorrespondenceEntry } from "../../../api/correspondence.api";
+import { format } from "date-fns";
 
 interface CorrespondenceModalProps {
   open: boolean;
   isCreating: boolean;
   onClose: () => void;
   onSubmit: (values: CorrespondenceFormValues) => Promise<void>;
+  existing?: CorrespondenceEntry | null;
 }
 
 export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
@@ -19,6 +23,7 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
   isCreating,
   onClose,
   onSubmit,
+  existing,
 }) => {
   const {
     register,
@@ -30,6 +35,21 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
     defaultValues: correspondenceDefaults,
   });
 
+  useEffect(() => {
+    if (open) {
+      if (existing) {
+        reset({
+          correspondence_type: existing.correspondence_type,
+          subject: existing.subject,
+          notes: existing.notes ?? "",
+          occurred_at: format(new Date(existing.occurred_at), "yyyy-MM-dd"),
+        });
+      } else {
+        reset(correspondenceDefaults);
+      }
+    }
+  }, [open, existing, reset]);
+
   const handleClose = () => {
     reset(correspondenceDefaults);
     onClose();
@@ -40,10 +60,12 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
     reset(correspondenceDefaults);
   });
 
+  const title = existing ? "עריכת רשומת התכתבות" : "הוספת רשומת התכתבות";
+
   return (
     <Modal
       open={open}
-      title="הוספת רשומת התכתבות"
+      title={title}
       onClose={handleClose}
       footer={
         <div className="flex gap-2 justify-end">
@@ -51,7 +73,7 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
             ביטול
           </Button>
           <Button type="button" isLoading={isCreating} disabled={isCreating} onClick={submit}>
-            הוסף
+            {existing ? "עדכן" : "הוסף"}
           </Button>
         </div>
       }

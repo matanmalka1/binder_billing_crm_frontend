@@ -53,6 +53,8 @@ export const ENDPOINTS = {
     `/clients/${clientId}/signature-requests`,
   correspondenceList: (clientId: number | string) => `/clients/${clientId}/correspondence`,
   correspondenceCreate: (clientId: number | string) => `/clients/${clientId}/correspondence`,
+  correspondenceById: (clientId: number | string, id: number | string) =>
+    `/clients/${clientId}/correspondence/${id}`,
   clientsExport: "/clients/export",
   clientsTemplate: "/clients/template",
   clientsImport: "/clients/import",
