@@ -35,11 +35,13 @@ export const authorityContactsApi = {
 
   listAuthorityContacts: async (
     clientId: number,
-    contactType?: string
-  ): Promise<{ items: AuthorityContactResponse[] }> => {
-    const response = await api.get<{ items: AuthorityContactResponse[] }>(
+    contactType?: string,
+    page: number = 1,
+    page_size: number = 20,
+  ): Promise<{ items: AuthorityContactResponse[]; page: number; page_size: number; total: number }> => {
+    const response = await api.get<{ items: AuthorityContactResponse[]; page: number; page_size: number; total: number }>(
       ENDPOINTS.clientAuthorityContacts(clientId),
-      { params: contactType ? { contact_type: contactType } : undefined }
+      { params: { ...(contactType ? { contact_type: contactType } : {}), page, page_size } }
     );
     return response.data;
   },

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Users } from "lucide-react";
+import { Plus, Users, ChevronRight, ChevronLeft } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { ErrorCard } from "../../../components/ui/ErrorCard";
@@ -14,7 +14,17 @@ interface AuthorityContactsCardProps {
 }
 
 export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ clientId }) => {
-  const { contacts, isLoading, error, deleteContact, deletingId } = useAuthorityContacts(clientId);
+  const {
+    contacts,
+    total,
+    page,
+    setPage,
+    totalPages,
+    isLoading,
+    error,
+    deleteContact,
+    deletingId,
+  } = useAuthorityContacts(clientId);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<AuthorityContactResponse | null>(null);
 
@@ -31,7 +41,7 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
   return (
     <Card
       title="אנשי קשר ברשויות"
-      subtitle="גורמי קשר ממשלתיים ורגולטוריים"
+      subtitle={total > 0 ? `${total} אנשי קשר` : "גורמי קשר ממשלתיים ורגולטוריים"}
       actions={
         <Button
           type="button"
@@ -70,6 +80,34 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
               onDelete={deleteContact}
             />
           ))}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            disabled={page <= 1}
+            onClick={() => setPage(page - 1)}
+          >
+            <ChevronRight className="h-4 w-4" />
+            הקודם
+          </Button>
+          <span className="text-xs text-gray-500">
+            עמוד {page} מתוך {totalPages}
+          </span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            disabled={page >= totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            הבא
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
         </div>
       )}
 

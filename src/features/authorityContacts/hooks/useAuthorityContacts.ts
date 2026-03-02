@@ -1,30 +1,41 @@
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authorityContactsApi } from "../../../api/authorityContacts.api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
+const PAGE_SIZE = 20;
+
 export const useAuthorityContacts = (clientId: number) => {
   const queryClient = useQueryClient();
-  const qk = QK.authorityContacts.forClient(clientId);
+  const [page, setPage] = useState(1);
+  const qk = [...QK.authorityContacts.forClient(clientId), { page, page_size: PAGE_SIZE }];
 
   const listQuery = useQuery({
     enabled: clientId > 0,
     queryKey: qk,
-    queryFn: () => authorityContactsApi.listAuthorityContacts(clientId),
+    queryFn: () => authorityContactsApi.listAuthorityContacts(clientId, undefined, page, PAGE_SIZE),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (contactId: number) => authorityContactsApi.deleteAuthorityContact(contactId),
     onSuccess: () => {
       toast.success("איש קשר נמחק בהצלחה");
-      queryClient.invalidateQueries({ queryKey: qk });
+      queryClient.invalidateQueries({ queryKey: QK.authorityContacts.forClient(clientId) });
     },
     onError: (err) => showErrorToast(err, "שגיאה במחיקת איש קשר"),
   });
 
+  const total = listQuery.data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
   return {
     contacts: listQuery.data?.items ?? [],
+    total,
+    page,
+    setPage,
+    totalPages,
     isLoading: listQuery.isPending,
     error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת אנשי קשר") : null,
     deleteContact: (id: number) => deleteMutation.mutate(id),
