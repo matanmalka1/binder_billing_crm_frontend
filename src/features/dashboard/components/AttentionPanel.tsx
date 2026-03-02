@@ -1,58 +1,18 @@
-import { useState } from "react";
 import { CheckCircle2, ShieldAlert } from "lucide-react";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  horizontalListSortingStrategy,
-  useSortable,
-  arrayMove,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import type { AttentionItem } from "../../../api/dashboard.api";
 import { AttentionSection } from "./AttentionSection";
-import { SECTIONS, type SectionKey } from "../utils";
+import { SECTIONS } from "../utils";
 import { cn } from "../../../utils/utils";
 
 interface AttentionPanelProps {
   items: AttentionItem[];
 }
 
-const SortableCard = ({ id, children }: { id: SectionKey; children: React.ReactNode }) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
-  return (
-    <div
-      ref={setNodeRef}
-      style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1, cursor: "grab" }}
-      {...attributes}
-      {...listeners}
-    >
-      {children}
-    </div>
-  );
-};
-
 export const AttentionPanel = ({ items }: AttentionPanelProps) => {
-  const [order, setOrder] = useState<SectionKey[]>(SECTIONS.map((s) => s.key));
-  const sensors = useSensors(useSensor(PointerSensor));
-
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    if (over && active.id !== over.id) {
-      setOrder((prev) => arrayMove(prev, prev.indexOf(active.id as SectionKey), prev.indexOf(over.id as SectionKey)));
-    }
-  };
-
   const sectionCounts = SECTIONS.map((s) => ({
     ...s,
     count: items.filter((i) => s.types.includes(i.item_type)).length,
   }));
-  const orderedSections = order.map((key) => SECTIONS.find((s) => s.key === key)!);
   const totalItems = items.length;
   const allClear = totalItems === 0;
 
@@ -100,24 +60,19 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
           </div>
         </div>
       ) : (
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={order} strategy={horizontalListSortingStrategy}>
-            <div className="grid grid-cols-1 gap-3 bg-gray-50/50 p-4 md:grid-cols-3">
-              {orderedSections.map((section, sectionIndex) => {
-                const sectionItems = items.filter((item) => section.types.includes(item.item_type));
-                return (
-                  <SortableCard key={section.key} id={section.key}>
-                    <AttentionSection
-                      section={section}
-                      items={sectionItems}
-                      sectionIndex={sectionIndex}
-                    />
-                  </SortableCard>
-                );
-              })}
-            </div>
-          </SortableContext>
-        </DndContext>
+        <div className="grid grid-cols-1 gap-3 bg-gray-50/50 p-4 md:grid-cols-3">
+          {SECTIONS.map((section, sectionIndex) => {
+            const sectionItems = items.filter((item) => section.types.includes(item.item_type));
+            return (
+              <AttentionSection
+                key={section.key}
+                section={section}
+                items={sectionItems}
+                sectionIndex={sectionIndex}
+              />
+            );
+          })}
+        </div>
       )}
     </div>
   );
