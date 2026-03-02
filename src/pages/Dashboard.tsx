@@ -6,7 +6,6 @@ import { DashboardStatsGrid } from "../features/dashboard/components/DashboardSt
 import { AdvisorTodayCard } from "../features/dashboard/components/AdvisorTodayCard";
 import { AttentionPanel } from "../features/dashboard/components/AttentionPanel";
 import { OperationalPanel } from "../features/dashboard/components/OperationalPanel";
-import { UrgencyBar } from "../features/dashboard/components/UrgencyBar";
 import { useDashboardPage } from "../features/dashboard/hooks/useDashboardPage";
 
 export const Dashboard: React.FC = () => {
@@ -39,28 +38,22 @@ export const Dashboard: React.FC = () => {
         <ErrorCard message={dashboard.message} />
       )}
 
-      {/* Urgency bar — pinned at top when attention items exist */}
-      {dashboard.status === "ok" && attentionItems.length > 0 && (
-        <UrgencyBar items={attentionItems} />
-      )}
-
       {/* Stats — skeleton while loading */}
       {dashboard.status === "loading" ? (
         <div className="grid grid-cols-2 gap-4 animate-pulse sm:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-28 rounded-xl bg-gray-100" />
+            <div key={i} className="h-24 rounded-xl bg-gray-100" />
           ))}
         </div>
       ) : dashboard.status === "ok" ? (
         <DashboardStatsGrid stats={stats} />
       ) : null}
 
-      {/* Advisor: today card + quick actions */}
+      {/* Advisor: quick actions + today card */}
       {dashboard.status === "loading" ? (
-        <div className="h-32 animate-pulse rounded-xl bg-gray-100" />
+        <div className="h-28 animate-pulse rounded-xl bg-gray-100" />
       ) : isAdvisor ? (
         <>
-          <AdvisorTodayCard />
           {quickActions && (
             <OperationalPanel
               quickActions={quickActions}
@@ -68,6 +61,7 @@ export const Dashboard: React.FC = () => {
               onQuickAction={handleQuickAction}
             />
           )}
+          <AdvisorTodayCard />
         </>
       ) : null}
 
