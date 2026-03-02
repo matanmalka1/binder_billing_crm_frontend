@@ -1,16 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { ClientSearchInput } from "./ClientSearchInput";
-import { usersApi } from "../../../api/users.api";
 import type { BinderResponse } from "../../../api/binders.types";
 import type { UseFormReturn } from "react-hook-form";
 import type { ReceiveBinderFormValues } from "../schemas";
+import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
+import { mapActions } from "../../../lib/actions/mapActions";
 import {
   getStatusLabel,
   getWorkStateLabel,
@@ -19,26 +18,50 @@ import {
 } from "../../../utils/enums";
 import { formatDate, cn } from "../../../utils/utils";
 import { BINDER_WORK_STATE_VARIANTS, BINDER_SIGNAL_VARIANTS, BINDER_TYPE_OPTIONS } from "../types";
-import { QK } from "../../../lib/queryKeys";
 
 /* ─── Detail mode ────────────────────────────────────────────── */
 
 interface DetailContentProps {
   binder: BinderResponse;
-  onOpenClient: () => void;
+  activeActionKeyRef: React.RefObject<string | null>;
+  onAction: (action: ActionCommand) => void;
 }
 
-const DetailContent: React.FC<DetailContentProps> = ({ binder, onOpenClient }) => {
-  const usersQuery = useQuery({
-    queryKey: QK.users.list({ page_size: 100 }),
-    queryFn: () => usersApi.list({ page_size: 100 }),
-    staleTime: 5 * 60 * 1000,
-  });
+const DetailContent: React.FC<DetailContentProps> = ({ binder, activeActionKeyRef, onAction }) => {
+  const actions = mapActions(binder.available_actions as BackendAction[] | null | undefined);
+  const action = actions[0] ?? null;
 
-  const userMap: Record<number, string> = {};
-  for (const u of usersQuery.data?.items ?? []) {
-    userMap[u.id] = u.full_name;
-  }
+  const actionButton = (() => {
+    if (binder.status === "ready_for_pickup" && action) {
+      return (
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          onClick={() => onAction(action)}
+          isLoading={activeActionKeyRef.current === action.uiKey}
+          disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
+        >
+          החזרת קלסר
+        </Button>
+      );
+    }
+    if (binder.status === "in_office" && binder.work_state === "in_progress" && action) {
+      return (
+        <Button
+          type="button"
+          size="sm"
+          onClick={() => onAction(action)}
+          isLoading={activeActionKeyRef.current === action.uiKey}
+          disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
+          className="bg-green-600 text-white hover:bg-green-700 active:bg-green-800 shadow-sm"
+        >
+          סיום טיפול
+        </Button>
+      );
+    }
+    return null;
+  })();
 
   return (
     <>
@@ -53,11 +76,8 @@ const DetailContent: React.FC<DetailContentProps> = ({ binder, onOpenClient }) =
         {binder.pickup_person_name && (
           <DrawerField label="נאסף על ידי" value={binder.pickup_person_name} />
         )}
-      </DrawerSection>
-
-      <DrawerSection title="מצב עבודה">
         <DrawerField
-          label="מצב"
+          label="מצב עבודה"
           value={
             <Badge variant={BINDER_WORK_STATE_VARIANTS[binder.work_state ?? ""] ?? "neutral"}>
               {getWorkStateLabel(binder.work_state ?? "")}
@@ -99,12 +119,11 @@ const DetailContent: React.FC<DetailContentProps> = ({ binder, onOpenClient }) =
         </DrawerSection>
       )}
 
-<div className="pt-1">
-        <Button variant="ghost" size="sm" onClick={onOpenClient} className="gap-2 text-gray-600">
-          פתח כרטיס לקוח
-          <ExternalLink className="h-4 w-4" />
-        </Button>
-      </div>
+      {actionButton && (
+        <div className="pt-2">
+          {actionButton}
+        </div>
+      )}
     </>
   );
 };
@@ -196,6 +215,8 @@ interface BinderDrawerProps {
   mode: DrawerMode;
   binder?: BinderResponse | null;
   onClose: () => void;
+  onAction?: (action: ActionCommand) => void;
+  activeActionKeyRef?: React.RefObject<string | null>;
   receiveForm?: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery?: string;
   selectedClient?: { id: number; name: string } | null;
@@ -205,11 +226,16 @@ interface BinderDrawerProps {
   isSubmitting?: boolean;
 }
 
+const NOOP_REF = { current: null } as React.RefObject<string | null>;
+const NOOP_ACTION = () => {};
+
 export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   open,
   mode,
   binder,
   onClose,
+  onAction = NOOP_ACTION,
+  activeActionKeyRef = NOOP_REF,
   receiveForm,
   clientQuery = "",
   selectedClient = null,
@@ -218,13 +244,6 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   onReceiveSubmit,
   isSubmitting = false,
 }) => {
-  const navigate = useNavigate();
-
-  const handleOpenClient = () => {
-    if (!binder) return;
-    navigate(`/clients/${binder.client_id}`);
-  };
-
   const title =
     mode === "receive"
       ? "קליטת חומר מלקוח"
@@ -235,7 +254,16 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   const subtitle =
     mode === "receive"
       ? undefined
-      : binder?.client_name ?? (binder ? `לקוח #${binder.client_id}` : undefined);
+      : binder
+      ? (
+          <Link
+            to={`/clients/${binder.client_id}`}
+            className="text-sm text-primary-600 hover:underline"
+          >
+            {binder.client_name ?? `לקוח #${binder.client_id}`}
+          </Link>
+        )
+      : undefined;
 
   return (
     <DetailDrawer
@@ -259,7 +287,11 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
       )}
 
       {mode === "detail" && binder && (
-        <DetailContent binder={binder} onOpenClient={handleOpenClient} />
+        <DetailContent
+          binder={binder}
+          activeActionKeyRef={activeActionKeyRef}
+          onAction={onAction}
+        />
       )}
     </DetailDrawer>
   );

@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 import { Select } from "../../../components/ui/Select";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
@@ -15,15 +17,26 @@ const YEAR_OPTIONS = [
 ];
 
 export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBarProps) => {
-  const activeCount = [
-    filters.status,
-    filters.work_state,
-    filters.query,
-    filters.year,
-  ].filter(Boolean).length;
-  const hasActive = activeCount > 0;
+  const [searchDraft, setSearchDraft] = useState(filters.query ?? "");
+  const [debouncedSearch] = useDebounce(searchDraft, 350);
+
+  // Sync draft when URL resets externally
+  useEffect(() => {
+    setSearchDraft(filters.query ?? "");
+  }, [filters.query]);
+
+  // Propagate debounced value
+  useEffect(() => {
+    if (debouncedSearch !== (filters.query ?? "")) {
+      onFilterChange("query", debouncedSearch);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
+
+  const hasActive = Boolean(filters.status || filters.work_state || filters.query || filters.year);
 
   const handleReset = () => {
+    setSearchDraft("");
     onFilterChange("status", "");
     onFilterChange("work_state", "");
     onFilterChange("query", "");
@@ -31,19 +44,16 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-        <div className="relative">
-          <Search className="absolute right-3 top-1/2 mt-3 h-4 w-4 -translate-y-1/2 text-gray-400 pointer-events-none" />
-          <Input
-            label="חיפוש"
-            type="text"
-            value={filters.query ?? ""}
-            onChange={(e) => onFilterChange("query", e.target.value)}
-            placeholder="שם לקוח או מספר קלסר..."
-            className="pr-9"
-          />
-        </div>
+        <Input
+          label="חיפוש"
+          type="text"
+          value={searchDraft}
+          onChange={(e) => setSearchDraft(e.target.value)}
+          placeholder="שם לקוח או מספר קלסר..."
+          leftIcon={<Search className="h-4 w-4" />}
+        />
         <Select
           label="סטטוס"
           value={filters.status ?? ""}
@@ -70,7 +80,7 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
       {hasActive && (
         <div className="flex flex-wrap items-center gap-2 animate-fade-in">
           {filters.query && (
-            <ActivePill label={`חיפוש: ${filters.query}`} onRemove={() => onFilterChange("query", "")} />
+            <ActivePill label={`חיפוש: ${filters.query}`} onRemove={() => { setSearchDraft(""); onFilterChange("query", ""); }} />
           )}
           {filters.status && (
             <ActivePill

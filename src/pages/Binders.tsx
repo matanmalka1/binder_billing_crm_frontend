@@ -97,12 +97,6 @@ export const Binders: React.FC = () => {
 
       {error && <ErrorCard message={error} />}
 
-      {!loading && (
-        <p className="text-sm text-gray-500 text-right">
-          סה"כ {total} קלסרים
-        </p>
-      )}
-
       <DataTable
         data={binders}
         columns={columns}
@@ -146,6 +140,8 @@ export const Binders: React.FC = () => {
         mode={effectiveMode}
         binder={selectedBinder}
         onClose={handleCloseDrawerAll}
+        onAction={onAction}
+        activeActionKeyRef={activeActionKeyRef}
         receiveForm={receive.form}
         clientQuery={receive.clientQuery}
         selectedClient={receive.selectedClient}

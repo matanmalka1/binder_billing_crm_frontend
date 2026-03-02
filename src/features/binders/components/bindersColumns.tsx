@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
-import { Badge } from "../../../components/ui/Badge";
 import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { Button } from "../../../components/ui/Button";
@@ -9,12 +8,12 @@ import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
 import { mapActions } from "../../../lib/actions/mapActions";
 import {
   getStatusLabel,
-  getWorkStateLabel,
   getBinderTypeLabel,
+  getSignalLabel,
 } from "../../../utils/enums";
 import { formatDate, cn } from "../../../utils/utils";
 import { type RefObject } from "react";
-import { BINDER_WORK_STATE_VARIANTS } from "../types";
+import { BINDER_SIGNAL_VARIANTS } from "../types";
 
 /* ─── Variant maps ───────────────────────────────────────────── */
 
@@ -22,6 +21,53 @@ const binderStatusVariants: Record<string, "success" | "warning" | "error" | "in
   in_office: "info",
   ready_for_pickup: "success",
 };
+
+const signalDotColors: Record<string, string> = {
+  missing_permanent_documents: "bg-yellow-400",
+  unpaid_charges: "bg-yellow-400",
+  ready_for_pickup: "bg-blue-400",
+  idle_binder: "bg-gray-400",
+};
+
+/* ─── Client + signals cell ──────────────────────────────────── */
+
+// eslint-disable-next-line react-refresh/only-export-components
+const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
+  const signals = Array.isArray(binder.signals) ? binder.signals : [];
+  return (
+    <div className="flex flex-col gap-0.5">
+      <Link
+        to={`/clients/${binder.client_id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="text-sm font-semibold text-gray-900 hover:text-primary-700 hover:underline"
+      >
+        {binder.client_name ?? `#${binder.client_id}`}
+      </Link>
+      {signals.length > 0 && (
+        <div className="flex flex-wrap gap-1 mt-0.5">
+          {signals.map((signal) => (
+            <span
+              key={signal}
+              title={getSignalLabel(signal)}
+              className={cn(
+                "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-xs font-medium",
+                BINDER_SIGNAL_VARIANTS[signal] === "warning"
+                  ? "bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200"
+                  : BINDER_SIGNAL_VARIANTS[signal] === "info"
+                  ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
+                  : "bg-gray-50 text-gray-600 ring-1 ring-gray-200",
+              )}
+            >
+              <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", signalDotColors[signal] ?? "bg-gray-400")} />
+              {getSignalLabel(signal)}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+ClientCell.displayName = "ClientCell";
 
 /* ─── Days-in-office cell ────────────────────────────────────── */
 
@@ -89,7 +135,7 @@ const ActionCell: React.FC<ActionCellProps> = ({ binder, activeActionKeyRef, onA
     );
   }
 
-  return <span className="text-sm text-gray-400">ממתין</span>;
+  return <span className="text-sm text-gray-400">—</span>;
 };
 ActionCell.displayName = "ActionCell";
 
@@ -146,15 +192,7 @@ export const buildBindersColumns = ({
     headerRender: () => (
       <SortableHeader label="לקוח" columnKey="client_name" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
     ),
-    render: (binder) => (
-      <Link
-        to={`/clients/${binder.client_id}`}
-        onClick={(e) => e.stopPropagation()}
-        className="text-sm font-semibold text-gray-900 hover:text-primary-700 hover:underline"
-      >
-        {binder.client_name ?? `#${binder.client_id}`}
-      </Link>
-    ),
+    render: (binder) => <ClientCell binder={binder} />,
   },
   {
     key: "binder_number",
@@ -207,15 +245,6 @@ export const buildBindersColumns = ({
       <SortableHeader label="ימים במשרד" columnKey="days_in_office" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
     ),
     render: (binder) => <DaysCell days={binder.days_in_office} />,
-  },
-  {
-    key: "work_state",
-    header: "מצב עבודה",
-    render: (binder) => (
-      <Badge variant={BINDER_WORK_STATE_VARIANTS[binder.work_state ?? ""] ?? "neutral"}>
-        {getWorkStateLabel(binder.work_state ?? "")}
-      </Badge>
-    ),
   },
   {
     key: "actions",
