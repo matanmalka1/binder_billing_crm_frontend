@@ -3,18 +3,18 @@ import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { Badge } from "../../../components/ui/Badge";
 import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
-import { buildActionsColumn } from "../../../components/ui/columnHelpers";
+import { Button } from "../../../components/ui/Button";
 import type { BinderResponse } from "../../../api/binders.types";
 import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
+import { mapActions } from "../../../lib/actions/mapActions";
 import {
   getStatusLabel,
-  getSignalLabel,
   getWorkStateLabel,
   getBinderTypeLabel,
 } from "../../../utils/enums";
 import { formatDate, cn } from "../../../utils/utils";
 import { type RefObject } from "react";
-import { BINDER_SIGNAL_VARIANTS, BINDER_WORK_STATE_VARIANTS } from "../types";
+import { BINDER_WORK_STATE_VARIANTS } from "../types";
 
 /* ─── Variant maps ───────────────────────────────────────────── */
 
@@ -43,43 +43,53 @@ const DaysCell: React.FC<{ days: number | null | undefined }> = ({ days }) => {
 };
 DaysCell.displayName = "DaysCell";
 
-/* ─── Signals cell ───────────────────────────────────────────── */
+/* ─── Smart action cell ──────────────────────────────────────── */
 
-// Priority: lower index = higher severity shown first
-const SIGNAL_PRIORITY = ["unpaid_charges", "missing_permanent_documents", "ready_for_pickup", "idle_binder"];
+interface ActionCellProps {
+  binder: BinderResponse;
+  activeActionKeyRef: RefObject<string | null>;
+  onAction: (action: ActionCommand) => void;
+}
 
-const sortByPriority = (signals: string[]) =>
-  [...signals].sort((a, b) => {
-    const ai = SIGNAL_PRIORITY.indexOf(a);
-    const bi = SIGNAL_PRIORITY.indexOf(b);
-    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
-  });
+const ActionCell: React.FC<ActionCellProps> = ({ binder, activeActionKeyRef, onAction }) => {
+  const actions = mapActions(binder.available_actions as BackendAction[] | null | undefined);
+  const action = actions[0] ?? null;
 
-const SignalsCell: React.FC<{ signals: string[] | null | undefined }> = ({ signals }) => {
-  if (!Array.isArray(signals) || signals.length === 0) {
-    return <span className="text-sm text-gray-400">—</span>;
+  if (binder.status === "ready_for_pickup") {
+    if (!action) return <span className="text-sm text-gray-400">—</span>;
+    return (
+      <Button
+        type="button"
+        variant="primary"
+        size="sm"
+        onClick={(e) => { e.stopPropagation(); onAction(action); }}
+        isLoading={activeActionKeyRef.current === action.uiKey}
+        disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
+      >
+        החזרת קלסר
+      </Button>
+    );
   }
 
-  const sorted = sortByPriority(signals);
-  const [primary, ...rest] = sorted;
+  if (binder.status === "in_office" && binder.work_state === "in_progress") {
+    if (!action) return <span className="text-sm text-gray-400">—</span>;
+    return (
+      <Button
+        type="button"
+        size="sm"
+        onClick={(e) => { e.stopPropagation(); onAction(action); }}
+        isLoading={activeActionKeyRef.current === action.uiKey}
+        disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
+        className="bg-green-600 text-white hover:bg-green-700 active:bg-green-800 shadow-sm"
+      >
+        סיום טיפול
+      </Button>
+    );
+  }
 
-  return (
-    <div className="flex items-center gap-1">
-      <Badge variant={BINDER_SIGNAL_VARIANTS[primary] ?? "neutral"}>
-        {getSignalLabel(primary)}
-      </Badge>
-      {rest.length > 0 && (
-        <span
-          className="inline-flex h-5 items-center rounded-full bg-gray-100 px-1.5 text-[11px] font-semibold text-gray-500 cursor-default"
-          title={rest.map(getSignalLabel).join(" · ")}
-        >
-          +{rest.length}
-        </span>
-      )}
-    </div>
-  );
+  return <span className="text-sm text-gray-400">ממתין</span>;
 };
-SignalsCell.displayName = "SignalsCell";
+ActionCell.displayName = "ActionCell";
 
 /* ─── Sortable header ────────────────────────────────────────── */
 
@@ -205,14 +215,10 @@ export const buildBindersColumns = ({
     ),
   },
   {
-    key: "signals",
-    header: "אותות",
-    render: (binder) => <SignalsCell signals={binder.signals} />,
-  },
-  buildActionsColumn<BinderResponse>({
+    key: "actions",
     header: "פעולות",
-    activeActionKeyRef,
-    onAction,
-    getActions: (binder) => binder.available_actions as BackendAction[] | null | undefined,
-  }),
+    render: (binder) => (
+      <ActionCell binder={binder} activeActionKeyRef={activeActionKeyRef} onAction={onAction} />
+    ),
+  },
 ];

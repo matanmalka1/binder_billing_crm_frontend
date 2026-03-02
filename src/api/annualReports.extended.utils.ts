@@ -38,19 +38,6 @@ const statusVariants: Record<AnnualReportStatus, BadgeVariant> = {
 export const getStatusVariant = (status: string): BadgeVariant =>
   (statusVariants as Record<string, BadgeVariant>)[status] ?? "neutral";
 
-// ── Status flow (for progression display) ─────────────────────────────────
-
-export const STATUS_ORDER: AnnualReportStatus[] = [
-  "not_started",
-  "collecting_docs",
-  "docs_complete",
-  "in_preparation",
-  "pending_client",
-  "submitted",
-  "accepted",
-  "closed",
-];
-
 // Valid transitions (mirrors backend constants.py)
 const validTransitions: Record<AnnualReportStatus, AnnualReportStatus[]> = {
   not_started: ["collecting_docs"],

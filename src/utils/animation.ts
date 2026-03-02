@@ -4,4 +4,3 @@ export const staggerDelay = (index: number, stepMs: number = DEFAULT_STEP_MS, of
   return `${offsetMs + index * stepMs}ms`;
 };
 
-export const DEFAULT_ANIMATION_STEP = DEFAULT_STEP_MS;
