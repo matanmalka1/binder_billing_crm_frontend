@@ -9,6 +9,7 @@ import { QK } from "../../../lib/queryKeys";
 import { useRole } from "../../../hooks/useRole";
 import { formatDate } from "../../../utils/utils";
 import { getStatusLabel } from "../../../api/annualReports.extended.utils";
+import { getDeadlineTypeLabel } from "../../../api/taxDeadlines.utils";
 import type { SectionItem } from "../utils";
 
 // Compute once per calendar day — stable across re-renders within the same day
@@ -83,7 +84,7 @@ export const useAdvisorToday = () => {
         .map((d) => ({
           id: d.id,
           label: d.client_name ?? `לקוח #${d.client_id}`,
-          sublabel: `${d.deadline_type} — ${formatDate(d.due_date)}`,
+          sublabel: `${getDeadlineTypeLabel(d.deadline_type)} — ${formatDate(d.due_date)}`,
           href: `/clients/${d.client_id}`,
         })),
     [deadlinesQuery.data, today, weekEnd],

@@ -7,7 +7,6 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { ClientSearchInput } from "./ClientSearchInput";
-import { bindersApi } from "../../../api/binders.api";
 import { usersApi } from "../../../api/users.api";
 import type { BinderResponse } from "../../../api/binders.types";
 import type { UseFormReturn } from "react-hook-form";
@@ -30,11 +29,6 @@ interface DetailContentProps {
 }
 
 const DetailContent: React.FC<DetailContentProps> = ({ binder, onOpenClient }) => {
-  const historyQuery = useQuery({
-    queryKey: QK.binders.history(binder.id),
-    queryFn: () => bindersApi.getHistory(binder.id),
-  });
-
   const usersQuery = useQuery({
     queryKey: QK.users.list({ page_size: 100 }),
     queryFn: () => usersApi.list({ page_size: 100 }),
@@ -105,41 +99,10 @@ const DetailContent: React.FC<DetailContentProps> = ({ binder, onOpenClient }) =
         </DrawerSection>
       )}
 
-      <DrawerSection title="היסטוריית סטטוסים">
-        {historyQuery.isPending && (
-          <p className="py-3 text-sm text-gray-400">טוען היסטוריה...</p>
-        )}
-        {historyQuery.data && historyQuery.data.history.length === 0 && (
-          <p className="py-3 text-sm text-gray-400">אין רשומות היסטוריה</p>
-        )}
-        {historyQuery.data && historyQuery.data.history.length > 0 && (
-          <div className="divide-y divide-gray-50">
-            {historyQuery.data.history.map((entry, i) => (
-              <div key={i} className="py-2.5 text-sm">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs text-gray-400 tabular-nums">{formatDate(entry.changed_at)}</span>
-                  <span className="text-xs text-gray-400">
-                    {userMap[entry.changed_by] ?? `#${entry.changed_by}`}
-                  </span>
-                </div>
-                <div className="mt-1 flex items-center gap-1.5 text-gray-700">
-                  <span className="text-gray-500">{getStatusLabel(entry.old_status)}</span>
-                  <span className="text-gray-300">→</span>
-                  <span className="font-medium">{getStatusLabel(entry.new_status)}</span>
-                </div>
-                {entry.notes && (
-                  <p className="mt-0.5 text-xs text-gray-400">{entry.notes}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </DrawerSection>
-
-      <div className="pt-1">
+<div className="pt-1">
         <Button variant="ghost" size="sm" onClick={onOpenClient} className="gap-2 text-gray-600">
-          <ExternalLink className="h-4 w-4" />
           פתח כרטיס לקוח
+          <ExternalLink className="h-4 w-4" />
         </Button>
       </div>
     </>
