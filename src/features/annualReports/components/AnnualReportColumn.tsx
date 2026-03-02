@@ -31,7 +31,7 @@ export const AnnualReportColumn: React.FC<AnnualReportColumnProps> = ({
 
   return (
     <div
-      className="w-72 shrink-0 animate-fade-in flex flex-col"
+      className="w-64 shrink-0 animate-fade-in flex flex-col"
       style={{ animationDelay: staggerDelay(stageIndex) }}
     >
       {/* Column header */}

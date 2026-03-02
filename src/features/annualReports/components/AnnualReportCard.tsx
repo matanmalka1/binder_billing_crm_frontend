@@ -1,7 +1,4 @@
-import { ArrowRight, ArrowLeft, Info, Clock, AlertTriangle } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
-import { Badge } from "../../../components/ui/Badge";
-import { Button } from "../../../components/ui/Button";
+import { ArrowRight, ArrowLeft, Clock, AlertTriangle } from "lucide-react";
 import { staggerDelay } from "../../../utils/animation";
 import { cn } from "../../../utils/utils";
 import type { StageKey } from "../types";
@@ -28,7 +25,7 @@ const DeadlinePill: React.FC<{ days: number | null }> = ({ days }) => {
 
   if (days < 0) {
     return (
-      <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-600">
+      <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-600">
         <AlertTriangle className="h-3 w-3" />
         באיחור {Math.abs(days)} ימים
       </span>
@@ -36,14 +33,14 @@ const DeadlinePill: React.FC<{ days: number | null }> = ({ days }) => {
   }
   if (days <= 7) {
     return (
-      <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-orange-50 px-2 py-0.5 text-xs font-semibold text-orange-600">
+      <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2 py-0.5 text-xs font-semibold text-orange-600">
         <Clock className="h-3 w-3" />
         {days} ימים נותרו
       </span>
     );
   }
   return (
-    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
+    <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
       <Clock className="h-3 w-3" />
       {days} ימים
     </span>
@@ -61,26 +58,37 @@ export const AnnualReportCard: React.FC<AnnualReportCardProps> = ({
   animationIndex,
 }) => {
   return (
-    <Card
-      variant="elevated"
-      className="transition-all duration-200 animate-scale-in hover:shadow-md"
+    <div
+      className={cn(
+        "rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 animate-scale-in",
+        "hover:shadow-md hover:border-gray-300",
+        isTransitioning && "opacity-60 pointer-events-none",
+      )}
       style={{ animationDelay: staggerDelay(animationIndex) }}
     >
-      {/* Client name + year badge */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex-1 min-w-0">
-          <h4 className="truncate text-sm font-semibold text-gray-900 leading-tight">
+      {/* Clickable main area */}
+      <button
+        type="button"
+        onClick={() => onOpenDetail(report.id)}
+        className="w-full text-right px-4 pt-4 pb-3 block"
+      >
+        <div className="flex items-start justify-between gap-1.5">
+          <h4 className="truncate text-sm font-semibold text-gray-900 leading-tight flex-1">
             {report.client_name}
           </h4>
-          <DeadlinePill days={report.days_until_due} />
+          <span className="shrink-0 rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-500 tabular-nums">
+            {report.tax_year}
+          </span>
         </div>
-        <Badge variant="info" className="shrink-0 font-mono text-xs">
-          {report.tax_year}
-        </Badge>
-      </div>
+        {report.days_until_due !== null && (
+          <div className="mt-1.5">
+            <DeadlinePill days={report.days_until_due} />
+          </div>
+        )}
+      </button>
 
-      {/* Action row */}
-      <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-2">
+      {/* Arrow row */}
+      <div className="flex items-center justify-between border-t border-gray-100 px-2 py-2">
         <button
           type="button"
           onClick={() => onTransition(report.id, stageKey, "back")}
@@ -93,19 +101,10 @@ export const AnnualReportCard: React.FC<AnnualReportCardProps> = ({
               : "invisible pointer-events-none",
           )}
         >
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-3.5 w-3.5" />
         </button>
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => onOpenDetail(report.id)}
-          className="gap-1 text-xs px-2"
-        >
-          <Info className="h-3.5 w-3.5" />
-          פרטים
-        </Button>
+        <span className="text-xs text-gray-400 select-none">העבר שלב</span>
 
         <button
           type="button"
@@ -120,9 +119,9 @@ export const AnnualReportCard: React.FC<AnnualReportCardProps> = ({
             isTransitioning && "animate-pulse",
           )}
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-3.5 w-3.5" />
         </button>
       </div>
-    </Card>
+    </div>
   );
 };

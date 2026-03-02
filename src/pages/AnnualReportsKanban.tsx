@@ -5,7 +5,6 @@ import { ErrorCard } from "../components/ui/ErrorCard";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { Button } from "../components/ui/Button";
 import { AnnualReportColumn } from "../features/annualReports/components/AnnualReportColumn";
-import { AnnualReportsLegend } from "../features/annualReports/components/AnnualReportsLegend";
 import { AnnualReportDetailDrawer } from "../features/annualReports/components/AnnualReportDetailDrawer";
 import { SeasonSummaryCards } from "../features/annualReports/components/SeasonSummaryCards";
 import { SeasonProgressBar } from "../features/annualReports/components/SeasonProgressBar";
@@ -137,7 +136,6 @@ export const AnnualReportsKanban: React.FC = () => {
             </div>
           </div>
 
-          <AnnualReportsLegend />
 
           {totalPages > 1 && (
             <PaginationCard

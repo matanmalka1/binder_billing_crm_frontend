@@ -54,26 +54,20 @@ const DeadlineCell: React.FC<{ report: AnnualReportFull }> = ({ report }) => {
 
 const columns: Column<AnnualReportFull>[] = [
   {
-    key: "client_id",
+    key: "client_name",
     header: "לקוח",
     render: (r) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">#{r.client_id}</span>
-    ),
-  },
-  {
-    key: "form_type",
-    header: "טופס",
-    render: (r) => (
-      <Badge variant="neutral" className="font-mono text-xs">
-        {r.form_type}
-      </Badge>
+      <span className="text-sm font-medium text-gray-900">{r.client_name ?? `לקוח #${r.client_id}`}</span>
     ),
   },
   {
     key: "client_type",
-    header: "סוג לקוח",
+    header: "סוג / טופס",
     render: (r) => (
-      <span className="text-sm text-gray-600">{getClientTypeLabel(r.client_type)}</span>
+      <div className="flex flex-col gap-0.5">
+        <span className="text-sm text-gray-700">{getClientTypeLabel(r.client_type)}</span>
+        <Badge variant="neutral" className="font-mono text-xs w-fit">{r.form_type}</Badge>
+      </div>
     ),
   },
   {
@@ -84,16 +78,16 @@ const columns: Column<AnnualReportFull>[] = [
     ),
   },
   {
+    key: "filing_deadline",
+    header: "מועד הגשה",
+    render: (r) => <DeadlineCell report={r} />,
+  },
+  {
     key: "deadline_type",
     header: "סוג מועד",
     render: (r) => (
       <span className="text-sm text-gray-500">{getDeadlineTypeLabel(r.deadline_type)}</span>
     ),
-  },
-  {
-    key: "filing_deadline",
-    header: "מועד הגשה",
-    render: (r) => <DeadlineCell report={r} />,
   },
   {
     key: "submitted_at",
