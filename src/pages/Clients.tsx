@@ -19,11 +19,9 @@ export const Clients: React.FC = () => {
 
   const {
     activeActionKey,
-    activeActionKeyRef,
     clients,
     error,
     filters,
-    onAction,
     handleFilterChange,
     loading,
     pendingAction,
@@ -37,10 +35,10 @@ export const Clients: React.FC = () => {
     can,
   } = useClientsPage();
 
-  const columns = useMemo(
-    () => buildClientColumns({ activeActionKeyRef, onAction }),
-    [activeActionKeyRef, onAction],
-  );
+  const activeCount = clients.filter((c) => c.status === "active").length;
+  const frozenCount = clients.filter((c) => c.status === "frozen").length;
+
+  const columns = useMemo(() => buildClientColumns(), []);
 
   const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
 
@@ -70,6 +68,12 @@ export const Clients: React.FC = () => {
       </InlineToolbar>
 
       {error && <ErrorCard message={error} />}
+
+      {!loading && total > 0 && (
+        <p className="text-sm text-gray-500">
+          סה&quot;כ {total} לקוחות · {activeCount} פעילים · {frozenCount} מוקפאים
+        </p>
+      )}
 
       <DataTable
         data={clients}

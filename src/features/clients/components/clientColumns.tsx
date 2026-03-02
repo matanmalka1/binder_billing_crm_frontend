@@ -1,12 +1,9 @@
-import { type RefObject } from "react";
 import { Link } from "react-router-dom";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ClientResponse } from "../../../api/clients.api";
-import { buildActionsColumn } from "../../../components/ui/columnHelpers";
 import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
-import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
 
 const clientStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   active: "success",
@@ -14,15 +11,7 @@ const clientStatusVariants: Record<string, "success" | "warning" | "error" | "in
   closed: "neutral",
 };
 
-interface BuildClientColumnsParams {
-  activeActionKeyRef: RefObject<string | null>;
-  onAction: (action: ActionCommand) => void;
-}
-
-export const buildClientColumns = ({
-  activeActionKeyRef,
-  onAction,
-}: BuildClientColumnsParams): Column<ClientResponse>[] => [
+export const buildClientColumns = (): Column<ClientResponse>[] => [
   {
     key: "full_name",
     header: "שם",
@@ -78,14 +67,8 @@ export const buildClientColumns = ({
         onClick={(e) => e.stopPropagation()}
         className="inline-flex items-center rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
       >
-        צפייה
+        ציר זמן ←
       </Link>
     ),
   },
-  buildActionsColumn<ClientResponse>({
-    header: "פעולות",
-    activeActionKeyRef,
-    onAction,
-    getActions: (client) => client.available_actions as BackendAction[] | null | undefined,
-  }),
-  ];
+];

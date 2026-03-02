@@ -78,6 +78,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="binders" element={<Binders />} />
             <Route path="clients" element={<Clients />} />
             <Route path="clients/:clientId" element={<ClientDetails />} />
+            <Route path="clients/:clientId/timeline" element={<ClientDetails initialTab="timeline" />} />
             <Route path="search" element={<Search />} />
             <Route path="charges" element={<Charges />} />
             <Route path="tax" element={<Navigate to="/tax/deadlines" replace />} />

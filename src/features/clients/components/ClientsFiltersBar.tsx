@@ -36,16 +36,6 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
       />
 
       <Select
-        label="אותות תפעוליים"
-        value={filters.has_signals}
-        onChange={(e) => onFilterChange("has_signals", e.target.value)}
-      >
-        <option value="">הכל</option>
-        <option value="true">עם אותות</option>
-        <option value="false">ללא אותות</option>
-      </Select>
-
-      <Select
         label="סטטוס לקוח"
         value={filters.status}
         onChange={(e) => onFilterChange("status", e.target.value)}

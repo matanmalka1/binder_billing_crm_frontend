@@ -21,6 +21,10 @@ import { cn } from "../utils/utils";
 
 type ActiveTab = "details" | "documents" | "timeline";
 
+interface ClientDetailsProps {
+  initialTab?: ActiveTab;
+}
+
 const TAB_LABELS: Record<ActiveTab, string> = {
   details: "פרטים",
   documents: "מסמכים",
@@ -29,10 +33,10 @@ const TAB_LABELS: Record<ActiveTab, string> = {
 
 const EDIT_FORM_ID = "client-edit-form";
 
-export const ClientDetails: React.FC = () => {
+export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "details" }) => {
   const { clientId } = useParams<{ clientId: string }>();
   const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState<ActiveTab>("details");
+  const [activeTab, setActiveTab] = useState<ActiveTab>(initialTab);
   const clientIdNum = clientId ? Number(clientId) : null;
 
   const { client, isValidId, isLoading, error, binders, bindersTotal, charges, chargesTotal,

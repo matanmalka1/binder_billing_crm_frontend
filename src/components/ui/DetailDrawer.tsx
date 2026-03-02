@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "../../utils/utils";
 
 interface DetailDrawerProps {
@@ -32,6 +32,17 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && open) {
+        handleClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, handleClose]);
+
   return (
     <>
       <div
@@ -48,6 +59,9 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
           "transition-transform duration-300 ease-in-out",
           open ? "translate-x-0" : "translate-x-full",
         )}
+        role="dialog"
+        aria-modal="true"
+        aria-label={typeof title === "string" ? title : undefined}
       >
         {/* Header */}
         <div className="flex shrink-0 items-start justify-between border-b border-gray-100 px-6 py-4" dir="rtl">
