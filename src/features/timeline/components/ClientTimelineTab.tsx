@@ -1,6 +1,5 @@
 import { useClientTimelinePage } from "../hooks/useClientTimelinePage";
 import { TimelineCommandBar } from "./TimelineCommandBar";
-import { TimelineFilterPanel } from "./TimelineFilterPanel";
 import { TimelineCard } from "./TimelineCard";
 import { ConfirmDialog } from "../../actions/components/ConfirmDialog";
 import { PaginationCard } from "../../../components/ui/PaginationCard";
@@ -42,15 +41,10 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }
     <div className="space-y-4">
       <TimelineCommandBar
         total={summary.totalOnPage}
-        filteredCount={summary.filteredTotal}
-        actionsCount={summary.filteredAvailableActions}
         hasActiveFilters={filters.hasActiveFilters}
         lastEventTimestamp={summary.lastEventTimestamp}
         refreshing={refreshing}
         onRefresh={refresh}
-      />
-
-      <TimelineFilterPanel
         searchTerm={filters.searchTerm}
         onSearchChange={filters.setSearchTerm}
         typeFilters={filters.typeFilters}
@@ -59,7 +53,6 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }
         pageSize={pageSize}
         onPageSizeChange={setPageSize}
         eventTypeStats={eventTypeStats}
-        hasActiveFilters={filters.hasActiveFilters}
       />
 
       <TimelineCard
