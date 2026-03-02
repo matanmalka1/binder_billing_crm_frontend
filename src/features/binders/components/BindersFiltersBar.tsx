@@ -7,11 +7,19 @@ import { BINDER_STATUS_OPTIONS } from "../types";
 import type { BindersFiltersBarProps } from "../types";
 import { cn } from "../../../utils/utils";
 
+const YEAR_OPTIONS = [
+  { value: "", label: "כל התקופות" },
+  { value: "2026", label: "2026" },
+  { value: "2025", label: "2025" },
+  { value: "2024", label: "2024" },
+];
+
 export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBarProps) => {
   const activeCount = [
     filters.status,
     filters.work_state,
     filters.query,
+    filters.year,
   ].filter(Boolean).length;
   const hasActive = activeCount > 0;
 
@@ -19,11 +27,12 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
     onFilterChange("status", "");
     onFilterChange("work_state", "");
     onFilterChange("query", "");
+    onFilterChange("year", "");
   };
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
         <div className="relative">
           <Search className="absolute right-3 top-1/2 mt-3 h-4 w-4 -translate-y-1/2 text-gray-400 pointer-events-none" />
           <Input
@@ -49,6 +58,13 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
           options={WORK_STATE_OPTIONS}
           className={cn(filters.work_state && "border-blue-400 ring-1 ring-blue-200")}
         />
+        <Select
+          label="תקופה"
+          value={filters.year ?? ""}
+          onChange={(e) => onFilterChange("year", e.target.value)}
+          options={YEAR_OPTIONS}
+          className={cn(filters.year && "border-blue-400 ring-1 ring-blue-200")}
+        />
       </div>
 
       {hasActive && (
@@ -67,6 +83,9 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
               label={WORK_STATE_OPTIONS.find((o) => o.value === filters.work_state)?.label ?? filters.work_state}
               onRemove={() => onFilterChange("work_state", "")}
             />
+          )}
+          {filters.year && (
+            <ActivePill label={filters.year} onRemove={() => onFilterChange("year", "")} />
           )}
           <Button
             type="button"

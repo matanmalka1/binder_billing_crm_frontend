@@ -23,12 +23,6 @@ const STATUS_OPTIONS = [
   { value: "completed", label: "הושלם" },
 ];
 
-const PAGE_SIZE_OPTIONS = [
-  { value: "20", label: "20 בעמוד" },
-  { value: "50", label: "50 בעמוד" },
-  { value: "100", label: "100 בעמוד" },
-];
-
 export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersProps) => {
   const handleReset = () => {
     onChange("client_id", "");
@@ -57,12 +51,6 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
           value={filters.status}
           onChange={(e) => onChange("status", e.target.value)}
           options={STATUS_OPTIONS}
-        />
-        <Select
-          label="גודל עמוד"
-          value={String(filters.page_size)}
-          onChange={(e) => onChange("page_size", e.target.value)}
-          options={PAGE_SIZE_OPTIONS}
         />
       </div>
     </FilterBar>

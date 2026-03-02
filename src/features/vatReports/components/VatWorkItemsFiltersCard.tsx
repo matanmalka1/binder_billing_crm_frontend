@@ -19,12 +19,6 @@ const STATUS_OPTIONS = [
   { value: "filed", label: "הוגש" },
 ];
 
-const PAGE_SIZE_OPTIONS = [
-  { value: "20", label: "20 בעמוד" },
-  { value: "50", label: "50 בעמוד" },
-  { value: "100", label: "100 בעמוד" },
-];
-
 export const VatWorkItemsFiltersCard = ({
   filters,
   onClear,
@@ -40,12 +34,6 @@ export const VatWorkItemsFiltersCard = ({
           value={filters.status}
           onChange={(e) => onFilterChange("status", e.target.value)}
           options={STATUS_OPTIONS}
-        />
-        <Select
-          label="גודל עמוד"
-          value={String(filters.page_size)}
-          onChange={(e) => onFilterChange("page_size", e.target.value)}
-          options={PAGE_SIZE_OPTIONS}
         />
         <div className="flex items-end">
           <Button

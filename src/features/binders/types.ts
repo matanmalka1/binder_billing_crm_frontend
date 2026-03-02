@@ -1,6 +1,8 @@
 import type { ListBindersParams } from "../../api/binders.types";
 
-export type BindersFilters = Omit<ListBindersParams, "client_name" | "binder_number">;
+export type BindersFilters = Omit<ListBindersParams, "client_name" | "binder_number" | "year"> & {
+  year?: string;
+};
 
 export interface BindersFiltersBarProps {
   filters: BindersFilters;

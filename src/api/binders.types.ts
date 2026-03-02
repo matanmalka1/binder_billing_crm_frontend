@@ -62,6 +62,7 @@ export interface ListBindersParams {
   page_size?: number;
   sort_by?: string;
   sort_dir?: string;
+  year?: number;
 }
 
 export interface ListOperationalBindersParams {

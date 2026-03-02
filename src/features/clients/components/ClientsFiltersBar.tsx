@@ -55,16 +55,6 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
         <option value="frozen">מוקפא</option>
         <option value="closed">סגור</option>
       </Select>
-
-      <Select
-        label="גודל עמוד"
-        value={String(filters.page_size)}
-        onChange={(e) => onFilterChange("page_size", e.target.value)}
-      >
-        <option value="20">20</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-      </Select>
     </div>
   );
 };
