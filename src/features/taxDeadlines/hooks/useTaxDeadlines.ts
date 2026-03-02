@@ -3,9 +3,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { useForm } from "react-hook-form";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
+import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
-import type { TaxDeadlineFilters, CreateTaxDeadlineForm } from "../types";
+import type { TaxDeadlineFilters, CreateTaxDeadlineForm, EditTaxDeadlineForm } from "../types";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
@@ -15,6 +16,8 @@ export const useTaxDeadlines = () => {
   const { searchParams, setFilter } = useSearchParamFilters();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [completingId, setCompletingId] = useState<number | null>(null);
+  const [editingDeadline, setEditingDeadline] = useState<TaxDeadlineResponse | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const filters: TaxDeadlineFilters = useMemo(
     () => ({
@@ -59,6 +62,29 @@ export const useTaxDeadlines = () => {
     onError: (error) => showErrorToast(error, "שגיאה ביצירת מועד"),
   });
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, payload }: {
+      id: number;
+      payload: { deadline_type?: string; due_date?: string; payment_amount?: number | null; description?: string | null };
+    }) => taxDeadlinesApi.updateTaxDeadline(id, payload),
+    onSuccess: () => {
+      toast.success("מועד עודכן בהצלחה");
+      queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
+      setEditingDeadline(null);
+    },
+    onError: (error) => showErrorToast(error, "שגיאה בעדכון מועד"),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (deadlineId: number) => taxDeadlinesApi.deleteTaxDeadline(deadlineId),
+    onSuccess: () => {
+      toast.success("מועד נמחק בהצלחה");
+      queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
+    },
+    onError: (error) => showErrorToast(error, "שגיאה במחיקת מועד"),
+    onSettled: () => setDeletingId(null),
+  });
+
   const completeMutation = useMutation({
     mutationFn: (deadlineId: number) => taxDeadlinesApi.completeTaxDeadline(deadlineId),
     onSuccess: () => {
@@ -67,6 +93,10 @@ export const useTaxDeadlines = () => {
     },
     onError: (error) => showErrorToast(error, "שגיאה בסימון מועד"),
     onSettled: () => setCompletingId(null),
+  });
+
+  const editForm = useForm<EditTaxDeadlineForm>({
+    defaultValues: { deadline_type: "", due_date: "", payment_amount: "", description: "" },
   });
 
   const form = useForm<CreateTaxDeadlineForm>({
@@ -90,11 +120,40 @@ export const useTaxDeadlines = () => {
     form.reset();
   });
 
+  const onEditSubmit = editForm.handleSubmit(async (values) => {
+    if (!editingDeadline) return;
+    await updateMutation.mutateAsync({
+      id: editingDeadline.id,
+      payload: {
+        deadline_type: values.deadline_type || undefined,
+        due_date: values.due_date || undefined,
+        payment_amount: values.payment_amount ? Number(values.payment_amount) : null,
+        description: values.description || null,
+      },
+    });
+    editForm.reset();
+  });
+
   const handleFilterChange = (key: string, value: string) => setFilter(key, value);
 
   const handleComplete = async (deadlineId: number) => {
     setCompletingId(deadlineId);
     await completeMutation.mutateAsync(deadlineId);
+  };
+
+  const handleEdit = (deadline: TaxDeadlineResponse) => {
+    setEditingDeadline(deadline);
+    editForm.reset({
+      deadline_type: deadline.deadline_type,
+      due_date: deadline.due_date,
+      payment_amount: deadline.payment_amount != null ? String(deadline.payment_amount) : "",
+      description: deadline.description ?? "",
+    });
+  };
+
+  const handleDelete = (deadlineId: number) => {
+    setDeletingId(deadlineId);
+    deleteMutation.mutate(deadlineId);
   };
 
   const deadlines = deadlinesQuery.data?.items ?? [];
@@ -113,14 +172,22 @@ export const useTaxDeadlines = () => {
       ? getErrorMessage(deadlinesQuery.error, "שגיאה בטעינת מועדים")
       : null,
     isCreating: createMutation.isPending,
+    isUpdating: updateMutation.isPending,
     completingId,
+    deletingId,
     showCreateModal,
+    editingDeadline,
     // Actions
     setShowCreateModal,
+    setEditingDeadline,
     handleFilterChange,
     handleComplete,
-    // Form
+    handleEdit,
+    handleDelete,
+    // Forms
     form,
     onSubmit,
+    editForm,
+    onEditSubmit,
   };
 };

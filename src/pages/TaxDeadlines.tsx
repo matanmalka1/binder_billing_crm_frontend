@@ -8,6 +8,7 @@ import { Button } from "../components/ui/Button";
 import { TaxDeadlinesFilters } from "../features/taxDeadlines/components/TaxDeadlinesFilters";
 import { TaxDeadlinesTable } from "../features/taxDeadlines/components/TaxDeadlinesTable";
 import { TaxDeadlineForm } from "../features/taxDeadlines/components/TaxDeadlineForm";
+import { EditTaxDeadlineFormModal } from "../features/taxDeadlines/components/EditTaxDeadlineForm";
 import { TaxDeadlineDrawer } from "../features/taxDeadlines/components/TaxDeadlineDrawer";
 import { useTaxDeadlines } from "../features/taxDeadlines/hooks/useTaxDeadlines";
 import { useTaxDashboard } from "../features/taxDashboard/hooks/useTaxDashboard";
@@ -20,13 +21,21 @@ export const TaxDeadlines: React.FC = () => {
     isLoading,
     error,
     isCreating,
+    isUpdating,
     handleFilterChange,
     handleComplete,
+    handleEdit,
+    handleDelete,
     showCreateModal,
     setShowCreateModal,
+    setEditingDeadline,
+    editingDeadline,
     completingId,
+    deletingId,
     form,
     onSubmit,
+    editForm,
+    onEditSubmit,
     deadlines,
     total,
     totalPages,
@@ -79,6 +88,9 @@ export const TaxDeadlines: React.FC = () => {
         onComplete={handleComplete}
         completingId={completingId}
         onRowClick={setSelectedDeadline}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        deletingId={deletingId}
       />
 
       {total > 0 && (
@@ -97,6 +109,14 @@ export const TaxDeadlines: React.FC = () => {
         onSubmit={onSubmit}
         form={form}
         isSubmitting={isCreating}
+      />
+
+      <EditTaxDeadlineFormModal
+        open={editingDeadline !== null}
+        onClose={() => setEditingDeadline(null)}
+        onSubmit={onEditSubmit}
+        form={editForm}
+        isSubmitting={isUpdating}
       />
 
       <TaxDeadlineDrawer

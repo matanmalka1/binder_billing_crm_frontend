@@ -1,4 +1,4 @@
-import { Calendar, CheckCircle2, Inbox } from "lucide-react";
+import { Calendar, CheckCircle2, Inbox, Edit2, Trash2 } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
@@ -18,6 +18,9 @@ interface TaxDeadlinesTableProps {
   onComplete: (id: number) => void;
   completingId: number | null;
   onRowClick?: (deadline: TaxDeadlineResponse) => void;
+  onEdit?: (deadline: TaxDeadlineResponse) => void;
+  onDelete?: (id: number) => void;
+  deletingId?: number | null;
 }
 
 const urgencyRowMap: Record<string, string> = {
@@ -33,6 +36,9 @@ export const TaxDeadlinesTable = ({
   onComplete,
   completingId,
   onRowClick,
+  onEdit,
+  onDelete,
+  deletingId,
 }: TaxDeadlinesTableProps) => {
   if (deadlines.length === 0) {
     return (
@@ -118,18 +124,46 @@ export const TaxDeadlinesTable = ({
                     )}
                   </td>
                   <td className="py-3.5 pr-4">
-                    {!isCompleted && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => { e.stopPropagation(); onComplete(deadline.id); }}
-                        isLoading={completingId === deadline.id}
-                        disabled={completingId !== null && completingId !== deadline.id}
-                      >
-                        סמן הושלם
-                      </Button>
-                    )}
+                    <div
+                      className="flex items-center gap-1"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {!isCompleted && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onComplete(deadline.id)}
+                          isLoading={completingId === deadline.id}
+                          disabled={completingId !== null && completingId !== deadline.id}
+                        >
+                          סמן הושלם
+                        </Button>
+                      )}
+                      {onEdit && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onEdit(deadline)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {onDelete && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          isLoading={deletingId === deadline.id}
+                          onClick={() => onDelete(deadline.id)}
+                          className="h-8 w-8 p-0 text-red-600 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               );

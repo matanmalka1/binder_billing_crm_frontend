@@ -73,6 +73,26 @@ export const taxDeadlinesApi = {
     return response.data;
   },
 
+  updateTaxDeadline: async (
+    deadlineId: number,
+    payload: {
+      deadline_type?: string;
+      due_date?: string;
+      payment_amount?: number | null;
+      description?: string | null;
+    }
+  ): Promise<TaxDeadlineResponse> => {
+    const response = await api.put<TaxDeadlineResponse>(
+      ENDPOINTS.taxDeadlineById(deadlineId),
+      payload
+    );
+    return response.data;
+  },
+
+  deleteTaxDeadline: async (deadlineId: number): Promise<void> => {
+    await api.delete(ENDPOINTS.taxDeadlineById(deadlineId));
+  },
+
   getDashboardDeadlines: async (): Promise<{
     urgent: DeadlineUrgentItem[];
     upcoming: TaxDeadlineResponse[];

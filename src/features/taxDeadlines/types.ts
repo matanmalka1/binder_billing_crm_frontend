@@ -13,3 +13,10 @@ export interface CreateTaxDeadlineForm {
   payment_amount: string;
   description: string;
 }
+
+export interface EditTaxDeadlineForm {
+  deadline_type: string;
+  due_date: string;
+  payment_amount: string;
+  description: string;
+}
