@@ -85,47 +85,34 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
   );
 
   const inner = (
-    <>
-      {/* Top color wash */}
+    <div className="relative flex items-center gap-4 p-4">
+      {/* Icon */}
       <div className={cn(
-        "absolute top-0 left-0 right-0 h-24 bg-gradient-to-b opacity-60",
-        styles.strip
-      )} />
+        "shrink-0 rounded-xl p-2.5 shadow-sm transition-transform duration-300 group-hover:scale-110",
+        styles.iconBg
+      )}>
+        <IconComponent className="h-5 w-5" />
+      </div>
 
-      <div className="relative p-6">
-        {/* Icon row */}
-        <div className="mb-5 flex items-start justify-between">
-          <div className={cn(
-            "rounded-xl p-3 shadow-sm transition-transform duration-300 group-hover:scale-110",
-            styles.iconBg
-          )}>
-            <IconComponent className="h-5 w-5" />
-          </div>
-
-          {stat.urgent && (
-            <span className="relative flex h-2.5 w-2.5 mt-1">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
-            </span>
-          )}
-        </div>
-
-        {/* Value */}
+      {/* Text */}
+      <div className="min-w-0 flex-1">
         <div className={cn(
-          "mb-1 text-4xl font-black tabular-nums tracking-tight leading-none",
+          "text-3xl font-black tabular-nums tracking-tight leading-none",
           styles.value
         )}>
           {count.toLocaleString("he-IL")}
         </div>
-
-        {/* Divider */}
-        <div className="my-3 h-px bg-gray-100" />
-
-        {/* Title + description */}
-        <p className="text-sm font-semibold text-gray-800 mb-0.5">{stat.title}</p>
-        <p className="text-xs text-gray-400 leading-relaxed">{stat.description}</p>
+        <p className="mt-1 text-sm font-semibold text-gray-800 truncate">{stat.title}</p>
+        <p className="text-xs text-gray-400 truncate">{stat.description}</p>
       </div>
-    </>
+
+      {stat.urgent && (
+        <span className="relative flex h-2.5 w-2.5 shrink-0">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
+        </span>
+      )}
+    </div>
   );
 
   if (stat.href) {
