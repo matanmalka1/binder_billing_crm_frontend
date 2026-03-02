@@ -1,45 +1,29 @@
-import { CheckCircle2, FileText, AlertTriangle, Users } from "lucide-react";
-import { StatsCard } from "../../../components/ui/StatsCard";
 import type { TaxSubmissionWidgetResponse } from "../../../api/taxDashboard.api";
 
 interface TaxSubmissionStatsProps {
   data?: TaxSubmissionWidgetResponse;
 }
 
+const Stat = ({ value, label }: { value: number | string; label: string }) => (
+  <div className="flex items-center gap-2.5 px-4 first:pr-0">
+    <span className="text-2xl font-bold tabular-nums text-gray-900">{value}</span>
+    <span className="text-xs leading-tight text-gray-500 max-w-[72px]">{label}</span>
+  </div>
+);
+
 export const TaxSubmissionStats = ({ data }: TaxSubmissionStatsProps) => {
   if (!data) return null;
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      <StatsCard
-        title="דוחות שהוגשו"
-        value={data.reports_submitted}
-        description={`${data.submission_percentage}% מהלקוחות הושלמו`}
-        icon={CheckCircle2}
-        variant="green"
-        trend={{ value: data.submission_percentage, label: "אחוז השלמה" }}
-      />
-      <StatsCard
-        title="בתהליך עבודה"
-        value={data.reports_in_progress}
-        description="דוחות בשלבי הכנה שונים"
-        icon={FileText}
-        variant="blue"
-      />
-      <StatsCard
-        title="טרם התחילו"
-        value={data.reports_not_started}
-        description="ממתינים להתחלת עבודה"
-        icon={AlertTriangle}
-        variant="orange"
-      />
-      <StatsCard
-        title='סה"כ לקוחות'
-        value={data.total_clients}
-        description="מסד לקוחות פעיל"
-        icon={Users}
-        variant="purple"
-      />
+    <div className="flex flex-wrap items-center gap-0 divide-x divide-x-reverse divide-gray-200 rounded-xl border border-gray-200 bg-white px-4 py-3">
+      <Stat value={data.reports_submitted} label="דוחות שהוגשו" />
+      <Stat value={data.reports_in_progress} label="בתהליך עבודה" />
+      <Stat value={data.reports_not_started} label="טרם התחילו" />
+      <Stat value={data.total_clients} label='סה"כ לקוחות' />
+      <div className="mr-auto flex items-center gap-1.5 pr-4">
+        <span className="text-sm font-semibold text-green-700">{data.submission_percentage}%</span>
+        <span className="text-xs text-gray-400">אחוז השלמה</span>
+      </div>
     </div>
   );
 };
