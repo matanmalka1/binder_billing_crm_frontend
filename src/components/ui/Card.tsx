@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/utils";
 
-interface CardProps {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   title?: string;
@@ -23,6 +23,7 @@ export const Card: React.FC<CardProps> = ({
   variant = "default",
   interactive = false,
   style,
+  ...rest
 }) => {
   const variants = {
     default: "bg-white border border-gray-200/80",
@@ -40,6 +41,7 @@ export const Card: React.FC<CardProps> = ({
         className,
       )}
     style={style}
+    {...rest}
     >
       {(title || subtitle || actions) && (
         <div className="px-6 py-4 border-b border-gray-100/80 bg-gradient-to-r from-gray-50/50 to-transparent flex items-start justify-between gap-4">
