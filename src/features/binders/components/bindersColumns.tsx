@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { Badge } from "../../../components/ui/Badge";
 import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
@@ -80,20 +81,58 @@ const SignalsCell: React.FC<{ signals: string[] | null | undefined }> = ({ signa
 };
 SignalsCell.displayName = "SignalsCell";
 
+/* ─── Sortable header ────────────────────────────────────────── */
+
+interface SortableHeaderProps {
+  label: string;
+  columnKey: string;
+  sortBy: string;
+  sortDir: string;
+  onSort: (key: string) => void;
+}
+
+const SortableHeader: React.FC<SortableHeaderProps> = ({ label, columnKey, sortBy, sortDir, onSort }) => {
+  const isActive = sortBy === columnKey;
+  const Icon = isActive ? (sortDir === "asc" ? ChevronUp : ChevronDown) : ChevronsUpDown;
+  return (
+    <button
+      type="button"
+      onClick={() => onSort(columnKey)}
+      className={cn(
+        "inline-flex items-center gap-1 font-semibold uppercase tracking-wide",
+        isActive ? "text-gray-800" : "text-gray-500 hover:text-gray-700",
+      )}
+    >
+      {label}
+      <Icon className="h-3 w-3 shrink-0" />
+    </button>
+  );
+};
+SortableHeader.displayName = "SortableHeader";
+
 /* ─── Column builder ─────────────────────────────────────────── */
 
 interface BuildBindersColumnsParams {
   activeActionKeyRef: RefObject<string | null>;
   onAction: (action: ActionCommand) => void;
+  sortBy: string;
+  sortDir: string;
+  onSort: (key: string) => void;
 }
 
 export const buildBindersColumns = ({
   activeActionKeyRef,
   onAction,
+  sortBy,
+  sortDir,
+  onSort,
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
   {
     key: "client_name",
     header: "לקוח",
+    headerRender: () => (
+      <SortableHeader label="לקוח" columnKey="client_name" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
+    ),
     render: (binder) => (
       <Link
         to={`/clients/${binder.client_id}`}
@@ -125,6 +164,9 @@ export const buildBindersColumns = ({
   {
     key: "status",
     header: "סטטוס",
+    headerRender: () => (
+      <SortableHeader label="סטטוס" columnKey="status" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
+    ),
     render: (binder) => (
       <StatusBadge
         status={binder.status}
@@ -136,6 +178,9 @@ export const buildBindersColumns = ({
   {
     key: "received_at",
     header: "תאריך קבלה",
+    headerRender: () => (
+      <SortableHeader label="תאריך קבלה" columnKey="received_at" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
+    ),
     render: (binder) => (
       <span className="text-sm text-gray-500 tabular-nums">
         {formatDate(binder.received_at)}
@@ -145,6 +190,9 @@ export const buildBindersColumns = ({
   {
     key: "days_in_office",
     header: "ימים במשרד",
+    headerRender: () => (
+      <SortableHeader label="ימים במשרד" columnKey="days_in_office" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
+    ),
     render: (binder) => <DaysCell days={binder.days_in_office} />,
   },
   {
@@ -162,7 +210,7 @@ export const buildBindersColumns = ({
     render: (binder) => <SignalsCell signals={binder.signals} />,
   },
   buildActionsColumn<BinderResponse>({
-    header: "פעולות מהירות",
+    header: "פעולות",
     activeActionKeyRef,
     onAction,
     getActions: (binder) => binder.available_actions as BackendAction[] | null | undefined,

@@ -17,8 +17,7 @@ const getDefaultValues = (): ReceiveBinderFormValues => ({
   received_at: format(new Date(), "yyyy-MM-dd"),
 });
 
-export const useReceiveBinderModal = () => {
-  const [open, setOpen] = useState(false);
+export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   const [clientQuery, setClientQuery] = useState("");
   const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
   const queryClient = useQueryClient();
@@ -47,8 +46,8 @@ export const useReceiveBinderModal = () => {
     onSuccess: async () => {
       toast.success("החומר נקלט בהצלחה");
       await queryClient.invalidateQueries({ queryKey: QK.binders.all });
-      setOpen(false);
       resetState();
+      onSuccess?.();
     },
     onError: (err) => {
       showErrorToast(err, "שגיאה בקליטת חומר");
@@ -69,28 +68,18 @@ export const useReceiveBinderModal = () => {
     }
   };
 
-  const handleOpen = () => {
-    resetState();
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    resetState();
-  };
+  const handleReset = () => resetState();
 
   const handleSubmit = form.handleSubmit((values) => mutation.mutate(values));
 
   return {
-    open,
     form,
     clientQuery,
     selectedClient,
     isSubmitting: mutation.isPending,
-    handleOpen,
-    handleClose,
     handleSubmit,
     handleClientSelect,
     handleClientQueryChange,
+    handleReset,
   };
 };

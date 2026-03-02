@@ -9,6 +9,7 @@ import { TableSkeleton } from "./TableSkeleton";
 export interface Column<T> {
   key: string;
   header: string;
+  headerRender?: () => ReactNode;
   render: (item: T, index: number) => ReactNode;
   className?: string;
   headerClassName?: string;
@@ -77,7 +78,7 @@ export const DataTable = <T,>({
                     column.headerClassName,
                   )}
                 >
-                  {column.header}
+                  {column.headerRender ? column.headerRender() : column.header}
                 </th>
               ))}
             </tr>

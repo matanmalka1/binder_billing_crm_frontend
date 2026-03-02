@@ -19,6 +19,9 @@ export interface BinderResponse {
 
 export interface BinderListResponse {
   items: BinderResponse[];
+  page: number;
+  page_size: number;
+  total: number;
 }
 
 export interface BinderExtended {
@@ -52,8 +55,13 @@ export interface ListBindersParams {
   status?: string;
   client_id?: number;
   work_state?: string;
+  query?: string;
   client_name?: string;
   binder_number?: string;
+  page?: number;
+  page_size?: number;
+  sort_by?: string;
+  sort_dir?: string;
 }
 
 export interface ListOperationalBindersParams {

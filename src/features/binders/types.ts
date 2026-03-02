@@ -1,10 +1,10 @@
 import type { ListBindersParams } from "../../api/binders.types";
 
-export type BindersFilters = ListBindersParams;
+export type BindersFilters = Omit<ListBindersParams, "client_name" | "binder_number">;
 
 export interface BindersFiltersBarProps {
   filters: BindersFilters;
-  onFilterChange: (name: keyof BindersFilters, value: string) => void;
+  onFilterChange: (name: string, value: string) => void;
 }
 
 // ── Shared variant maps (used by both table columns and drawer) ────────────

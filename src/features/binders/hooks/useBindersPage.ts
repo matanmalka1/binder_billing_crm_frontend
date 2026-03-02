@@ -1,38 +1,37 @@
-import { useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
 import { bindersApi } from "../../../api/binders.api";
 import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
-import type { BindersFilters } from "../types";
+import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { QK } from "../../../lib/queryKeys";
 
 export const useBindersPage = () => {
   const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const filters = useMemo<BindersFilters>(
-    () => ({
-      status: searchParams.get("status") ?? "",
-      work_state: searchParams.get("work_state") ?? "",
-      client_id: parsePositiveInt(searchParams.get("client_id"), 0) || undefined,
-      client_name: searchParams.get("client_name") ?? "",
-      binder_number: searchParams.get("binder_number") ?? "",
-    }),
-    [searchParams],
-  );
+  const { searchParams, setFilter, setPage, setSearchParams } = useSearchParamFilters();
+
+  const filters = {
+    status: searchParams.get("status") ?? "",
+    work_state: searchParams.get("work_state") ?? "",
+    client_id: parsePositiveInt(searchParams.get("client_id"), 0) || undefined,
+    query: searchParams.get("query") ?? "",
+    page: parsePositiveInt(searchParams.get("page"), 1),
+    page_size: parsePositiveInt(searchParams.get("page_size"), 20),
+    sort_by: searchParams.get("sort_by") ?? "received_at",
+    sort_dir: searchParams.get("sort_dir") ?? "desc",
+  };
 
   const deepLinkBinderId = parsePositiveInt(searchParams.get("binder_id"), 0) || undefined;
 
-  const listParams = useMemo(
-    () => ({
-      status: filters.status || undefined,
-      client_id: filters.client_id || undefined,
-      work_state: filters.work_state || undefined,
-      client_name: filters.client_name || undefined,
-      binder_number: filters.binder_number || undefined,
-    }),
-    [filters.status, filters.work_state, filters.client_id, filters.client_name, filters.binder_number],
-  );
+  const listParams = {
+    status: filters.status || undefined,
+    client_id: filters.client_id || undefined,
+    work_state: filters.work_state || undefined,
+    query: filters.query || undefined,
+    page: filters.page,
+    page_size: filters.page_size,
+    sort_by: filters.sort_by,
+    sort_dir: filters.sort_dir,
+  };
 
   const bindersQuery = useQuery({
     queryKey: QK.binders.list(listParams),
@@ -52,10 +51,17 @@ export const useBindersPage = () => {
     canonicalAction: true,
   });
 
-  const handleFilterChange = (name: keyof BindersFilters, value: string) => {
+  const handleFilterChange = (name: string, value: string) => {
+    setFilter(name, value);
+  };
+
+  const handleSort = (sortBy: string) => {
+    const currentDir = filters.sort_by === sortBy ? filters.sort_dir : "desc";
+    const nextDir = currentDir === "desc" ? "asc" : "desc";
     const next = new URLSearchParams(searchParams);
-    if (value) next.set(name, value);
-    else next.delete(name);
+    next.set("sort_by", sortBy);
+    next.set("sort_dir", nextDir);
+    next.set("page", "1");
     setSearchParams(next);
   };
 
@@ -76,12 +82,15 @@ export const useBindersPage = () => {
     activeActionKeyRef,
     deepLinkBinderId,
     binders: bindersQuery.data?.items ?? [],
+    total: bindersQuery.data?.total ?? 0,
     error: bindersQuery.error
       ? getErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת קלסרים")
       : null,
     filters,
     onAction,
     handleFilterChange,
+    handleSort,
+    setPage,
     handleSelectBinder,
     handleCloseDrawer,
     loading: bindersQuery.isPending,
