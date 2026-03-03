@@ -5,8 +5,8 @@ import {
   getStatusLabel,
   getStatusVariant,
   getClientTypeLabel,
-  getDeadlineTypeLabel,
 } from "../../../api/annualReports.extended.utils";
+import { getDeadlineTypeLabel } from "../../../api/taxDeadlines.utils";
 import { formatDate } from "../../../utils/utils";
 import { AlertTriangle, Clock } from "lucide-react";
 import { cn } from "../../../utils/utils";

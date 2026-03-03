@@ -57,6 +57,8 @@ export const QK = {
       forClient: (clientId: number) => ["tax", "vat-work-items", "client", clientId] as const,
       invoices: (id: number) => ["tax", "vat-work-items", "invoices", id] as const,
       audit: (id: number) => ["tax", "vat-work-items", "audit", id] as const,
+      clientSummary: (clientId: number) =>
+        ["tax", "vat-work-items", "client-summary", clientId] as const,
     },
     annualReportsForClient: (clientId: number) =>
       ["tax", "annual-reports", "client", clientId] as const,

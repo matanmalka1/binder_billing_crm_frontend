@@ -4,7 +4,7 @@ import type {
   AdvancePaymentStatus,
   CreateAdvancePaymentPayload,
 } from "../../../api/advancePayments.api";
-import { getErrorMessage, showErrorToast } from "../../../utils/utils";
+import { getErrorMessage, getHttpStatus, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
@@ -44,7 +44,13 @@ export const useAdvancePayments = (clientId: number, year: number) => {
       toast.success("מקדמה נוצרה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
     },
-    onError: (err) => showErrorToast(err, "שגיאה ביצירת מקדמה"),
+    onError: (err) => {
+      if (getHttpStatus(err) === 409) {
+        toast.error("מקדמה לחודש זה כבר קיימת");
+      } else {
+        showErrorToast(err, "שגיאה ביצירת מקדמה");
+      }
+    },
   });
 
   const rows = enabled ? (listQuery.data?.items ?? []) : [];

@@ -17,9 +17,11 @@ import { SignatureRequestsCard } from "../features/signatureRequests/components/
 import { ClientRemindersCard } from "../features/reminders/components/ClientRemindersCard";
 import { ClientDocumentsTab } from "../features/documents/components/ClientDocumentsTab";
 import { ClientTimelineTab } from "../features/timeline/components/ClientTimelineTab";
+import { VatClientSummaryPanel } from "../features/vatReports/components/VatClientSummaryPanel";
+import { ClientAdvancePaymentsTab } from "../features/advancedPayments/components/ClientAdvancePaymentsTab";
 import { cn } from "../utils/utils";
 
-type ActiveTab = "details" | "documents" | "timeline";
+type ActiveTab = "details" | "documents" | "timeline" | "vat" | "advance-payments";
 
 interface ClientDetailsProps {
   initialTab?: ActiveTab;
@@ -29,6 +31,8 @@ const TAB_LABELS: Record<ActiveTab, string> = {
   details: "פרטים",
   documents: "מסמכים",
   timeline: "ציר זמן",
+  vat: 'מע"מ',
+  "advance-payments": "מקדמות",
 };
 
 const EDIT_FORM_ID = "client-edit-form";
@@ -64,7 +68,7 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
 
   const tabBar = (
     <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 self-start">
-      {(["details", "documents", "timeline"] as ActiveTab[]).map((tab) => (
+      {(["details", "documents", "timeline", "vat", "advance-payments"] as ActiveTab[]).map((tab) => (
         <button
           key={tab}
           type="button"
@@ -141,6 +145,14 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
 
           {activeTab === "timeline" && (
             <ClientTimelineTab clientId={String(client.id)} />
+          )}
+
+          {activeTab === "advance-payments" && (
+            <ClientAdvancePaymentsTab clientId={client.id} />
+          )}
+
+          {activeTab === "vat" && (
+            <VatClientSummaryPanel clientId={client.id} />
           )}
 
           {/* Edit drawer — overlays page, scroll locked */}

@@ -10,8 +10,8 @@ import {
   getStatusLabel,
   getStatusVariant,
   getClientTypeLabel,
-  getDeadlineTypeLabel,
 } from "../../../api/annualReports.extended.utils";
+import { getDeadlineTypeLabel } from "../../../api/taxDeadlines.utils";
 import { formatDate } from "../../../utils/utils";
 
 interface AnnualReportDetailDrawerProps {

@@ -92,6 +92,33 @@ export interface VatAuditTrailResponse {
   items: VatAuditLogResponse[];
 }
 
+// ── Client Summary ────────────────────────────────────────────────────────────
+
+export interface VatPeriodRow {
+  period: string;
+  status: string;
+  total_output_vat: number;
+  total_input_vat: number;
+  net_vat: number;
+  final_vat_amount: number | null;
+  filed_at: string | null;
+}
+
+export interface VatAnnualSummary {
+  year: number;
+  total_output_vat: number;
+  total_input_vat: number;
+  net_vat: number;
+  periods_count: number;
+  filed_count: number;
+}
+
+export interface VatClientSummaryResponse {
+  client_id: number;
+  periods: VatPeriodRow[];
+  annual: VatAnnualSummary[];
+}
+
 // ── Filing ────────────────────────────────────────────────────────────────────
 
 export interface FileVatReturnPayload {
@@ -178,5 +205,45 @@ export const vatReportsApi = {
       ENDPOINTS.vatWorkItemsByClient(clientId),
     );
     return response.data;
+  },
+
+  getClientSummary: async (clientId: number): Promise<VatClientSummaryResponse> => {
+    const response = await api.get<VatClientSummaryResponse>(
+      ENDPOINTS.vatClientSummary(clientId),
+    );
+    return response.data;
+  },
+
+  exportClientVat: async (
+    clientId: number,
+    format: "excel" | "pdf",
+    year: number,
+  ): Promise<void> => {
+    const response = await api.get<Blob>(ENDPOINTS.vatClientExport(clientId), {
+      params: { format, year },
+      responseType: "blob",
+    });
+
+    const contentDisposition = response.headers["content-disposition"];
+    const filenameMatch = contentDisposition?.match(/filename="?([^";]+)"?/);
+    const ext = format === "excel" ? "xlsx" : "pdf";
+    const filename = filenameMatch?.[1] || `vat_${clientId}_${year}.${ext}`;
+
+    const mimeType =
+      format === "excel"
+        ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        : "application/pdf";
+
+    const blob = new Blob([response.data], {
+      type: response.headers["content-type"] || mimeType,
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   },
 };
