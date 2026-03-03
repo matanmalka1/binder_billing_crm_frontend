@@ -80,17 +80,6 @@ const scheduleLabels: Record<AnnualReportScheduleKey, string> = {
 export const getScheduleLabel = (key: string): string =>
   (scheduleLabels as Record<string, string>)[key] ?? key;
 
-// ── Deadline type labels ───────────────────────────────────────────────────
-
-export const getDeadlineTypeLabel = (type: string): string => {
-  const labels: Record<string, string> = {
-    standard: "סטנדרטי (30 אפריל)",
-    extended: "מורחב (31 ינואר שנה הבאה)",
-    custom: "מותאם אישית",
-  };
-  return labels[type] ?? type;
-};
-
 // ── Season progress helpers ────────────────────────────────────────────────
 
 export const SEASON_PROGRESS_STAGES = [

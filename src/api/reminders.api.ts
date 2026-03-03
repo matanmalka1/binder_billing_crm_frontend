@@ -111,8 +111,4 @@ export const remindersApi = {
     return response.data;
   },
 
-  markSent: async (id: number): Promise<Reminder> => {
-    const response = await api.post<Reminder>(ENDPOINTS.reminderMarkSent(id));
-    return response.data;
-  },
 };
