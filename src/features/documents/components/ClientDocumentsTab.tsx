@@ -10,8 +10,17 @@ interface ClientDocumentsTabProps {
 }
 
 export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId }) => {
-  const { documents, signals, loading, error, submitUpload, uploadError, uploading } =
-    useClientDocumentsTab(clientId);
+  const {
+    documents,
+    signals,
+    loading,
+    error,
+    submitUpload,
+    uploadError,
+    uploading,
+    handleDelete,
+    handleReplace,
+  } = useClientDocumentsTab(clientId);
 
   if (loading) return <TableSkeleton rows={4} columns={2} />;
   if (error) return <ErrorCard message={error} />;
@@ -25,6 +34,8 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
       submitUpload={submitUpload}
       uploadError={uploadError}
       uploading={uploading}
+      onDelete={handleDelete}
+      onReplace={handleReplace}
     />
   );
 };

@@ -65,4 +65,22 @@ export const documentsApi = {
     );
     return response.data;
   },
+
+  deleteDocument: async (id: number): Promise<void> => {
+    await api.delete(ENDPOINTS.documentById(id));
+  },
+
+  replaceDocument: async (
+    id: number,
+    file: File,
+  ): Promise<PermanentDocumentResponse> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.put<PermanentDocumentResponse>(
+      ENDPOINTS.documentReplace(id),
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } },
+    );
+    return response.data;
+  },
 };

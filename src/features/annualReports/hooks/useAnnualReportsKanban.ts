@@ -19,9 +19,14 @@ export const useAnnualReportsKanban = () => {
   const transitionMutation = useMutation({
     mutationFn: async ({ reportId, newStage }: { reportId: number; newStage: StageKey }) =>
       annualReportsApi.transitionStage(reportId, newStage),
-    onSuccess: () => {
+    onSuccess: (_data, { reportId }) => {
       toast.success("דוח הועבר בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      const allReports = kanbanQuery.data?.stages.flatMap((s) => s.reports) ?? [];
+      const report = allReports.find((r) => r.id === reportId);
+      if (report) {
+        queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(report.client_id) });
+      }
     },
     onError: (error) => {
       showErrorToast(error, "שגיאה בהעברת דוח");

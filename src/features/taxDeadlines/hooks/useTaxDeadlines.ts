@@ -54,9 +54,10 @@ export const useTaxDeadlines = () => {
       payment_amount?: number | null;
       description?: string | null;
     }) => taxDeadlinesApi.createTaxDeadline(payload),
-    onSuccess: () => {
+    onSuccess: (_data, payload) => {
       toast.success("מועד נוצר בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
+      queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(payload.client_id) });
       setShowCreateModal(false);
     },
     onError: (error) => showErrorToast(error, "שגיאה ביצירת מועד"),
@@ -87,9 +88,13 @@ export const useTaxDeadlines = () => {
 
   const completeMutation = useMutation({
     mutationFn: (deadlineId: number) => taxDeadlinesApi.completeTaxDeadline(deadlineId),
-    onSuccess: () => {
+    onSuccess: (_data, deadlineId) => {
       toast.success("מועד סומן כהושלם");
       queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
+      const clientId = toOptionalNumber(filters.client_id);
+      if (clientId) {
+        queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(clientId) });
+      }
     },
     onError: (error) => showErrorToast(error, "שגיאה בסימון מועד"),
     onSettled: () => setCompletingId(null),

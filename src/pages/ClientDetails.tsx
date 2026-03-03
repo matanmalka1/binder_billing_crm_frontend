@@ -19,6 +19,7 @@ import { ClientDocumentsTab } from "../features/documents/components/ClientDocum
 import { ClientTimelineTab } from "../features/timeline/components/ClientTimelineTab";
 import { VatClientSummaryPanel } from "../features/vatReports/components/VatClientSummaryPanel";
 import { ClientAdvancePaymentsTab } from "../features/advancedPayments/components/ClientAdvancePaymentsTab";
+import { ClientStatusCard } from "../features/clients/components/ClientStatusCard";
 import { cn } from "../utils/utils";
 
 type ActiveTab = "details" | "documents" | "timeline" | "vat" | "advance-payments";
@@ -104,6 +105,7 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
 
           {activeTab === "details" && (
             <div className="space-y-6">
+              <ClientStatusCard clientId={client.id} />
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 {/* Left column — profile info + tax + contacts + correspondence + signatures */}
                 <div className="space-y-6 lg:col-span-2">

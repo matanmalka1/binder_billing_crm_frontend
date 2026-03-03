@@ -2,7 +2,9 @@ import {
   AlertCircle,
   ArrowLeftRight,
   Bell,
+  CalendarClock,
   CheckCircle,
+  FileText,
   Receipt,
   FolderInput,
   FolderOutput,
@@ -27,6 +29,8 @@ const EVENT_LABELS: Record<string, string> = {
   charge_paid: "תשלום חיוב",
   notification: "התראה",
   notification_sent: "התראה נשלחה",
+  tax_deadline_due: "מועד מס",
+  annual_report_status_changed: "דוח שנתי",
 };
 
 export const getEventTypeLabel = (eventType: string): string =>
@@ -44,6 +48,8 @@ export const getEventIcon = (eventType: string): React.ReactNode => {
     charge_paid: <CheckCircle className="h-3.5 w-3.5" />,
     notification: <Bell className="h-3.5 w-3.5" />,
     notification_sent: <Bell className="h-3.5 w-3.5" />,
+    tax_deadline_due: <CalendarClock className="h-3.5 w-3.5" />,
+    annual_report_status_changed: <FileText className="h-3.5 w-3.5" />,
   };
   return icons[eventType] ?? <AlertCircle className="h-3.5 w-3.5" />;
 };
@@ -151,6 +157,30 @@ const EVENT_COLORS: Record<string, EventColorConfig> = {
 
 EVENT_COLORS.notification_sent = EVENT_COLORS.notification;
 EVENT_COLORS.invoice_attached = EVENT_COLORS.invoice_created;
+EVENT_COLORS.tax_deadline_due = {
+  dotBg: "bg-teal-500",
+  dotBorder: "border-teal-300",
+  cardBorder: "border-r-teal-400",
+  cardTint: "from-teal-50/60",
+  badgeBg: "bg-teal-100",
+  badgeText: "text-teal-700",
+  chipActiveBg: "bg-teal-100",
+  chipActiveText: "text-teal-800",
+  chipActiveBorder: "border-teal-300",
+  iconColor: "text-teal-600",
+};
+EVENT_COLORS.annual_report_status_changed = {
+  dotBg: "bg-indigo-500",
+  dotBorder: "border-indigo-300",
+  cardBorder: "border-r-indigo-400",
+  cardTint: "from-indigo-50/60",
+  badgeBg: "bg-indigo-100",
+  badgeText: "text-indigo-700",
+  chipActiveBg: "bg-indigo-100",
+  chipActiveText: "text-indigo-800",
+  chipActiveBorder: "border-indigo-300",
+  iconColor: "text-indigo-600",
+};
 
 const DEFAULT_EVENT_COLOR: EventColorConfig = {
   dotBg: "bg-gray-400",

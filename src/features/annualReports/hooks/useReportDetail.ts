@@ -39,6 +39,10 @@ export const useReportDetail = (reportId: number | null) => {
       toast.success("סטטוס עודכן בהצלחה");
       if (qk) void queryClient.invalidateQueries({ queryKey: qk });
       void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      const clientId = reportQuery.data?.client_id;
+      if (clientId) {
+        void queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(clientId) });
+      }
     },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון סטטוס"),
   });

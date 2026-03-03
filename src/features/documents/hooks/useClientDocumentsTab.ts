@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   documentsApi,
   type OperationalSignalsResponse,
@@ -7,8 +7,11 @@ import {
 import { getErrorMessage } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { useDocumentUpload } from "./useDocumentUpload";
+import { toast } from "../../../utils/toast";
 
 export const useClientDocumentsTab = (clientId: number) => {
+  const queryClient = useQueryClient();
+
   const documentsQuery = useQuery<PermanentDocumentListResponse>({
     enabled: clientId > 0,
     queryKey: QK.documents.clientList(clientId),
@@ -23,6 +26,23 @@ export const useClientDocumentsTab = (clientId: number) => {
 
   const { submitUpload, uploadError, uploading } = useDocumentUpload(clientId);
 
+  const invalidateDocs = () => {
+    void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) });
+    void queryClient.invalidateQueries({ queryKey: QK.documents.clientSignals(clientId) });
+  };
+
+  const handleDelete = async (id: number) => {
+    await documentsApi.deleteDocument(id);
+    toast.success("מסמך נמחק");
+    invalidateDocs();
+  };
+
+  const handleReplace = async (id: number, file: File) => {
+    await documentsApi.replaceDocument(id, file);
+    toast.success("מסמך הוחלף");
+    invalidateDocs();
+  };
+
   const errorSource = documentsQuery.error ?? signalsQuery.error;
 
   return {
@@ -33,5 +53,7 @@ export const useClientDocumentsTab = (clientId: number) => {
     submitUpload,
     uploadError,
     uploading,
+    handleDelete,
+    handleReplace,
   };
 };
