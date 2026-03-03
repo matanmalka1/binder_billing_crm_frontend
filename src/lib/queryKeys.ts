@@ -32,7 +32,6 @@ export const QK = {
       ["timeline", "client", clientId, "events", params] as const,
   },
   documents: {
-    clients: ["documents", "clients"] as const,
     clientList: (clientId: number) => ["documents", "client", clientId, "list"] as const,
     clientSignals: (clientId: number) => ["documents", "client", clientId, "signals"] as const,
   },
@@ -40,7 +39,6 @@ export const QK = {
     deadlines: {
       all: ["tax", "deadlines"] as const,
       list: (params: object) => ["tax", "deadlines", "list", params] as const,
-      urgent: ["tax", "deadlines", "urgent"] as const,
     },
     annualReports: {
       all: ["tax", "annual-reports"] as const,
@@ -79,7 +77,6 @@ export const QK = {
     forClient: (clientId: number) => ["authority-contacts", "client", clientId] as const,
   },
   advisorToday: {
-    all: ["advisor-today"] as const,
     deadlines: ["advisor-today", "deadlines"] as const,
     reports: ["advisor-today", "reports"] as const,
     reminders: ["advisor-today", "reminders"] as const,

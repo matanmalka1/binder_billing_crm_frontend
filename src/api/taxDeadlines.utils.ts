@@ -9,13 +9,6 @@ const deadlineTypeLabels = {
   other: "אחר",
 };
 
-const urgencyLabels = {
-  green: "תקין",
-  yellow: "קרוב למועד",
-  red: "דחוף",
-  overdue: "באיחור",
-};
-
 const urgencyColors = {
   green: "bg-green-100 text-green-800 border-green-200",
   yellow: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -24,16 +17,7 @@ const urgencyColors = {
   overdue: "bg-red-600 text-white border-red-700",
 };
 
-const deadlineIcons = {
-  vat: "📊",
-  advance_payment: "💰",
-  national_insurance: "🏥",
-  annual_report: "📑",
-  other: "📌",
-};
-
 export const getDeadlineTypeLabel = makeLabelGetter(deadlineTypeLabels, "אחר");
-export const getUrgencyLabel = makeLabelGetter(urgencyLabels);
 export const getUrgencyColor = makeClassGetter(
   urgencyColors,
   undefined,
@@ -49,8 +33,3 @@ export const calculateDaysRemaining = (dueDate: string): number => {
   const due = parseISO(dueDate);
   return differenceInCalendarDays(due, new Date());
 };
-
-export type DeadlineTypeKey = keyof typeof deadlineIcons;
-
-export const getDeadlineIcon = (type: DeadlineTypeKey | string): string =>
-  deadlineIcons[type as DeadlineTypeKey] ?? "📌";
