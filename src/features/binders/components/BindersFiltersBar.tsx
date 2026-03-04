@@ -7,13 +7,11 @@ import { RotateCcw, Search } from "lucide-react";
 import { WORK_STATE_OPTIONS } from "../../../constants/filterOptions.constants";
 import { BINDER_STATUS_OPTIONS } from "../types";
 import type { BindersFiltersBarProps } from "../types";
-import { cn } from "../../../utils/utils";
+import { cn, buildYearOptions } from "../../../utils/utils";
 
 const YEAR_OPTIONS = [
   { value: "", label: "כל התקופות" },
-  { value: "2026", label: "2026" },
-  { value: "2025", label: "2025" },
-  { value: "2024", label: "2024" },
+  ...buildYearOptions(),
 ];
 
 export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBarProps) => {

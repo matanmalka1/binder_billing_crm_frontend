@@ -1,5 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { Modal } from "../../../components/ui/Modal";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
@@ -10,7 +11,8 @@ import {
   type CreateAdvancePaymentFormValues,
 } from "../schemas";
 import { MONTH_OPTIONS } from "../utils";
-import type { CreateAdvancePaymentPayload } from "../../../api/advancePayments.api";
+import { advancePaymentsApi, type CreateAdvancePaymentPayload } from "../../../api/advancePayments.api";
+import { QK } from "../../../lib/queryKeys";
 
 interface CreateAdvancePaymentModalProps {
   open: boolean;
@@ -34,10 +36,18 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
     handleSubmit,
     reset,
     control,
+    setValue,
     formState: { errors },
   } = useForm<CreateAdvancePaymentFormValues>({
     resolver: zodResolver(createAdvancePaymentSchema),
     defaultValues: CREATE_ADVANCE_PAYMENT_DEFAULTS,
+  });
+
+  const { data: suggestion } = useQuery({
+    queryKey: QK.tax.advancePayments.suggestion(clientId, year),
+    queryFn: () => advancePaymentsApi.getSuggestion(clientId, year),
+    enabled: open && clientId > 0 && year > 0,
+    staleTime: 60_000,
   });
 
   const handleClose = () => {
@@ -57,6 +67,12 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
     reset(CREATE_ADVANCE_PAYMENT_DEFAULTS);
     onClose();
   });
+
+  const applySuggestion = () => {
+    if (suggestion?.suggested_amount != null) {
+      setValue("expected_amount", Number(suggestion.suggested_amount), { shouldValidate: true });
+    }
+  };
 
   return (
     <Modal
@@ -98,16 +114,27 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
           name="expected_amount"
           control={control}
           render={({ field }) => (
-            <Input
-              label="סכום צפוי"
-              type="number"
-              min={0}
-              value={field.value ?? ""}
-              onChange={(e) =>
-                field.onChange(e.target.value === "" ? null : Number(e.target.value))
-              }
-              error={errors.expected_amount?.message}
-            />
+            <div className="space-y-1">
+              <Input
+                label="סכום צפוי"
+                type="number"
+                min={0}
+                value={field.value ?? ""}
+                onChange={(e) =>
+                  field.onChange(e.target.value === "" ? null : Number(e.target.value))
+                }
+                error={errors.expected_amount?.message}
+              />
+              {suggestion?.has_data && suggestion.suggested_amount != null && (
+                <button
+                  type="button"
+                  onClick={applySuggestion}
+                  className="text-sm text-blue-600 hover:underline text-right w-full"
+                >
+                  הצעה לפי מחזור שנה קודמת: ₪{suggestion.suggested_amount.toLocaleString("he-IL")} — לחץ למילוי
+                </button>
+              )}
+            </div>
           )}
         />
         <Controller

@@ -37,6 +37,20 @@ export const formatDateTime = (value: string | null): string => {
 };
 
 
+/**
+ * Build a year options array from `from` up to current year + 1, newest first.
+ * Default start: 2010.
+ */
+export const buildYearOptions = (
+  from = 2010,
+): { value: string; label: string }[] => {
+  const end = new Date().getFullYear() + 1;
+  return Array.from({ length: end - from + 1 }, (_, i) => ({
+    value: String(end - i),
+    label: String(end - i),
+  }));
+};
+
 export const getHttpStatus = (error: unknown): number | null => {
   if (!axios.isAxiosError(error)) return null;
   const status = error.response?.status;

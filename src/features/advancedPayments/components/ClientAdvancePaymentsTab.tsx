@@ -5,7 +5,6 @@ import { AdvancePaymentSummary } from "./AdvancePaymentSummary";
 import { AdvancePaymentTable } from "./AdvancePaymentTable";
 import { CreateAdvancePaymentModal } from "./CreateAdvancePaymentModal";
 import { Button } from "../../../components/ui/Button";
-import { YEAR_OPTIONS } from "../utils";
 
 interface ClientAdvancePaymentsTabProps {
   clientId: number;
@@ -25,17 +24,17 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <select
-          value={String(year)}
-          onChange={(e) => setYear(Number(e.target.value))}
-          className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          {YEAR_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+        <input
+          type="number"
+          min={2000}
+          max={2099}
+          value={year}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            if (v >= 2000 && v <= 2099) setYear(v);
+          }}
+          className="w-24 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+        />
 
         {role === "advisor" && (
           <Button variant="primary" size="sm" onClick={() => setModalOpen(true)}>

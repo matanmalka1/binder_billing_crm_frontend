@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { buildYearOptions } from "../../../utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import { vatReportsApi, type VatAnnualSummary, type VatPeriodRow } from "../../../api/vatReports.api";
 import { QK } from "../../../lib/queryKeys";
@@ -134,7 +135,7 @@ const ExportControls = ({ clientId }: ExportControlsProps) => {
     }
   };
 
-  const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
+  const years = buildYearOptions().map((o) => Number(o.value));
 
   return (
     <div className="flex items-center gap-3">

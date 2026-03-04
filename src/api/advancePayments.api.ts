@@ -39,6 +39,13 @@ export interface UpdateAdvancePaymentPayload {
   status?: AdvancePaymentStatus;
 }
 
+export interface AdvancePaymentSuggestionResponse {
+  client_id: number;
+  year: number;
+  suggested_amount: number | null;
+  has_data: boolean;
+}
+
 export const advancePaymentsApi = {
   list: async (
     params: ListAdvancePaymentsParams,
@@ -67,6 +74,17 @@ export const advancePaymentsApi = {
     const response = await api.patch<AdvancePaymentRow>(
       ENDPOINTS.advancePaymentById(id),
       payload,
+    );
+    return response.data;
+  },
+
+  getSuggestion: async (
+    clientId: number,
+    year: number,
+  ): Promise<AdvancePaymentSuggestionResponse> => {
+    const response = await api.get<AdvancePaymentSuggestionResponse>(
+      ENDPOINTS.advancePaymentSuggest,
+      { params: toQueryParams({ client_id: clientId, year }) },
     );
     return response.data;
   },

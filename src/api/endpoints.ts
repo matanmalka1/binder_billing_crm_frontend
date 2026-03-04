@@ -101,6 +101,7 @@ export const ENDPOINTS = {
   annualReportDetails: (id: number | string) => `/annual-reports/${id}/details`,
   advancePayments: "/advance-payments",
   advancePaymentById: (id: number | string) => `/advance-payments/${id}`,
+  advancePaymentSuggest: "/advance-payments/suggest",
   vatClientSummary: (clientId: number | string) => `/vat/client/${clientId}/summary`,
   vatClientExport: (clientId: number | string) => `/vat/client/${clientId}/export`,
   clientStatusCard: (clientId: number | string) => `/clients/${clientId}/status-card`,

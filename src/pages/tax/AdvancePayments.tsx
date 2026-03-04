@@ -2,13 +2,12 @@ import { Plus } from "lucide-react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { ErrorCard } from "../../components/ui/ErrorCard";
 import { Button } from "../../components/ui/Button";
-import { Select } from "../../components/ui/Select";
+import { Input } from "../../components/ui/Input";
 import { ClientSearchField } from "../../features/advancedPayments/components/ClientSearchField";
 import { AdvancePaymentSummary } from "../../features/advancedPayments/components/AdvancePaymentSummary";
 import { AdvancePaymentTable } from "../../features/advancedPayments/components/AdvancePaymentTable";
 import { CreateAdvancePaymentModal } from "../../features/advancedPayments/components/CreateAdvancePaymentModal";
 import { useAdvancePaymentsPage } from "../../features/advancedPayments/hooks/useAdvancePaymentsPage";
-import { YEAR_OPTIONS } from "../../features/advancedPayments/utils";
 
 export const AdvancePayments: React.FC = () => {
   const {
@@ -49,11 +48,16 @@ export const AdvancePayments: React.FC = () => {
             onSelect={handleClientSelect}
             onClear={handleClientClear}
           />
-          <Select
+          <Input
             label="שנת מס"
-            value={String(filters.year)}
-            onChange={(e) => setFilter("year", Number(e.target.value))}
-            options={YEAR_OPTIONS}
+            type="number"
+            min={2000}
+            max={2099}
+            value={filters.year}
+            onChange={(e) => {
+              const v = Number(e.target.value);
+              if (v >= 2000 && v <= 2099) setFilter("year", v);
+            }}
           />
         </div>
         </div>

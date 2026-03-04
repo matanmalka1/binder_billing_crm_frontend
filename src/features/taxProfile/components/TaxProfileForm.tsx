@@ -22,6 +22,7 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
           business_type: profile.business_type ?? "",
           tax_year_start: profile.tax_year_start ? String(profile.tax_year_start) : "",
           accountant_name: profile.accountant_name ?? "",
+          advance_rate: profile.advance_rate ?? null,
         }
       : taxProfileDefaults,
   });
@@ -32,6 +33,7 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
       business_type: values.business_type || null,
       tax_year_start: values.tax_year_start ? Number(values.tax_year_start) : null,
       accountant_name: values.accountant_name || null,
+      advance_rate: values.advance_rate,
     });
   });
 
@@ -53,6 +55,15 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
           {...register("tax_year_start")}
         />
         <Input label="רואה חשבון מלווה" error={errors.accountant_name?.message} {...register("accountant_name")} />
+        <Input
+          label="אחוז מקדמה (%)"
+          type="number"
+          min={0}
+          max={100}
+          step={0.01}
+          error={errors.advance_rate?.message}
+          {...register("advance_rate")}
+        />
       </div>
       <div className="flex gap-2 justify-end pt-2">
         <Button type="button" variant="outline" disabled={isSaving} onClick={onCancel}>

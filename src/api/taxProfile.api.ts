@@ -6,6 +6,7 @@ export interface TaxProfileData {
   business_type: string | null;
   tax_year_start: number | null;
   accountant_name: string | null;
+  advance_rate: number | null;
 }
 
 export const taxProfileApi = {
