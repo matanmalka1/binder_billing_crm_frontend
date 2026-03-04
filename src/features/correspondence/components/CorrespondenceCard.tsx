@@ -29,6 +29,7 @@ export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
     isUpdating,
     deleteEntry,
     deletingId,
+    contacts,
   } = useCorrespondence(clientId);
 
   const handleSubmit = async (data: CorrespondenceFormValues) => {
@@ -107,6 +108,7 @@ export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
         onClose={handleClose}
         onSubmit={handleSubmit}
         existing={editing}
+        contacts={contacts}
       />
     </>
   );

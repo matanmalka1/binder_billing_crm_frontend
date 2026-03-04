@@ -6,6 +6,7 @@ export const correspondenceSchema = z.object({
   subject: z.string().trim().min(1, "יש להזין נושא"),
   notes: z.string().trim().optional().or(z.literal("")),
   occurred_at: z.string().trim().min(1, "יש להזין תאריך"),
+  contact_id: z.number().nullable().optional(),
 });
 
 export type CorrespondenceFormValues = z.infer<typeof correspondenceSchema>;
@@ -15,4 +16,5 @@ export const correspondenceDefaults: CorrespondenceFormValues = {
   subject: "",
   notes: "",
   occurred_at: format(new Date(), "yyyy-MM-dd"),
+  contact_id: null,
 };

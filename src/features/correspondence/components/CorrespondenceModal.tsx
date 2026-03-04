@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
@@ -8,6 +8,7 @@ import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
 import { correspondenceSchema, correspondenceDefaults, type CorrespondenceFormValues } from "../schemas";
 import type { CorrespondenceEntry } from "../../../api/correspondence.api";
+import type { AuthorityContactResponse } from "../../../api/authorityContacts.api";
 import { format } from "date-fns";
 
 interface CorrespondenceModalProps {
@@ -16,6 +17,7 @@ interface CorrespondenceModalProps {
   onClose: () => void;
   onSubmit: (values: CorrespondenceFormValues) => Promise<void>;
   existing?: CorrespondenceEntry | null;
+  contacts?: AuthorityContactResponse[];
 }
 
 export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
@@ -24,11 +26,13 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
   onClose,
   onSubmit,
   existing,
+  contacts = [],
 }) => {
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<CorrespondenceFormValues>({
     resolver: zodResolver(correspondenceSchema),
@@ -43,6 +47,7 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
           subject: existing.subject,
           notes: existing.notes ?? "",
           occurred_at: format(new Date(existing.occurred_at), "yyyy-MM-dd"),
+          contact_id: existing.contact_id ?? null,
         });
       } else {
         reset(correspondenceDefaults);
@@ -98,6 +103,30 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
           error={errors.occurred_at?.message}
           {...register("occurred_at")}
         />
+
+        {contacts.length > 0 && (
+          <Controller
+            name="contact_id"
+            control={control}
+            render={({ field }) => (
+              <Select
+                label="איש קשר (רשות)"
+                value={field.value ?? ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.onChange(val === "" ? null : Number(val));
+                }}
+              >
+                <option value="">ללא איש קשר</option>
+                {contacts.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}{c.office ? ` — ${c.office}` : ""}
+                  </option>
+                ))}
+              </Select>
+            )}
+          />
+        )}
 
         <Textarea
           label="הערות"

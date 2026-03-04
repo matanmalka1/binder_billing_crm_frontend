@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { correspondenceApi } from "../../../api/correspondence.api";
 import type { UpdateCorrespondencePayload } from "../../../api/correspondence.api";
+import { authorityContactsApi } from "../../../api/authorityContacts.api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { CorrespondenceFormValues } from "../schemas";
 import { QK } from "../../../lib/queryKeys";
@@ -19,11 +20,19 @@ export const useCorrespondence = (clientId: number) => {
     retry: false,
   });
 
+  const contactsQuery = useQuery({
+    enabled: clientId > 0,
+    queryKey: [...QK.authorityContacts.forClient(clientId), { page: 1, page_size: 100 }],
+    queryFn: () => authorityContactsApi.listAuthorityContacts(clientId, undefined, 1, 100),
+    staleTime: 60_000,
+  });
+
   const createMutation = useMutation({
     mutationFn: (values: CorrespondenceFormValues) =>
       correspondenceApi.create(clientId, {
         ...values,
         notes: values.notes || null,
+        contact_id: values.contact_id ?? null,
       }),
     onSuccess: () => {
       toast.success("רשומת התכתבות נוספה בהצלחה");
@@ -60,6 +69,7 @@ export const useCorrespondence = (clientId: number) => {
     total: listQuery.data?.total ?? 0,
     isLoading: listQuery.isPending,
     error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת התכתבויות") : null,
+    contacts: contactsQuery.data?.items ?? [],
     createEntry: (values: CorrespondenceFormValues) => createMutation.mutateAsync(values),
     isCreating: createMutation.isPending,
     updateEntry: (id: number, payload: UpdateCorrespondencePayload) =>

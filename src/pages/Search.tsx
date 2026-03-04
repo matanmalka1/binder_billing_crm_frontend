@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { Search as SearchIcon, FileSearch, X } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { InlineToolbar } from "../components/ui/InlineToolbar";
@@ -22,12 +22,6 @@ export const Search: React.FC = () => {
   );
 
   const [filtersOpen, setFiltersOpen] = useState(hasAdvancedFilter);
-
-  // Auto-open advanced panel when navigating here with existing advanced params
-  useEffect(() => {
-    if (hasAdvancedFilter) setFiltersOpen(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const hasAnyFilter = Boolean(filters.query) || hasAdvancedFilter;
   const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
