@@ -18,7 +18,7 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-let isHandlingAuthExpiry = false;
+let authExpiryRefCount = 0;
 
 api.interceptors.response.use(
   (response) => response,
@@ -26,14 +26,16 @@ api.interceptors.response.use(
     const skipIntercept =
       error.config?.headers?.[SKIP_AUTH_INTERCEPT_HEADER] === "1";
 
-    if (error.response?.status === 401 && !skipIntercept && !isHandlingAuthExpiry) {
-      isHandlingAuthExpiry = true;
-      clearPersistedAuthState();
-      window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
-
-      setTimeout(() => {
-        isHandlingAuthExpiry = false;
-      }, 5000);
+    if (error.response?.status === 401 && !skipIntercept) {
+      authExpiryRefCount += 1;
+      if (authExpiryRefCount === 1) {
+        clearPersistedAuthState();
+        window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
+      }
+      // Decrement after this rejection has been processed by all handlers.
+      Promise.resolve().then(() => {
+        authExpiryRefCount = Math.max(0, authExpiryRefCount - 1);
+      });
     }
     return Promise.reject(error);
   },
