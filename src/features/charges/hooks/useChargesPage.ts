@@ -89,6 +89,7 @@ export const useChargesPage = () => {
     payload: CreateChargePayload,
   ): Promise<boolean> => {
     if (!isAdvisor) {
+      toast.error("אין הרשאה ליצור חיוב");
       return false;
     }
 
