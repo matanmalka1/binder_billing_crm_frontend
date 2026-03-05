@@ -23,7 +23,6 @@ export interface ClientResponse {
   address_apartment: string | null;
   address_city: string | null;
   address_zip_code: string | null;
-  business_sector: string | null;
   opened_at: ISODateString;
   closed_at: string | null;
   available_actions?: BackendAction[] | null;
@@ -63,7 +62,6 @@ export interface UpdateClientPayload {
   address_apartment?: string | null;
   address_city?: string | null;
   address_zip_code?: string | null;
-  business_sector?: string | null;
 }
 
 export interface VatSummaryCard {
