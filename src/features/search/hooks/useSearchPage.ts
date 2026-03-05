@@ -24,6 +24,18 @@ export const useSearchPage = () => {
     [searchParams],
   );
 
+  const hasAnyFilter = useMemo(
+    () =>
+      Boolean(filters.query) ||
+      Boolean(filters.client_name) ||
+      Boolean(filters.id_number) ||
+      Boolean(filters.binder_number) ||
+      Boolean(filters.work_state) ||
+      filters.signal_type.length > 0 ||
+      Boolean(filters.has_signals),
+    [filters],
+  );
+
   const searchQuery = useQuery({
     queryKey: QK.search.results(filters),
     queryFn: () =>
@@ -43,6 +55,7 @@ export const useSearchPage = () => {
         page: filters.page,
         page_size: filters.page_size,
       }),
+    enabled: hasAnyFilter,
   });
 
   const handleFilterChange = useCallback(
@@ -75,7 +88,7 @@ export const useSearchPage = () => {
     filters,
     handleFilterChange,
     handleReset,
-    loading: searchQuery.isPending,
+    loading: hasAnyFilter ? searchQuery.isPending : false,
     results: searchQuery.data?.results ?? [],
     total: searchQuery.data?.total ?? 0,
   };
