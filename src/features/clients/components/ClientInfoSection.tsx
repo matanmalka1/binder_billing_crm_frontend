@@ -21,6 +21,19 @@ const statusBadge = (status: string) => (
   </Badge>
 );
 
+/** Formats the five structured address fields into a single human-readable string. */
+const formatStructuredAddress = (client: ClientResponse): string => {
+  const { address_street, address_building_number, address_apartment, address_city, address_zip_code } = client;
+
+  if (!address_street && !address_city) return "—";
+
+  const streetPart = [address_street, address_building_number].filter(Boolean).join(" ");
+  const aptPart = address_apartment ? `דירה ${address_apartment}` : "";
+  const cityPart = [address_zip_code, address_city].filter(Boolean).join(" ");
+
+  return [streetPart, aptPart, cityPart].filter(Boolean).join(", ");
+};
+
 export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   client,
   canEdit,
@@ -33,7 +46,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
     { label: "סטטוס", value: statusBadge(client.status) },
     { label: "טלפון", value: client.phone || "—" },
     { label: "אימייל", value: client.email || "—" },
-    { label: "כתובת", value: client.address || "—" },
+    { label: "כתובת למשלוח", value: formatStructuredAddress(client) },
     { label: "תיק קלסר ראשי", value: client.primary_binder_number || "—" },
     { label: "תאריך פתיחה", value: formatDate(client.opened_at) },
     { label: "תאריך סגירה", value: client.closed_at ? formatDate(client.closed_at) : "—" },

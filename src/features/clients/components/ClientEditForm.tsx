@@ -39,7 +39,11 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       email: client.email ?? "",
       status: client.status as ClientEditFormValues["status"],
       primary_binder_number: client.primary_binder_number ?? "",
-      address: client.address ?? "",
+      address_street: client.address_street ?? "",
+      address_building_number: client.address_building_number ?? "",
+      address_apartment: client.address_apartment ?? "",
+      address_city: client.address_city ?? "",
+      address_zip_code: client.address_zip_code ?? "",
       business_sector: client.business_sector ?? "",
       notes: "",
     },
@@ -51,7 +55,11 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       phone: data.phone || null,
       email: data.email || null,
       primary_binder_number: data.primary_binder_number || null,
-      address: data.address || null,
+      address_street: data.address_street || null,
+      address_building_number: data.address_building_number || null,
+      address_apartment: data.address_apartment || null,
+      address_city: data.address_city || null,
+      address_zip_code: data.address_zip_code || null,
       business_sector: data.business_sector || null,
       notes: data.notes || null,
     });
@@ -103,42 +111,80 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
             <option value="employee">שכיר</option>
           </Select>
           <Input
-            label="תחום עיסוק"
-            placeholder="לדוגמה: בנייה, מסחר, שירותים"
-            error={errors.business_sector?.message}
-            disabled={isLoading}
-            {...register("business_sector")}
-          />
-        </div>
-      </div>
-
-      {/* Contact details */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">פרטי התקשרות</h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Input
             label="טלפון"
-            type="tel"
-            placeholder="050-1234567"
+            placeholder="05X-XXXXXXX"
             error={errors.phone?.message}
             disabled={isLoading}
             {...register("phone")}
           />
+        </div>
+
+        <Input
+          label='דוא"ל'
+          type="email"
+          placeholder="example@domain.com"
+          error={errors.email?.message}
+          disabled={isLoading}
+          {...register("email")}
+        />
+      </div>
+
+      {/* Shipment address */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900">כתובת למשלוח</h3>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Input
-            label="אימייל"
-            type="email"
-            placeholder="הזן כתובת אימייל"
-            error={errors.email?.message}
+            label="רחוב"
+            placeholder="שם הרחוב"
+            error={errors.address_street?.message}
             disabled={isLoading}
-            {...register("email")}
+            {...register("address_street")}
+          />
+          <Input
+            label="מספר בניין"
+            placeholder="מספר"
+            error={errors.address_building_number?.message}
+            disabled={isLoading}
+            {...register("address_building_number")}
           />
         </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <Input
+            label="דירה"
+            placeholder="מספר דירה (אופציונלי)"
+            error={errors.address_apartment?.message}
+            disabled={isLoading}
+            {...register("address_apartment")}
+          />
+          <Input
+            label="עיר"
+            placeholder="שם העיר"
+            error={errors.address_city?.message}
+            disabled={isLoading}
+            {...register("address_city")}
+          />
+        </div>
+
         <Input
-          label="כתובת למשלוח דואר"
-          placeholder="רחוב, עיר, מיקוד"
-          error={errors.address?.message}
+          label="מיקוד"
+          placeholder="מיקוד"
+          error={errors.address_zip_code?.message}
           disabled={isLoading}
-          {...register("address")}
+          {...register("address_zip_code")}
+        />
+      </div>
+
+      {/* Business info */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900">מידע עסקי</h3>
+        <Input
+          label="ענף עסקי"
+          placeholder="לדוגמה: טכנולוגיה, מסחר..."
+          error={errors.business_sector?.message}
+          disabled={isLoading}
+          {...register("business_sector")}
         />
       </div>
 

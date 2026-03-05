@@ -19,7 +19,12 @@ export const clientEditSchema = z.object({
   email: z.string().trim().email("כתובת אימייל לא תקינה").optional().or(z.literal("")),
   status: z.enum(["active", "frozen", "closed"]),
   primary_binder_number: z.string().trim().optional().or(z.literal("")),
-  address: z.string().trim().optional().or(z.literal("")),
+  // Structured address fields
+  address_street: z.string().trim().optional().or(z.literal("")),
+  address_building_number: z.string().trim().optional().or(z.literal("")),
+  address_apartment: z.string().trim().optional().or(z.literal("")),
+  address_city: z.string().trim().optional().or(z.literal("")),
+  address_zip_code: z.string().trim().optional().or(z.literal("")),
   business_sector: z.string().trim().optional().or(z.literal("")),
   notes: z.string().trim().optional().or(z.literal("")),
 });

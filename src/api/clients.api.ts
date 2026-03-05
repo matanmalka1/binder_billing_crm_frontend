@@ -17,7 +17,12 @@ export interface ClientResponse {
   phone: string | null;
   email: string | null;
   notes: string | null;
-  address: string | null;
+  // Structured address fields
+  address_street: string | null;
+  address_building_number: string | null;
+  address_apartment: string | null;
+  address_city: string | null;
+  address_zip_code: string | null;
   business_sector: string | null;
   opened_at: ISODateString;
   closed_at: string | null;
@@ -52,7 +57,12 @@ export interface UpdateClientPayload {
   status?: string;
   client_type?: string;
   primary_binder_number?: string | null;
-  address?: string | null;
+  // Structured address fields
+  address_street?: string | null;
+  address_building_number?: string | null;
+  address_apartment?: string | null;
+  address_city?: string | null;
+  address_zip_code?: string | null;
   business_sector?: string | null;
 }
 
