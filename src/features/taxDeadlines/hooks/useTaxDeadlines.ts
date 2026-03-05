@@ -88,7 +88,7 @@ export const useTaxDeadlines = () => {
 
   const completeMutation = useMutation({
     mutationFn: (deadlineId: number) => taxDeadlinesApi.completeTaxDeadline(deadlineId),
-    onSuccess: (_data, deadlineId) => {
+    onSuccess: () => {
       toast.success("מועד סומן כהושלם");
       queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
       const clientId = toOptionalNumber(filters.client_id);

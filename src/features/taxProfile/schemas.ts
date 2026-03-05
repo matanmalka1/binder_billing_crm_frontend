@@ -8,7 +8,7 @@ export const taxProfileSchema = z.object({
   advance_rate: z.preprocess(
     (v) => (v === "" || v === null || v === undefined ? null : Number(v)),
     z.number().min(0, "אחוז מקדמה לא תקין").max(100, "אחוז מקדמה לא תקין").nullable(),
-  ),
+  ) as unknown as z.ZodNullable<z.ZodNumber>,
 });
 
 export type TaxProfileFormValues = z.infer<typeof taxProfileSchema>;
