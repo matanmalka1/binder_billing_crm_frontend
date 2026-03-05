@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { chargesApi } from "../../../api/charges.api";
 import { toast } from "../../../utils/toast";
-import { getErrorMessage, getHttpStatus, isPositiveInt } from "../../../utils/utils";
+import { getErrorMessage, getHttpStatus, isPositiveInt, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { useRole } from "../../../hooks/useRole";
 
@@ -39,6 +39,15 @@ export const useChargeDetailsPage = (chargeId: string | undefined) => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => chargesApi.delete(chargeIdNumber),
+    onSuccess: async () => {
+      toast.success("החיוב נמחק בהצלחה");
+      await queryClient.invalidateQueries({ queryKey: QK.charges.all });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה במחיקת חיוב"),
+  });
+
   const runAction = async (action: "issue" | "markPaid" | "cancel") => {
     if (!hasValidChargeId || !isAdvisor) {
       setDenied(true);
@@ -68,6 +77,8 @@ export const useChargeDetailsPage = (chargeId: string | undefined) => {
     error,
     loading: hasValidChargeId ? chargeQuery.isPending : false,
     runAction,
+    deleteCharge: () => deleteMutation.mutateAsync(),
+    isDeleting: deleteMutation.isPending,
     isAdvisor,
   };
 };

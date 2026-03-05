@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
@@ -25,9 +26,11 @@ interface DetailContentProps {
   binder: BinderResponse;
   activeActionKeyRef: React.RefObject<string | null>;
   onAction: (action: ActionCommand) => void;
+  onDelete?: () => void;
+  isDeleting?: boolean;
 }
 
-const DetailContent: React.FC<DetailContentProps> = ({ binder, activeActionKeyRef, onAction }) => {
+const DetailContent: React.FC<DetailContentProps> = ({ binder, activeActionKeyRef, onAction, onDelete, isDeleting }) => {
   const actions = mapActions(binder.available_actions as BackendAction[] | null | undefined);
   const action = actions[0] ?? null;
 
@@ -119,9 +122,23 @@ const DetailContent: React.FC<DetailContentProps> = ({ binder, activeActionKeyRe
         </DrawerSection>
       )}
 
-      {actionButton && (
-        <div className="pt-2">
+      {(actionButton || onDelete) && (
+        <div className="pt-2 flex items-center gap-2">
           {actionButton}
+          {onDelete && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onDelete}
+              isLoading={isDeleting}
+              disabled={isDeleting}
+              className="gap-2 text-red-600 border-red-200 hover:bg-red-50"
+            >
+              <Trash2 className="h-4 w-4" />
+              מחק קלסר
+            </Button>
+          )}
         </div>
       )}
     </>
@@ -224,6 +241,8 @@ interface BinderDrawerProps {
   onClientQueryChange?: (query: string) => void;
   onReceiveSubmit?: (e?: React.BaseSyntheticEvent) => void;
   isSubmitting?: boolean;
+  onDelete?: () => void;
+  isDeleting?: boolean;
 }
 
 const NOOP_REF = { current: null } as React.RefObject<string | null>;
@@ -243,6 +262,8 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   onClientQueryChange,
   onReceiveSubmit,
   isSubmitting = false,
+  onDelete,
+  isDeleting = false,
 }) => {
   const title =
     mode === "receive"
@@ -291,6 +312,8 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
           binder={binder}
           activeActionKeyRef={activeActionKeyRef}
           onAction={onAction}
+          onDelete={onDelete}
+          isDeleting={isDeleting}
         />
       )}
     </DetailDrawer>

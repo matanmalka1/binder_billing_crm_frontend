@@ -5,6 +5,7 @@ import { ErrorCard } from "../components/ui/ErrorCard";
 import { AccessBanner } from "../components/ui/AccessBanner";
 import { PageStateGuard } from "../components/ui/PageStateGuard";
 import { DetailDrawer } from "../components/ui/DetailDrawer";
+import { Modal } from "../components/ui/Modal";
 import { Button } from "../components/ui/Button";
 import { ClientEditForm } from "../features/clients/components/ClientEditForm";
 import { AuthorityContactsCard } from "../features/authorityContacts/components/AuthorityContactsCard";
@@ -41,11 +42,12 @@ const EDIT_FORM_ID = "client-edit-form";
 export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "details" }) => {
   const { clientId } = useParams<{ clientId: string }>();
   const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>(initialTab);
   const clientIdNum = clientId ? Number(clientId) : null;
 
   const { client, isValidId, isLoading, error, binders, bindersTotal, charges, chargesTotal,
-    annualReportsTotal, vatWorkItemsTotal, documentsTotal, updateClient, isUpdating, can } =
+    annualReportsTotal, vatWorkItemsTotal, documentsTotal, updateClient, isUpdating, deleteClient, isDeleting, can } =
     useClientDetails({ clientId: clientIdNum });
 
   // Lock background scroll when drawer is open
@@ -113,6 +115,7 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
                     client={client}
                     canEdit={can.editClients}
                     onEditStart={() => setIsEditing(true)}
+                    onDeleteStart={can.editClients ? () => setIsConfirmingDelete(true) : undefined}
                   />
                   <TaxProfileCard clientId={client.id} readOnly={!can.editClients} />
                   <AuthorityContactsCard clientId={client.id} />
@@ -156,6 +159,42 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
           {activeTab === "vat" && (
             <VatClientSummaryPanel clientId={client.id} />
           )}
+
+          {/* Delete confirmation modal */}
+          <Modal
+            open={isConfirmingDelete}
+            title="מחיקת לקוח"
+            onClose={() => setIsConfirmingDelete(false)}
+            footer={
+              <div className="flex items-center justify-end gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsConfirmingDelete(false)}
+                  disabled={isDeleting}
+                >
+                  ביטול
+                </Button>
+                <Button
+                  type="button"
+                  variant="primary"
+                  isLoading={isDeleting}
+                  disabled={isDeleting}
+                  onClick={async () => {
+                    await deleteClient();
+                    setIsConfirmingDelete(false);
+                  }}
+                  className="bg-red-600 hover:bg-red-700 focus:ring-red-500"
+                >
+                  מחק לקוח
+                </Button>
+              </div>
+            }
+          >
+            <p className="text-sm text-gray-600">
+              האם למחוק את הלקוח <span className="font-semibold">{client.full_name}</span>? פעולה זו אינה ניתנת לביטול.
+            </p>
+          </Modal>
 
           {/* Edit drawer — overlays page, scroll locked */}
           {can.editClients && (

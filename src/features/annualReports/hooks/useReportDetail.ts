@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import {
   annualReportsApi,
   type StatusTransitionPayload,
@@ -20,8 +21,9 @@ const fetchDetail = async (reportId: number): Promise<AnnualReportDetail> => {
   };
 };
 
-export const useReportDetail = (reportId: number | null) => {
+export const useReportDetail = (reportId: number | null, onDeleted?: () => void) => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const enabled = reportId !== null && reportId > 0;
   const qk = enabled ? QK.tax.annualReports.detail(reportId) : null;
 
@@ -68,6 +70,20 @@ export const useReportDetail = (reportId: number | null) => {
     onError: (err) => showErrorToast(err, "שגיאה בעדכון דוח"),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => annualReportsApi.deleteReport(reportId as number),
+    onSuccess: async () => {
+      toast.success("הדוח נמחק בהצלחה");
+      await queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      if (onDeleted) {
+        onDeleted();
+      } else {
+        navigate("/annual-reports");
+      }
+    },
+    onError: (err) => showErrorToast(err, "שגיאה במחיקת דוח"),
+  });
+
   return {
     report: reportQuery.data ?? null,
     isLoading: reportQuery.isPending,
@@ -79,5 +95,7 @@ export const useReportDetail = (reportId: number | null) => {
     isCompletingSchedule: completeScheduleMutation.isPending,
     updateDetail: (payload: Partial<AnnualReportDetail>) => updateMutation.mutate(payload),
     isUpdating: updateMutation.isPending,
+    deleteReport: () => deleteMutation.mutateAsync(),
+    isDeleting: deleteMutation.isPending,
   };
 };

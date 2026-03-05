@@ -78,6 +78,10 @@ export const bindersApi = {
     return response.data;
   },
 
+  delete: async (binderId: number): Promise<void> => {
+    await api.delete(ENDPOINTS.binderById(binderId));
+  },
+
   getHistory: async (binderId: number): Promise<BinderHistoryResponse> => {
     const response = await api.get<BinderHistoryResponse>(
       ENDPOINTS.binderHistory(binderId),

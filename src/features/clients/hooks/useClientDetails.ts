@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { clientsApi, type UpdateClientPayload, type ClientResponse } from "../../../api/clients.api";
 import { bindersApi } from "../../../api/binders.api";
 import { chargesApi } from "../../../api/charges.api";
@@ -27,6 +28,8 @@ type UseClientDetailsResult = {
   documentsTotal: number;
   updateClient: (payload: UpdateClientPayload) => Promise<void>;
   isUpdating: boolean;
+  deleteClient: () => Promise<void>;
+  isDeleting: boolean;
   can: ReturnType<typeof useRole>["can"];
 };
 
@@ -40,6 +43,7 @@ export const useClientDetails = ({
   const isValidId = Number.isFinite(id) && id > 0;
   const enabled = isValidId;
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { isAdvisor, can } = useRole();
 
   const clientQuery = useQuery({
@@ -92,6 +96,16 @@ export const useClientDetails = ({
       showErrorToast(err, "שגיאה בעדכון פרטי לקוח"),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => clientsApi.delete(id),
+    onSuccess: async () => {
+      toast.success("הלקוח נמחק בהצלחה");
+      await queryClient.invalidateQueries({ queryKey: QK.clients.all });
+      navigate("/clients");
+    },
+    onError: (err) => showErrorToast(err, "שגיאה במחיקת לקוח"),
+  });
+
   const updateClient = async (payload: UpdateClientPayload) => {
     await updateMutation.mutateAsync(payload);
   };
@@ -112,6 +126,8 @@ export const useClientDetails = ({
     documentsTotal: documentsQuery.data?.items?.length ?? 0,
     updateClient,
     isUpdating: updateMutation.isPending,
+    deleteClient: () => deleteMutation.mutateAsync(),
+    isDeleting: deleteMutation.isPending,
     can,
   };
 };

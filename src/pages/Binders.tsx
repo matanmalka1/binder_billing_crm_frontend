@@ -16,6 +16,7 @@ type DrawerMode = "detail" | "receive" | null;
 
 export const Binders: React.FC = () => {
   const [drawerMode, setDrawerMode] = useState<DrawerMode>(null);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   const {
     activeActionKey,
@@ -35,6 +36,8 @@ export const Binders: React.FC = () => {
     handleCloseDrawer,
     loading,
     pendingAction,
+    deleteBinder,
+    isDeleting,
   } = useBindersPage();
 
   const handleOpenReceive = () => setDrawerMode("receive");
@@ -135,6 +138,22 @@ export const Binders: React.FC = () => {
         onCancel={cancelPendingAction}
       />
 
+      <ConfirmDialog
+        open={isConfirmingDelete}
+        title="מחיקת קלסר"
+        message={selectedBinder ? `האם למחוק את הקלסר ${selectedBinder.binder_number}? פעולה זו אינה ניתנת לביטול.` : "האם למחוק את הקלסר?"}
+        confirmLabel="מחק קלסר"
+        cancelLabel="ביטול"
+        isLoading={isDeleting}
+        onConfirm={async () => {
+          if (selectedBinder) {
+            await deleteBinder(selectedBinder.id);
+          }
+          setIsConfirmingDelete(false);
+        }}
+        onCancel={() => setIsConfirmingDelete(false)}
+      />
+
       <BinderDrawer
         open={drawerOpen}
         mode={effectiveMode}
@@ -149,6 +168,8 @@ export const Binders: React.FC = () => {
         onClientQueryChange={receive.handleClientQueryChange}
         onReceiveSubmit={receive.handleSubmit}
         isSubmitting={receive.isSubmitting}
+        onDelete={effectiveMode === "detail" ? () => setIsConfirmingDelete(true) : undefined}
+        isDeleting={isDeleting}
       />
     </div>
   );

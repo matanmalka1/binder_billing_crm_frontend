@@ -269,4 +269,8 @@ export const annualReportsApi = {
     const res = await api.patch<AnnualReportFull>(ENDPOINTS.annualReportDetails(reportId), payload);
     return res.data;
   },
+
+  deleteReport: async (reportId: number): Promise<void> => {
+    await api.delete(ENDPOINTS.annualReportById(reportId));
+  },
 };

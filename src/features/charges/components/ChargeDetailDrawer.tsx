@@ -1,5 +1,9 @@
+import { useState } from "react";
+import { Trash2 } from "lucide-react";
 import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
 import { AccessBanner } from "../../../components/ui/AccessBanner";
+import { Button } from "../../../components/ui/Button";
+import { ConfirmDialog } from "../../actions/components/ConfirmDialog";
 import {
   getChargeAmountText,
   getChargeTypeLabel,
@@ -15,11 +19,27 @@ interface ChargeDetailDrawerProps {
 }
 
 export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId, onClose }) => {
-  const { actionLoading, charge, denied, runAction, isAdvisor } = useChargeDetailsPage(
+  const { actionLoading, charge, denied, runAction, isAdvisor, deleteCharge, isDeleting } = useChargeDetailsPage(
     chargeId != null ? String(chargeId) : undefined,
   );
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   return (
+    <>
+    <ConfirmDialog
+      open={isConfirmingDelete}
+      title="מחיקת חיוב"
+      message={charge ? `האם למחוק את חיוב #${charge.id}? פעולה זו אינה ניתנת לביטול.` : "האם למחוק את החיוב?"}
+      confirmLabel="מחק חיוב"
+      cancelLabel="ביטול"
+      isLoading={isDeleting}
+      onConfirm={async () => {
+        await deleteCharge();
+        setIsConfirmingDelete(false);
+        onClose();
+      }}
+      onCancel={() => setIsConfirmingDelete(false)}
+    />
     <DetailDrawer
       open={chargeId !== null}
       title={charge ? `חיוב #${charge.id}` : "פירוט חיוב"}
@@ -54,10 +74,27 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
                 onMarkPaid={() => void runAction("markPaid")}
                 onCancel={() => void runAction("cancel")}
               />
+              {charge.status === "draft" && (
+                <div className="pt-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsConfirmingDelete(true)}
+                    isLoading={isDeleting}
+                    disabled={isDeleting || actionLoading}
+                    className="gap-2 text-red-600 border-red-200 hover:bg-red-50"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    מחק חיוב
+                  </Button>
+                </div>
+              )}
             </DrawerSection>
           )}
         </>
       )}
     </DetailDrawer>
+    </>
   );
 };

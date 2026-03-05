@@ -1,6 +1,10 @@
+import { useState } from "react";
+import { Trash2 } from "lucide-react";
 import { DetailDrawer, DrawerSection } from "../../../components/ui/DetailDrawer";
 import { Badge } from "../../../components/ui/Badge";
+import { Button } from "../../../components/ui/Button";
 import { DescriptionList } from "../../../components/ui/DescriptionList";
+import { ConfirmDialog } from "../../actions/components/ConfirmDialog";
 import { ScheduleChecklist } from "./ScheduleChecklist";
 import { StatusTransitionPanel } from "./StatusTransitionPanel";
 import { AnnualReportDetailForm } from "./AnnualReportDetailForm";
@@ -23,6 +27,7 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
   reportId,
   onClose,
 }) => {
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const {
     report,
     isLoading,
@@ -32,7 +37,9 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
     isCompletingSchedule,
     updateDetail,
     isUpdating,
-  } = useReportDetail(reportId);
+    deleteReport,
+    isDeleting,
+  } = useReportDetail(reportId, onClose);
 
   const detail = report;
 
@@ -77,6 +84,20 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
     : [];
 
   return (
+    <>
+    <ConfirmDialog
+      open={isConfirmingDelete}
+      title="מחיקת דוח שנתי"
+      message={report ? `האם למחוק את הדוח השנתי לשנת ${report.tax_year}? פעולה זו אינה ניתנת לביטול.` : "האם למחוק את הדוח?"}
+      confirmLabel="מחק דוח"
+      cancelLabel="ביטול"
+      isLoading={isDeleting}
+      onConfirm={async () => {
+        await deleteReport();
+        setIsConfirmingDelete(false);
+      }}
+      onCancel={() => setIsConfirmingDelete(false)}
+    />
     <DetailDrawer open={reportId !== null} title={title} subtitle={subtitle} onClose={onClose}>
       {isLoading && (
         <p className="text-sm text-gray-500 text-center py-8">טוען דוח...</p>
@@ -136,8 +157,26 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
               <StatusHistoryTimeline history={report.status_history ?? []} />
             </div>
           </DrawerSection>
+
+          <DrawerSection title="מחיקה">
+            <div className="py-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsConfirmingDelete(true)}
+                isLoading={isDeleting}
+                disabled={isDeleting}
+                className="gap-2 text-red-600 border-red-200 hover:bg-red-50"
+              >
+                <Trash2 className="h-4 w-4" />
+                מחק דוח
+              </Button>
+            </div>
+          </DrawerSection>
         </>
       )}
     </DetailDrawer>
+    </>
   );
 };

@@ -89,4 +89,8 @@ export const chargesApi = {
     );
     return response.data;
   },
+
+  delete: async (chargeId: number): Promise<void> => {
+    await api.delete(ENDPOINTS.chargeById(chargeId));
+  },
 };

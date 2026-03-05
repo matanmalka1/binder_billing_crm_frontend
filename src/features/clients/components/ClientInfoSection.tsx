@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { Edit2 } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
@@ -12,6 +12,7 @@ type ClientInfoSectionProps = {
   client: ClientResponse;
   canEdit: boolean;
   onEditStart: () => void;
+  onDeleteStart?: () => void;
 };
 
 const statusBadge = (status: string) => (
@@ -24,6 +25,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   client,
   canEdit,
   onEditStart,
+  onDeleteStart,
 }) => {
   const infoItems = [
     { label: "מספר זהות / ח.פ", value: client.id_number },
@@ -42,10 +44,18 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
       title="פרטי לקוח"
       actions={
         canEdit ? (
-          <Button variant="outline" size="sm" onClick={onEditStart} className="gap-2">
-            <Edit2 className="h-4 w-4" />
-            ערוך פרטים
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={onEditStart} className="gap-2">
+              <Edit2 className="h-4 w-4" />
+              ערוך פרטים
+            </Button>
+            {onDeleteStart && (
+              <Button variant="outline" size="sm" onClick={onDeleteStart} className="gap-2 text-red-600 border-red-200 hover:bg-red-50">
+                <Trash2 className="h-4 w-4" />
+                מחק לקוח
+              </Button>
+            )}
+          </div>
         ) : undefined
       }
     >

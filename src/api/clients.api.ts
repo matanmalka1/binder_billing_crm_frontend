@@ -133,6 +133,10 @@ export const clientsApi = {
     return response.data;
   },
 
+  delete: async (clientId: number): Promise<void> => {
+    await api.delete(ENDPOINTS.clientById(clientId));
+  },
+
   getStatusCard: async (clientId: number): Promise<ClientStatusCardResponse> => {
     const response = await api.get<ClientStatusCardResponse>(
       ENDPOINTS.clientStatusCard(clientId),

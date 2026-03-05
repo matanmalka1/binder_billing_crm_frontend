@@ -1,9 +1,10 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { bindersApi } from "../../../api/binders.api";
-import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
+import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 export const useBindersPage = () => {
   const queryClient = useQueryClient();
@@ -79,6 +80,16 @@ export const useBindersPage = () => {
     setSearchParams(next, { replace: true });
   };
 
+  const deleteMutation = useMutation({
+    mutationFn: (binderId: number) => bindersApi.delete(binderId),
+    onSuccess: () => {
+      toast.success("הקלסר נמחק בהצלחה");
+      handleCloseDrawer();
+      void queryClient.invalidateQueries({ queryKey: QK.binders.all });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה במחיקת קלסר"),
+  });
+
   return {
     activeActionKey,
     activeActionKeyRef,
@@ -99,5 +110,8 @@ export const useBindersPage = () => {
     pendingAction,
     cancelPendingAction,
     confirmPendingAction,
+    deleteBinder: (binderId: number) => deleteMutation.mutateAsync(binderId),
+    isDeleting: deleteMutation.isPending,
+    deletingId: deleteMutation.isPending ? (deleteMutation.variables as number | undefined) : null,
   };
 };
