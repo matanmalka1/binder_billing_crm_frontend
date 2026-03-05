@@ -46,12 +46,6 @@ export const Users: React.FC = () => {
     [setEditUser, setResetUser, currentUserId],
   );
 
-  const filteredUsers = useMemo(() => {
-    if (filters.is_active === "true") return users.filter((u) => u.is_active);
-    if (filters.is_active === "false") return users.filter((u) => !u.is_active);
-    return users;
-  }, [users, filters.is_active]);
-
   const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
 
   if (!isAdvisor) {
@@ -83,7 +77,7 @@ export const Users: React.FC = () => {
       {error && <ErrorCard message={error} />}
 
       <DataTable
-        data={filteredUsers}
+        data={users}
         columns={columns}
         getRowKey={(user) => user.id}
         isLoading={loading}
@@ -94,7 +88,7 @@ export const Users: React.FC = () => {
         }}
       />
 
-      {!loading && filteredUsers.length > 0 && (
+      {!loading && users.length > 0 && (
         <PaginationCard
           page={filters.page}
           totalPages={totalPages}

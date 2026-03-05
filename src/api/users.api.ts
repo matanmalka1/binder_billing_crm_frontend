@@ -37,6 +37,7 @@ export type UserAuditLogListResponse = PaginatedResponse<UserAuditLogResponse>;
 export interface ListUsersParams {
   page?: number;
   page_size?: number;
+  is_active?: "true" | "false";
 }
 
 export interface CreateUserPayload {
