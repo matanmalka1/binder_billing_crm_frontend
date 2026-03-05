@@ -44,7 +44,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_apartment: client.address_apartment ?? "",
       address_city: client.address_city ?? "",
       address_zip_code: client.address_zip_code ?? "",
-      business_sector: client.business_sector ?? "",
       notes: "",
     },
   });
@@ -60,7 +59,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_apartment: data.address_apartment || null,
       address_city: data.address_city || null,
       address_zip_code: data.address_zip_code || null,
-      business_sector: data.business_sector || null,
       notes: data.notes || null,
     });
   });
@@ -173,18 +171,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
           error={errors.address_zip_code?.message}
           disabled={isLoading}
           {...register("address_zip_code")}
-        />
-      </div>
-
-      {/* Business info */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">מידע עסקי</h3>
-        <Input
-          label="ענף עסקי"
-          placeholder="לדוגמה: טכנולוגיה, מסחר..."
-          error={errors.business_sector?.message}
-          disabled={isLoading}
-          {...register("business_sector")}
         />
       </div>
 

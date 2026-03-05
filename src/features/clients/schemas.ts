@@ -25,7 +25,6 @@ export const clientEditSchema = z.object({
   address_apartment: z.string().trim().optional().or(z.literal("")),
   address_city: z.string().trim().optional().or(z.literal("")),
   address_zip_code: z.string().trim().optional().or(z.literal("")),
-  business_sector: z.string().trim().optional().or(z.literal("")),
   notes: z.string().trim().optional().or(z.literal("")),
 });
 
