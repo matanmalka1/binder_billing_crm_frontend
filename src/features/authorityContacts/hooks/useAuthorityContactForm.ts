@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -17,17 +18,24 @@ export const useAuthorityContactForm = (
 
   const form = useForm<AuthorityContactFormValues>({
     resolver: zodResolver(authorityContactSchema),
-    defaultValues: existing
-      ? {
-          contact_type: existing.contact_type as AuthorityContactFormValues["contact_type"],
-          name: existing.name,
-          office: existing.office ?? "",
-          phone: existing.phone ?? "",
-          email: existing.email ?? "",
-          notes: existing.notes ?? "",
-        }
-      : authorityContactDefaults,
+    defaultValues: authorityContactDefaults,
   });
+
+  // Re-populate the form whenever the target contact changes (create → edit or edit → different contact).
+  useEffect(() => {
+    if (existing) {
+      form.reset({
+        contact_type: existing.contact_type as AuthorityContactFormValues["contact_type"],
+        name: existing.name,
+        office: existing.office ?? "",
+        phone: existing.phone ?? "",
+        email: existing.email ?? "",
+        notes: existing.notes ?? "",
+      });
+    } else {
+      form.reset(authorityContactDefaults);
+    }
+  }, [existing, form]);
 
   const saveMutation = useMutation({
     mutationFn: (values: AuthorityContactFormValues) => {
