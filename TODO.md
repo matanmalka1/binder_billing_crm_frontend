@@ -2,7 +2,7 @@
 
 ## Address for Shipment
 
-- [ ] In **ClientDetails → Edit Info Drawer**
+- [x] In **ClientDetails → Edit Info Drawer**
   - Replace the single `Address for Shipment` input with structured fields:
     - Street
     - Building Number

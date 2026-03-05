@@ -18,6 +18,7 @@ UI: Hebrew-only. Roles: `ADVISOR` (full access), `SECRETARY` (operational, read-
 Status: Production-ready through Sprint 9. Sprints 1–9 are **frozen**.
 
 Backend repo: `../backend/` — FastAPI + SQLAlchemy (Python). API base: `http://localhost:8000`.
+Schema migrations: Alembic (`../backend/alembic/`). After any model change, generate + run a migration before testing.
 
 Full engineering rules: `FRONTEND_PROJECT_RULES.md` (this file is the assistant-facing summary).
 
