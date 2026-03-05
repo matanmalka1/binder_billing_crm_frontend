@@ -140,7 +140,7 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
               </div>
 
               {/* Full-width reminders table */}
-              <ClientRemindersCard clientId={client.id} />
+              <ClientRemindersCard clientId={client.id} clientName={client.full_name} />
             </div>
           )}
 

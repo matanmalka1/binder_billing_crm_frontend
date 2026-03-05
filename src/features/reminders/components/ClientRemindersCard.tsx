@@ -10,10 +10,12 @@ import type { Reminder } from "../reminder.types";
 
 interface ClientRemindersCardProps {
   clientId: number;
+  clientName?: string;
 }
 
 export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
   clientId,
+  clientName,
 }) => {
   const {
     reminders,
@@ -62,6 +64,7 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
       <CreateReminderModal
         open={showCreateModal}
         fixedClientId={clientId}
+        fixedClientName={clientName}
         form={form}
         isSubmitting={isSubmitting}
         onClose={() => {
@@ -78,3 +81,5 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
     </Card>
   );
 };
+
+ClientRemindersCard.displayName = "ClientRemindersCard";

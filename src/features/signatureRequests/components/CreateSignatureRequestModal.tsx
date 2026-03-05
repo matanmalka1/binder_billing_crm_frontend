@@ -38,8 +38,17 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
   const [requestType, setRequestType] = useState<SignatureRequestType>("engagement_agreement");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [overrideName, setOverrideName] = useState("");
-  const [overrideEmail, setOverrideEmail] = useState("");
+  // Pre-fill with client defaults so advisor can see/edit them immediately
+  const [overrideName, setOverrideName] = useState(signerName);
+  const [overrideEmail, setOverrideEmail] = useState(signerEmail ?? "");
+
+  const handleClose = () => {
+    onClose();
+    setTitle("");
+    setDescription("");
+    setOverrideName(signerName);
+    setOverrideEmail(signerEmail ?? "");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,24 +58,21 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
       request_type: requestType,
       title: title.trim(),
       description: description.trim() || undefined,
-      signer_name: overrideName.trim() || undefined,
-      signer_email: overrideEmail.trim() || undefined,
+      // Only send overrides if they differ from the defaults
+      signer_name: overrideName.trim() !== signerName ? overrideName.trim() || undefined : undefined,
+      signer_email: overrideEmail.trim() !== (signerEmail ?? "") ? overrideEmail.trim() || undefined : undefined,
     });
-    onClose();
-    setTitle("");
-    setDescription("");
-    setOverrideName("");
-    setOverrideEmail("");
+    handleClose();
   };
 
   return (
     <Modal
       open={open}
       title="בקשת חתימה חדשה"
-      onClose={onClose}
+      onClose={handleClose}
       footer={
         <div className="flex justify-end gap-2">
-          <Button variant="outline" size="sm" onClick={onClose} disabled={isLoading}>
+          <Button variant="outline" size="sm" onClick={handleClose} disabled={isLoading}>
             ביטול
           </Button>
           <Button size="sm" isLoading={isLoading} onClick={handleSubmit} type="submit">
@@ -100,19 +106,16 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
           rows={3}
         />
         <div className="border-t border-gray-100 pt-3">
-          <p className="text-xs text-gray-500 mb-3">
-            פרטי חותם — ברירת מחדל: {signerName}
-            {signerEmail ? ` (${signerEmail})` : ""}
-          </p>
+          <p className="text-xs text-gray-500 mb-3">פרטי חותם</p>
           <div className="grid grid-cols-2 gap-3">
             <Input
-              label="שם חותם (דריסה)"
+              label="שם חותם"
               value={overrideName}
               onChange={(e) => setOverrideName(e.target.value)}
               placeholder={signerName}
             />
             <Input
-              label='דוא"ל (דריסה)'
+              label='דוא"ל חותם'
               value={overrideEmail}
               onChange={(e) => setOverrideEmail(e.target.value)}
               placeholder={signerEmail ?? ""}
@@ -124,3 +127,5 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
     </Modal>
   );
 };
+
+CreateSignatureRequestModal.displayName = "CreateSignatureRequestModal";

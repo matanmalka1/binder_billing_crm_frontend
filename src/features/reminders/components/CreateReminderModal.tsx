@@ -13,6 +13,7 @@ interface CreateReminderModalProps {
   onClose: () => void;
   onSubmit: (e?: React.BaseSyntheticEvent) => void;
   fixedClientId?: number;
+  fixedClientName?: string;
 }
 
 // react-hook-form types errors on discriminated unions narrowly; cast once here.
@@ -25,10 +26,17 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   onClose,
   onSubmit,
   fixedClientId,
+  fixedClientName,
 }) => {
   const { register, watch, formState: { errors } } = form;
   const e = errors as FormErrors;
   const reminderType = watch("reminder_type");
+
+  const clientDisplay = fixedClientId
+    ? fixedClientName
+      ? `${fixedClientName} (#${fixedClientId})`
+      : `#${fixedClientId}`
+    : null;
 
   return (
     <Modal
@@ -67,10 +75,19 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             error={e.charge_id?.message} {...register("charge_id")} />
         )}
 
-        {fixedClientId ? (
+        {reminderType === "custom" && (
+          <Input
+            label="שם תזכורת מותאמת *"
+            placeholder="לדוג': תזכורת לחידוש רישיון"
+            error={e.message?.message}
+            {...register("message")}
+          />
+        )}
+
+        {clientDisplay ? (
           <div>
             <p className="mb-1 text-sm font-medium text-gray-700">לקוח</p>
-            <p className="text-sm font-mono text-gray-900">#{fixedClientId}</p>
+            <p className="text-sm text-gray-900">{clientDisplay}</p>
             <input type="hidden" value={String(fixedClientId)} {...register("client_id")} />
           </div>
         ) : (
@@ -85,16 +102,20 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           error={e.days_before?.message}
           {...register("days_before", { valueAsNumber: true })} />
 
-        <Textarea
-          label={reminderType === "custom" ? "הודעה *" : "הודעה"}
-          rows={3}
-          placeholder={reminderType === "custom"
-            ? "הזן הודעת תזכורת..."
-            : "אופציונלי — אם ריק תופק הודעת ברירת מחדל"}
-          error={e.message?.message}
-          {...register("message")}
-        />
+        {(reminderType === "tax_deadline_approaching" ||
+          reminderType === "binder_idle" ||
+          reminderType === "unpaid_charge") && (
+          <Textarea
+            label="הודעה"
+            rows={3}
+            placeholder="אופציונלי — אם ריק תופק הודעת ברירת מחדל"
+            error={e.message?.message}
+            {...register("message")}
+          />
+        )}
       </form>
     </Modal>
   );
 };
+
+CreateReminderModal.displayName = "CreateReminderModal";
