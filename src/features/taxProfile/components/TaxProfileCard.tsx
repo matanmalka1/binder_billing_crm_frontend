@@ -24,6 +24,10 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) 
     { label: "תחום עיסוק", value: profile?.business_type ?? "—" },
     { label: "שנת מס ראשונה", value: profile?.tax_year_start ?? "—" },
     { label: "רואה חשבון מלווה", value: profile?.accountant_name ?? "—" },
+    {
+      label: "אחוז מקדמה",
+      value: profile?.advance_rate != null ? `${profile.advance_rate}%` : "—",
+    },
   ];
 
   return (
