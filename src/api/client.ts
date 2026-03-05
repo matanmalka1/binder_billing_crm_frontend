@@ -4,7 +4,7 @@ import type { AxiosError } from "axios";
 export const AUTH_EXPIRED_EVENT = "auth:expired";
 export const SKIP_AUTH_INTERCEPT_HEADER = "X-Skip-Auth-Intercept";
 
-const AUTH_PERSIST_STORAGE_KEY = "auth-storage";
+export const AUTH_STORAGE_KEY = "auth-storage";
 
 const baseURL =
   import.meta.env?.VITE_API_BASE_URL || "http://localhost:8000/api/v1";
@@ -41,13 +41,13 @@ api.interceptors.response.use(
 
 const clearPersistedAuthState = (): void => {
   try {
-    localStorage.removeItem(AUTH_PERSIST_STORAGE_KEY);
+    localStorage.removeItem(AUTH_STORAGE_KEY);
   } catch {
     /* ignore */
   }
 
   try {
-    sessionStorage.removeItem(AUTH_PERSIST_STORAGE_KEY);
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
   } catch {
     /* ignore */
   }

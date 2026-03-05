@@ -6,16 +6,15 @@ import {
   type StateStorage,
 } from "zustand/middleware";
 import { authApi } from "../api/auth.api";
+import { AUTH_STORAGE_KEY } from "../api/client";
 import { getErrorMessage } from "../utils/utils";
 import type { AuthState } from "./auth.types";
-
-const AUTH_STORAGE_NAME = "auth-storage";
 
 const getInitialTarget = (): "local" | "session" => {
   if (typeof window === "undefined") return "local";
   try {
-    if (localStorage.getItem(AUTH_STORAGE_NAME)) return "local";
-    if (sessionStorage.getItem(AUTH_STORAGE_NAME)) return "session";
+    if (localStorage.getItem(AUTH_STORAGE_KEY)) return "local";
+    if (sessionStorage.getItem(AUTH_STORAGE_KEY)) return "session";
   } catch {
     // fall back to local
   }
@@ -141,15 +140,15 @@ export const useAuthStore = create<AuthState>()(
         },
       }),
       {
-        name: AUTH_STORAGE_NAME,
+        name: AUTH_STORAGE_KEY,
         storage: createJSONStorage(() => dynamicStorage),
         partialize: (state) => ({ user: state.user }),
         onRehydrateStorage: () => () => {
           try {
             if (typeof window === "undefined") return;
-            if (localStorage.getItem(AUTH_STORAGE_NAME)) {
+            if (localStorage.getItem(AUTH_STORAGE_KEY)) {
               storageTarget.current = "local";
-            } else if (sessionStorage.getItem(AUTH_STORAGE_NAME)) {
+            } else if (sessionStorage.getItem(AUTH_STORAGE_KEY)) {
               storageTarget.current = "session";
             }
           } catch {

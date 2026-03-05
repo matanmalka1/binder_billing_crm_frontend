@@ -38,23 +38,23 @@ export const useUsersPage = () => {
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateUserPayload) => usersApi.create(payload),
-    onSuccess: () => { toast.success("משתמש נוצר בהצלחה"); void invalidateUsers(queryClient); },
+    onSuccess: async () => { toast.success("משתמש נוצר בהצלחה"); await invalidateUsers(queryClient); },
     onError: (err) => showErrorToast(err, "שגיאה ביצירת משתמש"),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ userId, payload }: { userId: number; payload: UpdateUserPayload }) =>
       usersApi.update(userId, payload),
-    onSuccess: () => { toast.success("פרטי המשתמש עודכנו"); void invalidateUsers(queryClient); },
+    onSuccess: async () => { toast.success("פרטי המשתמש עודכנו"); await invalidateUsers(queryClient); },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון המשתמש"),
   });
 
   const toggleActiveMutation = useMutation({
     mutationFn: ({ userId, isActive }: { userId: number; isActive: boolean }) =>
       isActive ? usersApi.deactivate(userId) : usersApi.activate(userId),
-    onSuccess: (_, { isActive }) => {
+    onSuccess: async (_, { isActive }) => {
       toast.success(isActive ? "המשתמש הושבת בהצלחה" : "המשתמש הופעל בהצלחה");
-      void invalidateUsers(queryClient);
+      await invalidateUsers(queryClient);
     },
     onError: (err) => showErrorToast(err, "שגיאה בשינוי סטטוס המשתמש"),
   });
