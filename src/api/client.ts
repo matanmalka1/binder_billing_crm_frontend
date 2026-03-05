@@ -2,6 +2,7 @@ import axios from "axios";
 import type { AxiosError } from "axios";
 
 export const AUTH_EXPIRED_EVENT = "auth:expired";
+export const SKIP_AUTH_INTERCEPT_HEADER = "X-Skip-Auth-Intercept";
 
 const AUTH_PERSIST_STORAGE_KEY = "auth-storage";
 
@@ -22,7 +23,10 @@ let isHandlingAuthExpiry = false;
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401 && !isHandlingAuthExpiry) {
+    const skipIntercept =
+      error.config?.headers?.[SKIP_AUTH_INTERCEPT_HEADER] === "1";
+
+    if (error.response?.status === 401 && !skipIntercept && !isHandlingAuthExpiry) {
       isHandlingAuthExpiry = true;
       clearPersistedAuthState();
       window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));

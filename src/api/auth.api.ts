@@ -1,6 +1,6 @@
 import { ENDPOINTS } from "./endpoints";
 import type { AuthUser } from "../types/store";
-import { api } from "./client";
+import { api, SKIP_AUTH_INTERCEPT_HEADER } from "./client";
 
 export interface LoginRequest {
   email: string;
@@ -20,7 +20,12 @@ export const authApi = {
     );
     return response.data;
   },
+
   logout: async (): Promise<void> => {
-    await api.post(ENDPOINTS.authLogout);
+    // skipAuthInterceptor tells the Axios interceptor not to fire AUTH_EXPIRED_EVENT
+    // on a 401 during logout — the session is already being torn down intentionally.
+    await api.post(ENDPOINTS.authLogout, undefined, {
+      headers: { [SKIP_AUTH_INTERCEPT_HEADER]: "1" },
+    });
   },
 };
