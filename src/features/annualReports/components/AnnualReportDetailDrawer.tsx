@@ -11,6 +11,7 @@ import { AnnualReportDetailForm } from "./AnnualReportDetailForm";
 import { StatusHistoryTimeline } from "./StatusHistoryTimeline";
 import { IncomeExpensePanel } from "./IncomeExpensePanel";
 import { ReadinessCheckPanel } from "./ReadinessCheckPanel";
+import { TaxCalculationPanel } from "./TaxCalculationPanel";
 import { useReportDetail } from "../hooks/useReportDetail";
 import {
   getStatusLabel,
@@ -137,6 +138,12 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
           <DrawerSection title="הכנסות והוצאות">
             <div className="py-2">
               <IncomeExpensePanel reportId={report.id} />
+            </div>
+          </DrawerSection>
+
+          <DrawerSection title="חישוב מס">
+            <div className="py-2">
+              <TaxCalculationPanel reportId={report.id} />
             </div>
           </DrawerSection>
 

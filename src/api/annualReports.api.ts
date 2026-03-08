@@ -211,6 +211,14 @@ export interface ReadinessCheckResponse {
   issues: string[];
 }
 
+export interface TaxCalculationResult {
+  taxable_income: number;
+  tax_before_credits: number;
+  credit_points_value: number;
+  tax_after_credits: number;
+  effective_rate: number;
+}
+
 export interface IncomeLinePayload {
   source_type: IncomeSourceType;
   amount: number;
@@ -396,5 +404,10 @@ export const annualReportsApi = {
 
   deleteExpenseLine: async (reportId: number, lineId: number): Promise<void> => {
     await api.delete(ENDPOINTS.annualReportExpenseById(reportId, lineId));
+  },
+
+  getTaxCalculation: async (reportId: number): Promise<TaxCalculationResult> => {
+    const res = await api.get<TaxCalculationResult>(ENDPOINTS.annualReportTaxCalculation(reportId));
+    return res.data;
   },
 };
