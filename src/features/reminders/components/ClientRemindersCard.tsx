@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
@@ -7,6 +8,9 @@ import { ReminderDrawer } from "./ReminderDrawer";
 import { CreateReminderModal } from "./CreateReminderModal";
 import { useReminders } from "../hooks/useReminders";
 import type { Reminder } from "../reminder.types";
+import { bindersApi } from "../../../api/binders.api";
+import { chargesApi } from "../../../api/charges.api";
+import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
 
 interface ClientRemindersCardProps {
   clientId: number;
@@ -30,9 +34,25 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
     handleCancel,
   } = useReminders({ clientId });
 
-  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(
-    null,
-  );
+  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
+
+  const { data: bindersData } = useQuery({
+    queryKey: ["binders", "client", clientId],
+    queryFn: () => bindersApi.list({ client_id: clientId, page_size: 100 }),
+    enabled: showCreateModal,
+  });
+
+  const { data: chargesData } = useQuery({
+    queryKey: ["charges", "client", clientId],
+    queryFn: () => chargesApi.list({ client_id: clientId, page_size: 100 }),
+    enabled: showCreateModal,
+  });
+
+  const { data: taxDeadlinesData } = useQuery({
+    queryKey: ["tax_deadlines", "client", clientId],
+    queryFn: () => taxDeadlinesApi.listTaxDeadlines({ client_id: clientId, page_size: 100 }),
+    enabled: showCreateModal,
+  });
 
   return (
     <Card
@@ -72,6 +92,9 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
           setShowCreateModal(false);
         }}
         onSubmit={onSubmit}
+        clientBinders={bindersData?.items}
+        clientCharges={chargesData?.items}
+        clientTaxDeadlines={taxDeadlinesData?.items}
       />
 
       <ReminderDrawer

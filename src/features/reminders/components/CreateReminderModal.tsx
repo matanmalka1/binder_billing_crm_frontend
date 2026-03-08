@@ -5,6 +5,9 @@ import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
 import type { CreateReminderFormValues } from "../reminder.types";
+import type { BinderResponse } from "../../../api/binders.types";
+import type { ChargeResponse } from "../../../api/charges.api";
+import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
 
 interface CreateReminderModalProps {
   open: boolean;
@@ -14,6 +17,9 @@ interface CreateReminderModalProps {
   onSubmit: (e?: React.BaseSyntheticEvent) => void;
   fixedClientId?: number;
   fixedClientName?: string;
+  clientBinders?: BinderResponse[];
+  clientCharges?: ChargeResponse[];
+  clientTaxDeadlines?: TaxDeadlineResponse[];
 }
 
 // react-hook-form types errors on discriminated unions narrowly; cast once here.
@@ -27,6 +33,9 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   onSubmit,
   fixedClientId,
   fixedClientName,
+  clientBinders = [],
+  clientCharges = [],
+  clientTaxDeadlines = [],
 }) => {
   const { register, watch, formState: { errors } } = form;
   const e = errors as FormErrors;
@@ -63,16 +72,34 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
         </Select>
 
         {reminderType === "tax_deadline_approaching" && (
-          <Input type="number" label="מזהה מועד מס" min={1}
-            error={e.tax_deadline_id?.message} {...register("tax_deadline_id")} />
+          <Select label="מועד מס" error={e.tax_deadline_id?.message} {...register("tax_deadline_id")}>
+            <option value="">בחר מועד מס...</option>
+            {clientTaxDeadlines.map((d) => (
+              <option key={d.id} value={String(d.id)}>
+                {d.deadline_type} — {d.due_date}
+              </option>
+            ))}
+          </Select>
         )}
         {reminderType === "binder_idle" && (
-          <Input type="number" label="מזהה תיק" min={1}
-            error={e.binder_id?.message} {...register("binder_id")} />
+          <Select label="תיק" error={e.binder_id?.message} {...register("binder_id")}>
+            <option value="">בחר תיק...</option>
+            {clientBinders.map((b) => (
+              <option key={b.id} value={String(b.id)}>
+                {b.binder_number} — {b.binder_type}
+              </option>
+            ))}
+          </Select>
         )}
         {reminderType === "unpaid_charge" && (
-          <Input type="number" label="מזהה חשבונית" min={1}
-            error={e.charge_id?.message} {...register("charge_id")} />
+          <Select label="חשבונית" error={e.charge_id?.message} {...register("charge_id")}>
+            <option value="">בחר חשבונית...</option>
+            {clientCharges.map((c) => (
+              <option key={c.id} value={String(c.id)}>
+                #{c.id} — {c.charge_type} ({c.status})
+              </option>
+            ))}
+          </Select>
         )}
 
         {reminderType === "custom" && (
