@@ -9,6 +9,8 @@ import { ScheduleChecklist } from "./ScheduleChecklist";
 import { StatusTransitionPanel } from "./StatusTransitionPanel";
 import { AnnualReportDetailForm } from "./AnnualReportDetailForm";
 import { StatusHistoryTimeline } from "./StatusHistoryTimeline";
+import { IncomeExpensePanel } from "./IncomeExpensePanel";
+import { ReadinessCheckPanel } from "./ReadinessCheckPanel";
 import { useReportDetail } from "../hooks/useReportDetail";
 import {
   getStatusLabel,
@@ -129,6 +131,18 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
                 onComplete={completeSchedule}
                 isLoading={isCompletingSchedule}
               />
+            </div>
+          </DrawerSection>
+
+          <DrawerSection title="הכנסות והוצאות">
+            <div className="py-2">
+              <IncomeExpensePanel reportId={report.id} />
+            </div>
+          </DrawerSection>
+
+          <DrawerSection title="מוכנות להגשה">
+            <div className="py-2">
+              <ReadinessCheckPanel reportId={report.id} />
             </div>
           </DrawerSection>
 

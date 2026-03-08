@@ -63,6 +63,10 @@ export const QK = {
     },
     annualReportsForClient: (clientId: number) =>
       ["tax", "annual-reports", "client", clientId] as const,
+    annualReportFinancials: (id: number) =>
+      ["tax", "annual-reports", "financials", id] as const,
+    annualReportReadiness: (id: number) =>
+      ["tax", "annual-reports", "readiness", id] as const,
     advancePayments: {
       all: ["tax", "advance-payments"] as const,
       forClientYear: (clientId: number, year: number) =>

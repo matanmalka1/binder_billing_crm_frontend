@@ -108,4 +108,12 @@ export const ENDPOINTS = {
   clientStatusCard: (clientId: number | string) => `/clients/${clientId}/status-card`,
   documentById: (id: number | string) => `/documents/${id}`,
   documentReplace: (id: number | string) => `/documents/${id}/replace`,
+  annualReportFinancials: (id: number | string) => `/annual-reports/${id}/financials`,
+  annualReportReadiness: (id: number | string) => `/annual-reports/${id}/readiness`,
+  annualReportIncome: (id: number | string) => `/annual-reports/${id}/income`,
+  annualReportIncomeById: (id: number | string, lineId: number | string) =>
+    `/annual-reports/${id}/income/${lineId}`,
+  annualReportExpenses: (id: number | string) => `/annual-reports/${id}/expenses`,
+  annualReportExpenseById: (id: number | string, lineId: number | string) =>
+    `/annual-reports/${id}/expenses/${lineId}`,
 } as const;

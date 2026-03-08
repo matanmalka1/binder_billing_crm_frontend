@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, AlertTriangle } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Badge } from "../../../components/ui/Badge";
@@ -9,6 +10,7 @@ import type {
   AnnualReportStatus,
   StatusTransitionPayload,
 } from "../../../api/annualReports.api";
+import { annualReportsApi } from "../../../api/annualReports.api";
 import {
   getStatusLabel,
   getStatusVariant,
@@ -16,6 +18,7 @@ import {
 } from "../../../api/annualReports.extended.utils";
 import { cn } from "../../../utils/utils";
 import { type TransitionForm, EMPTY_FORM } from "../utils";
+import { QK } from "../../../lib/queryKeys";
 
 interface StatusTransitionPanelProps {
   report: AnnualReportFull;
@@ -31,6 +34,13 @@ export const StatusTransitionPanel: React.FC<StatusTransitionPanelProps> = ({
   const allowed = getAllowedTransitions(report.status);
   const [selected, setSelected] = useState<AnnualReportStatus | null>(null);
   const [form, setForm] = useState<TransitionForm>(EMPTY_FORM);
+
+  const canSubmit = allowed.includes("submitted");
+  const { data: readiness } = useQuery({
+    queryKey: QK.tax.annualReportReadiness(report.id),
+    queryFn: () => annualReportsApi.getReadiness(report.id),
+    enabled: canSubmit,
+  });
 
   if (allowed.length === 0) {
     return (
@@ -100,6 +110,18 @@ export const StatusTransitionPanel: React.FC<StatusTransitionPanelProps> = ({
               onChange={setField("note")}
               placeholder="הערה על המעבר..."
             />
+
+            {selected === "submitted" && readiness && !readiness.is_ready && (
+              <div className="rounded-md border border-amber-200 bg-amber-50 p-3 space-y-1">
+                <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                  <span>הדוח אינו מוכן להגשה — הגשה תיחסם על ידי השרת</span>
+                </div>
+                <ul className="space-y-0.5 pr-5 list-disc text-xs text-amber-700">
+                  {readiness.issues.map((issue, i) => <li key={i}>{issue}</li>)}
+                </ul>
+              </div>
+            )}
 
             {selected === "submitted" && (
               <Input

@@ -151,6 +151,78 @@ export interface StatusTransitionPayload {
   tax_due?: number | null;
 }
 
+export type IncomeSourceType =
+  | "business"
+  | "salary"
+  | "interest"
+  | "dividends"
+  | "capital_gains"
+  | "rental"
+  | "foreign"
+  | "pension"
+  | "other";
+
+export type ExpenseCategoryType =
+  | "office_rent"
+  | "professional_services"
+  | "salaries"
+  | "depreciation"
+  | "vehicle"
+  | "marketing"
+  | "insurance"
+  | "communication"
+  | "travel"
+  | "training"
+  | "bank_fees"
+  | "other";
+
+export interface IncomeLineResponse {
+  id: number;
+  annual_report_id: number;
+  source_type: IncomeSourceType;
+  amount: number;
+  description: string | null;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface ExpenseLineResponse {
+  id: number;
+  annual_report_id: number;
+  category: ExpenseCategoryType;
+  amount: number;
+  description: string | null;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface FinancialSummaryResponse {
+  annual_report_id: number;
+  total_income: number;
+  total_expenses: number;
+  taxable_income: number;
+  income_lines: IncomeLineResponse[];
+  expense_lines: ExpenseLineResponse[];
+}
+
+export interface ReadinessCheckResponse {
+  annual_report_id: number;
+  is_ready: boolean;
+  issues: string[];
+}
+
+export interface IncomeLinePayload {
+  source_type: IncomeSourceType;
+  amount: number;
+  description?: string | null;
+}
+
+export interface ExpenseLinePayload {
+  category: ExpenseCategoryType;
+  amount: number;
+  description?: string | null;
+}
+
 // ── API ────────────────────────────────────────────────────────────────────
 
 export const annualReportsApi = {
@@ -272,5 +344,57 @@ export const annualReportsApi = {
 
   deleteReport: async (reportId: number): Promise<void> => {
     await api.delete(ENDPOINTS.annualReportById(reportId));
+  },
+
+  getFinancials: async (reportId: number): Promise<FinancialSummaryResponse> => {
+    const res = await api.get<FinancialSummaryResponse>(ENDPOINTS.annualReportFinancials(reportId));
+    return res.data;
+  },
+
+  getReadiness: async (reportId: number): Promise<ReadinessCheckResponse> => {
+    const res = await api.get<ReadinessCheckResponse>(ENDPOINTS.annualReportReadiness(reportId));
+    return res.data;
+  },
+
+  addIncomeLine: async (reportId: number, payload: IncomeLinePayload): Promise<IncomeLineResponse> => {
+    const res = await api.post<IncomeLineResponse>(ENDPOINTS.annualReportIncome(reportId), payload);
+    return res.data;
+  },
+
+  updateIncomeLine: async (
+    reportId: number,
+    lineId: number,
+    payload: Partial<IncomeLinePayload>
+  ): Promise<IncomeLineResponse> => {
+    const res = await api.patch<IncomeLineResponse>(
+      ENDPOINTS.annualReportIncomeById(reportId, lineId),
+      payload
+    );
+    return res.data;
+  },
+
+  deleteIncomeLine: async (reportId: number, lineId: number): Promise<void> => {
+    await api.delete(ENDPOINTS.annualReportIncomeById(reportId, lineId));
+  },
+
+  addExpenseLine: async (reportId: number, payload: ExpenseLinePayload): Promise<ExpenseLineResponse> => {
+    const res = await api.post<ExpenseLineResponse>(ENDPOINTS.annualReportExpenses(reportId), payload);
+    return res.data;
+  },
+
+  updateExpenseLine: async (
+    reportId: number,
+    lineId: number,
+    payload: Partial<ExpenseLinePayload>
+  ): Promise<ExpenseLineResponse> => {
+    const res = await api.patch<ExpenseLineResponse>(
+      ENDPOINTS.annualReportExpenseById(reportId, lineId),
+      payload
+    );
+    return res.data;
+  },
+
+  deleteExpenseLine: async (reportId: number, lineId: number): Promise<void> => {
+    await api.delete(ENDPOINTS.annualReportExpenseById(reportId, lineId));
   },
 };
