@@ -15,6 +15,7 @@ export interface AdvancePaymentRow {
   status: AdvancePaymentStatus;
   due_date: string;
   tax_deadline_id: number | null;
+  updated_at: string | null;
 }
 
 export interface ListAdvancePaymentsParams {

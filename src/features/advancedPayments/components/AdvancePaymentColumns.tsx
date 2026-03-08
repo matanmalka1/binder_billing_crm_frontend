@@ -17,7 +17,7 @@ export const buildAdvancePaymentColumns = (
   const base: Column<AdvancePaymentRow>[] = [
     {
       key: "month",
-      header: "חודש",
+      header: "תקופה",
       render: (row) => (
         <span className="text-sm font-semibold text-gray-900">
           {MONTH_NAMES[row.month - 1] ?? row.month}
@@ -25,15 +25,8 @@ export const buildAdvancePaymentColumns = (
       ),
     },
     {
-      key: "due_date",
-      header: "תאריך תשלום",
-      render: (row) => (
-        <span className="text-sm text-gray-500 tabular-nums">{formatDate(row.due_date)}</span>
-      ),
-    },
-    {
       key: "expected_amount",
-      header: "סכום צפוי",
+      header: "צפוי",
       render: (row) => (
         <span className="font-mono text-sm font-medium text-gray-700 tabular-nums">
           {fmtCurrency(row.expected_amount)}
@@ -56,6 +49,13 @@ export const buildAdvancePaymentColumns = (
         <Badge variant={STATUS_VARIANT[row.status] ?? "neutral"}>
           {STATUS_LABEL[row.status] ?? row.status}
         </Badge>
+      ),
+    },
+    {
+      key: "due_date",
+      header: "תאריך תשלום",
+      render: (row) => (
+        <span className="text-sm text-gray-500 tabular-nums">{formatDate(row.due_date)}</span>
       ),
     },
   ];
