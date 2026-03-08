@@ -50,10 +50,13 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
           contact_id: existing.contact_id ?? null,
         });
       } else {
-        reset(correspondenceDefaults);
+        reset({
+          ...correspondenceDefaults,
+          contact_id: contacts.length === 1 ? contacts[0].id : null,
+        });
       }
     }
-  }, [open, existing, reset]);
+  }, [open, existing, contacts, reset]);
 
   const handleClose = () => {
     reset(correspondenceDefaults);

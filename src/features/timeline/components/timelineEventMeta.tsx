@@ -9,6 +9,12 @@ import {
   FolderInput,
   FolderOutput,
   CreditCard,
+  UserPlus,
+  UserCog,
+  Settings,
+  Clock,
+  Upload,
+  PenLine,
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
@@ -31,6 +37,12 @@ const EVENT_LABELS: Record<string, string> = {
   notification_sent: "התראה נשלחה",
   tax_deadline_due: "מועד מס",
   annual_report_status_changed: "דוח שנתי",
+  client_created: "לקוח נוצר",
+  client_info_updated: "פרטי לקוח עודכנו",
+  tax_profile_updated: "פרופיל מס עודכן",
+  reminder_created: "תזכורת נוצרה",
+  document_uploaded: "מסמך הועלה",
+  signature_request_created: "בקשת חתימה נוצרה",
 };
 
 export const getEventTypeLabel = (eventType: string): string =>
@@ -50,6 +62,12 @@ export const getEventIcon = (eventType: string): React.ReactNode => {
     notification_sent: <Bell className="h-3.5 w-3.5" />,
     tax_deadline_due: <CalendarClock className="h-3.5 w-3.5" />,
     annual_report_status_changed: <FileText className="h-3.5 w-3.5" />,
+    client_created: <UserPlus className="h-3.5 w-3.5" />,
+    client_info_updated: <UserCog className="h-3.5 w-3.5" />,
+    tax_profile_updated: <Settings className="h-3.5 w-3.5" />,
+    reminder_created: <Clock className="h-3.5 w-3.5" />,
+    document_uploaded: <Upload className="h-3.5 w-3.5" />,
+    signature_request_created: <PenLine className="h-3.5 w-3.5" />,
   };
   return icons[eventType] ?? <AlertCircle className="h-3.5 w-3.5" />;
 };
@@ -156,6 +174,78 @@ const EVENT_COLORS: Record<string, EventColorConfig> = {
 };
 
 EVENT_COLORS.notification_sent = EVENT_COLORS.notification;
+EVENT_COLORS.client_created = {
+  dotBg: "bg-primary-500",
+  dotBorder: "border-primary-300",
+  cardBorder: "border-r-primary-400",
+  cardTint: "from-primary-50/60",
+  badgeBg: "bg-primary-100",
+  badgeText: "text-primary-700",
+  chipActiveBg: "bg-primary-100",
+  chipActiveText: "text-primary-800",
+  chipActiveBorder: "border-primary-300",
+  iconColor: "text-primary-600",
+};
+EVENT_COLORS.client_info_updated = {
+  dotBg: "bg-sky-500",
+  dotBorder: "border-sky-300",
+  cardBorder: "border-r-sky-400",
+  cardTint: "from-sky-50/60",
+  badgeBg: "bg-sky-100",
+  badgeText: "text-sky-700",
+  chipActiveBg: "bg-sky-100",
+  chipActiveText: "text-sky-800",
+  chipActiveBorder: "border-sky-300",
+  iconColor: "text-sky-600",
+};
+EVENT_COLORS.tax_profile_updated = {
+  dotBg: "bg-slate-500",
+  dotBorder: "border-slate-300",
+  cardBorder: "border-r-slate-400",
+  cardTint: "from-slate-50/60",
+  badgeBg: "bg-slate-100",
+  badgeText: "text-slate-700",
+  chipActiveBg: "bg-slate-100",
+  chipActiveText: "text-slate-800",
+  chipActiveBorder: "border-slate-300",
+  iconColor: "text-slate-600",
+};
+EVENT_COLORS.reminder_created = {
+  dotBg: "bg-amber-500",
+  dotBorder: "border-amber-300",
+  cardBorder: "border-r-amber-400",
+  cardTint: "from-amber-50/60",
+  badgeBg: "bg-amber-100",
+  badgeText: "text-amber-700",
+  chipActiveBg: "bg-amber-100",
+  chipActiveText: "text-amber-800",
+  chipActiveBorder: "border-amber-300",
+  iconColor: "text-amber-600",
+};
+EVENT_COLORS.document_uploaded = {
+  dotBg: "bg-emerald-500",
+  dotBorder: "border-emerald-300",
+  cardBorder: "border-r-emerald-400",
+  cardTint: "from-emerald-50/60",
+  badgeBg: "bg-emerald-100",
+  badgeText: "text-emerald-700",
+  chipActiveBg: "bg-emerald-100",
+  chipActiveText: "text-emerald-800",
+  chipActiveBorder: "border-emerald-300",
+  iconColor: "text-emerald-600",
+};
+EVENT_COLORS.signature_request_created = {
+  dotBg: "bg-violet-500",
+  dotBorder: "border-violet-300",
+  cardBorder: "border-r-violet-400",
+  cardTint: "from-violet-50/60",
+  badgeBg: "bg-violet-100",
+  badgeText: "text-violet-700",
+  chipActiveBg: "bg-violet-100",
+  chipActiveText: "text-violet-800",
+  chipActiveBorder: "border-violet-300",
+  iconColor: "text-violet-600",
+};
 EVENT_COLORS.invoice_attached = EVENT_COLORS.invoice_created;
 EVENT_COLORS.tax_deadline_due = {
   dotBg: "bg-teal-500",

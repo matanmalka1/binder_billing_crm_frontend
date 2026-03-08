@@ -122,7 +122,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             error={e.client_id?.message} {...register("client_id")} />
         )}
 
-        <Input type="date" label="תאריך יעד"
+        <Input type="date" label="תאריך יעד" max="9999-12-31"
           error={e.target_date?.message} {...register("target_date")} />
 
         <Input type="number" label="ימים לפני" min={0}

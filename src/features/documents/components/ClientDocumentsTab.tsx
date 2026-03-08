@@ -1,5 +1,3 @@
-import { FolderOpen } from "lucide-react";
-import { EmptyState } from "../../../components/ui/EmptyState";
 import { ErrorCard } from "../../../components/ui/ErrorCard";
 import { TableSkeleton } from "../../../components/ui/TableSkeleton";
 import { DocumentsDataCards } from "./DocumentsDataCards";
@@ -24,8 +22,6 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
 
   if (loading) return <TableSkeleton rows={4} columns={2} />;
   if (error) return <ErrorCard message={error} />;
-
-  if (documents.length === 0) return <EmptyState icon={FolderOpen} message="אין מסמכים להצגה ללקוח זה" />;
 
   return (
     <DocumentsDataCards
