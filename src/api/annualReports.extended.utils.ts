@@ -47,8 +47,8 @@ const validTransitions: Record<AnnualReportStatus, AnnualReportStatus[]> = {
   pending_client: ["in_preparation", "submitted"],
   submitted: ["accepted", "assessment_issued"],
   accepted: ["closed"],
-  assessment_issued: ["objection_filed", "closed"],
-  objection_filed: ["closed"],
+  assessment_issued: ["objection_filed", "closed", "pending_client", "in_preparation", "docs_complete"],
+  objection_filed: ["closed", "docs_complete"],
   closed: [],
 };
 
