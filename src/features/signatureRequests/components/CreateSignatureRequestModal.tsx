@@ -58,9 +58,8 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
       request_type: requestType,
       title: title.trim(),
       description: description.trim() || undefined,
-      // Only send overrides if they differ from the defaults
-      signer_name: overrideName.trim() !== signerName ? overrideName.trim() || undefined : undefined,
-      signer_email: overrideEmail.trim() !== (signerEmail ?? "") ? overrideEmail.trim() || undefined : undefined,
+      signer_name: overrideName.trim() || signerName,
+      signer_email: overrideEmail.trim() || undefined,
     });
     handleClose();
   };
