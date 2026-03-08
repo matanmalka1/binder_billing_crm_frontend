@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { DetailDrawer } from "../../../components/ui/DetailDrawer";
 import { Badge } from "../../../components/ui/Badge";
@@ -14,6 +15,7 @@ const auditActionLabel: Record<string, string> = {
   user_activated: "הופעל",
   user_deactivated: "הושבת",
   password_reset: "סיסמה אופסה",
+  logout: "יציאה מהמערכת",
 };
 
 interface AuditLogsDrawerProps {
@@ -27,7 +29,8 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({
   open,
   onClose,
 }) => {
-  const params = { page: 1, page_size: PAGE_SIZE };
+  const [page, setPage] = useState(1);
+  const params = { page, page_size: PAGE_SIZE };
 
   const { data, isPending, isError } = useQuery({
     queryKey: QK.users.auditLogs(params),
@@ -37,11 +40,17 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({
 
   const logs = data?.items ?? [];
   const total = data?.total ?? 0;
+  const hasMore = page * PAGE_SIZE < total;
+
+  const handleClose = () => {
+    setPage(1);
+    onClose();
+  };
 
   return (
     <DetailDrawer
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       title="לוג ביקורת משתמשים"
       subtitle={total > 0 ? `${total} רשומות` : undefined}
     >
@@ -86,16 +95,21 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({
             </div>
           ))}
 
-          {total > PAGE_SIZE && (
-            <p className="text-center text-xs text-gray-400">
-              מציג {PAGE_SIZE} מתוך {total} רשומות
-            </p>
+          {hasMore && (
+            <Button
+              variant="outline"
+              fullWidth
+              onClick={() => setPage((p) => p + 1)}
+              disabled={isPending}
+            >
+              טען עוד ({total - page * PAGE_SIZE} נותרו)
+            </Button>
           )}
         </div>
       )}
 
       <div className="pt-2">
-        <Button variant="outline" fullWidth onClick={onClose}>
+        <Button variant="outline" fullWidth onClick={handleClose}>
           סגירה
         </Button>
       </div>
