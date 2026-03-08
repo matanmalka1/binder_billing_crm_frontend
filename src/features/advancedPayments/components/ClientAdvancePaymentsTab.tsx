@@ -5,6 +5,8 @@ import { AdvancePaymentSummary } from "./AdvancePaymentSummary";
 import { AdvancePaymentTable } from "./AdvancePaymentTable";
 import { CreateAdvancePaymentModal } from "./CreateAdvancePaymentModal";
 import { Button } from "../../../components/ui/Button";
+import { Select } from "../../../components/ui/Select";
+import { YEAR_OPTIONS } from "../utils";
 
 interface ClientAdvancePaymentsTabProps {
   clientId: number;
@@ -18,22 +20,17 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const [modalOpen, setModalOpen] = useState(false);
   const role = useAuthStore((s) => s.user?.role);
 
-  const { rows, isLoading, totalExpected, totalPaid, create, isCreating } =
+  const { rows, isLoading, totalExpected, totalPaid, create, isCreating, updateRow, updatingId } =
     useAdvancePayments(clientId, year);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <input
-          type="number"
-          min={2000}
-          max={2099}
-          value={year}
-          onChange={(e) => {
-            const v = Number(e.target.value);
-            if (v >= 2000 && v <= 2099) setYear(v);
-          }}
-          className="w-24 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+        <Select
+          value={String(year)}
+          onChange={(e) => setYear(Number(e.target.value))}
+          options={YEAR_OPTIONS}
+          className="w-28"
         />
 
         {role === "advisor" && (
@@ -45,7 +42,15 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
 
       <AdvancePaymentSummary totalExpected={totalExpected} totalPaid={totalPaid} />
 
-      <AdvancePaymentTable rows={rows} isLoading={isLoading} />
+      <AdvancePaymentTable
+        rows={rows}
+        isLoading={isLoading}
+        canEdit={role === "advisor"}
+        updatingId={updatingId}
+        onUpdate={(id, paid_amount, status, expected_amount) =>
+          updateRow(id, paid_amount, status, expected_amount)
+        }
+      />
 
       {role === "advisor" && (
         <CreateAdvancePaymentModal

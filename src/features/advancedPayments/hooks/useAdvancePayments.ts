@@ -11,6 +11,7 @@ import { toast } from "../../../utils/toast";
 interface UpdatePayload {
   id: number;
   paid_amount?: number | null;
+  expected_amount?: number | null;
   status?: AdvancePaymentStatus;
 }
 
@@ -33,6 +34,7 @@ export const useAdvancePayments = (clientId: number, year: number) => {
     onSuccess: () => {
       toast.success("מקדמה עודכנה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
+      void queryClient.invalidateQueries({ queryKey: QK.tax.advancePayments.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון מקדמה"),
   });
@@ -69,8 +71,8 @@ export const useAdvancePayments = (clientId: number, year: number) => {
       : null,
     totalExpected,
     totalPaid,
-    updateRow: (id: number, paid_amount: number | null) =>
-      updateMutation.mutate({ id, paid_amount }),
+    updateRow: (id: number, paid_amount: number | null, status?: AdvancePaymentStatus, expected_amount?: number | null) =>
+      updateMutation.mutate({ id, paid_amount, status, expected_amount }),
     isUpdating: updateMutation.isPending,
     updatingId,
     create: createMutation.mutateAsync,

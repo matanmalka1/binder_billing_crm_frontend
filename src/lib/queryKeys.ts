@@ -69,6 +69,8 @@ export const QK = {
         ["tax", "advance-payments", clientId, year] as const,
       suggestion: (clientId: number, year: number) =>
         ["tax", "advance-payments", clientId, year, "suggest"] as const,
+      overview: (params: object) =>
+        ["tax", "advance-payments", "overview", params] as const,
     },
   },
   reminders: {

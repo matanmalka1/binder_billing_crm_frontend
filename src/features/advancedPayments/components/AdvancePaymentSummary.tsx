@@ -31,10 +31,10 @@ export const AdvancePaymentSummary: React.FC<AdvancePaymentSummaryProps> = ({
       />
       <StatsCard
         title="יתרה לתשלום"
-        value={fmtCurrency(balance)}
+        value={fmtCurrency(Math.abs(balance))}
         icon={AlertCircle}
-        variant={balance > 0 ? "orange" : "green"}
-        description={balance > 0 ? "נותר לתשלום" : "הכל שולם"}
+        variant={balance > 0 ? "orange" : balance < 0 ? "blue" : "green"}
+        description={balance > 0 ? "נותר לתשלום" : balance < 0 ? "שולם ביתר" : "הכל שולם"}
       />
     </div>
   );

@@ -14,7 +14,7 @@ export const createAdvancePaymentSchema = z.object({
 export type CreateAdvancePaymentFormValues = z.infer<typeof createAdvancePaymentSchema>;
 
 export const CREATE_ADVANCE_PAYMENT_DEFAULTS: CreateAdvancePaymentFormValues = {
-  month: 1,
+  month: new Date().getMonth() + 1,
   due_date: "",
   expected_amount: null,
   paid_amount: null,

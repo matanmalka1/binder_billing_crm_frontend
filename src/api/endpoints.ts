@@ -102,6 +102,7 @@ export const ENDPOINTS = {
   advancePayments: "/advance-payments",
   advancePaymentById: (id: number | string) => `/advance-payments/${id}`,
   advancePaymentSuggest: "/advance-payments/suggest",
+  advancePaymentsOverview: "/advance-payments/overview",
   vatClientSummary: (clientId: number | string) => `/vat/client/${clientId}/summary`,
   vatClientExport: (clientId: number | string) => `/vat/client/${clientId}/export`,
   clientStatusCard: (clientId: number | string) => `/clients/${clientId}/status-card`,

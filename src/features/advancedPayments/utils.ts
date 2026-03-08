@@ -1,4 +1,19 @@
 import { buildYearOptions } from "../../utils/utils";
+import type { AdvancePaymentStatus } from "../../api/advancePayments.api";
+
+export const STATUS_VARIANT: Record<AdvancePaymentStatus, "success" | "warning" | "error" | "neutral"> = {
+  paid: "success",
+  partial: "warning",
+  overdue: "error",
+  pending: "neutral",
+};
+
+export const STATUS_LABEL: Record<AdvancePaymentStatus, string> = {
+  paid: "שולם",
+  partial: "חלקי",
+  overdue: "באיחור",
+  pending: "ממתין",
+};
 
 export const fmtCurrency = (n: number | null): string =>
   n != null

@@ -1,106 +1,158 @@
-import { Plus } from "lucide-react";
+import { getYear } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { ErrorCard } from "../../components/ui/ErrorCard";
-import { Button } from "../../components/ui/Button";
-import { Input } from "../../components/ui/Input";
-import { ClientSearchField } from "../../features/advancedPayments/components/ClientSearchField";
-import { AdvancePaymentSummary } from "../../features/advancedPayments/components/AdvancePaymentSummary";
-import { AdvancePaymentTable } from "../../features/advancedPayments/components/AdvancePaymentTable";
-import { CreateAdvancePaymentModal } from "../../features/advancedPayments/components/CreateAdvancePaymentModal";
-import { useAdvancePaymentsPage } from "../../features/advancedPayments/hooks/useAdvancePaymentsPage";
+import { Select } from "../../components/ui/Select";
+import { DataTable, type Column } from "../../components/ui/DataTable";
+import { Badge } from "../../components/ui/Badge";
+import { QK } from "../../lib/queryKeys";
+import { advancePaymentsApi, type AdvancePaymentOverviewRow, type AdvancePaymentStatus } from "../../api/advancePayments.api";
+import { MONTH_NAMES, MONTH_OPTIONS, YEAR_OPTIONS, fmtCurrency, STATUS_LABEL, STATUS_VARIANT } from "../../features/advancedPayments/utils";
+import { formatDate, parsePositiveInt } from "../../utils/utils";
+
+const STATUS_OPTIONS = [
+  { value: "", label: "כל הסטטוסים" },
+  { value: "overdue", label: "באיחור" },
+  { value: "pending", label: "ממתין" },
+  { value: "partial", label: "חלקי" },
+  { value: "paid", label: "שולם" },
+];
+
+const MONTH_FILTER_OPTIONS = [
+  { value: "", label: "כל החודשים" },
+  ...MONTH_OPTIONS,
+];
 
 export const AdvancePayments: React.FC = () => {
-  const {
-    filters,
-    setFilter,
-    selectedClientName,
-    isCreateModalOpen,
-    openCreateModal,
-    closeCreateModal,
-    handleClientSelect,
-    handleClientClear,
-    hasClientSelected,
-    rows,
-    isLoading,
-    error,
-    totalExpected,
-    totalPaid,
-    create,
-    isCreating,
-  } = useAdvancePaymentsPage();
+  const columns: Column<AdvancePaymentOverviewRow>[] = [
+    {
+      key: "client_name",
+      header: "לקוח",
+      render: (row) => (
+        <span className="text-sm font-semibold text-gray-900">{row.client_name}</span>
+      ),
+    },
+    {
+      key: "month",
+      header: "חודש",
+      render: (row) => (
+        <span className="text-sm text-gray-700">{MONTH_NAMES[row.month - 1] ?? row.month}</span>
+      ),
+    },
+    {
+      key: "due_date",
+      header: "תאריך תשלום",
+      render: (row) => (
+        <span className="text-sm text-gray-500 tabular-nums">{formatDate(row.due_date)}</span>
+      ),
+    },
+    {
+      key: "expected_amount",
+      header: "סכום צפוי",
+      render: (row) => (
+        <span className="font-mono text-sm font-medium text-gray-700 tabular-nums">
+          {fmtCurrency(row.expected_amount)}
+        </span>
+      ),
+    },
+    {
+      key: "paid_amount",
+      header: "שולם",
+      render: (row) => (
+        <span className="font-mono text-sm font-semibold text-green-700 tabular-nums">
+          {fmtCurrency(row.paid_amount)}
+        </span>
+      ),
+    },
+    {
+      key: "status",
+      header: "סטטוס",
+      render: (row) => (
+        <Badge variant={STATUS_VARIANT[row.status] ?? "neutral"}>
+          {STATUS_LABEL[row.status] ?? row.status}
+        </Badge>
+      ),
+    },
+  ];
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const year = parsePositiveInt(searchParams.get("year"), getYear(new Date()));
+  const month = parsePositiveInt(searchParams.get("month"), 0);
+  const statusFilter = (searchParams.get("status") ?? "") as AdvancePaymentStatus | "";
+
+  const setParam = (key: string, value: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set(key, value);
+    else next.delete(key);
+    setSearchParams(next);
+  };
+
+  const queryParams = useMemo(() => ({
+    year,
+    ...(month > 0 ? { month } : {}),
+    ...(statusFilter ? { status: [statusFilter] } : {}),
+    page_size: 200,
+  }), [year, month, statusFilter]);
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: QK.tax.advancePayments.overview(queryParams),
+    queryFn: () => advancePaymentsApi.overview(queryParams),
+  });
+
+  const rows = data?.items ?? [];
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="מחשבון מקדמות"
-        description="מעקב תשלומי מקדמה חודשיים לכל לקוח"
+        title="מקדמות — סקירה כללית"
+        description="כל הלקוחות עם מקדמות פתוחות, חלקיות או באיחור"
       />
 
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
         <div className="px-6 py-4 border-b border-gray-100/80 bg-gradient-to-r from-gray-50/50 to-transparent">
-          <h3 className="text-lg font-semibold text-gray-900 tracking-tight">בחירת לקוח ושנה</h3>
+          <h3 className="text-lg font-semibold text-gray-900 tracking-tight">סינון</h3>
         </div>
         <div className="p-6">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 max-w-md">
-          <ClientSearchField
-            selectedClientId={filters.client_id}
-            selectedClientName={selectedClientName}
-            onSelect={handleClientSelect}
-            onClear={handleClientClear}
-          />
-          <Input
-            label="שנת מס"
-            type="number"
-            min={2000}
-            max={2099}
-            value={filters.year}
-            onChange={(e) => {
-              const v = Number(e.target.value);
-              if (v >= 2000 && v <= 2099) setFilter("year", v);
-            }}
-          />
-        </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 max-w-2xl">
+            <Select
+              label="שנת מס"
+              value={String(year)}
+              onChange={(e) => setParam("year", e.target.value)}
+              options={YEAR_OPTIONS}
+            />
+            <Select
+              label="חודש"
+              value={month > 0 ? String(month) : ""}
+              onChange={(e) => setParam("month", e.target.value)}
+              options={MONTH_FILTER_OPTIONS}
+            />
+            <Select
+              label="סטטוס"
+              value={statusFilter}
+              onChange={(e) => setParam("status", e.target.value)}
+              options={STATUS_OPTIONS}
+            />
+          </div>
         </div>
       </div>
 
-      {error && <ErrorCard message={error} />}
+      {error && <ErrorCard message="שגיאה בטעינת מקדמות" />}
 
-      {hasClientSelected && (
-        <AdvancePaymentSummary totalExpected={totalExpected} totalPaid={totalPaid} />
-      )}
-
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-800">מקדמות חודשיות</h3>
-        <span title={!hasClientSelected ? "בחר לקוח תחילה" : undefined}>
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2"
-            disabled={!hasClientSelected}
-            onClick={openCreateModal}
-          >
-            <Plus className="h-4 w-4" />
-            מקדמה חדשה
-          </Button>
-        </span>
+      <div className="text-sm text-gray-500">
+        {!isLoading && `${rows.length} רשומות`}
       </div>
 
-      {!hasClientSelected ? (
-        <div className="rounded-xl border border-dashed border-gray-300 py-16 text-center text-gray-500">
-          <p className="text-base font-medium text-gray-700">בחר לקוח לצפייה במקדמות</p>
-          <p className="mt-1 text-sm">לאחר בחירת לקוח יוצג לוח המקדמות החודשי לשנה הנבחרת</p>
-        </div>
-      ) : (
-        <AdvancePaymentTable rows={rows} isLoading={isLoading} />
-      )}
-
-      <CreateAdvancePaymentModal
-        open={isCreateModalOpen}
-        clientId={filters.client_id}
-        year={filters.year}
-        onClose={closeCreateModal}
-        onCreate={create}
-        isCreating={isCreating}
+      <DataTable
+        columns={columns}
+        data={rows}
+        getRowKey={(row) => row.id}
+        isLoading={isLoading}
+        onRowClick={(row) => navigate(`/clients/${row.client_id}?tab=advance-payments`)}
+        emptyMessage="אין מקדמות לפי הסינון הנבחר"
       />
     </div>
   );
