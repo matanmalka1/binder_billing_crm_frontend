@@ -16,13 +16,14 @@
 
 ## Occupation Sync
 
-- [ ] In **ClientDetails → Edit Info Drawer**
+- [x] In **ClientDetails → Edit Info Drawer**
   - There is an `occupation` input.
 
-- [ ] In **ClientDetails → Tax Details**
+- [x] In **ClientDetails → Tax Details**
   - There is also an `occupation` input.
 
-- [ ] Ensure both inputs are **synchronized** and refer to the **same underlying field in the database**.
+- [x] Ensure both inputs are **synchronized** and refer to the **same underlying field in the database**.
+  - **N/A** — `occupation` field does not exist in either frontend or backend. Tax Details uses `business_type`. No sync issue exists.
 
 ---
 
@@ -30,30 +31,33 @@
 
 ## Communication Diary With Authorities
 
-- [ ] Fix **Internal Server Error**
+- [x] Fix **Internal Server Error**
   - Occurs in:
     - `ClientDetails → Communication Diary with Authorities`
-  - Investigate backend endpoint and response handling.
+  - Fixed in backend: `created_at` made `Optional[datetime]` in `CorrespondenceResponse` to handle legacy seeded rows with null values.
 
 ---
 
 ## Advanced Payments Percentage Not Displayed
 
-- [ ] In **ClientDetails → Tax Details**
+- [x] In **ClientDetails → Tax Details**
   - `advanced payments percentage` can be edited.
 
-- [ ] After saving, the value **is not displayed in the details view**.
+- [x] After saving, the value **is not displayed in the details view**.
+  - Fixed: `TaxProfileCard` displays `advance_rate`, `useTaxProfile` calls `setQueryData` on success.
 
-- [ ] Fix UI state refresh or data binding after update.
+- [x] Fix UI state refresh or data binding after update.
 
 ---
 
 ## Authorities Contacts Edit Modal
 
-- [ ] In **ClientDetails → Contacts in the Authorities**
+- [x] In **ClientDetails → Contacts in the Authorities**
   - When opening the **Edit Modal**, the existing content **is not pre-filled**.
 
-- [ ] Fix modal state initialization so current values appear.
+- [x] Fix modal state initialization so current values appear.
+  - Frontend: `useAuthorityContactForm` resets form with existing values via `useEffect`.
+  - Backend: Added `GET /authority-contacts/{contact_id}` endpoint.
 
 ---
 
@@ -61,18 +65,20 @@
 
 ### Default Signer Info
 
-- [ ] In **ClientDetails → New Signature Request**
+- [x] In **ClientDetails → New Signature Request**
   - `Signer Name`
   - `Signer Email`
 
-- [ ] These should be **pre-filled using the client's default contact information**.
+- [x] These should be **pre-filled using the client's default contact information**.
+  - Fixed: `CreateSignatureRequestModal` initializes from `client.full_name` / `client.email`.
 
 ### Signature Request URL
 
-- [ ] In **ClientDetails → Signature Requests**
+- [x] In **ClientDetails → Signature Requests**
   - The generated **URL leads to a `Not Found` page**.
 
-- [ ] Fix routing or backend endpoint.
+- [x] Fix routing or backend endpoint.
+  - Fixed: `/sign/:token` route exists in `AppRoutes.tsx`; backend `/sign/{token}` public endpoint confirmed working.
 
 ---
 
@@ -80,31 +86,34 @@
 
 ## Custom Reminder Type
 
-- [ ] In **ClientDetails → New Customer Reminder Modal**
+- [x] In **ClientDetails → New Customer Reminder Modal**
 
 - When `Reminder Type = Custom`:
-  - [ ] Show an additional **text input field**
-  - [ ] Advisor can type the custom reminder name.
+  - [x] Show an additional **text input field**
+  - [x] Advisor can type the custom reminder name.
+  - Fixed: `CreateReminderModal` conditionally renders input when `reminderType === "custom"`.
 
 ---
 
 ## Client Selector
 
-- [ ] In **ClientDetails → New Customer Reminder Modal**
+- [x] In **ClientDetails → New Customer Reminder Modal**
   - Client field currently shows only **Client ID**.
 
-- [ ] Update display format to:
+- [x] Update display format to:
   - `Client Name + Client ID`
+  - Fixed: displays `"Name (#ID)"` format.
 
 ---
 
 ## Reminder Not Appearing in UI
 
-- [ ] After submitting a reminder:
+- [x] After submitting a reminder:
   - The reminder **is saved in the database**
   - But **does not appear in the UI**.
 
-- [ ] Fix UI refresh or query invalidation.
+- [x] Fix UI refresh or query invalidation.
+  - Fixed: `useReminders` invalidates `reminders.all` and `reminders.list(clientId)` on success.
 
 ---
 
@@ -112,13 +121,14 @@
 
 ## Upload Option Missing
 
-- [ ] In **ClientDetails → Documents Page**
+- [x] In **ClientDetails → Documents Page**
   - There is **no option to upload a document**.
 
-- [ ] Add:
+- [x] Add:
   - Upload button
   - File input
   - Upload API integration.
+  - Fixed: `DocumentsUploadCard` fully implemented with type selector, file input, and multipart API integration.
 
 ---
 
@@ -126,16 +136,17 @@
 
 ## Timeline Empty
 
-- [ ] In **ClientDetails → Timeline Page**
+- [x] In **ClientDetails → Timeline Page**
   - Timeline currently shows **no events**.
 
-- [ ] Add events for:
+- [x] Add events for:
   - Client created
   - Reminder created
   - Client info updates
   - Tax details updates
   - Document uploads
   - Signature requests
+  - Fixed: backend `TimelineService` now aggregates all 6 new event types via `timeline_client_aggregator`. `updated_at` added to `Client` model (migration 0005).
 
 ---
 
