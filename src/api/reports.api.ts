@@ -25,6 +25,8 @@ export interface AgingReportResponse {
   total_outstanding: number;
   items: AgingReportItem[];
   summary: AgingBucket;
+  capped: boolean;
+  cap_limit: number;
 }
 
 // Note: Backend uses float for bucket fields; TS `number` already covers both int/float.
