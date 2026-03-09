@@ -13,6 +13,7 @@ const statusLabels: Record<AnnualReportStatus, string> = {
   assessment_issued: "שומה הוצאה",
   objection_filed: "השגה הוגשה",
   closed: "סגור",
+  amended: "תיקון דוח",
 };
 
 export const getStatusLabel = (status: string): string =>
@@ -33,6 +34,7 @@ const statusVariants: Record<AnnualReportStatus, BadgeVariant> = {
   assessment_issued: "warning",
   objection_filed: "error",
   closed: "neutral",
+  amended: "warning",
 };
 
 export const getStatusVariant = (status: string): BadgeVariant =>
@@ -50,6 +52,7 @@ const validTransitions: Record<AnnualReportStatus, AnnualReportStatus[]> = {
   assessment_issued: ["objection_filed", "closed", "pending_client", "in_preparation", "docs_complete"],
   objection_filed: ["closed", "docs_complete"],
   closed: [],
+  amended: ["in_preparation", "collecting_docs"],
 };
 
 export const getAllowedTransitions = (status: string): AnnualReportStatus[] =>
