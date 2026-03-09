@@ -201,7 +201,7 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
   const incomeLines: IncomeLineResponse[] = data?.income_lines ?? [];
   const expenseLines: ExpenseLineResponse[] = data?.expense_lines ?? [];
   const totalIncome = data?.total_income ?? 0;
-  const totalExpenses = data?.total_expenses ?? 0;
+  const totalExpenses = data?.recognized_expenses ?? data?.gross_expenses ?? 0;
   const taxableIncome = data?.taxable_income ?? 0;
 
   return (

@@ -17,6 +17,15 @@ export interface TaxDeadlineResponse {
   completed_at: string | null;
 }
 
+export interface TimelineEntry {
+  id: number;
+  due_date: string;
+  deadline_type: string;
+  status: string;
+  days_remaining: number;
+  milestone_label: string;
+}
+
 export interface DeadlineUrgentItem {
   id: number;
   client_id: number;
@@ -101,6 +110,14 @@ export const taxDeadlinesApi = {
       urgent: DeadlineUrgentItem[];
       upcoming: TaxDeadlineResponse[];
     }>(ENDPOINTS.taxDeadlinesDashboard);
+    return response.data;
+  },
+
+  getTimeline: async (clientId: number): Promise<TimelineEntry[]> => {
+    const response = await api.get<TimelineEntry[]>(
+      ENDPOINTS.taxDeadlinesTimeline,
+      { params: toQueryParams({ client_id: clientId }) },
+    );
     return response.data;
   },
 };
