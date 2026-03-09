@@ -219,6 +219,29 @@ export interface TaxCalculationResult {
   effective_rate: number;
 }
 
+export interface AnnexDataLine {
+  id: number;
+  annual_report_id: number;
+  schedule: AnnualReportScheduleKey;
+  line_number: number;
+  data: Record<string, unknown>;
+  notes: string | null;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface AnnexDataAddPayload {
+  data: Record<string, unknown>;
+  notes?: string | null;
+}
+
+export interface AdvancesSummary {
+  total_advances_paid: number;
+  advances_count: number;
+  final_balance: number;
+  balance_type: "due" | "refund" | "zero";
+}
+
 export interface IncomeLinePayload {
   source_type: IncomeSourceType;
   amount: number;
@@ -409,5 +432,45 @@ export const annualReportsApi = {
   getTaxCalculation: async (reportId: number): Promise<TaxCalculationResult> => {
     const res = await api.get<TaxCalculationResult>(ENDPOINTS.annualReportTaxCalculation(reportId));
     return res.data;
+  },
+
+  getAdvancesSummary: async (reportId: number): Promise<AdvancesSummary> => {
+    const res = await api.get<AdvancesSummary>(ENDPOINTS.annualReportAdvancesSummary(reportId));
+    return res.data;
+  },
+
+  getAnnexLines: async (reportId: number, schedule: AnnualReportScheduleKey): Promise<AnnexDataLine[]> => {
+    const res = await api.get<AnnexDataLine[]>(ENDPOINTS.annualReportAnnex(reportId, schedule));
+    return res.data;
+  },
+
+  addAnnexLine: async (
+    reportId: number,
+    schedule: AnnualReportScheduleKey,
+    payload: AnnexDataAddPayload
+  ): Promise<AnnexDataLine> => {
+    const res = await api.post<AnnexDataLine>(ENDPOINTS.annualReportAnnex(reportId, schedule), payload);
+    return res.data;
+  },
+
+  updateAnnexLine: async (
+    reportId: number,
+    schedule: AnnualReportScheduleKey,
+    lineId: number,
+    payload: AnnexDataAddPayload
+  ): Promise<AnnexDataLine> => {
+    const res = await api.patch<AnnexDataLine>(
+      ENDPOINTS.annualReportAnnexLine(reportId, schedule, lineId),
+      payload
+    );
+    return res.data;
+  },
+
+  deleteAnnexLine: async (
+    reportId: number,
+    schedule: AnnualReportScheduleKey,
+    lineId: number
+  ): Promise<void> => {
+    await api.delete(ENDPOINTS.annualReportAnnexLine(reportId, schedule, lineId));
   },
 };

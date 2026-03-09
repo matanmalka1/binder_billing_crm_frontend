@@ -117,4 +117,9 @@ export const ENDPOINTS = {
   annualReportExpenseById: (id: number | string, lineId: number | string) =>
     `/annual-reports/${id}/expenses/${lineId}`,
   annualReportTaxCalculation: (id: number | string) => `/annual-reports/${id}/tax-calculation`,
+  annualReportAdvancesSummary: (id: number | string) => `/annual-reports/${id}/advances-summary`,
+  annualReportAnnex: (id: number | string, schedule: string) =>
+    `/annual-reports/${id}/annex/${schedule}`,
+  annualReportAnnexLine: (id: number | string, schedule: string, lineId: number | string) =>
+    `/annual-reports/${id}/annex/${schedule}/${lineId}`,
 } as const;

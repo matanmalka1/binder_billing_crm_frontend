@@ -12,6 +12,7 @@ import { StatusHistoryTimeline } from "./StatusHistoryTimeline";
 import { IncomeExpensePanel } from "./IncomeExpensePanel";
 import { ReadinessCheckPanel } from "./ReadinessCheckPanel";
 import { TaxCalculationPanel } from "./TaxCalculationPanel";
+import { FinalBalancePanel } from "./FinalBalancePanel";
 import { useReportDetail } from "../hooks/useReportDetail";
 import {
   getStatusLabel,
@@ -128,6 +129,7 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
           <DrawerSection title="נספחים">
             <div className="py-2">
               <ScheduleChecklist
+                reportId={report.id}
                 schedules={report.schedules ?? []}
                 onComplete={completeSchedule}
                 isLoading={isCompletingSchedule}
@@ -144,6 +146,12 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
           <DrawerSection title="חישוב מס">
             <div className="py-2">
               <TaxCalculationPanel reportId={report.id} />
+            </div>
+          </DrawerSection>
+
+          <DrawerSection title="יתרה סופית">
+            <div className="py-2">
+              <FinalBalancePanel reportId={report.id} />
             </div>
           </DrawerSection>
 
