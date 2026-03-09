@@ -81,6 +81,10 @@ export const QK = {
         ["tax", "advance-payments", clientId, year, "suggest"] as const,
       overview: (params: object) =>
         ["tax", "advance-payments", "overview", params] as const,
+      kpi: (clientId: number, year: number) =>
+        ["tax", "advance-payments", clientId, year, "kpi"] as const,
+      chart: (clientId: number, year: number) =>
+        ["tax", "advance-payments", clientId, year, "chart"] as const,
     },
   },
   reminders: {
@@ -128,5 +132,14 @@ export const QK = {
     detail: (id: number) => ["signature-requests", "detail", id] as const,
     pending: (params: object) =>
       ["signature-requests", "pending", params] as const,
+  },
+  notifications: {
+    all: ["notifications"] as const,
+    list: (params?: object) => ["notifications", "list", params ?? {}] as const,
+    unreadCount: (clientId?: number) =>
+      ["notifications", "unread-count", clientId ?? "global"] as const,
+  },
+  taxDeadlines: {
+    timeline: (clientId: number) => ["tax-deadlines", "timeline", clientId] as const,
   },
 } as const;
