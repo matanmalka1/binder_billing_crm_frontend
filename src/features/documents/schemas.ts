@@ -17,7 +17,7 @@ export const documentsUploadSchema = z.object({
         Object.prototype.toString.call(file) === "[object File]",
       { message: "יש לבחור קובץ לפני העלאה" },
     ),
-  tax_year: z.number().nullable().optional(),
+  tax_year: z.number().nullable(),
 });
 
 export const documentsUploadDefaultValues: DocumentsUploadFormValues = {
@@ -25,4 +25,3 @@ export const documentsUploadDefaultValues: DocumentsUploadFormValues = {
   file: null,
   tax_year: null,
 };
-
