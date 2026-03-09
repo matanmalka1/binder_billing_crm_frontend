@@ -15,16 +15,27 @@ interface UpdatePayload {
   status?: AdvancePaymentStatus;
 }
 
-export const useAdvancePayments = (clientId: number, year: number) => {
+export const useAdvancePayments = (
+  clientId: number,
+  year: number,
+  statusFilter?: AdvancePaymentStatus[],
+) => {
   const queryClient = useQueryClient();
   const qk = QK.tax.advancePayments.forClientYear(clientId, year);
   const enabled = clientId > 0;
 
   const listQuery = useQuery({
     enabled,
-    queryKey: qk,
+    queryKey: statusFilter?.length
+      ? [...qk, { status: statusFilter }]
+      : qk,
     queryFn: () =>
-      advancePaymentsApi.list({ client_id: clientId, year, page_size: 12 }),
+      advancePaymentsApi.list({
+        client_id: clientId,
+        year,
+        page_size: 12,
+        ...(statusFilter?.length ? { status: statusFilter } : {}),
+      }),
     retry: false,
   });
 
@@ -55,6 +66,16 @@ export const useAdvancePayments = (clientId: number, year: number) => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => advancePaymentsApi.delete(id),
+    onSuccess: () => {
+      toast.success("מקדמה נמחקה בהצלחה");
+      void queryClient.invalidateQueries({ queryKey: qk });
+      void queryClient.invalidateQueries({ queryKey: QK.tax.advancePayments.all });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה במחיקת מקדמה"),
+  });
+
   const rows = enabled ? (listQuery.data?.items ?? []) : [];
   const totalExpected = rows.reduce((sum, row) => sum + (row.expected_amount ?? 0), 0);
   const totalPaid = rows.reduce((sum, row) => sum + (row.paid_amount ?? 0), 0);
@@ -77,5 +98,7 @@ export const useAdvancePayments = (clientId: number, year: number) => {
     updatingId,
     create: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
+    deleteRow: (id: number) => deleteMutation.mutate(id),
+    isDeletingId: deleteMutation.isPending ? (deleteMutation.variables ?? null) : null,
   };
 };

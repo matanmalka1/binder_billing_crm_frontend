@@ -8,7 +8,9 @@ interface AdvancePaymentTableProps {
   isLoading: boolean;
   canEdit?: boolean;
   updatingId?: number | null;
+  deletingId?: number | null;
   onUpdate?: (id: number, paid_amount: number | null, status: AdvancePaymentStatus, expected_amount: number | null) => void;
+  onDelete?: (id: number) => void;
 }
 
 export const AdvancePaymentTable: React.FC<AdvancePaymentTableProps> = ({
@@ -16,13 +18,15 @@ export const AdvancePaymentTable: React.FC<AdvancePaymentTableProps> = ({
   isLoading,
   canEdit = false,
   updatingId = null,
+  deletingId = null,
   onUpdate,
+  onDelete,
 }) => (
   <DataTable
     data={rows}
     columns={buildAdvancePaymentColumns(
-      canEdit && onUpdate
-        ? { canEdit: true, updatingId, onUpdate }
+      canEdit && onUpdate && onDelete
+        ? { canEdit: true, updatingId, deletingId, onUpdate, onDelete }
         : undefined,
     )}
     getRowKey={(row) => row.id}

@@ -1,4 +1,4 @@
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Trash2 } from "lucide-react";
 import type { Column } from "../../../components/ui/DataTable";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../../../api/advancePayments.api";
 import { Badge } from "../../../components/ui/Badge";
@@ -9,7 +9,9 @@ import { EditAdvancePaymentInline } from "./EditAdvancePaymentInline";
 interface BuildColumnsOptions {
   canEdit: boolean;
   updatingId: number | null;
+  deletingId: number | null;
   onUpdate: (id: number, paid_amount: number | null, status: AdvancePaymentStatus, expected_amount: number | null) => void;
+  onDelete: (id: number) => void;
 }
 
 export const buildAdvancePaymentColumns = (
@@ -60,6 +62,23 @@ export const buildAdvancePaymentColumns = (
       ),
     },
     {
+      key: "delta",
+      header: "הפרש",
+      render: (row) => {
+        if (row.delta == null) return <span className="text-gray-400 text-sm">—</span>;
+        const colorClass = row.delta > 0
+          ? "text-red-600"
+          : row.delta < 0
+            ? "text-green-600"
+            : "text-gray-400";
+        return (
+          <span className={`font-mono text-sm tabular-nums ${colorClass}`}>
+            {fmtCurrency(row.delta)}
+          </span>
+        );
+      },
+    },
+    {
       key: "notes",
       header: "",
       render: (row) =>
@@ -76,11 +95,27 @@ export const buildAdvancePaymentColumns = (
       key: "actions",
       header: "",
       render: (row) => (
-        <EditAdvancePaymentInline
-          row={row}
-          isUpdating={options.updatingId === row.id}
-          onSave={(paid_amount, status, expected_amount) => options.onUpdate(row.id, paid_amount, status, expected_amount)}
-        />
+        <div className="flex items-center gap-1">
+          <EditAdvancePaymentInline
+            row={row}
+            isUpdating={options.updatingId === row.id}
+            onSave={(paid_amount, status, expected_amount) => options.onUpdate(row.id, paid_amount, status, expected_amount)}
+          />
+          <button
+            type="button"
+            disabled={options.deletingId === row.id}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (window.confirm("האם למחוק את המקדמה?")) {
+                options.onDelete(row.id);
+              }
+            }}
+            className="rounded p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
+            title="מחק"
+          >
+            <Trash2 size={13} />
+          </button>
+        </div>
       ),
     });
   }

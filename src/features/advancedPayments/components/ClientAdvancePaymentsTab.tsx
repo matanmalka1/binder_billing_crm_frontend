@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { TrendingDown, Percent, TrendingUp, Banknote, CheckCircle, AlertCircle, Edit2 } from "lucide-react";
+import type { AdvancePaymentStatus } from "../../../api/advancePayments.api";
 import { useAdvancePayments } from "../hooks/useAdvancePayments";
 import { useAuthStore } from "../../../store/auth.store";
 import { useTaxProfile } from "../../taxProfile/hooks/useTaxProfile";
 import { AdvancePaymentTable } from "./AdvancePaymentTable";
+import { AdvancePaymentsKPICards } from "../../../components/advancePayments/AdvancePaymentsKPICards";
+import { AdvancePaymentsChart } from "../../../components/advancePayments/AdvancePaymentsChart";
 import { CreateAdvancePaymentModal } from "./CreateAdvancePaymentModal";
 import { Button } from "../../../components/ui/Button";
 import { Select } from "../../../components/ui/Select";
@@ -25,6 +28,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
 }) => {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
+  const [statusFilter, setStatusFilter] = useState<AdvancePaymentStatus[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editRateOpen, setEditRateOpen] = useState(false);
   const [reductionOpen, setReductionOpen] = useState(false);
@@ -33,8 +37,8 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const role = useAuthStore((s) => s.user?.role);
   const isAdvisor = role === "advisor";
 
-  const { rows, isLoading, totalExpected, totalPaid, create, isCreating, updateRow, updatingId } =
-    useAdvancePayments(clientId, year);
+  const { rows, isLoading, totalExpected, totalPaid, create, isCreating, updateRow, updatingId, deleteRow, isDeletingId } =
+    useAdvancePayments(clientId, year, statusFilter);
 
   const { profile, updateProfile, isUpdating: isUpdatingProfile } = useTaxProfile(clientId);
 
@@ -80,12 +84,43 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
             </Button>
           </div>
         )}
-        <div className="w-28">
-          <Select
-            value={String(year)}
-            onChange={(e) => setYear(Number(e.target.value))}
-            options={YEAR_OPTIONS}
-          />
+        <div className="flex items-center gap-2">
+          <div className="flex flex-wrap gap-1">
+            {(["pending", "paid", "partial", "overdue"] as AdvancePaymentStatus[]).map((s) => {
+              const labels: Record<AdvancePaymentStatus, string> = {
+                pending: "ממתין",
+                paid: "שולם",
+                partial: "חלקי",
+                overdue: "באיחור",
+              };
+              const active = statusFilter.includes(s);
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() =>
+                    setStatusFilter((prev) =>
+                      active ? prev.filter((x) => x !== s) : [...prev, s],
+                    )
+                  }
+                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                    active
+                      ? "bg-blue-600 text-white border-blue-600"
+                      : "bg-white text-gray-600 border-gray-300 hover:border-blue-400"
+                  }`}
+                >
+                  {labels[s]}
+                </button>
+              );
+            })}
+          </div>
+          <div className="w-28">
+            <Select
+              value={String(year)}
+              onChange={(e) => setYear(Number(e.target.value))}
+              options={YEAR_OPTIONS}
+            />
+          </div>
         </div>
       </div>
 
@@ -125,15 +160,23 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         />
       </div>
 
+      {/* KPI Cards */}
+      <AdvancePaymentsKPICards clientId={clientId} year={year} />
+
+      {/* Monthly Chart */}
+      <AdvancePaymentsChart clientId={clientId} year={year} />
+
       {/* Table */}
       <AdvancePaymentTable
         rows={rows}
         isLoading={isLoading}
         canEdit={isAdvisor}
         updatingId={updatingId}
+        deletingId={isDeletingId}
         onUpdate={(id, paid_amount, status, expected_amount) =>
           updateRow(id, paid_amount, status, expected_amount)
         }
+        onDelete={deleteRow}
       />
 
       {/* Add payment modal */}
