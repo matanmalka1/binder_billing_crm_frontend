@@ -73,6 +73,23 @@ export interface AnnualReportFull {
   taxable_income?: number;
 }
 
+export interface ReportDetailResponse {
+  report_id: number;
+  tax_refund_amount: number | null;
+  tax_due_amount: number | null;
+  client_approved_at: string | null;
+  internal_notes: string | null;
+  credit_points: number | null;
+  pension_credit_points: number | null;
+  life_insurance_credit_points: number | null;
+  tuition_credit_points: number | null;
+  pension_contribution: number | null;
+  donation_amount: number | null;
+  other_credits: number | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
 export interface ScheduleEntry {
   id: number;
   annual_report_id: number;
@@ -404,11 +421,19 @@ export const annualReportsApi = {
     return res.data;
   },
 
+  getReportDetails: async (reportId: number): Promise<ReportDetailResponse> => {
+    const res = await api.get<ReportDetailResponse>(ENDPOINTS.annualReportDetails(reportId));
+    return res.data;
+  },
+
   patchReportDetails: async (
     reportId: number,
-    payload: Partial<AnnualReportFull>
-  ): Promise<AnnualReportFull> => {
-    const res = await api.patch<AnnualReportFull>(ENDPOINTS.annualReportDetails(reportId), payload);
+    payload: Partial<ReportDetailResponse>
+  ): Promise<ReportDetailResponse> => {
+    const res = await api.patch<ReportDetailResponse>(
+      ENDPOINTS.annualReportDetails(reportId),
+      payload,
+    );
     return res.data;
   },
 

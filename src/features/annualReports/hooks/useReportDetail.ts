@@ -4,20 +4,25 @@ import {
   annualReportsApi,
   type StatusTransitionPayload,
   type AnnualReportScheduleKey,
+  type ReportDetailResponse,
 } from "../../../api/annualReports.api";
 import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import type { AnnualReportDetail } from "../types";
 
+// Fetch base report + detail record in parallel, merge into AnnualReportDetail
 const fetchDetail = async (reportId: number): Promise<AnnualReportDetail> => {
-  const base = await annualReportsApi.getReport(reportId);
+  const [base, detail] = await Promise.all([
+    annualReportsApi.getReport(reportId),
+    annualReportsApi.getReportDetails(reportId),
+  ]);
   return {
-    tax_refund_amount: null,
-    tax_due_amount: null,
-    client_approved_at: null,
-    internal_notes: null,
     ...base,
+    tax_refund_amount: detail.tax_refund_amount,
+    tax_due_amount: detail.tax_due_amount,
+    client_approved_at: detail.client_approved_at,
+    internal_notes: detail.internal_notes,
   };
 };
 
@@ -60,11 +65,24 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
   });
 
   const updateMutation = useMutation({
-    mutationFn: (payload: Partial<AnnualReportDetail>) =>
+    mutationFn: (payload: Partial<ReportDetailResponse>) =>
       annualReportsApi.patchReportDetails(reportId as number, payload),
     onSuccess: (updated) => {
       toast.success("דוח עודכן בהצלחה");
-      if (qk) queryClient.setQueryData(qk, updated);
+      // Merge updated detail fields back into the cached AnnualReportDetail
+      if (qk) {
+        queryClient.setQueryData<AnnualReportDetail>(qk, (prev) =>
+          prev
+            ? {
+                ...prev,
+                tax_refund_amount: updated.tax_refund_amount,
+                tax_due_amount: updated.tax_due_amount,
+                client_approved_at: updated.client_approved_at,
+                internal_notes: updated.internal_notes,
+              }
+            : prev,
+        );
+      }
       void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון דוח"),
@@ -93,7 +111,7 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
     completeSchedule: (schedule: AnnualReportScheduleKey) =>
       completeScheduleMutation.mutate(schedule),
     isCompletingSchedule: completeScheduleMutation.isPending,
-    updateDetail: (payload: Partial<AnnualReportDetail>) => updateMutation.mutate(payload),
+    updateDetail: (payload: Partial<ReportDetailResponse>) => updateMutation.mutate(payload),
     isUpdating: updateMutation.isPending,
     deleteReport: () => deleteMutation.mutateAsync(),
     isDeleting: deleteMutation.isPending,

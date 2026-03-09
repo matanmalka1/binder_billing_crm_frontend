@@ -18,14 +18,14 @@ interface DocumentsUploadCardProps {
   }) => Promise<boolean>;
   uploadError: string | null;
   uploading: boolean;
-  taxYears: number[];
+  selectedTaxYear: number | null;
 }
 
 export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
   submitUpload,
   uploadError,
   uploading,
-  taxYears,
+  selectedTaxYear,
 }) => {
   const {
     formState: { errors },
@@ -33,7 +33,6 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
     register,
     reset,
     setValue,
-    watch,
   } = useForm<DocumentsUploadFormValues>({
     defaultValues: documentsUploadDefaultValues,
     resolver: zodResolver(documentsUploadSchema),
@@ -44,12 +43,10 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
     const uploaded = await submitUpload({
       document_type: values.document_type,
       file: values.file,
-      tax_year: values.tax_year ?? null,
+      tax_year: selectedTaxYear ?? null,
     });
     if (uploaded) reset(documentsUploadDefaultValues);
   });
-
-  const taxYearValue = watch("tax_year");
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-2 sm:flex-row sm:items-end sm:gap-3">
@@ -63,18 +60,6 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
           <option value="power_of_attorney">ייפוי כוח</option>
           <option value="engagement_agreement">הסכם התקשרות</option>
         </Select>
-      </div>
-
-      <div className="min-w-0 flex-1 space-y-1">
-        <label className="block text-sm font-medium text-gray-700">שנת מס</label>
-        <select
-          value={taxYearValue ?? ""}
-          onChange={(e) => setValue("tax_year", e.target.value ? Number(e.target.value) : null)}
-          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700"
-        >
-          <option value="">ללא שנה</option>
-          {taxYears.map((y) => <option key={y} value={y}>{y}</option>)}
-        </select>
       </div>
 
       <div className="min-w-0 flex-1 space-y-1">

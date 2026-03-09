@@ -12,6 +12,7 @@ import { SeasonReportsTable } from "../features/annualReports/components/SeasonR
 import { CreateReportModal } from "../features/annualReports/components/CreateReportModal";
 import { useAnnualReportsKanbanPage } from "../features/annualReports/hooks/useAnnualReportsKanbanPage";
 import { STAGE_ORDER, KANBAN_PAGE_SIZE, TAB_LABELS, type ActiveTab } from "../features/annualReports/types";
+import { OverdueBanner } from "../features/annualReports/components/OverdueBanner";
 import { cn } from "../utils/utils";
 
 export const AnnualReportsKanban: React.FC = () => {
@@ -69,6 +70,15 @@ export const AnnualReportsKanban: React.FC = () => {
         }
       />
 
+      {/* Overdue banner — shown whenever season.overdue has entries */}
+      {season.overdue.length > 0 && (
+        <OverdueBanner
+          overdue={season.overdue}
+          onSelect={setSelectedReportId}
+        />
+      )}
+
+      {/* Controls row — tabs + year picker (always visible) */}
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1">
           {(Object.keys(TAB_LABELS) as ActiveTab[]).map((tab) => (
@@ -88,30 +98,29 @@ export const AnnualReportsKanban: React.FC = () => {
           ))}
         </div>
 
-        {activeTab === "season" && (
-          <div className="flex items-center gap-1 rounded-lg border border-gray-300 bg-white px-2 py-1">
-            <button
-              type="button"
-              onClick={decrementYear}
-              className="rounded p-1 hover:bg-gray-100"
-              aria-label="שנה קודמת"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-            <span className="w-16 text-center text-sm font-bold text-gray-900">
-              {taxYear}
-            </span>
-            <button
-              type="button"
-              onClick={incrementYear}
-              disabled={!canIncrementYear}
-              className="rounded p-1 hover:bg-gray-100 disabled:opacity-40"
-              aria-label="שנה הבאה"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-          </div>
-        )}
+        {/* Year picker — always visible, affects both tabs */}
+        <div className="flex items-center gap-1 rounded-lg border border-gray-300 bg-white px-2 py-1">
+          <button
+            type="button"
+            onClick={decrementYear}
+            className="rounded p-1 hover:bg-gray-100"
+            aria-label="שנה קודמת"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+          <span className="w-16 text-center text-sm font-bold text-gray-900">
+            {taxYear}
+          </span>
+          <button
+            type="button"
+            onClick={incrementYear}
+            disabled={!canIncrementYear}
+            className="rounded p-1 hover:bg-gray-100 disabled:opacity-40"
+            aria-label="שנה הבאה"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       {activeTab === "kanban" && (
@@ -135,7 +144,6 @@ export const AnnualReportsKanban: React.FC = () => {
               })}
             </div>
           </div>
-
 
           {totalPages > 1 && (
             <PaginationCard

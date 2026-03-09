@@ -6,7 +6,7 @@ import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { STAGE_ORDER, KANBAN_PAGE_SIZE, type StageKey, type KanbanStage } from "../types";
 
-export const useAnnualReportsKanban = () => {
+export const useAnnualReportsKanban = (taxYear: number) => {
   const queryClient = useQueryClient();
   const [transitioning, setTransitioning] = useState<number | null>(null);
   const [page, setPage] = useState(1);
@@ -50,15 +50,19 @@ export const useAnnualReportsKanban = () => {
     await transitionMutation.mutateAsync({ reportId, newStage });
   };
 
-  // Normalize API response (string stage) into our typed union and drop unknown stages defensively
+  // Normalize + filter by taxYear (client-side — kanban API returns all years)
   const stages: KanbanStage[] =
     kanbanQuery.data?.stages
       .map((stage) => {
         const key = stage.stage as StageKey;
         if (!STAGE_ORDER.includes(key)) return null;
-        return { stage: key, reports: stage.reports };
+        return {
+          stage: key,
+          reports: stage.reports.filter((r) => r.tax_year === taxYear),
+        };
       })
       .filter((s): s is KanbanStage => Boolean(s)) ?? [];
+
   const maxCount = Math.max(0, ...stages.map((stage) => stage.reports.length));
   const totalPages = Math.max(1, Math.ceil(maxCount / KANBAN_PAGE_SIZE));
 

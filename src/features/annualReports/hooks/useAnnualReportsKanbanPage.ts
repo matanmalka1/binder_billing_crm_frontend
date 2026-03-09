@@ -9,12 +9,16 @@ export const useAnnualReportsKanbanPage = () => {
   const [taxYear, setTaxYear] = useState(CURRENT_YEAR - 1);
   const [showCreate, setShowCreate] = useState(false);
 
-  const kanban = useAnnualReportsKanban();
+  const kanban = useAnnualReportsKanban(taxYear);
   const season = useSeasonDashboard(taxYear);
 
-  const decrementYear = () => setTaxYear((y) => y - 1);
-  const incrementYear = () => setTaxYear((y) => Math.min(y + 1, CURRENT_YEAR));
-  const canIncrementYear = taxYear < CURRENT_YEAR - 1;
+  const decrementYear = () => {
+    setTaxYear((y) => y - 1);
+  };
+  const incrementYear = () => {
+    setTaxYear((y) => Math.min(y + 1, CURRENT_YEAR));
+  };
+  const canIncrementYear = taxYear < CURRENT_YEAR;
 
   return {
     activeTab,
