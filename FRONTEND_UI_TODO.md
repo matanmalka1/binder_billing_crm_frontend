@@ -5,7 +5,7 @@
 
 ---
 
-## Wave 1 — Tax Engine Display
+## ✅ Wave 1 — Tax Engine Display (DONE)
 
 ### 1.1 — Tax Bracket Breakdown
 **קובץ:** מצא את הקומפוננטה שמציגה `getTaxCalculation` (חפש שימוש ב-`annualReportTaxCalc` query key או `getTaxCalculation`)
@@ -42,7 +42,7 @@
 
 ---
 
-## Wave 2 — Fields & Data Model
+## ✅ Wave 2 — Fields & Data Model (DONE)
 
 ### 2.1 — Recognition Rate על שורות הוצאה
 **קבצים:** מצא את הטופס והשורה של הוצאות ב-`IncomeExpensePanel.tsx` (או קומפוננטת expense נפרדת)

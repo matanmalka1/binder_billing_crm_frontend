@@ -9,6 +9,7 @@ export const createAdvancePaymentSchema = z.object({
   due_date: z.string().min(1, "יש להזין תאריך יעד"),
   expected_amount: z.number().min(0, "הסכום חייב להיות חיובי").nullable(),
   paid_amount: z.number().min(0, "הסכום חייב להיות חיובי").nullable(),
+  notes: z.string().nullable().optional(),
 });
 
 export type CreateAdvancePaymentFormValues = z.infer<typeof createAdvancePaymentSchema>;
@@ -18,4 +19,5 @@ export const CREATE_ADVANCE_PAYMENT_DEFAULTS: CreateAdvancePaymentFormValues = {
   due_date: "",
   expected_amount: null,
   paid_amount: null,
+  notes: null,
 };

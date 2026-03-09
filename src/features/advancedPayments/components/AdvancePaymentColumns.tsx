@@ -1,3 +1,4 @@
+import { MessageSquare } from "lucide-react";
 import type { Column } from "../../../components/ui/DataTable";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../../../api/advancePayments.api";
 import { Badge } from "../../../components/ui/Badge";
@@ -57,6 +58,16 @@ export const buildAdvancePaymentColumns = (
       render: (row) => (
         <span className="text-sm text-gray-500 tabular-nums">{formatDate(row.due_date)}</span>
       ),
+    },
+    {
+      key: "notes",
+      header: "",
+      render: (row) =>
+        row.notes ? (
+          <span title={row.notes} className="text-gray-400 hover:text-gray-600 cursor-default">
+            <MessageSquare className="h-3.5 w-3.5" />
+          </span>
+        ) : null,
     },
   ];
 

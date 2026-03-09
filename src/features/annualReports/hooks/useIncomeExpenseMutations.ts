@@ -1,0 +1,50 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { annualReportsApi, type IncomeSourceType } from "../../../api/annualReports.api";
+import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
+import { showErrorToast } from "../../../utils/utils";
+import type { AddExpensePayload } from "../components/AddExpenseLineForm";
+
+export const useIncomeExpenseMutations = (reportId: number) => {
+  const queryClient = useQueryClient();
+
+  const invalidate = () => {
+    void queryClient.invalidateQueries({ queryKey: QK.tax.annualReportFinancials(reportId) });
+    void queryClient.invalidateQueries({ queryKey: QK.tax.annualReportReadiness(reportId) });
+    void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.detail(reportId) });
+  };
+
+  const addIncome = useMutation({
+    mutationFn: ({ type_key, amount, description }: { type_key: string; amount: number; description?: string }) =>
+      annualReportsApi.addIncomeLine(reportId, { source_type: type_key as IncomeSourceType, amount, description }),
+    onSuccess: () => { toast.success("הכנסה נוספה"); invalidate(); },
+    onError: (err) => showErrorToast(err, "שגיאה בהוספת הכנסה"),
+  });
+
+  const deleteIncome = useMutation({
+    mutationFn: (lineId: number) => annualReportsApi.deleteIncomeLine(reportId, lineId),
+    onSuccess: () => { toast.success("הכנסה נמחקה"); invalidate(); },
+    onError: (err) => showErrorToast(err, "שגיאה במחיקת הכנסה"),
+  });
+
+  const addExpense = useMutation({
+    mutationFn: (payload: AddExpensePayload) =>
+      annualReportsApi.addExpenseLine(reportId, {
+        category: payload.category,
+        amount: payload.amount,
+        description: payload.description,
+        recognition_rate: payload.recognition_rate,
+        supporting_document_ref: payload.supporting_document_ref,
+      }),
+    onSuccess: () => { toast.success("הוצאה נוספה"); invalidate(); },
+    onError: (err) => showErrorToast(err, "שגיאה בהוספת הוצאה"),
+  });
+
+  const deleteExpense = useMutation({
+    mutationFn: (lineId: number) => annualReportsApi.deleteExpenseLine(reportId, lineId),
+    onSuccess: () => { toast.success("הוצאה נמחקה"); invalidate(); },
+    onError: (err) => showErrorToast(err, "שגיאה במחיקת הוצאה"),
+  });
+
+  return { addIncome, deleteIncome, addExpense, deleteExpense };
+};

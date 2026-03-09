@@ -9,13 +9,13 @@ import { QK } from "../../../lib/queryKeys";
 import { useDocumentUpload } from "./useDocumentUpload";
 import { toast } from "../../../utils/toast";
 
-export const useClientDocumentsTab = (clientId: number) => {
+export const useClientDocumentsTab = (clientId: number, taxYear?: number | null) => {
   const queryClient = useQueryClient();
 
   const documentsQuery = useQuery<PermanentDocumentListResponse>({
     enabled: clientId > 0,
-    queryKey: QK.documents.clientList(clientId),
-    queryFn: () => documentsApi.listByClient(clientId),
+    queryKey: [...QK.documents.clientList(clientId), taxYear ?? null],
+    queryFn: () => documentsApi.listByClient(clientId, taxYear ? { tax_year: taxYear } : undefined),
   });
 
   const signalsQuery = useQuery<OperationalSignalsResponse>({

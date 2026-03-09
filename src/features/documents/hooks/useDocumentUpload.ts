@@ -21,7 +21,7 @@ export const useDocumentUpload = (clientId: number) => {
   });
 
   const submitUpload = async (
-    payload: Pick<UploadDocumentPayload, "document_type" | "file">,
+    payload: Pick<UploadDocumentPayload, "document_type" | "file"> & { tax_year?: number | null },
   ): Promise<boolean> => {
     if (!clientId) {
       setUploadError("יש לבחור לקוח לפני העלאה");

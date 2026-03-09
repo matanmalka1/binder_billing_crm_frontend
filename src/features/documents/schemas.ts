@@ -4,6 +4,7 @@ import type { UploadDocumentPayload } from "../../api/documents.api";
 export interface DocumentsUploadFormValues {
   document_type: UploadDocumentPayload["document_type"];
   file: File | null;
+  tax_year: number | null;
 }
 
 export const documentsUploadSchema = z.object({
@@ -16,10 +17,12 @@ export const documentsUploadSchema = z.object({
         Object.prototype.toString.call(file) === "[object File]",
       { message: "יש לבחור קובץ לפני העלאה" },
     ),
+  tax_year: z.number().nullable().optional(),
 });
 
 export const documentsUploadDefaultValues: DocumentsUploadFormValues = {
   document_type: "id_copy",
   file: null,
+  tax_year: null,
 };
 

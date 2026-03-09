@@ -63,6 +63,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
       due_date: data.due_date,
       expected_amount: data.expected_amount,
       paid_amount: data.paid_amount,
+      notes: data.notes ?? null,
     });
     reset(CREATE_ADVANCE_PAYMENT_DEFAULTS);
     onClose();
@@ -153,6 +154,15 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
             />
           )}
         />
+        <div className="space-y-1">
+          <label className="block text-sm font-medium text-gray-700">הערות (אופציונלי)</label>
+          <textarea
+            {...register("notes")}
+            rows={2}
+            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            placeholder="הערות..."
+          />
+        </div>
       </form>
     </Modal>
   );
