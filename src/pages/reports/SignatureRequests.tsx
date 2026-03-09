@@ -208,6 +208,7 @@ export const SignatureRequestsPage: React.FC = () => {
           data={displayedItems}
           columns={columns}
           getRowKey={(req) => req.id}
+          onRowClick={(req) => setAuditRequestId(req.id)}
           isLoading={false}
           emptyState={{
             icon: FileSignature,

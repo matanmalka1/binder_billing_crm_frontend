@@ -47,6 +47,8 @@ export const SignatureRequestAuditDrawer: React.FC<Props> = ({
     enabled: open,
   });
 
+  const events = data?.audit_trail ?? [];
+
   return (
     <DetailDrawer
       open={open}
@@ -94,11 +96,11 @@ export const SignatureRequestAuditDrawer: React.FC<Props> = ({
           </DrawerSection>
 
           <DrawerSection title="היסטוריית פעילות">
-            {data.audit_trail.length === 0 && (
+            {events.length === 0 && (
               <p className="py-3 text-sm text-gray-400">אין אירועים</p>
             )}
             <div className="divide-y divide-gray-50">
-              {data.audit_trail.map((event) => (
+              {events.map((event) => (
                 <div key={event.id} className="py-2.5">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-sm font-medium text-gray-800">
