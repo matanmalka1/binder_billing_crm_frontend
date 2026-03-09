@@ -13,6 +13,7 @@ import { IncomeExpensePanel } from "./IncomeExpensePanel";
 import { ReadinessCheckPanel } from "./ReadinessCheckPanel";
 import { TaxCalculationPanel } from "./TaxCalculationPanel";
 import { FinalBalancePanel } from "./FinalBalancePanel";
+import { DeadlineUpdatePanel } from "./DeadlineUpdatePanel";
 import { useReportDetail } from "../hooks/useReportDetail";
 import {
   getStatusLabel,
@@ -123,6 +124,16 @@ export const AnnualReportDetailDrawer: React.FC<AnnualReportDetailDrawerProps> =
           <DrawerSection title="פרטים">
             <div className="py-2">
               <DescriptionList columns={1} items={baseDetails} />
+            </div>
+          </DrawerSection>
+
+          <DrawerSection title="מועד הגשה">
+            <div className="py-2">
+              <DeadlineUpdatePanel
+                reportId={report.id}
+                deadlineType={report.deadline_type}
+                filingDeadline={report.filing_deadline}
+              />
             </div>
           </DrawerSection>
 
