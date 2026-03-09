@@ -21,9 +21,10 @@ import { ClientTimelineTab } from "../features/timeline/components/ClientTimelin
 import { VatClientSummaryPanel } from "../features/vatReports/components/VatClientSummaryPanel";
 import { ClientAdvancePaymentsTab } from "../features/advancedPayments/components/ClientAdvancePaymentsTab";
 import { ClientStatusCard } from "../features/clients/components/ClientStatusCard";
+import { FilingTimeline } from "../components/taxDeadlines/FilingTimeline";
 import { cn } from "../utils/utils";
 
-type ActiveTab = "details" | "documents" | "timeline" | "vat" | "advance-payments";
+type ActiveTab = "details" | "documents" | "timeline" | "vat" | "advance-payments" | "deadlines";
 
 interface ClientDetailsProps {
   initialTab?: ActiveTab;
@@ -35,6 +36,7 @@ const TAB_LABELS: Record<ActiveTab, string> = {
   timeline: "ציר זמן",
   vat: 'מע"מ',
   "advance-payments": "מקדמות",
+  deadlines: "מועדים",
 };
 
 const EDIT_FORM_ID = "client-edit-form";
@@ -71,7 +73,7 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
 
   const tabBar = (
     <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 self-start">
-      {(["details", "documents", "timeline", "vat", "advance-payments"] as ActiveTab[]).map((tab) => (
+      {(["details", "documents", "timeline", "vat", "advance-payments", "deadlines"] as ActiveTab[]).map((tab) => (
         <button
           key={tab}
           type="button"
@@ -158,6 +160,10 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({ initialTab = "deta
 
           {activeTab === "vat" && (
             <VatClientSummaryPanel clientId={client.id} />
+          )}
+
+          {activeTab === "deadlines" && (
+            <FilingTimeline clientId={client.id} />
           )}
 
           {/* Delete confirmation modal */}

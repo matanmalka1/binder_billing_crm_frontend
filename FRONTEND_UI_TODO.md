@@ -92,7 +92,7 @@
 
 ---
 
-## Wave 3 — Advance Payments Analytics
+## ✅ Wave 3 — Advance Payments Analytics (DONE) 
 
 ### 3.1 — Delete מקדמה
 **קובץ:** מצא את שורת המקדמה (חפש `advancePaymentsApi.update`)

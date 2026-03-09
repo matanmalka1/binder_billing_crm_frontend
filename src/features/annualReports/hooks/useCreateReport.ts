@@ -31,8 +31,11 @@ export const useCreateReport = (onSuccess?: () => void) => {
 
   const mutation = useMutation({
     mutationFn: (payload: CreateAnnualReportPayload) => annualReportsApi.createReport(payload),
-    onSuccess: () => {
-      toast.success("דוח שנתי נוצר בהצלחה");
+    onSuccess: (data) => {
+      const message = data.profit != null
+        ? `דוח נוצר | רווח ראשוני: ₪${data.profit.toLocaleString("he-IL")}`
+        : "דוח שנתי נוצר בהצלחה";
+      toast.success(message);
       queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
       form.reset();
       onSuccess?.();

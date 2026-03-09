@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, AlertTriangle } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Badge } from "../../../components/ui/Badge";
 import { Card } from "../../../components/ui/Card";
+import { Textarea } from "../../../components/ui/Textarea";
+import { Modal } from "../../../components/ui/Modal";
 import type {
   AnnualReportFull,
   AnnualReportStatus,
@@ -16,9 +18,10 @@ import {
   getStatusVariant,
   getAllowedTransitions,
 } from "../../../api/annualReports.extended.utils";
-import { cn } from "../../../utils/utils";
+import { cn, showErrorToast } from "../../../utils/utils";
 import { type TransitionForm, EMPTY_FORM } from "../utils";
 import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
 
 interface StatusTransitionPanelProps {
   report: AnnualReportFull;
@@ -31,9 +34,28 @@ export const StatusTransitionPanel: React.FC<StatusTransitionPanelProps> = ({
   onTransition,
   isLoading,
 }) => {
+  const queryClient = useQueryClient();
   const allowed = getAllowedTransitions(report.status);
   const [selected, setSelected] = useState<AnnualReportStatus | null>(null);
   const [form, setForm] = useState<TransitionForm>(EMPTY_FORM);
+  const [amendOpen, setAmendOpen] = useState(false);
+  const [amendReason, setAmendReason] = useState("");
+
+  const amendMutation = useMutation({
+    mutationFn: (reason: string) => annualReportsApi.amend(report.id, reason),
+    onSuccess: () => {
+      toast.success("דוח נשלח לתיקון");
+      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.detail(report.id) });
+      setAmendOpen(false);
+      setAmendReason("");
+    },
+    onError: (err) => showErrorToast(err, "שגיאה בשליחת תיקון"),
+  });
+
+  const handleAmendSubmit = () => {
+    if (amendReason.trim().length < 10) return;
+    amendMutation.mutate(amendReason.trim());
+  };
 
   const canSubmit = allowed.includes("submitted");
   const { data: readiness } = useQuery({
@@ -73,11 +95,52 @@ export const StatusTransitionPanel: React.FC<StatusTransitionPanelProps> = ({
   };
 
   return (
+    <>
+      <Modal
+        open={amendOpen}
+        title="תיקון דוח"
+        onClose={() => { setAmendOpen(false); setAmendReason(""); }}
+        footer={
+          <div className="flex items-center justify-end gap-2">
+            <Button type="button" variant="outline" onClick={() => { setAmendOpen(false); setAmendReason(""); }}>
+              ביטול
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleAmendSubmit}
+              isLoading={amendMutation.isPending}
+              disabled={amendReason.trim().length < 10}
+            >
+              שלח
+            </Button>
+          </div>
+        }
+      >
+        <Textarea
+          label="סיבת תיקון *"
+          rows={4}
+          value={amendReason}
+          onChange={(e) => setAmendReason(e.target.value)}
+          placeholder="תאר את סיבת התיקון (לפחות 10 תווים)..."
+        />
+        {amendReason.trim().length > 0 && amendReason.trim().length < 10 && (
+          <p className="mt-1 text-xs text-red-500">נדרשים לפחות 10 תווים</p>
+        )}
+      </Modal>
+
     <Card title="מעבר סטטוס">
       <div className="space-y-4">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span>סטטוס נוכחי:</span>
-          <Badge variant={getStatusVariant(report.status)}>{getStatusLabel(report.status)}</Badge>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <span>סטטוס נוכחי:</span>
+            <Badge variant={getStatusVariant(report.status)}>{getStatusLabel(report.status)}</Badge>
+          </div>
+          {report.status === "submitted" && (
+            <Button type="button" variant="outline" size="sm" onClick={() => setAmendOpen(true)}>
+              תיקון דוח
+            </Button>
+          )}
         </div>
 
         <div>
@@ -178,5 +241,6 @@ export const StatusTransitionPanel: React.FC<StatusTransitionPanelProps> = ({
         )}
       </div>
     </Card>
+    </>
   );
 };
