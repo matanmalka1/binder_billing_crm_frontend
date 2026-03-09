@@ -13,7 +13,8 @@ export type AnnualReportStatus =
   | "accepted"
   | "assessment_issued"
   | "objection_filed"
-  | "closed";
+  | "closed"
+  | "amended";
 
 export type ClientTypeForReport =
   | "individual"
@@ -62,6 +63,14 @@ export interface AnnualReportFull {
   tax_due_amount?: number | null;
   client_approved_at?: string | null;
   internal_notes?: string | null;
+  amendment_reason?: string | null;
+  profit?: number | null;
+  final_balance?: number | null;
+  available_actions?: { action: string; label: string }[];
+  // Financial summary fields (present in detail response)
+  total_income?: number;
+  total_expenses?: number;
+  taxable_income?: number;
 }
 
 export interface ScheduleEntry {
@@ -191,6 +200,11 @@ export interface ExpenseLineResponse {
   annual_report_id: number;
   category: ExpenseCategoryType;
   amount: number;
+  recognition_rate: number;
+  recognized_amount: number;
+  supporting_document_ref: string | null;
+  supporting_document_id: number | null;
+  supporting_document_filename: string | null;
   description: string | null;
   created_at: string;
   updated_at: string | null;
@@ -199,7 +213,8 @@ export interface ExpenseLineResponse {
 export interface FinancialSummaryResponse {
   annual_report_id: number;
   total_income: number;
-  total_expenses: number;
+  gross_expenses: number;
+  recognized_expenses: number;
   taxable_income: number;
   income_lines: IncomeLineResponse[];
   expense_lines: ExpenseLineResponse[];
@@ -211,12 +226,33 @@ export interface ReadinessCheckResponse {
   issues: string[];
 }
 
+export interface BracketBreakdownItem {
+  rate: number;
+  from_amount: number;
+  to_amount: number | null;
+  taxable_in_bracket: number;
+  tax_in_bracket: number;
+}
+
+export interface NationalInsuranceBreakdown {
+  base_amount: number;
+  high_amount: number;
+  total: number;
+}
+
 export interface TaxCalculationResult {
   taxable_income: number;
+  pension_deduction: number;
   tax_before_credits: number;
   credit_points_value: number;
+  donation_credit: number;
+  other_credits: number;
   tax_after_credits: number;
+  net_profit: number;
   effective_rate: number;
+  national_insurance: NationalInsuranceBreakdown;
+  brackets: BracketBreakdownItem[];
+  total_liability: number | null;
 }
 
 export interface AnnexDataLine {
@@ -252,6 +288,9 @@ export interface ExpenseLinePayload {
   category: ExpenseCategoryType;
   amount: number;
   description?: string | null;
+  recognition_rate?: number | null;
+  supporting_document_ref?: string | null;
+  supporting_document_id?: number | null;
 }
 
 // ── API ────────────────────────────────────────────────────────────────────
@@ -472,5 +511,10 @@ export const annualReportsApi = {
     lineId: number
   ): Promise<void> => {
     await api.delete(ENDPOINTS.annualReportAnnexLine(reportId, schedule, lineId));
+  },
+
+  amend: async (reportId: number, reason: string): Promise<AnnualReportFull> => {
+    const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReportAmend(reportId), { reason });
+    return res.data;
   },
 };
