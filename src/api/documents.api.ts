@@ -1,11 +1,13 @@
 import { ENDPOINTS } from "./endpoints";
 import { api } from "./client";
+import { toQueryParams } from "./queryParams";
 
 export interface PermanentDocumentResponse {
   id: number;
   client_id: number;
   document_type: string;
   storage_key: string;
+  tax_year: number | null;
   is_present: boolean;
   uploaded_by: number;
   uploaded_at: string;
@@ -24,6 +26,11 @@ export interface UploadDocumentPayload {
   client_id: number;
   document_type: "id_copy" | "power_of_attorney" | "engagement_agreement";
   file: File;
+  tax_year?: number | null;
+}
+
+export interface ListDocumentsByClientParams {
+  tax_year?: number;
 }
 
 export const documentsApi = {
@@ -34,6 +41,9 @@ export const documentsApi = {
     formData.append("client_id", String(payload.client_id));
     formData.append("document_type", payload.document_type);
     formData.append("file", payload.file);
+    if (payload.tax_year != null) {
+      formData.append("tax_year", String(payload.tax_year));
+    }
 
     const response = await api.post<PermanentDocumentResponse>(
       ENDPOINTS.documentsUpload,
@@ -50,10 +60,17 @@ export const documentsApi = {
 
   listByClient: async (
     clientId: number,
+    params?: ListDocumentsByClientParams,
   ): Promise<PermanentDocumentListResponse> => {
     const response = await api.get<PermanentDocumentListResponse>(
       ENDPOINTS.documentsByClient(clientId),
+      params ? { params: toQueryParams(params) } : undefined,
     );
+    return response.data;
+  },
+
+  getDownloadUrl: async (id: number): Promise<{ url: string }> => {
+    const response = await api.get<{ url: string }>(ENDPOINTS.documentDownloadUrl(id));
     return response.data;
   },
 
