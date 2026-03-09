@@ -153,7 +153,7 @@
 
 ---
 
-## Wave 4 — Report Workflows
+## ✅ Wave 4 — Report Workflows (DONE) 
 
 ### 4.1 — כפתור ו-Modal תיקון דוח (Amend)
 **קבצים:** מצא את פאנל הפעולות של דוח שנתי (חפש `transitionStatus` או `submitReport`)

@@ -1,6 +1,7 @@
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "../../store/auth.store";
 import { getRoleLabel } from "../../utils/enums";
+import { NotificationBell } from "./NotificationBell";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -26,6 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
       </div>
 
       <div className="flex items-center gap-6">
+        <NotificationBell />
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <UserIcon className="w-4 h-4 text-gray-400" />
           <span>
