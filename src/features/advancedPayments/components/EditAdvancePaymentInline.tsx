@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Check, X, Pencil, Loader2 } from "lucide-react";
-import type { AdvancePaymentRow, AdvancePaymentStatus } from "../../../api/advancePayments.api";
+import type { AdvancePaymentRow, AdvancePaymentStatus } from "../api/advancePayments.types";
 import { STATUS_LABEL } from "../utils";
 
 const STATUS_OPTIONS: { value: AdvancePaymentStatus; label: string }[] = [

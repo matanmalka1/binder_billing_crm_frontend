@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { QK } from "../../lib/queryKeys";
-import { advancePaymentsApi } from "../../api/advancePayments.api";
+import { advancePaymentsApi } from "../../features/advancedPayments/api/advancePayments.api";
 
 interface AdvancePaymentsChartProps {
   clientId: number;
@@ -59,8 +59,10 @@ export const AdvancePaymentsChart: React.FC<AdvancePaymentsChartProps> = ({
             tickFormatter={(v: number) => `₪${(v / 1000).toFixed(0)}k`}
           />
           <Tooltip
-            formatter={(value: number, name: string) => [
-              `₪${value.toLocaleString("he-IL")}`,
+            formatter={(value, name) => [
+              typeof value === "number"
+                ? `₪${value.toLocaleString("he-IL")}`
+                : String(value),
               name,
             ]}
             contentStyle={{ fontSize: 12, direction: "rtl" }}

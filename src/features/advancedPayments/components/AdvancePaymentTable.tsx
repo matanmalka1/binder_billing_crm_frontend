@@ -1,5 +1,5 @@
 import { DataTable } from "../../../components/ui/DataTable";
-import type { AdvancePaymentRow, AdvancePaymentStatus } from "../../../api/advancePayments.api";
+import type { AdvancePaymentRow, AdvancePaymentStatus } from "../api/advancePayments.types";
 import { buildAdvancePaymentColumns } from "./AdvancePaymentColumns";
 import { CalendarDays } from "lucide-react";
 

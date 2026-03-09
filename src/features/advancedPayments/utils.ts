@@ -1,5 +1,5 @@
 import { buildYearOptions } from "../../utils/utils";
-import type { AdvancePaymentStatus } from "../../api/advancePayments.api";
+import type { AdvancePaymentStatus } from "./api/advancePayments.types";
 
 export const STATUS_VARIANT: Record<AdvancePaymentStatus, "success" | "warning" | "error" | "neutral"> = {
   paid: "success",

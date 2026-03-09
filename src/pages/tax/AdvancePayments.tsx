@@ -9,7 +9,8 @@ import { Select } from "../../components/ui/Select";
 import { DataTable, type Column } from "../../components/ui/DataTable";
 import { Badge } from "../../components/ui/Badge";
 import { QK } from "../../lib/queryKeys";
-import { advancePaymentsApi, type AdvancePaymentOverviewRow, type AdvancePaymentStatus } from "../../api/advancePayments.api";
+import { advancePaymentsApi } from "../../features/advancedPayments/api/advancePayments.api";
+import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "../../features/advancedPayments/api/advancePayments.types";
 import { MONTH_NAMES, MONTH_OPTIONS, YEAR_OPTIONS, fmtCurrency, STATUS_LABEL, STATUS_VARIANT } from "../../features/advancedPayments/utils";
 import { formatDate, parsePositiveInt } from "../../utils/utils";
 
