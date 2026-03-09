@@ -85,6 +85,7 @@ src/
 
 - All API paths in `src/api/endpoints.ts` — no hardcoded URLs elsewhere
 - Pages render; hooks decide — no business logic in pages
+- Max **150 lines** per .ts or .tsx file — split if exceeded
 - No cross-feature component imports
 - Arrow functions only — no `function` declarations
 - No `localStorage`/`sessionStorage` outside `src/store/`
@@ -178,11 +179,4 @@ Changes require updating both `src/utils/enums.ts` AND the constants file. Never
 ## Known Issues
 
 No current known issues. All previously tracked issues have been resolved:
-- Signature audit trail (`audit_trail` / `occurred_at`) — fixed
-- VAT monetary fields (`number` in both layers) — fixed
-- `useImportExport.ts` URL hardcoding — fixed, uses `ENDPOINTS.*`
-- `correspondence.api.ts` path hardcoding — fixed, uses `ENDPOINTS.*`
-- `userAuditLogs` missing from `endpoints.ts` — added
-- `AnnualReportResponse.client_name` — present in both backend schema and frontend
-- `/settings/users` user management page — implemented (`Users.tsx`, full CRUD)
-- `/reports/signature-requests` page — implemented (`SignatureRequests.tsx`)
+

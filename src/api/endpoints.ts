@@ -122,4 +122,13 @@ export const ENDPOINTS = {
     `/annual-reports/${id}/annex/${schedule}`,
   annualReportAnnexLine: (id: number | string, schedule: string, lineId: number | string) =>
     `/annual-reports/${id}/annex/${schedule}/${lineId}`,
+  annualReportAmend: (id: number | string) => `/annual-reports/${id}/amend`,
+  taxDeadlinesTimeline: "/tax-deadlines/timeline",
+  advancePaymentsKPI: "/advance-payments/kpi",
+  advancePaymentsChart: "/advance-payments/chart",
+  notifications: "/notifications",
+  notificationsUnreadCount: "/notifications/unread-count",
+  notificationsMarkRead: "/notifications/mark-read",
+  notificationsMarkAllRead: "/notifications/mark-all-read",
+  documentDownloadUrl: (id: number | string) => `/documents/${id}/download-url`,
 } as const;
