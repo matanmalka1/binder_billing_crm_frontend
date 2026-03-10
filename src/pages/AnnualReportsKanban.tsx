@@ -1,4 +1,5 @@
-import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { Plus, ChevronLeft, ChevronRight, BarChart2, FileDown } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { PageLoading } from "../components/ui/PageLoading";
 import { ErrorCard } from "../components/ui/ErrorCard";
@@ -13,9 +14,14 @@ import { CreateReportModal } from "../features/annualReports/components/CreateRe
 import { useAnnualReportsKanbanPage } from "../features/annualReports/hooks/useAnnualReportsKanbanPage";
 import { STAGE_ORDER, KANBAN_PAGE_SIZE, TAB_LABELS, type ActiveTab } from "../features/annualReports/types";
 import { OverdueBanner } from "../features/annualReports/components/OverdueBanner";
+import { YearComparisonModal } from "../features/annualReports/components/YearComparisonModal";
 import { cn } from "../utils/utils";
 
 export const AnnualReportsKanban: React.FC = () => {
+  const [showComparison, setShowComparison] = useState(false);
+  const openComparison = () => setShowComparison(true);
+  const closeComparison = () => setShowComparison(false);
+
   const {
     activeTab,
     setActiveTab,
@@ -63,10 +69,20 @@ export const AnnualReportsKanban: React.FC = () => {
         title="לוח דוחות שנתיים"
         description="ניהול ומעקב אחר דוחות שנתיים"
         actions={
-          <Button variant="primary" onClick={openCreate} className="gap-2">
-            <Plus className="h-4 w-4" />
-            דוח חדש
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" onClick={() => window.print()} className="gap-1.5">
+              <FileDown className="h-4 w-4" />
+              PDF ↓
+            </Button>
+            <Button variant="secondary" onClick={openComparison} className="gap-1.5">
+              <BarChart2 className="h-4 w-4" />
+              השוואה 📊
+            </Button>
+            <Button variant="primary" onClick={openCreate} className="gap-2">
+              <Plus className="h-4 w-4" />
+              דוח חדש
+            </Button>
+          </div>
         }
       />
 
@@ -193,6 +209,12 @@ export const AnnualReportsKanban: React.FC = () => {
       />
 
       <CreateReportModal open={showCreate} onClose={closeCreate} />
+
+      <YearComparisonModal
+        open={showComparison}
+        onClose={closeComparison}
+        currentTaxYear={taxYear}
+      />
     </div>
   );
 };

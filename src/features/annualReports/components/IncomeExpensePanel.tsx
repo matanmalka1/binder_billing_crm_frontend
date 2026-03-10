@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { annualReportsApi, type IncomeLineResponse, type ExpenseLineResponse } from "../../../api/annualReports.api";
 import { QK } from "../../../lib/queryKeys";
 import { cn } from "../../../utils/utils";
-import { LineRow, AddLineForm, INCOME_LABELS, EXPENSE_LABELS } from "./IncomeExpensePanelParts";
+import { AddLineForm } from "./IncomeExpensePanelParts";
+import { LineRow, INCOME_LABELS, EXPENSE_LABELS } from "./financialLabels";
 import { AddExpenseLineForm } from "./AddExpenseLineForm";
 import { useIncomeExpenseMutations } from "../hooks/useIncomeExpenseMutations";
 

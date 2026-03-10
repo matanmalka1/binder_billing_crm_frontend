@@ -11,8 +11,11 @@ interface CreateReportModalProps {
   onClose: () => void;
 }
 
+const fmt = (n: number) =>
+  n.toLocaleString("he-IL", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
 export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onClose }) => {
-  const { form, onSubmit, isSubmitting } = useCreateReport(onClose);
+  const { form, onSubmit, onSaveDraft, isSubmitting, preview } = useCreateReport(onClose);
   const { register, formState: { errors } } = form;
 
   const handleClose = () => {
@@ -29,6 +32,9 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
         <div className="flex items-center justify-end gap-2">
           <Button type="button" variant="outline" onClick={handleClose}>
             ביטול
+          </Button>
+          <Button type="button" variant="outline" onClick={onSaveDraft} isLoading={isSubmitting}>
+            שמור טיוטה
           </Button>
           <Button type="button" onClick={onSubmit} isLoading={isSubmitting}>
             צור דוח
@@ -74,6 +80,64 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
           <option value="extended">מורחב מייצגים — 31 ינואר</option>
           <option value="custom">מותאם אישית</option>
         </Select>
+
+        <Input
+          label="תאריך הגשה"
+          type="date"
+          error={errors.filing_date?.message}
+          {...register("filing_date")}
+        />
+
+        <div>
+          <p className="mb-2 text-sm font-medium text-gray-700">נתוני הכנסות ראשוניים (לתצוגה בלבד)</p>
+          <div className="grid grid-cols-2 gap-3">
+            <Input
+              label="הכנסה ברוטו (₪)"
+              type="number"
+              min={0}
+              {...register("gross_income")}
+            />
+            <Input
+              label="הוצאות (₪)"
+              type="number"
+              min={0}
+              {...register("expenses")}
+            />
+            <Input
+              label="מקדמות ששולמו (₪)"
+              type="number"
+              min={0}
+              {...register("advances_paid")}
+            />
+            <Input
+              label="נקודות זיכוי"
+              type="number"
+              min={0}
+              step={0.25}
+              {...register("credit_points")}
+            />
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm">
+          <p className="mb-1.5 font-medium text-blue-800">תצוגה מקדימה (אומדן)</p>
+          <div className="grid grid-cols-3 gap-2 text-blue-700">
+            <div>
+              <span className="block text-xs text-blue-500">רווח נקי</span>
+              <span className="font-mono">₪{fmt(preview.netProfit)}</span>
+            </div>
+            <div>
+              <span className="block text-xs text-blue-500">מס משוער</span>
+              <span className="font-mono">₪{fmt(preview.estimatedTax)}</span>
+            </div>
+            <div>
+              <span className="block text-xs text-blue-500">יתרה לתשלום</span>
+              <span className={`font-mono ${preview.balance < 0 ? "text-green-600" : "text-red-600"}`}>
+                ₪{fmt(Math.abs(preview.balance))}{preview.balance < 0 ? " (החזר)" : ""}
+              </span>
+            </div>
+          </div>
+        </div>
 
         <div>
           <p className="mb-2 text-sm font-medium text-gray-700">נספחים נדרשים</p>

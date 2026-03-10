@@ -159,6 +159,8 @@ export interface CreateAnnualReportPayload {
   tax_year: number;
   client_type: ClientTypeForReport;
   deadline_type?: DeadlineType;
+  filing_date?: string | null;
+  status?: string;
   assigned_to?: number | null;
   notes?: string | null;
   has_rental_income?: boolean;
