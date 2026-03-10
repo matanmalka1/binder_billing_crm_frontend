@@ -6,6 +6,7 @@ import { DashboardStatsGrid } from "../features/dashboard/components/DashboardSt
 import { AdvisorTodayCard } from "../features/dashboard/components/AdvisorTodayCard";
 import { AttentionPanel } from "../features/dashboard/components/AttentionPanel";
 import { OperationalPanel } from "../features/dashboard/components/OperationalPanel";
+import { SeasonSummaryWidget } from "../features/dashboard/components/SeasonSummaryWidget";
 import { useDashboardPage } from "../features/dashboard/hooks/useDashboardPage";
 
 export const Dashboard: React.FC = () => {
@@ -49,7 +50,7 @@ export const Dashboard: React.FC = () => {
         <DashboardStatsGrid stats={stats} />
       ) : null}
 
-      {/* Advisor: quick actions + today card */}
+      {/* Advisor: quick actions + today card + season widget */}
       {dashboard.status === "loading" ? (
         <div className="h-28 animate-pulse rounded-xl bg-gray-100" />
       ) : isAdvisor ? (
@@ -61,6 +62,7 @@ export const Dashboard: React.FC = () => {
               onQuickAction={handleQuickAction}
             />
           )}
+          <SeasonSummaryWidget />
           <AdvisorTodayCard />
         </>
       ) : null}

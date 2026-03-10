@@ -12,10 +12,12 @@ import { ClientsFiltersBar } from "../features/clients/components/ClientsFilters
 import { CreateClientModal } from "../features/clients/components/CreateClientModal";
 import { buildClientColumns } from "../features/clients/components/clientColumns";
 import { useClientsPage } from "../features/clients/hooks/useClientsPage";
+import { ImportExportModal } from "../features/importExport/components/ImportExportModal";
 
 export const Clients: React.FC = () => {
   const navigate = useNavigate();
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showImportExport, setShowImportExport] = useState(false);
 
   const {
     activeActionKey,
@@ -31,7 +33,6 @@ export const Clients: React.FC = () => {
     total,
     createClient,
     createLoading,
-    isAdvisor,
     can,
   } = useClientsPage();
 
@@ -48,11 +49,16 @@ export const Clients: React.FC = () => {
         title="לקוחות"
         description="רשימת כל הלקוחות במערכת"
         actions={
-          can.createClients ? (
-            <Button variant="primary" onClick={() => setShowCreateModal(true)}>
-              לקוח חדש
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)}>
+              ייבוא / ייצוא
             </Button>
-          ) : null
+            {can.createClients && (
+              <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+                לקוח חדש
+              </Button>
+            )}
+          </div>
         }
       />
 
@@ -101,29 +107,26 @@ export const Clients: React.FC = () => {
           showPageSizeSelect
           pageSize={filters.page_size}
           pageSizeOptions={[20, 50, 100]}
-          onPageSizeChange={(pageSize) =>
-            handleFilterChange("page_size", String(pageSize))
-          }
+          onPageSizeChange={(size) => handleFilterChange("page_size", String(size))}
         />
       )}
 
-      {isAdvisor && (
-        <CreateClientModal
-          open={showCreateModal}
-          onClose={() => setShowCreateModal(false)}
-          onSubmit={async (data) => {
-            const client = await createClient(data);
-            setShowCreateModal(false);
-            navigate(`/clients/${client.id}`);
-          }}
-          isLoading={createLoading}
-        />
-      )}
+      <CreateClientModal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSubmit={createClient}
+        isLoading={createLoading}
+      />
+
+      <ImportExportModal
+        open={showImportExport}
+        onClose={() => setShowImportExport(false)}
+      />
 
       <ConfirmDialog
         open={Boolean(pendingAction)}
         title={pendingAction?.confirm?.title ?? "אישור פעולה"}
-        message={pendingAction?.confirm?.message ?? "האם להמשיך בביצוע הפעולה?"}
+        message={pendingAction?.confirm?.message ?? "האם להמשיך?"}
         confirmLabel={pendingAction?.confirm?.confirmLabel ?? "אישור"}
         cancelLabel={pendingAction?.confirm?.cancelLabel ?? "ביטול"}
         isLoading={activeActionKey === pendingAction?.uiKey}

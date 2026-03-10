@@ -75,7 +75,9 @@ export const useClientsPage = () => {
     total: listQuery.data?.total ?? 0,
     cancelPendingAction,
     confirmPendingAction,
-    createClient: (payload: CreateClientPayload) => createMutation.mutateAsync(payload),
+    createClient: async (payload: CreateClientPayload): Promise<void> => {
+      await createMutation.mutateAsync(payload);
+    },
     createLoading: createMutation.isPending,
     isAdvisor,
     can,
