@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { TrendingDown, Percent, TrendingUp, Banknote, CheckCircle, AlertCircle, Edit2 } from "lucide-react";
-import type { AdvancePaymentStatus } from "../api/advancePayments.types";
+import type { AdvancePaymentStatus } from "../types";
 import { useAdvancePayments } from "../hooks/useAdvancePayments";
 import { useAuthStore } from "../../../store/auth.store";
 import { useTaxProfile } from "../../taxProfile/hooks/useTaxProfile";
 import { AdvancePaymentTable } from "./AdvancePaymentTable";
-import { AdvancePaymentsKPICards } from "../../../components/advancePayments/AdvancePaymentsKPICards";
-import { AdvancePaymentsChart } from "../../../components/advancePayments/AdvancePaymentsChart";
+import { AdvancePaymentsKPICards } from "./AdvancePaymentsKPICards";
+import { AdvancePaymentsChart } from "./AdvancePaymentsChart";
 import { CreateAdvancePaymentModal } from "./CreateAdvancePaymentModal";
 import { Button } from "../../../components/ui/Button";
 import { Select } from "../../../components/ui/Select";
@@ -15,7 +15,7 @@ import { StatsCard } from "../../../components/ui/StatsCard";
 import { Modal } from "../../../components/ui/Modal";
 import { Input } from "../../../components/ui/Input";
 import { TaxProfileForm } from "../../taxProfile/components/TaxProfileForm";
-import { advancePaymentsApi } from "../api/advancePayments.api";
+import { advancePaymentsApi } from "../../../api/advancePayments.api";
 import { YEAR_OPTIONS, fmtCurrency } from "../utils";
 import { QK } from "../../../lib/queryKeys";
 

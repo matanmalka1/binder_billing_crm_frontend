@@ -1,6 +1,6 @@
 import { MessageSquare, Trash2 } from "lucide-react";
 import type { Column } from "../../../components/ui/DataTable";
-import type { AdvancePaymentRow, AdvancePaymentStatus } from "../api/advancePayments.types";
+import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { Badge } from "../../../components/ui/Badge";
 import { formatDate } from "../../../utils/utils";
 import { fmtCurrency, MONTH_NAMES, STATUS_LABEL, STATUS_VARIANT } from "../utils";

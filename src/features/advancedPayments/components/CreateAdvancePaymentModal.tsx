@@ -11,8 +11,8 @@ import {
   type CreateAdvancePaymentFormValues,
 } from "../schemas";
 import { MONTH_OPTIONS } from "../utils";
-import { advancePaymentsApi } from "../api/advancePayments.api";
-import type { CreateAdvancePaymentPayload } from "../api/advancePayments.types";
+import { advancePaymentsApi } from "../../../api/advancePayments.api";
+import type { CreateAdvancePaymentPayload } from "../types";
 import { QK } from "../../../lib/queryKeys";
 
 interface CreateAdvancePaymentModalProps {

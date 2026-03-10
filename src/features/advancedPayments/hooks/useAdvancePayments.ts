@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { advancePaymentsApi } from "../api/advancePayments.api";
+import { advancePaymentsApi } from "../../../api/advancePayments.api";
 import type {
   AdvancePaymentStatus,
   CreateAdvancePaymentPayload,
-} from "../api/advancePayments.types";
+} from "../types";
 import { getErrorMessage, getHttpStatus, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
