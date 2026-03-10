@@ -1,11 +1,11 @@
 import { useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
-import {
-  vatReportsApi,
-  type CreateVatWorkItemPayload,
-  type VatWorkItemsListParams,
-} from "../../../api/vatReports.api";
+import { vatReportsApi } from "../../../api/vatReports.api";
+import type {
+  CreateVatWorkItemPayload,
+  VatWorkItemsListParams,
+} from "../../../api/vatReports.types";
 import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { toOptionalString } from "../../../utils/filters";

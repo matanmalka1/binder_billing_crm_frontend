@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { CreateVatWorkItemPayload, CreateVatInvoicePayload } from "../../api/vatReports.api";
+import type { CreateVatWorkItemPayload, CreateVatInvoicePayload } from "../../api/vatReports.types";
 import {
   INCOME_KEY,
   EXPENSE_CATEGORIES,

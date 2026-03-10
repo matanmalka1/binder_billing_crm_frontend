@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { buildYearOptions } from "../../../utils/utils";
 import { useQuery } from "@tanstack/react-query";
-import { vatReportsApi, type VatAnnualSummary, type VatPeriodRow } from "../../../api/vatReports.api";
+import { vatReportsApi } from "../../../api/vatReports.api";
+import type { VatAnnualSummary, VatPeriodRow } from "../../../api/vatReports.types";
 import { QK } from "../../../lib/queryKeys";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";

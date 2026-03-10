@@ -11,7 +11,7 @@ import { VatWorkItemsFiltersCard } from "../../features/vatReports/components/Va
 import { buildVatWorkItemColumns } from "../../features/vatReports/components/VatWorkItemColumns";
 import { VatWorkItemDrawer } from "../../features/vatReports/components/VatWorkItemDrawer";
 import { useVatWorkItemsPage } from "../../features/vatReports/hooks/useVatWorkItemsPage";
-import type { VatWorkItemResponse } from "../../api/vatReports.api";
+import type { VatWorkItemResponse } from "../../api/vatReports.types";
 
 export const VatWorkItems: React.FC = () => {
   const {
