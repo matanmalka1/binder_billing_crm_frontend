@@ -45,6 +45,7 @@ export const QK = {
       all: ["tax", "annual-reports"] as const,
       detail: (id: number) => ["tax", "annual-reports", "detail", id] as const,
       kanban: ["tax", "annual-reports", "kanban"] as const,
+      statusHistory: (id: number | string) => ["tax", "annual-reports", "status-history", id] as const,
       seasonSummary: (taxYear: number) =>
         ["tax", "annual-reports", "season", taxYear, "summary"] as const,
       seasonList: (taxYear: number) =>

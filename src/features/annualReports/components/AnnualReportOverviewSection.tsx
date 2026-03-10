@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { ReportAlertBanners } from "./ReportAlertBanners";
 import { ReportSummaryCards } from "./ReportSummaryCards";
@@ -7,6 +8,9 @@ import { AnnualReportDetailForm } from "./AnnualReportDetailForm";
 import { ScheduleChecklist } from "./ScheduleChecklist";
 import { AnnualPLSummary } from "./AnnualPLSummary";
 import { ReportHistoryTable } from "./ReportHistoryTable";
+import { StatusHistoryTimeline } from "./StatusHistoryTimeline";
+import { annualReportsApi } from "../../../api/annualReports.api";
+import { QK } from "../../../lib/queryKeys";
 import type { AnnualReportDetail } from "../types";
 import type { AnnualReportFull, AnnualReportScheduleKey, ScheduleEntry } from "../../../api/annualReports.api";
 
@@ -42,6 +46,12 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
   submitRef,
 }) => {
   const [plExpanded, setPlExpanded] = useState(false);
+
+  const { data: history } = useQuery({
+    queryKey: QK.tax.annualReports.statusHistory(report.id),
+    queryFn: () => annualReportsApi.getHistory(report.id),
+    enabled: !!report.id,
+  });
 
   return (
     <div className="space-y-6">
@@ -99,6 +109,9 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
         currentReportId={report.id}
         onSelect={onSelectReport}
       />
+
+      {/* 7. Status history timeline */}
+      <StatusHistoryTimeline history={history ?? []} />
     </div>
   );
 };

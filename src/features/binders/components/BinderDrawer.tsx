@@ -7,6 +7,7 @@ import type { ActionCommand } from "../../../lib/actions/types";
 import { BinderDetailsPanel } from "./BinderDetailsPanel";
 import { BinderActionsPanel } from "./BinderActionsPanel";
 import { BinderReceivePanel } from "./BinderReceivePanel";
+import { BinderHistorySection } from "./BinderHistorySection";
 
 /* ─── Main drawer ────────────────────────────────────────────── */
 
@@ -102,6 +103,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
             onDelete={onDelete}
             isDeleting={isDeleting}
           />
+          <BinderHistorySection binderId={binder.id} />
         </>
       )}
     </DetailDrawer>
