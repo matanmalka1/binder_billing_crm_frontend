@@ -3,7 +3,7 @@ import { cn } from "../../../utils/utils";
 import { useReportDetail } from "../hooks/useReportDetail";
 import { AnnualReportPanelLayout } from "./AnnualReportPanelLayout";
 import { DeleteReportConfirmDialog } from "./DeleteReportConfirmDialog";
-import type { AnnualReportStatus } from "../../../api/annualReports.api";
+import type { StatusTransitionPayload } from "../../../api/annualReports.api";
 import type { SectionKey } from "../types";
 import AnnualReportSidebar from "./AnnualReportSidebar";
 import { AnnualReportOverviewSection } from "./AnnualReportOverviewSection";
@@ -47,8 +47,8 @@ export const AnnualReportFullPanel = ({ reportId, onClose }: AnnualReportFullPan
     setShowDeleteConfirm(false);
   }, [deleteReport]);
 
-  const handleTransition = (action: string, note?: string) => {
-    transition({ status: action as AnnualReportStatus, note: note ?? null });
+  const handleTransition = (payload: StatusTransitionPayload) => {
+    transition(payload);
   };
 
   const renderContent = () => {

@@ -17,7 +17,7 @@ interface AnnualReportSidebarStatusProps {
   report: AnnualReportFull;
   detail: ReportDetailResponse | null;
   availableActions: string[];
-  onTransition: (action: string, note?: string) => void;
+  onTransition: (payload: StatusTransitionPayload) => void;
 }
 
 export const AnnualReportSidebarStatus = ({
@@ -30,7 +30,7 @@ export const AnnualReportSidebarStatus = ({
   const handleTransition = async (payload: StatusTransitionPayload) => {
     setIsTransitioning(true);
     try {
-      onTransition(payload.status, payload.note ?? undefined);
+      onTransition(payload);
     } finally {
       setIsTransitioning(false);
     }

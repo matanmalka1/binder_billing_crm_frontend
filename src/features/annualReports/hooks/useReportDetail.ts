@@ -41,8 +41,15 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
   });
 
   const transitionMutation = useMutation({
-    mutationFn: (payload: StatusTransitionPayload) =>
-      annualReportStatusApi.transitionStatus(reportId as number, payload),
+    mutationFn: (payload: StatusTransitionPayload) => {
+      if (payload.status === "submitted") {
+        return annualReportStatusApi.submitReport(reportId as number, {
+          note: payload.note ?? undefined,
+          ita_reference: payload.ita_reference ?? undefined,
+        });
+      }
+      return annualReportStatusApi.transitionStatus(reportId as number, payload);
+    },
     onSuccess: () => {
       toast.success("סטטוס עודכן בהצלחה");
       if (qk) void queryClient.invalidateQueries({ queryKey: qk });
