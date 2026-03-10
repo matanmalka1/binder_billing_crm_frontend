@@ -66,7 +66,20 @@ export interface AnnualReportFull {
   amendment_reason?: string | null;
   profit?: number | null;
   final_balance?: number | null;
-  available_actions?: { action: string; label: string }[];
+  available_actions?: {
+    id: string;
+    key: string;
+    label: string;
+    method: string;
+    endpoint: string;
+    payload?: Record<string, unknown>;
+    confirm?: {
+      title: string;
+      message: string;
+      confirm_label: string;
+      cancel_label: string;
+    };
+  }[];
   // Financial summary fields (present in detail response)
   total_income?: number;
   total_expenses?: number;

@@ -23,9 +23,33 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
     chargeId != null ? String(chargeId) : undefined,
   );
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
 
   return (
     <>
+    <ConfirmDialog
+      open={isConfirmingCancel}
+      title="ביטול חיוב"
+      message={charge ? `האם לבטל את חיוב #${charge.id}?` : "האם לבטל את החיוב?"}
+      confirmLabel="בטל חיוב"
+      cancelLabel="חזור"
+      isLoading={actionLoading}
+      onConfirm={async () => {
+        await runAction("cancel", cancelReason || undefined);
+        setIsConfirmingCancel(false);
+        setCancelReason("");
+      }}
+      onCancel={() => { setIsConfirmingCancel(false); setCancelReason(""); }}
+    >
+      <textarea
+        className="mt-3 w-full rounded border border-gray-300 p-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+        rows={3}
+        placeholder="סיבת ביטול (אופציונלי)"
+        value={cancelReason}
+        onChange={(e) => setCancelReason(e.target.value)}
+      />
+    </ConfirmDialog>
     <ConfirmDialog
       open={isConfirmingDelete}
       title="מחיקת חיוב"
@@ -72,7 +96,7 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
                 size="sm"
                 onIssue={() => void runAction("issue")}
                 onMarkPaid={() => void runAction("markPaid")}
-                onCancel={() => void runAction("cancel")}
+                onCancel={() => setIsConfirmingCancel(true)}
               />
               {charge.status === "draft" && (
                 <div className="pt-3">

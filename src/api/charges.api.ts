@@ -83,9 +83,10 @@ export const chargesApi = {
     return response.data;
   },
 
-  cancel: async (chargeId: number): Promise<ChargeAdvisorResponse> => {
+  cancel: async (chargeId: number, reason?: string): Promise<ChargeAdvisorResponse> => {
     const response = await api.post<ChargeAdvisorResponse>(
       ENDPOINTS.chargeCancel(chargeId),
+      reason ? { reason } : undefined,
     );
     return response.data;
   },

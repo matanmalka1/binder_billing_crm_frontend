@@ -10,6 +10,7 @@ export interface ConfirmDialogProps {
   isLoading?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  children?: React.ReactNode;
 }
 
 export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
@@ -21,6 +22,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   isLoading = false,
   onConfirm,
   onCancel,
+  children,
 }) => {
   return (
     <Modal
@@ -49,6 +51,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       }
     >
       <p className="text-sm text-gray-700">{message}</p>
+      {children}
     </Modal>
   );
 };

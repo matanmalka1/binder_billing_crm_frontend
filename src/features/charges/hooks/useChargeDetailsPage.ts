@@ -25,10 +25,10 @@ export const useChargeDetailsPage = (chargeId: string | undefined) => {
   const queryDenied = getHttpStatus(chargeQuery.error) === 403;
 
   const actionMutation = useMutation({
-    mutationFn: (action: "issue" | "markPaid" | "cancel") => {
+    mutationFn: ({ action, reason }: { action: "issue" | "markPaid" | "cancel"; reason?: string }) => {
       if (action === "issue") return chargesApi.issue(chargeIdNumber);
       if (action === "markPaid") return chargesApi.markPaid(chargeIdNumber);
-      return chargesApi.cancel(chargeIdNumber);
+      return chargesApi.cancel(chargeIdNumber, reason);
     },
     onSuccess: async () => {
       toast.success("פעולת חיוב בוצעה בהצלחה");
@@ -48,7 +48,7 @@ export const useChargeDetailsPage = (chargeId: string | undefined) => {
     onError: (err) => showErrorToast(err, "שגיאה במחיקת חיוב"),
   });
 
-  const runAction = async (action: "issue" | "markPaid" | "cancel") => {
+  const runAction = async (action: "issue" | "markPaid" | "cancel", reason?: string) => {
     if (!hasValidChargeId || !isAdvisor) {
       setDenied(true);
       return;
@@ -56,7 +56,7 @@ export const useChargeDetailsPage = (chargeId: string | undefined) => {
     try {
       setActionError(null);
       setDenied(false);
-      await actionMutation.mutateAsync(action);
+      await actionMutation.mutateAsync({ action, reason });
     } catch (err: unknown) {
       if (getHttpStatus(err) === 403) setDenied(true);
       setActionError(getErrorMessage(err, "שגיאה בביצוע פעולה"));
