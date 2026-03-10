@@ -4,7 +4,7 @@ import { Card } from "../../../components/ui/Card";
 import { DataTable } from "../../../components/ui/DataTable";
 import { AccessBanner } from "../../../components/ui/AccessBanner";
 import { DocumentsUploadCard } from "./DocumentsUploadCard";
-import { ConfirmDeleteDialog } from "./ConfirmDeleteDialog";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { buildDocumentColumns, DOC_TYPE_LABELS } from "./DocumentsColumns";
 import { documentsApi } from "../../../api/documents.api";
 import type {
@@ -132,12 +132,15 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
 
       <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
 
-      {confirmDeleteId !== null && (
-        <ConfirmDeleteDialog
-          onConfirm={handleConfirmDelete}
-          onCancel={() => setConfirmDeleteId(null)}
-        />
-      )}
+      <ConfirmDialog
+        open={confirmDeleteId !== null}
+        title="מחיקת מסמך"
+        message="האם למחוק מסמך זה?"
+        confirmLabel="מחק"
+        cancelLabel="ביטול"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmDeleteId(null)}
+      />
     </div>
   );
 };

@@ -10,7 +10,7 @@ import {
   getEventColor,
   getEventIcon,
   getEventTypeLabel,
-} from "./timelineEventMeta";
+} from "./TimelineEventMeta";
 
 interface TimelineEventItemProps {
   event: TimelineEvent;

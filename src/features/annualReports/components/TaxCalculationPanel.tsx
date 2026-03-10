@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { annualReportTaxApi } from "../../../api/annualReportTax.api";
 import { annualReportsApi } from "../../../api/annualReports.api";
 import { QK } from "../../../lib/queryKeys";
 import { cn } from "../../../utils/utils";
@@ -30,7 +31,7 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: QK.tax.annualReportTaxCalc(reportId),
-    queryFn: () => annualReportsApi.getTaxCalculation(reportId),
+    queryFn: () => annualReportTaxApi.getTaxCalculation(reportId),
   });
 
   const detailQ = useQuery({

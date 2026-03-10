@@ -1,6 +1,6 @@
-import { useNotifications } from "../../hooks/useNotifications";
-import { SeverityBadge } from "../notifications/SeverityBadge";
-import { Button } from "../ui/Button";
+import { useNotifications } from "../../../hooks/useNotifications";
+import { SeverityBadge } from "./SeverityBadge";
+import { Button } from "../../../components/ui/Button";
 
 interface NotificationsTabProps {
   clientId: number;

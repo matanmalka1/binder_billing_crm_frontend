@@ -8,7 +8,7 @@ import { Button } from "../components/ui/Button";
 import { ChargesCreateModal } from "../features/charges/components/ChargesCreateModal";
 import { ChargesFiltersCard } from "../features/charges/components/ChargesFiltersCard";
 import { ChargesSummaryBar } from "../features/charges/components/ChargesSummaryBar";
-import { buildChargeColumns } from "../features/charges/components/chargeColumns";
+import { buildChargeColumns } from "../features/charges/components/ChargeColumns";
 import { ChargeDetailDrawer } from "../features/charges/components/ChargeDetailDrawer";
 import { useChargesPage } from "../features/charges/hooks/useChargesPage";
 import { ImportExportModal } from "../features/importExport/components/ImportExportModal";

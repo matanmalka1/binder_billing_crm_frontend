@@ -28,6 +28,7 @@ import type { StatusTransitionPayload, ReportDetailResponse, AnnualReportSchedul
 import type { DetailTab } from "./AnnualReportDetailDrawer";
 import { useQuery } from "@tanstack/react-query";
 import { annualReportsApi } from "../../../api/annualReports.api";
+import { annualReportTaxApi } from "../../../api/annualReportTax.api";
 import { QK } from "../../../lib/queryKeys";
 
 interface Props {
@@ -55,7 +56,7 @@ export const ReportDetailTabs: React.FC<Props> = ({
 }) => {
   const advancesQ = useQuery({
     queryKey: QK.tax.annualReportAdvancesSummary(report.id),
-    queryFn: () => annualReportsApi.getAdvancesSummary(report.id),
+    queryFn: () => annualReportTaxApi.getAdvancesSummary(report.id),
     enabled: activeTab === "overview" || activeTab === "tax",
   });
 

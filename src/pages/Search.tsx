@@ -7,7 +7,7 @@ import { ErrorCard } from "../components/ui/ErrorCard";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { EmptyState } from "../components/ui/EmptyState";
 import { SearchFiltersBar } from "../features/search/components/SearchFiltersBar";
-import { searchColumns } from "../features/search/components/searchColumns";
+import { searchColumns } from "../features/search/components/SearchColumns";
 import { useSearchPage } from "../features/search/hooks/useSearchPage";
 import { cn } from "../utils/utils";
 import type { SearchResult } from "../api/search.api";

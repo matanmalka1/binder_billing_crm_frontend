@@ -1,13 +1,18 @@
 import { useState, useRef, useEffect } from "react";
-import { Input } from "../../../components/ui/Input";
-import { searchApi } from "../../../api/search.api";
-import type { SearchResult } from "../../../api/search.api";
+import { X } from "lucide-react";
+import { Input } from "./Input";
+import { searchApi } from "../../api/search.api";
+import type { SearchResult } from "../../api/search.api";
+
+// ── Controlled search input (value/onChange) ──────────────────────────────────
 
 interface ClientSearchInputProps {
   value: string;
   onChange: (query: string) => void;
   onSelect: (client: { id: number; name: string; id_number: string }) => void;
   error?: string;
+  label?: string;
+  placeholder?: string;
 }
 
 export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
@@ -15,6 +20,8 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
   onChange,
   onSelect,
   error,
+  label = "לקוח",
+  placeholder = "חפש לפי שם, ת.ז. / ח.פ...",
 }) => {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [open, setOpen] = useState(false);
@@ -66,10 +73,10 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
   return (
     <div ref={containerRef} className="relative w-full">
       <Input
-        label="לקוח"
+        label={label}
         value={value}
         onChange={(e) => handleChange(e.target.value)}
-        placeholder="חפש לפי שם, ת.ז. / ח.פ..."
+        placeholder={placeholder}
         autoComplete="off"
         error={error}
         rightIcon={
@@ -96,3 +103,39 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
     </div>
   );
 };
+
+ClientSearchInput.displayName = "ClientSearchInput";
+
+// ── Selected-client display (with clear button) ───────────────────────────────
+
+interface SelectedClientDisplayProps {
+  name: string;
+  id: number;
+  onClear: () => void;
+  label?: string;
+}
+
+export const SelectedClientDisplay: React.FC<SelectedClientDisplayProps> = ({
+  name,
+  id,
+  onClear,
+  label = "לקוח",
+}) => (
+  <div className="space-y-1">
+    <label className="block text-sm font-medium text-gray-700">{label}</label>
+    <div className="flex items-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-3 py-2.5">
+      <span className="flex-1 text-sm font-medium text-primary-900">{name}</span>
+      <span className="text-xs text-primary-500">#{id}</span>
+      <button
+        type="button"
+        onClick={onClear}
+        className="rounded p-0.5 text-primary-400 hover:bg-primary-100 hover:text-primary-600"
+        aria-label="נקה בחירה"
+      >
+        <X className="h-3.5 w-3.5" />
+      </button>
+    </div>
+  </div>
+);
+
+SelectedClientDisplay.displayName = "SelectedClientDisplay";

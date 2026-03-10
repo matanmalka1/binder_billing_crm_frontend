@@ -1,7 +1,7 @@
 import { PageHeader } from "../components/layout/PageHeader";
 import { AccessBanner } from "../components/ui/AccessBanner";
 import { ErrorCard } from "../components/ui/ErrorCard";
-import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
+import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { DashboardStatsGrid } from "../features/dashboard/components/DashboardStatsGrid";
 import { AdvisorTodayCard } from "../features/dashboard/components/AdvisorTodayCard";
 import { AttentionPanel } from "../features/dashboard/components/AttentionPanel";

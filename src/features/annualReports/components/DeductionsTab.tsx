@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { annualReportsApi } from "../../../api/annualReports.api";
+import { annualReportFinancialsApi } from "../../../api/annualReportFinancials.api";
 import { QK } from "../../../lib/queryKeys";
 import { TaxCreditsPanel } from "./TaxCreditsPanel";
 import { TaxSavingsOpportunities } from "./TaxSavingsOpportunities";
-import { EXPENSE_LABELS } from "./financialLabels";
+import { EXPENSE_LABELS } from "../financialLabels";
 
 interface Props {
   reportId: number;
@@ -30,7 +30,7 @@ const CATEGORY_ICONS: Record<string, string> = {
 export const DeductionsTab: React.FC<Props> = ({ reportId }) => {
   const { data, isLoading } = useQuery({
     queryKey: QK.tax.annualReportFinancials(reportId),
-    queryFn: () => annualReportsApi.getFinancials(reportId),
+    queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
   });
 
   if (isLoading)

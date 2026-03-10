@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { annualReportsApi, type IncomeLineResponse, type ExpenseLineResponse } from "../../../api/annualReports.api";
+import { annualReportFinancialsApi } from "../../../api/annualReportFinancials.api";
+import type { IncomeLineResponse, ExpenseLineResponse } from "../../../api/annualReports.api";
 import { QK } from "../../../lib/queryKeys";
 import { cn } from "../../../utils/utils";
 import { AddLineForm } from "./IncomeExpensePanelParts";
-import { LineRow, INCOME_LABELS, EXPENSE_LABELS } from "./financialLabels";
+import { LineRow, INCOME_LABELS, EXPENSE_LABELS } from "../financialLabels";
 import { AddExpenseLineForm } from "./AddExpenseLineForm";
 import { useIncomeExpenseMutations } from "../hooks/useIncomeExpenseMutations";
 
@@ -12,7 +13,7 @@ interface IncomeExpensePanelProps { reportId: number; }
 export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId }) => {
   const { data, isLoading } = useQuery({
     queryKey: QK.tax.annualReportFinancials(reportId),
-    queryFn: () => annualReportsApi.getFinancials(reportId),
+    queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
   });
 
   const { addIncome, deleteIncome, addExpense, deleteExpense } = useIncomeExpenseMutations(reportId);

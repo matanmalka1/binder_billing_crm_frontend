@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
-import { UserFormFields } from "../hooks/UserFormFields";
+import { UserFormFields } from "./UserFormFields";
 import { createUserSchema, type CreateUserFormValues } from "../schemas";
 import type { CreateUserPayload } from "../../../api/users.api";
 

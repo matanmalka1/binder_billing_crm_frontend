@@ -1,5 +1,6 @@
 import { useQueries } from "@tanstack/react-query";
-import { annualReportsApi, type SeasonSummary } from "../../../api/annualReports.api";
+import type { SeasonSummary } from "../../../api/annualReports.api";
+import { annualReportSeasonApi } from "../../../api/annualReportSeason.api";
 import { QK } from "../../../lib/queryKeys";
 
 export interface YearComparisonData {
@@ -13,7 +14,7 @@ export function useYearComparison(years: number[]) {
   const seasonQueries = useQueries({
     queries: years.map((year) => ({
       queryKey: QK.tax.annualReports.seasonSummary(year),
-      queryFn: () => annualReportsApi.getSeasonSummary(year),
+      queryFn: () => annualReportSeasonApi.getSeasonSummary(year),
       retry: 1,
     })),
   });

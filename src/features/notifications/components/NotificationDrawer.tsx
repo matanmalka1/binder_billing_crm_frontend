@@ -1,7 +1,7 @@
-import { cn } from "../../utils/utils";
-import { useNotifications } from "../../hooks/useNotifications";
+import { cn } from "../../../utils/utils";
+import { useNotifications } from "../../../hooks/useNotifications";
 import { SeverityBadge } from "./SeverityBadge";
-import type { NotificationItem } from "../../api/notifications.api";
+import type { NotificationItem } from "../../../api/notifications.api";
 
 interface NotificationDrawerProps {
   open: boolean;

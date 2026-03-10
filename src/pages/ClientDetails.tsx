@@ -21,8 +21,8 @@ import { ClientTimelineTab } from "../features/timeline/components/ClientTimelin
 import { VatClientSummaryPanel } from "../features/vatReports/components/VatClientSummaryPanel";
 import { ClientAdvancePaymentsTab } from "../features/advancedPayments/components/ClientAdvancePaymentsTab";
 import { ClientStatusCard } from "../features/clients/components/ClientStatusCard";
-import { FilingTimeline } from "../components/taxDeadlines/FilingTimeline";
-import { NotificationsTab } from "../components/clientDetails/NotificationsTab";
+import { FilingTimeline } from "../features/taxDeadlines/components/FilingTimeline";
+import { NotificationsTab } from "../features/notifications/components/NotificationsTab";
 import { ClientAnnualReportsTab } from "../features/annualReports/components/ClientAnnualReportsTab";
 import { cn } from "../utils/utils";
 

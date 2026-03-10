@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getYear } from "date-fns";
 import { TrendingUp, AlertTriangle, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { annualReportsApi } from "../../../api/annualReports.api";
+import { annualReportSeasonApi } from "../../../api/annualReportSeason.api";
 import { QK } from "../../../lib/queryKeys";
 import { cn } from "../../../utils/utils";
 
@@ -11,7 +11,7 @@ const currentYear = getYear(new Date());
 export const SeasonSummaryWidget: React.FC = () => {
   const { data, isPending } = useQuery({
     queryKey: QK.tax.annualReports.seasonSummary(currentYear),
-    queryFn: () => annualReportsApi.getSeasonSummary(currentYear),
+    queryFn: () => annualReportSeasonApi.getSeasonSummary(currentYear),
   });
 
   if (isPending) {

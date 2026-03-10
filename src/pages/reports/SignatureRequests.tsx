@@ -6,13 +6,22 @@ import { PageStateGuard } from "../../components/ui/PageStateGuard";
 import { DataTable } from "../../components/ui/DataTable";
 import { StatsCard } from "../../components/ui/StatsCard";
 import { Button } from "../../components/ui/Button";
-import { SignatureStatusBadge } from "../../features/signatureRequests/components/SignatureStatusBadge";
+import { StatusBadge } from "../../components/ui/StatusBadge";
 import { SignatureRequestAuditDrawer } from "../../features/signatureRequests/components/SignatureRequestAuditDrawer";
 import { usePendingSignatureRequests } from "../../features/signatureRequests/hooks/usePendingSignatureRequests";
 import { useSignatureRequestActions } from "../../features/signatureRequests/hooks/useSignatureRequestActions";
 import { buildSigningUrl } from "../../features/signatureRequests/utils/signingUrl";
 import type { SignatureRequestResponse } from "../../api/signatureRequests.api";
-import { getSignatureRequestTypeLabel } from "../../utils/enums";
+import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "../../utils/enums";
+
+const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "success" | "error"> = {
+  draft: "neutral",
+  pending_signature: "info",
+  signed: "success",
+  declined: "error",
+  expired: "warning",
+  canceled: "neutral",
+};
 import { formatDate } from "../../utils/utils";
 import type { SendSignatureRequestResponse } from "../../api/signatureRequests.api";
 
@@ -106,7 +115,7 @@ export const SignatureRequestsPage: React.FC = () => {
       {
         key: "status",
         header: "סטטוס",
-        render: (req: SignatureRequestResponse) => <SignatureStatusBadge status={req.status} />,
+        render: (req: SignatureRequestResponse) => <StatusBadge status={req.status} getLabel={getSignatureRequestStatusLabel} variantMap={signatureStatusVariants} />,
       },
       {
         key: "created_at",

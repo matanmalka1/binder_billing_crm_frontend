@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { annualReportsApi } from "../../../api/annualReports.api";
+import { annualReportStatusApi } from "../../../api/annualReportStatus.api";
 import type { DeadlineType } from "../../../api/annualReports.api";
 import { QK } from "../../../lib/queryKeys";
 import { Button } from "../../../components/ui/Button";
@@ -31,7 +31,7 @@ export const DeadlineUpdatePanel: React.FC<Props> = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
-      annualReportsApi.updateDeadline(reportId, {
+      annualReportStatusApi.updateDeadline(reportId, {
         deadline_type: selected,
         ...(selected === "custom" && customNote ? { custom_deadline_note: customNote } : {}),
       }),

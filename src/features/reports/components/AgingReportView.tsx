@@ -4,7 +4,7 @@ import { PageStateGuard } from "../../../components/ui/PageStateGuard";
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { AgingReportFilters } from "./AgingReportFilters";
 import { AgingReportHeader } from "./AgingReportHeader";
-import { AgingReportTable } from "./Agingreporttable";
+import { AgingReportTable } from "./AgingReportTable";
 import { useAgingReport } from "../hooks/useAgingReport";
 
 export const AgingReportView: React.FC = () => {

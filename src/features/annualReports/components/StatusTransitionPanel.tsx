@@ -13,6 +13,7 @@ import type {
   StatusTransitionPayload,
 } from "../../../api/annualReports.api";
 import { annualReportsApi } from "../../../api/annualReports.api";
+import { annualReportTaxApi } from "../../../api/annualReportTax.api";
 import {
   getStatusLabel,
   getStatusVariant,
@@ -60,7 +61,7 @@ export const StatusTransitionPanel: React.FC<StatusTransitionPanelProps> = ({
   const canSubmit = allowed.includes("submitted");
   const { data: readiness } = useQuery({
     queryKey: QK.tax.annualReportReadiness(report.id),
-    queryFn: () => annualReportsApi.getReadiness(report.id),
+    queryFn: () => annualReportTaxApi.getReadiness(report.id),
     enabled: canSubmit,
   });
 

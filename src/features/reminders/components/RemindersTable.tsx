@@ -3,8 +3,8 @@ import { DataTable, type Column } from "../../../components/ui/DataTable";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { formatDate } from "../../../utils/utils";
-import type { Reminder } from "../reminder.types";
-import { reminderTypeLabels, statusLabels } from "../reminder.types";
+import type { Reminder } from "../types";
+import { reminderTypeLabels, statusLabels } from "../types";
 
 interface RemindersTableProps {
   reminders: Reminder[];

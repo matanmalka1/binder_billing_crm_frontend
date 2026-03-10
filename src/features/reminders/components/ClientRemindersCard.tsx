@@ -7,7 +7,7 @@ import { RemindersTable } from "./RemindersTable";
 import { ReminderDrawer } from "./ReminderDrawer";
 import { CreateReminderModal } from "./CreateReminderModal";
 import { useReminders } from "../hooks/useReminders";
-import type { Reminder } from "../reminder.types";
+import type { Reminder } from "../types";
 import { bindersApi } from "../../../api/binders.api";
 import { chargesApi } from "../../../api/charges.api";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";

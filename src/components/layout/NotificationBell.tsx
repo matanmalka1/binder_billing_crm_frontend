@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Bell } from "lucide-react";
 import { notificationsApi } from "../../api/notifications.api";
 import { QK } from "../../lib/queryKeys";
-import { NotificationDrawer } from "../notifications/NotificationDrawer";
+import { NotificationDrawer } from "../../features/notifications/components/NotificationDrawer";
 
 export const NotificationBell: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);

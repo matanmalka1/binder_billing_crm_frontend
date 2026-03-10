@@ -6,7 +6,7 @@ import type { SearchResult } from "../../../api/search.api";
 import { toQueryParams } from "../../../api/queryParams";
 import { cn } from "../../../utils/utils";
 import { getSignalLabel, getWorkStateLabel } from "../../../utils/enums";
-import { getResultColor, getResultIcon, getResultLabel } from "./searchResultMeta";
+import { getResultColor, getResultIcon, getResultLabel } from "./SearchResultMeta";
 
 type BadgeVariant = "error" | "warning" | "info" | "neutral";
 

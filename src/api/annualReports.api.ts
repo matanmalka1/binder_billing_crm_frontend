@@ -339,50 +339,6 @@ export const annualReportsApi = {
     return res.data;
   },
 
-  getSeasonSummary: async (taxYear: number): Promise<SeasonSummary> => {
-    const res = await api.get<SeasonSummary>(ENDPOINTS.taxYearSummary(taxYear));
-    return res.data;
-  },
-
-  listSeasonReports: async (
-    taxYear: number,
-    params: { page?: number; page_size?: number }
-  ): Promise<AnnualReportListResponse> => {
-    const res = await api.get<AnnualReportListResponse>(ENDPOINTS.taxYearReports(taxYear), { params });
-    return res.data;
-  },
-
-  transitionStatus: async (
-    reportId: number,
-    payload: StatusTransitionPayload
-  ): Promise<AnnualReportFull> => {
-    const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReportTransitionStatus(reportId), payload);
-    return res.data;
-  },
-
-  submitReport: async (
-    reportId: number,
-    payload: { submitted_at?: string; ita_reference?: string | null; note?: string | null } = {}
-  ): Promise<AnnualReportFull> => {
-    const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReportSubmit(reportId), payload);
-    return res.data;
-  },
-
-  transitionStage: async (reportId: number, toStage: StageKey): Promise<AnnualReportFull> => {
-    const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReportTransition(reportId), {
-      to_stage: toStage,
-    });
-    return res.data;
-  },
-
-  updateDeadline: async (
-    reportId: number,
-    payload: { deadline_type: DeadlineType; custom_deadline_note?: string | null }
-  ): Promise<AnnualReportFull> => {
-    const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReportDeadline(reportId), payload);
-    return res.data;
-  },
-
   getSchedules: async (reportId: number): Promise<ScheduleEntry[]> => {
     const res = await api.get<ScheduleEntry[]>(ENDPOINTS.annualReportSchedules(reportId));
     return res.data;
@@ -411,18 +367,6 @@ export const annualReportsApi = {
     return res.data;
   },
 
-  getOverdue: async (taxYear?: number): Promise<AnnualReportFull[]> => {
-    const res = await api.get<AnnualReportFull[]>(ENDPOINTS.annualReportOverdue, {
-      params: taxYear ? { tax_year: taxYear } : undefined,
-    });
-    return res.data;
-  },
-
-  getKanbanView: async (): Promise<{ stages: KanbanStage[] }> => {
-    const res = await api.get<{ stages: KanbanStage[] }>(ENDPOINTS.annualReportsKanban);
-    return res.data;
-  },
-
   getReportDetails: async (reportId: number): Promise<ReportDetailResponse> => {
     const res = await api.get<ReportDetailResponse>(ENDPOINTS.annualReportDetails(reportId));
     return res.data;
@@ -441,68 +385,6 @@ export const annualReportsApi = {
 
   deleteReport: async (reportId: number): Promise<void> => {
     await api.delete(ENDPOINTS.annualReportById(reportId));
-  },
-
-  getFinancials: async (reportId: number): Promise<FinancialSummaryResponse> => {
-    const res = await api.get<FinancialSummaryResponse>(ENDPOINTS.annualReportFinancials(reportId));
-    return res.data;
-  },
-
-  getReadiness: async (reportId: number): Promise<ReadinessCheckResponse> => {
-    const res = await api.get<ReadinessCheckResponse>(ENDPOINTS.annualReportReadiness(reportId));
-    return res.data;
-  },
-
-  addIncomeLine: async (reportId: number, payload: IncomeLinePayload): Promise<IncomeLineResponse> => {
-    const res = await api.post<IncomeLineResponse>(ENDPOINTS.annualReportIncome(reportId), payload);
-    return res.data;
-  },
-
-  updateIncomeLine: async (
-    reportId: number,
-    lineId: number,
-    payload: Partial<IncomeLinePayload>
-  ): Promise<IncomeLineResponse> => {
-    const res = await api.patch<IncomeLineResponse>(
-      ENDPOINTS.annualReportIncomeById(reportId, lineId),
-      payload
-    );
-    return res.data;
-  },
-
-  deleteIncomeLine: async (reportId: number, lineId: number): Promise<void> => {
-    await api.delete(ENDPOINTS.annualReportIncomeById(reportId, lineId));
-  },
-
-  addExpenseLine: async (reportId: number, payload: ExpenseLinePayload): Promise<ExpenseLineResponse> => {
-    const res = await api.post<ExpenseLineResponse>(ENDPOINTS.annualReportExpenses(reportId), payload);
-    return res.data;
-  },
-
-  updateExpenseLine: async (
-    reportId: number,
-    lineId: number,
-    payload: Partial<ExpenseLinePayload>
-  ): Promise<ExpenseLineResponse> => {
-    const res = await api.patch<ExpenseLineResponse>(
-      ENDPOINTS.annualReportExpenseById(reportId, lineId),
-      payload
-    );
-    return res.data;
-  },
-
-  deleteExpenseLine: async (reportId: number, lineId: number): Promise<void> => {
-    await api.delete(ENDPOINTS.annualReportExpenseById(reportId, lineId));
-  },
-
-  getTaxCalculation: async (reportId: number): Promise<TaxCalculationResult> => {
-    const res = await api.get<TaxCalculationResult>(ENDPOINTS.annualReportTaxCalculation(reportId));
-    return res.data;
-  },
-
-  getAdvancesSummary: async (reportId: number): Promise<AdvancesSummary> => {
-    const res = await api.get<AdvancesSummary>(ENDPOINTS.annualReportAdvancesSummary(reportId));
-    return res.data;
   },
 
   getAnnexLines: async (reportId: number, schedule: AnnualReportScheduleKey): Promise<AnnexDataLine[]> => {

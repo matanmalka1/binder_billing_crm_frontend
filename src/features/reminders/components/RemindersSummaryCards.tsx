@@ -2,7 +2,7 @@ import { Bell, Calendar, AlertTriangle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { cn } from "../../../utils/utils";
-import type { Reminder } from "../reminder.types";
+import type { Reminder } from "../types";
 
 interface StatConfig {
   icon: LucideIcon;

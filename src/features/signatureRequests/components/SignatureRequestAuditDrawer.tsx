@@ -6,11 +6,21 @@ import {
   DrawerField,
   DrawerSection,
 } from "../../../components/ui/DetailDrawer";
-import { SignatureStatusBadge } from "./SignatureStatusBadge";
+import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { formatDate, formatDateTime } from "../../../utils/utils";
 import {
   getSignatureRequestTypeLabel,
+  getSignatureRequestStatusLabel,
 } from "../../../utils/enums";
+
+const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "success" | "error"> = {
+  draft: "neutral",
+  pending_signature: "info",
+  signed: "success",
+  declined: "error",
+  expired: "warning",
+  canceled: "neutral",
+};
 
 interface Props {
   requestId: number | null;
@@ -71,7 +81,7 @@ export const SignatureRequestAuditDrawer: React.FC<Props> = ({
           <DrawerSection title="פרטי הבקשה">
             <DrawerField
               label="סטטוס"
-              value={<SignatureStatusBadge status={data.status} />}
+              value={<StatusBadge status={data.status} getLabel={getSignatureRequestStatusLabel} variantMap={signatureStatusVariants} />}
             />
             <DrawerField label="חותם" value={data.signer_name} />
             {data.signer_email && (

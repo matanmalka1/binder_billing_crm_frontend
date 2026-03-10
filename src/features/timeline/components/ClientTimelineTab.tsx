@@ -1,7 +1,7 @@
 import { useClientTimelinePage } from "../hooks/useClientTimelinePage";
 import { TimelineCommandBar } from "./TimelineCommandBar";
 import { TimelineCard } from "./TimelineCard";
-import { ConfirmDialog } from "../../actions/components/ConfirmDialog";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { PaginationCard } from "../../../components/ui/PaginationCard";
 import { PageLoading } from "../../../components/ui/PageLoading";
 import { ErrorCard } from "../../../components/ui/ErrorCard";

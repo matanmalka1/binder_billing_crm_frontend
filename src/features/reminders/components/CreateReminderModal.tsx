@@ -4,8 +4,8 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
-import type { CreateReminderFormValues } from "../reminder.types";
-import type { BinderResponse } from "../../../api/binders.types";
+import type { CreateReminderFormValues } from "../types";
+import type { BinderResponse } from "../../binders/types";
 import type { ChargeResponse } from "../../../api/charges.api";
 import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
 

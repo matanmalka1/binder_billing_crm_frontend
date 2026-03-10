@@ -8,8 +8,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { QK } from "../../lib/queryKeys";
-import { advancePaymentsApi } from "../../features/advancedPayments/api/advancePayments.api";
+import { QK } from "../../../lib/queryKeys";
+import { advancePaymentsApi } from "../../../api/advancePayments.api";
 
 interface AdvancePaymentsChartProps {
   clientId: number;

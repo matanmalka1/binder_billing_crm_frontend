@@ -10,8 +10,8 @@ import { Badge } from "../../components/ui/Badge";
 import { PaginationCard } from "../../components/ui/PaginationCard";
 import { OverviewKPICards } from "../../features/advancedPayments/components/OverviewKPICards";
 import { QK } from "../../lib/queryKeys";
-import { advancePaymentsApi } from "../../features/advancedPayments/api/advancePayments.api";
-import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "../../features/advancedPayments/api/advancePayments.types";
+import { advancePaymentsApi } from "../../api/advancePayments.api";
+import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "../../features/advancedPayments/types";
 import { MONTH_NAMES, MONTH_OPTIONS, YEAR_OPTIONS, fmtCurrency, STATUS_LABEL, STATUS_VARIANT } from "../../features/advancedPayments/utils";
 import { formatDate, parsePositiveInt } from "../../utils/utils";
 

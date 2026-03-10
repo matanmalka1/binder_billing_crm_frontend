@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { Button } from "../../../components/ui/Button";
-import type { BinderResponse } from "../../../api/binders.types";
+import type { BinderResponse } from "../types";
 import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
 import { mapActions } from "../../../lib/actions/mapActions";
 import {

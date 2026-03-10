@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle, Clock, AlertTriangle } from "lucide-react";
-import { taxDeadlinesApi } from "../../api/taxDeadlines.api";
-import type { TimelineEntry } from "../../api/taxDeadlines.api";
-import { QK } from "../../lib/queryKeys";
-import { cn } from "../../utils/utils";
+import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
+import type { TimelineEntry } from "../../../api/taxDeadlines.api";
+import { QK } from "../../../lib/queryKeys";
+import { cn } from "../../../utils/utils";
 
 interface FilingTimelineProps {
   clientId: number;

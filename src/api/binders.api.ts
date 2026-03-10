@@ -10,7 +10,7 @@ import type {
   ListOperationalBindersParams,
   ReceiveBinderPayload,
   ReturnBinderPayload,
-} from "./binders.types";
+} from "../features/binders/types";
 
 export const bindersApi = {
   list: async (params: ListBindersParams): Promise<BinderListResponse> => {

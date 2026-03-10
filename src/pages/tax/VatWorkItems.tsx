@@ -8,7 +8,7 @@ import { PaginationCard } from "../../components/ui/PaginationCard";
 import { ErrorCard } from "../../components/ui/ErrorCard";
 import { VatWorkItemsCreateModal } from "../../features/vatReports/components/VatWorkItemsCreateModal";
 import { VatWorkItemsFiltersCard } from "../../features/vatReports/components/VatWorkItemsFiltersCard";
-import { buildVatWorkItemColumns } from "../../features/vatReports/components/vatWorkItemColumns";
+import { buildVatWorkItemColumns } from "../../features/vatReports/components/VatWorkItemColumns";
 import { VatWorkItemDrawer } from "../../features/vatReports/components/VatWorkItemDrawer";
 import { useVatWorkItemsPage } from "../../features/vatReports/hooks/useVatWorkItemsPage";
 import type { VatWorkItemResponse } from "../../api/vatReports.api";

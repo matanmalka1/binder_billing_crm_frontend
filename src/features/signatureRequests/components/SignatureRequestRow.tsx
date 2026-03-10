@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { Send, X, Copy, Check, ChevronDown, ChevronUp, Link2 } from "lucide-react";
-import { SignatureStatusBadge } from "./SignatureStatusBadge";
+import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { SignatureRequestResponse } from "../../../api/signatureRequests.api";
-import { getSignatureRequestTypeLabel } from "../../../utils/enums";
+import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "../../../utils/enums";
+
+const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "success" | "error"> = {
+  draft: "neutral",
+  pending_signature: "info",
+  signed: "success",
+  declined: "error",
+  expired: "warning",
+  canceled: "neutral",
+};
 import { formatDate, formatDateTime } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
@@ -58,7 +67,7 @@ export const SignatureRequestRow: React.FC<Props> = ({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="truncate text-sm font-semibold text-gray-900">{request.title}</span>
-            <SignatureStatusBadge status={request.status} />
+            <StatusBadge status={request.status} getLabel={getSignatureRequestStatusLabel} variantMap={signatureStatusVariants} />
           </div>
           <p className="mt-0.5 text-xs text-gray-500">
             {getSignatureRequestTypeLabel(request.request_type)} · {request.signer_name} · {formatDate(request.created_at)}

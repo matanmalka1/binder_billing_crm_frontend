@@ -6,6 +6,7 @@ import {
   type AnnualReportScheduleKey,
   type ReportDetailResponse,
 } from "../../../api/annualReports.api";
+import { annualReportStatusApi } from "../../../api/annualReportStatus.api";
 import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
@@ -41,7 +42,7 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
 
   const transitionMutation = useMutation({
     mutationFn: (payload: StatusTransitionPayload) =>
-      annualReportsApi.transitionStatus(reportId as number, payload),
+      annualReportStatusApi.transitionStatus(reportId as number, payload),
     onSuccess: () => {
       toast.success("סטטוס עודכן בהצלחה");
       if (qk) void queryClient.invalidateQueries({ queryKey: qk });

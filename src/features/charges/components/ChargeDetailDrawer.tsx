@@ -3,7 +3,7 @@ import { Trash2 } from "lucide-react";
 import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
 import { AccessBanner } from "../../../components/ui/AccessBanner";
 import { Button } from "../../../components/ui/Button";
-import { ConfirmDialog } from "../../actions/components/ConfirmDialog";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import {
   getChargeAmountText,
   getChargeTypeLabel,

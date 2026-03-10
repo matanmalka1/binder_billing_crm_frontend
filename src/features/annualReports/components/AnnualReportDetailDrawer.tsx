@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { DetailDrawer } from "../../../components/ui/DetailDrawer";
 import { Button } from "../../../components/ui/Button";
-import { ConfirmDialog } from "../../actions/components/ConfirmDialog";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { useReportDetail } from "../hooks/useReportDetail";
 import { ReportSummaryCards } from "./ReportSummaryCards";
 import { ReportDetailTabs } from "./ReportDetailTabs";

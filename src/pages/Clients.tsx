@@ -7,10 +7,10 @@ import { DataTable } from "../components/ui/DataTable";
 import { AccessBanner } from "../components/ui/AccessBanner";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { Button } from "../components/ui/Button";
-import { ConfirmDialog } from "../features/actions/components/ConfirmDialog";
+import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { ClientsFiltersBar } from "../features/clients/components/ClientsFiltersBar";
 import { CreateClientModal } from "../features/clients/components/CreateClientModal";
-import { buildClientColumns } from "../features/clients/components/clientColumns";
+import { buildClientColumns } from "../features/clients/components/ClientColumns";
 import { useClientsPage } from "../features/clients/hooks/useClientsPage";
 import { ImportExportModal } from "../features/importExport/components/ImportExportModal";
 

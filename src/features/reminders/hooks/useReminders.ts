@@ -8,7 +8,7 @@ import { QK } from "../../../lib/queryKeys";
 import type {
   CreateReminderRequest,
   CreateReminderFormValues,
-} from "../reminder.types";
+} from "../types";
 
 const makeDefaultFormValues = (
   clientId?: number,

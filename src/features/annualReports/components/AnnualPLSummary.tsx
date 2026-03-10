@@ -8,6 +8,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { annualReportFinancialsApi } from "../../../api/annualReportFinancials.api";
+import { annualReportTaxApi } from "../../../api/annualReportTax.api";
 import { annualReportsApi } from "../../../api/annualReports.api";
 import { QK } from "../../../lib/queryKeys";
 import { DrawerSection } from "../../../components/ui/DetailDrawer";
@@ -48,12 +50,12 @@ const WaterfallRow: React.FC<WaterfallRowProps> = ({ label, value, isSubtract, i
 export const AnnualPLSummary: React.FC<Props> = ({ reportId, clientId }) => {
   const financialsQ = useQuery({
     queryKey: QK.tax.annualReportFinancials(reportId),
-    queryFn: () => annualReportsApi.getFinancials(reportId),
+    queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
   });
 
   const taxQ = useQuery({
     queryKey: QK.tax.annualReportTaxCalc(reportId),
-    queryFn: () => annualReportsApi.getTaxCalculation(reportId),
+    queryFn: () => annualReportTaxApi.getTaxCalculation(reportId),
   });
 
   const isLoading = financialsQ.isLoading || taxQ.isLoading;
@@ -129,7 +131,7 @@ const MultiYearChart: React.FC<MultiYearChartProps> = ({ clientId, currentReport
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useQuery({
       queryKey: QK.tax.annualReportFinancials(r.id),
-      queryFn: () => annualReportsApi.getFinancials(r.id),
+      queryFn: () => annualReportFinancialsApi.getFinancials(r.id),
       enabled: sorted.length > 0,
     })
   );
@@ -138,7 +140,7 @@ const MultiYearChart: React.FC<MultiYearChartProps> = ({ clientId, currentReport
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useQuery({
       queryKey: QK.tax.annualReportTaxCalc(r.id),
-      queryFn: () => annualReportsApi.getTaxCalculation(r.id),
+      queryFn: () => annualReportTaxApi.getTaxCalculation(r.id),
       enabled: sorted.length > 0,
     })
   );
