@@ -34,7 +34,7 @@
 - [ ] E1 — Split `src/api/annualReports.api.ts` (547 lines)
 - [ ] E2 — Split `src/features/binders/components/BinderDrawer.tsx` (322 lines)
 - [ ] E3 — Split `src/pages/SigningPage.tsx` (299 lines)
-- [ ] E4 — Split `src/features/timeline/components/timelineEventMeta.tsx` (296 lines)
+- [ ] E4 — Split `src/features/timeline/components/TimelineEventMeta.tsx` (296 lines)
 - [ ] E5 — Split `src/pages/ClientDetails.tsx` (263 lines)
 - [ ] E6 — Split `src/features/binders/components/bindersColumns.tsx` (256 lines)
 - [ ] E7 — Split `src/pages/Login.tsx` (254 lines)
