@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { annualReportsApi } from "../../../api/annualReports.api";
 import { QK } from "../../../lib/queryKeys";
 import { SeasonReportsTable } from "./SeasonReportsTable";
-import { AnnualReportDetailDrawer } from "./AnnualReportDetailDrawer";
+import { AnnualReportFullPanel } from "./AnnualReportFullPanel";
 import { PageLoading } from "../../../components/ui/PageLoading";
 import { ErrorCard } from "../../../components/ui/ErrorCard";
 import { getErrorMessage } from "../../../utils/utils";
@@ -73,10 +73,12 @@ export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ 
         )}
       </div>
 
-      <AnnualReportDetailDrawer
-        reportId={selectedReportId}
-        onClose={() => setSelectedReportId(null)}
-      />
+      {selectedReportId !== null && (
+        <AnnualReportFullPanel
+          reportId={selectedReportId}
+          onClose={() => setSelectedReportId(null)}
+        />
+      )}
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { ErrorCard } from "../components/ui/ErrorCard";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { Button } from "../components/ui/Button";
 import { AnnualReportColumn } from "../features/annualReports/components/AnnualReportColumn";
-import { AnnualReportDetailDrawer } from "../features/annualReports/components/AnnualReportDetailDrawer";
+import { AnnualReportFullPanel } from "../features/annualReports/components/AnnualReportFullPanel";
 import { SeasonSummaryCards } from "../features/annualReports/components/SeasonSummaryCards";
 import { SeasonProgressBar } from "../features/annualReports/components/SeasonProgressBar";
 import { SeasonReportsTable } from "../features/annualReports/components/SeasonReportsTable";
@@ -203,10 +203,12 @@ export const AnnualReportsKanban: React.FC = () => {
         </>
       )}
 
-      <AnnualReportDetailDrawer
-        reportId={selectedReportId}
-        onClose={() => setSelectedReportId(null)}
-      />
+      {selectedReportId !== null && (
+        <AnnualReportFullPanel
+          reportId={selectedReportId}
+          onClose={() => setSelectedReportId(null)}
+        />
+      )}
 
       <CreateReportModal open={showCreate} onClose={closeCreate} />
 

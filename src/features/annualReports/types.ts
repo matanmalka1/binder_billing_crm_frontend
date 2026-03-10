@@ -32,6 +32,17 @@ export const CURRENT_YEAR = new Date().getFullYear();
 
 export const KANBAN_PAGE_SIZE = 6;
 
+export const SECTION_KEYS = [
+  "overview",
+  "financials",
+  "tax",
+  "deductions",
+  "documents",
+  "timeline",
+] as const;
+
+export type SectionKey = (typeof SECTION_KEYS)[number];
+
 export interface AnnualReportDetail extends AnnualReportFull {
   tax_refund_amount: number | null;
   tax_due_amount: number | null;
