@@ -1,4 +1,10 @@
 import type { AnnualReportFull } from "../../api/annualReports.api";
+import type {
+  AnnualReportStatus,
+  ReadinessCheckResponse,
+  StatusTransitionPayload,
+} from "../../api/annualReports.api";
+import type { ChangeEvent } from "react";
 
 export const STAGE_ORDER = [
   "material_collection",
@@ -50,4 +56,43 @@ export interface AnnualReportDetail extends AnnualReportFull {
   internal_notes: string | null;
   stage?: StageKey;
   due_date?: string | null;
+}
+
+export interface TransitionForm {
+  note: string;
+  itaRef: string;
+  assessmentAmount: string;
+  refundDue: string;
+  taxDue: string;
+}
+
+export interface StatusTransitionPanelProps {
+  report: AnnualReportFull;
+  onTransition: (payload: StatusTransitionPayload) => void;
+  isLoading: boolean;
+}
+
+export interface AmendReportModalProps {
+  open: boolean;
+  reason: string;
+  isPending: boolean;
+  onReasonChange: (value: string) => void;
+  onClose: () => void;
+  onSubmit: () => void;
+}
+
+export interface TransitionTargetSelectorProps {
+  allowed: AnnualReportStatus[];
+  selected: AnnualReportStatus | null;
+  onSelect: (status: AnnualReportStatus) => void;
+}
+
+export interface TransitionDetailsFormProps {
+  selected: AnnualReportStatus;
+  form: TransitionForm;
+  readiness?: ReadinessCheckResponse;
+  isLoading: boolean;
+  onFieldChange: (field: keyof TransitionForm) => (e: ChangeEvent<HTMLInputElement>) => void;
+  onCancel: () => void;
+  onSubmit: () => void;
 }

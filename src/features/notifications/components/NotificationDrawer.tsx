@@ -1,12 +1,8 @@
 import { cn } from "../../../utils/utils";
-import { useNotifications } from "../../../hooks/useNotifications";
+import { useNotifications } from "../hooks/useNotifications";
 import { SeverityBadge } from "./SeverityBadge";
 import type { NotificationItem } from "../../../api/notifications.api";
-
-interface NotificationDrawerProps {
-  open: boolean;
-  onClose: () => void;
-}
+import type { NotificationDrawerProps } from "../types";
 
 export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, onClose }) => {
   const { notifications, unreadCount, markRead, markAllRead } = useNotifications();

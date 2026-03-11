@@ -3,7 +3,7 @@ import { annualReportFinancialsApi } from "../../../api/annualReportFinancials.a
 import { QK } from "../../../lib/queryKeys";
 import { TaxCreditsPanel } from "./TaxCreditsPanel";
 import { TaxSavingsOpportunities } from "./TaxSavingsOpportunities";
-import { EXPENSE_LABELS } from "../financialLabels";
+import { EXPENSE_LABELS } from "../constants";
 
 interface Props {
   reportId: number;

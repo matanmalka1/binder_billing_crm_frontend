@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { getStatusLabel } from "../../../../api/annualReports.extended.utils";
 import { cn } from "../../../../utils/utils";
-import type { TransitionTargetSelectorProps } from "./types";
+import type { TransitionTargetSelectorProps } from "../../types";
 
 export const TransitionTargetSelector = ({
   allowed,

@@ -2,7 +2,7 @@ import { AlertTriangle } from "lucide-react";
 import { getStatusLabel } from "../../../../api/annualReports.extended.utils";
 import { Button } from "../../../../components/ui/Button";
 import { Input } from "../../../../components/ui/Input";
-import type { TransitionDetailsFormProps } from "./types";
+import type { TransitionDetailsFormProps } from "../../types";
 
 export const TransitionDetailsForm = ({
   selected,

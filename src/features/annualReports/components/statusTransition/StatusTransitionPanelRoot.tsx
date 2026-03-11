@@ -13,11 +13,11 @@ import { Card } from "../../../../components/ui/Card";
 import { QK } from "../../../../lib/queryKeys";
 import { toast } from "../../../../utils/toast";
 import { showErrorToast } from "../../../../utils/utils";
-import { EMPTY_FORM, type TransitionForm } from "../../utils";
+import { EMPTY_FORM } from "../../utils";
+import type { StatusTransitionPanelProps, TransitionForm } from "../../types";
 import { AmendReportModal } from "./AmendReportModal";
 import { TransitionDetailsForm } from "./TransitionDetailsForm";
 import { TransitionTargetSelector } from "./TransitionTargetSelector";
-import type { StatusTransitionPanelProps } from "./types";
 
 export const StatusTransitionPanel = ({
   report,

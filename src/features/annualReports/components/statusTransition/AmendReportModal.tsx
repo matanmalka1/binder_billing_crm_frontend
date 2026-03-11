@@ -1,7 +1,7 @@
 import { Button } from "../../../../components/ui/Button";
 import { Modal } from "../../../../components/ui/Modal";
 import { Textarea } from "../../../../components/ui/Textarea";
-import type { AmendReportModalProps } from "./types";
+import type { AmendReportModalProps } from "../../types";
 
 export const AmendReportModal = ({
   open,

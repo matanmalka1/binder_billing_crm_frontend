@@ -1,5 +1,5 @@
 import { differenceInCalendarDays, parseISO } from "date-fns";
-import type { StageKey } from "./types";
+import type { StageKey, TransitionForm } from "./types";
 
 export const STAGE_ACCENT: Record<StageKey, string> = {
   material_collection: "from-gray-400 to-gray-500",
@@ -30,14 +30,6 @@ export const FLAG_FIELDS: { name: FlagFieldName; label: string }[] = [
   { name: "has_depreciation", label: "פחת (נספח ד)" },
   { name: "has_exempt_rental", label: "שכר דירה פטור (נספח ה)" },
 ];
-
-export interface TransitionForm {
-  note: string;
-  itaRef: string;
-  assessmentAmount: string;
-  refundDue: string;
-  taxDue: string;
-}
 
 export const EMPTY_FORM: TransitionForm = {
   note: "",

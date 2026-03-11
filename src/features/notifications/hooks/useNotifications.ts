@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { notificationsApi } from "../api/notifications.api";
-import { QK } from "../lib/queryKeys";
-import { toast } from "../utils/toast";
-import { getErrorMessage } from "../utils/utils";
+import { notificationsApi } from "../../../api/notifications.api";
+import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
+import { getErrorMessage } from "../../../utils/utils";
 
 export function useNotifications(clientId?: number) {
   const queryClient = useQueryClient();

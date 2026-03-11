@@ -1,9 +1,6 @@
 import type { NotificationSeverity } from "../../../api/notifications.api";
 import { cn } from "../../../utils/utils";
-
-interface SeverityBadgeProps {
-  severity: NotificationSeverity;
-}
+import type { SeverityBadgeProps } from "../types";
 
 const SEVERITY_LABELS: Record<NotificationSeverity, string> = {
   info: "מידע",

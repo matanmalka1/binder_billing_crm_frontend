@@ -1,10 +1,7 @@
-import { useNotifications } from "../../../hooks/useNotifications";
+import { useNotifications } from "../hooks/useNotifications";
 import { SeverityBadge } from "./SeverityBadge";
 import { Button } from "../../../components/ui/Button";
-
-interface NotificationsTabProps {
-  clientId: number;
-}
+import type { NotificationsTabProps } from "../types";
 
 export const NotificationsTab: React.FC<NotificationsTabProps> = ({ clientId }) => {
   const { notifications, unreadCount, markAllRead, isLoading } = useNotifications(clientId);
