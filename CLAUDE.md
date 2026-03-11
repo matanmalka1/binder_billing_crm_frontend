@@ -89,6 +89,9 @@ src/
     └── toast.ts         # toast.* wrapper
 ```
 
+- For large features, `components/` may include domain sub-folders (for example: `kanban/`, `panel/`, `financials/`).
+- For large features, prefer `<scope>.constants.ts` over a single `constants.ts` (for example: `annex.constants.ts`, `report.constants.ts`).
+
 ---
 
 ## Non-Negotiable Rules
