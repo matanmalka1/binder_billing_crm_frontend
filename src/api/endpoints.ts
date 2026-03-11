@@ -45,6 +45,8 @@ export const ENDPOINTS = {
   taxDeadlinesDashboard: "/tax-deadlines/dashboard/urgent",
   clientAuthorityContacts: (clientId: number | string) =>
     `/clients/${clientId}/authority-contacts`,
+  AUTHORITY_CONTACT_DETAIL: (id: number) =>
+    `/clients/authority-contacts/${id}`,
   authorityContactById: (id: number | string) =>
     `/clients/authority-contacts/${id}`,
   clientTaxProfile: (clientId: number | string) =>

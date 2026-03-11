@@ -101,41 +101,29 @@ interface ActionCellProps {
 // eslint-disable-next-line react-refresh/only-export-components
 const ActionCell: React.FC<ActionCellProps> = ({ binder, activeActionKeyRef, onAction }) => {
   const actions = mapActions(binder.available_actions as BackendAction[] | null | undefined);
-  const action = actions[0] ?? null;
+  const action =
+    actions.find((candidate) => candidate.key === "ready") ??
+    actions.find((candidate) => candidate.key === "return") ??
+    actions[0] ??
+    null;
 
-  if (binder.status === "ready_for_pickup") {
-    if (!action) return <span className="text-sm text-gray-400">—</span>;
-    return (
-      <Button
-        type="button"
-        variant="primary"
-        size="sm"
-        onClick={(e) => { e.stopPropagation(); onAction(action); }}
-        isLoading={activeActionKeyRef.current === action.uiKey}
-        disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
-      >
-        החזרת קלסר
-      </Button>
-    );
-  }
+  if (!action) return <span className="text-sm text-gray-400">—</span>;
 
-  if (binder.status === "in_office" && binder.work_state === "in_progress") {
-    if (!action) return <span className="text-sm text-gray-400">—</span>;
-    return (
-      <Button
-        type="button"
-        size="sm"
-        onClick={(e) => { e.stopPropagation(); onAction(action); }}
-        isLoading={activeActionKeyRef.current === action.uiKey}
-        disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
-        className="bg-green-600 text-white hover:bg-green-700 active:bg-green-800 shadow-sm"
-      >
-        סיום טיפול
-      </Button>
-    );
-  }
+  const isReadyAction = action.key === "ready";
 
-  return <span className="text-sm text-gray-400">—</span>;
+  return (
+    <Button
+      type="button"
+      variant="primary"
+      size="sm"
+      onClick={(e) => { e.stopPropagation(); onAction(action); }}
+      isLoading={activeActionKeyRef.current === action.uiKey}
+      disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
+      className={isReadyAction ? "bg-green-600 text-white hover:bg-green-700 active:bg-green-800 shadow-sm" : undefined}
+    >
+      {action.label}
+    </Button>
+  );
 };
 ActionCell.displayName = "ActionCell";
 

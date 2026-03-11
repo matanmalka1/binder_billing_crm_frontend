@@ -97,6 +97,7 @@ export const QK = {
   },
   authorityContacts: {
     forClient: (clientId: number) => ["authority-contacts", "client", clientId] as const,
+    detail: (contactId: number) => ["authority-contacts", "detail", contactId] as const,
   },
   advisorToday: {
     deadlines: ["advisor-today", "deadlines"] as const,

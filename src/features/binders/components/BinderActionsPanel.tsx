@@ -20,38 +20,30 @@ export const BinderActionsPanel: React.FC<BinderActionsPanelProps> = ({
   isDeleting,
 }) => {
   const actions = mapActions(binder.available_actions as BackendAction[] | null | undefined);
-  const action = actions[0] ?? null;
+  const action =
+    actions.find((candidate) => candidate.key === "ready") ??
+    actions.find((candidate) => candidate.key === "return") ??
+    actions[0] ??
+    null;
 
   const actionButton = (() => {
-    if (binder.status === "ready_for_pickup" && action) {
-      return (
-        <Button
-          type="button"
-          variant="primary"
-          size="sm"
-          onClick={() => onAction(action)}
-          isLoading={activeActionKeyRef.current === action.uiKey}
-          disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
-        >
-          החזרת קלסר
-        </Button>
-      );
-    }
-    if (binder.status === "in_office" && binder.work_state === "in_progress" && action) {
-      return (
-        <Button
-          type="button"
-          size="sm"
-          onClick={() => onAction(action)}
-          isLoading={activeActionKeyRef.current === action.uiKey}
-          disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
-          className="bg-green-600 text-white hover:bg-green-700 active:bg-green-800 shadow-sm"
-        >
-          סיום טיפול
-        </Button>
-      );
-    }
-    return null;
+    if (!action) return null;
+
+    const isReadyAction = action.key === "ready";
+
+    return (
+      <Button
+        type="button"
+        variant="primary"
+        size="sm"
+        onClick={() => onAction(action)}
+        isLoading={activeActionKeyRef.current === action.uiKey}
+        disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
+        className={isReadyAction ? "bg-green-600 text-white hover:bg-green-700 active:bg-green-800 shadow-sm" : undefined}
+      >
+        {action.label}
+      </Button>
+    );
   })();
 
   if (!actionButton && !onDelete) {
