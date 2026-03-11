@@ -15,7 +15,7 @@ const fmt = (n: number) =>
   n.toLocaleString("he-IL", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
 export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onClose }) => {
-  const { form, onSubmit, onSaveDraft, isSubmitting, preview } = useCreateReport(onClose);
+  const { form, onSubmit, isSubmitting, preview } = useCreateReport(onClose);
   const { register, formState: { errors } } = form;
 
   const handleClose = () => {
@@ -32,9 +32,6 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
         <div className="flex items-center justify-end gap-2">
           <Button type="button" variant="outline" onClick={handleClose}>
             ביטול
-          </Button>
-          <Button type="button" variant="outline" onClick={onSaveDraft} isLoading={isSubmitting}>
-            שמור טיוטה
           </Button>
           <Button type="button" onClick={onSubmit} isLoading={isSubmitting}>
             צור דוח

@@ -111,9 +111,5 @@ export const useCreateReport = (onSuccess?: () => void) => {
     mutation.mutate(buildPayload(values));
   });
 
-  const onSaveDraft = form.handleSubmit((values) => {
-    mutation.mutate({ ...buildPayload(values), status: "draft" });
-  });
-
-  return { form, onSubmit, onSaveDraft, isSubmitting: mutation.isPending, preview };
+  return { form, onSubmit, isSubmitting: mutation.isPending, preview };
 };
