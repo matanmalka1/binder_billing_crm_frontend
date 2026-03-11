@@ -208,21 +208,21 @@ Apply fixes in this order to avoid cascading compile/lint errors:
 ## Verification Checklist
 
 ### Backend
-- [ ] `app/authority_contact/services/authority_contact_service.py` — no import from
+- [x] `app/authority_contact/services/authority_contact_service.py` — no import from
       `app.clients.repositories.*`
-- [ ] `app/authority_contact/api/authority_contact.py` — no `ContactType(...)` instantiation,
+- [x] `app/authority_contact/api/authority_contact.py` — no `ContactType(...)` instantiation,
       no `ClientRepository` usage
-- [ ] `app/authority_contact/schemas/authority_contact.py` — all three `contact_type` fields
+- [x] `app/authority_contact/schemas/authority_contact.py` — all three `contact_type` fields
       typed as `ContactType` (not `str`)
-- [ ] `pytest -q` passes
+- [x] `pytest -q` passes
 
 ### Frontend
-- [ ] `src/api/authorityContacts.api.ts` — `getAuthorityContact(id)` exists and typed;
+- [x] `src/api/authorityContacts.api.ts` — `getAuthorityContact(id)` exists and typed;
       `ContactType` union type exported; all `contact_type` fields typed
-- [ ] `src/features/authorityContacts/hooks/useAuthorityContact.ts` — hook created, arrow
+- [x] `src/features/authorityContacts/hooks/useAuthorityContact.ts` — hook created, arrow
       function, importable via direct path
-- [ ] `src/features/clients/components/ClientDetailsOverviewTab.tsx` — imports
+- [x] `src/features/clients/components/ClientDetailsOverviewTab.tsx` — imports
       `AuthorityContactsCard` from
       `'../../authorityContacts/components/AuthorityContactsCard'` (direct path)
-- [ ] No `src/features/authorityContacts/index.ts` file exists
-- [ ] `tsc --noEmit` passes
+- [x] No `src/features/authorityContacts/index.ts` file exists
+- [x] `tsc --noEmit` passes
