@@ -19,14 +19,16 @@ export const useAdvancePaymentsOverview = ({
   statusFilter,
   page,
 }: UseAdvancePaymentsOverviewParams) => {
-  const statuses = statusFilter ? [statusFilter as AdvancePaymentStatus] : undefined;
-  const queryParams = useMemo(() => ({
-    year,
-    ...(month > 0 ? { month } : {}),
-    ...(statuses ? { status: statuses } : {}),
-    page,
-    page_size: PAGE_SIZE,
-  }), [year, month, statuses, page]);
+  const queryParams = useMemo(() => {
+    const statuses = statusFilter ? [statusFilter as AdvancePaymentStatus] : undefined;
+    return {
+      year,
+      ...(month > 0 ? { month } : {}),
+      ...(statuses ? { status: statuses } : {}),
+      page,
+      page_size: PAGE_SIZE,
+    };
+  }, [year, month, statusFilter, page]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: QK.tax.advancePayments.overview(queryParams),
