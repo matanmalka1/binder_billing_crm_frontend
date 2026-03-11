@@ -19,6 +19,7 @@ export const useAdvancePayments = (
   clientId: number,
   year: number,
   statusFilter?: AdvancePaymentStatus[],
+  page = 1,
 ) => {
   const queryClient = useQueryClient();
   const qk = QK.tax.advancePayments.forClientYear(clientId, year);
@@ -27,13 +28,14 @@ export const useAdvancePayments = (
   const listQuery = useQuery({
     enabled,
     queryKey: statusFilter?.length
-      ? [...qk, { status: statusFilter }]
-      : qk,
+      ? [...qk, { status: statusFilter, page }]
+      : [...qk, page],
     queryFn: () =>
       advancePaymentsApi.list({
         client_id: clientId,
         year,
-        page_size: 12,
+        page,
+        page_size: 20,
         ...(statusFilter?.length ? { status: statusFilter } : {}),
       }),
     retry: false,
@@ -92,6 +94,7 @@ export const useAdvancePayments = (
       : null,
     totalExpected,
     totalPaid,
+    total: listQuery.data?.total ?? 0,
     updateRow: (id: number, paid_amount: number | null, status?: AdvancePaymentStatus, expected_amount?: number | null) =>
       updateMutation.mutate({ id, paid_amount, status, expected_amount }),
     isUpdating: updateMutation.isPending,

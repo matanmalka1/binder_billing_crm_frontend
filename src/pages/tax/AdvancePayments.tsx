@@ -1,7 +1,5 @@
 import { getYear } from "date-fns";
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useMemo } from "react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { ErrorCard } from "../../components/ui/ErrorCard";
 import { Select } from "../../components/ui/Select";
@@ -9,13 +7,10 @@ import { DataTable, type Column } from "../../components/ui/DataTable";
 import { Badge } from "../../components/ui/Badge";
 import { PaginationCard } from "../../components/ui/PaginationCard";
 import { OverviewKPICards } from "../../features/advancedPayments/components/OverviewKPICards";
-import { QK } from "../../lib/queryKeys";
-import { advancePaymentsApi } from "../../api/advancePayments.api";
+import { useAdvancePaymentsOverview } from "../../features/advancedPayments/hooks/useAdvancePaymentsOverview";
 import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "../../features/advancedPayments/types";
 import { MONTH_NAMES, MONTH_OPTIONS, YEAR_OPTIONS, fmtCurrency, STATUS_LABEL, STATUS_VARIANT } from "../../features/advancedPayments/utils";
 import { formatDate, parsePositiveInt } from "../../utils/utils";
-
-const PAGE_SIZE = 50;
 
 const STATUS_OPTIONS = [
   { value: "", label: "כל הסטטוסים" },
@@ -98,22 +93,12 @@ export const AdvancePayments: React.FC = () => {
     setSearchParams(next);
   };
 
-  const queryParams = useMemo(() => ({
+  const { rows, total, totalPages, isLoading, error, kpiData } = useAdvancePaymentsOverview({
     year,
-    ...(month > 0 ? { month } : {}),
-    ...(statusFilter ? { status: [statusFilter] } : {}),
+    month,
+    statusFilter,
     page,
-    page_size: PAGE_SIZE,
-  }), [year, month, statusFilter, page]);
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: QK.tax.advancePayments.overview(queryParams),
-    queryFn: () => advancePaymentsApi.overview(queryParams),
   });
-
-  const rows = data?.items ?? [];
-  const total = data?.total ?? 0;
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (
     <div className="space-y-6">
@@ -122,12 +107,12 @@ export const AdvancePayments: React.FC = () => {
         description="כל הלקוחות עם מקדמות פתוחות, חלקיות או באיחור"
       />
 
-      {!isLoading && data && (
+      {!isLoading && kpiData && (
         <OverviewKPICards
           year={year}
-          totalExpected={data.total_expected}
-          totalPaid={data.total_paid}
-          collectionRate={data.collection_rate}
+          totalExpected={kpiData.total_expected}
+          totalPaid={kpiData.total_paid}
+          collectionRate={kpiData.collection_rate}
         />
       )}
 

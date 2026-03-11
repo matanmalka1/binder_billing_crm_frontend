@@ -1,0 +1,75 @@
+import { TrendingDown, Edit2 } from "lucide-react";
+import type { AdvancePaymentStatus } from "../types";
+import { Button } from "../../../components/ui/Button";
+import { Select } from "../../../components/ui/Select";
+import { YEAR_OPTIONS } from "../utils";
+
+interface ClientAdvancePaymentsHeaderProps {
+  isAdvisor: boolean;
+  statusFilter: AdvancePaymentStatus[];
+  onToggleStatus: (status: AdvancePaymentStatus) => void;
+  year: number;
+  onYearChange: (year: number) => void;
+  onOpenCreate: () => void;
+  onOpenReduction: () => void;
+  onOpenEditRate: () => void;
+}
+
+const STATUS_FILTERS: AdvancePaymentStatus[] = ["pending", "paid", "partial", "overdue"];
+const STATUS_LABELS: Record<AdvancePaymentStatus, string> = {
+  pending: "ממתין",
+  paid: "שולם",
+  partial: "חלקי",
+  overdue: "באיחור",
+};
+
+export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderProps> = ({
+  isAdvisor,
+  statusFilter,
+  onToggleStatus,
+  year,
+  onYearChange,
+  onOpenCreate,
+  onOpenReduction,
+  onOpenEditRate,
+}) => (
+  <div className="flex items-center justify-between">
+    {isAdvisor && (
+      <div className="flex gap-2">
+        <Button variant="primary" size="sm" onClick={onOpenCreate}>הוסף מקדמה</Button>
+        <Button variant="outline" size="sm" onClick={onOpenReduction}>
+          <TrendingDown size={14} className="mr-1" />
+          בקש הפחתה
+        </Button>
+        <Button variant="outline" size="sm" onClick={onOpenEditRate}>
+          <Edit2 size={14} className="mr-1" />
+          עריכת שיעור
+        </Button>
+      </div>
+    )}
+    <div className="flex items-center gap-2">
+      <div className="flex flex-wrap gap-1">
+        {STATUS_FILTERS.map((status) => {
+          const active = statusFilter.includes(status);
+          return (
+            <button
+              key={status}
+              type="button"
+              onClick={() => onToggleStatus(status)}
+              className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                active ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-600 border-gray-300 hover:border-blue-400"
+              }`}
+            >
+              {STATUS_LABELS[status]}
+            </button>
+          );
+        })}
+      </div>
+      <div className="w-28">
+        <Select value={String(year)} onChange={(e) => onYearChange(Number(e.target.value))} options={YEAR_OPTIONS} />
+      </div>
+    </div>
+  </div>
+);
+
+ClientAdvancePaymentsHeader.displayName = "ClientAdvancePaymentsHeader";

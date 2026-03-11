@@ -1,0 +1,53 @@
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { advancePaymentsApi } from "../../../api/advancePayments.api";
+import { QK } from "../../../lib/queryKeys";
+import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "../types";
+
+const PAGE_SIZE = 50;
+
+interface UseAdvancePaymentsOverviewParams {
+  year: number;
+  month: number;
+  statusFilter: string;
+  page: number;
+}
+
+export const useAdvancePaymentsOverview = ({
+  year,
+  month,
+  statusFilter,
+  page,
+}: UseAdvancePaymentsOverviewParams) => {
+  const statuses = statusFilter ? [statusFilter as AdvancePaymentStatus] : undefined;
+  const queryParams = useMemo(() => ({
+    year,
+    ...(month > 0 ? { month } : {}),
+    ...(statuses ? { status: statuses } : {}),
+    page,
+    page_size: PAGE_SIZE,
+  }), [year, month, statuses, page]);
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: QK.tax.advancePayments.overview(queryParams),
+    queryFn: () => advancePaymentsApi.overview(queryParams),
+  });
+
+  const rows: AdvancePaymentOverviewRow[] = data?.items ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const kpiData = {
+    total_expected: data?.total_expected ?? null,
+    total_paid: data?.total_paid ?? null,
+    collection_rate: data?.collection_rate ?? null,
+  };
+
+  return {
+    rows,
+    total,
+    totalPages,
+    isLoading,
+    error: error ?? null,
+    kpiData,
+  };
+};
