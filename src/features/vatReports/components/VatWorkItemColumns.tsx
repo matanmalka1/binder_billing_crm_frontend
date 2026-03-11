@@ -1,7 +1,7 @@
 import { Button } from "../../../components/ui/Button";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
-import type { VatWorkItemResponse } from "../../../api/vatReports.types";
+import type { VatWorkItemResponse } from "../../../api/vatReports.api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatDateTime } from "../../../utils/utils";
 import {

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
-import type { CreateVatWorkItemPayload } from "../../../api/vatReports.types";
+import type { CreateVatWorkItemPayload } from "../../../api/vatReports.api";
 import {
   vatWorkItemCreateDefaultValues,
   vatWorkItemCreateSchema,

@@ -5,7 +5,7 @@ import { vatReportsApi } from "../../../api/vatReports.api";
 import type {
   CreateVatWorkItemPayload,
   VatWorkItemsListParams,
-} from "../../../api/vatReports.types";
+} from "../../../api/vatReports.api";
 import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { toOptionalString } from "../../../utils/filters";

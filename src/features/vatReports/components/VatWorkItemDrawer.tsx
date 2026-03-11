@@ -8,7 +8,7 @@ import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { Button } from "../../../components/ui/Button";
 import { CategoryDataEntryForm } from "./CategoryDataEntryForm";
 import { useVatWorkItemDetail } from "../hooks/useVatWorkItemDetail";
-import type { VatWorkItemResponse } from "../../../api/vatReports.types";
+import type { VatWorkItemResponse } from "../../../api/vatReports.api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatDateTime } from "../../../utils/utils";
 import { formatVatAmount, canAddInvoice, canSendBack } from "../utils";

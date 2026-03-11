@@ -58,6 +58,7 @@ ENDPOINTS → single source of truth for all backend paths
 - **Pages** (`src/pages/`) — composition only; no `useQuery`, no `useMutation`, no business decisions
 - **Feature hooks** (`src/features/*/hooks/`) — own all data-fetching and state; return clean view-model objects to pages
 - **API files** (`src/api/*.api.ts`) — call the backend; own request/response TypeScript types
+- **API utils** (`src/api/*.utils.ts`) — optional API-layer transforms only (backend enum mapping, response normalization/parsing); no UI logic
 - **`endpoints.ts`** — all backend paths; static paths as strings, dynamic paths as `(id) => string` functions
 
 ---
@@ -70,7 +71,8 @@ src/
 │   ├── client.ts        # Axios instance — 401 handled globally here
 │   ├── endpoints.ts     # ALL backend paths — never hardcode URLs elsewhere
 │   ├── queryParams.ts   # toQueryParams() — use for all query params
-│   └── *.api.ts         # One file per domain
+│   ├── *.api.ts         # One file per domain (includes API request/response types)
+│   └── *.utils.ts       # Optional API-layer transforms/parsers only (no UI logic)
 ├── features/<name>/
 │   ├── components/      # Feature-specific UI
 │   ├── hooks/           # use<Name>Page.ts
@@ -154,6 +156,7 @@ src/
 - One file per domain: `clients.api.ts`, `binders.api.ts`
 - Exports: typed interfaces + named `const` object (e.g. `clientsApi`)
 - Types: `*Payload`/`*Request` (requests), `*Response` (responses), `List*Params` (list params)
+- `src/api/*.utils.ts` is allowed only for API-layer transformations/parsing of backend data; never for component/UI concerns
 
 ---
 
