@@ -4,7 +4,7 @@ import { Select } from "../../../components/ui/Select";
 import { ClientSearchInput } from "../../../components/ui/ClientSearchInput";
 import type { UseFormReturn } from "react-hook-form";
 import type { ReceiveBinderFormValues } from "../schemas";
-import { BINDER_TYPE_OPTIONS } from "../types";
+import { BINDER_TYPE_OPTIONS } from "../constants";
 
 interface BinderReceivePanelProps {
   form: UseFormReturn<ReceiveBinderFormValues>;

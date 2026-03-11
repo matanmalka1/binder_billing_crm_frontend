@@ -8,7 +8,7 @@ import {
   getBinderTypeLabel,
 } from "../../../utils/enums";
 import { formatDate, cn } from "../../../utils/utils";
-import { BINDER_WORK_STATE_VARIANTS, BINDER_SIGNAL_VARIANTS } from "../types";
+import { BINDER_WORK_STATE_VARIANTS, BINDER_SIGNAL_VARIANTS } from "../constants";
 
 interface BinderDetailsPanelProps {
   binder: BinderResponse;

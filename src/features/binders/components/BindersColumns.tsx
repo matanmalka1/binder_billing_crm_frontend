@@ -13,7 +13,7 @@ import {
 } from "../../../utils/enums";
 import { formatDate, cn } from "../../../utils/utils";
 import { type RefObject } from "react";
-import { BINDER_SIGNAL_VARIANTS } from "../types";
+import { BINDER_SIGNAL_VARIANTS } from "../constants";
 
 /* ─── Variant maps ───────────────────────────────────────────── */
 

@@ -5,7 +5,7 @@ import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
 import { RotateCcw, Search } from "lucide-react";
 import { WORK_STATE_OPTIONS } from "../../../constants/filterOptions.constants";
-import { BINDER_STATUS_OPTIONS } from "../types";
+import { BINDER_STATUS_OPTIONS } from "../constants";
 import type { BindersFiltersBarProps } from "../types";
 import { cn, buildYearOptions } from "../../../utils/utils";
 
