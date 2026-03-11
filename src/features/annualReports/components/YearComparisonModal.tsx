@@ -30,7 +30,7 @@ const ROW_DEFS: RowDef[] = [
   },
   {
     label: "אחוז השלמה",
-    render: (d) => d.season ? `${(d.season.completion_rate * 100).toFixed(1)}%` : "—",
+    render: (d) => d.season ? `${d.season.completion_rate.toFixed(1)}%` : "—",
   },
   { label: "בפיגור", render: (d) => d.season ? String(d.season.overdue_count) : "—" },
 ];
