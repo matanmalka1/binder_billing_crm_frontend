@@ -17,6 +17,8 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
   if (isLoading) return <p className="text-sm text-gray-400 py-2">בודק מוכנות...</p>;
   if (!data) return null;
 
+  const completion = Math.max(0, Math.min(100, data.completion_pct));
+
   return (
     <div className="space-y-2">
       <div
@@ -36,6 +38,22 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
             <span>הדוח אינו מוכן להגשה ({data.issues.length} בעיות)</span>
           </>
         )}
+      </div>
+
+      <div className="space-y-1">
+        <div className="flex items-center justify-between text-xs text-gray-600">
+          <span>אחוז השלמת מוכנות</span>
+          <span>{completion.toFixed(1)}%</span>
+        </div>
+        <div className="h-2 rounded-full bg-gray-200">
+          <div
+            className={cn(
+              "h-2 rounded-full transition-all",
+              data.is_ready ? "bg-green-500" : "bg-amber-500"
+            )}
+            style={{ width: `${completion}%` }}
+          />
+        </div>
       </div>
 
       {data.issues.length > 0 && (

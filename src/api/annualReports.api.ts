@@ -256,6 +256,7 @@ export interface ReadinessCheckResponse {
   annual_report_id: number;
   is_ready: boolean;
   issues: string[];
+  completion_pct: number; // 0.0–100.0
 }
 
 export interface BracketBreakdownItem {
