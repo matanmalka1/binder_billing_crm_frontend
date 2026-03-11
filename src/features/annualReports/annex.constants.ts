@@ -1,4 +1,4 @@
-import type { AnnualReportScheduleKey } from "../../api/annualReports.api";
+import type { AnnualReportScheduleKey } from "../../api/annualReport.api";
 
 export type FieldDef = {
   key: string;

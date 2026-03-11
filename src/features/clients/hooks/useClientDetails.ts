@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { clientsApi, type UpdateClientPayload, type ClientResponse } from "../../../api/clients.api";
 import { bindersApi } from "../../../api/binders.api";
 import { chargesApi } from "../../../api/charges.api";
-import { annualReportsApi } from "../../../api/annualReports.api";
+import { annualReportsApi } from "../../../api/annualReport.api";
 import { vatReportsApi } from "../../../api/vatReports.api";
 import { documentsApi } from "../../../api/documents.api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";

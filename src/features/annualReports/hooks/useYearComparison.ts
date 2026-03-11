@@ -1,6 +1,6 @@
 import { useQueries } from "@tanstack/react-query";
-import type { SeasonSummary } from "../../../api/annualReports.api";
-import { annualReportSeasonApi } from "../../../api/annualReportSeason.api";
+import type { SeasonSummary } from "../../../api/annualReport.api";
+import { annualReportSeasonApi } from "../../../api/annualReport.season.api";
 import { QK } from "../../../lib/queryKeys";
 
 export interface YearComparisonData {

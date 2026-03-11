@@ -1,16 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import {
-  annualReportsApi,
-  type StatusTransitionPayload,
-  type AnnualReportScheduleKey,
-  type ReportDetailResponse,
-} from "../../../api/annualReports.api";
-import { annualReportStatusApi } from "../../../api/annualReportStatus.api";
-import { showErrorToast } from "../../../utils/utils";
+import { useQuery } from "@tanstack/react-query";
+import { annualReportsApi } from "../../../api/annualReport.api";
 import { QK } from "../../../lib/queryKeys";
-import { toast } from "../../../utils/toast";
 import type { AnnualReportDetail } from "../types";
+import { useReportMutations } from "./useReportMutations";
+import { useReportSchedules } from "./useReportSchedules";
 
 // Fetch base report + detail record in parallel, merge into AnnualReportDetail
 const fetchDetail = async (reportId: number): Promise<AnnualReportDetail> => {
@@ -28,11 +21,8 @@ const fetchDetail = async (reportId: number): Promise<AnnualReportDetail> => {
 };
 
 export const useReportDetail = (reportId: number | null, onDeleted?: () => void) => {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const enabled = reportId !== null && reportId > 0;
   const queryKey = QK.tax.annualReports.detail(reportId ?? 0);
-  const qk = enabled ? queryKey : null;
 
   const reportQuery = useQuery<AnnualReportDetail>({
     enabled,
@@ -41,101 +31,22 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
     retry: false,
   });
 
-  const transitionMutation = useMutation({
-    mutationFn: (payload: StatusTransitionPayload) => {
-      if (payload.status === "submitted") {
-        return annualReportStatusApi.submitReport(reportId as number, {
-          note: payload.note ?? undefined,
-          ita_reference: payload.ita_reference ?? undefined,
-        });
-      }
-      return annualReportStatusApi.transitionStatus(reportId as number, payload);
-    },
-    onSuccess: () => {
-      toast.success("סטטוס עודכן בהצלחה");
-      if (qk) void queryClient.invalidateQueries({ queryKey: qk });
-      void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
-      const clientId = reportQuery.data?.client_id;
-      if (clientId) {
-        void queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(clientId) });
-      }
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בעדכון סטטוס"),
-  });
-
-  const completeScheduleMutation = useMutation({
-    mutationFn: (schedule: AnnualReportScheduleKey) =>
-      annualReportsApi.completeSchedule(reportId as number, schedule),
-    onSuccess: () => {
-      toast.success("נספח סומן כהושלם");
-      if (qk) void queryClient.invalidateQueries({ queryKey: qk });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בעדכון נספח"),
-  });
-
-  const addScheduleMutation = useMutation({
-    mutationFn: ({ schedule, notes }: { schedule: AnnualReportScheduleKey; notes?: string }) =>
-      annualReportsApi.addSchedule(reportId as number, { schedule, notes }),
-    onSuccess: () => {
-      toast.success("נספח נוסף בהצלחה");
-      if (qk) void queryClient.invalidateQueries({ queryKey: qk });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בהוספת נספח"),
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: (payload: Partial<ReportDetailResponse>) =>
-      annualReportsApi.patchReportDetails(reportId as number, payload),
-    onSuccess: (updated) => {
-      toast.success("דוח עודכן בהצלחה");
-      // Merge updated detail fields back into the cached AnnualReportDetail
-      if (qk) {
-        queryClient.setQueryData<AnnualReportDetail>(qk, (prev) =>
-          prev
-            ? {
-                ...prev,
-                tax_refund_amount: updated.tax_refund_amount,
-                tax_due_amount: updated.tax_due_amount,
-                client_approved_at: updated.client_approved_at,
-                internal_notes: updated.internal_notes,
-              }
-            : prev,
-        );
-      }
-      void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בעדכון דוח"),
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: () => annualReportsApi.deleteReport(reportId as number),
-    onSuccess: async () => {
-      toast.success("הדוח נמחק בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
-      if (onDeleted) {
-        onDeleted();
-      } else {
-        navigate("/tax/reports");
-      }
-    },
-    onError: (err) => showErrorToast(err, "שגיאה במחיקת דוח"),
-  });
+  const schedules = useReportSchedules(reportId);
+  const mutations = useReportMutations(reportId, reportQuery.data ?? null, onDeleted);
 
   return {
     report: reportQuery.data ?? null,
     isLoading: reportQuery.isPending,
     error: reportQuery.error ? "שגיאה בטעינת דוח" : null,
-    transition: (payload: StatusTransitionPayload) => transitionMutation.mutate(payload),
-    isTransitioning: transitionMutation.isPending,
-    completeSchedule: (schedule: AnnualReportScheduleKey) =>
-      completeScheduleMutation.mutate(schedule),
-    addSchedule: (schedule: AnnualReportScheduleKey, notes?: string) =>
-      addScheduleMutation.mutate({ schedule, notes }),
-    isCompletingSchedule: completeScheduleMutation.isPending,
-    isAddingSchedule: addScheduleMutation.isPending,
-    updateDetail: (payload: Partial<ReportDetailResponse>) => updateMutation.mutate(payload),
-    isUpdating: updateMutation.isPending,
-    deleteReport: () => deleteMutation.mutateAsync(),
-    isDeleting: deleteMutation.isPending,
+    transition: mutations.transition,
+    isTransitioning: mutations.isTransitioning,
+    completeSchedule: schedules.completeSchedule,
+    addSchedule: schedules.addSchedule,
+    isCompletingSchedule: schedules.isCompletingSchedule,
+    isAddingSchedule: schedules.isAddingSchedule,
+    updateDetail: mutations.updateDetail,
+    isUpdating: mutations.isUpdating,
+    deleteReport: mutations.deleteReport,
+    isDeleting: mutations.isDeleting,
   };
 };

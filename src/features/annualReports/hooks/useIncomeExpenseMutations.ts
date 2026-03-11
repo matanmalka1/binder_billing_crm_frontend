@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { annualReportFinancialsApi } from "../../../api/annualReportFinancials.api";
-import type { ExpenseLinePayload, IncomeLinePayload, IncomeSourceType } from "../../../api/annualReports.api";
+import { annualReportFinancialsApi } from "../../../api/annualReport.financials.api";
+import type { ExpenseLinePayload, IncomeLinePayload, IncomeSourceType } from "../../../api/annualReport.api";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
-import type { AddExpensePayload } from "../components/AddExpenseLineForm";
+import type { AddExpensePayload } from "../components/financials/AddExpenseLineForm";
 
 export const useIncomeExpenseMutations = (reportId: number) => {
   const queryClient = useQueryClient();

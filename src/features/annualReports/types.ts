@@ -1,9 +1,9 @@
-import type { AnnualReportFull } from "../../api/annualReports.api";
+import type { AnnualReportFull } from "../../api/annualReport.api";
 import type {
   AnnualReportStatus,
   ReadinessCheckResponse,
   StatusTransitionPayload,
-} from "../../api/annualReports.api";
+} from "../../api/annualReport.api";
 import type { ChangeEvent } from "react";
 
 export const STAGE_ORDER = [

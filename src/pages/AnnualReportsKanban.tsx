@@ -5,16 +5,16 @@ import { PageLoading } from "../components/ui/PageLoading";
 import { ErrorCard } from "../components/ui/ErrorCard";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { Button } from "../components/ui/Button";
-import { AnnualReportColumn } from "../features/annualReports/components/AnnualReportColumn";
-import { AnnualReportFullPanel } from "../features/annualReports/components/AnnualReportFullPanel";
-import { SeasonSummaryCards } from "../features/annualReports/components/SeasonSummaryCards";
-import { SeasonProgressBar } from "../features/annualReports/components/SeasonProgressBar";
-import { SeasonReportsTable } from "../features/annualReports/components/SeasonReportsTable";
-import { CreateReportModal } from "../features/annualReports/components/CreateReportModal";
+import { AnnualReportColumn } from "../features/annualReports/components/kanban/AnnualReportColumn";
+import { AnnualReportFullPanel } from "../features/annualReports/components/panel/AnnualReportFullPanel";
+import { SeasonSummaryCards } from "../features/annualReports/components/kanban/SeasonSummaryCards";
+import { SeasonProgressBar } from "../features/annualReports/components/kanban/SeasonProgressBar";
+import { SeasonReportsTable } from "../features/annualReports/components/kanban/SeasonReportsTable";
+import { CreateReportModal } from "../features/annualReports/components/shared/CreateReportModal";
 import { useAnnualReportsKanbanPage } from "../features/annualReports/hooks/useAnnualReportsKanbanPage";
 import { STAGE_ORDER, KANBAN_PAGE_SIZE, TAB_LABELS, type ActiveTab } from "../features/annualReports/types";
-import { OverdueBanner } from "../features/annualReports/components/OverdueBanner";
-import { YearComparisonModal } from "../features/annualReports/components/YearComparisonModal";
+import { OverdueBanner } from "../features/annualReports/components/shared/OverdueBanner";
+import { YearComparisonModal } from "../features/annualReports/components/kanban/YearComparisonModal";
 import { cn } from "../utils/utils";
 
 export const AnnualReportsKanban: React.FC = () => {
