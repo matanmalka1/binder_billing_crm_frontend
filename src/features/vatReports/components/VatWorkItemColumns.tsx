@@ -10,7 +10,7 @@ import {
   canFile,
   isFiled,
   formatVatAmount,
-} from "../utils/vatWorkItemStatus";
+} from "../utils";
 import type { VatWorkItemAction } from "../hooks/useVatWorkItemsPage";
 
 const statusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {

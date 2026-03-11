@@ -1,1 +1,1 @@
-export { StatusTransitionPanel } from "./statusTransition/StatusTransitionPanelRoot";
+export { StatusTransitionPanel } from "./StatusTransitionPanelRoot";

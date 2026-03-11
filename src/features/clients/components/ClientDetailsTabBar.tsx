@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { cn } from "../../../utils/utils";
-import { CLIENT_DETAILS_TABS, CLIENT_DETAILS_TAB_LABELS, type ActiveClientDetailsTab } from "../clientDetailsTabs";
+import { CLIENT_DETAILS_TABS, CLIENT_DETAILS_TAB_LABELS, type ActiveClientDetailsTab } from "../constants";
 
 type ClientDetailsTabBarProps = {
   activeTab: ActiveClientDetailsTab;

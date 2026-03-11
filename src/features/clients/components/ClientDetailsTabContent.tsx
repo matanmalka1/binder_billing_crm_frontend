@@ -6,8 +6,11 @@ import { ClientAdvancePaymentsTab } from "../../advancedPayments/components/Clie
 import { FilingTimeline } from "../../taxDeadlines/components/FilingTimeline";
 import { NotificationsTab } from "../../notifications/components/NotificationsTab";
 import { ClientAnnualReportsTab } from "../../../components/annualReports/ClientAnnualReportsTab";
-import { ClientDetailsOverviewTab, type ClientDetailsOverviewTabProps } from "./ClientDetailsOverviewTab";
-import type { ActiveClientDetailsTab } from "../clientDetailsTabs";
+import {
+  ClientDetailsOverviewTab,
+  type ClientDetailsOverviewTabProps,
+} from "./ClientDetailsOverviewTab";
+import type { ActiveClientDetailsTab } from "../constants";
 
 type ClientDetailsTabContentProps = {
   activeTab: ActiveClientDetailsTab;
@@ -20,12 +23,17 @@ export const ClientDetailsTabContent: FC<ClientDetailsTabContentProps> = ({
   clientId,
   overviewProps,
 }) => {
-  if (activeTab === "details") return <ClientDetailsOverviewTab {...overviewProps} />;
-  if (activeTab === "documents") return <ClientDocumentsTab clientId={clientId} />;
-  if (activeTab === "timeline") return <ClientTimelineTab clientId={String(clientId)} />;
-  if (activeTab === "advance-payments") return <ClientAdvancePaymentsTab clientId={clientId} />;
+  if (activeTab === "details")
+    return <ClientDetailsOverviewTab {...overviewProps} />;
+  if (activeTab === "documents")
+    return <ClientDocumentsTab clientId={clientId} />;
+  if (activeTab === "timeline")
+    return <ClientTimelineTab clientId={String(clientId)} />;
+  if (activeTab === "advance-payments")
+    return <ClientAdvancePaymentsTab clientId={clientId} />;
   if (activeTab === "vat") return <VatClientSummaryPanel clientId={clientId} />;
   if (activeTab === "deadlines") return <FilingTimeline clientId={clientId} />;
-  if (activeTab === "notifications") return <NotificationsTab clientId={clientId} />;
+  if (activeTab === "notifications")
+    return <NotificationsTab clientId={clientId} />;
   return <ClientAnnualReportsTab clientId={clientId} />;
 };

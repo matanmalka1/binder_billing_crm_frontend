@@ -11,7 +11,7 @@ import { useVatWorkItemDetail } from "../hooks/useVatWorkItemDetail";
 import type { VatWorkItemResponse } from "../../../api/vatReports.types";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatDateTime } from "../../../utils/utils";
-import { formatVatAmount, canAddInvoice, canSendBack } from "../utils/vatWorkItemStatus";
+import { formatVatAmount, canAddInvoice, canSendBack } from "../utils";
 import { useRole } from "../../../hooks/useRole";
 
 const statusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {

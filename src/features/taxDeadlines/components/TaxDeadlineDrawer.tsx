@@ -10,7 +10,7 @@ import {
   getDeadlineTypeLabel,
   getUrgencyColor,
 } from "../../../api/taxDeadlines.utils";
-import { getDeadlineUrgency } from "../utils/deadlineUrgency";
+import { getDeadlineUrgency } from "../utils";
 import { formatDate, cn } from "../../../utils/utils";
 
 interface TaxDeadlineDrawerProps {

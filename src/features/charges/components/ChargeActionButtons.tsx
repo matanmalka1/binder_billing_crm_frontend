@@ -1,5 +1,5 @@
 import { cn } from "../../../utils/utils";
-import { canCancel, canIssue, canMarkPaid } from "../utils/chargeStatus";
+import { canCancel, canIssue, canMarkPaid } from "../utils";
 
 interface ChargeActionButtonsProps {
   status: string;

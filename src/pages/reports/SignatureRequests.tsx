@@ -10,7 +10,7 @@ import { StatusBadge } from "../../components/ui/StatusBadge";
 import { SignatureRequestAuditDrawer } from "../../features/signatureRequests/components/SignatureRequestAuditDrawer";
 import { usePendingSignatureRequests } from "../../features/signatureRequests/hooks/usePendingSignatureRequests";
 import { useSignatureRequestActions } from "../../features/signatureRequests/hooks/useSignatureRequestActions";
-import { buildSigningUrl } from "../../features/signatureRequests/utils/signingUrl";
+import { buildSigningUrl } from "../../features/signatureRequests/utils";
 import type { SignatureRequestResponse } from "../../api/signatureRequests.api";
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "../../utils/enums";
 

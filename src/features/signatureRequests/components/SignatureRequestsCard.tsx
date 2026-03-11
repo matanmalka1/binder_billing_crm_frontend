@@ -8,7 +8,7 @@ import { SignatureRequestRow } from "./SignatureRequestRow";
 import { CreateSignatureRequestModal } from "./CreateSignatureRequestModal";
 import { useClientSignatureRequests } from "../hooks/useClientSignatureRequests";
 import { useSignatureRequestActions } from "../hooks/useSignatureRequestActions";
-import { buildSigningUrl } from "../utils/signingUrl";
+import { buildSigningUrl } from "../utils";
 import type { ClientResponse } from "../../../api/clients.api";
 import type { SendSignatureRequestResponse } from "../../../api/signatureRequests.api";
 

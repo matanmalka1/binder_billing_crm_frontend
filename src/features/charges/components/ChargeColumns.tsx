@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ChargeResponse } from "../../../api/charges.api";
-import { getChargeAmountText, getChargeTypeLabel } from "../utils/chargeStatus";
+import { getChargeAmountText, getChargeTypeLabel } from "../utils";
 import { formatDateTime } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { ChargeActionButtons } from "./ChargeActionButtons"

@@ -1,20 +1,20 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { annualReportsApi } from "../../../../api/annualReports.api";
-import { annualReportTaxApi } from "../../../../api/annualReportTax.api";
+import { annualReportsApi } from "../../../api/annualReports.api";
+import { annualReportTaxApi } from "../../../api/annualReportTax.api";
 import {
   getAllowedTransitions,
   getStatusLabel,
   getStatusVariant,
-} from "../../../../api/annualReports.extended.utils";
-import { Badge } from "../../../../components/ui/Badge";
-import { Button } from "../../../../components/ui/Button";
-import { Card } from "../../../../components/ui/Card";
-import { QK } from "../../../../lib/queryKeys";
-import { toast } from "../../../../utils/toast";
-import { showErrorToast } from "../../../../utils/utils";
-import { EMPTY_FORM } from "../../utils";
-import type { StatusTransitionPanelProps, TransitionForm } from "../../types";
+} from "../../../api/annualReports.extended.utils";
+import { Badge } from "../../../components/ui/Badge";
+import { Button } from "../../../components/ui/Button";
+import { Card } from "../../../components/ui/Card";
+import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
+import { showErrorToast } from "../../../utils/utils";
+import { EMPTY_FORM } from "../utils";
+import type { StatusTransitionPanelProps, TransitionForm } from "../types";
 import { AmendReportModal } from "./AmendReportModal";
 import { TransitionDetailsForm } from "./TransitionDetailsForm";
 import { TransitionTargetSelector } from "./TransitionTargetSelector";

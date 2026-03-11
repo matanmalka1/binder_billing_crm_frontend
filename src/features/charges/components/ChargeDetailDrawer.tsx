@@ -7,7 +7,7 @@ import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import {
   getChargeAmountText,
   getChargeTypeLabel,
-} from "../utils/chargeStatus";
+} from "../utils";
 import { formatDateTime } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { ChargeActionButtons } from "./ChargeActionButtons";

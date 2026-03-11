@@ -1,4 +1,4 @@
-import type { ChargeResponse } from "../../../api/charges.api";
+import type { ChargeResponse } from "../../api/charges.api";
 
 export const canIssue = (status: string): boolean => status === "draft";
 

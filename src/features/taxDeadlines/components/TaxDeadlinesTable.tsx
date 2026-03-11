@@ -9,7 +9,7 @@ import {
   getDeadlineTypeLabel,
   getUrgencyColor,
 } from "../../../api/taxDeadlines.utils";
-import { getDeadlineUrgency, getDeadlineDaysLabelShort } from "../utils/deadlineUrgency";
+import { getDeadlineUrgency, getDeadlineDaysLabelShort } from "../utils";
 import { staggerDelay } from "../../../utils/animation";
 import { formatDate, cn } from "../../../utils/utils";
 

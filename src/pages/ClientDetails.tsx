@@ -7,7 +7,7 @@ import { PageStateGuard } from "../components/ui/PageStateGuard";
 import { ClientDetailsTabBar } from "../features/clients/components/ClientDetailsTabBar";
 import { ClientDetailsTabContent } from "../features/clients/components/ClientDetailsTabContent";
 import { useClientDetails } from "../features/clients/hooks/useClientDetails";
-import type { ActiveClientDetailsTab } from "../features/clients/clientDetailsTabs";
+import type { ActiveClientDetailsTab } from "../features/clients/constants";
 
 interface ClientDetailsProps {
   initialTab?: ActiveClientDetailsTab;
