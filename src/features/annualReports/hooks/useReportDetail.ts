@@ -73,6 +73,16 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
     onError: (err) => showErrorToast(err, "שגיאה בעדכון נספח"),
   });
 
+  const addScheduleMutation = useMutation({
+    mutationFn: ({ schedule, notes }: { schedule: AnnualReportScheduleKey; notes?: string }) =>
+      annualReportsApi.addSchedule(reportId as number, { schedule, notes }),
+    onSuccess: () => {
+      toast.success("נספח נוסף בהצלחה");
+      if (qk) void queryClient.invalidateQueries({ queryKey: qk });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה בהוספת נספח"),
+  });
+
   const updateMutation = useMutation({
     mutationFn: (payload: Partial<ReportDetailResponse>) =>
       annualReportsApi.patchReportDetails(reportId as number, payload),
@@ -119,7 +129,10 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
     isTransitioning: transitionMutation.isPending,
     completeSchedule: (schedule: AnnualReportScheduleKey) =>
       completeScheduleMutation.mutate(schedule),
+    addSchedule: (schedule: AnnualReportScheduleKey, notes?: string) =>
+      addScheduleMutation.mutate({ schedule, notes }),
     isCompletingSchedule: completeScheduleMutation.isPending,
+    isAddingSchedule: addScheduleMutation.isPending,
     updateDetail: (payload: Partial<ReportDetailResponse>) => updateMutation.mutate(payload),
     isUpdating: updateMutation.isPending,
     deleteReport: () => deleteMutation.mutateAsync(),

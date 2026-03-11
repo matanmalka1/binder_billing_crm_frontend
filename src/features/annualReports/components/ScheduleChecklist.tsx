@@ -8,12 +8,15 @@ import type { ScheduleEntry, AnnualReportScheduleKey } from "../../../api/annual
 import { getScheduleLabel } from "../../../api/annualReports.extended.utils";
 import { cn } from "../../../utils/utils";
 import { AnnexDataPanel } from "./AnnexDataPanel";
+import { ScheduleAddForm } from "./ScheduleAddForm";
 
 interface ScheduleChecklistProps {
   reportId: number;
   schedules: ScheduleEntry[];
   onComplete: (schedule: AnnualReportScheduleKey) => void;
+  onAdd: (schedule: AnnualReportScheduleKey, notes?: string) => void;
   isLoading: boolean;
+  isAdding: boolean;
   completingKey?: AnnualReportScheduleKey | null;
 }
 
@@ -21,7 +24,9 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
   reportId,
   schedules,
   onComplete,
+  onAdd,
   isLoading,
+  isAdding,
   completingKey,
 }) => {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -30,6 +35,9 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
     return (
       <Card title="נספחים">
         <p className="text-sm text-gray-500">אין נספחים נדרשים לדוח זה</p>
+        <div className="mt-3">
+          <ScheduleAddForm schedules={schedules} onAdd={onAdd} isAdding={isAdding} />
+        </div>
       </Card>
     );
   }
@@ -128,6 +136,11 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
           );
         })}
       </ul>
+      <div className="mt-3">
+        <ScheduleAddForm schedules={schedules} onAdd={onAdd} isAdding={isAdding} />
+      </div>
     </Card>
   );
 };
+
+ScheduleChecklist.displayName = "ScheduleChecklist";

@@ -38,7 +38,7 @@ export const AnnualReportFullPanel = ({ reportId, onClose }: AnnualReportFullPan
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const submitRef = useRef<(() => void) | null>(null);
 
-  const { report, isLoading, error, transition, updateDetail, isUpdating, completeSchedule, isCompletingSchedule, deleteReport, isDeleting } =
+  const { report, isLoading, error, transition, updateDetail, isUpdating, completeSchedule, addSchedule, isCompletingSchedule, isAddingSchedule, deleteReport, isDeleting } =
     useReportDetail(reportId, onClose);
 
   const handleSave = useCallback(() => { submitRef.current?.(); }, []);
@@ -57,9 +57,12 @@ export const AnnualReportFullPanel = ({ reportId, onClose }: AnnualReportFullPan
       case "overview":
         return (
           <AnnualReportOverviewSection
-            report={report} detail={report} schedules={[]}
+            report={report} detail={report} schedules={report.schedules ?? []}
             onDetailSave={updateDetail} isSaving={isUpdating}
-            onScheduleComplete={completeSchedule} isScheduleLoading={isCompletingSchedule}
+            onScheduleComplete={completeSchedule}
+            onScheduleAdd={addSchedule}
+            isScheduleLoading={isCompletingSchedule}
+            isScheduleAdding={isAddingSchedule}
             clientId={report.client_id} onDirtyChange={setIsDirty} submitRef={submitRef}
           />
         );

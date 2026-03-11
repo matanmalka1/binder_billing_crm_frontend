@@ -22,7 +22,9 @@ interface Props {
   onDetailSave: (data: Partial<AnnualReportDetail>) => void;
   isSaving: boolean;
   onScheduleComplete: (schedule: AnnualReportScheduleKey) => void;
+  onScheduleAdd: (schedule: AnnualReportScheduleKey, notes?: string) => void;
   isScheduleLoading: boolean;
+  isScheduleAdding: boolean;
   completingKey?: AnnualReportScheduleKey | null;
   clientId: number;
   onSelectReport?: (reportId: number) => void;
@@ -38,7 +40,9 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
   onDetailSave,
   isSaving,
   onScheduleComplete,
+  onScheduleAdd,
   isScheduleLoading,
+  isScheduleAdding,
   completingKey,
   clientId,
   onSelectReport,
@@ -78,7 +82,9 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
         reportId={report.id}
         schedules={schedules}
         onComplete={onScheduleComplete}
+        onAdd={onScheduleAdd}
         isLoading={isScheduleLoading}
+        isAdding={isScheduleAdding}
         completingKey={completingKey}
       />
 
