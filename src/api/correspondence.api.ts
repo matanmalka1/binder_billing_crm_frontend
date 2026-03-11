@@ -46,7 +46,7 @@ export const correspondenceApi = {
     payload: CreateCorrespondencePayload,
   ): Promise<CorrespondenceEntry> => {
     const response = await api.post<CorrespondenceEntry>(
-      ENDPOINTS.correspondenceCreate(clientId),
+      ENDPOINTS.correspondenceList(clientId),
       payload,
     );
     return response.data;

@@ -65,7 +65,7 @@ export const authorityContactsApi = {
 
   getAuthorityContact: async (contactId: number): Promise<AuthorityContactResponse> => {
     const response = await api.get<AuthorityContactResponse>(
-      ENDPOINTS.AUTHORITY_CONTACT_DETAIL(contactId),
+      ENDPOINTS.authorityContactById(contactId),
     );
     return response.data;
   },

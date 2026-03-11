@@ -37,16 +37,12 @@ export const ENDPOINTS = {
     `/annual-reports/${id}/transition`,
   annualReportSubmit: (id: number | string) => `/annual-reports/${id}/submit`,
   annualReportsKanban: "/annual-reports/kanban/view",
-  annualReportAddSchedule: (id: number | string) =>
-    `/annual-reports/${id}/schedules`,
   taxDeadlines: "/tax-deadlines",
   taxDeadlineById: (id: number | string) => `/tax-deadlines/${id}`,
   taxDeadlineComplete: (id: number | string) => `/tax-deadlines/${id}/complete`,
   taxDeadlinesDashboard: "/tax-deadlines/dashboard/urgent",
   clientAuthorityContacts: (clientId: number | string) =>
     `/clients/${clientId}/authority-contacts`,
-  AUTHORITY_CONTACT_DETAIL: (id: number) =>
-    `/clients/authority-contacts/${id}`,
   authorityContactById: (id: number | string) =>
     `/clients/authority-contacts/${id}`,
   clientTaxProfile: (clientId: number | string) =>
@@ -54,7 +50,6 @@ export const ENDPOINTS = {
   clientSignatureRequests: (clientId: number | string) =>
     `/clients/${clientId}/signature-requests`,
   correspondenceList: (clientId: number | string) => `/clients/${clientId}/correspondence`,
-  correspondenceCreate: (clientId: number | string) => `/clients/${clientId}/correspondence`,
   correspondenceById: (clientId: number | string, id: number | string) =>
     `/clients/${clientId}/correspondence/${id}`,
   clientsExport: "/clients/export",

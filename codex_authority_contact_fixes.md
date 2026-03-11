@@ -82,19 +82,19 @@ string propagates up as a 400 (FastAPI handles this automatically from `ValueErr
 - `src/api/endpoints.ts`
 - `src/features/authorityContacts/hooks/useAuthorityContact.ts` (create new)
 
-**Problem:** The backend exposes `GET /api/v1/authority-contacts/{id}` but the frontend has
+**Problem:** The backend exposes `GET /api/v1/clients/authority-contacts/{id}` but the frontend has
 no corresponding API function or hook, leaving the endpoint dead.
 
 **Required changes:**
 
-1. In `src/api/endpoints.ts`, add under the authority contacts section:
+1. In `src/api/endpoints.ts`, ensure the authority contact detail route exists under the authority contacts section:
    ```ts
-   AUTHORITY_CONTACT_DETAIL: (id: number) => `/authority-contacts/${id}`,
+   authorityContactById: (id: number | string) => `/clients/authority-contacts/${id}`,
    ```
 2. In `src/api/authorityContacts.api.ts`, add:
    ```ts
    getAuthorityContact: (contactId: number): Promise<AuthorityContactResponse> =>
-     apiClient.get(ENDPOINTS.AUTHORITY_CONTACT_DETAIL(contactId)).then(r => r.data),
+     api.get(ENDPOINTS.authorityContactById(contactId)).then(r => r.data),
    ```
 3. Create `src/features/authorityContacts/hooks/useAuthorityContact.ts`:
    ```ts

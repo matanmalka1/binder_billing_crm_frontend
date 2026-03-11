@@ -362,7 +362,7 @@ export const annualReportsApi = {
     reportId: number,
     payload: { schedule: AnnualReportScheduleKey; notes?: string | null }
   ): Promise<ScheduleEntry> => {
-    const res = await api.post<ScheduleEntry>(ENDPOINTS.annualReportAddSchedule(reportId), payload);
+    const res = await api.post<ScheduleEntry>(ENDPOINTS.annualReportSchedules(reportId), payload);
     return res.data;
   },
 
