@@ -105,7 +105,7 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
       if (onDeleted) {
         onDeleted();
       } else {
-        navigate("/annual-reports");
+        navigate("/tax/reports");
       }
     },
     onError: (err) => showErrorToast(err, "שגיאה במחיקת דוח"),
