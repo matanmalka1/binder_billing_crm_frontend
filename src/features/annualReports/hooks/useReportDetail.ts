@@ -31,11 +31,12 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const enabled = reportId !== null && reportId > 0;
-  const qk = enabled ? QK.tax.annualReports.detail(reportId) : null;
+  const queryKey = QK.tax.annualReports.detail(reportId ?? 0);
+  const qk = enabled ? queryKey : null;
 
   const reportQuery = useQuery<AnnualReportDetail>({
     enabled,
-    queryKey: qk ?? ["annual-reports", "detail", null],
+    queryKey,
     queryFn: () => fetchDetail(reportId as number),
     retry: false,
   });
