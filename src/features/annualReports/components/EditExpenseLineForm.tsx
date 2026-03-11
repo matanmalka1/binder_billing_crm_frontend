@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ExpenseLineResponse, ExpenseCategoryType } from "../../../api/annualReports.api";
 import { Button } from "../../../components/ui/Button";
-import { EXPENSE_LABELS } from "../constants";
+import { EXPENSE_LABELS } from "../report.constants";
 
 interface EditExpenseLineFormProps {
   line: ExpenseLineResponse;

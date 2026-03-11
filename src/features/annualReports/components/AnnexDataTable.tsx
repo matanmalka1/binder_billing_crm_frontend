@@ -1,6 +1,6 @@
 import { Check, Pencil, Trash2, X } from "lucide-react";
 import type { AnnexDataLine } from "../../../api/annualReports.api";
-import type { FieldDef } from "../annexData.constants";
+import type { FieldDef } from "../annex.constants";
 
 interface AnnexDataTableProps {
   lines: AnnexDataLine[];

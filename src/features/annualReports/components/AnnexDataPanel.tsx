@@ -9,7 +9,7 @@ import {
   buildAnnexPayload,
   buildEmptyForm,
   mapLineDataToForm,
-} from "../annexData.constants";
+} from "../annex.constants";
 import { AnnexDataTable } from "./AnnexDataTable";
 
 interface Props {

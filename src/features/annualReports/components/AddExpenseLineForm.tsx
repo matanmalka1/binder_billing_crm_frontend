@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import type { ExpenseCategoryType } from "../../../api/annualReports.api";
 import { Button } from "../../../components/ui/Button";
-import { EXPENSE_LABELS } from "../constants";
+import { EXPENSE_LABELS } from "../report.constants";
 
 export interface AddExpensePayload {
   category: ExpenseCategoryType;

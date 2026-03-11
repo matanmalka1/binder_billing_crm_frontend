@@ -157,6 +157,7 @@ src/
 - Exports: typed interfaces + named `const` object (e.g. `clientsApi`)
 - Types: `*Payload`/`*Request` (requests), `*Response` (responses), `List*Params` (list params)
 - `src/api/*.utils.ts` is allowed only for API-layer transformations/parsing of backend data; never for component/UI concerns
+- Examples: `annualReports.utils.ts`, `annualReports.extended.utils.ts`, `authorityContacts.utils.ts`, `taxDeadlines.utils.ts`
 
 ---
 
@@ -214,6 +215,7 @@ No other file may construct a path string.
 | Hooks | `use` prefix, camelCase | `useClientsPage.ts` |
 | API files | `<name>.api.ts` | `clients.api.ts` |
 | Types/utils | `<name>.<kind>.ts` | `binders.types.ts` |
+| Feature constants (large features) | `<scope>.constants.ts` | `report.constants.ts` |
 | Constants | SCREAMING_SNAKE_CASE | `AUTH_STORAGE_NAME` |
 | Request types | `*Payload` / `*Request` | `CreateClientPayload` |
 | Response types | `*Response` | `ClientResponse` |

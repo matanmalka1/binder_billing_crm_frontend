@@ -5,7 +5,7 @@ import type { IncomeLineResponse, ExpenseLineResponse } from "../../../api/annua
 import { QK } from "../../../lib/queryKeys";
 import { cn } from "../../../utils/utils";
 import { AddLineForm } from "./IncomeExpensePanelParts";
-import { LineRow, INCOME_LABELS, EXPENSE_LABELS } from "../constants";
+import { LineRow, INCOME_LABELS, EXPENSE_LABELS } from "../report.constants";
 import { AddExpenseLineForm } from "./AddExpenseLineForm";
 import { useIncomeExpenseMutations } from "../hooks/useIncomeExpenseMutations";
 import { EditIncomeLineForm } from "./EditIncomeLineForm";
