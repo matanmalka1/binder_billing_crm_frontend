@@ -5,7 +5,7 @@ import { VatClientSummaryPanel } from "../../vatReports/components/VatClientSumm
 import { ClientAdvancePaymentsTab } from "../../advancedPayments/components/ClientAdvancePaymentsTab";
 import { FilingTimeline } from "../../taxDeadlines/components/FilingTimeline";
 import { NotificationsTab } from "../../notifications/components/NotificationsTab";
-import { ClientAnnualReportsTab } from "../../annualReports/components/ClientAnnualReportsTab";
+import { ClientAnnualReportsTab } from "../../../components/annualReports/ClientAnnualReportsTab";
 import { ClientDetailsOverviewTab, type ClientDetailsOverviewTabProps } from "./ClientDetailsOverviewTab";
 import type { ActiveClientDetailsTab } from "../clientDetailsTabs";
 

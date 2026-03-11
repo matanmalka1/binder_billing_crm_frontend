@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { annualReportsApi } from "../../../api/annualReports.api";
-import { QK } from "../../../lib/queryKeys";
-import { SeasonReportsTable } from "./SeasonReportsTable";
-import { AnnualReportFullPanel } from "./AnnualReportFullPanel";
-import { PageLoading } from "../../../components/ui/PageLoading";
-import { ErrorCard } from "../../../components/ui/ErrorCard";
-import { getErrorMessage } from "../../../utils/utils";
-import { cn } from "../../../utils/utils";
+import { annualReportsApi } from "../../api/annualReports.api";
+import { QK } from "../../lib/queryKeys";
+import { SeasonReportsTable } from "../../features/annualReports/components/SeasonReportsTable";
+import { AnnualReportFullPanel } from "../../features/annualReports/components/AnnualReportFullPanel";
+import { PageLoading } from "../ui/PageLoading";
+import { ErrorCard } from "../ui/ErrorCard";
+import { getErrorMessage } from "../../utils/utils";
+import { cn } from "../../utils/utils";
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_LIST = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2, CURRENT_YEAR - 3];
