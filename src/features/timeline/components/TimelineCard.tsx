@@ -3,7 +3,7 @@ import type { TimelineEvent } from "../../../api/timeline.api";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { TimelineEventItem } from "./TimelineEventItem";
 import { Clock, InboxIcon } from "lucide-react";
-import { formatDateHeading } from "./TimelineEventMeta";
+import { formatDateHeading } from "../utils";
 import { cn } from "../../../utils/utils";
 
 export interface TimelineCardProps {

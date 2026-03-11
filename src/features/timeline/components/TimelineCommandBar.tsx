@@ -3,7 +3,8 @@ import { he } from "date-fns/locale";
 import { RefreshCw, Search, X, ChevronDown, Filter } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { Select } from "../../../components/ui/Select";
-import { getEventTypeLabel, getEventColor } from "./TimelineEventMeta";
+import { getEventColor } from "../constants";
+import { getEventTypeLabel } from "../utils";
 import { cn } from "../../../utils/utils";
 
 // ── TimelineCommandBar ────────────────────────────────────────────────────────

@@ -5,12 +5,12 @@ import type { TimelineEvent } from "../../../api/timeline.api";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
+import { getEventColor } from "../constants";
 import {
   formatTimestamp,
-  getEventColor,
   getEventIcon,
   getEventTypeLabel,
-} from "./TimelineEventMeta";
+} from "../utils";
 
 interface TimelineEventItemProps {
   event: TimelineEvent;

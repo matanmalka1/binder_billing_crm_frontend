@@ -1,4 +1,4 @@
-import type { EventColorConfig } from "../types";
+import type { EventColorConfig } from "./types";
 
 const EVENT_COLORS: Record<string, EventColorConfig> = {
   binder_received: {
