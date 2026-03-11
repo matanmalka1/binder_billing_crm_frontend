@@ -28,6 +28,7 @@ export const Binders: React.FC = () => {
     error,
     filters,
     deepLinkBinderId,
+    selectedBinder,
     onAction,
     handleFilterChange,
     handleSort,
@@ -53,11 +54,6 @@ export const Binders: React.FC = () => {
       setDrawerMode(null);
     }
   };
-
-  const selectedBinder = useMemo(
-    () => binders.find((b) => b.id === deepLinkBinderId) ?? null,
-    [binders, deepLinkBinderId],
-  );
 
   // When a binder is selected via row click, switch to detail mode
   const handleRowClick = (binder: { id: number }) => {

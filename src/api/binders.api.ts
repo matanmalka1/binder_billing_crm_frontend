@@ -12,6 +12,25 @@ import type {
   ReturnBinderPayload,
 } from "../features/binders/types";
 
+export interface BinderDetailResponse {
+  id: number;
+  client_id: number;
+  binder_number: string;
+  status: string;
+  received_at: string;
+  returned_at: string | null;
+  pickup_person_name: string | null;
+  work_state: string | null;
+  signals: string[];
+}
+
+export interface BinderListResponseExtended {
+  items: BinderDetailResponse[];
+  page: number;
+  page_size: number;
+  total: number;
+}
+
 export const bindersApi = {
   list: async (params: ListBindersParams): Promise<BinderListResponse> => {
     const response = await api.get<BinderListResponse>(ENDPOINTS.binders, {
@@ -20,7 +39,7 @@ export const bindersApi = {
     return response.data;
   },
 
-  getById: async (binderId: number): Promise<BinderResponse> => {
+  getBinder: async (binderId: number): Promise<BinderResponse> => {
     const response = await api.get<BinderResponse>(
       ENDPOINTS.binderById(binderId),
     );
@@ -53,14 +72,13 @@ export const bindersApi = {
     return response.data;
   },
 
-  listOpen: async (
-    params: ListOperationalBindersParams,
-  ): Promise<BinderExtendedListResponse> => {
-    const response = await api.get<BinderExtendedListResponse>(
+  getOpenBinders: async (params?: {
+    page?: number;
+    page_size?: number;
+  }): Promise<BinderListResponseExtended> => {
+    const response = await api.get<BinderListResponseExtended>(
       ENDPOINTS.bindersOpen,
-      {
-        params: toQueryParams(params),
-      },
+      { params },
     );
     return response.data;
   },

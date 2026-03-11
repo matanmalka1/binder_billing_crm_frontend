@@ -5,6 +5,7 @@ import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
+import { useBinderDetail } from "./useBinderDetail";
 
 export const useBindersPage = () => {
   const queryClient = useQueryClient();
@@ -23,6 +24,7 @@ export const useBindersPage = () => {
   };
 
   const deepLinkBinderId = parsePositiveInt(searchParams.get("binder_id"), 0) || undefined;
+  const deepLinkBinderIdOrNull = deepLinkBinderId ?? null;
 
   const listParams = {
     status: filters.status || undefined,
@@ -40,6 +42,12 @@ export const useBindersPage = () => {
     queryKey: QK.binders.list(listParams),
     queryFn: () => bindersApi.list(listParams),
   });
+
+  const pageMatch = bindersQuery.data?.items.find((binder) => binder.id === deepLinkBinderId) ?? null;
+  const needsFallbackDetail =
+    deepLinkBinderIdOrNull !== null && !bindersQuery.isPending && pageMatch === null;
+  const binderDetailQuery = useBinderDetail(needsFallbackDetail ? deepLinkBinderIdOrNull : null);
+  const selectedBinder = pageMatch ?? binderDetailQuery.data ?? null;
 
   const {
     activeActionKey,
@@ -94,6 +102,7 @@ export const useBindersPage = () => {
     activeActionKey,
     activeActionKeyRef,
     deepLinkBinderId,
+    selectedBinder,
     binders: bindersQuery.data?.items ?? [],
     total: bindersQuery.data?.total ?? 0,
     error: bindersQuery.error
