@@ -1,4 +1,4 @@
-import { Paperclip, Trash2 } from "lucide-react";
+import { Paperclip, Pencil, Trash2 } from "lucide-react";
 import { documentsApi } from "../../../api/documents.api";
 
 export interface LineRowProps {
@@ -9,6 +9,7 @@ export interface LineRowProps {
   supportingDocumentRef?: string | null;
   supportingDocumentId?: number | null;
   supportingDocumentFilename?: string | null;
+  onEdit?: () => void;
   onDelete: () => void;
   isDeleting: boolean;
 }
@@ -16,6 +17,7 @@ export interface LineRowProps {
 export const LineRow: React.FC<LineRowProps> = ({
   label, amount, description, recognitionRate,
   supportingDocumentRef, supportingDocumentId, supportingDocumentFilename,
+  onEdit,
   onDelete, isDeleting,
 }) => {
   const handleDownload = async () => {
@@ -49,6 +51,16 @@ export const LineRow: React.FC<LineRowProps> = ({
       </div>
       <div className="flex items-center gap-2 mr-2">
         <span className="text-gray-700 font-mono">₪{amount.toLocaleString("he-IL")}</span>
+        {onEdit ? (
+          <button
+            type="button"
+            onClick={onEdit}
+            className="text-blue-400 hover:text-blue-600 p-0.5"
+            aria-label="עריכת שורה"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </button>
+        ) : null}
         <button type="button" onClick={onDelete} disabled={isDeleting}
           className="text-red-400 hover:text-red-600 disabled:opacity-40 p-0.5" aria-label="מחק">
           <Trash2 className="h-3.5 w-3.5" />
@@ -57,3 +69,5 @@ export const LineRow: React.FC<LineRowProps> = ({
     </div>
   );
 };
+
+LineRow.displayName = "LineRow";

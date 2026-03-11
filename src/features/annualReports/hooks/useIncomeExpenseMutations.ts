@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { annualReportFinancialsApi } from "../../../api/annualReportFinancials.api";
-import type { IncomeSourceType } from "../../../api/annualReports.api";
+import type { ExpenseLinePayload, IncomeLinePayload, IncomeSourceType } from "../../../api/annualReports.api";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
@@ -45,11 +45,25 @@ export const useIncomeExpenseMutations = (reportId: number) => {
     onError: (err) => showErrorToast(err, "שגיאה בהוספת הוצאה"),
   });
 
+  const updateIncome = useMutation({
+    mutationFn: ({ lineId, payload }: { lineId: number; payload: Partial<IncomeLinePayload> }) =>
+      annualReportFinancialsApi.updateIncomeLine(reportId, lineId, payload),
+    onSuccess: () => { toast.success("הכנסה עודכנה"); invalidate(); },
+    onError: (err) => showErrorToast(err, "שגיאה בעדכון הכנסה"),
+  });
+
+  const updateExpense = useMutation({
+    mutationFn: ({ lineId, payload }: { lineId: number; payload: Partial<ExpenseLinePayload> }) =>
+      annualReportFinancialsApi.updateExpenseLine(reportId, lineId, payload),
+    onSuccess: () => { toast.success("הוצאה עודכנה"); invalidate(); },
+    onError: (err) => showErrorToast(err, "שגיאה בעדכון הוצאה"),
+  });
+
   const deleteExpense = useMutation({
     mutationFn: (lineId: number) => annualReportFinancialsApi.deleteExpenseLine(reportId, lineId),
     onSuccess: () => { toast.success("הוצאה נמחקה"); invalidate(); },
     onError: (err) => showErrorToast(err, "שגיאה במחיקת הוצאה"),
   });
 
-  return { addIncome, deleteIncome, addExpense, deleteExpense };
+  return { addIncome, deleteIncome, addExpense, updateIncome, updateExpense, deleteExpense };
 };

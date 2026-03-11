@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { annualReportFinancialsApi } from "../../../api/annualReportFinancials.api";
 import type { IncomeLineResponse, ExpenseLineResponse } from "../../../api/annualReports.api";
@@ -7,16 +8,20 @@ import { AddLineForm } from "./IncomeExpensePanelParts";
 import { LineRow, INCOME_LABELS, EXPENSE_LABELS } from "../financialLabels";
 import { AddExpenseLineForm } from "./AddExpenseLineForm";
 import { useIncomeExpenseMutations } from "../hooks/useIncomeExpenseMutations";
+import { EditIncomeLineForm } from "./EditIncomeLineForm";
+import { EditExpenseLineForm } from "./EditExpenseLineForm";
 
 interface IncomeExpensePanelProps { reportId: number; }
 
 export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId }) => {
+  const [editingIncomeId, setEditingIncomeId] = useState<number | null>(null);
+  const [editingExpenseId, setEditingExpenseId] = useState<number | null>(null);
   const { data, isLoading } = useQuery({
     queryKey: QK.tax.annualReportFinancials(reportId),
     queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
   });
 
-  const { addIncome, deleteIncome, addExpense, deleteExpense } = useIncomeExpenseMutations(reportId);
+  const { addIncome, deleteIncome, addExpense, updateIncome, updateExpense, deleteExpense } = useIncomeExpenseMutations(reportId);
 
   if (isLoading) return <p className="text-sm text-gray-400 py-2">טוען נתונים פיננסיים...</p>;
 
@@ -32,9 +37,29 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
         <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">הכנסות</h4>
         {incomeLines.length === 0 && <p className="text-xs text-gray-400">לא הוזנו הכנסות</p>}
         {incomeLines.map((l) => (
-          <LineRow key={l.id} label={INCOME_LABELS[l.source_type] ?? l.source_type}
-            amount={l.amount} description={l.description}
-            onDelete={() => deleteIncome.mutate(l.id)} isDeleting={deleteIncome.isPending} />
+          <div key={l.id}>
+            <LineRow label={INCOME_LABELS[l.source_type] ?? l.source_type}
+              amount={l.amount} description={l.description}
+              onEdit={() => {
+                setEditingExpenseId(null);
+                setEditingIncomeId((current) => (current === l.id ? null : l.id));
+              }}
+              onDelete={() => deleteIncome.mutate(l.id)} isDeleting={deleteIncome.isPending} />
+            {editingIncomeId === l.id ? (
+              <EditIncomeLineForm
+                line={l}
+                typeOptions={INCOME_LABELS}
+                isSaving={updateIncome.isPending}
+                onCancel={() => setEditingIncomeId(null)}
+                onSave={(payload) => {
+                  updateIncome.mutate(
+                    { lineId: l.id, payload },
+                    { onSuccess: () => setEditingIncomeId(null) },
+                  );
+                }}
+              />
+            ) : null}
+          </div>
         ))}
         <AddLineForm typeOptions={INCOME_LABELS}
           onAdd={(key, amt, desc) => addIncome.mutate({ type_key: key, amount: amt, description: desc })}
@@ -45,11 +70,30 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
         <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">הוצאות</h4>
         {expenseLines.length === 0 && <p className="text-xs text-gray-400">לא הוזנו הוצאות</p>}
         {expenseLines.map((l) => (
-          <LineRow key={l.id} label={EXPENSE_LABELS[l.category] ?? l.category}
-            amount={l.amount} description={l.description}
-            recognitionRate={l.recognition_rate} supportingDocumentRef={l.supporting_document_ref}
-            supportingDocumentId={l.supporting_document_id} supportingDocumentFilename={l.supporting_document_filename}
-            onDelete={() => deleteExpense.mutate(l.id)} isDeleting={deleteExpense.isPending} />
+          <div key={l.id}>
+            <LineRow label={EXPENSE_LABELS[l.category] ?? l.category}
+              amount={l.amount} description={l.description}
+              recognitionRate={l.recognition_rate} supportingDocumentRef={l.supporting_document_ref}
+              supportingDocumentId={l.supporting_document_id} supportingDocumentFilename={l.supporting_document_filename}
+              onEdit={() => {
+                setEditingIncomeId(null);
+                setEditingExpenseId((current) => (current === l.id ? null : l.id));
+              }}
+              onDelete={() => deleteExpense.mutate(l.id)} isDeleting={deleteExpense.isPending} />
+            {editingExpenseId === l.id ? (
+              <EditExpenseLineForm
+                line={l}
+                isSaving={updateExpense.isPending}
+                onCancel={() => setEditingExpenseId(null)}
+                onSave={(payload) => {
+                  updateExpense.mutate(
+                    { lineId: l.id, payload },
+                    { onSuccess: () => setEditingExpenseId(null) },
+                  );
+                }}
+              />
+            ) : null}
+          </div>
         ))}
         <AddExpenseLineForm onAdd={(p) => addExpense.mutate(p)} isAdding={addExpense.isPending} />
       </div>
@@ -75,3 +119,5 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
     </div>
   );
 };
+
+IncomeExpensePanel.displayName = "IncomeExpensePanel";
