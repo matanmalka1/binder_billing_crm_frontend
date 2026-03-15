@@ -1,7 +1,7 @@
 import { DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
 import { Badge } from "../../../components/ui/Badge";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
-import { DaysDisplay } from "../../../components/ui/DaysDisplay";
+import { MonoValue } from "../../../components/ui/MonoValue";
 import type { BinderResponse } from "../types";
 import {
   getStatusLabel,
@@ -42,7 +42,7 @@ export const BinderDetailsPanel: React.FC<BinderDetailsPanelProps> = ({ binder }
         />
         <DrawerField
           label="ימים במשרד"
-          value={<DaysDisplay days={binder.days_in_office} />}
+          value={<MonoValue value={binder.days_in_office} format="days" />}
         />
       </DrawerSection>
 
