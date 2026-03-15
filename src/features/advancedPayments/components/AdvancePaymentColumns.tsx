@@ -2,6 +2,7 @@ import { MessageSquare, Trash2 } from "lucide-react";
 import type { Column } from "../../../components/ui/DataTable";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { Badge } from "../../../components/ui/Badge";
+import { MonoValue } from "../../../components/ui/MonoValue";
 import { formatDate } from "../../../utils/utils";
 import { fmtCurrency, MONTH_NAMES, STATUS_LABEL, STATUS_VARIANT } from "../utils";
 import { EditAdvancePaymentInline } from "./EditAdvancePaymentInline";
@@ -30,20 +31,12 @@ export const buildAdvancePaymentColumns = (
     {
       key: "expected_amount",
       header: "צפוי",
-      render: (row) => (
-        <span className="font-mono text-sm font-medium text-gray-700 tabular-nums">
-          {fmtCurrency(row.expected_amount)}
-        </span>
-      ),
+      render: (row) => <MonoValue value={fmtCurrency(row.expected_amount)} />,
     },
     {
       key: "paid_amount",
       header: "שולם",
-      render: (row) => (
-        <span className="font-mono text-sm font-semibold text-green-700 tabular-nums">
-          {fmtCurrency(row.paid_amount)}
-        </span>
-      ),
+      render: (row) => <MonoValue value={fmtCurrency(row.paid_amount)} tone="positive" />,
     },
     {
       key: "status",
@@ -66,16 +59,8 @@ export const buildAdvancePaymentColumns = (
       header: "הפרש",
       render: (row) => {
         if (row.delta == null) return <span className="text-gray-400 text-sm">—</span>;
-        const colorClass = row.delta > 0
-          ? "text-red-600"
-          : row.delta < 0
-            ? "text-green-600"
-            : "text-gray-400";
-        return (
-          <span className={`font-mono text-sm tabular-nums ${colorClass}`}>
-            {fmtCurrency(row.delta)}
-          </span>
-        );
+        const tone = row.delta > 0 ? "negative" : row.delta < 0 ? "positive" : "neutral";
+        return <MonoValue value={fmtCurrency(row.delta)} tone={tone} />;
       },
     },
     {
