@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
-import { AccessBanner } from "../../../components/ui/AccessBanner";
+import { Alert } from "../../../components/ui/Alert";
 import { Button } from "../../../components/ui/Button";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import {
@@ -71,7 +71,7 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
       onClose={onClose}
     >
       {denied && (
-        <AccessBanner variant="warning" message="אין לך הרשאה לבצע פעולה זו" />
+        <Alert variant="warning" message="אין לך הרשאה לבצע פעולה זו" />
       )}
 
       {charge && (
