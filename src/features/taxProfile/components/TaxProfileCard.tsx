@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Edit2 } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
-import { DescriptionList } from "../../../components/ui/DescriptionList";
-import { ErrorCard } from "../../../components/ui/ErrorCard";
+import { DefinitionList } from "../../../components/ui/DefinitionList";
+import { Alert } from "../../../components/ui/Alert";
 import { useTaxProfile } from "../hooks/useTaxProfile";
 import { TaxProfileForm } from "./TaxProfileForm";
 
@@ -36,7 +36,7 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) 
         <p className="py-2 text-sm text-gray-500">טוען פרטי מס...</p>
       )}
 
-      {error && <ErrorCard message={error} />}
+      {error && <Alert variant="error" message={error} />}
 
       {!isLoading && !error && (
         isEditing ? (
@@ -48,7 +48,7 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) 
           />
         ) : (
           <div className="space-y-4">
-            <DescriptionList items={items} columns={2} />
+            <DefinitionList items={items} columns={2} />
             {!readOnly && (
               <div className="flex justify-end">
                 <Button
