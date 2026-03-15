@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "./Button";
+import { Input } from "./Input";
 import { Modal } from "./Modal";
 import type { ActionInputField } from "../../lib/actions/types";
-import { cn } from "../../utils/utils";
 
 export interface ConfirmDialogProps {
   open: boolean;
@@ -73,22 +73,15 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       {inputs && inputs.length > 0 && (
         <div className="mt-3 space-y-3">
           {inputs.map((field) => (
-            <div key={field.name} className="w-full space-y-1">
-              <label className="block text-sm font-medium text-gray-700">
-                {field.label}
-                {field.required && <span className="text-red-500 mr-1">*</span>}
-              </label>
-              <input
-                type={field.type}
-                value={inputValues[field.name] ?? ""}
-                onChange={(e) =>
-                  setInputValues((prev) => ({ ...prev, [field.name]: e.target.value }))
-                }
-                className={cn(
-                  "w-full rounded-lg border px-3 py-3 shadow-sm transition-all focus:border-primary-500 focus:ring-2 focus:ring-primary-500 sm:text-sm bg-white border-gray-300",
-                )}
-              />
-            </div>
+            <Input
+              key={field.name}
+              label={field.required ? `${field.label} *` : field.label}
+              type={field.type}
+              value={inputValues[field.name] ?? ""}
+              onChange={(e) =>
+                setInputValues((prev) => ({ ...prev, [field.name]: e.target.value }))
+              }
+            />
           ))}
         </div>
       )}
