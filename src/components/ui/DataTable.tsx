@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import { Card } from "./Card";
 import { cn } from "../../utils/utils";
-import { EmptyState, type EmptyStateProps } from "./EmptyState";
+import { StateCard } from "./StateCard";
+import type { StateCardProps as EmptyStateProps } from "./StateCard";
 import type { LucideIcon } from "lucide-react";
 import { Inbox } from "lucide-react";
 import { TableSkeleton } from "./TableSkeleton";
@@ -53,7 +54,7 @@ export const DataTable = <T,>({
 
   if (data.length === 0) {
     return (
-      <EmptyState
+      <StateCard
         icon={emptyState?.icon ?? Inbox}
         title={emptyState?.title}
         message={emptyState?.message ?? emptyMessage}
