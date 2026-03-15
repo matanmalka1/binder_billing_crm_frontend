@@ -13,6 +13,8 @@ interface ClientAdvancePaymentsHeaderProps {
   onOpenCreate: () => void;
   onOpenReduction: () => void;
   onOpenEditRate: () => void;
+  onGenerateSchedule: () => void;
+  isGenerating?: boolean;
 }
 
 const STATUS_FILTERS: AdvancePaymentStatus[] = ["pending", "paid", "partial", "overdue"];
@@ -32,6 +34,8 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
   onOpenCreate,
   onOpenReduction,
   onOpenEditRate,
+  onGenerateSchedule,
+  isGenerating,
 }) => (
   <div className="flex items-center justify-between">
     {isAdvisor && (
@@ -44,6 +48,9 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
         <Button variant="outline" size="sm" onClick={onOpenEditRate}>
           <Edit2 size={14} className="mr-1" />
           עריכת שיעור
+        </Button>
+        <Button variant="outline" size="sm" onClick={onGenerateSchedule} disabled={isGenerating}>
+          {isGenerating ? "יוצר..." : "צור לוח מקדמות לשנה"}
         </Button>
       </div>
     )}

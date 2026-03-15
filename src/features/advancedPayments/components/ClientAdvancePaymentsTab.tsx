@@ -1,8 +1,13 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AdvancePaymentStatus } from "../types";
 import { useAdvancePayments } from "../hooks/useAdvancePayments";
 import { useAdvanceRateInsights } from "../hooks/useAdvanceRateInsights";
 import { useRole } from "../../../hooks/useRole";
+import { advancePaymentsApi } from "../../../api/advancePayments.api";
+import { QK } from "../../../lib/queryKeys";
+import { toast } from "../../../utils/toast";
+import { showErrorToast } from "../../../utils/utils";
 import { ClientAdvancePaymentsHeader } from "./ClientAdvancePaymentsHeader";
 import { AdvancePaymentsStatsRow } from "./AdvancePaymentsStatsRow";
 import { AdvancePaymentTable } from "./AdvancePaymentTable";
@@ -29,9 +34,20 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const [reductionOpen, setReductionOpen] = useState(false);
   const { isAdvisor } = useRole();
 
+  const queryClient = useQueryClient();
   const { rows, isLoading, totalExpected, totalPaid, total, create, isCreating, updateRow, updatingId, deleteRow, isDeletingId } =
     useAdvancePayments(clientId, year, statusFilter, page);
   const { advanceRate, annualIncome, updateAdvanceRate, isUpdatingRate } = useAdvanceRateInsights(clientId, year);
+
+  const generateMutation = useMutation({
+    mutationFn: () => advancePaymentsApi.generateSchedule(clientId, year),
+    onSuccess: (data) => {
+      const msg = data.created > 0 ? `נוצרו ${data.created} מקדמות` : "הכול קיים";
+      toast.success(msg);
+      void queryClient.invalidateQueries({ queryKey: QK.tax.advancePayments.forClientYear(clientId, year) });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה ביצירת לוח מקדמות"),
+  });
 
   const totalPages = Math.max(1, Math.ceil(total / 20));
   const handleStatusToggle = (status: AdvancePaymentStatus) => {
@@ -50,6 +66,8 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         onOpenCreate={() => setModalOpen(true)}
         onOpenReduction={() => setReductionOpen(true)}
         onOpenEditRate={() => setEditRateOpen(true)}
+        onGenerateSchedule={() => generateMutation.mutate()}
+        isGenerating={generateMutation.isPending}
       />
       <AdvancePaymentsStatsRow
         advanceRate={advanceRate}

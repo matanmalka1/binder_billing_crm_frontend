@@ -88,4 +88,15 @@ export const advancePaymentsApi = {
     );
     return response.data;
   },
+
+  generateSchedule: async (
+    clientId: number,
+    year: number,
+  ): Promise<{ created: number; skipped: number }> => {
+    const response = await api.post<{ created: number; skipped: number }>(
+      ENDPOINTS.advancePaymentsGenerate,
+      { client_id: clientId, year },
+    );
+    return response.data;
+  },
 };
