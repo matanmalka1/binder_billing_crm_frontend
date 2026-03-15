@@ -19,11 +19,13 @@ export const FinalBalancePanel: React.FC<Props> = ({ reportId }) => {
   const taxQuery = useQuery({
     queryKey: QK.tax.annualReportTaxCalc(reportId),
     queryFn: () => annualReportTaxApi.getTaxCalculation(reportId),
+    enabled: !!reportId,
   });
 
   const advancesQuery = useQuery({
     queryKey: QK.tax.annualReportAdvancesSummary(reportId),
     queryFn: () => annualReportTaxApi.getAdvancesSummary(reportId),
+    enabled: !!reportId,
   });
 
   if (taxQuery.isLoading || advancesQuery.isLoading)
