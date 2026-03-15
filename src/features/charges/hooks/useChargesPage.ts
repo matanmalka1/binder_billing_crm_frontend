@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   chargesApi,
+  type BulkChargeActionPayload,
   type ChargesListParams,
   type CreateChargePayload,
 } from "../../../api/charges.api";
@@ -44,7 +45,29 @@ export const useChargesPage = () => {
     },
   });
 
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+  const toggleSelect = useCallback((id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const toggleSelectAll = useCallback((ids: number[]) => {
+    setSelectedIds((prev) => {
+      const allSelected = ids.every((id) => prev.has(id));
+      if (allSelected) return new Set();
+      return new Set(ids);
+    });
+  }, []);
+
+  const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
+
   const [actionLoadingId, setActionLoadingId] = useState<number | null>(null);
+  const [bulkLoading, setBulkLoading] = useState(false);
 
   const actionMutation = useMutation({
     mutationFn: async ({
@@ -83,6 +106,33 @@ export const useChargesPage = () => {
     [actionMutation, isAdvisor],
   );
 
+  const runBulkAction = useCallback(
+    async (action: BulkChargeActionPayload["action"], cancellationReason?: string) => {
+      if (!isAdvisor || selectedIds.size === 0) return;
+      setBulkLoading(true);
+      try {
+        const result = await chargesApi.bulkAction({
+          charge_ids: Array.from(selectedIds),
+          action,
+          cancellation_reason: cancellationReason,
+        });
+        if (result.succeeded.length > 0) {
+          toast.success(`${result.succeeded.length} חיובים עודכנו בהצלחה`);
+        }
+        if (result.failed.length > 0) {
+          result.failed.forEach((f) => toast.error(`חיוב #${f.id}: ${f.error}`));
+        }
+        await queryClient.invalidateQueries({ queryKey: QK.charges.all });
+        clearSelection();
+      } catch (requestError: unknown) {
+        showErrorToast(requestError, "שגיאה בביצוע פעולה מרובה");
+      } finally {
+        setBulkLoading(false);
+      }
+    },
+    [isAdvisor, selectedIds, clearSelection, queryClient],
+  );
+
   // setFilter provided by useSearchParamFilters
 
   const submitCreate = async (
@@ -104,6 +154,7 @@ export const useChargesPage = () => {
 
   return {
     actionLoadingId,
+    bulkLoading,
     charges: listQuery.data?.items ?? [],
     createError: createMutation.error
       ? getErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")
@@ -116,6 +167,11 @@ export const useChargesPage = () => {
     isAdvisor,
     loading: listQuery.isPending,
     runAction,
+    runBulkAction,
+    selectedIds,
+    toggleSelect,
+    toggleSelectAll,
+    clearSelection,
     setFilter,
     setSearchParams,
     submitCreate,

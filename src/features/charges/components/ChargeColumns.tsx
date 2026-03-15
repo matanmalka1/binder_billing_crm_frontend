@@ -21,6 +21,10 @@ interface BuildChargeColumnsParams {
   actionLoadingId: number | null;
   runAction: (chargeId: number, action: ChargeAction) => Promise<void>;
   onOpenDetail: (chargeId: number) => void;
+  selectedIds?: Set<number>;
+  onToggleSelect?: (id: number) => void;
+  onToggleAll?: (ids: number[]) => void;
+  allIds?: number[];
 }
 
 export const buildChargeColumns = ({
@@ -28,7 +32,42 @@ export const buildChargeColumns = ({
   actionLoadingId,
   runAction,
   onOpenDetail,
-}: BuildChargeColumnsParams): Column<ChargeResponse>[] => [
+  selectedIds,
+  onToggleSelect,
+  onToggleAll,
+  allIds = [],
+}: BuildChargeColumnsParams): Column<ChargeResponse>[] => {
+  const allSelected = allIds.length > 0 && allIds.every((id) => selectedIds?.has(id));
+  const someSelected = !allSelected && allIds.some((id) => selectedIds?.has(id));
+
+  const checkboxColumn: Column<ChargeResponse> = {
+    key: "select",
+    header: "",
+    headerClassName: "w-8",
+    className: "w-8",
+    headerRender: () => (
+      <input
+        type="checkbox"
+        checked={allSelected}
+        ref={(el) => { if (el) el.indeterminate = someSelected; }}
+        onChange={() => onToggleAll?.(allIds)}
+        className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+        aria-label="בחר הכל"
+      />
+    ),
+    render: (charge) => (
+      <input
+        type="checkbox"
+        checked={selectedIds?.has(charge.id) ?? false}
+        onChange={() => onToggleSelect?.(charge.id)}
+        onClick={(e) => e.stopPropagation()}
+        className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+        aria-label={`בחר חיוב ${charge.id}`}
+      />
+    ),
+  };
+
+  const dataColumns: Column<ChargeResponse>[] = [
   {
     key: "id",
     header: "מזהה",
@@ -113,4 +152,10 @@ export const buildChargeColumns = ({
       );
     },
   },
-];
+  ];
+
+  if (isAdvisor && onToggleSelect) {
+    return [checkboxColumn, ...dataColumns];
+  }
+  return dataColumns;
+};

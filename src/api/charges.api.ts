@@ -44,6 +44,22 @@ export interface CreateChargePayload {
   currency?: string;
 }
 
+export interface BulkChargeActionPayload {
+  charge_ids: number[];
+  action: "issue" | "mark-paid" | "cancel";
+  cancellation_reason?: string;
+}
+
+export interface BulkChargeFailedItem {
+  id: number;
+  error: string;
+}
+
+export interface BulkChargeActionResult {
+  succeeded: number[];
+  failed: BulkChargeFailedItem[];
+}
+
 export const chargesApi = {
   list: async (params: ChargesListParams): Promise<ChargesListResponse> => {
     const response = await api.get<ChargesListResponse>(ENDPOINTS.charges, {
@@ -93,5 +109,13 @@ export const chargesApi = {
 
   delete: async (chargeId: number): Promise<void> => {
     await api.delete(ENDPOINTS.chargeById(chargeId));
+  },
+
+  bulkAction: async (payload: BulkChargeActionPayload): Promise<BulkChargeActionResult> => {
+    const response = await api.post<BulkChargeActionResult>(
+      ENDPOINTS.chargesBulkAction,
+      payload,
+    );
+    return response.data;
   },
 };

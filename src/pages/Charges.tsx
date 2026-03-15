@@ -9,6 +9,7 @@ import { ChargesFiltersCard } from "../features/charges/components/ChargesFilter
 import { ChargesSummaryBar } from "../features/charges/components/ChargesSummaryBar";
 import { buildChargeColumns } from "../features/charges/components/ChargeColumns";
 import { ChargeDetailDrawer } from "../features/charges/components/ChargeDetailDrawer";
+import { ChargeBulkToolbar } from "../features/charges/components/ChargeBulkToolbar";
 import { useChargesPage } from "../features/charges/hooks/useChargesPage";
 import { ImportExportModal } from "../features/importExport/components/ImportExportModal";
 
@@ -18,6 +19,7 @@ export const Charges: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const {
     actionLoadingId,
+    bulkLoading,
     charges,
     createError,
     createLoading,
@@ -26,11 +28,17 @@ export const Charges: React.FC = () => {
     isAdvisor,
     loading,
     runAction,
+    runBulkAction,
+    selectedIds,
+    toggleSelect,
+    toggleSelectAll,
+    clearSelection,
     setFilter,
     setSearchParams,
     submitCreate,
     total,
   } = useChargesPage();
+  const allIds = useMemo(() => charges.map((c) => c.id), [charges]);
   const columns = useMemo(
     () =>
       buildChargeColumns({
@@ -38,8 +46,12 @@ export const Charges: React.FC = () => {
         actionLoadingId,
         runAction,
         onOpenDetail: setSelectedChargeId,
+        selectedIds,
+        onToggleSelect: toggleSelect,
+        onToggleAll: toggleSelectAll,
+        allIds,
       }),
-    [isAdvisor, actionLoadingId, runAction],
+    [isAdvisor, actionLoadingId, runAction, selectedIds, toggleSelect, toggleSelectAll, allIds],
   );
   const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
   return (
@@ -72,6 +84,14 @@ export const Charges: React.FC = () => {
         onClear={() => setSearchParams(new URLSearchParams())}
       />
       <ChargesSummaryBar charges={charges} isAdvisor={isAdvisor} />
+      {isAdvisor && selectedIds.size > 0 && (
+        <ChargeBulkToolbar
+          selectedCount={selectedIds.size}
+          loading={bulkLoading}
+          onAction={runBulkAction}
+          onClear={clearSelection}
+        />
+      )}
       {error && <Alert variant="error" message={error} />}
       <DataTable
         data={charges}

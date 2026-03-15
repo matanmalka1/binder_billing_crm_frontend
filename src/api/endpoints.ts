@@ -26,6 +26,7 @@ export const ENDPOINTS = {
   chargeMarkPaid: (chargeId: number | string) =>
     `/charges/${chargeId}/mark-paid`,
   chargeCancel: (chargeId: number | string) => `/charges/${chargeId}/cancel`,
+  chargesBulkAction: "/charges/bulk-action",
   documentsUpload: "/documents/upload",
   documentsByClient: (clientId: number | string) =>
     `/documents/client/${clientId}`,
@@ -127,6 +128,7 @@ export const ENDPOINTS = {
   notificationsUnreadCount: "/notifications/unread-count",
   notificationsMarkRead: "/notifications/mark-read",
   notificationsMarkAllRead: "/notifications/mark-all-read",
+  notificationsSend: "/notifications/send",
   documentDownloadUrl: (id: number | string) => `/documents/${id}/download-url`,
   documentApprove: (id: number | string) => `/documents/${id}/approve`,
   documentReject: (id: number | string) => `/documents/${id}/reject`,
