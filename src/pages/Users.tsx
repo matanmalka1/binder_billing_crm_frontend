@@ -1,10 +1,9 @@
 import { useMemo, useState } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
-import { InlineToolbar } from "../components/ui/InlineToolbar";
+import { ToolbarContainer } from "../components/ui/ToolbarContainer";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { DataTable } from "../components/ui/DataTable";
-import { AccessBanner } from "../components/ui/AccessBanner";
-import { ErrorCard } from "../components/ui/ErrorCard";
+import { Alert } from "../components/ui/Alert";
 import { Button } from "../components/ui/Button";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { useRole } from "../hooks/useRole";
@@ -22,7 +21,6 @@ export const Users: React.FC = () => {
   const { isAdvisor } = useRole();
   const currentUserId = useAuthStore((s) => s.user?.id);
   const [pendingToggle, setPendingToggle] = useState<UserResponse | null>(null);
-
   const {
     users, total, loading, error, filters,
     handleFilterChange, setPage,
@@ -35,7 +33,6 @@ export const Users: React.FC = () => {
     toggleActive, toggleActiveLoading,
     resetPassword, resetPasswordLoading,
   } = useUsersPage();
-
   const columns = useMemo(
     () => buildUserColumns({
       onEdit: setEditUser,
@@ -45,18 +42,15 @@ export const Users: React.FC = () => {
     }),
     [setEditUser, setResetUser, currentUserId],
   );
-
   const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
-
   if (!isAdvisor) {
     return (
       <div className="space-y-6">
         <PageHeader title="ניהול משתמשים" description="ניהול חשבונות משתמשים במערכת" />
-        <AccessBanner variant="warning" message="גישה לניהול משתמשים זמינה ליועצים בלבד." />
+        <Alert variant="warning" message="גישה לניהול משתמשים זמינה ליועצים בלבד." />
       </div>
     );
   }
-
   return (
     <div className="space-y-6">
       <PageHeader
@@ -69,13 +63,10 @@ export const Users: React.FC = () => {
           </div>
         }
       />
-
-      <InlineToolbar>
+      <ToolbarContainer>
         <UsersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
-      </InlineToolbar>
-
-      {error && <ErrorCard message={error} />}
-
+      </ToolbarContainer>
+      {error && <Alert variant="error" message={error} />}
       <DataTable
         data={users}
         columns={columns}
@@ -87,7 +78,6 @@ export const Users: React.FC = () => {
           action: { label: "משתמש חדש", onClick: () => setShowCreateModal(true) },
         }}
       />
-
       {!loading && users.length > 0 && (
         <PaginationCard
           page={filters.page}
@@ -100,14 +90,12 @@ export const Users: React.FC = () => {
           onPageSizeChange={(size) => handleFilterChange("page_size", String(size))}
         />
       )}
-
       <CreateUserModal
         open={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onSubmit={createUser}
         isLoading={createLoading}
       />
-
       <EditUserModal
         open={Boolean(editUser)}
         user={editUser}
@@ -115,7 +103,6 @@ export const Users: React.FC = () => {
         onSubmit={updateUser}
         isLoading={updateLoading}
       />
-
       <ResetPasswordModal
         open={Boolean(resetUser)}
         user={resetUser}
@@ -123,12 +110,10 @@ export const Users: React.FC = () => {
         onSubmit={resetPassword}
         isLoading={resetPasswordLoading}
       />
-
       <AuditLogsDrawer
         open={showAuditLogs}
         onClose={() => setShowAuditLogs(false)}
       />
-
       <ConfirmDialog
         open={Boolean(pendingToggle)}
         title={pendingToggle?.is_active ? "השבתת משתמש" : "הפעלת משתמש"}
