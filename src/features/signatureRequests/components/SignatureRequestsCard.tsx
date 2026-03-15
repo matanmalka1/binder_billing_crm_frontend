@@ -2,8 +2,9 @@ import { useState } from "react";
 import { FileSignature, Plus } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
-import { EmptyState } from "../../../components/ui/EmptyState";
-import { ErrorCard } from "../../../components/ui/ErrorCard";
+import { StateCard } from "../../../components/ui/StateCard";
+import { Alert } from "../../../components/ui/Alert";
+import { SkeletonBlock } from "../../../components/ui/SkeletonBlock";
 import { SignatureRequestRow } from "./SignatureRequestRow";
 import { CreateSignatureRequestModal } from "./CreateSignatureRequestModal";
 import { useClientSignatureRequests } from "../hooks/useClientSignatureRequests";
@@ -45,18 +46,18 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) =>
         }
       >
         <div className="space-y-2">
-          {error && <ErrorCard message={error} />}
+          {error && <Alert variant="error" message={error} />}
 
           {isLoading && (
             <div className="space-y-2">
-              {[1, 2].map((i) => (
-                <div key={i} className="h-16 animate-pulse rounded-xl bg-gray-100" />
+              {Array.from({ length: 2 }).map((_, i) => (
+                <SkeletonBlock key={i} height="h-16" rounded="xl" width="w-full" />
               ))}
             </div>
           )}
 
           {!isLoading && !error && items.length === 0 && (
-            <EmptyState
+            <StateCard
               icon={FileSignature}
               message="אין בקשות חתימה עבור לקוח זה"
               action={canManage ? { label: "יצירת בקשה ראשונה", onClick: () => setShowCreate(true) } : undefined}
