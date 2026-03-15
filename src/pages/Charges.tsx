@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Plus, ArrowUpDown } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { Alert } from "../components/ui/Alert";
 import { DataTable } from "../components/ui/DataTable";
@@ -14,6 +16,7 @@ import { useChargesPage } from "../features/charges/hooks/useChargesPage";
 import { ImportExportModal } from "../features/importExport/components/ImportExportModal";
 
 export const Charges: React.FC = () => {
+  const [, setSearchParams] = useSearchParams();
   const [selectedChargeId, setSelectedChargeId] = useState<number | null>(null);
   const [showImportExport, setShowImportExport] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -34,7 +37,6 @@ export const Charges: React.FC = () => {
     toggleSelectAll,
     clearSelection,
     setFilter,
-    setSearchParams,
     submitCreate,
     total,
   } = useChargesPage();
@@ -54,6 +56,7 @@ export const Charges: React.FC = () => {
     [isAdvisor, actionLoadingId, runAction, selectedIds, toggleSelect, toggleSelectAll, allIds],
   );
   const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -61,29 +64,35 @@ export const Charges: React.FC = () => {
         description="רשימת חיובים ופעולות חיוב נתמכות"
         actions={
           <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)}>
+              <ArrowUpDown className="h-3.5 w-3.5" />
+              ייבוא / ייצוא
+            </Button>
             {isAdvisor && (
               <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)}>
+                <Plus className="h-3.5 w-3.5" />
                 חיוב חדש
               </Button>
             )}
-            <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)}>
-              ייבוא / ייצוא
-            </Button>
           </div>
         }
       />
+
+      <ChargesSummaryBar charges={charges} isAdvisor={isAdvisor} total={total} />
+
       {!isAdvisor && (
         <Alert
           variant="info"
           message="צפייה בלבד. יצירה ושינוי חיובים זמינים ליועץ בלבד."
         />
       )}
+
       <ChargesFiltersCard
         filters={filters}
         onFilterChange={setFilter}
         onClear={() => setSearchParams(new URLSearchParams())}
       />
-      <ChargesSummaryBar charges={charges} isAdvisor={isAdvisor} />
+
       {isAdvisor && selectedIds.size > 0 && (
         <ChargeBulkToolbar
           selectedCount={selectedIds.size}
@@ -92,7 +101,9 @@ export const Charges: React.FC = () => {
           onClear={clearSelection}
         />
       )}
+
       {error && <Alert variant="error" message={error} />}
+
       <DataTable
         data={charges}
         columns={columns}
@@ -100,9 +111,8 @@ export const Charges: React.FC = () => {
         onRowClick={(charge) => setSelectedChargeId(charge.id)}
         isLoading={loading}
         rowClassName={(charge) => {
-          if (charge.status === "paid") return "bg-green-50/50";
-          if (charge.status === "canceled") return "opacity-60";
-          if (charge.status === "issued") return "bg-primary-50/30";
+          if (charge.status === "canceled") return "text-gray-400";
+          if (charge.status === "issued") return "bg-primary-50/20";
           return "";
         }}
         emptyMessage="אין חיובים להצגה"
@@ -111,8 +121,12 @@ export const Charges: React.FC = () => {
           message: isAdvisor
             ? "אין חיובים התואמים את הסינון. ניתן ליצור חיוב חדש בטופס למעלה."
             : "אין חיובים התואמים את הסינון הנוכחי.",
+          action: isAdvisor
+            ? { label: "חיוב חדש", onClick: () => setShowCreateModal(true) }
+            : undefined,
         }}
       />
+
       {!loading && total > 0 && (
         <PaginationCard
           page={filters.page}
@@ -126,6 +140,7 @@ export const Charges: React.FC = () => {
           onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
         />
       )}
+
       <ChargeDetailDrawer
         chargeId={selectedChargeId}
         onClose={() => setSelectedChargeId(null)}

@@ -20,6 +20,7 @@ export const useChargesPage = () => {
   const filters = {
     client_id: searchParams.get("client_id") ?? "",
     status: searchParams.get("status") ?? "",
+    charge_type: searchParams.get("charge_type") ?? "",
     page: parsePositiveInt(searchParams.get("page"), 1),
     page_size: parsePositiveInt(searchParams.get("page_size"), 20),
   };
@@ -27,6 +28,7 @@ export const useChargesPage = () => {
   const apiParams: ChargesListParams = {
     client_id: toOptionalNumber(filters.client_id),
     status: toOptionalString(filters.status),
+    charge_type: toOptionalString(filters.charge_type),
     page: filters.page,
     page_size: filters.page_size,
   };

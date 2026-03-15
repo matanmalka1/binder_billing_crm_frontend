@@ -31,6 +31,7 @@ export type ChargesListResponse = PaginatedResponse<ChargeResponse>;
 export interface ChargesListParams {
   client_id?: number;
   status?: string;
+  charge_type?: string;
   issued_before?: string;
   page?: number;
   page_size?: number;

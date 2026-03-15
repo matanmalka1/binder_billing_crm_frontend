@@ -3,9 +3,9 @@ import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ChargeResponse } from "../../../api/charges.api";
 import { getChargeAmountText, getChargeTypeLabel } from "../utils";
-import { formatDateTime } from "../../../utils/utils";
+import { formatDate } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
-import { ChargeActionButtons } from "./ChargeActionButtons"
+import { ChargeRowActions } from "./ChargeRowActions";
 
 export type ChargeAction = "issue" | "markPaid" | "cancel";
 
@@ -40,11 +40,12 @@ export const buildChargeColumns = ({
   const allSelected = allIds.length > 0 && allIds.every((id) => selectedIds?.has(id));
   const someSelected = !allSelected && allIds.some((id) => selectedIds?.has(id));
 
+  /* Checkbox — rightmost in RTL (first in DOM) */
   const checkboxColumn: Column<ChargeResponse> = {
     key: "select",
     header: "",
-    headerClassName: "w-8",
-    className: "w-8",
+    headerClassName: "w-10",
+    className: "w-10",
     headerRender: () => (
       <input
         type="checkbox"
@@ -68,90 +69,100 @@ export const buildChargeColumns = ({
   };
 
   const dataColumns: Column<ChargeResponse>[] = [
-  {
-    key: "id",
-    header: "מזהה",
-    render: (charge) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">#{charge.id}</span>
-    ),
-  },
-  {
-    key: "client_id",
-    header: "לקוח",
-    render: (charge) => (
-      <Link
-        to={`/clients/${charge.client_id}`}
-        onClick={(e) => e.stopPropagation()}
-        className="text-sm font-semibold text-gray-900 hover:text-primary-700 hover:underline"
-      >
-        {charge.client_name ?? `#${charge.client_id}`}
-      </Link>
-    ),
-  },
-  {
-    key: "charge_type",
-    header: "סוג",
-    render: (charge) => (
-      <span className="text-sm text-gray-600">{getChargeTypeLabel(charge.charge_type)}</span>
-    ),
-  },
-  {
-    key: "status",
-    header: "סטטוס",
-    render: (charge) => (
-      <StatusBadge
-        status={charge.status}
-        getLabel={getChargeStatusLabel}
-        variantMap={chargeStatusVariants}
-      />
-    ),
-  },
-  {
-    key: "amount",
-    header: "סכום",
-    render: (charge) => (
-      <span className="font-mono text-sm font-semibold text-gray-900 tabular-nums">
-        {getChargeAmountText(charge)}
-      </span>
-    ),
-  },
-  {
-    key: "created_at",
-    header: "נוצר",
-    render: (charge) => (
-      <span className="text-sm text-gray-500 tabular-nums">{formatDateTime(charge.created_at)}</span>
-    ),
-  },
-  {
-    key: "actions",
-    header: "פעולות",
-    render: (charge) => {
-      const isLoading = actionLoadingId === charge.id;
-      const isDisabled = actionLoadingId !== null && actionLoadingId !== charge.id;
-      const stop = (fn: () => void) => (e: React.MouseEvent) => { e.stopPropagation(); fn(); };
-
-      return (
-        <div className="flex flex-wrap items-center gap-1.5">
-          <button
-            type="button"
-            onClick={stop(() => onOpenDetail(charge.id))}
-            className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700"
-          >
-            פירוט
-          </button>
-          {isAdvisor && (
-            <ChargeActionButtons
-              status={charge.status}
-              disabled={isLoading || isDisabled}
-              onIssue={stop(() => void runAction(charge.id, "issue"))}
-              onMarkPaid={stop(() => void runAction(charge.id, "markPaid"))}
-              onCancel={stop(() => void runAction(charge.id, "cancel"))}
-            />
-          )}
-        </div>
-      );
+    {
+      key: "id",
+      header: "#",
+      headerClassName: "w-10 text-center",
+      className: "w-10 text-center",
+      render: (charge) => (
+        <span className="font-mono text-xs text-gray-400 tabular-nums">{charge.id}</span>
+      ),
     },
-  },
+    {
+      key: "client_id",
+      header: "לקוח",
+      headerClassName: "w-48",
+      className: "w-48 max-w-[12rem]",
+      render: (charge) => (
+        <Link
+          to={`/clients/${charge.client_id}`}
+          onClick={(e) => e.stopPropagation()}
+          className="text-sm font-semibold text-gray-900 hover:text-primary-700 hover:underline"
+        >
+          {charge.client_name ?? `#${charge.client_id}`}
+        </Link>
+      ),
+    },
+    {
+      key: "charge_type",
+      header: "סוג",
+      headerClassName: "w-24",
+      className: "w-24",
+      render: (charge) => (
+        <span className="text-sm text-gray-500">{getChargeTypeLabel(charge.charge_type)}</span>
+      ),
+    },
+    {
+      key: "period",
+      header: "תקופה",
+      headerClassName: "w-24",
+      className: "w-24",
+      render: (charge) => (
+        <span className="font-mono text-sm text-gray-500 tabular-nums">{charge.period ?? "—"}</span>
+      ),
+    },
+    {
+      key: "status",
+      header: "סטטוס",
+      headerClassName: "w-28",
+      className: "w-28",
+      render: (charge) => (
+        <StatusBadge
+          status={charge.status}
+          getLabel={getChargeStatusLabel}
+          variantMap={chargeStatusVariants}
+        />
+      ),
+    },
+    {
+      key: "amount",
+      header: "סכום",
+      headerClassName: "w-36",
+      className: "w-36",
+      render: (charge) => (
+        <span className="font-mono text-sm font-semibold text-gray-900 tabular-nums">
+          {getChargeAmountText(charge)}
+        </span>
+      ),
+    },
+    {
+      key: "created_at",
+      header: "תאריך",
+      headerClassName: "w-24",
+      className: "w-24",
+      render: (charge) => (
+        <span className="text-sm text-gray-400 tabular-nums">{formatDate(charge.created_at)}</span>
+      ),
+    },
+    /* Actions — last in DOM = leftmost in RTL */
+    {
+      key: "actions",
+      header: "",
+      headerClassName: "w-10",
+      className: "w-10",
+      render: (charge) => (
+        <ChargeRowActions
+          chargeId={charge.id}
+          status={charge.status}
+          disabled={actionLoadingId !== null}
+          onOpenDetail={() => onOpenDetail(charge.id)}
+          onIssue={() => void runAction(charge.id, "issue")}
+          onMarkPaid={() => void runAction(charge.id, "markPaid")}
+          onCancel={() => void runAction(charge.id, "cancel")}
+          showActions={isAdvisor}
+        />
+      ),
+    },
   ];
 
   if (isAdvisor && onToggleSelect) {

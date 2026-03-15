@@ -103,12 +103,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
             error={errors.period?.message}
             {...register("period")}
           />
-          <Input
-            label="מטבע *"
-            placeholder="ILS"
-            error={errors.currency?.message}
-            {...register("currency")}
-          />
+          <input type="hidden" {...register("currency")} />
         </div>
 
         {createError && <p className="text-sm text-red-600">{createError}</p>}

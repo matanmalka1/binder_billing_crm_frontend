@@ -9,7 +9,12 @@ export const canCancel = (status: string): boolean =>
 
 export const getChargeAmountText = (charge: ChargeResponse): string => {
   if (!("amount" in charge) || typeof charge.amount !== "number") return "—";
-  return `${charge.amount.toFixed(2)} ${charge.currency}`;
+  return charge.amount.toLocaleString("he-IL", {
+    style: "currency",
+    currency: charge.currency ?? "ILS",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 };
 
 const CHARGE_TYPE_LABELS: Record<string, string> = {

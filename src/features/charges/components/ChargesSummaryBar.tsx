@@ -1,90 +1,90 @@
-import { TrendingUp, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Clock, CheckCircle2, FileText, XCircle } from "lucide-react";
 import type { ChargeResponse } from "../../../api/charges.api";
 
 interface ChargesSummaryBarProps {
   charges: ChargeResponse[];
   isAdvisor: boolean;
+  total: number;
 }
 
-const formatAmount = (amount: number): string =>
-  `₪${amount.toLocaleString("he-IL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const formatILS = (amount: number): string =>
+  amount.toLocaleString("he-IL", {
+    style: "currency",
+    currency: "ILS",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
-export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, isAdvisor }) => {
-  if (!isAdvisor || charges.length === 0) return null;
+interface StatCardProps {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+  accent: string;
+  iconBg: string;
+  valueColor: string;
+}
 
-  const advisorCharges = charges.filter(
-    (c): c is ChargeResponse & { amount: number; currency: string } =>
-      "amount" in c && typeof c.amount === "number"
-  );
+const StatCard: React.FC<StatCardProps> = ({ label, value, icon, accent, iconBg, valueColor }) => (
+  <div className={`relative flex items-center gap-4 rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm overflow-hidden`}>
+    <div className={`absolute right-0 top-0 bottom-0 w-1 rounded-r-xl ${accent}`} />
+    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${iconBg}`}>
+      {icon}
+    </div>
+    <div className="min-w-0">
+      <p className="text-xs text-gray-500 mb-0.5">{label}</p>
+      <p className={`text-lg font-bold tabular-nums leading-tight ${valueColor}`}>{value}</p>
+    </div>
+  </div>
+);
 
-  if (advisorCharges.length === 0) return null;
+export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, isAdvisor, total }) => {
+  if (charges.length === 0) return null;
 
-  const totalIssued = advisorCharges
-    .filter((c) => c.status === "issued")
-    .reduce((sum, c) => sum + c.amount, 0);
-
-  const totalPaid = advisorCharges
-    .filter((c) => c.status === "paid")
-    .reduce((sum, c) => sum + c.amount, 0);
-
-  const totalDraft = advisorCharges
-    .filter((c) => c.status === "draft")
-    .reduce((sum, c) => sum + c.amount, 0);
-
-  const totalCanceled = advisorCharges
-    .filter((c) => c.status === "canceled")
-    .reduce((sum, c) => sum + c.amount, 0);
-
-  const stats = [
-    {
-      label: "ממתין לגביה",
-      value: formatAmount(totalIssued),
-      icon: Clock,
-      colorClass: "text-primary-700 bg-primary-50 border-primary-200",
-      iconClass: "text-primary-500",
-      show: totalIssued > 0,
-    },
-    {
-      label: "שולם",
-      value: formatAmount(totalPaid),
-      icon: CheckCircle,
-      colorClass: "text-emerald-700 bg-emerald-50 border-emerald-200",
-      iconClass: "text-emerald-500",
-      show: totalPaid > 0,
-    },
-    {
-      label: "טיוטות",
-      value: formatAmount(totalDraft),
-      icon: TrendingUp,
-      colorClass: "text-gray-700 bg-gray-50 border-gray-200",
-      iconClass: "text-gray-400",
-      show: totalDraft > 0,
-    },
-    {
-      label: "מבוטל",
-      value: formatAmount(totalCanceled),
-      icon: XCircle,
-      colorClass: "text-red-700 bg-red-50 border-red-200",
-      iconClass: "text-red-400",
-      show: totalCanceled > 0,
-    },
-  ].filter((s) => s.show);
-
-  if (stats.length === 0) return null;
+  const amountOrCount = (status: string): string => {
+    const group = charges.filter((c) => c.status === status);
+    if (!isAdvisor) return String(group.length);
+    const sum = group
+      .filter((c): c is ChargeResponse & { amount: number } =>
+        "amount" in c && typeof c.amount === "number"
+      )
+      .reduce((s, c) => s + c.amount, 0);
+    return formatILS(sum);
+  };
 
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-xl border border-gray-100 bg-white px-5 py-3 shadow-sm">
-      <span className="text-xs font-semibold text-gray-400 shrink-0">סיכום עמוד:</span>
-      {stats.map((stat) => (
-        <div
-          key={stat.label}
-          className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 ${stat.colorClass}`}
-        >
-          <stat.icon className={`h-3.5 w-3.5 shrink-0 ${stat.iconClass}`} />
-          <span className="text-xs font-semibold tabular-nums">{stat.value}</span>
-          <span className="text-xs opacity-70">{stat.label}</span>
-        </div>
-      ))}
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <StatCard
+        label="ממתין לגביה"
+        value={amountOrCount("issued")}
+        icon={<Clock className="h-5 w-5 text-primary-600" />}
+        accent="bg-primary-500"
+        iconBg="bg-primary-50"
+        valueColor="text-primary-700"
+      />
+      <StatCard
+        label="שולם"
+        value={amountOrCount("paid")}
+        icon={<CheckCircle2 className="h-5 w-5 text-emerald-600" />}
+        accent="bg-emerald-500"
+        iconBg="bg-emerald-50"
+        valueColor="text-emerald-700"
+      />
+      <StatCard
+        label="טיוטה"
+        value={amountOrCount("draft")}
+        icon={<FileText className="h-5 w-5 text-gray-500" />}
+        accent="bg-gray-400"
+        iconBg="bg-gray-50"
+        valueColor="text-gray-700"
+      />
+      <StatCard
+        label="בוטל"
+        value={amountOrCount("canceled")}
+        icon={<XCircle className="h-5 w-5 text-red-500" />}
+        accent="bg-red-400"
+        iconBg="bg-red-50"
+        valueColor="text-red-600"
+      />
     </div>
   );
 };
