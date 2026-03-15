@@ -123,7 +123,7 @@ export const SelectedClientDisplay: React.FC<SelectedClientDisplayProps> = ({
 }) => (
   <div className="space-y-1">
     <label className="block text-sm font-medium text-gray-700">{label}</label>
-    <div className="flex items-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-3 py-2.5">
+    <div className="flex items-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-3 py-3">
       <span className="flex-1 text-sm font-medium text-primary-900">{name}</span>
       <span className="text-xs text-primary-500">#{id}</span>
       <button

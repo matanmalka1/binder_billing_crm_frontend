@@ -1,11 +1,11 @@
-import { MessageSquare, Trash2 } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import type { Column } from "../../../components/ui/DataTable";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { Badge } from "../../../components/ui/Badge";
 import { MonoValue } from "../../../components/ui/MonoValue";
 import { formatDate } from "../../../utils/utils";
 import { fmtCurrency, MONTH_NAMES, STATUS_LABEL, STATUS_VARIANT } from "../utils";
-import { EditAdvancePaymentInline } from "./EditAdvancePaymentInline";
+import { AdvancePaymentRowActions } from "./AdvancePaymentRowActions";
 
 interface BuildColumnsOptions {
   canEdit: boolean;
@@ -79,28 +79,16 @@ export const buildAdvancePaymentColumns = (
     base.push({
       key: "actions",
       header: "",
+      headerClassName: "w-10",
+      className: "w-10",
       render: (row) => (
-        <div className="flex items-center gap-1">
-          <EditAdvancePaymentInline
-            row={row}
-            isUpdating={options.updatingId === row.id}
-            onSave={(paid_amount, status, expected_amount) => options.onUpdate(row.id, paid_amount, status, expected_amount)}
-          />
-          <button
-            type="button"
-            disabled={options.deletingId === row.id}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (window.confirm("האם למחוק את המקדמה?")) {
-                options.onDelete(row.id);
-              }
-            }}
-            className="rounded p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
-            title="מחק"
-          >
-            <Trash2 size={13} />
-          </button>
-        </div>
+        <AdvancePaymentRowActions
+          row={row}
+          updatingId={options.updatingId}
+          deletingId={options.deletingId}
+          onUpdate={options.onUpdate}
+          onDelete={options.onDelete}
+        />
       ),
     });
   }

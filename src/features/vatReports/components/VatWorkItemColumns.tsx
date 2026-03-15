@@ -1,17 +1,11 @@
-import { Button } from "../../../components/ui/Button";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { VatWorkItemResponse } from "../../../api/vatReports.api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatDateTime } from "../../../utils/utils";
-import {
-  canMarkMaterialsComplete,
-  canMarkReadyForReview,
-  canFile,
-  isFiled,
-  formatVatAmount,
-} from "../utils";
+import { formatVatAmount } from "../utils";
 import type { VatWorkItemAction } from "../hooks/useVatWorkItemsPage";
+import { VatWorkItemRowActions } from "./VatWorkItemRowActions";
 
 const statusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   pending_materials: "warning",
@@ -20,76 +14,6 @@ const statusVariants: Record<string, "success" | "warning" | "error" | "info" | 
   ready_for_review: "warning",
   filed: "success",
 };
-
-interface ActionCellProps {
-  item: VatWorkItemResponse;
-  isAdvisor: boolean;
-  isLoading: boolean;
-  isDisabled: boolean;
-  runAction: (itemId: number, action: VatWorkItemAction) => Promise<void>;
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-const ActionCell: React.FC<ActionCellProps> = ({
-  item,
-  isAdvisor,
-  isLoading,
-  isDisabled,
-  runAction,
-}) => {
-  const stop = (fn: () => void) => (e: React.MouseEvent) => { e.stopPropagation(); fn(); };
-
-  return (
-    <div className="flex flex-wrap items-center gap-1.5">
-      {canMarkMaterialsComplete(item.status) && (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          isLoading={isLoading}
-          disabled={isDisabled}
-          title="מאשר שהחומרים התקבלו במשרד ומעביר לשלב הקלדה"
-          onClick={stop(() => void runAction(item.id, "materialsComplete"))}
-          className="border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50"
-        >
-          אישור קבלה
-        </Button>
-      )}
-      {canMarkReadyForReview(item.status) && (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          isLoading={isLoading}
-          disabled={isDisabled}
-          title="מסמן את התיק כמוכן לבדיקת היועץ"
-          onClick={stop(() => void runAction(item.id, "readyForReview"))}
-          className="border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50"
-        >
-          שלח לבדיקה
-        </Button>
-      )}
-      {isAdvisor && canFile(item.status) && (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          isLoading={isLoading}
-          disabled={isDisabled}
-          title="מסמן את הדוח כהוגש ידנית — יש להגיש בנפרד לרשות המסים"
-          onClick={stop(() => void runAction(item.id, "file"))}
-          className="border-primary-200 bg-primary-50 text-primary-700 hover:bg-primary-100"
-        >
-          סמן כהוגש
-        </Button>
-      )}
-      {isFiled(item.status) && (
-        <span className="text-xs text-gray-400">הוגש</span>
-      )}
-    </div>
-  );
-};
-ActionCell.displayName = "ActionCell";
 
 interface BuildColumnsParams {
   isAdvisor: boolean;
@@ -165,9 +89,11 @@ export const buildVatWorkItemColumns = ({
   },
   {
     key: "actions",
-    header: "פעולות",
+    header: "",
+    headerClassName: "w-10",
+    className: "w-10",
     render: (item) => (
-      <ActionCell
+      <VatWorkItemRowActions
         item={item}
         isAdvisor={isAdvisor}
         isLoading={actionLoadingId === item.id}

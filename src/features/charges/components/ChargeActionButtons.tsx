@@ -1,3 +1,4 @@
+import { CheckCircle2 } from "lucide-react";
 import { cn } from "../../../utils/utils";
 import { canCancel, canIssue, canMarkPaid } from "../utils";
 
@@ -40,8 +41,9 @@ export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
           type="button"
           disabled={disabled}
           onClick={onMarkPaid}
-          className={cn(btn, "border-green-200 bg-green-50 text-green-700 hover:bg-green-100")}
+          className={cn(btn, "gap-1.5 border-green-200 bg-green-50 text-green-700 hover:bg-green-100")}
         >
+          <CheckCircle2 className="h-3.5 w-3.5" />
           סימון שולם
         </button>
       )}

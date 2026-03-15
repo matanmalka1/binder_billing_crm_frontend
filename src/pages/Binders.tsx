@@ -16,29 +16,30 @@ type DrawerMode = "detail" | "receive" | null;
 
 export const Binders: React.FC = () => {
   const [drawerMode, setDrawerMode] = useState<DrawerMode>(null);
-  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [confirmDeleteForId, setConfirmDeleteForId] = useState<number | null>(null);
+  const [confirmReturnForId, setConfirmReturnForId] = useState<number | null>(null);
+  const [pickupPersonName, setPickupPersonName] = useState("");
 
   const {
-    activeActionKey,
-    activeActionKeyRef,
+    actionLoadingId,
     binders,
     total,
-    cancelPendingAction,
-    confirmPendingAction,
     error,
     filters,
     deepLinkBinderId,
     selectedBinder,
-    onAction,
     handleFilterChange,
     handleSort,
     setPage,
     handleSelectBinder,
     handleCloseDrawer,
     loading,
-    pendingAction,
     deleteBinder,
     isDeleting,
+    markReady,
+    isMarkingReady,
+    returnBinder,
+    isReturning,
   } = useBindersPage();
 
   const handleOpenReceive = () => setDrawerMode("receive");
@@ -55,22 +56,31 @@ export const Binders: React.FC = () => {
     }
   };
 
-  // When a binder is selected via row click, switch to detail mode
   const handleRowClick = (binder: { id: number }) => {
     handleSelectBinder(binder);
     setDrawerMode("detail");
   };
 
+  const handleReturnConfirm = async () => {
+    if (confirmReturnForId === null) return;
+    await returnBinder(confirmReturnForId, pickupPersonName);
+    setConfirmReturnForId(null);
+    setPickupPersonName("");
+  };
+
   const columns = useMemo(
     () =>
       buildBindersColumns({
-        activeActionKeyRef,
-        onAction,
+        actionLoadingId,
+        onMarkReady: (id) => void markReady(id),
+        onReturn: (id) => setConfirmReturnForId(id),
+        onOpenDetail: (id) => { handleSelectBinder({ id }); setDrawerMode("detail"); },
+        onDelete: (id) => setConfirmDeleteForId(id),
         sortBy: filters.sort_by,
         sortDir: filters.sort_dir,
         onSort: handleSort,
       }),
-    [activeActionKeyRef, onAction, filters.sort_by, filters.sort_dir, handleSort],
+    [actionLoadingId, markReady, handleSelectBinder, handleSort, filters.sort_by, filters.sort_dir],
   );
 
   const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
@@ -124,31 +134,42 @@ export const Binders: React.FC = () => {
       )}
 
       <ConfirmDialog
-        open={Boolean(pendingAction)}
-        title={pendingAction?.confirm?.title ?? "אישור פעולה"}
-        message={pendingAction?.confirm?.message ?? "האם להמשיך בביצוע הפעולה?"}
-        confirmLabel={pendingAction?.confirm?.confirmLabel ?? "אישור"}
-        cancelLabel={pendingAction?.confirm?.cancelLabel ?? "ביטול"}
-        isLoading={activeActionKey === pendingAction?.uiKey}
-        inputs={pendingAction?.confirm?.inputs}
-        onConfirm={(inputValues) => void confirmPendingAction(inputValues)}
-        onCancel={cancelPendingAction}
-      />
+        open={confirmReturnForId !== null}
+        title="החזרת קלסר"
+        message={
+          confirmReturnForId !== null
+            ? `האם להחזיר את קלסר #${confirmReturnForId}?`
+            : "האם להחזיר את הקלסר?"
+        }
+        confirmLabel="החזר קלסר"
+        cancelLabel="ביטול"
+        isLoading={isReturning}
+        onConfirm={() => void handleReturnConfirm()}
+        onCancel={() => { setConfirmReturnForId(null); setPickupPersonName(""); }}
+      >
+        <input
+          type="text"
+          className="mt-3 w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+          placeholder="שם האיש המאסף *"
+          value={pickupPersonName}
+          onChange={(e) => setPickupPersonName(e.target.value)}
+        />
+      </ConfirmDialog>
 
       <ConfirmDialog
-        open={isConfirmingDelete}
+        open={confirmDeleteForId !== null}
         title="מחיקת קלסר"
-        message={selectedBinder ? `האם למחוק את הקלסר ${selectedBinder.binder_number}? פעולה זו אינה ניתנת לביטול.` : "האם למחוק את הקלסר?"}
+        message={`האם למחוק את קלסר #${confirmDeleteForId}? פעולה זו אינה ניתנת לביטול.`}
         confirmLabel="מחק קלסר"
         cancelLabel="ביטול"
         isLoading={isDeleting}
         onConfirm={async () => {
-          if (selectedBinder) {
-            await deleteBinder(selectedBinder.id);
+          if (confirmDeleteForId !== null) {
+            await deleteBinder(confirmDeleteForId);
           }
-          setIsConfirmingDelete(false);
+          setConfirmDeleteForId(null);
         }}
-        onCancel={() => setIsConfirmingDelete(false)}
+        onCancel={() => setConfirmDeleteForId(null)}
       />
 
       <BinderDrawer
@@ -156,8 +177,8 @@ export const Binders: React.FC = () => {
         mode={effectiveMode}
         binder={selectedBinder}
         onClose={handleCloseDrawerAll}
-        onAction={onAction}
-        activeActionKeyRef={activeActionKeyRef}
+        onMarkReady={selectedBinder ? () => void markReady(selectedBinder.id) : undefined}
+        actionLoading={isMarkingReady}
         receiveForm={receive.form}
         clientQuery={receive.clientQuery}
         selectedClient={receive.selectedClient}
@@ -165,8 +186,6 @@ export const Binders: React.FC = () => {
         onClientQueryChange={receive.handleClientQueryChange}
         onReceiveSubmit={receive.handleSubmit}
         isSubmitting={receive.isSubmitting}
-        onDelete={effectiveMode === "detail" ? () => setIsConfirmingDelete(true) : undefined}
-        isDeleting={isDeleting}
       />
     </div>
   );

@@ -69,7 +69,7 @@ export const AdvancePaymentReportView: React.FC = () => {
   );
 
   return (
-    <PageStateGuard isLoading={isLoading} error={error} header={header} loadingMessage="טוען דוח...">
+    <PageStateGuard isLoading={isLoading} error={error?.message ?? null} header={header} loadingMessage="טוען דוח...">
       {data && <AdvancePaymentReportTable data={data} />}
     </PageStateGuard>
   );

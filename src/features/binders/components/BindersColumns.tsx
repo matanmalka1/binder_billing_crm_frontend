@@ -1,21 +1,18 @@
 import { Link } from "react-router-dom";
 import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
-import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
 import { MonoValue } from "../../../components/ui/MonoValue";
 import { SortableHeader } from "../../../components/ui/SortableHeader";
 import type { BinderResponse } from "../types";
-import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
-import { mapActions } from "../../../lib/actions/mapActions";
 import {
   getStatusLabel,
   getBinderTypeLabel,
   getSignalLabel,
 } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
-import { type RefObject } from "react";
 import { BINDER_SIGNAL_VARIANTS, BINDER_STATUS_VARIANTS, SIGNAL_DOT_COLORS } from "../constants";
+import { BinderRowActions } from "./BinderRowActions";
 
 /* ─── Client + signals cell ──────────────────────────────────── */
 
@@ -49,56 +46,25 @@ const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
 };
 ClientCell.displayName = "ClientCell";
 
-/* ─── Smart action cell ──────────────────────────────────────── */
-
-interface ActionCellProps {
-  binder: BinderResponse;
-  activeActionKeyRef: RefObject<string | null>;
-  onAction: (action: ActionCommand) => void;
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-const ActionCell: React.FC<ActionCellProps> = ({ binder, activeActionKeyRef, onAction }) => {
-  const actions = mapActions(binder.available_actions as BackendAction[] | null | undefined);
-  const action =
-    actions.find((candidate) => candidate.key === "ready") ??
-    actions.find((candidate) => candidate.key === "return") ??
-    actions[0] ??
-    null;
-
-  if (!action) return <span className="text-sm text-gray-400">—</span>;
-
-  const isReadyAction = action.key === "ready";
-
-  return (
-    <Button
-      type="button"
-      variant="primary"
-      size="sm"
-      onClick={(e) => { e.stopPropagation(); onAction(action); }}
-      isLoading={activeActionKeyRef.current === action.uiKey}
-      disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
-      className={isReadyAction ? "bg-green-600 text-white hover:bg-green-700 active:bg-green-800 shadow-sm" : undefined}
-    >
-      {action.label}
-    </Button>
-  );
-};
-ActionCell.displayName = "ActionCell";
-
 /* ─── Column builder ─────────────────────────────────────────── */
 
 interface BuildBindersColumnsParams {
-  activeActionKeyRef: RefObject<string | null>;
-  onAction: (action: ActionCommand) => void;
+  actionLoadingId: number | null;
+  onMarkReady: (binderId: number) => void;
+  onReturn: (binderId: number) => void;
+  onOpenDetail: (binderId: number) => void;
+  onDelete: (binderId: number) => void;
   sortBy: string;
   sortDir: string;
   onSort: (key: string) => void;
 }
 
 export const buildBindersColumns = ({
-  activeActionKeyRef,
-  onAction,
+  actionLoadingId,
+  onMarkReady,
+  onReturn,
+  onOpenDetail,
+  onDelete,
   sortBy,
   sortDir,
   onSort,
@@ -165,9 +131,19 @@ export const buildBindersColumns = ({
   },
   {
     key: "actions",
-    header: "פעולות",
+    header: "",
+    headerClassName: "w-10",
+    className: "w-10",
     render: (binder) => (
-      <ActionCell binder={binder} activeActionKeyRef={activeActionKeyRef} onAction={onAction} />
+      <BinderRowActions
+        binderId={binder.id}
+        status={binder.status}
+        disabled={actionLoadingId !== null}
+        onOpenDetail={() => onOpenDetail(binder.id)}
+        onMarkReady={() => onMarkReady(binder.id)}
+        onReturn={() => onReturn(binder.id)}
+        onDelete={() => onDelete(binder.id)}
+      />
     ),
   },
 ];

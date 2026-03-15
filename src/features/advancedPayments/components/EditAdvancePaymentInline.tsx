@@ -14,12 +14,14 @@ interface EditAdvancePaymentInlineProps {
   row: AdvancePaymentRow;
   isUpdating: boolean;
   onSave: (paid_amount: number | null, status: AdvancePaymentStatus, expected_amount: number | null) => void;
+  onCancel?: () => void;
 }
 
 export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> = ({
   row,
   isUpdating,
   onSave,
+  onCancel: onCancelProp,
 }) => {
   const [editing, setEditing] = useState(false);
   const [paidAmount, setPaidAmount] = useState<string>("");
@@ -42,7 +44,7 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
     setEditing(false);
   };
 
-  const handleCancel = () => setEditing(false);
+  const handleCancel = () => { setEditing(false); onCancelProp?.(); };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") { e.preventDefault(); handleSave(); }

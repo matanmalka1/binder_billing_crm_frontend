@@ -13,7 +13,7 @@ const formatILS = (amount: number): string =>
     currency: "ILS",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  });
+  }).replace(/\s/g, "");
 
 interface StatCardProps {
   label: string;
@@ -37,7 +37,7 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, icon, accent, iconBg,
   </div>
 );
 
-export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, isAdvisor, total }) => {
+export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, isAdvisor }) => {
   if (charges.length === 0) return null;
 
   const amountOrCount = (status: string): string => {

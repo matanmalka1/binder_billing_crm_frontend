@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { History, Send, X, FileSignature, Link2, ClipboardCheck, Clock, AlertCircle, Copy, Check } from "lucide-react";
+import { FileSignature, ClipboardCheck, Clock, AlertCircle } from "lucide-react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { PageStateGuard } from "../../components/ui/PageStateGuard";
 import { DataTable } from "../../components/ui/DataTable";
@@ -8,6 +8,7 @@ import { StatsCard } from "../../components/ui/StatsCard";
 import { Button } from "../../components/ui/Button";
 import { StatusBadge } from "../../components/ui/StatusBadge";
 import { SignatureRequestAuditDrawer } from "../../features/signatureRequests/components/SignatureRequestAuditDrawer";
+import { SignatureRequestsPageRowActions } from "../../features/signatureRequests/components/SignatureRequestsPageRowActions";
 import { usePendingSignatureRequests } from "../../features/signatureRequests/hooks/usePendingSignatureRequests";
 import { useSignatureRequestActions } from "../../features/signatureRequests/hooks/useSignatureRequestActions";
 import { buildSigningUrl } from "../../features/signatureRequests/utils";
@@ -26,31 +27,6 @@ import { formatDate } from "../../utils/utils";
 import type { SendSignatureRequestResponse } from "../../api/signatureRequests.api";
 
 const TERMINAL_STATUSES = new Set(["signed", "expired", "canceled", "declined"]);
-
-const CopyButton: React.FC<{ text: string }> = ({ text }) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // clipboard not available
-    }
-  };
-
-  return (
-    <button
-      type="button"
-      onClick={handleCopy}
-      title="העתק קישור"
-      className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
-    >
-      {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
-    </button>
-  );
-};
 
 export const SignatureRequestsPage: React.FC = () => {
   const { items, total, clientNames, isLoading, error } = usePendingSignatureRequests();
@@ -126,59 +102,20 @@ export const SignatureRequestsPage: React.FC = () => {
       },
       {
         key: "actions",
-        header: "פעולות",
-        render: (req: SignatureRequestResponse) => {
-          const isDraft = req.status === "draft";
-          const isTerminal = TERMINAL_STATUSES.has(req.status);
-          const signingUrl = signingUrls[req.id];
-          return (
-            <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-              {isDraft && (
-                <button
-                  type="button"
-                  disabled={isSending}
-                  onClick={() => void handleSend(req.id)}
-                  className="inline-flex items-center gap-1 rounded-md border border-primary-200 bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-700 transition-colors hover:bg-primary-100 disabled:opacity-50"
-                >
-                  <Send className="h-3 w-3" />
-                  שלח
-                </button>
-              )}
-              {req.status === "pending_signature" && signingUrl && (
-                <>
-                  <a
-                    href={signingUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50"
-                  >
-                    <Link2 className="h-3 w-3" />
-                    קישור
-                  </a>
-                  <CopyButton text={signingUrl} />
-                </>
-              )}
-              {!isTerminal && (
-                <button
-                  type="button"
-                  disabled={isCanceling}
-                  onClick={() => void cancel(req.id)}
-                  className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={() => setAuditRequestId(req.id)}
-                title="היסטוריית פעילות"
-                className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
-              >
-                <History className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          );
-        },
+        header: "",
+        headerClassName: "w-10",
+        className: "w-10",
+        render: (req: SignatureRequestResponse) => (
+          <SignatureRequestsPageRowActions
+            req={req}
+            signingUrl={signingUrls[req.id]}
+            isSending={isSending}
+            isCanceling={isCanceling}
+            onSend={(id) => void handleSend(id)}
+            onCancel={(id) => void cancel(id)}
+            onAudit={setAuditRequestId}
+          />
+        ),
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps

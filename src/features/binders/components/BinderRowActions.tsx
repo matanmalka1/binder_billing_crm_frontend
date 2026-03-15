@@ -1,28 +1,26 @@
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, Eye, FileText, MoreHorizontal, Trash2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Eye, MoreHorizontal, Trash2 } from "lucide-react";
 import { cn } from "../../../utils/utils";
-import { canCancel, canIssue, canMarkPaid } from "../utils";
+import { canMarkReady, canReturn } from "../utils";
 
-interface ChargeRowActionsProps {
-  chargeId: number;
+interface BinderRowActionsProps {
+  binderId: number;
   status: string;
   disabled?: boolean;
-  showActions?: boolean;
-  onIssue: () => void;
-  onMarkPaid: () => void;
-  onCancel: () => void;
   onOpenDetail: () => void;
+  onMarkReady: () => void;
+  onReturn: () => void;
+  onDelete: () => void;
 }
 
-export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
-  chargeId,
+export const BinderRowActions: React.FC<BinderRowActionsProps> = ({
+  binderId,
   status,
   disabled = false,
-  showActions = true,
-  onIssue,
-  onMarkPaid,
-  onCancel,
   onOpenDetail,
+  onMarkReady,
+  onReturn,
+  onDelete,
 }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -37,8 +35,6 @@ export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
-
-  const hasActions = showActions && (canIssue(status) || canMarkPaid(status) || canCancel(status));
 
   const item = (label: string, onClick: () => void, danger = false, icon?: React.ReactNode) => (
     <button
@@ -61,6 +57,8 @@ export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
     </button>
   );
 
+  const hasActions = canMarkReady(status) || canReturn(status);
+
   return (
     <div ref={ref} className="relative flex justify-center" onClick={(e) => e.stopPropagation()}>
       <button
@@ -68,22 +66,23 @@ export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
         disabled={disabled}
         onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
         className="flex h-7 w-7 items-center justify-center rounded-md border border-transparent text-gray-400 transition-colors hover:border-gray-200 hover:bg-gray-100 hover:text-gray-600 disabled:opacity-40"
-        aria-label={`פעולות לחיוב ${chargeId}`}
+        aria-label={`פעולות לקלסר ${binderId}`}
       >
         <MoreHorizontal className="h-4 w-4" />
       </button>
 
       {open && (
-        <div className="absolute left-0 top-8 z-50 min-w-[140px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
+        <div className="absolute left-0 top-8 z-50 min-w-[160px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
           {item("צפייה בפרטים", onOpenDetail, false, <Eye className="h-4 w-4" />)}
           {hasActions && <div className="my-1 border-t border-gray-100" />}
-          {showActions && canIssue(status) && item("הנפקה", onIssue, false, <FileText className="h-4 w-4" />)}
-          {showActions && canMarkPaid(status) && item("סימון שולם", onMarkPaid, false, <CheckCircle2 className="h-4 w-4" />)}
-          {showActions && canCancel(status) && item("ביטול", onCancel, true, <Trash2 className="h-4 w-4" />)}
+          {canMarkReady(status) && item("מוכן לאיסוף", onMarkReady, false, <CheckCircle2 className="h-4 w-4" />)}
+          {canReturn(status) && item("החזרה", onReturn, false, <ArrowLeft className="h-4 w-4" />)}
+          <div className="my-1 border-t border-gray-100" />
+          {item("מחק קלסר", onDelete, true, <Trash2 className="h-4 w-4" />)}
         </div>
       )}
     </div>
   );
 };
 
-ChargeRowActions.displayName = "ChargeRowActions";
+BinderRowActions.displayName = "BinderRowActions";

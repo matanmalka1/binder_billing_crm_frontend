@@ -1,12 +1,10 @@
-import { ExternalLink } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Badge } from "../../../components/ui/Badge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { SearchResult } from "../../../api/search.api";
-import { toQueryParams } from "../../../api/queryParams";
 import { cn } from "../../../utils/utils";
 import { getSignalLabel, getWorkStateLabel } from "../../../utils/enums";
 import { getResultColor, getResultIcon, getResultLabel } from "./SearchResultMeta";
+import { SearchRowActions } from "./SearchRowActions";
 
 type BadgeVariant = "error" | "warning" | "info" | "neutral";
 
@@ -21,15 +19,6 @@ const WORK_STATE_STYLES: Record<string, string> = {
   waiting_for_work: "text-gray-500",
   in_progress: "text-primary-700",
   completed: "text-green-700",
-};
-
-const buildDetailUrl = (result: SearchResult): string | null => {
-  if (result.result_type === "client") return `/clients/${result.client_id}`;
-  if (result.result_type === "binder" && result.binder_id) {
-    const params = toQueryParams({ binder_id: result.binder_id, client_id: result.client_id });
-    return `/binders?${params.toString()}`;
-  }
-  return null;
 };
 
 export const searchColumns: Column<SearchResult>[] = [
@@ -93,26 +82,9 @@ export const searchColumns: Column<SearchResult>[] = [
   },
   {
     key: "actions",
-    header: "פעולות",
-    render: (result) => {
-      const url = buildDetailUrl(result);
-      return url ? (
-        <Link
-          to={url}
-          onClick={(e) => e.stopPropagation()}
-          className={cn(
-            "inline-flex items-center gap-1.5 rounded-lg",
-            "border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium",
-            "text-gray-600 shadow-sm transition-all duration-200",
-            "hover:border-primary-400 hover:bg-primary-50 hover:text-primary-800 hover:shadow-md",
-          )}
-        >
-          <ExternalLink className="h-3 w-3" />
-          פירוט
-        </Link>
-      ) : (
-        <span className="text-sm text-gray-300">—</span>
-      );
-    },
+    header: "",
+    headerClassName: "w-10",
+    className: "w-10",
+    render: (result) => <SearchRowActions result={result} />,
   },
 ];

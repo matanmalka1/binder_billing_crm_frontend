@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Send, X, Copy, Check, ChevronDown, ChevronUp, Link2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Link2 } from "lucide-react";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { SignatureRequestResponse } from "../../../api/signatureRequests.api";
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "../../../utils/enums";
+import { formatDate, formatDateTime } from "../../../utils/utils";
+import { SignatureRequestRowActions } from "./SignatureRequestRowActions";
 
 const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "success" | "error"> = {
   draft: "neutral",
@@ -12,8 +14,6 @@ const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "
   expired: "warning",
   canceled: "neutral",
 };
-import { formatDate, formatDateTime } from "../../../utils/utils";
-import { toast } from "../../../utils/toast";
 
 // ── Shared field row for expanded details ─────────────────────────────────────
 
@@ -46,19 +46,7 @@ export const SignatureRequestRow: React.FC<Props> = ({
   onCancel,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    if (!signingUrl) return;
-    await navigator.clipboard.writeText(signingUrl);
-    setCopied(true);
-    toast.success("הקישור הועתק");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const isDraft = request.status === "draft";
   const isPending = request.status === "pending_signature";
-  const isTerminal = ["signed", "declined", "expired", "canceled"].includes(request.status);
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-sm">
@@ -75,41 +63,15 @@ export const SignatureRequestRow: React.FC<Props> = ({
         </div>
 
         <div className="flex shrink-0 items-center gap-1">
-          {canManage && isDraft && (
-            <button
-              type="button"
-              disabled={isSending}
-              onClick={() => void onSend(request.id)}
-              className="inline-flex items-center gap-1.5 rounded-md border border-primary-200 bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-700 transition-colors hover:bg-primary-100 disabled:opacity-50"
-            >
-              <Send className="h-3 w-3" />
-              שלח
-            </button>
-          )}
-
-          {isPending && signingUrl && (
-            <button
-              type="button"
-              onClick={() => void handleCopy()}
-              title="העתק קישור חתימה"
-              className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
-            >
-              {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
-            </button>
-          )}
-
-          {canManage && !isTerminal && (
-            <button
-              type="button"
-              disabled={isCanceling}
-              onClick={() => void onCancel(request.id)}
-              title="בטל בקשה"
-              className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          )}
-
+          <SignatureRequestRowActions
+            request={request}
+            signingUrl={signingUrl}
+            isSending={isSending}
+            isCanceling={isCanceling}
+            canManage={canManage}
+            onSend={onSend}
+            onCancel={onCancel}
+          />
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
@@ -132,13 +94,7 @@ export const SignatureRequestRow: React.FC<Props> = ({
           {isPending && signingUrl && (
             <div className="flex items-center gap-2 pt-1">
               <Link2 className="h-3.5 w-3.5 shrink-0 text-gray-400" />
-              <button
-                type="button"
-                onClick={() => void handleCopy()}
-                className="break-all text-left text-xs text-primary-600 hover:underline"
-              >
-                {signingUrl}
-              </button>
+              <span className="break-all text-xs text-primary-600">{signingUrl}</span>
             </div>
           )}
         </div>

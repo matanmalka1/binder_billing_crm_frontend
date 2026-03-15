@@ -14,7 +14,7 @@ export const getChargeAmountText = (charge: ChargeResponse): string => {
     currency: charge.currency ?? "ILS",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  });
+  }).replace(/\s/g, "");
 };
 
 const CHARGE_TYPE_LABELS: Record<string, string> = {

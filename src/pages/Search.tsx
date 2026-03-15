@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
-import { Search as SearchIcon, FileSearch, X } from "lucide-react";
+import { Search as SearchIcon, FileSearch } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { ToolbarContainer } from "../components/ui/ToolbarContainer";
+import { Input } from "../components/ui/Input";
 import { DataTable } from "../components/ui/DataTable";
 import { Alert } from "../components/ui/Alert";
 import { PaginationCard } from "../components/ui/PaginationCard";
@@ -10,7 +11,6 @@ import { SearchFiltersBar } from "../features/search/components/SearchFiltersBar
 import { searchColumns } from "../features/search/components/SearchColumns";
 import { DocumentResultsSection } from "../features/search/components/DocumentResultsSection";
 import { useSearchPage } from "../features/search/hooks/useSearchPage";
-import { cn } from "../utils/utils";
 import type { SearchResult } from "../api/search.api";
 
 export const Search: React.FC = () => {
@@ -41,31 +41,17 @@ export const Search: React.FC = () => {
       />
 
       {/* Hero search bar */}
-      <ToolbarContainer className="flex items-center gap-3 py-3">
-        <SearchIcon className="h-5 w-5 shrink-0 text-gray-400" />
-        <input
+      <ToolbarContainer>
+        <Input
           ref={inputRef}
           type="text"
           value={filters.query}
           onChange={(e) => handleFilterChange("query", e.target.value)}
           placeholder="חיפוש חופשי — שם לקוח, מספר קלסר..."
-          className={cn(
-            "min-w-0 flex-1 bg-transparent text-sm text-gray-900 placeholder:text-gray-400",
-            "outline-none",
-          )}
+          startIcon={<SearchIcon className="h-4 w-4" />}
           autoFocus
           dir="rtl"
         />
-        {filters.query && (
-          <button
-            type="button"
-            onClick={() => handleFilterChange("query", "")}
-            className="shrink-0 rounded-md p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
-            aria-label="נקה חיפוש"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
       </ToolbarContainer>
 
       {/* Advanced filters */}

@@ -1,9 +1,8 @@
-import { UserCheck, UserX, KeyRound, Pencil } from "lucide-react";
 import { Badge } from "../../../components/ui/Badge";
-import { Button } from "../../../components/ui/Button";
 import type { Column } from "../../../components/ui/DataTable";
 import type { UserResponse } from "../../../api/users.api";
 import { formatDateTime } from "../../../utils/utils";
+import { UserRowActions } from "./UserRowActions";
 
 const ROLE_LABELS: Record<string, string> = {
   advisor: "יועץ",
@@ -73,43 +72,17 @@ export const buildUserColumns = ({
   },
   {
     key: "actions",
-    header: "פעולות",
+    header: "",
+    headerClassName: "w-10",
+    className: "w-10",
     render: (user) => (
-      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onEdit(user)}
-          title="עריכה"
-          className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-        >
-          <Pencil className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onResetPassword(user)}
-          title="איפוס סיסמה"
-          className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-        >
-          <KeyRound className="h-4 w-4" />
-        </Button>
-        {user.id !== currentUserId && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onToggleActive(user)}
-            title={user.is_active ? "השבתה" : "הפעלה"}
-            className="rounded-md p-1.5 hover:bg-gray-100"
-          >
-            {user.is_active ? (
-              <UserX className="h-4 w-4 text-red-500" />
-            ) : (
-              <UserCheck className="h-4 w-4 text-green-600" />
-            )}
-          </Button>
-        )}
-      </div>
+      <UserRowActions
+        user={user}
+        currentUserId={currentUserId}
+        onEdit={onEdit}
+        onResetPassword={onResetPassword}
+        onToggleActive={onToggleActive}
+      />
     ),
   },
 ];

@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { bindersApi } from "../../../api/binders.api";
 import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
-import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
@@ -49,19 +48,6 @@ export const useBindersPage = () => {
   const binderDetailQuery = useBinderDetail(needsFallbackDetail ? deepLinkBinderIdOrNull : null);
   const selectedBinder = pageMatch ?? binderDetailQuery.data ?? null;
 
-  const {
-    activeActionKey,
-    activeActionKeyRef,
-    cancelPendingAction,
-    confirmPendingAction,
-    handleAction: onAction,
-    pendingAction,
-  } = useActionRunner({
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: QK.binders.all }),
-    errorFallback: "שגיאה בביצוע פעולת קלסר",
-    canonicalAction: true,
-  });
-
   const handleFilterChange = (name: string, value: string) => {
     setFilter(name, value);
   };
@@ -98,9 +84,34 @@ export const useBindersPage = () => {
     onError: (err) => showErrorToast(err, "שגיאה במחיקת קלסר"),
   });
 
+  const markReadyMutation = useMutation({
+    mutationFn: (binderId: number) => bindersApi.ready(binderId),
+    onSuccess: () => {
+      toast.success("הקלסר סומן כמוכן לאיסוף");
+      void queryClient.invalidateQueries({ queryKey: QK.binders.all });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה בסימון קלסר כמוכן"),
+  });
+
+  const returnBinderMutation = useMutation({
+    mutationFn: ({ binderId, pickupPersonName }: { binderId: number; pickupPersonName: string }) =>
+      bindersApi.returnBinder(binderId, { pickup_person_name: pickupPersonName }),
+    onSuccess: () => {
+      toast.success("הקלסר הוחזר בהצלחה");
+      void queryClient.invalidateQueries({ queryKey: QK.binders.all });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה בהחזרת קלסר"),
+  });
+
+  const actionLoadingId =
+    markReadyMutation.isPending
+      ? (markReadyMutation.variables as number | undefined) ?? null
+      : returnBinderMutation.isPending
+      ? (returnBinderMutation.variables as { binderId: number } | undefined)?.binderId ?? null
+      : null;
+
   return {
-    activeActionKey,
-    activeActionKeyRef,
+    actionLoadingId,
     deepLinkBinderId,
     selectedBinder,
     binders: bindersQuery.data?.items ?? [],
@@ -109,18 +120,18 @@ export const useBindersPage = () => {
       ? getErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת קלסרים")
       : null,
     filters,
-    onAction,
     handleFilterChange,
     handleSort,
     setPage,
     handleSelectBinder,
     handleCloseDrawer,
     loading: bindersQuery.isPending,
-    pendingAction,
-    cancelPendingAction,
-    confirmPendingAction,
     deleteBinder: (binderId: number) => deleteMutation.mutateAsync(binderId),
     isDeleting: deleteMutation.isPending,
-    deletingId: deleteMutation.isPending ? (deleteMutation.variables as number | undefined) : null,
+    markReady: (binderId: number) => markReadyMutation.mutateAsync(binderId),
+    isMarkingReady: markReadyMutation.isPending,
+    returnBinder: (binderId: number, pickupPersonName: string) =>
+      returnBinderMutation.mutateAsync({ binderId, pickupPersonName }),
+    isReturning: returnBinderMutation.isPending,
   };
 };

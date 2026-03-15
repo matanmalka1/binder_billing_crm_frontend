@@ -8,6 +8,7 @@ import { PaginationCard } from "../components/ui/PaginationCard";
 import { Button } from "../components/ui/Button";
 import { ChargesCreateModal } from "../features/charges/components/ChargesCreateModal";
 import { ChargesFiltersCard } from "../features/charges/components/ChargesFiltersCard";
+import { ToolbarContainer } from "../components/ui/ToolbarContainer";
 import { ChargesSummaryBar } from "../features/charges/components/ChargesSummaryBar";
 import { buildChargeColumns } from "../features/charges/components/ChargeColumns";
 import { ChargeDetailDrawer } from "../features/charges/components/ChargeDetailDrawer";
@@ -87,11 +88,13 @@ export const Charges: React.FC = () => {
         />
       )}
 
-      <ChargesFiltersCard
-        filters={filters}
-        onFilterChange={setFilter}
-        onClear={() => setSearchParams(new URLSearchParams())}
-      />
+      <ToolbarContainer>
+        <ChargesFiltersCard
+          filters={filters}
+          onFilterChange={setFilter}
+          onClear={() => setSearchParams(new URLSearchParams())}
+        />
+      </ToolbarContainer>
 
       {isAdvisor && selectedIds.size > 0 && (
         <ChargeBulkToolbar

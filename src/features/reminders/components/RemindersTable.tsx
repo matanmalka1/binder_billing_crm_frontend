@@ -1,11 +1,11 @@
 import { Calendar } from "lucide-react";
 import { DataTable, type Column } from "../../../components/ui/DataTable";
 import { Badge } from "../../../components/ui/Badge";
-import { Button } from "../../../components/ui/Button";
 import { TruncateText } from "../../../components/ui/TruncateText";
 import { formatDate } from "../../../utils/utils";
 import type { Reminder } from "../types";
 import { reminderTypeLabels, statusLabels } from "../types";
+import { ReminderRowActions } from "./ReminderRowActions";
 
 interface RemindersTableProps {
   reminders: Reminder[];
@@ -89,26 +89,12 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
     },
     {
       key: "actions",
-      header: "פעולות",
-      render: (r) =>
-        r.status === "pending" ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              onCancel(r.id);
-            }}
-            isLoading={cancelingId === r.id}
-            disabled={cancelingId !== null}
-            className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100"
-          >
-            ביטול
-          </Button>
-        ) : (
-          <span className="text-sm text-gray-400">—</span>
-        ),
+      header: "",
+      headerClassName: "w-10",
+      className: "w-10",
+      render: (r) => (
+        <ReminderRowActions reminder={r} cancelingId={cancelingId} onCancel={onCancel} />
+      ),
     },
   ];
 
