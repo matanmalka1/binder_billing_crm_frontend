@@ -12,8 +12,19 @@ export interface SearchResult {
   signals?: string[] | null;
 }
 
+export interface DocumentSearchResult {
+  id: number;
+  client_id: number;
+  client_name: string;
+  document_type: string;
+  original_filename: string | null;
+  tax_year: number | null;
+  status: string;
+}
+
 export interface SearchResponse {
   results: SearchResult[];
+  documents: DocumentSearchResult[];
   page: number;
   page_size: number;
   total: number;
