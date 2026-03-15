@@ -16,8 +16,12 @@ import {
   ClipboardList,
   Settings,
   ChevronDown,
+  User as UserIcon,
+  LogOut,
 } from "lucide-react";
 import { cn } from "../../utils/utils";
+import { useAuthStore } from "../../store/auth.store";
+import { getRoleLabel } from "../../utils/enums";
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -153,6 +157,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     tax: true,
     settings: true,
   });
+  const { user, logout } = useAuthStore();
+  const handleLogout = () => { void logout(); };
 
   const toggleGroup = (key: string) => {
     setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -197,6 +203,49 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
           />
         ))}
       </nav>
+
+      {/* Profile */}
+      <div className="shrink-0 border-t border-white/5 px-2 py-3">
+        {isSidebarOpen ? (
+          <div className="flex items-center justify-between gap-2 px-3 py-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10">
+                <UserIcon className="h-4 w-4 text-gray-300" />
+              </div>
+              <div className="min-w-0 text-right">
+                <p className="truncate text-sm font-medium text-white leading-tight">
+                  {user?.full_name || "אורח"}
+                </p>
+                {user?.role && (
+                  <p className="truncate text-xs text-gray-400 leading-tight">
+                    {getRoleLabel(user.role)}
+                  </p>
+                )}
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="shrink-0 rounded-lg p-1.5 text-gray-400 hover:bg-white/5 hover:text-red-400 transition-colors"
+              aria-label="התנתקות"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2 py-1">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
+              <UserIcon className="h-4 w-4 text-gray-300" />
+            </div>
+            <button
+              onClick={handleLogout}
+              className="rounded-lg p-1.5 text-gray-400 hover:bg-white/5 hover:text-red-400 transition-colors"
+              aria-label="התנתקות"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+      </div>
     </aside>
   );
 };

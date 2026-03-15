@@ -1,6 +1,4 @@
-import { Menu, LogOut, User as UserIcon } from "lucide-react";
-import { useAuthStore } from "../../store/auth.store";
-import { getRoleLabel } from "../../utils/enums";
+import { Menu } from "lucide-react";
 import { NotificationBell } from "./NotificationBell";
 
 interface NavbarProps {
@@ -8,11 +6,6 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
-  const { user, logout } = useAuthStore();
-  const handleLogout = () => {
-    void logout();
-  };
-
   return (
     <header role="banner" className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 z-10 shrink-0">
       <div className="flex items-center gap-4">
@@ -28,27 +21,6 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
 
       <div className="flex items-center gap-6">
         <NotificationBell />
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <UserIcon className="w-4 h-4 text-gray-400" />
-          <span>
-            שלום,{" "}
-            <span className="font-semibold text-gray-900">
-              {user?.full_name || "אורח"}
-            </span>
-            {user?.role && (
-              <span className="mr-1 text-gray-500">
-                ({getRoleLabel(user.role)})
-              </span>
-            )}
-          </span>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-medium"
-        >
-          <LogOut className="w-4 h-4" />
-          <span>התנתקות</span>
-        </button>
       </div>
     </header>
   );

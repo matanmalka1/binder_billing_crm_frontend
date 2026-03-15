@@ -35,12 +35,14 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ ariaLabel, children 
     setOpen(true);
   };
 
+  const portalRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!open) return;
     const close = (e: MouseEvent) => {
-      if (triggerRef.current && triggerRef.current.contains(e.target as Node)) return;
-      // Delay so click handlers on portal items fire before the portal is removed
-      setTimeout(() => setOpen(false), 0);
+      if (triggerRef.current?.contains(e.target as Node)) return;
+      if (portalRef.current?.contains(e.target as Node)) return;
+      setOpen(false);
     };
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
@@ -68,6 +70,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ ariaLabel, children 
 
       {open && coords && createPortal(
         <div
+          ref={portalRef}
           style={{
             position: "fixed",
             top: openAbove ? undefined : coords.top,
