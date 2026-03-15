@@ -1,11 +1,10 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../components/layout/PageHeader";
-import { InlineToolbar } from "../components/ui/InlineToolbar";
+import { ToolbarContainer } from "../components/ui/ToolbarContainer";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { DataTable } from "../components/ui/DataTable";
-import { AccessBanner } from "../components/ui/AccessBanner";
-import { ErrorCard } from "../components/ui/ErrorCard";
+import { Alert } from "../components/ui/Alert";
 import { Button } from "../components/ui/Button";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { ClientsFiltersBar } from "../features/clients/components/ClientsFiltersBar";
@@ -18,7 +17,6 @@ export const Clients: React.FC = () => {
   const navigate = useNavigate();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showImportExport, setShowImportExport] = useState(false);
-
   const {
     activeActionKey,
     clients,
@@ -35,14 +33,13 @@ export const Clients: React.FC = () => {
     createLoading,
     can,
   } = useClientsPage();
-
   const activeCount = clients.filter((c) => c.status === "active").length;
   const frozenCount = clients.filter((c) => c.status === "frozen").length;
-
   const columns = useMemo(() => buildClientColumns(), []);
-
-  const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
-
+  const totalPages = Math.max(
+    1,
+    Math.ceil(Math.max(total, 1) / filters.page_size),
+  );
   return (
     <div className="space-y-6">
       <PageHeader
@@ -50,37 +47,43 @@ export const Clients: React.FC = () => {
         description="רשימת כל הלקוחות במערכת"
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowImportExport(true)}
+            >
               ייבוא / ייצוא
             </Button>
             {can.createClients && (
-              <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+              <Button
+                variant="primary"
+                onClick={() => setShowCreateModal(true)}
+              >
                 לקוח חדש
               </Button>
             )}
           </div>
         }
       />
-
       {!can.editClients && (
-        <AccessBanner
+        <Alert
           variant="info"
           message="צפייה בלבד. יצירה ועריכה של לקוחות זמינה ליועצים בלבד."
         />
       )}
-
-      <InlineToolbar>
-        <ClientsFiltersBar filters={filters} onFilterChange={handleFilterChange} />
-      </InlineToolbar>
-
-      {error && <ErrorCard message={error} />}
-
+      <ToolbarContainer>
+        <ClientsFiltersBar
+          filters={filters}
+          onFilterChange={handleFilterChange}
+        />
+      </ToolbarContainer>
+      {error && <Alert variant="error" message={error} />}
       {!loading && total > 0 && (
         <p className="text-sm text-gray-500">
-          סה&quot;כ {total} לקוחות · {activeCount} פעילים · {frozenCount} מוקפאים
+          סה&quot;כ {total} לקוחות · {activeCount} פעילים · {frozenCount}{" "}
+          מוקפאים
         </p>
       )}
-
       <DataTable
         data={clients}
         columns={columns}
@@ -97,7 +100,6 @@ export const Clients: React.FC = () => {
             : undefined,
         }}
       />
-
       {!loading && clients.length > 0 && (
         <PaginationCard
           page={filters.page}
@@ -107,22 +109,21 @@ export const Clients: React.FC = () => {
           showPageSizeSelect
           pageSize={filters.page_size}
           pageSizeOptions={[20, 50, 100]}
-          onPageSizeChange={(size) => handleFilterChange("page_size", String(size))}
+          onPageSizeChange={(size) =>
+            handleFilterChange("page_size", String(size))
+          }
         />
       )}
-
       <CreateClientModal
         open={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onSubmit={createClient}
         isLoading={createLoading}
       />
-
       <ImportExportModal
         open={showImportExport}
         onClose={() => setShowImportExport(false)}
       />
-
       <ConfirmDialog
         open={Boolean(pendingAction)}
         title={pendingAction?.confirm?.title ?? "אישור פעולה"}
