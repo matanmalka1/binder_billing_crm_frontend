@@ -3,7 +3,7 @@ import { Edit2, Trash2 } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
-import { DescriptionList } from "../../../components/ui/DescriptionList";
+import { DefinitionList } from "../../../components/ui/DefinitionList";
 import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
 import type { ClientResponse } from "../../../api/clients.api";
@@ -72,7 +72,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
         ) : undefined
       }
     >
-      <DescriptionList columns={2} items={infoItems} />
+      <DefinitionList columns={2} items={infoItems} />
     </Card>
   );
 };
