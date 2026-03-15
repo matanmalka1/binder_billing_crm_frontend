@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ErrorCard } from "../../../components/ui/ErrorCard";
+import { Alert } from "../../../components/ui/Alert";
 import { TableSkeleton } from "../../../components/ui/TableSkeleton";
 import { DocumentsDataCards } from "./DocumentsDataCards";
 import { useClientDocumentsTab } from "../hooks/useClientDocumentsTab";
@@ -26,7 +26,7 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
   } = useClientDocumentsTab(clientId, taxYear);
 
   if (loading) return <TableSkeleton rows={4} columns={2} />;
-  if (error) return <ErrorCard message={error} />;
+  if (error) return <Alert variant="error" message={error} />;
 
   return (
     <DocumentsDataCards
