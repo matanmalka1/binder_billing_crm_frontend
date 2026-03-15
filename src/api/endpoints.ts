@@ -122,6 +122,7 @@ export const ENDPOINTS = {
     `/annual-reports/${id}/annex/${schedule}/${lineId}`,
   annualReportAmend: (id: number | string) => `/annual-reports/${id}/amend`,
   taxDeadlinesTimeline: "/tax-deadlines/timeline",
+  taxDeadlinesGenerate: "/tax-deadlines/generate",
   advancePaymentsKPI: "/advance-payments/kpi",
   advancePaymentsChart: "/advance-payments/chart",
   notifications: "/notifications",

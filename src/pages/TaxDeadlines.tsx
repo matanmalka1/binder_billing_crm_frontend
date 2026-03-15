@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Wand2 } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { PageLoading } from "../components/ui/PageLoading";
@@ -14,6 +14,7 @@ import { useTaxDeadlines } from "../features/taxDeadlines/hooks/useTaxDeadlines"
 import { useTaxDashboard } from "../features/taxDashboard/hooks/useTaxDashboard";
 import { TaxSubmissionStats } from "../features/taxDashboard/components/TaxSubmissionStats";
 import type { TaxDeadlineResponse } from "../api/taxDeadlines.api";
+import { useRole } from "../hooks/useRole";
 
 export const TaxDeadlines: React.FC = () => {
   const {
@@ -39,20 +40,37 @@ export const TaxDeadlines: React.FC = () => {
     deadlines,
     total,
     totalPages,
+    handleGenerate,
+    isGenerating,
   } = useTaxDeadlines();
 
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
   const { currentYear, submissions } = useTaxDashboard();
+  const { isAdvisor } = useRole();
+  const clientIdForGenerate = filters.client_id ? Number(filters.client_id) : null;
 
   const header = (
     <PageHeader
       title="דוחות מס"
       description={`ניהול מועדי מס ומעקב הגשה לשנת ${currentYear}`}
       actions={
-        <Button variant="primary" onClick={() => setShowCreateModal(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
-          מועד חדש
-        </Button>
+        <div className="flex gap-2">
+          {isAdvisor && clientIdForGenerate && (
+            <Button
+              variant="secondary"
+              onClick={() => handleGenerate(clientIdForGenerate, currentYear)}
+              disabled={isGenerating}
+              className="gap-2"
+            >
+              <Wand2 className="h-4 w-4" />
+              {isGenerating ? "יוצר..." : "צור דדליינים לשנה"}
+            </Button>
+          )}
+          <Button variant="primary" onClick={() => setShowCreateModal(true)} className="gap-2">
+            <Plus className="h-4 w-4" />
+            מועד חדש
+          </Button>
+        </div>
       }
     />
   );

@@ -120,4 +120,15 @@ export const taxDeadlinesApi = {
     );
     return response.data;
   },
+
+  generateDeadlines: async (payload: {
+    client_id: number;
+    year: number;
+  }): Promise<{ created_count: number }> => {
+    const response = await api.post<{ created_count: number }>(
+      ENDPOINTS.taxDeadlinesGenerate,
+      payload
+    );
+    return response.data;
+  },
 };
