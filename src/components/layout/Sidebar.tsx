@@ -97,6 +97,8 @@ const NavGroupSection: React.FC<NavGroupSectionProps> = ({
         <button
           onClick={onToggle}
           className="flex w-full items-center justify-between px-4 py-2 text-left text-gray-400 hover:text-white transition-colors"
+          aria-expanded={isExpanded}
+          aria-controls={`nav-group-${group.key}`}
         >
           <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-gray-500 select-none">
             {group.label}
@@ -113,6 +115,7 @@ const NavGroupSection: React.FC<NavGroupSectionProps> = ({
       )}
 
       <div
+        id={`nav-group-${group.key}`}
         className={cn(
           "overflow-hidden transition-all duration-200",
           isExpanded || !isSidebarOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",

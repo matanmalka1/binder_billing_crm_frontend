@@ -28,6 +28,8 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
     <div
       className="rounded-xl border border-red-200 bg-gradient-to-r from-red-50 to-rose-50 shadow-sm"
       role="alert"
+      aria-live="polite"
+      aria-atomic="true"
     >
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3">
@@ -49,6 +51,7 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
           onClick={() => setExpanded((v) => !v)}
           className="shrink-0 rounded-lg p-1.5 text-red-700 hover:bg-red-100 transition-colors"
           aria-label={expanded ? "כווץ רשימה" : "הרחב רשימה"}
+          aria-expanded={expanded}
         >
           {expanded ? (
             <ChevronUp className="h-4 w-4" />
@@ -94,6 +97,8 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
             type="button"
             onClick={() => setExpanded((v) => !v)}
             className="w-full pt-1 text-xs font-medium text-red-700 hover:text-red-900 transition-colors text-center"
+            aria-expanded={expanded}
+            aria-label={expanded ? "הצג פחות דוחות" : `הצג ${overdue.length - 3} דוחות נוספים שחרגו ממועד ההגשה`}
           >
             {expanded
               ? "הצג פחות"

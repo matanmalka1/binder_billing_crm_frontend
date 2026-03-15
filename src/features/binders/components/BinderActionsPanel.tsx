@@ -20,39 +20,30 @@ export const BinderActionsPanel: React.FC<BinderActionsPanelProps> = ({
   isDeleting,
 }) => {
   const actions = mapActions(binder.available_actions as BackendAction[] | null | undefined);
-  const action =
-    actions.find((candidate) => candidate.key === "ready") ??
-    actions.find((candidate) => candidate.key === "return") ??
-    actions[0] ??
-    null;
 
-  const actionButton = (() => {
-    if (!action) return null;
-
-    const isReadyAction = action.key === "ready";
-
-    return (
-      <Button
-        type="button"
-        variant="primary"
-        size="sm"
-        onClick={() => onAction(action)}
-        isLoading={activeActionKeyRef.current === action.uiKey}
-        disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
-        className={isReadyAction ? "bg-green-600 text-white hover:bg-green-700 active:bg-green-800 shadow-sm" : undefined}
-      >
-        {action.label}
-      </Button>
-    );
-  })();
-
-  if (!actionButton && !onDelete) {
+  if (actions.length === 0 && !onDelete) {
     return null;
   }
 
   return (
     <div className="pt-2 flex items-center gap-2">
-      {actionButton}
+      {actions.map((action) => {
+        const isReadyAction = action.key === "ready";
+        return (
+          <Button
+            key={action.uiKey}
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={() => onAction(action)}
+            isLoading={activeActionKeyRef.current === action.uiKey}
+            disabled={activeActionKeyRef.current !== null && activeActionKeyRef.current !== action.uiKey}
+            className={isReadyAction ? "bg-green-600 text-white hover:bg-green-700 active:bg-green-800 shadow-sm" : undefined}
+          >
+            {action.label}
+          </Button>
+        );
+      })}
       {onDelete && (
         <Button
           type="button"

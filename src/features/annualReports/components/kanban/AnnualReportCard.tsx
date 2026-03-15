@@ -71,11 +71,12 @@ export const AnnualReportCard: React.FC<AnnualReportCardProps> = ({
         type="button"
         onClick={() => onOpenDetail(report.id)}
         className="w-full text-right px-4 pt-4 pb-3 block"
+        aria-label={`${report.client_name}, שנת ${report.tax_year}${report.days_until_due !== null && report.days_until_due < 0 ? `, באיחור ${Math.abs(report.days_until_due)} ימים` : report.days_until_due !== null ? `, ${report.days_until_due} ימים נותרו` : ""}`}
       >
         <div className="flex items-start justify-between gap-1.5">
-          <h4 className="truncate text-sm font-semibold text-gray-900 leading-tight flex-1">
+          <h3 className="truncate text-sm font-semibold text-gray-900 leading-tight flex-1">
             {report.client_name}
-          </h4>
+          </h3>
           <span className="shrink-0 rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-500 tabular-nums">
             {report.tax_year}
           </span>
@@ -89,38 +90,38 @@ export const AnnualReportCard: React.FC<AnnualReportCardProps> = ({
 
       {/* Arrow row */}
       <div className="flex items-center justify-between border-t border-gray-100 px-2 py-2">
-        <button
-          type="button"
-          onClick={() => onTransition(report.id, stageKey, "back")}
-          disabled={!canMoveBack || isTransitioning}
-          aria-label="שלב קודם"
-          className={cn(
-            "rounded-lg p-1.5 transition-colors",
-            canMoveBack
-              ? "text-gray-400 hover:bg-gray-100 hover:text-gray-700"
-              : "invisible pointer-events-none",
-          )}
-        >
-          <ArrowRight className="h-3.5 w-3.5" />
-        </button>
+        {canMoveBack ? (
+          <button
+            type="button"
+            onClick={() => onTransition(report.id, stageKey, "back")}
+            disabled={isTransitioning}
+            aria-label="שלב קודם"
+            className="rounded-lg p-1.5 transition-colors text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+          >
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+        ) : (
+          <span className="w-[26px]" aria-hidden="true" />
+        )}
 
         <span className="text-xs text-gray-400 select-none">העבר שלב</span>
 
-        <button
-          type="button"
-          onClick={() => onTransition(report.id, stageKey, "forward")}
-          disabled={!canMoveForward || isTransitioning}
-          aria-label="שלב הבא"
-          className={cn(
-            "rounded-lg p-1.5 transition-colors",
-            canMoveForward
-              ? "text-primary-500 hover:bg-primary-50 hover:text-primary-700"
-              : "invisible pointer-events-none",
-            isTransitioning && "animate-pulse",
-          )}
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-        </button>
+        {canMoveForward ? (
+          <button
+            type="button"
+            onClick={() => onTransition(report.id, stageKey, "forward")}
+            disabled={isTransitioning}
+            aria-label="שלב הבא"
+            className={cn(
+              "rounded-lg p-1.5 transition-colors text-primary-500 hover:bg-primary-50 hover:text-primary-700",
+              isTransitioning && "animate-pulse",
+            )}
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+          </button>
+        ) : (
+          <span className="w-[26px]" aria-hidden="true" />
+        )}
       </div>
     </div>
   );

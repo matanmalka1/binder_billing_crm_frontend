@@ -38,9 +38,9 @@ export const AnnualReportColumn: React.FC<AnnualReportColumnProps> = ({
       <div className="mb-3 rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
         <div className={cn("h-1 w-full bg-gradient-to-r", accent)} />
         <div className="flex items-center justify-between px-3 py-2.5">
-          <h3 className="text-sm font-semibold text-gray-800">
+          <h2 className="text-sm font-semibold text-gray-800">
             {getReportStageLabel(stage.stage)}
-          </h3>
+          </h2>
           <Badge className={cn("text-xs font-bold tabular-nums", getStageColor(stage.stage))}>
             {stage.reports.length}
           </Badge>

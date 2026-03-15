@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
-import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { Button } from "../../../components/ui/Button";
+import { SignalBadge } from "../../../components/ui/SignalBadge";
+import { DaysDisplay } from "../../../components/ui/DaysDisplay";
+import { SortableHeader } from "../../../components/ui/SortableHeader";
 import type { BinderResponse } from "../types";
 import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
 import { mapActions } from "../../../lib/actions/mapActions";
@@ -11,24 +13,9 @@ import {
   getBinderTypeLabel,
   getSignalLabel,
 } from "../../../utils/enums";
-import { formatDate, cn } from "../../../utils/utils";
+import { formatDate } from "../../../utils/utils";
 import { type RefObject } from "react";
-import { BINDER_SIGNAL_VARIANTS } from "../constants";
-
-/* ─── Variant maps ───────────────────────────────────────────── */
-
-const binderStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
-  in_office: "info",
-  ready_for_pickup: "success",
-  returned: "neutral",
-};
-
-const signalDotColors: Record<string, string> = {
-  missing_permanent_documents: "bg-yellow-400",
-  unpaid_charges: "bg-yellow-400",
-  ready_for_pickup: "bg-blue-400",
-  idle_binder: "bg-gray-400",
-};
+import { BINDER_SIGNAL_VARIANTS, BINDER_STATUS_VARIANTS, SIGNAL_DOT_COLORS } from "../constants";
 
 /* ─── Client + signals cell ──────────────────────────────────── */
 
@@ -47,21 +34,13 @@ const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
       {signals.length > 0 && (
         <div className="flex flex-wrap gap-1 mt-0.5">
           {signals.map((signal) => (
-            <span
+            <SignalBadge
               key={signal}
-              title={getSignalLabel(signal)}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-xs font-medium",
-                BINDER_SIGNAL_VARIANTS[signal] === "warning"
-                  ? "bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200"
-                  : BINDER_SIGNAL_VARIANTS[signal] === "info"
-                  ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
-                  : "bg-gray-50 text-gray-600 ring-1 ring-gray-200",
-              )}
-            >
-              <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", signalDotColors[signal] ?? "bg-gray-400")} />
-              {getSignalLabel(signal)}
-            </span>
+              signal={signal}
+              label={getSignalLabel(signal)}
+              variant={BINDER_SIGNAL_VARIANTS[signal] as "warning" | "info" | "neutral" | undefined ?? "neutral"}
+              dotColor={SIGNAL_DOT_COLORS[signal]}
+            />
           ))}
         </div>
       )}
@@ -69,27 +48,6 @@ const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
   );
 };
 ClientCell.displayName = "ClientCell";
-
-/* ─── Days-in-office cell ────────────────────────────────────── */
-
-// eslint-disable-next-line react-refresh/only-export-components
-const DaysCell: React.FC<{ days: number | null | undefined }> = ({ days }) => {
-  if (days == null) return <span className="text-gray-400">—</span>;
-
-  const urgency =
-    days > 90
-      ? "text-red-600 font-bold"
-      : days > 60
-        ? "text-orange-500 font-semibold"
-        : "text-gray-700";
-
-  return (
-    <span className={cn("font-mono text-sm tabular-nums", urgency)}>
-      {days}
-    </span>
-  );
-};
-DaysCell.displayName = "DaysCell";
 
 /* ─── Smart action cell ──────────────────────────────────────── */
 
@@ -127,36 +85,6 @@ const ActionCell: React.FC<ActionCellProps> = ({ binder, activeActionKeyRef, onA
   );
 };
 ActionCell.displayName = "ActionCell";
-
-/* ─── Sortable header ────────────────────────────────────────── */
-
-interface SortableHeaderProps {
-  label: string;
-  columnKey: string;
-  sortBy: string;
-  sortDir: string;
-  onSort: (key: string) => void;
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-const SortableHeader: React.FC<SortableHeaderProps> = ({ label, columnKey, sortBy, sortDir, onSort }) => {
-  const isActive = sortBy === columnKey;
-  const Icon = isActive ? (sortDir === "asc" ? ChevronUp : ChevronDown) : ChevronsUpDown;
-  return (
-    <button
-      type="button"
-      onClick={() => onSort(columnKey)}
-      className={cn(
-        "inline-flex items-center gap-1 font-semibold uppercase tracking-wide",
-        isActive ? "text-gray-800" : "text-gray-500 hover:text-gray-700",
-      )}
-    >
-      {label}
-      <Icon className="h-3 w-3 shrink-0" />
-    </button>
-  );
-};
-SortableHeader.displayName = "SortableHeader";
 
 /* ─── Column builder ─────────────────────────────────────────── */
 
@@ -211,7 +139,7 @@ export const buildBindersColumns = ({
       <StatusBadge
         status={binder.status}
         getLabel={getStatusLabel}
-        variantMap={binderStatusVariants}
+        variantMap={BINDER_STATUS_VARIANTS}
       />
     ),
   },
@@ -233,7 +161,7 @@ export const buildBindersColumns = ({
     headerRender: () => (
       <SortableHeader label="ימים במשרד" columnKey="days_in_office" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
     ),
-    render: (binder) => <DaysCell days={binder.days_in_office} />,
+    render: (binder) => <DaysDisplay days={binder.days_in_office} returned={binder.status === "returned"} />,
   },
   {
     key: "actions",

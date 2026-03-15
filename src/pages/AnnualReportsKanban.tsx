@@ -65,6 +65,12 @@ export const AnnualReportsKanban: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-1.5 focus:text-sm focus:font-medium focus:text-gray-900 focus:shadow"
+      >
+        דלג לתוכן הראשי
+      </a>
       <PageHeader
         title="לוח דוחות שנתיים"
         description="ניהול ומעקב אחר דוחות שנתיים"
@@ -76,7 +82,7 @@ export const AnnualReportsKanban: React.FC = () => {
             </Button>
             <Button variant="secondary" onClick={openComparison} className="gap-1.5">
               <BarChart2 className="h-4 w-4" />
-              השוואה 📊
+              השוואה <span aria-hidden="true">📊</span>
             </Button>
             <Button variant="primary" onClick={openCreate} className="gap-2">
               <Plus className="h-4 w-4" />
@@ -95,12 +101,18 @@ export const AnnualReportsKanban: React.FC = () => {
       )}
 
       {/* Controls row — tabs + year picker (always visible) */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1">
+      <div id="main-content" className="flex items-center gap-3 flex-wrap">
+        <div
+          role="tablist"
+          aria-label="מצב תצוגה"
+          className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1"
+        >
           {(Object.keys(TAB_LABELS) as ActiveTab[]).map((tab) => (
             <button
               key={tab}
               type="button"
+              role="tab"
+              aria-selected={activeTab === tab}
               onClick={() => setActiveTab(tab)}
               className={cn(
                 "rounded-md px-4 py-1.5 text-sm font-medium transition-all",
@@ -141,7 +153,12 @@ export const AnnualReportsKanban: React.FC = () => {
 
       {activeTab === "kanban" && (
         <>
-          <div className="overflow-x-auto pb-4">
+          <div
+            className="relative overflow-x-auto pb-4"
+            aria-label="עמודות קנבן — גלול לצפייה בכל השלבים"
+          >
+            {/* Left-edge fade to signal hidden columns in RTL overflow */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-gray-50 to-transparent" aria-hidden="true" />
             <div className="flex gap-2">
               {STAGE_ORDER.map((stageKey, stageIndex) => {
                 const stageData = stages.find((s) => s.stage === stageKey);

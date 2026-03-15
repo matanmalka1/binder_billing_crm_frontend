@@ -16,8 +16,12 @@ export const NotificationBell: React.FC = () => {
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white leading-none">
-            {unreadCount > 99 ? "99+" : unreadCount}
+          <span
+            role="status"
+            aria-label={`${unreadCount > 99 ? "99+" : unreadCount} התראות חדשות`}
+            className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white leading-none"
+          >
+            <span aria-hidden="true">{unreadCount > 99 ? "99+" : unreadCount}</span>
           </span>
         )}
       </button>

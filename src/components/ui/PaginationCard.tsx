@@ -35,6 +35,8 @@ export const PaginationCard: React.FC<PaginationCardProps> = ({
             className="rounded-md border border-gray-300 px-3 py-1 text-gray-700 disabled:opacity-50"
             onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
+            aria-disabled={page <= 1}
+            aria-label="עמוד קודם"
           >
             הקודם
           </button>
@@ -43,6 +45,8 @@ export const PaginationCard: React.FC<PaginationCardProps> = ({
             className="rounded-md border border-gray-300 px-3 py-1 text-gray-700 disabled:opacity-50"
             onClick={() => onPageChange(page + 1)}
             disabled={page >= totalPages}
+            aria-disabled={page >= totalPages}
+            aria-label="עמוד הבא"
           >
             הבא
           </button>

@@ -14,7 +14,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 z-10 shrink-0">
+    <header role="banner" className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 z-10 shrink-0">
       <div className="flex items-center gap-4">
         <button
           onClick={toggleSidebar}
@@ -23,7 +23,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
         >
           <Menu className="w-6 h-6" />
         </button>
-        <h1 className="text-xl font-bold text-gray-900">יוסף מאיר מערכת ניהול</h1>
+        <span className="text-xl font-bold text-gray-900">יוסף מאיר מערכת ניהול</span>
       </div>
 
       <div className="flex items-center gap-6">

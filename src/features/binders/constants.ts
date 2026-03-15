@@ -1,3 +1,17 @@
+export const BINDER_STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+  in_office: "info",
+  ready_for_pickup: "success",
+  returned: "neutral",
+  overdue: "error",
+};
+
+export const SIGNAL_DOT_COLORS: Record<string, string> = {
+  missing_permanent_documents: "bg-yellow-400",
+  unpaid_charges: "bg-yellow-400",
+  ready_for_pickup: "bg-blue-400",
+  idle_binder: "bg-gray-400",
+};
+
 export const BINDER_WORK_STATE_VARIANTS: Record<string, "neutral" | "info" | "success"> = {
   waiting_for_work: "neutral",
   in_progress: "info",

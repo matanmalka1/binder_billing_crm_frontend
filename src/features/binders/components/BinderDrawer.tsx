@@ -93,6 +93,10 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
         />
       )}
 
+      {mode === "detail" && !binder && (
+        <div className="flex items-center justify-center py-12 text-sm text-gray-400">טוען...</div>
+      )}
+
       {mode === "detail" && binder && (
         <>
           <BinderDetailsPanel binder={binder} />
