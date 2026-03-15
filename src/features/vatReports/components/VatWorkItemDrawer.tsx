@@ -13,6 +13,8 @@ import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatDateTime } from "../../../utils/utils";
 import { formatVatAmount, canAddInvoice, canSendBack } from "../utils";
 import { useRole } from "../../../hooks/useRole";
+import { vatReportsApi } from "../../../api/vatReports.api";
+import { toast } from "../../../utils/toast";
 
 const statusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   pending_materials: "warning",
@@ -37,6 +39,22 @@ export const VatWorkItemDrawer: React.FC<VatWorkItemDrawerProps> = ({
   const [sendBackNote, setSendBackNote] = useState("");
   const [sendingBack, setSendingBack] = useState(false);
   const [showSendBackForm, setShowSendBackForm] = useState(false);
+  const [loadingExcel, setLoadingExcel] = useState(false);
+  const [loadingPdf, setLoadingPdf] = useState(false);
+
+  const handleExport = async (format: "excel" | "pdf") => {
+    if (!item) return;
+    const year = Number(item.period.split("-")[0]);
+    const setLoading = format === "excel" ? setLoadingExcel : setLoadingPdf;
+    setLoading(true);
+    try {
+      await vatReportsApi.exportClientVat(item.client_id, format, year);
+    } catch {
+      toast.error("ייצוא נכשל, נסה שוב");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const { summary, loading: summaryLoading } = useVatWorkItemDetail(item?.id ?? null);
 
@@ -116,6 +134,27 @@ export const VatWorkItemDrawer: React.FC<VatWorkItemDrawerProps> = ({
               </>
             )}
           </DrawerSection>
+
+          {isAdvisor && (
+            <DrawerSection title="ייצוא">
+              <div className="flex items-center gap-3 py-2">
+                <button
+                  onClick={() => handleExport("excel")}
+                  disabled={loadingExcel}
+                  className="inline-flex items-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                >
+                  {loadingExcel ? "מייצא..." : "ייצוא Excel"}
+                </button>
+                <button
+                  onClick={() => handleExport("pdf")}
+                  disabled={loadingPdf}
+                  className="inline-flex items-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                >
+                  {loadingPdf ? "מייצא..." : "ייצוא PDF"}
+                </button>
+              </div>
+            </DrawerSection>
+          )}
 
           {canAddInvoice(item.status) && (
             <DrawerSection title="הקלדת נתונים">
