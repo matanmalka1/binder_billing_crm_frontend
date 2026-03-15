@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Plus, ChevronLeft, ChevronRight, BarChart2, FileDown } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { PageLoading } from "../components/ui/PageLoading";
-import { ErrorCard } from "../components/ui/ErrorCard";
+import { Alert } from "../components/ui/Alert";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { Button } from "../components/ui/Button";
 import { AnnualReportColumn } from "../features/annualReports/components/kanban/AnnualReportColumn";
@@ -58,7 +58,7 @@ export const AnnualReportsKanban: React.FC = () => {
     return (
       <div className="space-y-6">
         <PageHeader title="לוח דוחות שנתיים" />
-        <ErrorCard message="שגיאה בטעינת לוח דוחות" />
+        <Alert variant="error" message="שגיאה בטעינת לוח דוחות" />
       </div>
     );
   }
@@ -192,7 +192,7 @@ export const AnnualReportsKanban: React.FC = () => {
       {activeTab === "season" && (
         <>
           {season.isLoading && <PageLoading message="טוען נתוני עונה..." />}
-          {season.error && <ErrorCard message={season.error} />}
+          {season.error && <Alert variant="error" message={season.error} />}
 
           {!season.isLoading && !season.error && season.summary && (
             <>
