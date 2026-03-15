@@ -5,21 +5,6 @@ import type { AnnualReportDetail } from "../types";
 import { useReportMutations } from "./useReportMutations";
 import { useReportSchedules } from "./useReportSchedules";
 
-// Fetch base report + detail record in parallel, merge into AnnualReportDetail
-const fetchDetail = async (reportId: number): Promise<AnnualReportDetail> => {
-  const [base, detail] = await Promise.all([
-    annualReportsApi.getReport(reportId),
-    annualReportsApi.getReportDetails(reportId),
-  ]);
-  return {
-    ...base,
-    tax_refund_amount: detail.tax_refund_amount,
-    tax_due_amount: detail.tax_due_amount,
-    client_approved_at: detail.client_approved_at,
-    internal_notes: detail.internal_notes,
-  };
-};
-
 export const useReportDetail = (reportId: number | null, onDeleted?: () => void) => {
   const enabled = reportId !== null && reportId > 0;
   const queryKey = QK.tax.annualReports.detail(reportId ?? 0);
@@ -27,7 +12,7 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
   const reportQuery = useQuery<AnnualReportDetail>({
     enabled,
     queryKey,
-    queryFn: () => fetchDetail(reportId as number),
+    queryFn: () => annualReportsApi.getReport(reportId as number) as Promise<AnnualReportDetail>,
     retry: false,
   });
 
