@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
-import { EmptyState } from "../../../components/ui/EmptyState";
+import { StateCard } from "../../../components/ui/StateCard";
 import { Inbox } from "lucide-react";
 import type { AgingReportItem } from "../../../api/reports.api";
 
@@ -16,7 +16,7 @@ export const AgingReportTable: React.FC<AgingReportTableProps> = ({ items }) => 
   const navigate = useNavigate();
 
   if (items.length === 0) {
-    return <EmptyState icon={Inbox} message="אין חובות פתוחים" />;
+    return <StateCard icon={Inbox} message="אין חובות פתוחים" />;
   }
 
   return (
