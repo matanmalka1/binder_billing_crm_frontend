@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { PageLoading } from "../components/ui/PageLoading";
-import { ErrorCard } from "../components/ui/ErrorCard";
+import { Alert } from "../components/ui/Alert";
 import { Button } from "../components/ui/Button";
 import { TaxDeadlinesFilters } from "../features/taxDeadlines/components/TaxDeadlinesFilters";
 import { TaxDeadlinesTable } from "../features/taxDeadlines/components/TaxDeadlinesTable";
@@ -70,7 +70,7 @@ export const TaxDeadlines: React.FC = () => {
     return (
       <div className="space-y-6">
         {header}
-        <ErrorCard message={error} />
+        <Alert variant="error" message={error} />
       </div>
     );
   }
