@@ -1,7 +1,7 @@
 import { getYear } from "date-fns";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/layout/PageHeader";
-import { ErrorCard } from "../../components/ui/ErrorCard";
+import { Alert } from "../../components/ui/Alert";
 import { Select } from "../../components/ui/Select";
 import { DataTable, type Column } from "../../components/ui/DataTable";
 import { Badge } from "../../components/ui/Badge";
@@ -144,7 +144,7 @@ export const AdvancePayments: React.FC = () => {
         </div>
       </div>
 
-      {error && <ErrorCard message="שגיאה בטעינת מקדמות" />}
+      {error && <Alert variant="error" message="שגיאה בטעינת מקדמות" />}
 
       {!isLoading && (
         <p className="text-sm text-gray-500">{total.toLocaleString("he-IL")} רשומות</p>
