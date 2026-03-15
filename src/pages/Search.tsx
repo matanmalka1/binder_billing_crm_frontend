@@ -8,12 +8,13 @@ import { PaginationCard } from "../components/ui/PaginationCard";
 import { StateCard } from "../components/ui/StateCard";
 import { SearchFiltersBar } from "../features/search/components/SearchFiltersBar";
 import { searchColumns } from "../features/search/components/SearchColumns";
+import { DocumentResultsSection } from "../features/search/components/DocumentResultsSection";
 import { useSearchPage } from "../features/search/hooks/useSearchPage";
 import { cn } from "../utils/utils";
 import type { SearchResult } from "../api/search.api";
 
 export const Search: React.FC = () => {
-  const { error, filters, handleFilterChange, handleReset, loading, results, total } = useSearchPage();
+  const { error, filters, handleFilterChange, handleReset, loading, results, documents, total } = useSearchPage();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const hasAdvancedFilter = Boolean(
@@ -91,7 +92,7 @@ export const Search: React.FC = () => {
       )}
 
       {/* Filter active, no results */}
-      {!loading && !error && hasAnyFilter && results.length === 0 && (
+      {!loading && !error && hasAnyFilter && results.length === 0 && documents.length === 0 && (
         <StateCard
           icon={FileSearch}
           title="לא נמצאו תוצאות"
@@ -133,6 +134,9 @@ export const Search: React.FC = () => {
           )}
         </>
       )}
+
+      {/* Document results */}
+      {!loading && <DocumentResultsSection documents={documents} />}
     </div>
   );
 };

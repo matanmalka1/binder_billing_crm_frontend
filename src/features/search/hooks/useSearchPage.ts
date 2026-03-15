@@ -90,6 +90,7 @@ export const useSearchPage = () => {
     handleReset,
     loading: hasAnyFilter ? searchQuery.isPending : false,
     results: searchQuery.data?.results ?? [],
+    documents: searchQuery.data?.documents ?? [],
     total: searchQuery.data?.total ?? 0,
   };
 };
