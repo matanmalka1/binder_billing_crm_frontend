@@ -70,16 +70,19 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
   const financialsQ = useQuery({
     queryKey: QK.tax.annualReportFinancials(reportId),
     queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
+    enabled: !!reportId,
   });
 
   const taxCalcQ = useQuery({
     queryKey: QK.tax.annualReportTaxCalc(reportId),
     queryFn: () => annualReportTaxApi.getTaxCalculation(reportId),
+    enabled: !!reportId,
   });
 
   const advancesQ = useQuery({
     queryKey: QK.tax.annualReportAdvancesSummary(reportId),
     queryFn: () => annualReportTaxApi.getAdvancesSummary(reportId),
+    enabled: !!reportId,
   });
 
   const isLoading =
