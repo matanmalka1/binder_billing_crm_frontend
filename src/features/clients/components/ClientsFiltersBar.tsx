@@ -32,7 +32,7 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
         value={searchDraft}
         onChange={(e) => setSearchDraft(e.target.value)}
         placeholder="שם, ת.ז. / ח.פ."
-        leftIcon={<Search className="h-4 w-4" />}
+        startIcon={<Search className="h-4 w-4" />}
       />
 
       <Select
