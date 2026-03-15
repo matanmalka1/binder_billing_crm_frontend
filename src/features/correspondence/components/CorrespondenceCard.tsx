@@ -2,8 +2,8 @@ import { useState } from "react";
 import { MessageSquare, Plus } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
-import { ErrorCard } from "../../../components/ui/ErrorCard";
-import { EmptyState } from "../../../components/ui/EmptyState";
+import { Alert } from "../../../components/ui/Alert";
+import { StateCard } from "../../../components/ui/StateCard";
 import { CorrespondenceEntryItem } from "./CorrespondenceEntry";
 import { CorrespondenceModal } from "./CorrespondenceModal";
 import { useCorrespondence } from "../hooks/useCorrespondence";
@@ -70,14 +70,14 @@ export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
           </Button>
         }
       >
-        {error && <ErrorCard message={error} />}
+        {error && <Alert variant="error" message={error} />}
 
         {isLoading && (
           <p className="py-4 text-center text-sm text-gray-500">טוען...</p>
         )}
 
         {!isLoading && entries.length === 0 && (
-          <EmptyState
+          <StateCard
             icon={MessageSquare}
             message="אין רשומות תקשורת עדיין — הוסף את הרשומה הראשונה"
             variant="minimal"
