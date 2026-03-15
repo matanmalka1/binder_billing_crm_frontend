@@ -39,7 +39,8 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ ariaLabel, children 
     if (!open) return;
     const close = (e: MouseEvent) => {
       if (triggerRef.current && triggerRef.current.contains(e.target as Node)) return;
-      setOpen(false);
+      // Delay so click handlers on portal items fire before the portal is removed
+      setTimeout(() => setOpen(false), 0);
     };
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);

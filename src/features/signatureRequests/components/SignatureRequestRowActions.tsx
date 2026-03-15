@@ -85,7 +85,7 @@ export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProp
         confirmLabel="בטל בקשה"
         cancelLabel="חזור"
         isLoading={isCanceling}
-        onConfirm={() => { setConfirmCancel(false); void onCancel(request.id); }}
+        onConfirm={() => { setConfirmCancel(false); onCancel(request.id).catch(() => {}); }}
         onCancel={() => setConfirmCancel(false)}
       />
     </div>

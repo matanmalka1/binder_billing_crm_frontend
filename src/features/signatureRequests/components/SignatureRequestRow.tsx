@@ -34,6 +34,7 @@ interface Props {
   canManage: boolean;
   onSend: (id: number) => Promise<unknown>;
   onCancel: (id: number) => Promise<unknown>;
+  onAudit: (id: number) => void;
 }
 
 export const SignatureRequestRow: React.FC<Props> = ({
@@ -44,12 +45,13 @@ export const SignatureRequestRow: React.FC<Props> = ({
   canManage,
   onSend,
   onCancel,
+  onAudit,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const isPending = request.status === "pending_signature";
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-sm">
+    <div className="rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-sm">
       {/* Main row */}
       <div className="flex items-center gap-3 px-4 py-3">
         <div className="min-w-0 flex-1">
@@ -71,6 +73,7 @@ export const SignatureRequestRow: React.FC<Props> = ({
             canManage={canManage}
             onSend={onSend}
             onCancel={onCancel}
+            onAudit={onAudit}
           />
           <button
             type="button"

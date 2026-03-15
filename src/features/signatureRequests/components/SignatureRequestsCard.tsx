@@ -6,6 +6,7 @@ import { StateCard } from "../../../components/ui/StateCard";
 import { Alert } from "../../../components/ui/Alert";
 import { SkeletonBlock } from "../../../components/ui/SkeletonBlock";
 import { SignatureRequestRow } from "./SignatureRequestRow";
+import { SignatureRequestAuditDrawer } from "./SignatureRequestAuditDrawer";
 import { CreateSignatureRequestModal } from "./CreateSignatureRequestModal";
 import { useClientSignatureRequests } from "../hooks/useClientSignatureRequests";
 import { useSignatureRequestActions } from "../hooks/useSignatureRequestActions";
@@ -21,6 +22,7 @@ interface Props {
 export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) => {
   const [showCreate, setShowCreate] = useState(false);
   const [signingUrls, setSigningUrls] = useState<Record<number, string>>({});
+  const [auditRequestId, setAuditRequestId] = useState<number | null>(null);
 
   const { items, total, isLoading, error } = useClientSignatureRequests({ clientId: client.id });
   const { create, isCreating, send, isSending, cancel, isCanceling } = useSignatureRequestActions(client.id);
@@ -76,12 +78,18 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) =>
                   canManage={canManage}
                   onSend={handleSend}
                   onCancel={cancel}
+                  onAudit={setAuditRequestId}
                 />
               ))}
             </div>
           )}
         </div>
       </Card>
+
+      <SignatureRequestAuditDrawer
+        requestId={auditRequestId}
+        onClose={() => setAuditRequestId(null)}
+      />
 
       <CreateSignatureRequestModal
         open={showCreate}

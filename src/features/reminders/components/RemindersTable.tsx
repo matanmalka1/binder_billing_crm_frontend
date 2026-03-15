@@ -10,7 +10,10 @@ import { ReminderRowActions } from "./ReminderRowActions";
 interface RemindersTableProps {
   reminders: Reminder[];
   cancelingId: number | null;
+  markingSentId: number | null;
   onCancel: (id: number) => void;
+  onMarkSent: (id: number) => void;
+  onViewDetails: (reminder: Reminder) => void;
   onRowClick?: (reminder: Reminder) => void;
   showClient?: boolean;
 }
@@ -24,7 +27,10 @@ const STATUS_VARIANTS: Record<string, "success" | "error" | "warning"> = {
 export const RemindersTable: React.FC<RemindersTableProps> = ({
   reminders,
   cancelingId,
+  markingSentId,
   onCancel,
+  onMarkSent,
+  onViewDetails,
   onRowClick,
   showClient = true,
 }) => {
@@ -93,7 +99,14 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
       headerClassName: "w-10",
       className: "w-10",
       render: (r) => (
-        <ReminderRowActions reminder={r} cancelingId={cancelingId} onCancel={onCancel} />
+        <ReminderRowActions
+          reminder={r}
+          cancelingId={cancelingId}
+          markingSentId={markingSentId}
+          onCancel={onCancel}
+          onMarkSent={onMarkSent}
+          onViewDetails={onViewDetails}
+        />
       ),
     },
   ];

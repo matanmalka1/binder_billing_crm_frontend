@@ -8,7 +8,6 @@ import { RemindersTable } from "../../features/reminders/components/RemindersTab
 import { ReminderDrawer } from "../../features/reminders/components/ReminderDrawer";
 import { CreateReminderModal } from "../../features/reminders/components/CreateReminderModal";
 import { useReminders } from "../../features/reminders/hooks/useReminders";
-import type { Reminder } from "../../api/reminders.api";
 
 export const RemindersPage: React.FC = () => {
   const {
@@ -22,9 +21,12 @@ export const RemindersPage: React.FC = () => {
     isSubmitting,
     cancelingId,
     handleCancel,
+    markingSentId,
+    handleMarkSent,
+    selectedReminder,
+    setSelectedReminder,
   } = useReminders();
 
-  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
   const [statusFilter, setStatusFilter] = useState("");
 
   const filteredReminders = useMemo(() => {
@@ -75,7 +77,10 @@ export const RemindersPage: React.FC = () => {
         <RemindersTable
           reminders={filteredReminders}
           cancelingId={cancelingId}
+          markingSentId={markingSentId}
           onCancel={handleCancel}
+          onMarkSent={handleMarkSent}
+          onViewDetails={setSelectedReminder}
           onRowClick={setSelectedReminder}
         />
       )}

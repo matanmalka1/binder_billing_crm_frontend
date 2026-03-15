@@ -79,6 +79,7 @@ export const ENDPOINTS = {
   reminders: "/reminders",
   reminderById: (id: number) => `/reminders/${id}`,
   reminderCancel: (id: number) => `/reminders/${id}/cancel`,
+  reminderMarkSent: (id: number) => `/reminders/${id}/mark-sent`,
   vatWorkItems: "/vat/work-items",
   vatWorkItemById: (id: number | string) => `/vat/work-items/${id}`,
   vatWorkItemsByClient: (clientId: number | string) => `/vat/clients/${clientId}/work-items`,

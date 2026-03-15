@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
@@ -7,7 +6,6 @@ import { RemindersTable } from "./RemindersTable";
 import { ReminderDrawer } from "./ReminderDrawer";
 import { CreateReminderModal } from "./CreateReminderModal";
 import { useReminders } from "../hooks/useReminders";
-import type { Reminder } from "../types";
 import { bindersApi } from "../../../api/binders.api";
 import { chargesApi } from "../../../api/charges.api";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
@@ -32,9 +30,11 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
     isSubmitting,
     cancelingId,
     handleCancel,
+    markingSentId,
+    handleMarkSent,
+    selectedReminder,
+    setSelectedReminder,
   } = useReminders({ clientId });
-
-  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
 
   const { data: bindersData } = useQuery({
     queryKey: ["binders", "client", clientId],
@@ -75,7 +75,10 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
         <RemindersTable
           reminders={reminders}
           cancelingId={cancelingId}
+          markingSentId={markingSentId}
           onCancel={handleCancel}
+          onMarkSent={handleMarkSent}
+          onViewDetails={setSelectedReminder}
           onRowClick={setSelectedReminder}
           showClient={false}
         />

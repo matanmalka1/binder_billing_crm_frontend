@@ -5,6 +5,7 @@ import { remindersApi } from "../../../api/reminders.api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { QK } from "../../../lib/queryKeys";
+import type { Reminder } from "../../../api/reminders.api";
 import type {
   CreateReminderRequest,
   CreateReminderFormValues,
@@ -68,6 +69,8 @@ export const useReminders = (opts?: { clientId?: number }) => {
   const queryClient = useQueryClient();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [cancelingId, setCancelingId] = useState<number | null>(null);
+  const [markingSentId, setMarkingSentId] = useState<number | null>(null);
+  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
 
   const form = useForm<CreateReminderFormValues>({
     defaultValues: makeDefaultFormValues(clientId),
@@ -101,6 +104,16 @@ export const useReminders = (opts?: { clientId?: number }) => {
     onSettled: () => setCancelingId(null),
   });
 
+  const markSentMutation = useMutation({
+    mutationFn: remindersApi.markSent,
+    onSuccess: () => {
+      toast.success("תזכורת סומנה כנשלחה");
+      queryClient.invalidateQueries({ queryKey: QK.reminders.all });
+    },
+    onError: (error) => showErrorToast(error, "שגיאה בסימון התזכורת"),
+    onSettled: () => setMarkingSentId(null),
+  });
+
   const onSubmit = form.handleSubmit((values) => {
     const payload = buildPayload(values, clientId);
     if (!payload) {
@@ -130,6 +143,11 @@ export const useReminders = (opts?: { clientId?: number }) => {
     void cancelMutation.mutateAsync(id);
   };
 
+  const handleMarkSent = (id: number) => {
+    setMarkingSentId(id);
+    void markSentMutation.mutateAsync(id);
+  };
+
   return {
     reminders: remindersQuery.data?.items ?? [],
     isLoading: remindersQuery.isPending,
@@ -143,5 +161,9 @@ export const useReminders = (opts?: { clientId?: number }) => {
     isSubmitting: createMutation.isPending,
     cancelingId,
     handleCancel,
+    markingSentId,
+    handleMarkSent,
+    selectedReminder,
+    setSelectedReminder,
   };
 };
