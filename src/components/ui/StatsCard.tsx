@@ -12,6 +12,8 @@ export interface StatsCardProps {
     value: number;
     label: string;
   };
+  /** When provided, renders a progress bar below the value (0–100). */
+  progress?: number;
   className?: string;
 }
 
@@ -22,6 +24,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   icon: Icon,
   variant = "neutral",
   trend,
+  progress,
   className,
 }) => {
   const [displayValue, setDisplayValue] = useState(0);
@@ -132,6 +135,16 @@ export const StatsCard: React.FC<StatsCardProps> = ({
             </div>
           )}
         </div>
+
+        {/* Progress bar */}
+        {progress !== undefined && (
+          <div className="mb-3 w-full rounded-full h-2 bg-white/40">
+            <div
+              className={cn("h-2 rounded-full transition-all duration-700", config.accent)}
+              style={{ width: `${Math.min(Math.max(progress, 0), 100)}%` }}
+            />
+          </div>
+        )}
 
         {/* Description and trend */}
         <div className="space-y-2">
