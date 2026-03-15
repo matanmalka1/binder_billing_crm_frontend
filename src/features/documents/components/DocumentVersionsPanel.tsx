@@ -1,0 +1,60 @@
+import { useQuery } from "@tanstack/react-query";
+import { QK } from "../../../lib/queryKeys";
+import { documentsApi } from "../../../api/documents.api";
+import { Badge } from "../../../components/ui/Badge";
+import { STATUS_LABELS, STATUS_BADGE_VARIANT } from "../documents.constants";
+import { formatDate } from "../../../utils/utils";
+
+interface DocumentVersionsPanelProps {
+  clientId: number;
+  documentType: string;
+  taxYear?: number;
+}
+
+export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
+  clientId,
+  documentType,
+  taxYear,
+}) => {
+  const { data, isLoading } = useQuery({
+    queryKey: QK.documents.versions(clientId, documentType, taxYear),
+    queryFn: () => documentsApi.getVersions(clientId, documentType, taxYear),
+  });
+
+  const items = data?.items ?? [];
+
+  if (isLoading) {
+    return (
+      <div className="px-4 py-2 text-xs text-gray-400">טוען גרסאות...</div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="px-4 py-2 text-xs text-gray-400">אין גרסאות קודמות</div>
+    );
+  }
+
+  return (
+    <div className="border-t border-gray-100 bg-gray-50 px-4 py-3">
+      <p className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+        היסטוריית גרסאות
+      </p>
+      <ul className="space-y-1.5">
+        {items.map((v) => (
+          <li key={v.id} className="flex items-center gap-3 text-xs text-gray-700">
+            <span className="inline-block rounded-full bg-gray-200 px-1.5 py-0.5 text-gray-600 font-mono">
+              v{v.version}
+            </span>
+            <span className="tabular-nums text-gray-400">{formatDate(v.uploaded_at)}</span>
+            <Badge variant={STATUS_BADGE_VARIANT[v.status] ?? "neutral"}>
+              {STATUS_LABELS[v.status] ?? v.status}
+            </Badge>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+DocumentVersionsPanel.displayName = "DocumentVersionsPanel";

@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   documentsApi,
   type OperationalSignalsResponse,
@@ -43,6 +43,37 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
     invalidateDocs();
   };
 
+  const approveMutation = useMutation({
+    mutationFn: (id: number) => documentsApi.approveDocument(id),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) });
+      void queryClient.invalidateQueries({ queryKey: QK.clients.list({}) });
+      toast.success("המסמך אושר");
+    },
+    onError: (error) => toast.error(getErrorMessage(error, "שגיאה בפעולה")),
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: ({ id, notes }: { id: number; notes: string }) =>
+      documentsApi.rejectDocument(id, notes),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) });
+      void queryClient.invalidateQueries({ queryKey: QK.clients.list({}) });
+      toast.success("המסמך נדחה");
+    },
+    onError: (error) => toast.error(getErrorMessage(error, "שגיאה בפעולה")),
+  });
+
+  const updateNotesMutation = useMutation({
+    mutationFn: ({ id, notes }: { id: number; notes: string }) =>
+      documentsApi.updateNotes(id, notes),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) });
+      toast.success("ההערה עודכנה");
+    },
+    onError: (error) => toast.error(getErrorMessage(error, "שגיאה בפעולה")),
+  });
+
   const errorSource = documentsQuery.error ?? signalsQuery.error;
 
   return {
@@ -55,5 +86,8 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
     uploading,
     handleDelete,
     handleReplace,
+    handleApprove: (id: number) => approveMutation.mutate(id),
+    handleReject: (id: number, notes: string) => rejectMutation.mutate({ id, notes }),
+    handleUpdateNotes: (id: number, notes: string) => updateNotesMutation.mutate({ id, notes }),
   };
 };

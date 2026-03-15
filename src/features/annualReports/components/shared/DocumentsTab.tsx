@@ -5,17 +5,20 @@ import { documentsApi } from "../../../../api/documents.api";
 import type { PermanentDocumentResponse } from "../../../../api/documents.api";
 import { cn, getErrorMessage } from "../../../../utils/utils";
 import { toast } from "../../../../utils/toast";
-
-const DOC_TYPE_LABELS: Record<string, string> = {
-  id_copy: "צילום תעודת זהות",
-  power_of_attorney: "ייפוי כוח",
-  engagement_agreement: "הסכם התקשרות",
-};
+import { Badge } from "../../../../components/ui/Badge";
+import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "../../../documents/documents.constants";
 
 const DOC_TYPE_ICONS: Record<string, string> = {
   id_copy: "🪪",
   power_of_attorney: "📜",
   engagement_agreement: "📝",
+  tax_form: "📄",
+  receipt: "📄",
+  invoice_doc: "📄",
+  bank_approval: "📄",
+  withholding_certificate: "📄",
+  nii_approval: "📄",
+  other: "📄",
 };
 
 const ALL_REQUIRED_TYPES = ["id_copy", "power_of_attorney", "engagement_agreement"] as const;
@@ -46,6 +49,9 @@ const DocumentCard = ({ doc }: DocumentCardProps) => {
             {doc.tax_year}
           </span>
         )}
+        <Badge variant={STATUS_BADGE_VARIANT[doc.status] ?? "neutral"}>
+          {STATUS_LABELS[doc.status] ?? doc.status}
+        </Badge>
       </div>
       <div className="text-xs text-zinc-400 mt-auto">{formatDate(doc.uploaded_at)}</div>
     </div>
@@ -56,9 +62,10 @@ DocumentCard.displayName = "DocumentCard";
 interface MissingDocRowProps {
   clientId: number;
   docType: string;
+  annualReportId?: number;
 }
 
-const MissingDocRow = ({ clientId, docType }: MissingDocRowProps) => {
+const MissingDocRow = ({ clientId, docType, annualReportId }: MissingDocRowProps) => {
   const label = DOC_TYPE_LABELS[docType] ?? docType;
   const icon = DOC_TYPE_ICONS[docType] ?? "📄";
   const inputRef = useRef<HTMLInputElement>(null);
@@ -66,24 +73,23 @@ const MissingDocRow = ({ clientId, docType }: MissingDocRowProps) => {
 
   const upload = useMutation({
     mutationFn: (file: File) =>
-      documentsApi.upload({ client_id: clientId, document_type: docType as never, file }),
+      documentsApi.upload({
+        client_id: clientId,
+        document_type: docType as never,
+        file,
+        ...(annualReportId != null ? { annual_report_id: annualReportId } : {}),
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) });
       queryClient.invalidateQueries({ queryKey: QK.documents.clientSignals(clientId) });
+      if (annualReportId != null) {
+        queryClient.invalidateQueries({ queryKey: QK.documents.byAnnualReport(annualReportId) });
+      }
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, "שגיאה בהעלאת המסמך"));
     },
   });
-
-  const handleUploadClick = () => {
-    inputRef.current?.click();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) upload.mutate(file);
-  };
 
   return (
     <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
@@ -92,18 +98,14 @@ const MissingDocRow = ({ clientId, docType }: MissingDocRowProps) => {
         <span className="text-sm font-medium text-zinc-800">{label}</span>
       </div>
       <div className="flex items-center gap-2">
-        {upload.isPending && (
-          <span className="text-xs text-zinc-400">מעלה...</span>
-        )}
+        {upload.isPending && <span className="text-xs text-zinc-400">מעלה...</span>}
         <button
           type="button"
-          onClick={handleUploadClick}
+          onClick={() => inputRef.current?.click()}
           disabled={upload.isPending}
           className={cn(
             "rounded-md px-3 py-1.5 text-xs font-medium text-white transition-colors",
-            upload.isPending
-              ? "bg-amber-300 cursor-not-allowed"
-              : "bg-amber-500 hover:bg-amber-600",
+            upload.isPending ? "bg-amber-300 cursor-not-allowed" : "bg-amber-500 hover:bg-amber-600",
           )}
         >
           העלה
@@ -112,7 +114,7 @@ const MissingDocRow = ({ clientId, docType }: MissingDocRowProps) => {
           ref={inputRef}
           type="file"
           className="hidden"
-          onChange={handleFileChange}
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) upload.mutate(f); }}
         />
       </div>
     </div>
@@ -122,12 +124,20 @@ MissingDocRow.displayName = "MissingDocRow";
 
 interface DocumentsTabProps {
   clientId: number;
+  reportId?: number;
 }
 
-export const DocumentsTab = ({ clientId }: DocumentsTabProps) => {
-  const { data: docList, isLoading: docsLoading } = useQuery({
+export const DocumentsTab = ({ clientId, reportId }: DocumentsTabProps) => {
+  const byClient = useQuery({
     queryKey: QK.documents.clientList(clientId),
     queryFn: () => documentsApi.listByClient(clientId),
+    enabled: reportId == null,
+  });
+
+  const byReport = useQuery({
+    queryKey: QK.documents.byAnnualReport(reportId!),
+    queryFn: () => documentsApi.listByAnnualReport(reportId!),
+    enabled: reportId != null,
   });
 
   const { data: signals } = useQuery({
@@ -135,7 +145,8 @@ export const DocumentsTab = ({ clientId }: DocumentsTabProps) => {
     queryFn: () => documentsApi.getSignalsByClient(clientId),
   });
 
-  const docs = docList?.items ?? [];
+  const activeQuery = reportId != null ? byReport : byClient;
+  const docs = activeQuery.data?.items ?? [];
   const uploadedTypes = new Set(docs.map((d) => d.document_type));
 
   const missingTypes =
@@ -143,7 +154,7 @@ export const DocumentsTab = ({ clientId }: DocumentsTabProps) => {
       ? (signals?.missing_documents ?? [])
       : ALL_REQUIRED_TYPES.filter((t) => !uploadedTypes.has(t));
 
-  if (docsLoading) {
+  if (activeQuery.isPending) {
     return (
       <div className="flex items-center justify-center py-16 text-zinc-400 text-sm">
         טוען מסמכים...
@@ -175,7 +186,12 @@ export const DocumentsTab = ({ clientId }: DocumentsTabProps) => {
           </h3>
           <div className="space-y-2">
             {missingTypes.map((type) => (
-              <MissingDocRow key={type} clientId={clientId} docType={type} />
+              <MissingDocRow
+                key={type}
+                clientId={clientId}
+                docType={type}
+                annualReportId={reportId}
+              />
             ))}
           </div>
         </section>

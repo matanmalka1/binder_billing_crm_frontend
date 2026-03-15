@@ -4,8 +4,9 @@ import { Card } from "../../../components/ui/Card";
 import { DataTable } from "../../../components/ui/DataTable";
 import { Alert } from "../../../components/ui/Alert";
 import { DocumentsUploadCard } from "./DocumentsUploadCard";
+import { DocumentVersionsPanel } from "./DocumentVersionsPanel";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
-import { buildDocumentColumns, DOC_TYPE_LABELS } from "./DocumentsColumns";
+import { buildDocumentColumns } from "./DocumentsColumns";
 import { documentsApi } from "../../../api/documents.api";
 import type {
   OperationalSignalsResponse,
@@ -13,7 +14,9 @@ import type {
   UploadDocumentPayload,
 } from "../../../api/documents.api";
 import { useAuthStore } from "../../../store/auth.store";
+import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
+import { DOC_TYPE_LABELS } from "../documents.constants";
 
 interface DocumentsDataCardsProps {
   documents: PermanentDocumentResponse[];
@@ -30,19 +33,26 @@ interface DocumentsDataCardsProps {
   uploading: boolean;
   onDelete: (id: number) => Promise<void>;
   onReplace: (id: number, file: File) => Promise<void>;
+  handleApprove: (id: number) => void;
+  handleReject: (id: number, notes: string) => void;
 }
 
 export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
   documents, signals, taxYear, onTaxYearChange, taxYears,
   submitUpload, uploadError, uploading, onDelete, onReplace,
+  handleApprove, handleReject,
 }) => {
   const role = useAuthStore((s) => s.user?.role);
   const isAdvisor = role === "advisor";
+  const { can } = useRole();
 
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [replacingId, setReplacingId] = useState<number | null>(null);
   const [downloadingId, setDownloadingId] = useState<number | null>(null);
+  const [rejectingId, setRejectingId] = useState<number | null>(null);
+  const [rejectNote, setRejectNote] = useState("");
+  const [expandedVersionsId, setExpandedVersionsId] = useState<number | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pendingReplaceId = useRef<number | null>(null);
@@ -80,15 +90,39 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     }
   };
 
+  const handleExpandVersions = (id: number) => {
+    setExpandedVersionsId((prev) => (prev === id ? null : id));
+  };
+
+  const handleRejectClick = (id: number) => {
+    setRejectingId(id);
+  };
+
+  const handleConfirmReject = () => {
+    if (rejectingId === null) return;
+    handleReject(rejectingId, rejectNote);
+    setRejectingId(null);
+    setRejectNote("");
+  };
+
   const columns = buildDocumentColumns({
     isAdvisor,
+    canPerformActions: can.performBinderActions,
     downloadingId,
     replacingId,
     deletingId,
+    rejectingId,
     onDownload: handleDownloadClick,
     onReplace: handleReplaceClick,
     onDelete: (id) => setConfirmDeleteId(id),
+    handleApprove,
+    handleReject: handleRejectClick,
+    handleExpandVersions,
   });
+
+  const expandedDoc = expandedVersionsId !== null
+    ? documents.find((d) => d.id === expandedVersionsId)
+    : null;
 
   return (
     <div className="space-y-4">
@@ -128,6 +162,13 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
           getRowKey={(doc) => doc.id}
           emptyState={{ icon: FileText, message: "לא נמצאו מסמכים ללקוח זה" }}
         />
+        {expandedDoc && (
+          <DocumentVersionsPanel
+            clientId={expandedDoc.client_id}
+            documentType={expandedDoc.document_type}
+            taxYear={expandedDoc.tax_year ?? undefined}
+          />
+        )}
       </Card>
 
       <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
@@ -141,6 +182,24 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         onConfirm={handleConfirmDelete}
         onCancel={() => setConfirmDeleteId(null)}
       />
+
+      <ConfirmDialog
+        open={rejectingId !== null}
+        title="דחיית מסמך"
+        message="הזן סיבת דחייה:"
+        confirmLabel="דחה"
+        cancelLabel="ביטול"
+        onConfirm={handleConfirmReject}
+        onCancel={() => { setRejectingId(null); setRejectNote(""); }}
+      >
+        <textarea
+          value={rejectNote}
+          onChange={(e) => setRejectNote(e.target.value)}
+          placeholder="הערות"
+          className="mt-2 w-full rounded border border-gray-200 px-2 py-1 text-sm"
+          rows={3}
+        />
+      </ConfirmDialog>
     </div>
   );
 };

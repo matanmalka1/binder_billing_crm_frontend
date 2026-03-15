@@ -128,6 +128,11 @@ export const ENDPOINTS = {
   notificationsMarkRead: "/notifications/mark-read",
   notificationsMarkAllRead: "/notifications/mark-all-read",
   documentDownloadUrl: (id: number | string) => `/documents/${id}/download-url`,
+  documentApprove: (id: number | string) => `/documents/${id}/approve`,
+  documentReject: (id: number | string) => `/documents/${id}/reject`,
+  documentVersions: (clientId: number | string) => `/documents/client/${clientId}/versions`,
+  documentsByAnnualReport: (reportId: number | string) => `/documents/annual-report/${reportId}`,
+  documentNotes: (id: number | string) => `/documents/${id}/notes`,
 } as const;
 
 export const ACTION_ENDPOINT_PATTERNS: RegExp[] = [
