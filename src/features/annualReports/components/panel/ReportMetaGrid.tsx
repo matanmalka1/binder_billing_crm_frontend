@@ -1,8 +1,5 @@
-import type {
-  AnnualReportFull,
-  ClientTypeForReport,
-} from "../../../../api/annualReport.api";
-import { DrawerField } from "../../../../components/ui/DetailDrawer";
+import type { AnnualReportFull, ClientTypeForReport } from "../../../../api/annualReport.api";
+import { DefinitionList } from "../../../../components/ui/DefinitionList";
 
 interface ReportMetaGridProps {
   report: AnnualReportFull;
@@ -21,17 +18,17 @@ const formatDate = (value: string | null): string => {
 };
 
 export const ReportMetaGrid = ({ report }: ReportMetaGridProps) => (
-  <div className="grid grid-cols-2 gap-x-6" dir="rtl">
-    <DrawerField label="שנת מס" value={report.tax_year} />
-    <DrawerField
-      label="סוג לקוח"
-      value={CLIENT_TYPE_LABELS[report.client_type] ?? report.client_type}
-    />
-    <DrawerField label="מזהה דוח" value={report.form_type} />
-    <DrawerField label="מספר אסמכתא" value={report.ita_reference} />
-    <DrawerField label="הוגש בתאריך" value={formatDate(report.submitted_at)} />
-    <DrawerField label="מועד הגשה" value={formatDate(report.filing_deadline)} />
-  </div>
+  <DefinitionList
+    columns={2}
+    items={[
+      { label: "שנת מס", value: report.tax_year },
+      { label: "סוג לקוח", value: CLIENT_TYPE_LABELS[report.client_type] ?? report.client_type },
+      { label: "מזהה דוח", value: report.form_type },
+      { label: "מספר אסמכתא", value: report.ita_reference },
+      { label: "הוגש בתאריך", value: formatDate(report.submitted_at) },
+      { label: "מועד הגשה", value: formatDate(report.filing_deadline) },
+    ]}
+  />
 );
 
 ReportMetaGrid.displayName = "ReportMetaGrid";
