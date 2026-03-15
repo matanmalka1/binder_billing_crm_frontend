@@ -4,7 +4,7 @@ import { TimelineCard } from "./TimelineCard";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { PaginationCard } from "../../../components/ui/PaginationCard";
 import { PageLoading } from "../../../components/ui/PageLoading";
-import { ErrorCard } from "../../../components/ui/ErrorCard";
+import { Alert } from "../../../components/ui/Alert";
 
 interface ClientTimelineTabProps {
   clientId: string | undefined;
@@ -33,7 +33,7 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }
   } = useClientTimelinePage(clientId);
 
   if (loading) return <PageLoading message="טוען ציר זמן..." />;
-  if (error) return <ErrorCard message={error} />;
+  if (error) return <Alert variant="error" message={error} />;
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
