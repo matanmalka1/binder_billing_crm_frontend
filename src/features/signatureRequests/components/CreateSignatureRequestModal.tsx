@@ -5,6 +5,7 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
+import { ClientSearchInput, SelectedClientDisplay } from "../../../components/ui/ClientSearchInput";
 import type { CreateSignatureRequestPayload, SignatureRequestType } from "../../../api/signatureRequests.api";
 import { getSignatureRequestTypeLabel } from "../../../utils/enums";
 
@@ -18,8 +19,8 @@ const REQUEST_TYPES: SignatureRequestType[] = [
 
 interface Props {
   open: boolean;
-  clientId: number;
-  signerName: string;
+  clientId?: number;
+  signerName?: string;
   signerEmail?: string;
   signerPhone?: string;
   isLoading: boolean;
@@ -29,37 +30,47 @@ interface Props {
 
 export const CreateSignatureRequestModal: React.FC<Props> = ({
   open,
-  clientId,
-  signerName,
+  clientId: initialClientId,
+  signerName: initialSignerName = "",
   signerEmail,
   isLoading,
   onClose,
   onCreate,
 }) => {
+  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(
+    initialClientId != null ? { id: initialClientId, name: initialSignerName } : null,
+  );
+  const [clientQuery, setClientQuery] = useState("");
   const [requestType, setRequestType] = useState<SignatureRequestType>("engagement_agreement");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  // Pre-fill with client defaults so advisor can see/edit them immediately
-  const [overrideName, setOverrideName] = useState(signerName);
+  const [overrideName, setOverrideName] = useState(initialSignerName);
   const [overrideEmail, setOverrideEmail] = useState(signerEmail ?? "");
+
+  const resolvedClientId = initialClientId ?? selectedClient?.id;
+  const resolvedSignerName = initialSignerName || selectedClient?.name || "";
 
   const handleClose = () => {
     onClose();
     setTitle("");
     setDescription("");
-    setOverrideName(signerName);
+    setOverrideName(initialSignerName);
     setOverrideEmail(signerEmail ?? "");
+    if (initialClientId == null) {
+      setSelectedClient(null);
+      setClientQuery("");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    if (!title.trim() || !resolvedClientId) return;
     await onCreate({
-      client_id: clientId,
+      client_id: resolvedClientId,
       request_type: requestType,
       title: title.trim(),
       description: description.trim() || undefined,
-      signer_name: overrideName.trim() || signerName,
+      signer_name: overrideName.trim() || resolvedSignerName,
       signer_email: overrideEmail.trim() || undefined,
     });
     handleClose();
@@ -75,7 +86,7 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
           <Button variant="outline" size="sm" onClick={handleClose} disabled={isLoading}>
             ביטול
           </Button>
-          <Button size="sm" isLoading={isLoading} onClick={handleSubmit} type="submit">
+          <Button size="sm" isLoading={isLoading} onClick={handleSubmit} type="submit" disabled={!resolvedClientId}>
             יצירה
           </Button>
         </div>
@@ -86,6 +97,21 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
           <Link2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span>לאחר יצירה, לחץ <strong>שלח</strong> כדי לקבל קישור חתימה שניתן לשלוח ללקוח (וואטסאפ, אימייל, SMS וכד׳).</span>
         </div>
+        {initialClientId == null && (
+          selectedClient ? (
+            <SelectedClientDisplay
+              name={selectedClient.name}
+              id={selectedClient.id}
+              onClear={() => { setSelectedClient(null); setClientQuery(""); setOverrideName(""); }}
+            />
+          ) : (
+            <ClientSearchInput
+              value={clientQuery}
+              onChange={setClientQuery}
+              onSelect={(c) => { setSelectedClient({ id: c.id, name: c.name }); setOverrideName(c.name); setClientQuery(c.name); }}
+            />
+          )
+        )}
         <Select
           label="סוג מסמך"
           value={requestType}
@@ -116,7 +142,7 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
               label="שם חותם"
               value={overrideName}
               onChange={(e) => setOverrideName(e.target.value)}
-              placeholder={signerName}
+              placeholder={resolvedSignerName}
             />
             <Input
               label='דוא"ל חותם'

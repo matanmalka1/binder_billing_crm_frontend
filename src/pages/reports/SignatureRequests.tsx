@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FileSignature, ClipboardCheck, Clock, AlertCircle } from "lucide-react";
+import { FileSignature, ClipboardCheck, Clock, AlertCircle, Plus } from "lucide-react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { PageStateGuard } from "../../components/ui/PageStateGuard";
 import { DataTable } from "../../components/ui/DataTable";
@@ -9,6 +9,7 @@ import { Button } from "../../components/ui/Button";
 import { StatusBadge } from "../../components/ui/StatusBadge";
 import { SignatureRequestAuditDrawer } from "../../features/signatureRequests/components/SignatureRequestAuditDrawer";
 import { SignatureRequestsPageRowActions } from "../../features/signatureRequests/components/SignatureRequestsPageRowActions";
+import { CreateSignatureRequestModal } from "../../features/signatureRequests/components/CreateSignatureRequestModal";
 import { usePendingSignatureRequests } from "../../features/signatureRequests/hooks/usePendingSignatureRequests";
 import { useSignatureRequestActions } from "../../features/signatureRequests/hooks/useSignatureRequestActions";
 import { buildSigningUrl } from "../../features/signatureRequests/utils";
@@ -30,11 +31,12 @@ const TERMINAL_STATUSES = new Set(["signed", "expired", "canceled", "declined"])
 
 export const SignatureRequestsPage: React.FC = () => {
   const { items, total, clientNames, isLoading, error } = usePendingSignatureRequests();
-  const { send, isSending, cancel, isCanceling } = useSignatureRequestActions();
+  const { send, isSending, cancel, isCanceling, create, isCreating } = useSignatureRequestActions();
 
   const [signingUrls, setSigningUrls] = useState<Record<number, string>>({});
   const [auditRequestId, setAuditRequestId] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
 
   const draft = items.filter((r) => r.status === "draft").length;
   const pending = items.filter((r) => r.status === "pending_signature").length;
@@ -126,6 +128,12 @@ export const SignatureRequestsPage: React.FC = () => {
     <PageHeader
       title="בקשות חתימה"
       description="כל בקשות החתימה הפעילות בכלל הלקוחות"
+      actions={
+        <Button size="sm" onClick={() => setShowCreate(true)}>
+          <Plus className="h-3.5 w-3.5" />
+          בקשה חדשה
+        </Button>
+      }
     />
   );
 
@@ -167,6 +175,13 @@ export const SignatureRequestsPage: React.FC = () => {
       <SignatureRequestAuditDrawer
         requestId={auditRequestId}
         onClose={() => setAuditRequestId(null)}
+      />
+
+      <CreateSignatureRequestModal
+        open={showCreate}
+        isLoading={isCreating}
+        onClose={() => setShowCreate(false)}
+        onCreate={create}
       />
     </PageStateGuard>
   );
