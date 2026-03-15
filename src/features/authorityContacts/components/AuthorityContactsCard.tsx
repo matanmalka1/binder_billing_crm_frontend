@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Plus, Users, ChevronRight, ChevronLeft } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
-import { ErrorCard } from "../../../components/ui/ErrorCard";
-import { EmptyState } from "../../../components/ui/EmptyState";
+import { Alert } from "../../../components/ui/Alert";
+import { StateCard } from "../../../components/ui/StateCard";
 import type { AuthorityContactResponse } from "../../../api/authorityContacts.api";
 import { useAuthorityContacts } from "../hooks/useAuthorityContacts";
 import { AuthorityContactRow } from "./AuthorityContactRow";
@@ -55,14 +55,14 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
         </Button>
       }
     >
-      {error && <ErrorCard message={error} />}
+      {error && <Alert variant="error" message={error} />}
 
       {isLoading && (
         <p className="text-sm text-gray-500 text-center py-4">טוען אנשי קשר...</p>
       )}
 
       {!isLoading && !error && contacts.length === 0 && (
-        <EmptyState
+        <StateCard
           icon={Users}
           message="לא נוספו עדיין אנשי קשר ברשויות"
           variant="minimal"
