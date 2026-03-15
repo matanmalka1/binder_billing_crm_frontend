@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
-import { InlineToolbar } from "../components/ui/InlineToolbar";
+import { ToolbarContainer } from "../components/ui/ToolbarContainer";
 import { DataTable } from "../components/ui/DataTable";
-import { ErrorCard } from "../components/ui/ErrorCard";
+import { Alert } from "../components/ui/Alert";
 import { Button } from "../components/ui/Button";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
@@ -90,11 +90,11 @@ export const Binders: React.FC = () => {
         }
       />
 
-      <InlineToolbar>
+      <ToolbarContainer>
         <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
-      </InlineToolbar>
+      </ToolbarContainer>
 
-      {error && <ErrorCard message={error} />}
+      {error && <Alert variant="error" message={error} />}
 
       <DataTable
         data={binders}
