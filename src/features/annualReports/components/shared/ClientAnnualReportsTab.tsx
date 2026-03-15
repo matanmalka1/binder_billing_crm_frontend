@@ -5,7 +5,7 @@ import { QK } from "../../../../lib/queryKeys";
 import { SeasonReportsTable } from "../kanban/SeasonReportsTable";
 import { AnnualReportFullPanel } from "../panel/AnnualReportFullPanel";
 import { PageLoading } from "../../../../components/ui/PageLoading";
-import { ErrorCard } from "../../../../components/ui/ErrorCard";
+import { Alert } from "../../../../components/ui/Alert";
 import { getErrorMessage } from "../../../../utils/utils";
 import { cn } from "../../../../utils/utils";
 
@@ -26,7 +26,7 @@ export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ 
   });
 
   if (isPending) return <PageLoading message="טוען דוחות שנתיים..." />;
-  if (error) return <ErrorCard message={getErrorMessage(error, "שגיאה בטעינת דוחות שנתיים")} />;
+  if (error) return <Alert variant="error" message={getErrorMessage(error, "שגיאה בטעינת דוחות שנתיים")} />;
 
   const allReports = data ?? [];
   const yearHasReports = (year: number) => allReports.some((r) => r.tax_year === year);
