@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Search, RotateCcw } from "lucide-react";
+import { Search } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import { Select } from "../../../components/ui/Select";
 import { Input } from "../../../components/ui/Input";
-import { Badge } from "../../../components/ui/Badge";
-import { Button } from "../../../components/ui/Button";
+import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
 import { cn } from "../../../utils/utils";
 import type { ClientsFiltersBarProps } from "../types";
 
@@ -33,8 +32,6 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
 
-  const hasActive = Boolean(filters.search || filters.status);
-
   const handleReset = () => {
     setSearchDraft("");
     onFilterChange("search", "");
@@ -60,30 +57,13 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
         />
       </div>
 
-      {hasActive && (
-        <div className="flex flex-wrap items-center gap-2 animate-fade-in">
-          {filters.search && (
-            <Badge removable onRemove={() => { setSearchDraft(""); onFilterChange("search", ""); }}>
-              {`חיפוש: ${filters.search}`}
-            </Badge>
-          )}
-          {filters.status && (
-            <Badge removable onRemove={() => onFilterChange("status", "")}>
-              {STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status}
-            </Badge>
-          )}
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleReset}
-            className="gap-1.5 text-sm text-gray-500 hover:text-gray-700"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-            איפוס
-          </Button>
-        </div>
-      )}
+      <ActiveFilterBadges
+        badges={[
+          filters.search ? { key: "search", label: `חיפוש: ${filters.search}`, onRemove: () => { setSearchDraft(""); onFilterChange("search", ""); } } : null,
+          filters.status ? { key: "status", label: STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onFilterChange("status", "") } : null,
+        ].filter((b): b is NonNullable<typeof b> => b !== null)}
+        onReset={handleReset}
+      />
     </div>
   );
 };

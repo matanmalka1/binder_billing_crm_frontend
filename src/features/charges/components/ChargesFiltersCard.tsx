@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { RotateCcw } from "lucide-react";
 import { Select } from "../../../components/ui/Select";
-import { Badge } from "../../../components/ui/Badge";
-import { Button } from "../../../components/ui/Button";
+import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
 import { ClientSearchInput, SelectedClientDisplay } from "../../../components/ui/ClientSearchInput";
 import { cn } from "../../../utils/utils";
 import type { ChargesFilters } from "../types";
@@ -35,8 +33,6 @@ export const ChargesFiltersCard = ({
 }: ChargesFiltersCardProps) => {
   const [clientQuery, setClientQuery] = useState("");
   const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
-
-  const hasActive = Boolean(filters.client_id || filters.status || filters.charge_type);
 
   const handleSelectClient = (client: { id: number; name: string }) => {
     setSelectedClient(client);
@@ -92,33 +88,14 @@ export const ChargesFiltersCard = ({
         />
       </div>
 
-      {hasActive && (
-        <div className="flex flex-wrap items-center gap-2 animate-fade-in">
-          {selectedClient && (
-            <Badge removable onRemove={handleClearClient}>{`לקוח: ${selectedClient.name}`}</Badge>
-          )}
-          {filters.status && (
-            <Badge removable onRemove={() => onFilterChange("status", "")}>
-              {STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status}
-            </Badge>
-          )}
-          {filters.charge_type && (
-            <Badge removable onRemove={() => onFilterChange("charge_type", "")}>
-              {CHARGE_TYPE_OPTIONS.find((o) => o.value === filters.charge_type)?.label ?? filters.charge_type}
-            </Badge>
-          )}
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleClearAll}
-            className="gap-1.5 text-sm text-gray-500 hover:text-gray-700"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-            איפוס
-          </Button>
-        </div>
-      )}
+      <ActiveFilterBadges
+        badges={[
+          selectedClient ? { key: "client", label: `לקוח: ${selectedClient.name}`, onRemove: handleClearClient } : null,
+          filters.status ? { key: "status", label: STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onFilterChange("status", "") } : null,
+          filters.charge_type ? { key: "charge_type", label: CHARGE_TYPE_OPTIONS.find((o) => o.value === filters.charge_type)?.label ?? filters.charge_type, onRemove: () => onFilterChange("charge_type", "") } : null,
+        ].filter((b): b is NonNullable<typeof b> => b !== null)}
+        onReset={handleClearAll}
+      />
     </div>
   );
 };

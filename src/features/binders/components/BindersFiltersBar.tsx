@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { Select } from "../../../components/ui/Select";
 import { Input } from "../../../components/ui/Input";
-import { Button } from "../../../components/ui/Button";
-import { Badge } from "../../../components/ui/Badge";
-import { RotateCcw, Search } from "lucide-react";
+import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
+import { Search } from "lucide-react";
 import { WORK_STATE_OPTIONS } from "../../../constants/filterOptions.constants";
 import { BINDER_STATUS_OPTIONS } from "../constants";
 import type { BindersFiltersBarProps } from "../types";
@@ -15,7 +14,10 @@ const YEAR_OPTIONS = [
   ...buildYearOptions(),
 ];
 
-export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBarProps) => {
+export const BindersFiltersBar = ({
+  filters,
+  onFilterChange,
+}: BindersFiltersBarProps) => {
   const [searchDraft, setSearchDraft] = useState(filters.query ?? "");
   const [debouncedSearch] = useDebounce(searchDraft, 350);
 
@@ -31,8 +33,6 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
-
-  const hasActive = Boolean(filters.status || filters.work_state || filters.query || filters.year);
 
   const handleReset = () => {
     setSearchDraft("");
@@ -58,54 +58,70 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
           value={filters.status ?? ""}
           onChange={(e) => onFilterChange("status", e.target.value)}
           options={[...BINDER_STATUS_OPTIONS]}
-          className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
+          className={cn(
+            filters.status && "border-primary-400 ring-1 ring-primary-200",
+          )}
         />
         <Select
           label="מצב עבודה"
           value={filters.work_state ?? ""}
           onChange={(e) => onFilterChange("work_state", e.target.value)}
           options={WORK_STATE_OPTIONS}
-          className={cn(filters.work_state && "border-primary-400 ring-1 ring-primary-200")}
+          className={cn(
+            filters.work_state && "border-primary-400 ring-1 ring-primary-200",
+          )}
         />
         <Select
           label="תקופה"
           value={filters.year ?? ""}
           onChange={(e) => onFilterChange("year", e.target.value)}
           options={YEAR_OPTIONS}
-          className={cn(filters.year && "border-primary-400 ring-1 ring-primary-200")}
+          className={cn(
+            filters.year && "border-primary-400 ring-1 ring-primary-200",
+          )}
         />
       </div>
 
-      {hasActive && (
-        <div className="flex flex-wrap items-center gap-2 animate-fade-in">
-          {filters.query && (
-            <Badge removable onRemove={() => { setSearchDraft(""); onFilterChange("query", ""); }}>{`חיפוש: ${filters.query}`}</Badge>
-          )}
-          {filters.status && (
-            <Badge removable onRemove={() => onFilterChange("status", "")}>
-              {BINDER_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status}
-            </Badge>
-          )}
-          {filters.work_state && (
-            <Badge removable onRemove={() => onFilterChange("work_state", "")}>
-              {WORK_STATE_OPTIONS.find((o) => o.value === filters.work_state)?.label ?? filters.work_state}
-            </Badge>
-          )}
-          {filters.year && (
-            <Badge removable onRemove={() => onFilterChange("year", "")}>{filters.year}</Badge>
-          )}
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleReset}
-            className="gap-1.5 text-sm text-gray-500 hover:text-gray-700"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-            איפוס
-          </Button>
-        </div>
-      )}
+      <ActiveFilterBadges
+        badges={[
+          filters.query
+            ? {
+                key: "query",
+                label: `חיפוש: ${filters.query}`,
+                onRemove: () => {
+                  setSearchDraft("");
+                  onFilterChange("query", "");
+                },
+              }
+            : null,
+          filters.status
+            ? {
+                key: "status",
+                label:
+                  BINDER_STATUS_OPTIONS.find((o) => o.value === filters.status)
+                    ?.label ?? filters.status,
+                onRemove: () => onFilterChange("status", ""),
+              }
+            : null,
+          filters.work_state
+            ? {
+                key: "work_state",
+                label:
+                  WORK_STATE_OPTIONS.find((o) => o.value === filters.work_state)
+                    ?.label ?? filters.work_state,
+                onRemove: () => onFilterChange("work_state", ""),
+              }
+            : null,
+          filters.year
+            ? {
+                key: "year",
+                label: filters.year,
+                onRemove: () => onFilterChange("year", ""),
+              }
+            : null,
+        ].filter((b): b is NonNullable<typeof b> => b !== null)}
+        onReset={handleReset}
+      />
     </div>
   );
 };
