@@ -50,7 +50,7 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
 
   const { data: taxDeadlinesData } = useQuery({
     queryKey: ["tax_deadlines", "client", clientId],
-    queryFn: () => taxDeadlinesApi.listTaxDeadlines({ client_id: clientId, page_size: 100 }),
+    queryFn: () => taxDeadlinesApi.listTaxDeadlines({ client_name: clientName, page_size: 100 }),
     enabled: showCreateModal,
   });
 
