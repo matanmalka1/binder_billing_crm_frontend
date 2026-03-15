@@ -51,11 +51,13 @@ export const AnnualPLSummary: React.FC<Props> = ({ reportId, clientId }) => {
   const financialsQ = useQuery({
     queryKey: QK.tax.annualReportFinancials(reportId),
     queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
+    enabled: !!reportId,
   });
 
   const taxQ = useQuery({
     queryKey: QK.tax.annualReportTaxCalc(reportId),
     queryFn: () => annualReportTaxApi.getTaxCalculation(reportId),
+    enabled: !!reportId,
   });
 
   const isLoading = financialsQ.isLoading || taxQ.isLoading;
