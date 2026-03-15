@@ -15,6 +15,7 @@ import { useAnnualReportsKanbanPage } from "../features/annualReports/hooks/useA
 import { STAGE_ORDER, KANBAN_PAGE_SIZE, TAB_LABELS, type ActiveTab } from "../features/annualReports/types";
 import { OverdueBanner } from "../features/annualReports/components/shared/OverdueBanner";
 import { YearComparisonModal } from "../features/annualReports/components/kanban/YearComparisonModal";
+import { AnnualReportStatusView } from "../features/reports/components/AnnualReportStatusView";
 import { cn } from "../utils/utils";
 
 export const AnnualReportsKanban: React.FC = () => {
@@ -218,6 +219,10 @@ export const AnnualReportsKanban: React.FC = () => {
             </div>
           )}
         </>
+      )}
+
+      {activeTab === "status" && (
+        <AnnualReportStatusView />
       )}
 
       {selectedReportId !== null && (

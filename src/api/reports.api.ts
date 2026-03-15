@@ -29,6 +29,45 @@ export interface AgingReportResponse {
   cap_limit: number;
 }
 
+export interface AnnualReportClientEntry {
+  client_id: number;
+  client_name: string;
+  form_type: string | null;
+  filing_deadline: string | null;
+  days_until_deadline: number | null;
+}
+
+export interface AnnualReportStatusGroup {
+  status: string;
+  count: number;
+  clients: AnnualReportClientEntry[];
+}
+
+export interface AnnualReportStatusReportResponse {
+  tax_year: number;
+  total: number;
+  statuses: AnnualReportStatusGroup[];
+}
+
+export interface AdvancePaymentReportItem {
+  client_id: number;
+  client_name: string;
+  total_expected: number;
+  total_paid: number;
+  overdue_count: number;
+  gap: number;
+}
+
+export interface AdvancePaymentReportResponse {
+  year: number;
+  month: number | null;
+  total_expected: number;
+  total_paid: number;
+  collection_rate: number;
+  total_gap: number;
+  items: AdvancePaymentReportItem[];
+}
+
 // Note: Backend uses float for bucket fields; TS `number` already covers both int/float.
 
 export type ExportFormat = "excel" | "pdf";
@@ -83,5 +122,28 @@ export const reportsApi = {
 
   downloadExport: (downloadUrl: string): void => {
     window.open(downloadUrl, "_blank");
+  },
+
+  getAdvancePaymentReport: async (
+    year: number,
+    month?: number,
+  ): Promise<AdvancePaymentReportResponse> => {
+    const params: Record<string, unknown> = { year };
+    if (month !== undefined) params.month = month;
+    const response = await api.get<AdvancePaymentReportResponse>(
+      ENDPOINTS.reportsAdvancePayments,
+      { params },
+    );
+    return response.data;
+  },
+
+  getAnnualReportStatusReport: async (
+    taxYear: number,
+  ): Promise<AnnualReportStatusReportResponse> => {
+    const response = await api.get<AnnualReportStatusReportResponse>(
+      ENDPOINTS.reportsAnnualReportStatus,
+      { params: { tax_year: taxYear } },
+    );
+    return response.data;
   },
 };

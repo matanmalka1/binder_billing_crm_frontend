@@ -18,6 +18,8 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { RemindersPage } from "../pages/reports/Reminders";
 import { SignatureRequestsPage } from "../pages/reports/SignatureRequests";
 import { AgingReport } from "../pages/reports/AgingReport";
+import { AnnualReportStatusReport } from "../pages/reports/AnnualReportStatusReport";
+import { AdvancePaymentCollectionsReport } from "../pages/reports/AdvancePaymentCollectionsReport";
 import { AdvancePayments } from "../pages/tax/AdvancePayments";
 import { VatWorkItems } from "../pages/tax/VatWorkItems";
 import { Users } from "../pages/Users";
@@ -80,6 +82,9 @@ export const AppRoutes: React.FC = () => {
             <Route path="clients/:clientId" element={<ClientDetails />} />
             <Route path="clients/:clientId/timeline" element={<ClientDetails initialTab="timeline" />} />
             <Route path="clients/:clientId/documents" element={<ClientDetails initialTab="documents" />} />
+            <Route path="clients/:clientId/vat" element={<ClientDetails initialTab="vat" />} />
+            <Route path="clients/:clientId/advance-payments" element={<ClientDetails initialTab="advance-payments" />} />
+            <Route path="clients/:clientId/annual-reports" element={<ClientDetails initialTab="annual-reports" />} />
             <Route path="search" element={<Search />} />
             <Route path="charges" element={<Charges />} />
             <Route path="tax" element={<Navigate to="/tax/deadlines" replace />} />
@@ -87,9 +92,11 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
             <Route path="tax/advance-payments" element={<AdvancePayments />} />
             <Route path="tax/vat" element={<VatWorkItems />} />
-            <Route path="reports/aging" element={<AgingReport />} />
-            <Route path="reports/reminders" element={<RemindersPage />} />
-            <Route path="reports/signature-requests" element={<SignatureRequestsPage />} />
+            <Route path="reports/advance-payments" element={<Navigate to="/tax/advance-payments?tab=report" replace />} />
+            <Route path="reports/aging" element={<Navigate to="/charges?tab=aging" replace />} />
+            <Route path="reports/annual-reports" element={<Navigate to="/tax/reports?tab=status" replace />} />
+            <Route path="reminders" element={<RemindersPage />} />
+            <Route path="signature-requests" element={<SignatureRequestsPage />} />
             <Route path="settings/users" element={<Users />} />
           </Route>
         </Route>

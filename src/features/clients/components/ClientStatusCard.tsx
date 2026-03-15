@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck } from "lucide-react";
 import { clientsApi } from "../../../api/clients.api";
 import { QK } from "../../../lib/queryKeys";
@@ -13,10 +14,14 @@ interface TileProps {
   title: string;
   primary: string;
   secondary: string;
+  onClick?: () => void;
 }
 
-const Tile: React.FC<TileProps> = ({ icon, title, primary, secondary }) => (
-  <div className="flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4">
+const Tile: React.FC<TileProps> = ({ icon, title, primary, secondary, onClick }) => (
+  <div
+    className={`flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4 ${onClick ? "cursor-pointer hover:bg-gray-100 transition-colors" : ""}`}
+    onClick={onClick}
+  >
     <div className="mt-0.5 shrink-0 text-blue-600">{icon}</div>
     <div className="min-w-0">
       <p className="text-xs font-medium text-gray-500">{title}</p>
@@ -30,6 +35,7 @@ const fmt = (n: number | null | undefined) =>
   n != null ? `₪${Number(n).toLocaleString("he-IL", { maximumFractionDigits: 0 })}` : "—";
 
 export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
+  const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: QK.clients.statusCard(clientId),
     queryFn: () => clientsApi.getStatusCard(clientId),
@@ -80,36 +86,42 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title='מע"מ שנה נוכחית'
           primary={fmt(vat.net_vat_total)}
           secondary={vatStatus}
+          onClick={() => navigate(`/clients/${clientId}/vat`)}
         />
         <Tile
           icon={<FileText size={18} />}
           title="דוח שנתי"
           primary={arStatus}
           secondary={arSecondary}
+          onClick={() => navigate(`/clients/${clientId}/annual-reports`)}
         />
         <Tile
           icon={<CreditCard size={18} />}
           title="חיובים פתוחים"
           primary={fmt(charges.total_outstanding)}
           secondary={`${charges.unpaid_count} חיובים`}
+          onClick={() => navigate(`/clients/${clientId}`)}
         />
         <Tile
           icon={<TrendingUp size={18} />}
           title="מקדמות"
           primary={fmt(advance_payments.total_paid)}
           secondary={`${advance_payments.count} תשלומים`}
+          onClick={() => navigate(`/clients/${clientId}/advance-payments`)}
         />
         <Tile
           icon={<FolderOpen size={18} />}
           title="קלסרים"
           primary={`${binders.active_count} פעילים`}
           secondary={`${binders.in_office_count} במשרד`}
+          onClick={() => navigate(`/clients/${clientId}`)}
         />
         <Tile
           icon={<FileCheck size={18} />}
           title="מסמכים"
           primary={`${documents.present_count}/${documents.total_count}`}
           secondary="מסמכים קיימים"
+          onClick={() => navigate(`/clients/${clientId}/documents`)}
         />
       </div>
     </Card>

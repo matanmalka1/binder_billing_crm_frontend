@@ -15,7 +15,6 @@ import {
   KanbanSquare,
   ClipboardList,
   Settings,
-  TrendingDown,
   ChevronDown,
 } from "lucide-react";
 import { cn } from "../../utils/utils";
@@ -48,6 +47,8 @@ const NAV_GROUPS: NavGroup[] = [
       { to: "/clients", label: "לקוחות", icon: Users },
       { to: "/search", label: "חיפוש", icon: Search },
       { to: "/charges", label: "חיובים", icon: ReceiptText },
+      { to: "/reminders", label: "תזכורות", icon: Bell },
+      { to: "/signature-requests", label: "בקשות חתימה", icon: FileSignature },
     ],
   },
   {
@@ -58,15 +59,6 @@ const NAV_GROUPS: NavGroup[] = [
       { to: "/tax/reports", label: "קנבן דוחות", icon: KanbanSquare, end: true },
       { to: "/tax/advance-payments", label: "מקדמות", icon: CalendarDays },
       { to: "/tax/vat", label: 'דוחות מע"מ', icon: ClipboardList },
-    ],
-  },
-  {
-    key: "reports",
-    label: "דוחות",
-    items: [
-      { to: "/reports/aging", label: "דוח חובות", icon: TrendingDown },
-      { to: "/reports/reminders", label: "תזכורות", icon: Bell },
-      { to: "/reports/signature-requests", label: "בקשות חתימה", icon: FileSignature },
     ],
   },
   {
@@ -159,7 +151,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
   const [expanded, setExpanded] = useState<Record<string, boolean>>({
     main: true,
     tax: true,
-    reports: true,
     settings: true,
   });
 

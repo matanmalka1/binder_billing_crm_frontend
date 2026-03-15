@@ -1,6 +1,8 @@
 import { getYear } from "date-fns";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/layout/PageHeader";
+import { AdvancePaymentReportView } from "../../features/reports/components/AdvancePaymentReportView";
+import { cn } from "../../utils/utils";
 import { Alert } from "../../components/ui/Alert";
 import { Select } from "../../components/ui/Select";
 import { DataTable, type Column } from "../../components/ui/DataTable";
@@ -80,6 +82,14 @@ export const AdvancePayments: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const activeTab = searchParams.get("tab") ?? "overview";
+
+  const setTab = (tab: string) => {
+    const next = new URLSearchParams();
+    next.set("tab", tab);
+    setSearchParams(next);
+  };
+
   const year = parsePositiveInt(searchParams.get("year"), getYear(new Date()));
   const month = parsePositiveInt(searchParams.get("month"), 0);
   const statusFilter = (searchParams.get("status") ?? "") as AdvancePaymentStatus | "";
@@ -102,6 +112,34 @@ export const AdvancePayments: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <div
+        role="tablist"
+        aria-label="תצוגת מקדמות"
+        className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 w-fit"
+      >
+        {(["overview", "report"] as const).map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab}
+            onClick={() => setTab(tab)}
+            className={cn(
+              "rounded-md px-4 py-1.5 text-sm font-medium transition-all",
+              activeTab === tab
+                ? "bg-white text-gray-900 shadow-sm"
+                : "text-gray-500 hover:text-gray-700",
+            )}
+          >
+            {tab === "overview" ? "סקירה" : "דוח גבייה"}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === "report" && <AdvancePaymentReportView />}
+
+      {activeTab === "overview" && (
+      <>
       <PageHeader
         title="מקדמות — סקירה כללית"
         description="כל הלקוחות עם מקדמות פתוחות, חלקיות או באיחור"
@@ -167,6 +205,8 @@ export const AdvancePayments: React.FC = () => {
           label="מקדמות"
           onPageChange={(p) => setParam("page", String(p))}
         />
+      )}
+      </>
       )}
     </div>
   );

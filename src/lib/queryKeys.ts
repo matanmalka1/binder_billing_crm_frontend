@@ -131,6 +131,10 @@ export const QK = {
   },
   reports: {
     aging: (asOfDate: string) => ["reports", "aging", asOfDate] as const,
+    annualReportStatus: (taxYear: number) =>
+      ["reports", "annual-report-status", taxYear] as const,
+    advancePayments: (year: number, month?: number) =>
+      ["reports", "advance-payments", year, month ?? null] as const,
   },
   signatureRequests: {
     all: ["signature-requests"] as const,
