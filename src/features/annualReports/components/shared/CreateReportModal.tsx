@@ -106,13 +106,16 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
               min={0}
               {...register("advances_paid")}
             />
-            <Input
-              label="נקודות זיכוי"
-              type="number"
-              min={0}
-              step={0.25}
-              {...register("credit_points")}
-            />
+            <div>
+              <Input
+                label="נקודות זיכוי"
+                type="number"
+                min={0}
+                step={0.25}
+                {...register("credit_points")}
+              />
+              <p className="mt-1 text-xs text-gray-500">לצורך הצגת אומדן בלבד — לא נשמר בדוח</p>
+            </div>
           </div>
         </div>
 
