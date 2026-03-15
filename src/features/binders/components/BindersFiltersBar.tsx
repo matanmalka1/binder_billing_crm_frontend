@@ -3,7 +3,7 @@ import { useDebounce } from "use-debounce";
 import { Select } from "../../../components/ui/Select";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
-import { ActivePill } from "../../../components/ui/ActivePill";
+import { Badge } from "../../../components/ui/Badge";
 import { RotateCcw, Search } from "lucide-react";
 import { WORK_STATE_OPTIONS } from "../../../constants/filterOptions.constants";
 import { BINDER_STATUS_OPTIONS } from "../constants";
@@ -51,7 +51,7 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
           value={searchDraft}
           onChange={(e) => setSearchDraft(e.target.value)}
           placeholder="שם לקוח או מספר קלסר..."
-          leftIcon={<Search className="h-4 w-4" />}
+          startIcon={<Search className="h-4 w-4" />}
         />
         <Select
           label="סטטוס"
@@ -79,22 +79,20 @@ export const BindersFiltersBar = ({ filters, onFilterChange }: BindersFiltersBar
       {hasActive && (
         <div className="flex flex-wrap items-center gap-2 animate-fade-in">
           {filters.query && (
-            <ActivePill label={`חיפוש: ${filters.query}`} onRemove={() => { setSearchDraft(""); onFilterChange("query", ""); }} />
+            <Badge removable onRemove={() => { setSearchDraft(""); onFilterChange("query", ""); }}>{`חיפוש: ${filters.query}`}</Badge>
           )}
           {filters.status && (
-            <ActivePill
-              label={BINDER_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status}
-              onRemove={() => onFilterChange("status", "")}
-            />
+            <Badge removable onRemove={() => onFilterChange("status", "")}>
+              {BINDER_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status}
+            </Badge>
           )}
           {filters.work_state && (
-            <ActivePill
-              label={WORK_STATE_OPTIONS.find((o) => o.value === filters.work_state)?.label ?? filters.work_state}
-              onRemove={() => onFilterChange("work_state", "")}
-            />
+            <Badge removable onRemove={() => onFilterChange("work_state", "")}>
+              {WORK_STATE_OPTIONS.find((o) => o.value === filters.work_state)?.label ?? filters.work_state}
+            </Badge>
           )}
           {filters.year && (
-            <ActivePill label={filters.year} onRemove={() => onFilterChange("year", "")} />
+            <Badge removable onRemove={() => onFilterChange("year", "")}>{filters.year}</Badge>
           )}
           <Button
             type="button"
