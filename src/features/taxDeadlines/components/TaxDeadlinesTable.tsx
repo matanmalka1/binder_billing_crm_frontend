@@ -1,8 +1,9 @@
 import { Calendar, CheckCircle2, Inbox, Edit2, Trash2 } from "lucide-react";
+import { IconLabel } from "../../../components/ui/IconLabel";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
-import { EmptyState } from "../../../components/ui/EmptyState";
+import { StateCard } from "../../../components/ui/StateCard";
 import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
 import {
   formatCurrency,
@@ -42,7 +43,7 @@ export const TaxDeadlinesTable = ({
 }: TaxDeadlinesTableProps) => {
   if (deadlines.length === 0) {
     return (
-      <EmptyState
+      <StateCard
         icon={Inbox}
         title="אין מועדים להצגה"
         message="לא נמצאו מועדים מסים התואמים לסינון הנוכחי"
@@ -94,12 +95,11 @@ export const TaxDeadlinesTable = ({
                     {getDeadlineTypeLabel(deadline.deadline_type)}
                   </td>
                   <td className="py-3.5 pr-4">
-                    <div className="flex items-center gap-1.5 text-sm">
-                      <Calendar className="h-3.5 w-3.5 shrink-0 text-gray-400" />
-                      <span className="font-medium text-gray-800">
-                        {formatDate(deadline.due_date)}
-                      </span>
-                    </div>
+                    <IconLabel
+                      icon={<Calendar className="h-3.5 w-3.5 shrink-0 text-gray-400" />}
+                      label={formatDate(deadline.due_date)}
+                      className="border-transparent bg-transparent font-medium text-gray-800 text-sm px-0 gap-1.5"
+                    />
                   </td>
                   <td className="py-3.5 pr-4">
                     {isCompleted ? (
