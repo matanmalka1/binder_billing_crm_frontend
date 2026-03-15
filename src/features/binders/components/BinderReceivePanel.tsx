@@ -71,6 +71,16 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         {...register("received_at")}
       />
 
+      <div className="w-full space-y-1">
+        <label className="block text-sm font-medium text-gray-700">הערות</label>
+        <textarea
+          rows={3}
+          placeholder="הערות פנימיות (אופציונלי)"
+          className="w-full rounded-lg border border-gray-300 px-3 py-3 shadow-sm transition-all focus:border-primary-500 focus:ring-2 focus:ring-primary-500 sm:text-sm bg-white resize-none"
+          {...register("notes")}
+        />
+      </div>
+
       <div className="flex justify-end gap-2 pt-2">
         <Button type="button" variant="ghost" onClick={onClose}>
           ביטול

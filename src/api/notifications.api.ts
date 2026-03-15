@@ -55,11 +55,11 @@ export const notificationsApi = {
     return response.data;
   },
 
-  markAllRead: async (clientId: number): Promise<MarkReadResponse> => {
+  markAllRead: async (clientId?: number): Promise<MarkReadResponse> => {
     const response = await api.post<MarkReadResponse>(
       ENDPOINTS.notificationsMarkAllRead,
       null,
-      { params: toQueryParams({ client_id: clientId }) },
+      clientId != null ? { params: toQueryParams({ client_id: clientId }) } : undefined,
     );
     return response.data;
   },

@@ -15,6 +15,7 @@ const getDefaultValues = (): ReceiveBinderFormValues => ({
   binder_type: "",
   binder_number: "",
   received_at: format(new Date(), "yyyy-MM-dd"),
+  notes: null,
 });
 
 export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
@@ -42,6 +43,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
         binder_number: values.binder_number,
         received_at: values.received_at,
         received_by: userId!,
+        notes: values.notes ?? null,
       }),
     onSuccess: async () => {
       toast.success("החומר נקלט בהצלחה");

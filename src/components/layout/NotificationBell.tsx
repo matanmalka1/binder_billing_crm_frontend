@@ -1,23 +1,10 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Bell } from "lucide-react";
-import { notificationsApi } from "../../api/notifications.api";
-import { QK } from "../../lib/queryKeys";
 import { NotificationDrawer } from "../../features/notifications/components/NotificationDrawer";
+import { useNotificationBell } from "../../features/notifications/hooks/useNotificationBell";
 
 export const NotificationBell: React.FC = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const { data } = useQuery({
-    queryKey: QK.notifications.unreadCount(),
-    queryFn: () => notificationsApi.getUnreadCount(),
-    refetchInterval: 30_000,
-  });
-
-  const unreadCount = data?.unread_count ?? 0;
-
-  const handleOpen = () => setDrawerOpen(true);
-  const handleClose = () => setDrawerOpen(false);
+  const { drawerOpen, unreadCount, handleOpen, handleClose } =
+    useNotificationBell();
 
   return (
     <>

@@ -17,11 +17,18 @@ export const useConfirmableAction = <T,>(
     [executeAction, shouldConfirm],
   );
 
-  const confirmPendingAction = useCallback(async () => {
-    if (!pendingAction) return;
-    await executeAction(pendingAction);
-    setPendingAction(null);
-  }, [executeAction, pendingAction]);
+  const confirmPendingAction = useCallback(
+    async (inputValues?: Record<string, string>) => {
+      if (!pendingAction) return;
+      const action =
+        inputValues && Object.keys(inputValues).length > 0
+          ? { ...pendingAction, payload: { ...(pendingAction as Record<string, unknown>).payload as Record<string, unknown>, ...inputValues } }
+          : pendingAction;
+      await executeAction(action as T);
+      setPendingAction(null);
+    },
+    [executeAction, pendingAction],
+  );
 
   const cancelPendingAction = () => setPendingAction(null);
 

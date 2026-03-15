@@ -5,6 +5,7 @@ export const receiveBinderSchema = z.object({
   binder_type: z.string().min(1, "נא לבחור סוג חומר"),
   binder_number: z.string().min(1, "נא להזין מספר קלסר"),
   received_at: z.string().min(1, "נא לבחור תאריך קבלה"),
+  notes: z.string().optional().nullable(),
 });
 
 export type ReceiveBinderFormValues = z.infer<typeof receiveBinderSchema>;

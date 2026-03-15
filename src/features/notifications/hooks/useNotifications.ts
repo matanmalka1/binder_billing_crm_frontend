@@ -4,7 +4,7 @@ import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
 
-export function useNotifications(clientId?: number) {
+export const useNotifications = (clientId?: number) => {
   const queryClient = useQueryClient();
 
   const { data: notifications = [], isLoading } = useQuery({
@@ -36,14 +36,14 @@ export function useNotifications(clientId?: number) {
   });
 
   const markAllReadMutation = useMutation({
-    mutationFn: (cid: number) => notificationsApi.markAllRead(cid),
+    mutationFn: (cid?: number) => notificationsApi.markAllRead(cid),
     onSuccess: invalidate,
     onError: (err) =>
       toast.error(getErrorMessage(err, "שגיאה בסימון כל ההתראות כנקראות")),
   });
 
   const markRead = (ids: number[]) => markReadMutation.mutate(ids);
-  const markAllRead = (cid: number) => markAllReadMutation.mutate(cid);
+  const markAllRead = (cid?: number) => markAllReadMutation.mutate(cid);
 
   return { notifications, unreadCount, markRead, markAllRead, isLoading };
-}
+};

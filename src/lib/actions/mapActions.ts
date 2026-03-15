@@ -9,6 +9,7 @@ const mapConfirm = (confirm?: BackendAction["confirm"] | null): ActionCommand["c
     message: confirm.message,
     confirmLabel: confirm.confirm_label,
     cancelLabel: confirm.cancel_label,
+    inputs: confirm.inputs,
   };
 };
 

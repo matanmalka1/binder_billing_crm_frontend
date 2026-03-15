@@ -130,7 +130,8 @@ export const Binders: React.FC = () => {
         confirmLabel={pendingAction?.confirm?.confirmLabel ?? "אישור"}
         cancelLabel={pendingAction?.confirm?.cancelLabel ?? "ביטול"}
         isLoading={activeActionKey === pendingAction?.uiKey}
-        onConfirm={confirmPendingAction}
+        inputs={pendingAction?.confirm?.inputs}
+        onConfirm={(inputValues) => void confirmPendingAction(inputValues)}
         onCancel={cancelPendingAction}
       />
 

@@ -1,10 +1,18 @@
 export type ActionMethod = "post" | "patch" | "put" | "delete";
 
+export interface BackendActionInputField {
+  name: string;
+  label: string;
+  type: "text";
+  required?: boolean;
+}
+
 export interface BackendActionConfirm {
   title: string;
   message: string;
   confirm_label: string;
   cancel_label: string;
+  inputs?: BackendActionInputField[];
 }
 
 export interface BackendAction {
@@ -24,11 +32,19 @@ export interface BackendAction {
 
 export type BackendActionInput = BackendAction;
 
+export interface ActionInputField {
+  name: string;
+  label: string;
+  type: "text";
+  required?: boolean;
+}
+
 export interface ActionConfirmConfig {
   title: string;
   message: string;
   confirmLabel: string;
   cancelLabel: string;
+  inputs?: ActionInputField[];
 }
 
 export interface ActionCommand {

@@ -12,13 +12,10 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
     if (!item.is_read) {
       markRead([item.id]);
     }
-    onClose();
   };
 
   const handleMarkAllRead = () => {
-    // markAllRead requires a clientId; for global we pass 0 as a sentinel handled by backend
-    // The API accepts client_id as optional query param — passing no client_id marks all globally
-    markAllRead(0);
+    markAllRead();
   };
 
   return (

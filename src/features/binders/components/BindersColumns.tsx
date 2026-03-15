@@ -20,6 +20,7 @@ import { BINDER_SIGNAL_VARIANTS } from "../constants";
 const binderStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   in_office: "info",
   ready_for_pickup: "success",
+  returned: "neutral",
 };
 
 const signalDotColors: Record<string, string> = {
