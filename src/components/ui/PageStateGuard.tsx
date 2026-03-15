@@ -1,6 +1,6 @@
 import type { ReactNode, FC } from "react";
 import { PageLoading } from "./PageLoading";
-import { ErrorCard } from "./ErrorCard";
+import { Alert } from "./Alert";
 
 interface PageStateGuardProps {
   isLoading: boolean;
@@ -21,7 +21,7 @@ export const PageStateGuard: FC<PageStateGuardProps> = ({
     <div className="space-y-6">
       {header}
       {isLoading && <PageLoading message={loadingMessage} />}
-      {error && <ErrorCard message={error} />}
+      {error && <Alert variant="error" message={error} />}
       {!isLoading && !error && children}
     </div>
   );
