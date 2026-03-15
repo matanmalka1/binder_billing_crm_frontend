@@ -1,7 +1,7 @@
 import type { PagedFilters } from "../../types/filters";
 
 export type TaxDeadlineFilters = PagedFilters<{
-  client_id: string;
+  client_name: string;
   deadline_type: string;
   status: string;
 }>;

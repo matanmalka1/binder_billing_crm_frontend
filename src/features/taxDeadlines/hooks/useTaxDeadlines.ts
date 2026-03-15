@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
 import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
-import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
+import { toOptionalString } from "../../../utils/filters";
 import type { TaxDeadlineFilters, CreateTaxDeadlineForm, EditTaxDeadlineForm } from "../types";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
@@ -21,7 +21,7 @@ export const useTaxDeadlines = () => {
 
   const filters: TaxDeadlineFilters = useMemo(
     () => ({
-      client_id: searchParams.get("client_id") || "",
+      client_name: searchParams.get("client_name") || "",
       deadline_type: searchParams.get("deadline_type") || "",
       status: searchParams.get("status") || "",
       page: parsePositiveInt(searchParams.get("page"), 1),
@@ -32,7 +32,7 @@ export const useTaxDeadlines = () => {
 
   const apiParams = useMemo(
     () => ({
-      client_id: toOptionalNumber(filters.client_id),
+      client_name: toOptionalString(filters.client_name),
       deadline_type: toOptionalString(filters.deadline_type),
       status: toOptionalString(filters.status),
       page: filters.page,
@@ -102,10 +102,6 @@ export const useTaxDeadlines = () => {
     onSuccess: () => {
       toast.success("מועד סומן כהושלם");
       queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
-      const clientId = toOptionalNumber(filters.client_id);
-      if (clientId) {
-        queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(clientId) });
-      }
     },
     onError: (error) => showErrorToast(error, "שגיאה בסימון מועד"),
     onSettled: () => setCompletingId(null),

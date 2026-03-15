@@ -1,4 +1,6 @@
-import { RotateCcw } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
+import { RotateCcw, Search } from "lucide-react";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Button } from "../../../components/ui/Button";
@@ -25,23 +27,39 @@ const STATUS_OPTIONS = [
 ];
 
 export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersProps) => {
-  const hasActive = Boolean(filters.client_id || filters.deadline_type || filters.status);
+  const [searchDraft, setSearchDraft] = useState(filters.client_name ?? "");
+  const [debouncedSearch] = useDebounce(searchDraft, 350);
+
+  useEffect(() => {
+    setSearchDraft(filters.client_name ?? "");
+  }, [filters.client_name]);
+
+  useEffect(() => {
+    if (debouncedSearch !== (filters.client_name ?? "")) {
+      onChange("client_name", debouncedSearch);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
+
+  const hasActive = Boolean(filters.client_name || filters.deadline_type || filters.status);
 
   const handleReset = () => {
-    onChange("client_id", "");
+    setSearchDraft("");
+    onChange("client_name", "");
     onChange("deadline_type", "");
     onChange("status", "");
   };
 
   return (
     <div className="flex flex-wrap items-end gap-3">
-      <div className="w-36">
+      <div className="w-52">
         <Input
-          label="מזהה לקוח"
-          type="number"
-          value={filters.client_id}
-          onChange={(e) => onChange("client_id", e.target.value)}
-          placeholder="לדוגמה: 123"
+          label="חיפוש לקוח"
+          type="text"
+          value={searchDraft}
+          onChange={(e) => setSearchDraft(e.target.value)}
+          placeholder="שם לקוח..."
+          startIcon={<Search className="h-4 w-4" />}
         />
       </div>
       <div className="w-40">

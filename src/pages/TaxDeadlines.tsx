@@ -13,6 +13,7 @@ import { TaxDeadlineDrawer } from "../features/taxDeadlines/components/TaxDeadli
 import { useTaxDeadlines } from "../features/taxDeadlines/hooks/useTaxDeadlines";
 import { useTaxDashboard } from "../features/taxDashboard/hooks/useTaxDashboard";
 import { TaxSubmissionStats } from "../features/taxDashboard/components/TaxSubmissionStats";
+import { ToolbarContainer } from "../components/ui/ToolbarContainer";
 import type { TaxDeadlineResponse } from "../api/taxDeadlines.api";
 import { useRole } from "../hooks/useRole";
 
@@ -47,7 +48,7 @@ export const TaxDeadlines: React.FC = () => {
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
   const { currentYear, submissions } = useTaxDashboard();
   const { isAdvisor } = useRole();
-  const clientIdForGenerate = filters.client_id ? Number(filters.client_id) : null;
+  const clientIdForGenerate = null;
 
   const header = (
     <PageHeader
@@ -99,7 +100,9 @@ export const TaxDeadlines: React.FC = () => {
 
       <TaxSubmissionStats data={submissions} />
 
-      <TaxDeadlinesFilters filters={filters} onChange={handleFilterChange} />
+      <ToolbarContainer>
+        <TaxDeadlinesFilters filters={filters} onChange={handleFilterChange} />
+      </ToolbarContainer>
 
       <TaxDeadlinesTable
         deadlines={deadlines}
