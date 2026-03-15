@@ -112,24 +112,24 @@ export const OverlayContainer: React.FC<OverlayContainerProps> = ({
       className="fixed inset-0 flex items-center justify-center bg-black/30 px-4"
       style={{ zIndex: z }}
     >
-      <div className={cn("w-full max-w-lg rounded-xl bg-white shadow-xl", className)}>
+      <div className={cn("flex max-h-[90vh] w-full max-w-lg flex-col rounded-xl bg-white shadow-xl", className)}>
         {title && (
-          <div className="flex items-center justify-between border-b border-gray-100 p-6 pb-3">
+          <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
             <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
             {onClose && (
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded px-2 py-1 text-sm text-gray-600 hover:bg-gray-100"
+                className="rounded p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
                 aria-label="סגירה"
               >
-                ×
+                ✕
               </button>
             )}
           </div>
         )}
-        <div className="p-6 py-4">{children}</div>
-        {footer && <div className="border-t border-gray-100 p-6 pt-3">{footer}</div>}
+        <div className="flex-1 overflow-y-auto p-6 py-4">{children}</div>
+        {footer && <div className="shrink-0 border-t border-gray-100 px-6 py-4">{footer}</div>}
       </div>
     </div>
   );

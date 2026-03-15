@@ -33,16 +33,16 @@ export const OverviewKPICards: React.FC<OverviewKPICardsProps> = ({
         variant="green"
         description="לפי הסינון הנבחר"
       />
-      <div className="relative rounded-xl p-6 bg-gradient-to-br from-purple-500/10 to-fuchsia-500/10 border border-purple-200/50 overflow-hidden">
+      <div className="relative rounded-xl p-4 bg-gradient-to-br from-purple-500/10 to-fuchsia-500/10 border border-purple-200/50 overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 opacity-20 blur-3xl bg-gradient-to-br from-purple-400 to-fuchsia-600" />
         <div className="relative">
           <div className="flex items-start justify-between mb-3">
-            <h3 className="text-sm font-medium text-gray-600">שיעור גבייה</h3>
+            <h3 className="text-xs font-medium text-gray-600">שיעור גבייה</h3>
             <div className="rounded-lg p-2 bg-purple-100 text-purple-600">
-              <TrendingUp className="h-5 w-5" />
+              <TrendingUp className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-3xl font-bold tracking-tight text-purple-700 mb-3">
+          <div className="text-2xl font-bold tracking-tight text-purple-700 mb-3">
             {pct !== null ? `${pct}%` : "—"}
           </div>
           {pct !== null && (

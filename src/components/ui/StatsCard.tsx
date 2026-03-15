@@ -105,7 +105,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   return (
     <div
       className={cn(
-        "relative rounded-xl p-6 transition-all duration-300",
+        "relative rounded-xl p-4 transition-all duration-300",
         "bg-gradient-to-br",
         config.bg,
         "border",
@@ -120,18 +120,18 @@ export const StatsCard: React.FC<StatsCardProps> = ({
       <div className={cn("absolute top-0 right-0 w-32 h-32 opacity-30 blur-3xl", config.accent)} />
 
       <div className="relative">
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
-            <h3 className="text-sm font-medium text-gray-600 mb-1">{title}</h3>
-            <div className={cn("text-3xl font-bold tracking-tight", config.text)}>
+            <h3 className="text-xs font-medium text-gray-600 mb-1">{title}</h3>
+            <div className={cn("text-2xl font-bold tracking-tight", config.text)}>
               {typeof value === "number" ? displayValue.toLocaleString('he-IL') : value}
             </div>
           </div>
 
           {/* Icon with gradient background */}
           {Icon && (
-            <div className={cn("rounded-lg p-3 shadow-sm", config.icon)}>
-              <Icon className="h-6 w-6" />
+            <div className={cn("rounded-lg p-2 shadow-sm", config.icon)}>
+              <Icon className="h-4 w-4" />
             </div>
           )}
         </div>
