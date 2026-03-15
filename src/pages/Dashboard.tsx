@@ -1,6 +1,5 @@
 import { PageHeader } from "../components/layout/PageHeader";
-import { AccessBanner } from "../components/ui/AccessBanner";
-import { ErrorCard } from "../components/ui/ErrorCard";
+import { Alert } from "../components/ui/Alert";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { DashboardStatsGrid } from "../features/dashboard/components/DashboardStatsGrid";
 import { AdvisorTodayCard } from "../features/dashboard/components/AdvisorTodayCard";
@@ -21,24 +20,19 @@ export const Dashboard: React.FC = () => {
     pendingQuickAction,
     stats,
   } = useDashboardPage();
-
   const isAdvisor = dashboard.status === "ok" && dashboard.data?.role_view === "advisor";
   const quickActions = isAdvisor && dashboard.data?.role_view === "advisor"
     ? dashboard.data.quick_actions
     : undefined;
-
   return (
     <div className="space-y-6">
       <PageHeader title="לוח בקרה" />
-
       {denied && (
-        <AccessBanner variant="warning" message="אין הרשאה לצפות בנתוני לוח בקרה זה" />
+        <Alert variant="warning" message="אין הרשאה לצפות בנתוני לוח בקרה זה" />
       )}
-
       {dashboard.status === "error" && !denied && (
-        <ErrorCard message={dashboard.message} />
+        <Alert variant="error" message={dashboard.message} />
       )}
-
       {/* Stats — skeleton while loading */}
       {dashboard.status === "loading" ? (
         <div className="grid grid-cols-2 gap-4 animate-pulse sm:grid-cols-4">
@@ -49,7 +43,6 @@ export const Dashboard: React.FC = () => {
       ) : dashboard.status === "ok" ? (
         <DashboardStatsGrid stats={stats} />
       ) : null}
-
       {/* Advisor: quick actions + today card + season widget */}
       {dashboard.status === "loading" ? (
         <div className="h-28 animate-pulse rounded-xl bg-gray-100" />
@@ -66,14 +59,12 @@ export const Dashboard: React.FC = () => {
           <AdvisorTodayCard />
         </>
       ) : null}
-
       {/* Attention panel — shared by both roles */}
       {dashboard.status === "loading" ? (
         <div className="h-40 animate-pulse rounded-xl bg-gray-100" />
-      ) : dashboard.status === "ok" ? (
+      ) : (
         <AttentionPanel items={attentionItems} />
-      ) : null}
-
+      )}
       <ConfirmDialog
         open={Boolean(pendingQuickAction)}
         title={pendingQuickAction?.confirm?.title || "אישור פעולה"}
