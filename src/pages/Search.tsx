@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
 import { Search as SearchIcon, FileSearch, X } from "lucide-react";
 import { PageHeader } from "../components/layout/PageHeader";
-import { InlineToolbar } from "../components/ui/InlineToolbar";
+import { ToolbarContainer } from "../components/ui/ToolbarContainer";
 import { DataTable } from "../components/ui/DataTable";
-import { ErrorCard } from "../components/ui/ErrorCard";
+import { Alert } from "../components/ui/Alert";
 import { PaginationCard } from "../components/ui/PaginationCard";
-import { EmptyState } from "../components/ui/EmptyState";
+import { StateCard } from "../components/ui/StateCard";
 import { SearchFiltersBar } from "../features/search/components/SearchFiltersBar";
 import { searchColumns } from "../features/search/components/SearchColumns";
 import { useSearchPage } from "../features/search/hooks/useSearchPage";
@@ -40,7 +40,7 @@ export const Search: React.FC = () => {
       />
 
       {/* Hero search bar */}
-      <InlineToolbar className="flex items-center gap-3 py-3">
+      <ToolbarContainer className="flex items-center gap-3 py-3">
         <SearchIcon className="h-5 w-5 shrink-0 text-gray-400" />
         <input
           ref={inputRef}
@@ -65,10 +65,10 @@ export const Search: React.FC = () => {
             <X className="h-4 w-4" />
           </button>
         )}
-      </InlineToolbar>
+      </ToolbarContainer>
 
       {/* Advanced filters */}
-      <InlineToolbar>
+      <ToolbarContainer>
         <SearchFiltersBar
           filters={filters}
           onFilterChange={handleFilterChange}
@@ -76,13 +76,13 @@ export const Search: React.FC = () => {
           isOpen={filtersOpen}
           onToggle={() => setFiltersOpen((o) => !o)}
         />
-      </InlineToolbar>
+      </ToolbarContainer>
 
-      {error && <ErrorCard message={error} />}
+      {error && <Alert variant="error" message={error} />}
 
       {/* No filter active */}
       {!loading && !error && !hasAnyFilter && (
-        <EmptyState
+        <StateCard
           icon={SearchIcon}
           title="מה תרצה למצוא?"
           message="הקלד שם לקוח, מספר קלסר, או השתמש בפילטרים המתקדמים"
@@ -92,7 +92,7 @@ export const Search: React.FC = () => {
 
       {/* Filter active, no results */}
       {!loading && !error && hasAnyFilter && results.length === 0 && (
-        <EmptyState
+        <StateCard
           icon={FileSearch}
           title="לא נמצאו תוצאות"
           message="נסה להרחיב את קריטריוני החיפוש או לאפס את הפילטרים"
