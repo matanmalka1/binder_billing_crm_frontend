@@ -76,6 +76,7 @@ export const ENDPOINTS = {
   reportsAgingExport: "/reports/aging/export",
   reportsAnnualReportStatus: "/reports/annual-reports",
   reportsAdvancePayments: "/reports/advance-payments",
+  reportsVatCompliance: "/reports/vat-compliance",
   reminders: "/reminders",
   reminderById: (id: number) => `/reminders/${id}`,
   reminderCancel: (id: number) => `/reminders/${id}/cancel`,

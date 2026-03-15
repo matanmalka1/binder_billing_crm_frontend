@@ -135,6 +135,7 @@ export const QK = {
       ["reports", "annual-report-status", taxYear] as const,
     advancePayments: (year: number, month?: number) =>
       ["reports", "advance-payments", year, month ?? null] as const,
+    vatCompliance: (year: number) => ["reports", "vat-compliance", year] as const,
   },
   signatureRequests: {
     all: ["signature-requests"] as const,

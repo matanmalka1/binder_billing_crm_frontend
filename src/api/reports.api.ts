@@ -68,6 +68,31 @@ export interface AdvancePaymentReportResponse {
   items: AdvancePaymentReportItem[];
 }
 
+export interface VatComplianceItem {
+  client_id: number;
+  client_name: string;
+  periods_expected: number;
+  periods_filed: number;
+  periods_open: number;
+  on_time_count: number;
+  late_count: number;
+  compliance_rate: number;
+}
+
+export interface StalePendingItem {
+  client_id: number;
+  client_name: string;
+  period: string;
+  days_pending: number;
+}
+
+export interface VatComplianceReportResponse {
+  year: number;
+  total_clients: number;
+  items: VatComplianceItem[];
+  stale_pending: StalePendingItem[];
+}
+
 // Note: Backend uses float for bucket fields; TS `number` already covers both int/float.
 
 export type ExportFormat = "excel" | "pdf";
@@ -143,6 +168,14 @@ export const reportsApi = {
     const response = await api.get<AnnualReportStatusReportResponse>(
       ENDPOINTS.reportsAnnualReportStatus,
       { params: { tax_year: taxYear } },
+    );
+    return response.data;
+  },
+
+  getVatComplianceReport: async (year: number): Promise<VatComplianceReportResponse> => {
+    const response = await api.get<VatComplianceReportResponse>(
+      ENDPOINTS.reportsVatCompliance,
+      { params: { year } },
     );
     return response.data;
   },

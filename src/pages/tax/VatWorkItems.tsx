@@ -1,5 +1,8 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { PageHeader } from "../../components/layout/PageHeader";
+import { VatComplianceReportView } from "../../features/reports/components/VatComplianceReportView";
+import { cn } from "../../utils/utils";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { DataTable } from "../../components/ui/DataTable";
@@ -11,7 +14,18 @@ import { VatWorkItemDrawer } from "../../features/vatReports/components/VatWorkI
 import { useVatWorkItemsPage } from "../../features/vatReports/hooks/useVatWorkItemsPage";
 import type { VatWorkItemResponse } from "../../api/vatReports.api";
 
+type ActiveTab = "list" | "compliance";
+
+const TAB_LABELS: Record<ActiveTab, string> = {
+  list: "רשימה",
+  compliance: 'דוח ציות',
+};
+
 export const VatWorkItems: React.FC = () => {
+  const [urlParams, setUrlParams] = useSearchParams();
+  const activeTab = (urlParams.get("tab") as ActiveTab) ?? "list";
+  const setTab = (tab: ActiveTab) => setUrlParams(tab === "list" ? {} : { tab });
+
   const {
     actionLoadingId,
     workItems,
@@ -46,6 +60,26 @@ export const VatWorkItems: React.FC = () => {
   }, [workItems]);
   return (
     <div className="space-y-6">
+      <div role="tablist" className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 w-fit">
+        {(Object.keys(TAB_LABELS) as ActiveTab[]).map((tab) => (
+          <button
+            key={tab}
+            role="tab"
+            aria-selected={activeTab === tab}
+            onClick={() => setTab(tab)}
+            className={cn(
+              "rounded-md px-4 py-1.5 text-sm font-medium transition-all",
+              activeTab === tab
+                ? "bg-white text-gray-900 shadow-sm"
+                : "text-gray-500 hover:text-gray-700",
+            )}
+          >
+            {TAB_LABELS[tab]}
+          </button>
+        ))}
+      </div>
+      {activeTab === "compliance" && <VatComplianceReportView />}
+      {activeTab === "list" && <>
       <PageHeader
         title='דוחות מע"מ'
         description='ניהול תיקי מע"מ חודשיים — הקלדה, בדיקה והגשה'
@@ -112,6 +146,7 @@ export const VatWorkItems: React.FC = () => {
         onClose={() => setShowCreateModal(false)}
         onSubmit={submitCreate}
       />
+      </>}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { PageHeader } from "../../components/layout/PageHeader";
 import { AdvancePaymentReportView } from "../../features/reports/components/AdvancePaymentReportView";
 import { cn } from "../../utils/utils";
 import { Alert } from "../../components/ui/Alert";
+import { ToolbarContainer } from "../../components/ui/ToolbarContainer";
 import { Select } from "../../components/ui/Select";
 import { DataTable, type Column } from "../../components/ui/DataTable";
 import { Badge } from "../../components/ui/Badge";
@@ -154,33 +155,28 @@ export const AdvancePayments: React.FC = () => {
         />
       )}
 
-      <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="px-6 py-4 border-b border-gray-100/80 bg-gradient-to-r from-gray-50/50 to-transparent">
-          <h3 className="text-lg font-semibold text-gray-900 tracking-tight">סינון</h3>
+      <ToolbarContainer>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 max-w-2xl">
+          <Select
+            label="שנת מס"
+            value={String(year)}
+            onChange={(e) => setParam("year", e.target.value)}
+            options={YEAR_OPTIONS}
+          />
+          <Select
+            label="חודש"
+            value={month > 0 ? String(month) : ""}
+            onChange={(e) => setParam("month", e.target.value)}
+            options={MONTH_FILTER_OPTIONS}
+          />
+          <Select
+            label="סטטוס"
+            value={statusFilter}
+            onChange={(e) => setParam("status", e.target.value)}
+            options={STATUS_OPTIONS}
+          />
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 max-w-2xl">
-            <Select
-              label="שנת מס"
-              value={String(year)}
-              onChange={(e) => setParam("year", e.target.value)}
-              options={YEAR_OPTIONS}
-            />
-            <Select
-              label="חודש"
-              value={month > 0 ? String(month) : ""}
-              onChange={(e) => setParam("month", e.target.value)}
-              options={MONTH_FILTER_OPTIONS}
-            />
-            <Select
-              label="סטטוס"
-              value={statusFilter}
-              onChange={(e) => setParam("status", e.target.value)}
-              options={STATUS_OPTIONS}
-            />
-          </div>
-        </div>
-      </div>
+      </ToolbarContainer>
 
       {error && <Alert variant="error" message="שגיאה בטעינת מקדמות" />}
 
