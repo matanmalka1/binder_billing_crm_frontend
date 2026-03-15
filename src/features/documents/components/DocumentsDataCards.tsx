@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { FileText } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { DataTable } from "../../../components/ui/DataTable";
-import { AccessBanner } from "../../../components/ui/AccessBanner";
+import { Alert } from "../../../components/ui/Alert";
 import { DocumentsUploadCard } from "./DocumentsUploadCard";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { buildDocumentColumns, DOC_TYPE_LABELS } from "./DocumentsColumns";
@@ -93,7 +93,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
   return (
     <div className="space-y-4">
       {signals.missing_documents.length > 0 && (
-        <AccessBanner
+        <Alert
           variant="warning"
           message={`מסמכים חסרים: ${signals.missing_documents.map((d) => DOC_TYPE_LABELS[d] ?? d).join(", ")}`}
         />
