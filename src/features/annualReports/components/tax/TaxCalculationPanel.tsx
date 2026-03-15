@@ -32,11 +32,13 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: QK.tax.annualReportTaxCalc(reportId),
     queryFn: () => annualReportTaxApi.getTaxCalculation(reportId),
+    enabled: !!reportId,
   });
 
   const detailQ = useQuery({
     queryKey: QK.tax.annualReports.detail(reportId),
     queryFn: () => annualReportsApi.getReportDetails(reportId),
+    enabled: !!reportId,
   });
 
   const updateMutation = useMutation({
