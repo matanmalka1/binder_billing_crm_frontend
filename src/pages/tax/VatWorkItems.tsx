@@ -1,11 +1,9 @@
 import { useMemo, useState } from "react";
 import { PageHeader } from "../../components/layout/PageHeader";
-import { AccessBanner } from "../../components/ui/AccessBanner";
+import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
-
 import { DataTable } from "../../components/ui/DataTable";
 import { PaginationCard } from "../../components/ui/PaginationCard";
-import { ErrorCard } from "../../components/ui/ErrorCard";
 import { VatWorkItemsCreateModal } from "../../features/vatReports/components/VatWorkItemsCreateModal";
 import { VatWorkItemsFiltersCard } from "../../features/vatReports/components/VatWorkItemsFiltersCard";
 import { buildVatWorkItemColumns } from "../../features/vatReports/components/VatWorkItemColumns";
@@ -30,17 +28,13 @@ export const VatWorkItems: React.FC = () => {
     submitCreate,
     total,
   } = useVatWorkItemsPage();
-
   const [selectedItem, setSelectedItem] = useState<VatWorkItemResponse | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-
   const columns = useMemo(
     () => buildVatWorkItemColumns({ isAdvisor, actionLoadingId, runAction }),
     [isAdvisor, actionLoadingId, runAction],
   );
-
   const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
-
   const stats = useMemo(() => {
     const typing = workItems.filter((i) =>
       i.status === "data_entry_in_progress" || i.status === "material_received"
@@ -50,7 +44,6 @@ export const VatWorkItems: React.FC = () => {
     const pending = workItems.filter((i) => i.status === "pending_materials").length;
     return { typing, review, filed, pending };
   }, [workItems]);
-
   return (
     <div className="space-y-6">
       <PageHeader
@@ -64,23 +57,19 @@ export const VatWorkItems: React.FC = () => {
           ) : undefined
         }
       />
-
       {!isAdvisor && (
-        <AccessBanner
+        <Alert
           variant="info"
           message='צפייה בלבד. פתיחת תיקי מע"מ זמינה ליועץ. ניתן לבצע הקלדת נתונים בתוך כל תיק.'
         />
       )}
-
       <VatWorkItemsFiltersCard
         filters={filters}
         onFilterChange={setFilter}
         onClear={() => setSearchParams(new URLSearchParams())}
         stats={!loading && workItems.length > 0 ? stats : undefined}
       />
-
-      {error && <ErrorCard message={error} />}
-
+      {error && <Alert variant="error" message={error} />}
       <DataTable
         data={workItems}
         columns={columns}
@@ -98,7 +87,6 @@ export const VatWorkItems: React.FC = () => {
             : undefined,
         }}
       />
-
       {!loading && total > 0 && (
         <PaginationCard
           page={filters.page}
@@ -112,13 +100,11 @@ export const VatWorkItems: React.FC = () => {
           onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
         />
       )}
-
       <VatWorkItemDrawer
         item={selectedItem}
         onClose={() => setSelectedItem(null)}
         onSendBack={sendBackWithNote}
       />
-
       <VatWorkItemsCreateModal
         open={showCreateModal}
         createError={createError}
