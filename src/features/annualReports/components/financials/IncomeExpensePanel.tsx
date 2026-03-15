@@ -19,6 +19,7 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
   const { data, isLoading } = useQuery({
     queryKey: QK.tax.annualReportFinancials(reportId),
     queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
+    enabled: !!reportId,
   });
 
   const { addIncome, deleteIncome, addExpense, updateIncome, updateExpense, deleteExpense } = useIncomeExpenseMutations(reportId);
