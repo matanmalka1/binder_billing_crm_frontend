@@ -12,6 +12,7 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
   const { data, isLoading } = useQuery({
     queryKey: QK.tax.annualReportReadiness(reportId),
     queryFn: () => annualReportTaxApi.getReadiness(reportId),
+    enabled: !!reportId,
   });
 
   if (isLoading) return <p className="text-sm text-gray-400 py-2">בודק מוכנות...</p>;
