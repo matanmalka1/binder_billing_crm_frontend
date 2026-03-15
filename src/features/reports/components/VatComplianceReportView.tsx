@@ -11,13 +11,13 @@ const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => new Date().getFullYear(
 const selectCls =
   "rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none";
 
-function complianceBadgeVariant(rate: number) {
+const complianceBadgeVariant = (rate: number) => {
   if (rate >= 80) return "success" as const;
   if (rate >= 50) return "warning" as const;
   return "error" as const;
-}
+};
 
-function ComplianceTable({ items }: { items: VatComplianceItem[] }) {
+const ComplianceTable = ({ items }: { items: VatComplianceItem[] }) => {
   if (items.length === 0) return <p className="text-sm text-gray-500">אין נתונים לשנה זו.</p>;
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200">
@@ -49,9 +49,9 @@ function ComplianceTable({ items }: { items: VatComplianceItem[] }) {
       </table>
     </div>
   );
-}
+};
 
-function StalePendingTable({ items }: { items: StalePendingItem[] }) {
+const StalePendingTable = ({ items }: { items: StalePendingItem[] }) => {
   if (items.length === 0) return null;
   return (
     <div className="space-y-3">
@@ -82,7 +82,7 @@ function StalePendingTable({ items }: { items: StalePendingItem[] }) {
       </div>
     </div>
   );
-}
+};
 
 export const VatComplianceReportView: React.FC = () => {
   const [year, setYear] = useState(new Date().getFullYear());

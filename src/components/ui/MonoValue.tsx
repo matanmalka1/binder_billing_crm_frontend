@@ -18,15 +18,15 @@ const toneClass: Record<NonNullable<MonoValueProps["tone"]>, string> = {
   critical: "text-red-600 font-bold",
 };
 
-function daysTone(
+const daysTone = (
   days: number,
   returned?: boolean,
-): NonNullable<MonoValueProps["tone"]> {
+): NonNullable<MonoValueProps["tone"]> => {
   if (returned) return "neutral";
   if (days > 90) return "critical";
   if (days > 60) return "warning";
   return "neutral";
-}
+};
 
 export const MonoValue: React.FC<MonoValueProps> = ({
   value,

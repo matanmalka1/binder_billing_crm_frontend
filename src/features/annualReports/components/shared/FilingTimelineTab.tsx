@@ -8,12 +8,12 @@ interface Props {
   reports: AnnualReportFull[];
 }
 
-function formatDate(dateStr: string | null | undefined): string {
+const formatDate = (dateStr: string | null | undefined): string => {
   if (!dateStr) return "—";
   return new Date(dateStr).toLocaleDateString("he-IL");
-}
+};
 
-function statusLabel(status: AnnualReportFull["status"]): string {
+const statusLabel = (status: AnnualReportFull["status"]): string => {
   const map: Record<AnnualReportFull["status"], string> = {
     not_started: "טרם החל",
     collecting_docs: "איסוף מסמכים",
@@ -28,9 +28,9 @@ function statusLabel(status: AnnualReportFull["status"]): string {
     amended: "עם תיקונים",
   };
   return map[status] ?? status;
-}
+};
 
-function deadlineStatus(report: AnnualReportFull): TimelineEventStatus {
+const deadlineStatus = (report: AnnualReportFull): TimelineEventStatus => {
   if (!report.filing_deadline) return "pending";
   const now = new Date();
   const deadline = new Date(report.filing_deadline);
@@ -39,7 +39,7 @@ function deadlineStatus(report: AnnualReportFull): TimelineEventStatus {
   const daysLeft = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
   if (daysLeft < 14) return "warning";
   return "pending";
-}
+};
 
 export const FilingTimelineTab: React.FC<Props> = ({ reports }) => {
   const now = new Date();

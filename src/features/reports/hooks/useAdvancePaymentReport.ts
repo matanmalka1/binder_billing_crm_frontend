@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { QK } from "../../../lib/queryKeys";
 import { reportsApi } from "../../../api/reports.api";
 
-export function useAdvancePaymentReport() {
+export const useAdvancePaymentReport = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState<number | undefined>(undefined);
 
@@ -13,4 +13,4 @@ export function useAdvancePaymentReport() {
   });
 
   return { year, setYear, month, setMonth, data, isLoading, error };
-}
+};

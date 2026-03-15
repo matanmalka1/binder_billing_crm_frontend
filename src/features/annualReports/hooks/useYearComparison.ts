@@ -10,7 +10,7 @@ export interface YearComparisonData {
   error: boolean;
 }
 
-export function useYearComparison(years: number[]) {
+export const useYearComparison = (years: number[]) => {
   const seasonQueries = useQueries({
     queries: years.map((year) => ({
       queryKey: QK.tax.annualReports.seasonSummary(year),
@@ -29,4 +29,4 @@ export function useYearComparison(years: number[]) {
   const isLoading = seasonQueries.some((q) => q.isPending);
 
   return { data, isLoading };
-}
+};

@@ -24,7 +24,7 @@ const TAX_BRACKETS = [
 
 const CREDIT_POINT_VALUE = 2_904; // ILS per credit point (2024)
 
-function computeTax(taxableIncome: number): number {
+const computeTax = (taxableIncome: number): number => {
   let tax = 0;
   let prev = 0;
   for (const { limit, rate } of TAX_BRACKETS) {
@@ -33,7 +33,7 @@ function computeTax(taxableIncome: number): number {
     prev = limit;
   }
   return Math.max(0, tax);
-}
+};
 
 export const useCreateReport = (onSuccess?: () => void) => {
   const queryClient = useQueryClient();

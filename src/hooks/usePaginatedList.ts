@@ -7,7 +7,11 @@ interface Options<TItem> {
   errorMessage?: string;
 }
 
-export function usePaginatedList<TItem>({ queryKey, queryFn, errorMessage = "שגיאה בטעינת הנתונים" }: Options<TItem>) {
+export const usePaginatedList = <TItem,>({
+  queryKey,
+  queryFn,
+  errorMessage = "שגיאה בטעינת הנתונים",
+}: Options<TItem>) => {
   const { data, isPending, error } = useQuery({ queryKey, queryFn });
   return {
     items: data?.items ?? [] as TItem[],
@@ -15,4 +19,4 @@ export function usePaginatedList<TItem>({ queryKey, queryFn, errorMessage = "ש�
     loading: isPending,
     error: error ? getErrorMessage(error, errorMessage) : null,
   };
-}
+};
