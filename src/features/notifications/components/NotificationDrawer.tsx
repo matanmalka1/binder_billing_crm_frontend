@@ -1,11 +1,16 @@
+import { useState } from "react";
 import { cn } from "../../../utils/utils";
 import { useNotifications } from "../hooks/useNotifications";
+import { useRole } from "../../../hooks/useRole";
 import { SeverityBadge } from "./SeverityBadge";
+import { SendNotificationModal } from "./SendNotificationModal";
 import type { NotificationItem } from "../../../api/notifications.api";
 import type { NotificationDrawerProps } from "../types";
 
 export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, onClose }) => {
   const { notifications, unreadCount, markRead, markAllRead } = useNotifications();
+  const { isAdvisor } = useRole();
+  const [sendOpen, setSendOpen] = useState(false);
   const limited = notifications.slice(0, 20);
 
   const handleItemClick = (item: NotificationItem) => {
@@ -20,6 +25,10 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
 
   return (
     <>
+      <SendNotificationModal
+        open={sendOpen}
+        onClose={() => setSendOpen(false)}
+      />
       <div
         className={cn(
           "fixed inset-0 z-40 bg-black/20 transition-opacity duration-200",
@@ -43,6 +52,15 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
         <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-5 py-4">
           <h3 className="text-base font-semibold text-gray-900">התראות</h3>
           <div className="flex items-center gap-3">
+            {isAdvisor && (
+              <button
+                type="button"
+                onClick={() => setSendOpen(true)}
+                className="text-xs text-green-600 hover:text-green-700 font-medium"
+              >
+                שלח הודעה
+              </button>
+            )}
             <button
               type="button"
               onClick={handleMarkAllRead}

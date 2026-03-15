@@ -12,3 +12,9 @@ export interface NotificationsTabProps {
 export interface SeverityBadgeProps {
   severity: NotificationSeverity;
 }
+
+export interface SendNotificationModalProps {
+  open: boolean;
+  onClose: () => void;
+  clientId?: number;
+}

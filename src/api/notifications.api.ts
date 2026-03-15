@@ -30,6 +30,17 @@ export interface ListNotificationsParams {
   limit?: number;
 }
 
+export interface SendNotificationPayload {
+  client_id: number;
+  channel: "WHATSAPP" | "EMAIL";
+  message: string;
+  severity?: string;
+}
+
+export interface SendNotificationResponse {
+  ok: boolean;
+}
+
 export const notificationsApi = {
   list: async (params?: ListNotificationsParams): Promise<NotificationItem[]> => {
     const response = await api.get<NotificationItem[]>(
@@ -60,6 +71,14 @@ export const notificationsApi = {
       ENDPOINTS.notificationsMarkAllRead,
       null,
       clientId != null ? { params: toQueryParams({ client_id: clientId }) } : undefined,
+    );
+    return response.data;
+  },
+
+  send: async (payload: SendNotificationPayload): Promise<SendNotificationResponse> => {
+    const response = await api.post<SendNotificationResponse>(
+      ENDPOINTS.notificationsSend,
+      payload,
     );
     return response.data;
   },
