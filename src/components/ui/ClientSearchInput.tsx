@@ -79,7 +79,7 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
         placeholder={placeholder}
         autoComplete="off"
         error={error}
-        rightIcon={
+        endIcon={
           loading ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
           ) : undefined
