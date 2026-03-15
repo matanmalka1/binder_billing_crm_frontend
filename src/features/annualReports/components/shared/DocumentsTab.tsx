@@ -131,18 +131,19 @@ export const DocumentsTab = ({ clientId, reportId }: DocumentsTabProps) => {
   const byClient = useQuery({
     queryKey: QK.documents.clientList(clientId),
     queryFn: () => documentsApi.listByClient(clientId),
-    enabled: reportId == null,
+    enabled: !!clientId && reportId == null,
   });
 
   const byReport = useQuery({
     queryKey: QK.documents.byAnnualReport(reportId!),
     queryFn: () => documentsApi.listByAnnualReport(reportId!),
-    enabled: reportId != null,
+    enabled: !!reportId,
   });
 
   const { data: signals } = useQuery({
     queryKey: QK.documents.clientSignals(clientId),
     queryFn: () => documentsApi.getSignalsByClient(clientId),
+    enabled: !!clientId,
   });
 
   const activeQuery = reportId != null ? byReport : byClient;
