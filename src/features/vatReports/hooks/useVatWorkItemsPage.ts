@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { vatReportsApi } from "../../../api/vatReports.api";
 import type {
@@ -31,9 +32,10 @@ export const useVatWorkItemsPage = () => {
     page_size: filters.page_size,
   };
 
-  const listQuery = useQuery({
+  const { items: workItems, total, loading, error } = usePaginatedList({
     queryKey: QK.tax.vatWorkItems.list(apiParams),
     queryFn: () => vatReportsApi.list(apiParams),
+    errorMessage: 'שגיאה בטעינת תיקי מע"מ',
   });
 
   const createMutation = useMutation({
@@ -117,22 +119,20 @@ export const useVatWorkItemsPage = () => {
 
   return {
     actionLoadingId,
-    workItems: listQuery.data?.items ?? [],
+    workItems,
     createError: createMutation.error
       ? getErrorMessage(createMutation.error, 'שגיאה ביצירת תיק מע"מ')
       : null,
     createLoading: createMutation.isPending,
-    error: listQuery.error
-      ? getErrorMessage(listQuery.error, 'שגיאה בטעינת תיקי מע"מ')
-      : null,
+    error,
     filters,
     isAdvisor,
-    loading: listQuery.isPending,
+    loading,
     runAction,
     sendBackWithNote,
     setFilter,
     setSearchParams,
     submitCreate,
-    total: listQuery.data?.total ?? 0,
+    total,
   };
 };

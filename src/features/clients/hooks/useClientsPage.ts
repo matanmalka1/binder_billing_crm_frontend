@@ -1,7 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { clientsApi, type ListClientsParams } from "../../../api/clients.api";
-import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
+import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import { QK } from "../../../lib/queryKeys";
 import type { CreateClientPayload } from "../../../api/clients.api";
@@ -29,9 +30,10 @@ export const useClientsPage = () => {
     page_size: filters.page_size,
   };
 
-  const listQuery = useQuery({
+  const { items: clientItems, total, loading, error } = usePaginatedList({
     queryKey: QK.clients.list(apiParams),
     queryFn: () => clientsApi.list(apiParams),
+    errorMessage: "שגיאה בטעינת רשימת לקוחות",
   });
 
   const createMutation = useMutation({
@@ -64,15 +66,15 @@ export const useClientsPage = () => {
   return {
     activeActionKey,
     activeActionKeyRef,
-    clients: listQuery.data?.items ?? [],
-    error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת רשימת לקוחות") : null,
+    clients: clientItems,
+    error,
     filters,
     onAction,
     handleFilterChange,
-    loading: listQuery.isPending,
+    loading,
     pendingAction,
     setPage,
-    total: listQuery.data?.total ?? 0,
+    total,
     cancelPendingAction,
     confirmPendingAction,
     createClient: async (payload: CreateClientPayload): Promise<void> => {

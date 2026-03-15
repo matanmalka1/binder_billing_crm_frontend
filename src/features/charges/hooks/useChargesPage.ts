@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   chargesApi,
@@ -33,9 +34,10 @@ export const useChargesPage = () => {
     page_size: filters.page_size,
   };
 
-  const listQuery = useQuery({
+  const { items: chargeItems, total, loading, error } = usePaginatedList({
     queryKey: QK.charges.list(apiParams),
     queryFn: () => chargesApi.list(apiParams),
+    errorMessage: "שגיאה בטעינת רשימת חיובים",
   });
   const { isAdvisor } = useRole();
 
@@ -157,17 +159,15 @@ export const useChargesPage = () => {
   return {
     actionLoadingId,
     bulkLoading,
-    charges: listQuery.data?.items ?? [],
+    charges: chargeItems,
     createError: createMutation.error
       ? getErrorMessage(createMutation.error, "שגיאה ביצירת חיוב")
       : null,
     createLoading: createMutation.isPending,
-    error: listQuery.error
-      ? getErrorMessage(listQuery.error, "שגיאה בטעינת רשימת חיובים")
-      : null,
+    error,
     filters,
     isAdvisor,
-    loading: listQuery.isPending,
+    loading,
     runAction,
     runBulkAction,
     selectedIds,
@@ -177,6 +177,6 @@ export const useChargesPage = () => {
     setFilter,
     setSearchParams,
     submitCreate,
-    total: listQuery.data?.total ?? 0,
+    total,
   };
 };
