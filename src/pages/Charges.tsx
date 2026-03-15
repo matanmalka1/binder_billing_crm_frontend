@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
-import { AccessBanner } from "../components/ui/AccessBanner";
+import { Alert } from "../components/ui/Alert";
 import { DataTable } from "../components/ui/DataTable";
-import { ErrorCard } from "../components/ui/ErrorCard";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { Button } from "../components/ui/Button";
 import { ChargesCreateModal } from "../features/charges/components/ChargesCreateModal";
@@ -17,7 +16,6 @@ export const Charges: React.FC = () => {
   const [selectedChargeId, setSelectedChargeId] = useState<number | null>(null);
   const [showImportExport, setShowImportExport] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-
   const {
     actionLoadingId,
     charges,
@@ -33,7 +31,6 @@ export const Charges: React.FC = () => {
     submitCreate,
     total,
   } = useChargesPage();
-
   const columns = useMemo(
     () =>
       buildChargeColumns({
@@ -44,9 +41,7 @@ export const Charges: React.FC = () => {
       }),
     [isAdvisor, actionLoadingId, runAction],
   );
-
   const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
-
   return (
     <div className="space-y-6">
       <PageHeader
@@ -65,24 +60,19 @@ export const Charges: React.FC = () => {
           </div>
         }
       />
-
       {!isAdvisor && (
-        <AccessBanner
+        <Alert
           variant="info"
           message="צפייה בלבד. יצירה ושינוי חיובים זמינים ליועץ בלבד."
         />
       )}
-
       <ChargesFiltersCard
         filters={filters}
         onFilterChange={setFilter}
         onClear={() => setSearchParams(new URLSearchParams())}
       />
-
       <ChargesSummaryBar charges={charges} isAdvisor={isAdvisor} />
-
-      {error && <ErrorCard message={error} />}
-
+      {error && <Alert variant="error" message={error} />}
       <DataTable
         data={charges}
         columns={columns}
@@ -103,7 +93,6 @@ export const Charges: React.FC = () => {
             : "אין חיובים התואמים את הסינון הנוכחי.",
         }}
       />
-
       {!loading && total > 0 && (
         <PaginationCard
           page={filters.page}
@@ -117,12 +106,10 @@ export const Charges: React.FC = () => {
           onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
         />
       )}
-
       <ChargeDetailDrawer
         chargeId={selectedChargeId}
         onClose={() => setSelectedChargeId(null)}
       />
-
       <ChargesCreateModal
         open={showCreateModal}
         createError={createError}
@@ -130,7 +117,6 @@ export const Charges: React.FC = () => {
         onClose={() => setShowCreateModal(false)}
         onSubmit={submitCreate}
       />
-
       <ImportExportModal
         open={showImportExport}
         onClose={() => setShowImportExport(false)}
