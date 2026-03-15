@@ -42,9 +42,9 @@ export const StatusTransitionPanel = ({
     mutationFn: (reason: string) => annualReportsApi.amend(report.id, reason),
     onSuccess: () => {
       toast.success("דוח נשלח לתיקון");
-      queryClient.invalidateQueries({
-        queryKey: QK.tax.annualReports.detail(report.id),
-      });
+      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.detail(report.id) });
+      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.kanban });
+      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
       closeAmendModal();
     },
     onError: (error) => showErrorToast(error, "שגיאה בשליחת תיקון"),
