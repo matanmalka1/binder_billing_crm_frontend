@@ -1,4 +1,5 @@
 import { Button } from "../../../components/ui/Button";
+import { IconLabel } from "../../../components/ui/IconLabel";
 import { ChevronLeft, FileText, CreditCard } from "lucide-react";
 import { mapActions } from "../../../lib/actions/mapActions";
 import type { TimelineEvent } from "../../../api/timeline.api";
@@ -19,25 +20,6 @@ interface TimelineEventItemProps {
   activeActionKey: string | null;
 }
 
-interface MetaChipProps {
-  icon: React.ReactNode;
-  label: string;
-  className?: string;
-}
-
-const MetaChip: React.FC<MetaChipProps> = ({ icon, label, className }) => (
-  <span
-    className={cn(
-      "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-mono",
-      className,
-    )}
-  >
-    {icon}
-    {label}
-  </span>
-);
-
-MetaChip.displayName = "MetaChip";
 
 export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
   event,
@@ -107,14 +89,14 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
           {(event.binder_id ?? event.charge_id) && (
             <div className="flex flex-wrap gap-2">
               {event.binder_id && (
-                <MetaChip
+                <IconLabel
                   icon={<FileText className="h-3 w-3" />}
                   label={`קלסר #${event.binder_id}`}
                   className="bg-slate-50 text-slate-600 border-slate-200"
                 />
               )}
               {event.charge_id && (
-                <MetaChip
+                <IconLabel
                   icon={<CreditCard className="h-3 w-3" />}
                   label={`חיוב #${event.charge_id}`}
                   className="bg-amber-50 text-amber-700 border-amber-200"
