@@ -1,4 +1,4 @@
-import { InlineToolbar } from "../../../components/ui/InlineToolbar";
+import { ToolbarContainer } from "../../../components/ui/ToolbarContainer";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
@@ -27,7 +27,7 @@ export const ChargesFiltersCard = ({
   const hasActive = Boolean(filters.client_id || filters.status);
 
   return (
-    <InlineToolbar>
+    <ToolbarContainer>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Input
           label="מזהה לקוח"
@@ -57,7 +57,7 @@ export const ChargesFiltersCard = ({
           </Button>
         </div>
       </div>
-    </InlineToolbar>
+    </ToolbarContainer>
   );
 };
 
