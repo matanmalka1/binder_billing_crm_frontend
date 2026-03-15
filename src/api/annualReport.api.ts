@@ -138,6 +138,7 @@ export interface SeasonSummary {
   assessment_issued: number;
   objection_filed: number;
   closed: number;
+  amended: number;
   completion_rate: number;
   overdue_count: number;
 }
