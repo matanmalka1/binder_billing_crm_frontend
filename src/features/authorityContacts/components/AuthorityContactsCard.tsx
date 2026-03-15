@@ -4,6 +4,7 @@ import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { Alert } from "../../../components/ui/Alert";
 import { StateCard } from "../../../components/ui/StateCard";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import type { AuthorityContactResponse } from "../../../api/authorityContacts.api";
 import { useAuthorityContacts } from "../hooks/useAuthorityContacts";
 import { AuthorityContactRow } from "./AuthorityContactRow";
@@ -27,6 +28,7 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
   } = useAuthorityContacts(clientId);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<AuthorityContactResponse | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
   const handleEdit = (contact: AuthorityContactResponse) => {
     setEditing(contact);
@@ -77,7 +79,7 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
               contact={contact}
               isDeleting={deletingId === contact.id}
               onEdit={handleEdit}
-              onDelete={deleteContact}
+              onDelete={(id) => setConfirmDeleteId(id)}
             />
           ))}
         </div>
@@ -116,6 +118,17 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
         clientId={clientId}
         existing={editing}
         onClose={handleClose}
+      />
+
+      <ConfirmDialog
+        open={confirmDeleteId !== null}
+        title="מחיקת איש קשר"
+        message="האם למחוק את איש הקשר? פעולה זו אינה הפיכה."
+        confirmLabel="מחק"
+        cancelLabel="ביטול"
+        isLoading={deletingId === confirmDeleteId}
+        onConfirm={() => { if (confirmDeleteId !== null) deleteContact(confirmDeleteId); setConfirmDeleteId(null); }}
+        onCancel={() => setConfirmDeleteId(null)}
       />
     </Card>
   );

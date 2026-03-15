@@ -4,6 +4,7 @@ import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { Alert } from "../../../components/ui/Alert";
 import { StateCard } from "../../../components/ui/StateCard";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { CorrespondenceEntryItem } from "./CorrespondenceEntry";
 import { CorrespondenceModal } from "./CorrespondenceModal";
 import { useCorrespondence } from "../hooks/useCorrespondence";
@@ -17,6 +18,7 @@ interface CorrespondenceCardProps {
 export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<CorrespondenceEntry | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
   const {
     entries,
@@ -94,7 +96,7 @@ export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
                   entry={entry}
                   isDeleting={deletingId === entry.id}
                   onEdit={handleEdit}
-                  onDelete={deleteEntry}
+                  onDelete={(id) => setConfirmDeleteId(id)}
                 />
               ))}
             </ul>
@@ -109,6 +111,17 @@ export const CorrespondenceCard = ({ clientId }: CorrespondenceCardProps) => {
         onSubmit={handleSubmit}
         existing={editing}
         contacts={contacts}
+      />
+
+      <ConfirmDialog
+        open={confirmDeleteId !== null}
+        title="מחיקת רשומה"
+        message="האם למחוק את הרשומה? פעולה זו אינה הפיכה."
+        confirmLabel="מחק"
+        cancelLabel="ביטול"
+        isLoading={deletingId === confirmDeleteId}
+        onConfirm={() => { if (confirmDeleteId !== null) deleteEntry(confirmDeleteId); setConfirmDeleteId(null); }}
+        onCancel={() => setConfirmDeleteId(null)}
       />
     </>
   );

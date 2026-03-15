@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-import { cn } from "../../../utils/utils";
+import { Pencil, Trash2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { EditAdvancePaymentInline } from "./EditAdvancePaymentInline";
 
@@ -19,21 +20,18 @@ export const AdvancePaymentRowActions: React.FC<AdvancePaymentRowActionsProps> =
   onUpdate,
   onDelete,
 }) => {
-  const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!editing) return;
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-        setEditing(false);
-      }
+      if (ref.current && !ref.current.contains(e.target as Node)) setEditing(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
+  }, [editing]);
 
   return (
     <div ref={ref} className="relative flex justify-center" onClick={(e) => e.stopPropagation()}>
@@ -44,58 +42,37 @@ export const AdvancePaymentRowActions: React.FC<AdvancePaymentRowActionsProps> =
           onSave={(paid_amount, status, expected_amount) => {
             onUpdate(row.id, paid_amount, status, expected_amount);
             setEditing(false);
-            setOpen(false);
           }}
-          onCancel={() => { setEditing(false); setOpen(false); }}
+          onCancel={() => setEditing(false)}
         />
       ) : (
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
-          className="flex h-7 w-7 items-center justify-center rounded-md border border-transparent text-gray-400 transition-colors hover:border-gray-200 hover:bg-gray-100 hover:text-gray-600"
-          aria-label={`פעולות למקדמה ${row.id}`}
-        >
-          <MoreHorizontal className="h-4 w-4" />
-        </button>
+        <DropdownMenu ariaLabel={`פעולות למקדמה ${row.id}`}>
+          <DropdownMenuItem
+            label="עריכה"
+            onClick={() => setEditing(true)}
+            icon={<Pencil className="h-4 w-4" />}
+          />
+          <div className="my-1 border-t border-gray-100" />
+          <DropdownMenuItem
+            label={deletingId === row.id ? "מוחק..." : "מחק"}
+            onClick={() => setConfirmDelete(true)}
+            icon={<Trash2 className="h-4 w-4" />}
+            danger
+            disabled={deletingId === row.id}
+          />
+        </DropdownMenu>
       )}
 
-      {open && !editing && (
-        <div className="absolute left-0 top-8 z-50 min-w-[140px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); setEditing(true); }}
-            className="w-full px-3 py-2 text-right text-sm text-gray-700 transition-colors hover:bg-gray-50"
-          >
-            <span className="grid w-full grid-cols-[minmax(0,1fr)_1rem] items-center gap-2">
-              <span className="truncate">עריכה</span>
-              <span className="flex h-4 w-4 items-center justify-center">
-                <Pencil className="h-4 w-4" />
-              </span>
-            </span>
-          </button>
-          <div className="my-1 border-t border-gray-100" />
-          <button
-            type="button"
-            disabled={deletingId === row.id}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen(false);
-              if (window.confirm("האם למחוק את המקדמה?")) onDelete(row.id);
-            }}
-            className={cn(
-              "w-full px-3 py-2 text-right text-sm text-red-600 transition-colors hover:bg-red-50",
-              "disabled:opacity-40 disabled:cursor-not-allowed",
-            )}
-          >
-            <span className="grid w-full grid-cols-[minmax(0,1fr)_1rem] items-center gap-2">
-              <span className="truncate">{deletingId === row.id ? "מוחק..." : "מחק"}</span>
-              <span className="flex h-4 w-4 items-center justify-center">
-                <Trash2 className="h-4 w-4" />
-              </span>
-            </span>
-          </button>
-        </div>
-      )}
+      <ConfirmDialog
+        open={confirmDelete}
+        title="מחיקת מקדמה"
+        message="האם למחוק את המקדמה? פעולה זו אינה הפיכה."
+        confirmLabel="מחק"
+        cancelLabel="ביטול"
+        isLoading={deletingId === row.id}
+        onConfirm={() => { setConfirmDelete(false); onDelete(row.id); }}
+        onCancel={() => setConfirmDelete(false)}
+      />
     </div>
   );
 };
