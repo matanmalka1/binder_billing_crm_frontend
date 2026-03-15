@@ -2,6 +2,7 @@ import { Calendar } from "lucide-react";
 import { DataTable, type Column } from "../../../components/ui/DataTable";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
+import { TruncateText } from "../../../components/ui/TruncateText";
 import { formatDate } from "../../../utils/utils";
 import type { Reminder } from "../types";
 import { reminderTypeLabels, statusLabels } from "../types";
@@ -53,14 +54,7 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
     {
       key: "message",
       header: "הודעה",
-      render: (r) => (
-        <p
-          className="max-w-md truncate text-sm text-gray-700"
-          title={r.message}
-        >
-          {r.message}
-        </p>
-      ),
+      render: (r) => <TruncateText text={r.message} maxWidth="max-w-md" className="text-gray-700" />,
     },
     {
       key: "target_date",
