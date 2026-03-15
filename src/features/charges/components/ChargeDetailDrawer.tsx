@@ -14,18 +14,12 @@ import { formatDateTime } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { ChargeActionButtons } from "./ChargeActionButtons";
 import { useChargeDetailsPage } from "../hooks/useChargeDetailsPage";
+import { chargeStatusVariants } from "../constants";
 
 interface ChargeDetailDrawerProps {
   chargeId: number | null;
   onClose: () => void;
 }
-
-const chargeStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
-  draft: "neutral",
-  issued: "info",
-  paid: "success",
-  canceled: "error",
-};
 
 export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId, onClose }) => {
   const { actionLoading, charge, denied, runAction, isAdvisor, deleteCharge, isDeleting } = useChargeDetailsPage(

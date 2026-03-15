@@ -6,15 +6,9 @@ import { getChargeAmountText, getChargeTypeLabel } from "../utils";
 import { formatDate } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { ChargeRowActions } from "./ChargeRowActions";
+import { chargeStatusVariants } from "../constants";
 
 export type ChargeAction = "issue" | "markPaid" | "cancel";
-
-const chargeStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
-  draft: "neutral",
-  issued: "info",
-  paid: "success",
-  canceled: "error",
-};
 
 interface BuildChargeColumnsParams {
   isAdvisor: boolean;
