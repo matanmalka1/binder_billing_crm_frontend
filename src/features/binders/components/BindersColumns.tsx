@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import type { Column } from "../../../components/ui/DataTable";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { Button } from "../../../components/ui/Button";
-import { SignalBadge } from "../../../components/ui/SignalBadge";
-import { DaysDisplay } from "../../../components/ui/DaysDisplay";
+import { Badge } from "../../../components/ui/Badge";
+import { MonoValue } from "../../../components/ui/MonoValue";
 import { SortableHeader } from "../../../components/ui/SortableHeader";
 import type { BinderResponse } from "../types";
 import type { ActionCommand, BackendAction } from "../../../lib/actions/types";
@@ -34,13 +34,13 @@ const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
       {signals.length > 0 && (
         <div className="flex flex-wrap gap-1 mt-0.5">
           {signals.map((signal) => (
-            <SignalBadge
+            <Badge
               key={signal}
-              signal={signal}
-              label={getSignalLabel(signal)}
               variant={BINDER_SIGNAL_VARIANTS[signal] as "warning" | "info" | "neutral" | undefined ?? "neutral"}
-              dotColor={SIGNAL_DOT_COLORS[signal]}
-            />
+              dot={SIGNAL_DOT_COLORS[signal]}
+            >
+              {getSignalLabel(signal)}
+            </Badge>
           ))}
         </div>
       )}
@@ -161,7 +161,7 @@ export const buildBindersColumns = ({
     headerRender: () => (
       <SortableHeader label="ימים במשרד" columnKey="days_in_office" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
     ),
-    render: (binder) => <DaysDisplay days={binder.days_in_office} returned={binder.status === "returned"} />,
+    render: (binder) => <MonoValue value={binder.days_in_office} format="days" returned={binder.status === "returned"} />,
   },
   {
     key: "actions",
