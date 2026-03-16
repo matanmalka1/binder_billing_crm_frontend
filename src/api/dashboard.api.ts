@@ -7,8 +7,8 @@ import { api } from "./client";
 export interface DashboardOverviewResponse {
   total_clients: number;
   active_binders: number;
-  work_state?: string | null;
-  signals?: string[] | null;
+  open_reminders: number;
+  vat_due_this_month: number;
   quick_actions: BackendAction[];
   attention: AttentionResponse;
 }
@@ -16,6 +16,8 @@ export interface DashboardOverviewResponse {
 export interface DashboardSummaryResponse {
   binders_in_office: number;
   binders_ready_for_pickup: number;
+  open_reminders: number;
+  vat_due_this_month: number;
   attention: AttentionResponse;
 }
 

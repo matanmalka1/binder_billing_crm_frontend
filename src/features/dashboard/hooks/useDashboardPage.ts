@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Users, FolderOpen } from "lucide-react";
+import { Users, FolderOpen, Bell, FileText } from "lucide-react";
 import { dashboardApi } from "../../../api/dashboard.api";
 import type {
   DashboardOverviewResponse,
@@ -51,6 +51,26 @@ const buildAdvisorStats = (data: DashboardOverviewResponse): StatItem[] => [
     variant: "blue",
     href: "/binders?status=in_office",
   },
+  {
+    key: "open_reminders",
+    title: "תזכורות פתוחות",
+    value: data.open_reminders,
+    description: "תזכורות הממתינות לטיפול",
+    icon: Bell,
+    variant: "amber",
+    urgent: data.open_reminders > 0,
+    href: "/reminders",
+  },
+  {
+    key: "vat_due_this_month",
+    title: "דוחות מע״מ לחודש",
+    value: data.vat_due_this_month,
+    description: "טרם הוגשו לחודש הנוכחי",
+    icon: FileText,
+    variant: data.vat_due_this_month > 0 ? "red" : "green",
+    urgent: data.vat_due_this_month > 0,
+    href: "/vat-reports",
+  },
 ];
 
 const buildSecretaryStats = (data: DashboardSummaryResponse): StatItem[] => [
@@ -71,6 +91,26 @@ const buildSecretaryStats = (data: DashboardSummaryResponse): StatItem[] => [
     icon: Users,
     variant: "green",
     href: "/binders?status=ready_for_pickup",
+  },
+  {
+    key: "open_reminders",
+    title: "תזכורות פתוחות",
+    value: data.open_reminders,
+    description: "תזכורות הממתינות לטיפול",
+    icon: Bell,
+    variant: "amber",
+    urgent: data.open_reminders > 0,
+    href: "/reminders",
+  },
+  {
+    key: "vat_due_this_month",
+    title: "דוחות מע״מ לחודש",
+    value: data.vat_due_this_month,
+    description: "טרם הוגשו לחודש הנוכחי",
+    icon: FileText,
+    variant: data.vat_due_this_month > 0 ? "red" : "green",
+    urgent: data.vat_due_this_month > 0,
+    href: "/vat-reports",
   },
 ];
 
