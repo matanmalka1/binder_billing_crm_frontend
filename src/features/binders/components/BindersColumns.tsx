@@ -18,7 +18,9 @@ import { BinderRowActions } from "./BinderRowActions";
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
-  const signals = Array.isArray(binder.signals) ? binder.signals : [];
+  const signals = (Array.isArray(binder.signals) ? binder.signals : []).filter(
+    (s) => s !== "ready_for_pickup"
+  );
   return (
     <div className="flex flex-col gap-0.5">
       <Link
