@@ -31,6 +31,7 @@ export const ReportHistoryTable: React.FC<Props> = ({
     queryKey: QK.tax.annualReportsForClient(clientId),
     queryFn: () => annualReportsApi.listClientReports(clientId),
     staleTime: 30_000,
+    enabled: !!clientId,
   });
 
   const sorted = [...reports].sort((a, b) => b.tax_year - a.tax_year);
