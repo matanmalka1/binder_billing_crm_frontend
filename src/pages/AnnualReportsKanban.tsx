@@ -6,7 +6,6 @@ import { Alert } from "../components/ui/Alert";
 import { PaginationCard } from "../components/ui/PaginationCard";
 import { Button } from "../components/ui/Button";
 import { AnnualReportColumn } from "../features/annualReports/components/kanban/AnnualReportColumn";
-import { AnnualReportFullPanel } from "../features/annualReports/components/panel/AnnualReportFullPanel";
 import { SeasonSummaryCards } from "../features/annualReports/components/kanban/SeasonSummaryCards";
 import { SeasonProgressBar } from "../features/annualReports/components/kanban/SeasonProgressBar";
 import { SeasonReportsTable } from "../features/annualReports/components/kanban/SeasonReportsTable";
@@ -26,8 +25,6 @@ export const AnnualReportsKanban: React.FC = () => {
   const {
     activeTab,
     setActiveTab,
-    selectedReportId,
-    setSelectedReportId,
     taxYear,
     decrementYear,
     incrementYear,
@@ -35,6 +32,7 @@ export const AnnualReportsKanban: React.FC = () => {
     showCreate,
     openCreate,
     closeCreate,
+    openReport,
     stages,
     transitioning,
     handleTransition,
@@ -97,7 +95,7 @@ export const AnnualReportsKanban: React.FC = () => {
       {season.overdue.length > 0 && (
         <OverdueBanner
           overdue={season.overdue}
-          onSelect={setSelectedReportId}
+          onSelect={openReport}
         />
       )}
 
@@ -172,7 +170,7 @@ export const AnnualReportsKanban: React.FC = () => {
                     pageSize={KANBAN_PAGE_SIZE}
                     transitioningId={transitioning}
                     onTransition={handleTransition}
-                    onOpenDetail={setSelectedReportId}
+                    onOpenDetail={openReport}
                   />
                 );
               })}
@@ -206,7 +204,7 @@ export const AnnualReportsKanban: React.FC = () => {
                 <SeasonReportsTable
                   reports={season.reports}
                   isLoading={season.isLoading}
-                  onSelect={(report) => setSelectedReportId(report.id)}
+                  onSelect={(report) => openReport(report.id)}
                 />
               </div>
             </>
@@ -223,13 +221,6 @@ export const AnnualReportsKanban: React.FC = () => {
 
       {activeTab === "status" && (
         <AnnualReportStatusView />
-      )}
-
-      {selectedReportId !== null && (
-        <AnnualReportFullPanel
-          reportId={selectedReportId}
-          onClose={() => setSelectedReportId(null)}
-        />
       )}
 
       <CreateReportModal open={showCreate} onClose={closeCreate} />
