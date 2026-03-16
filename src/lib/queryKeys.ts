@@ -75,6 +75,8 @@ export const QK = {
       ["tax", "annual-reports", "financials", id] as const,
     annualReportReadiness: (id: number) =>
       ["tax", "annual-reports", "readiness", id] as const,
+    annualReportDetails: (id: number) =>
+      ["tax", "annual-reports", id, "details"] as const,
     annualReportTaxCalc: (id: number) =>
       ["tax", "annual-reports", id, "tax-calc"] as const,
     annualReportAdvancesSummary: (id: number) =>
