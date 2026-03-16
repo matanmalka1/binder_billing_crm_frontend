@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../../components/ui/Button";
 import { Input } from "../../../../components/ui/Input";
+import { DatePicker } from "../../../../components/ui/DatePicker";
 import { Textarea } from "../../../../components/ui/Textarea";
 import type { AnnualReportDetail } from "../../types";
 import {
@@ -39,6 +40,7 @@ export const AnnualReportDetailForm: React.FC<AnnualReportDetailFormProps> = ({
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isDirty },
@@ -76,23 +78,30 @@ export const AnnualReportDetailForm: React.FC<AnnualReportDetailFormProps> = ({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Input
           label="סכום החזר מס (₪)"
-          type="number"
-          step="0.01"
+          type="text"
+          inputMode="decimal"
           error={errors.tax_refund_amount?.message}
           {...register("tax_refund_amount")}
         />
         <Input
           label="סכום לתשלום (₪)"
-          type="number"
-          step="0.01"
+          type="text"
+          inputMode="decimal"
           error={errors.tax_due_amount?.message}
           {...register("tax_due_amount")}
         />
-        <Input
-          label="תאריך אישור לקוח"
-          type="date"
-          error={errors.client_approved_at?.message}
-          {...register("client_approved_at")}
+        <Controller
+          control={control}
+          name="client_approved_at"
+          render={({ field }) => (
+            <DatePicker
+              label="תאריך אישור לקוח"
+              error={errors.client_approved_at?.message}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
         />
       </div>
 
