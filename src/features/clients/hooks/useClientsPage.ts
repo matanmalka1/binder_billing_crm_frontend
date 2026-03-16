@@ -1,7 +1,8 @@
+import { useCallback, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
-import { clientsApi, type ListClientsParams } from "../../../api/clients.api";
+import { clientsApi, type BulkClientActionPayload, type ListClientsParams } from "../../../api/clients.api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import { QK } from "../../../lib/queryKeys";
@@ -59,6 +60,54 @@ export const useClientsPage = () => {
     canonicalAction: true,
   });
 
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [bulkLoading, setBulkLoading] = useState(false);
+
+  const toggleSelect = useCallback((id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const toggleSelectAll = useCallback((ids: number[]) => {
+    setSelectedIds((prev) => {
+      const allSelected = ids.every((id) => prev.has(id));
+      if (allSelected) return new Set();
+      return new Set(ids);
+    });
+  }, []);
+
+  const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
+
+  const runBulkAction = useCallback(
+    async (action: BulkClientActionPayload["action"]) => {
+      if (!isAdvisor || selectedIds.size === 0) return;
+      setBulkLoading(true);
+      try {
+        const result = await clientsApi.bulkAction({
+          client_ids: Array.from(selectedIds),
+          action,
+        });
+        if (result.succeeded.length > 0) {
+          toast.success(`${result.succeeded.length} לקוחות עודכנו בהצלחה`);
+        }
+        if (result.failed.length > 0) {
+          result.failed.forEach((f) => toast.error(`לקוח #${f.id}: ${f.error}`));
+        }
+        await queryClient.invalidateQueries({ queryKey: QK.clients.all });
+        clearSelection();
+      } catch (requestError: unknown) {
+        showErrorToast(requestError, "שגיאה בביצוע פעולה מרובה");
+      } finally {
+        setBulkLoading(false);
+      }
+    },
+    [isAdvisor, selectedIds, clearSelection, queryClient],
+  );
+
   const handleFilterChange = (name: "has_signals" | "status" | "page_size" | "search", value: string) => {
     setFilter(name, value);
   };
@@ -66,14 +115,20 @@ export const useClientsPage = () => {
   return {
     activeActionKey,
     activeActionKeyRef,
+    bulkLoading,
     clients: clientItems,
+    clearSelection,
     error,
     filters,
     onAction,
     handleFilterChange,
     loading,
     pendingAction,
+    runBulkAction,
+    selectedIds,
     setPage,
+    toggleSelect,
+    toggleSelectAll,
     total,
     cancelPendingAction,
     confirmPendingAction,

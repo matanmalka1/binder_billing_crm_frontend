@@ -5,6 +5,7 @@ export const ENDPOINTS = {
   authLogout: "/auth/logout",
   clients: "/clients",
   clientById: (clientId: number | string) => `/clients/${clientId}`,
+  clientsBulkAction: "/clients/bulk-action",
   clientBinders: (clientId: number | string) => `/clients/${clientId}/binders`,
   clientTimeline: (clientId: number | string) =>
     `/clients/${clientId}/timeline`,

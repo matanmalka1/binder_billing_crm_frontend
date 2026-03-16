@@ -110,6 +110,21 @@ export interface ClientStatusCardResponse {
   documents: DocumentsCard;
 }
 
+export interface BulkClientActionPayload {
+  client_ids: number[];
+  action: "freeze" | "close" | "activate";
+}
+
+export interface BulkClientFailedItem {
+  id: number;
+  error: string;
+}
+
+export interface BulkClientActionResult {
+  succeeded: number[];
+  failed: BulkClientFailedItem[];
+}
+
 export const clientsApi = {
   list: async (params: ListClientsParams): Promise<ClientListResponse> => {
     const response = await api.get<ClientListResponse>(ENDPOINTS.clients, {
@@ -148,6 +163,14 @@ export const clientsApi = {
   getStatusCard: async (clientId: number): Promise<ClientStatusCardResponse> => {
     const response = await api.get<ClientStatusCardResponse>(
       ENDPOINTS.clientStatusCard(clientId),
+    );
+    return response.data;
+  },
+
+  bulkAction: async (payload: BulkClientActionPayload): Promise<BulkClientActionResult> => {
+    const response = await api.post<BulkClientActionResult>(
+      ENDPOINTS.clientsBulkAction,
+      payload,
     );
     return response.data;
   },

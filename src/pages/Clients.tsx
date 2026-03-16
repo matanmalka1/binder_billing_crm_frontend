@@ -10,6 +10,7 @@ import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { ClientsFiltersBar } from "../features/clients/components/ClientsFiltersBar";
 import { CreateClientModal } from "../features/clients/components/CreateClientModal";
 import { buildClientColumns } from "../features/clients/components/ClientColumns";
+import { ClientBulkToolbar } from "../features/clients/components/ClientBulkToolbar";
 import { useClientsPage } from "../features/clients/hooks/useClientsPage";
 import { ImportExportModal } from "../features/importExport/components/ImportExportModal";
 
@@ -19,27 +20,43 @@ export const Clients: React.FC = () => {
   const [showImportExport, setShowImportExport] = useState(false);
   const {
     activeActionKey,
+    bulkLoading,
     clients,
+    clearSelection,
     error,
     filters,
     handleFilterChange,
+    isAdvisor,
     loading,
     pendingAction,
     cancelPendingAction,
     confirmPendingAction,
+    runBulkAction,
+    selectedIds,
     setPage,
+    toggleSelect,
+    toggleSelectAll,
     total,
     createClient,
     createLoading,
     can,
   } = useClientsPage();
+
   const activeCount = clients.filter((c) => c.status === "active").length;
   const frozenCount = clients.filter((c) => c.status === "frozen").length;
-  const columns = useMemo(() => buildClientColumns(), []);
+  const allIds = useMemo(() => clients.map((c) => c.id), [clients]);
+  const columns = useMemo(
+    () =>
+      isAdvisor
+        ? buildClientColumns({ selectedIds, onToggleSelect: toggleSelect, onToggleAll: toggleSelectAll, allIds })
+        : buildClientColumns(),
+    [isAdvisor, selectedIds, toggleSelect, toggleSelectAll, allIds],
+  );
   const totalPages = Math.max(
     1,
     Math.ceil(Math.max(total, 1) / filters.page_size),
   );
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -77,6 +94,14 @@ export const Clients: React.FC = () => {
           onFilterChange={handleFilterChange}
         />
       </ToolbarContainer>
+      {isAdvisor && selectedIds.size > 0 && (
+        <ClientBulkToolbar
+          selectedCount={selectedIds.size}
+          loading={bulkLoading}
+          onAction={runBulkAction}
+          onClear={clearSelection}
+        />
+      )}
       {error && <Alert variant="error" message={error} />}
       {!loading && total > 0 && (
         <p className="text-sm text-gray-500">
