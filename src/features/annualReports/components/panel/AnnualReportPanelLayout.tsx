@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Download } from "lucide-react";
 
 interface AnnualReportPanelLayoutProps {
   open: boolean;
@@ -10,6 +11,8 @@ interface AnnualReportPanelLayoutProps {
   isDirty: boolean;
   isSaving: boolean;
   children: React.ReactNode;
+  onExportPdf?: () => void;
+  isExportingPdf?: boolean;
 }
 
 export const AnnualReportPanelLayout = ({
@@ -22,6 +25,8 @@ export const AnnualReportPanelLayout = ({
   isDirty,
   isSaving,
   children,
+  onExportPdf,
+  isExportingPdf = false,
 }: AnnualReportPanelLayoutProps) => {
   const [showGuard, setShowGuard] = useState(false);
 
@@ -61,6 +66,17 @@ export const AnnualReportPanelLayout = ({
               )}
             </div>
             <div className="flex items-center gap-2">
+              {onExportPdf && (
+                <button
+                  type="button"
+                  onClick={onExportPdf}
+                  disabled={isExportingPdf}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Download size={14} />
+                  {isExportingPdf ? "מפיק..." : "הורד טיוטה"}
+                </button>
+              )}
               <button
                 type="button"
                 onClick={onDelete}

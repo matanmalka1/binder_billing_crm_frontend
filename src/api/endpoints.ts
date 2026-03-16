@@ -126,6 +126,7 @@ export const ENDPOINTS = {
   annualReportAnnexLine: (id: number | string, schedule: string, lineId: number | string) =>
     `/annual-reports/${id}/annex/${schedule}/${lineId}`,
   annualReportAmend: (id: number | string) => `/annual-reports/${id}/amend`,
+  annualReportExportPdf: (id: number | string) => `/annual-reports/${id}/export/pdf`,
   taxDeadlinesTimeline: "/tax-deadlines/timeline",
   taxDeadlinesGenerate: "/tax-deadlines/generate",
   advancePaymentsKPI: "/advance-payments/kpi",

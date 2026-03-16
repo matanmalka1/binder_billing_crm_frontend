@@ -1,5 +1,8 @@
 import { useState, useRef, useCallback } from "react";
 import { cn } from "../../../../utils/utils";
+import { toast } from "../../../../utils/toast";
+import { useRole } from "../../../../hooks/useRole";
+import { annualReportsApi } from "../../../../api/annualReport.api";
 import { useReportDetail } from "../../hooks/useReportDetail";
 import { AnnualReportPanelLayout } from "./AnnualReportPanelLayout";
 import { DeleteReportConfirmDialog } from "./DeleteReportConfirmDialog";
@@ -38,8 +41,23 @@ export const AnnualReportFullPanel = ({ reportId, onClose }: AnnualReportFullPan
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const submitRef = useRef<(() => void) | null>(null);
 
+  const { isAdvisor } = useRole();
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+
   const { report, isLoading, error, transition, updateDetail, isUpdating, completeSchedule, addSchedule, isCompletingSchedule, isAddingSchedule, deleteReport, isDeleting } =
     useReportDetail(reportId, onClose);
+
+  const handleExportPdf = useCallback(async () => {
+    if (!report) return;
+    setIsExportingPdf(true);
+    try {
+      await annualReportsApi.exportPdf(reportId, report.tax_year);
+    } catch {
+      toast.error("שגיאה בהפקת הטיוטה");
+    } finally {
+      setIsExportingPdf(false);
+    }
+  }, [report, reportId]);
 
   const handleSave = useCallback(() => { submitRef.current?.(); }, []);
   const handleDeleteConfirm = useCallback(async () => {
@@ -85,6 +103,8 @@ export const AnnualReportFullPanel = ({ reportId, onClose }: AnnualReportFullPan
         onSave={handleSave}
         isDirty={isDirty}
         isSaving={isUpdating}
+        onExportPdf={isAdvisor && report ? handleExportPdf : undefined}
+        isExportingPdf={isExportingPdf}
       >
         {isLoading && (
           <div className="flex flex-1 items-center justify-center text-sm text-gray-400">טוען דוח...</div>

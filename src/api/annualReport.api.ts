@@ -441,4 +441,19 @@ export const annualReportsApi = {
     const res = await api.post<AnnualReportFull>(ENDPOINTS.annualReportAmend(reportId), { reason });
     return res.data;
   },
+
+  exportPdf: async (reportId: number, taxYear: number): Promise<void> => {
+    const response = await api.get<Blob>(ENDPOINTS.annualReportExportPdf(reportId), {
+      responseType: "blob",
+    });
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `annual_report_${reportId}_${taxYear}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  },
 };
