@@ -66,6 +66,9 @@ export const ENDPOINTS = {
     `/signature-requests/${id}/cancel`,
   signatureRequestAuditTrail: (id: number | string) =>
     `/signature-requests/${id}/audit-trail`,
+  signerView: (token: string) => `/sign/${token}`,
+  signerApprove: (token: string) => `/sign/${token}/approve`,
+  signerDecline: (token: string) => `/sign/${token}/decline`,
   users: "/users",
   userById: (id: number | string) => `/users/${id}`,
   userActivate: (id: number | string) => `/users/${id}/activate`,

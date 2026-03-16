@@ -1,3 +1,4 @@
+import axios from "axios";
 import { api } from "./client";
 import { ENDPOINTS } from "./endpoints";
 import type { PaginatedResponse } from "../types/common";
@@ -58,7 +59,7 @@ export interface CreateSignatureRequestPayload {
   request_type: SignatureRequestType;
   title: string;
   description?: string;
-  signer_name?: string;
+  signer_name: string;
   signer_email?: string;
   signer_phone?: string;
 }
@@ -77,14 +78,13 @@ export interface CancelSignatureRequestPayload {
 }
 
 export interface SignerViewResponse {
+  request_id: number;
   title: string;
   description: string | null;
   signer_name: string;
-  request_type: SignatureRequestType;
-  status: SignatureRequestStatus;
-  expires_at: string | null;
+  status: string;
   content_hash: string | null;
-  created_at: string;
+  expires_at: string | null;
 }
 
 export interface SignerDeclinePayload {
@@ -164,28 +164,26 @@ export const signatureRequestsApi = {
   },
 };
 
-// Public signer API (no auth)
-import axios from "axios";
-
-const PUBLIC_BASE = import.meta.env?.VITE_API_BASE_URL
-  ? import.meta.env.VITE_API_BASE_URL.replace("/api/v1", "")
-  : "http://localhost:8000";
-
+// Public signer API (no auth — bypasses /api/v1 prefix)
 const publicApi = axios.create({
-  baseURL: PUBLIC_BASE,
+  baseURL: import.meta.env?.VITE_API_BASE_URL
+    ? import.meta.env.VITE_API_BASE_URL.replace("/api/v1", "")
+    : "http://localhost:8000",
   timeout: 15000,
   headers: { "Content-Type": "application/json" },
 });
 
 export const signerApi = {
   view: async (token: string): Promise<SignerViewResponse> => {
-    const response = await publicApi.get<SignerViewResponse>(`/sign/${token}`);
+    const response = await publicApi.get<SignerViewResponse>(
+      ENDPOINTS.signerView(token),
+    );
     return response.data;
   },
 
-  approve: async (token: string): Promise<{ status: string }> => {
-    const response = await publicApi.post<{ status: string }>(
-      `/sign/${token}/approve`,
+  approve: async (token: string): Promise<SignerViewResponse> => {
+    const response = await publicApi.post<SignerViewResponse>(
+      ENDPOINTS.signerApprove(token),
     );
     return response.data;
   },
@@ -193,9 +191,9 @@ export const signerApi = {
   decline: async (
     token: string,
     payload?: SignerDeclinePayload,
-  ): Promise<{ status: string }> => {
-    const response = await publicApi.post<{ status: string }>(
-      `/sign/${token}/decline`,
+  ): Promise<SignerViewResponse> => {
+    const response = await publicApi.post<SignerViewResponse>(
+      ENDPOINTS.signerDecline(token),
       payload ?? {},
     );
     return response.data;
