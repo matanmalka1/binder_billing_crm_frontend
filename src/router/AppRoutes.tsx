@@ -20,6 +20,7 @@ import { RemindersPage } from "../pages/reports/Reminders";
 import { SignatureRequestsPage } from "../pages/reports/SignatureRequests";
 import { AdvancePayments } from "../pages/tax/AdvancePayments";
 import { VatWorkItems } from "../pages/tax/VatWorkItems";
+import { VatWorkItemDetail } from "../pages/tax/VatWorkItemDetail";
 import { Users } from "../pages/Users";
 import { SigningPage } from "../pages/SigningPage";
 
@@ -91,6 +92,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
             <Route path="tax/advance-payments" element={<AdvancePayments />} />
             <Route path="tax/vat" element={<VatWorkItems />} />
+            <Route path="tax/vat/:id" element={<VatWorkItemDetail />} />
             <Route path="reports/advance-payments" element={<Navigate to="/tax/advance-payments?tab=report" replace />} />
             <Route path="reports/aging" element={<Navigate to="/charges?tab=aging" replace />} />
             <Route path="reports/annual-reports" element={<Navigate to="/tax/reports?tab=status" replace />} />

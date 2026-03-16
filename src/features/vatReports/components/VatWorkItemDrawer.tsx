@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   DetailDrawer,
   DrawerField,
@@ -36,6 +37,7 @@ export const VatWorkItemDrawer: React.FC<VatWorkItemDrawerProps> = ({
   onSendBack,
 }) => {
   const { isAdvisor } = useRole();
+  const navigate = useNavigate();
   const [sendBackNote, setSendBackNote] = useState("");
   const [sendingBack, setSendingBack] = useState(false);
   const [showSendBackForm, setShowSendBackForm] = useState(false);
@@ -85,6 +87,14 @@ export const VatWorkItemDrawer: React.FC<VatWorkItemDrawerProps> = ({
     >
       {item && (
         <>
+          <div className="pb-2">
+            <button
+              onClick={() => { handleClose(); navigate(`/tax/vat/${item.id}`); }}
+              className="text-sm text-blue-600 hover:underline"
+            >
+              פתח בדף מלא ↗
+            </button>
+          </div>
           <DrawerSection title="פרטי תיק">
             <DrawerField label="לקוח" value={item.client_name ?? `#${item.client_id}`} />
             <DrawerField label="תקופה" value={<span className="font-mono">{item.period}</span>} />

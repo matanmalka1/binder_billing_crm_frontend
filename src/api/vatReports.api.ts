@@ -62,9 +62,9 @@ export interface VatInvoiceListResponse {
 
 export interface CreateVatInvoicePayload {
   invoice_type: "income" | "expense";
-  invoice_number: string;
-  invoice_date: string;
-  counterparty_name: string;
+  invoice_number?: string;
+  invoice_date?: string;
+  counterparty_name?: string;
   net_amount: number;
   vat_amount: number;
   counterparty_id?: string | null;
@@ -87,6 +87,7 @@ export interface VatAuditTrailResponse {
 }
 
 export interface VatPeriodRow {
+  work_item_id: number;
   period: string;
   status: string;
   total_output_vat: number;

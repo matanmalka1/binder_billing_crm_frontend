@@ -29,3 +29,14 @@ export const CATEGORY_LABELS: Record<string, string> = {
   marketing: "שיווק",
   other: "אחר",
 };
+
+export const CATEGORY_COLORS: Record<string, string> = {
+  office: "bg-blue-400",
+  travel: "bg-orange-400",
+  professional_services: "bg-purple-400",
+  equipment: "bg-gray-400",
+  rent: "bg-amber-400",
+  salary: "bg-rose-400",
+  marketing: "bg-pink-400",
+  other: "bg-slate-400",
+};

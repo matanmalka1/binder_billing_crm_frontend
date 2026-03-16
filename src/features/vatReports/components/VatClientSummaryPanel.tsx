@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { buildYearOptions } from "../../../utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import { vatReportsApi } from "../../../api/vatReports.api";
@@ -78,6 +79,21 @@ const PERIOD_COLUMNS: Column<VatPeriodRow>[] = [
       r.filed_at
         ? new Date(r.filed_at).toLocaleDateString("he-IL")
         : "—",
+  },
+  {
+    key: "action",
+    header: "",
+    headerClassName: "w-24",
+    className: "w-24",
+    render: (r) => (
+      <Link
+        to={`/tax/vat/${r.work_item_id}`}
+        className="text-sm text-blue-600 hover:underline"
+        onClick={(e) => e.stopPropagation()}
+      >
+        פתח להקלדה
+      </Link>
+    ),
   },
 ];
 
