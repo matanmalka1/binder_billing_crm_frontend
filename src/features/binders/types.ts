@@ -92,3 +92,24 @@ export interface BindersFiltersBarProps {
   filters: BindersFilters;
   onFilterChange: (name: string, value: string) => void;
 }
+
+export interface BinderIntakeResponse {
+  id: number;
+  binder_id: number;
+  received_at: string;
+  received_by: number;
+  received_by_name?: string | null;
+  notes?: string | null;
+  created_at: string;
+}
+
+export interface BinderIntakeListResponse {
+  binder_id: number;
+  intakes: BinderIntakeResponse[];
+}
+
+export interface BinderReceiveResult {
+  binder: BinderResponse;
+  intake: BinderIntakeResponse;
+  is_new_binder: boolean;
+}

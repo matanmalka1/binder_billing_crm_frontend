@@ -19,6 +19,7 @@ export const QK = {
       pageSize: number,
     ) => ["binders", "client", clientId, { page, page_size: pageSize }] as const,
     history: (binderId: number) => ["binders", "history", binderId] as const,
+    intakes: (binderId: number) => ["binders", "intakes", binderId] as const,
   },
   charges: {
     all: ["charges"] as const,

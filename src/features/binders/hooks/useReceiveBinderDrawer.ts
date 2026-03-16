@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { bindersApi } from "../../../api/binders.api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
@@ -35,6 +35,16 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     setSelectedClient(null);
   };
 
+  const binderNumber = useWatch({ control: form.control, name: "binder_number" });
+
+  const { data: activeBinderData } = useQuery({
+    queryKey: QK.binders.list({ binder_number: binderNumber }),
+    queryFn: () => bindersApi.list({ binder_number: binderNumber, page_size: 1 }),
+    enabled: binderNumber.trim().length >= 2,
+    staleTime: 5000,
+  });
+  const activeBinder = activeBinderData?.items?.[0] ?? null;
+
   const mutation = useMutation({
     mutationFn: (values: ReceiveBinderFormValues) =>
       bindersApi.receive({
@@ -45,8 +55,8 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
         received_by: userId!,
         notes: values.notes ?? null,
       }),
-    onSuccess: async () => {
-      toast.success("החומר נקלט בהצלחה");
+    onSuccess: async (result) => {
+      toast.success(result.is_new_binder ? "קלסר חדש נפתח והחומר נקלט" : "החומר נוסף לקלסר קיים");
       await queryClient.invalidateQueries({ queryKey: QK.binders.all });
       resetState();
       onSuccess?.();
@@ -78,6 +88,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     form,
     clientQuery,
     selectedClient,
+    activeBinder,
     isSubmitting: mutation.isPending,
     handleSubmit,
     handleClientSelect,

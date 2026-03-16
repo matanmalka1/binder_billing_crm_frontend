@@ -4,7 +4,9 @@ import { api } from "./client";
 import type {
   BinderExtendedListResponse,
   BinderHistoryResponse,
+  BinderIntakeListResponse,
   BinderListResponse,
+  BinderReceiveResult,
   BinderResponse,
   ListBindersParams,
   ListOperationalBindersParams,
@@ -46,8 +48,8 @@ export const bindersApi = {
     return response.data;
   },
 
-  receive: async (payload: ReceiveBinderPayload): Promise<BinderResponse> => {
-    const response = await api.post<BinderResponse>(
+  receive: async (payload: ReceiveBinderPayload): Promise<BinderReceiveResult> => {
+    const response = await api.post<BinderReceiveResult>(
       ENDPOINTS.binderReceive,
       payload,
     );
@@ -103,6 +105,13 @@ export const bindersApi = {
   getHistory: async (binderId: number): Promise<BinderHistoryResponse> => {
     const response = await api.get<BinderHistoryResponse>(
       ENDPOINTS.binderHistory(binderId),
+    );
+    return response.data;
+  },
+
+  getIntakes: async (binderId: number): Promise<BinderIntakeListResponse> => {
+    const response = await api.get<BinderIntakeListResponse>(
+      ENDPOINTS.binderIntakes(binderId),
     );
     return response.data;
   },

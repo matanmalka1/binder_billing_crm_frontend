@@ -15,6 +15,7 @@ export const ENDPOINTS = {
   binderReturn: (binderId: number | string) => `/binders/${binderId}/return`,
   binderReceive: "/binders/receive",
   binderHistory: (binderId: number | string) => `/binders/${binderId}/history`,
+  binderIntakes: (binderId: number | string) => `/binders/${binderId}/intakes`,
   bindersOpen: "/binders/open",
   dashboardSummary: "/dashboard/summary",
   dashboardOverview: "/dashboard/overview",

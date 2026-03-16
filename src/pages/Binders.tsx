@@ -182,6 +182,7 @@ export const Binders: React.FC = () => {
         receiveForm={receive.form}
         clientQuery={receive.clientQuery}
         selectedClient={receive.selectedClient}
+        activeBinder={receive.activeBinder}
         onClientSelect={receive.handleClientSelect}
         onClientQueryChange={receive.handleClientQueryChange}
         onReceiveSubmit={receive.handleSubmit}

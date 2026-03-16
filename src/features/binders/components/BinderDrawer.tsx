@@ -7,6 +7,7 @@ import { BinderDetailsPanel } from "./BinderDetailsPanel";
 import { BinderActionsPanel } from "./BinderActionsPanel";
 import { BinderReceivePanel } from "./BinderReceivePanel";
 import { BinderHistorySection } from "./BinderHistorySection";
+import { BinderIntakesSection } from "./BinderIntakesSection";
 
 /* ─── Main drawer ────────────────────────────────────────────── */
 
@@ -22,6 +23,7 @@ interface BinderDrawerProps {
   receiveForm?: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery?: string;
   selectedClient?: { id: number; name: string } | null;
+  activeBinder?: BinderResponse | null;
   onClientSelect?: (client: { id: number; name: string; id_number: string }) => void;
   onClientQueryChange?: (query: string) => void;
   onReceiveSubmit?: (e?: React.BaseSyntheticEvent) => void;
@@ -38,6 +40,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   receiveForm,
   clientQuery = "",
   selectedClient = null,
+  activeBinder = null,
   onClientSelect,
   onClientQueryChange,
   onReceiveSubmit,
@@ -77,6 +80,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
           form={receiveForm}
           clientQuery={clientQuery}
           selectedClient={selectedClient}
+          activeBinder={activeBinder}
           onClientSelect={onClientSelect!}
           onClientQueryChange={onClientQueryChange!}
           onSubmit={onReceiveSubmit!}
@@ -97,6 +101,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
             disabled={actionLoading}
             onMarkReady={() => onMarkReady?.()}
           />
+          <BinderIntakesSection binderId={binder.id} binderType={binder.binder_type} />
           <BinderHistorySection binderId={binder.id} />
         </>
       )}

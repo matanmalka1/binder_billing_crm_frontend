@@ -7,12 +7,14 @@ import { DatePicker } from "../../../components/ui/DatePicker";
 import { ClientSearchInput } from "../../../components/ui/ClientSearchInput";
 import type { UseFormReturn } from "react-hook-form";
 import type { ReceiveBinderFormValues } from "../schemas";
+import type { BinderResponse } from "../types";
 import { BINDER_TYPE_OPTIONS } from "../constants";
 
 interface BinderReceivePanelProps {
   form: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery: string;
   selectedClient: { id: number; name: string } | null;
+  activeBinder?: BinderResponse | null;
   onClientSelect: (client: { id: number; name: string; id_number: string }) => void;
   onClientQueryChange: (query: string) => void;
   onSubmit: (e?: React.BaseSyntheticEvent) => void;
@@ -24,6 +26,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
   form,
   clientQuery,
   selectedClient,
+  activeBinder,
   onClientSelect,
   onClientQueryChange,
   onSubmit,
@@ -38,6 +41,12 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
+      {activeBinder && (
+        <div className="rounded border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800" dir="rtl">
+          נמצא קלסר פעיל #{activeBinder.binder_number} — החומר יתווסף אליו
+        </div>
+      )}
+
       <ClientSearchInput
         value={clientQuery}
         onChange={onClientQueryChange}
