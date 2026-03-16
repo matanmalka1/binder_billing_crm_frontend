@@ -156,7 +156,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
   useEffect(() => {
     if (selected) setMonthState(selected);
-  }, [value]);
+  }, [value, selected]);
 
   const displayValue = selected ? format(selected, "dd/MM/yyyy") : "";
 

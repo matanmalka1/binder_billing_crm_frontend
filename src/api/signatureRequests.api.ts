@@ -82,7 +82,8 @@ export interface SignerViewResponse {
   title: string;
   description: string | null;
   signer_name: string;
-  status: string;
+  status: SignatureRequestStatus;
+  request_type: string;
   content_hash: string | null;
   expires_at: string | null;
 }

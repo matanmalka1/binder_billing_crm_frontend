@@ -10,7 +10,7 @@ import { toast } from "../../../../utils/toast";
 import { Badge } from "../../../../components/ui/Badge";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "../../../documents/documents.constants";
 
-export const DOC_TYPE_ICONS: Record<string, ComponentType<{ className?: string }>> = {
+const DOC_TYPE_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   id_copy:                 CreditCard,
   power_of_attorney:       ScrollText,
   engagement_agreement:    FileSignature,

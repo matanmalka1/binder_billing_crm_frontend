@@ -3,7 +3,7 @@ import { QK } from "../../../lib/queryKeys";
 import { documentsApi } from "../../../api/documents.api";
 import { Badge } from "../../../components/ui/Badge";
 import { STATUS_LABELS, STATUS_BADGE_VARIANT } from "../documents.constants";
-import { formatDate } from "../../../utils/utils";
+import { formatDate, formatFileSize } from "../../../utils/utils";
 
 interface DocumentVersionsPanelProps {
   clientId: number;
@@ -40,16 +40,24 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
       <p className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
         היסטוריית גרסאות
       </p>
-      <ul className="space-y-1.5">
+      <ul className="space-y-2">
         {items.map((v) => (
           <li key={v.id} className="flex items-center gap-3 text-xs text-gray-700">
-            <span className="inline-block rounded-full bg-gray-200 px-1.5 py-0.5 text-gray-600 font-mono">
+            <span className="inline-block rounded-full bg-gray-200 px-1.5 py-0.5 text-gray-600 font-mono shrink-0">
               v{v.version}
             </span>
-            <span className="tabular-nums text-gray-400">{formatDate(v.uploaded_at)}</span>
+            <span className="tabular-nums text-gray-400 shrink-0">{formatDate(v.uploaded_at)}</span>
             <Badge variant={STATUS_BADGE_VARIANT[v.status] ?? "neutral"}>
               {STATUS_LABELS[v.status] ?? v.status}
             </Badge>
+            {v.original_filename && (
+              <span className="truncate max-w-[180px] text-gray-600" title={v.original_filename}>
+                {v.original_filename}
+              </span>
+            )}
+            {v.file_size_bytes != null && (
+              <span className="text-gray-400 shrink-0">{formatFileSize(v.file_size_bytes)}</span>
+            )}
           </li>
         ))}
       </ul>

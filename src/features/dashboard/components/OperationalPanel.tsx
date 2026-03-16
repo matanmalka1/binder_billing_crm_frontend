@@ -1,5 +1,4 @@
 import { CheckCircle, Info, Zap, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
 import { mapActions } from "../../../lib/actions/mapActions";
 import type { BackendAction, ActionCommand } from "../../../lib/actions/types";
 import { cn } from "../../../utils/utils";
@@ -41,7 +40,6 @@ interface ActionButtonProps {
 }
 
 const ActionButton = ({ action, isLoading, isDisabled, index, onQuickAction }: ActionButtonProps) => {
-  const isNav = action.method === "get";
   const content = (
     <>
       <div className="min-w-0 flex-1">
@@ -91,18 +89,6 @@ const ActionButton = ({ action, isLoading, isDisabled, index, onQuickAction }: A
       ? "cursor-not-allowed border-gray-100 bg-gray-50 opacity-40"
       : "border-gray-200 bg-white hover:-translate-y-0.5 hover:border-violet-300 hover:shadow-lg hover:shadow-violet-50"
   );
-
-  if (isNav) {
-    return (
-      <Link
-        to={action.endpoint}
-        className={baseClass}
-        style={{ animationDelay: staggerDelay(index, 50) }}
-      >
-        {content}
-      </Link>
-    );
-  }
 
   return (
     <button

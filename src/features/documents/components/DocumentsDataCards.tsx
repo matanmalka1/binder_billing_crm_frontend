@@ -5,6 +5,7 @@ import { DataTable } from "../../../components/ui/DataTable";
 import { Alert } from "../../../components/ui/Alert";
 import { DocumentsUploadCard } from "./DocumentsUploadCard";
 import { DocumentVersionsPanel } from "./DocumentVersionsPanel";
+import { DocumentPreviewModal } from "./DocumentPreviewModal";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { buildDocumentColumns } from "./DocumentsColumns";
 import { documentsApi } from "../../../api/documents.api";
@@ -54,6 +55,9 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
   const [rejectNote, setRejectNote] = useState("");
   const [expandedVersionsId, setExpandedVersionsId] = useState<number | null>(null);
 
+  const [previewDoc, setPreviewDoc] = useState<PermanentDocumentResponse | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pendingReplaceId = useRef<number | null>(null);
 
@@ -90,6 +94,18 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     }
   };
 
+  const handlePreviewClick = async (doc: PermanentDocumentResponse) => {
+    setPreviewDoc(doc);
+    setPreviewUrl(null);
+    try {
+      const { url } = await documentsApi.getDownloadUrl(doc.id);
+      setPreviewUrl(url);
+    } catch {
+      toast.error("שגיאה בטעינת המסמך");
+      setPreviewDoc(null);
+    }
+  };
+
   const handleExpandVersions = (id: number) => {
     setExpandedVersionsId((prev) => (prev === id ? null : id));
   };
@@ -113,6 +129,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     deletingId,
     rejectingId,
     onDownload: handleDownloadClick,
+    onPreview: handlePreviewClick,
     onReplace: handleReplaceClick,
     onDelete: (id) => setConfirmDeleteId(id),
     handleApprove,
@@ -133,27 +150,29 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         />
       )}
 
-      <div className="flex items-center gap-2">
-        <label className="text-sm text-gray-600">שנת מס:</label>
-        <select
-          value={taxYear ?? ""}
-          onChange={(e) => onTaxYearChange(e.target.value ? Number(e.target.value) : null)}
-          className="rounded border border-gray-200 px-2 py-1 text-sm bg-white"
-        >
-          <option value="">הכל</option>
-          {taxYears.map((y) => <option key={y} value={y}>{y}</option>)}
-        </select>
-      </div>
+      <Card title="העלאת מסמך">
+        <DocumentsUploadCard
+          submitUpload={submitUpload}
+          uploadError={uploadError}
+          uploading={uploading}
+          selectedTaxYear={taxYear}
+        />
+      </Card>
 
       <Card
         title={`מסמכים (${documents.length})`}
         actions={
-          <DocumentsUploadCard
-            submitUpload={submitUpload}
-            uploadError={uploadError}
-            uploading={uploading}
-            selectedTaxYear={taxYear}
-          />
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-500">שנת מס:</label>
+            <select
+              value={taxYear ?? ""}
+              onChange={(e) => onTaxYearChange(e.target.value ? Number(e.target.value) : null)}
+              className="appearance-none rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="">הכל</option>
+              {taxYears.map((y) => <option key={y} value={y}>{y}</option>)}
+            </select>
+          </div>
         }
       >
         <DataTable
@@ -172,6 +191,15 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
       </Card>
 
       <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
+
+      <DocumentPreviewModal
+        open={previewDoc !== null}
+        onClose={() => { setPreviewDoc(null); setPreviewUrl(null); }}
+        url={previewUrl}
+        filename={previewDoc?.original_filename ?? null}
+        mimeType={previewDoc?.mime_type ?? null}
+        onDownload={() => previewDoc && handleDownloadClick(previewDoc.id)}
+      />
 
       <ConfirmDialog
         open={confirmDeleteId !== null}

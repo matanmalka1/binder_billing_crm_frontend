@@ -1,7 +1,6 @@
 import type { AnnualReportFull } from "../../api/annualReport.api";
 import type {
   AnnualReportStatus,
-  ReadinessCheckResponse,
   StatusTransitionPayload,
 } from "../../api/annualReport.api";
 import type { ChangeEvent } from "react";

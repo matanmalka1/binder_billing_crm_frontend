@@ -1,4 +1,4 @@
-import { Download, History, CheckCircle, XCircle, RefreshCw, Trash2 } from "lucide-react";
+import { Download, Eye, History, CheckCircle, XCircle, RefreshCw, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
 import type { PermanentDocumentResponse } from "../../../api/documents.api";
 
@@ -11,6 +11,7 @@ interface DocumentRowActionsProps {
   deletingId: number | null;
   rejectingId: number | null;
   onDownload: (id: number) => void;
+  onPreview: (doc: PermanentDocumentResponse) => void;
   onReplace: (id: number) => void;
   onDelete: (id: number) => void;
   handleApprove: (id: number) => void;
@@ -27,6 +28,7 @@ export const DocumentRowActions: React.FC<DocumentRowActionsProps> = ({
   deletingId,
   rejectingId,
   onDownload,
+  onPreview,
   onReplace,
   onDelete,
   handleApprove,
@@ -35,6 +37,11 @@ export const DocumentRowActions: React.FC<DocumentRowActionsProps> = ({
 }) => (
   <div onClick={(e) => e.stopPropagation()}>
     <DropdownMenu ariaLabel={`פעולות למסמך ${doc.id}`}>
+      <DropdownMenuItem
+        label="תצוגה מקדימה"
+        onClick={() => onPreview(doc)}
+        icon={<Eye className="h-4 w-4" />}
+      />
       <DropdownMenuItem
         label={downloadingId === doc.id ? "מוריד..." : "הורד"}
         onClick={() => onDownload(doc.id)}

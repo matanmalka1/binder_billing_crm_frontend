@@ -13,6 +13,7 @@ interface BuildDocColumnsOptions {
   deletingId: number | null;
   rejectingId: number | null;
   onDownload: (id: number) => void;
+  onPreview: (doc: PermanentDocumentResponse) => void;
   onReplace: (id: number) => void;
   onDelete: (id: number) => void;
   handleApprove: (id: number) => void;
@@ -28,6 +29,7 @@ export const buildDocumentColumns = ({
   deletingId,
   rejectingId,
   onDownload,
+  onPreview,
   onReplace,
   onDelete,
   handleApprove,
@@ -83,6 +85,7 @@ export const buildDocumentColumns = ({
         deletingId={deletingId}
         rejectingId={rejectingId}
         onDownload={onDownload}
+        onPreview={onPreview}
         onReplace={onReplace}
         onDelete={onDelete}
         handleApprove={handleApprove}

@@ -51,6 +51,13 @@ export const buildYearOptions = (
   }));
 };
 
+export const formatFileSize = (bytes: number | null | undefined): string => {
+  if (bytes == null) return "—";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
 export const getHttpStatus = (error: unknown): number | null => {
   if (!axios.isAxiosError(error)) return null;
   const status = error.response?.status;

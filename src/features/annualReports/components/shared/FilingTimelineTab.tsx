@@ -1,23 +1,17 @@
 import React from "react";
-import { CalendarCheck, CalendarClock } from "lucide-react";
+import { CalendarCheck } from "lucide-react";
 import type { AnnualReportFull } from "../../../../api/annualReport.api";
 import { TimelineEvent } from "../statusTransition/TimelineEvent";
 import type { TimelineEventStatus } from "../statusTransition/TimelineEvent";
 import { cn } from "../../../../utils/utils";
 import { UpcomingDeadlinesList } from "./UpcomingDeadlinesList";
+import { STATUS_LABELS } from "./annualReports.constants";
 
 interface Props { reports: AnnualReportFull[]; }
 
 const formatDate = (dateStr: string | null | undefined): string => {
   if (!dateStr) return "—";
   return new Date(dateStr).toLocaleDateString("he-IL");
-};
-
-export const STATUS_LABELS: Record<AnnualReportFull["status"], string> = {
-  not_started: "טרם החל", collecting_docs: "איסוף מסמכים", docs_complete: "מסמכים הושלמו",
-  in_preparation: "בהכנה", pending_client: "ממתין ללקוח", submitted: "הוגש",
-  accepted: "התקבל", assessment_issued: "שומה הוצאה", objection_filed: "הגשת השגה",
-  closed: "סגור", amended: "עם תיקונים",
 };
 
 interface ProgressBarProps { label: string; count: number; pct: number; color: string; }
