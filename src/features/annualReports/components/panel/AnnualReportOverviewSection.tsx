@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, BarChart3 } from "lucide-react";
 import { ReportAlertBanners } from "./ReportAlertBanners";
 import { ReportSummaryCards } from "./ReportSummaryCards";
 import { ReportMetaGrid } from "./ReportMetaGrid";
@@ -33,21 +33,9 @@ interface Props {
 }
 
 export const AnnualReportOverviewSection: React.FC<Props> = ({
-  report,
-  detail,
-  advances,
-  schedules,
-  onDetailSave,
-  isSaving,
-  onScheduleComplete,
-  onScheduleAdd,
-  isScheduleLoading,
-  isScheduleAdding,
-  completingKey,
-  clientId,
-  onSelectReport,
-  onDirtyChange,
-  submitRef,
+  report, detail, advances, schedules, onDetailSave, isSaving,
+  onScheduleComplete, onScheduleAdd, isScheduleLoading, isScheduleAdding,
+  completingKey, clientId, onSelectReport, onDirtyChange, submitRef,
 }) => {
   const [plExpanded, setPlExpanded] = useState(false);
 
@@ -59,25 +47,28 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
 
   return (
     <div className="space-y-6">
-      {/* 1. Alert banners */}
       <ReportAlertBanners report={detail ?? ({} as AnnualReportDetail)} advances={advances} />
 
-      {/* 2. Summary cards */}
       <ReportSummaryCards reportId={report.id} />
 
-      {/* 3. Two-column grid: meta + detail form */}
-      <div className="grid grid-cols-2 gap-6">
-        <ReportMetaGrid report={report} />
-        <AnnualReportDetailForm
-          detail={detail}
-          onSave={onDetailSave}
-          isSaving={isSaving}
-          onDirtyChange={onDirtyChange}
-          submitRef={submitRef}
-        />
+      {/* Meta + detail form */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h3 className="mb-4 text-sm font-semibold text-gray-700">פרטי הדוח</h3>
+          <ReportMetaGrid report={report} />
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h3 className="mb-4 text-sm font-semibold text-gray-700">עדכון נתונים</h3>
+          <AnnualReportDetailForm
+            detail={detail}
+            onSave={onDetailSave}
+            isSaving={isSaving}
+            onDirtyChange={onDirtyChange}
+            submitRef={submitRef}
+          />
+        </div>
       </div>
 
-      {/* 4. Schedule checklist */}
       <ScheduleChecklist
         reportId={report.id}
         schedules={schedules}
@@ -88,36 +79,37 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
         completingKey={completingKey}
       />
 
-      {/* 5. P&L summary — collapsible, collapsed by default */}
-      <div className="rounded-lg border border-gray-200 bg-white">
+      {/* P&L collapsible */}
+      <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
         <button
           type="button"
-          className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="flex w-full items-center justify-between px-5 py-4 text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors"
           onClick={() => setPlExpanded((prev) => !prev)}
         >
-          <span>סיכום רווח והפסד</span>
-          {plExpanded ? (
-            <ChevronUp className="h-4 w-4 text-gray-400" />
-          ) : (
-            <ChevronDown className="h-4 w-4 text-gray-400" />
-          )}
+          <div className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4 text-gray-400" />
+            <span>סיכום רווח והפסד</span>
+          </div>
+          {plExpanded
+            ? <ChevronUp className="h-4 w-4 text-gray-400" />
+            : <ChevronDown className="h-4 w-4 text-gray-400" />}
         </button>
         {plExpanded && (
-          <div className="border-t border-gray-100 px-4 pb-4 pt-2">
+          <div className="border-t border-gray-100 px-5 pb-5 pt-4">
             <AnnualPLSummary reportId={report.id} clientId={clientId} />
           </div>
         )}
       </div>
 
-      {/* 6. Report history table */}
-      <ReportHistoryTable
-        clientId={clientId}
-        currentReportId={report.id}
-        onSelect={onSelectReport}
-      />
+      <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <h3 className="mb-4 text-sm font-semibold text-gray-700">היסטוריית דוחות</h3>
+        <ReportHistoryTable clientId={clientId} currentReportId={report.id} onSelect={onSelectReport} />
+      </div>
 
-      {/* 7. Status history timeline */}
-      <StatusHistoryTimeline history={history ?? []} />
+      <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <h3 className="mb-4 text-sm font-semibold text-gray-700">היסטוריית סטטוסים</h3>
+        <StatusHistoryTimeline history={history ?? []} />
+      </div>
     </div>
   );
 };
