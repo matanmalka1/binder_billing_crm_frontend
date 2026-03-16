@@ -1,30 +1,27 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAnnualReportsKanban } from "./useAnnualReportsKanban";
 import { useSeasonDashboard } from "./useSeasonDashboard";
 import { CURRENT_YEAR, type ActiveTab } from "../types";
 
 export const useAnnualReportsKanbanPage = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("kanban");
-  const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
   const [taxYear, setTaxYear] = useState(CURRENT_YEAR - 1);
   const [showCreate, setShowCreate] = useState(false);
+  const navigate = useNavigate();
 
   const kanban = useAnnualReportsKanban(taxYear);
   const season = useSeasonDashboard(taxYear);
 
-  const decrementYear = () => {
-    setTaxYear((y) => y - 1);
-  };
-  const incrementYear = () => {
-    setTaxYear((y) => Math.min(y + 1, CURRENT_YEAR));
-  };
+  const decrementYear = () => { setTaxYear((y) => y - 1); };
+  const incrementYear = () => { setTaxYear((y) => Math.min(y + 1, CURRENT_YEAR)); };
   const canIncrementYear = taxYear < CURRENT_YEAR;
+
+  const openReport = (id: number) => navigate(`/tax/reports/${id}`);
 
   return {
     activeTab,
     setActiveTab,
-    selectedReportId,
-    setSelectedReportId,
     taxYear,
     decrementYear,
     incrementYear,
@@ -32,6 +29,7 @@ export const useAnnualReportsKanbanPage = () => {
     showCreate,
     openCreate: () => setShowCreate(true),
     closeCreate: () => setShowCreate(false),
+    openReport,
     ...kanban,
     season,
   };
