@@ -6,7 +6,6 @@ import { DataTable } from "../components/ui/DataTable";
 import { Alert } from "../components/ui/Alert";
 import { Button } from "../components/ui/Button";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
-import { useRole } from "../hooks/useRole";
 import { useAuthStore } from "../store/auth.store";
 import { useUsersPage } from "../features/users/hooks/useUsersPage";
 import { buildUserColumns } from "../features/users/components/UsersColumns";
@@ -18,7 +17,6 @@ import { AuditLogsDrawer } from "../features/users/components/AuditLogsDrawer";
 import type { UserResponse } from "../api/users.api";
 
 export const Users: React.FC = () => {
-  const { isAdvisor } = useRole();
   const currentUserId = useAuthStore((s) => s.user?.id);
   const [pendingToggle, setPendingToggle] = useState<UserResponse | null>(null);
   const {
@@ -32,6 +30,7 @@ export const Users: React.FC = () => {
     updateUser, updateLoading,
     toggleActive, toggleActiveLoading,
     resetPassword, resetPasswordLoading,
+    isAdvisor,
   } = useUsersPage();
   const columns = useMemo(
     () => buildUserColumns({

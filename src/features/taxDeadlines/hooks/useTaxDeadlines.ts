@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
+import { useRole } from "../../../hooks/useRole";
 import { useForm } from "react-hook-form";
 import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
 import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
@@ -13,6 +14,7 @@ import { getErrorMessage } from "../../../utils/utils";
 
 export const useTaxDeadlines = () => {
   const queryClient = useQueryClient();
+  const { isAdvisor } = useRole();
   const { searchParams, setFilter } = useSearchParamFilters();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [completingId, setCompletingId] = useState<number | null>(null);
@@ -205,5 +207,8 @@ export const useTaxDeadlines = () => {
     onSubmit,
     editForm,
     onEditSubmit,
+
+    // Permissions
+    isAdvisor,
   };
 };

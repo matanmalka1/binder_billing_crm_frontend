@@ -7,6 +7,7 @@ import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { parsePositiveInt } from "../../../utils/utils";
+import { useRole } from "../../../hooks/useRole";
 
 const PAGE_SIZE = 20;
 
@@ -15,6 +16,7 @@ const invalidateUsers = (queryClient: ReturnType<typeof useQueryClient>) =>
 
 export const useUsersPage = () => {
   const queryClient = useQueryClient();
+  const { isAdvisor } = useRole();
   const { searchParams, setFilter, setPage } = useSearchParamFilters();
 
   const page = parsePositiveInt(searchParams.get("page"), 1);
@@ -120,5 +122,8 @@ export const useUsersPage = () => {
 
     resetPassword,
     resetPasswordLoading: resetPasswordMutation.isPending,
+
+    // Permissions
+    isAdvisor,
   };
 };

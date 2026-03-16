@@ -15,7 +15,6 @@ import { useTaxDashboard } from "../features/taxDashboard/hooks/useTaxDashboard"
 import { TaxSubmissionStats } from "../features/taxDashboard/components/TaxSubmissionStats";
 import { ToolbarContainer } from "../components/ui/ToolbarContainer";
 import type { TaxDeadlineResponse } from "../api/taxDeadlines.api";
-import { useRole } from "../hooks/useRole";
 
 export const TaxDeadlines: React.FC = () => {
   const {
@@ -43,11 +42,11 @@ export const TaxDeadlines: React.FC = () => {
     totalPages,
     handleGenerate,
     isGenerating,
+    isAdvisor,
   } = useTaxDeadlines();
 
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
   const { currentYear, submissions } = useTaxDashboard();
-  const { isAdvisor } = useRole();
   const clientIdForGenerate = null;
 
   const header = (
