@@ -10,6 +10,7 @@ import { ClientDetails } from "../pages/ClientDetails";
 import { Search } from "../pages/Search";
 import { Charges } from "../pages/Charges";
 import { AnnualReportsKanban } from "../pages/AnnualReportsKanban";
+import { AnnualReportDetail } from "../pages/AnnualReportDetail";
 import { TaxDeadlines } from "../pages/TaxDeadlines";
 import { Login } from "../pages/Login";
 import { Navbar } from "../components/layout/Navbar";
@@ -86,6 +87,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="charges" element={<Charges />} />
             <Route path="tax" element={<Navigate to="/tax/deadlines" replace />} />
             <Route path="tax/reports" element={<AnnualReportsKanban />} />
+            <Route path="tax/reports/:reportId" element={<AnnualReportDetail />} />
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
             <Route path="tax/advance-payments" element={<AdvancePayments />} />
             <Route path="tax/vat" element={<VatWorkItems />} />
