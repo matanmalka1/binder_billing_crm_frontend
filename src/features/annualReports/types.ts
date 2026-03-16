@@ -91,7 +91,6 @@ export interface TransitionTargetSelectorProps {
 export interface TransitionDetailsFormProps {
   selected: AnnualReportStatus;
   form: TransitionForm;
-  readiness?: ReadinessCheckResponse;
   isLoading: boolean;
   onFieldChange: (field: keyof TransitionForm) => (e: ChangeEvent<HTMLInputElement>) => void;
   onCancel: () => void;
