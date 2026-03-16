@@ -3,7 +3,10 @@ import { z } from "zod";
 export const taxProfileSchema = z.object({
   vat_type: z.enum(["monthly", "bimonthly", "exempt"]),
   business_type: z.string().trim().optional().or(z.literal("")),
-  tax_year_start: z.string().trim().regex(/^\d{4}$/, "שנה לא תקינה").optional().or(z.literal("")),
+  tax_year_start: z.string().trim().optional().or(z.literal("")).refine(
+    (v) => !v || (/^\d{4}$/.test(v) && Number(v) >= 1900 && Number(v) <= 2100),
+    "שנה לא תקינה",
+  ),
   accountant_name: z.string().trim().optional().or(z.literal("")),
   advance_rate: z.preprocess(
     (v) => (v === "" || v === null || v === undefined ? null : Number(v)),

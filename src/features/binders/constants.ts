@@ -37,6 +37,9 @@ export const BINDER_TYPE_OPTIONS = [
   { value: "other", label: "אחר" },
 ] as const;
 
+export const getBinderTypeLabel = (type: string): string =>
+  BINDER_TYPE_OPTIONS.find((o) => o.value === type)?.label ?? type;
+
 export const BINDER_STATUS_OPTIONS = [
   { value: "", label: "כל הסטטוסים" },
   { value: "in_office", label: "במשרד" },

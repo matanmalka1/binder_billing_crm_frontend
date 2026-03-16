@@ -1,13 +1,19 @@
+import { Controller } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
+import { DatePicker } from "../../../components/ui/DatePicker";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
 import type { CreateReminderFormValues } from "../types";
 import type { BinderResponse } from "../../binders/types";
+import { getBinderTypeLabel } from "../../binders/constants";
 import type { ChargeResponse } from "../../../api/charges.api";
+import { getChargeTypeLabel } from "../../charges/utils";
+import { getChargeStatusLabel } from "../../../utils/enums";
 import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
+import { getDeadlineTypeLabel } from "../../../api/taxDeadlines.utils";
 
 interface CreateReminderModalProps {
   open: boolean;
@@ -37,7 +43,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   clientCharges = [],
   clientTaxDeadlines = [],
 }) => {
-  const { register, watch, formState: { errors } } = form;
+  const { register, control, watch, formState: { errors } } = form;
   const e = errors as FormErrors;
   const reminderType = watch("reminder_type");
 
@@ -76,7 +82,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             <option value="">בחר מועד מס...</option>
             {clientTaxDeadlines.map((d) => (
               <option key={d.id} value={String(d.id)}>
-                {d.deadline_type} — {d.due_date}
+                {getDeadlineTypeLabel(d.deadline_type)} — {d.due_date}
               </option>
             ))}
           </Select>
@@ -86,7 +92,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             <option value="">בחר תיק...</option>
             {clientBinders.map((b) => (
               <option key={b.id} value={String(b.id)}>
-                {b.binder_number} — {b.binder_type}
+                {b.binder_number} — {getBinderTypeLabel(b.binder_type)}
               </option>
             ))}
           </Select>
@@ -96,7 +102,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             <option value="">בחר חשבונית...</option>
             {clientCharges.map((c) => (
               <option key={c.id} value={String(c.id)}>
-                #{c.id} — {c.charge_type} ({c.status})
+                #{c.id} — {getChargeTypeLabel(c.charge_type)} ({getChargeStatusLabel(c.status)})
               </option>
             ))}
           </Select>
@@ -122,8 +128,19 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             error={e.client_id?.message} {...register("client_id")} />
         )}
 
-        <Input type="date" label="תאריך יעד" max="9999-12-31"
-          error={e.target_date?.message} {...register("target_date")} />
+        <Controller
+          name="target_date"
+          control={control}
+          render={({ field }) => (
+            <DatePicker
+              label="תאריך יעד"
+              error={e.target_date?.message}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
+        />
 
         <Input type="number" label="ימים לפני" min={0}
           error={e.days_before?.message}

@@ -5,6 +5,7 @@ import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
+import { DatePicker } from "../../../components/ui/DatePicker";
 import { Textarea } from "../../../components/ui/Textarea";
 import { correspondenceSchema, correspondenceDefaults, type CorrespondenceFormValues } from "../schemas";
 import type { CorrespondenceEntry } from "../../../api/correspondence.api";
@@ -100,11 +101,18 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
 
         <Input label="נושא *" error={errors.subject?.message} {...register("subject")} />
 
-        <Input
-          label="תאריך *"
-          type="date"
-          error={errors.occurred_at?.message}
-          {...register("occurred_at")}
+        <Controller
+          name="occurred_at"
+          control={control}
+          render={({ field }) => (
+            <DatePicker
+              label="תאריך *"
+              error={errors.occurred_at?.message}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
         />
 
         {contacts.length > 0 && (

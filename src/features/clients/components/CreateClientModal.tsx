@@ -1,9 +1,10 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
+import { DatePicker } from "../../../components/ui/DatePicker";
 import type { CreateClientPayload } from "../../../api/clients.api";
 import { createClientSchema, type CreateClientFormValues } from "../schemas";
 
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export const CreateClientModal: React.FC<Props> = ({ open, onClose, onSubmit, isLoading = false }) => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<CreateClientFormValues>({
+  const { register, handleSubmit, control, formState: { errors }, reset } = useForm<CreateClientFormValues>({
     resolver: zodResolver(createClientSchema),
     defaultValues: { full_name: "", id_number: "", client_type: "osek_patur", phone: "", email: "", opened_at: new Date().toISOString().split("T")[0] },
   });
@@ -54,7 +55,20 @@ export const CreateClientModal: React.FC<Props> = ({ open, onClose, onSubmit, is
             <option value="company">חברה</option>
             <option value="employee">שכיר</option>
           </Select>
-          <Input label="תאריך פתיחה *" type="date" error={errors.opened_at?.message} disabled={isLoading} {...register("opened_at")} />
+          <Controller
+            name="opened_at"
+            control={control}
+            render={({ field }) => (
+              <DatePicker
+                label="תאריך פתיחה *"
+                error={errors.opened_at?.message}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                disabled={isLoading}
+              />
+            )}
+          />
         </div>
 
         <div className="space-y-4 border-t border-gray-200 pt-4">

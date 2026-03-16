@@ -75,10 +75,7 @@ const resolveErrorMessage = (
   if (axios.isAxiosError(error)) {
     const detail = error.response?.data?.detail;
     if (typeof detail === "string" && detail.trim()) return detail.trim();
-    if (Array.isArray(detail) && detail[0] && typeof detail[0] === "object") {
-      const msg = (detail[0] as { msg?: unknown }).msg;
-      if (typeof msg === "string" && msg.trim()) return msg.trim();
-    }
+    if (Array.isArray(detail)) return fallbackMessage;
   }
 
   if (error instanceof Error && error.message) {

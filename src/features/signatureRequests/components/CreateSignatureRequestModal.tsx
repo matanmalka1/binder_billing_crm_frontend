@@ -64,13 +64,14 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !resolvedClientId) return;
+    const resolvedSignerNameFinal = overrideName.trim() || resolvedSignerName;
+    if (!title.trim() || !resolvedClientId || !resolvedSignerNameFinal) return;
     await onCreate({
       client_id: resolvedClientId,
       request_type: requestType,
       title: title.trim(),
       description: description.trim() || undefined,
-      signer_name: overrideName.trim() || resolvedSignerName,
+      signer_name: resolvedSignerNameFinal,
       signer_email: overrideEmail.trim() || undefined,
     });
     handleClose();
@@ -86,7 +87,7 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
           <Button variant="outline" size="sm" onClick={handleClose} disabled={isLoading}>
             ביטול
           </Button>
-          <Button size="sm" isLoading={isLoading} onClick={handleSubmit} type="submit" disabled={!resolvedClientId}>
+          <Button size="sm" isLoading={isLoading} onClick={handleSubmit} type="submit" disabled={!resolvedClientId || !(overrideName.trim() || resolvedSignerName)}>
             יצירה
           </Button>
         </div>

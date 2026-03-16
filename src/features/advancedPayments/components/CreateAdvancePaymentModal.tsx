@@ -5,6 +5,7 @@ import { Modal } from "../../../components/ui/Modal";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
 import { Select } from "../../../components/ui/Select";
+import { DatePicker } from "../../../components/ui/DatePicker";
 import {
   createAdvancePaymentSchema,
   CREATE_ADVANCE_PAYMENT_DEFAULTS,
@@ -106,11 +107,18 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
             />
           )}
         />
-        <Input
-          label="תאריך יעד"
-          type="date"
-          {...register("due_date")}
-          error={errors.due_date?.message}
+        <Controller
+          name="due_date"
+          control={control}
+          render={({ field }) => (
+            <DatePicker
+              label="תאריך יעד"
+              error={errors.due_date?.message}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
         />
         <Controller
           name="expected_amount"

@@ -1,8 +1,10 @@
+import { Controller } from "react-hook-form";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
 import { Modal } from "../../../components/ui/Modal";
+import { DatePicker } from "../../../components/ui/DatePicker";
 import type { UseFormReturn } from "react-hook-form";
 import type { EditTaxDeadlineForm } from "../types";
 
@@ -29,7 +31,7 @@ export const EditTaxDeadlineFormModal = ({
   form,
   isSubmitting,
 }: EditTaxDeadlineFormProps) => {
-  const { register, formState: { errors }, reset } = form;
+  const { register, control, formState: { errors }, reset } = form;
 
   const handleClose = () => {
     reset();
@@ -60,11 +62,18 @@ export const EditTaxDeadlineFormModal = ({
           options={DEADLINE_TYPE_OPTIONS}
         />
 
-        <Input
-          label="תאריך מועד *"
-          type="date"
-          {...register("due_date", { required: "שדה חובה" })}
-          error={errors.due_date?.message}
+        <Controller
+          name="due_date"
+          control={control}
+          render={({ field }) => (
+            <DatePicker
+              label="תאריך מועד *"
+              error={errors.due_date?.message}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
         />
 
         <Input

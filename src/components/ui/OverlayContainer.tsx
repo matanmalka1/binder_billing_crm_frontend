@@ -112,7 +112,7 @@ export const OverlayContainer: React.FC<OverlayContainerProps> = ({
       className="fixed inset-0 flex items-center justify-center bg-black/30 px-4"
       style={{ zIndex: z }}
     >
-      <div className={cn("flex max-h-[90vh] w-full max-w-lg flex-col rounded-xl bg-white shadow-xl", className)}>
+      <div className={cn("flex max-h-[92vh] w-full max-w-xl flex-col rounded-xl bg-white shadow-xl", className)}>
         {title && (
           <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
             <h3 className="text-lg font-semibold text-gray-900">{title}</h3>

@@ -1,8 +1,10 @@
+import { Controller } from "react-hook-form";
 import { Modal } from "../../../../components/ui/Modal";
 import { Button } from "../../../../components/ui/Button";
 import { Input } from "../../../../components/ui/Input";
 import { Select } from "../../../../components/ui/Select";
 import { Textarea } from "../../../../components/ui/Textarea";
+import { DatePicker } from "../../../../components/ui/DatePicker";
 import { useCreateReport } from "../../hooks/useCreateReport";
 import { FLAG_FIELDS } from "../../utils";
 
@@ -16,7 +18,7 @@ const fmt = (n: number) =>
 
 export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onClose }) => {
   const { form, onSubmit, isSubmitting, preview } = useCreateReport(onClose);
-  const { register, formState: { errors } } = form;
+  const { register, control, formState: { errors } } = form;
 
   const handleClose = () => {
     form.reset();
@@ -78,11 +80,18 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
           <option value="custom">מותאם אישית</option>
         </Select>
 
-        <Input
-          label="תאריך הגשה"
-          type="date"
-          error={errors.filing_date?.message}
-          {...register("filing_date")}
+        <Controller
+          name="filing_date"
+          control={control}
+          render={({ field }) => (
+            <DatePicker
+              label="תאריך הגשה"
+              error={errors.filing_date?.message}
+              value={field.value ?? ""}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
         />
 
         <div>

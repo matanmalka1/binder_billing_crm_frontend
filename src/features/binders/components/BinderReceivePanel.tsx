@@ -1,7 +1,9 @@
+import { Controller } from "react-hook-form";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
+import { DatePicker } from "../../../components/ui/DatePicker";
 import { ClientSearchInput } from "../../../components/ui/ClientSearchInput";
 import type { UseFormReturn } from "react-hook-form";
 import type { ReceiveBinderFormValues } from "../schemas";
@@ -30,6 +32,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
 }) => {
   const {
     register,
+    control,
     formState: { errors },
   } = form;
 
@@ -65,11 +68,18 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         {...register("binder_number")}
       />
 
-      <Input
-        type="date"
-        label="תאריך קבלה"
-        error={errors.received_at?.message}
-        {...register("received_at")}
+      <Controller
+        name="received_at"
+        control={control}
+        render={({ field }) => (
+          <DatePicker
+            label="תאריך קבלה"
+            error={errors.received_at?.message}
+            value={field.value}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
+          />
+        )}
       />
 
       <Textarea

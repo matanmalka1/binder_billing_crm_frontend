@@ -38,7 +38,7 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
   });
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4" noValidate>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Select label="סוג מע״מ" error={errors.vat_type?.message} {...register("vat_type")}>
           <option value="monthly">חודשי</option>

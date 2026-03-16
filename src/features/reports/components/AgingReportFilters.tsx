@@ -1,5 +1,4 @@
-import { Calendar } from "lucide-react";
-import { Input } from "../../../components/ui/Input";
+import { DatePicker } from "../../../components/ui/DatePicker";
 
 interface AgingReportFiltersProps {
   asOfDate: string;
@@ -10,14 +9,11 @@ export const AgingReportFilters: React.FC<AgingReportFiltersProps> = ({
   asOfDate,
   onDateChange,
 }) => (
-  <div className="flex items-end gap-3">
-    <Calendar className="h-5 w-5 text-gray-400 mb-2.5 shrink-0" />
-    <Input
-      type="date"
+  <div className="max-w-xs">
+    <DatePicker
       label="נכון לתאריך"
       value={asOfDate}
-      onChange={(e) => onDateChange(e.target.value)}
-      className="max-w-xs"
+      onChange={onDateChange}
     />
   </div>
 );
