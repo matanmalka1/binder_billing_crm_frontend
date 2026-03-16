@@ -1,4 +1,3 @@
-import { AlertTriangle } from "lucide-react";
 import { getStatusLabel } from "../../../../api/annualReport.extended.utils";
 import { Button } from "../../../../components/ui/Button";
 import { Input } from "../../../../components/ui/Input";
@@ -7,7 +6,6 @@ import type { TransitionDetailsFormProps } from "../../types";
 export const TransitionDetailsForm = ({
   selected,
   form,
-  readiness,
   isLoading,
   onFieldChange,
   onCancel,
@@ -21,20 +19,6 @@ export const TransitionDetailsForm = ({
         onChange={onFieldChange("note")}
         placeholder="הערה על המעבר..."
       />
-
-      {selected === "submitted" && readiness && !readiness.is_ready && (
-        <div className="space-y-1 rounded-md border border-amber-200 bg-amber-50 p-3">
-          <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700">
-            <AlertTriangle className="h-4 w-4 shrink-0" />
-            <span>הדוח אינו מוכן להגשה — הגשה תיחסם על ידי השרת</span>
-          </div>
-          <ul className="list-disc space-y-0.5 pr-5 text-xs text-amber-700">
-            {readiness.issues.map((issue, index) => (
-              <li key={index}>{issue}</li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       {selected === "submitted" && (
         <Input
