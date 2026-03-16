@@ -28,6 +28,8 @@ export interface BackendAction {
   client_id?: number | null;
   client_name?: string | null;
   binder_number?: string | null;
+  category?: string | null;
+  due_label?: string | null;
 }
 
 export type BackendActionInput = BackendAction;
@@ -58,4 +60,6 @@ export interface ActionCommand {
   confirm?: ActionConfirmConfig;
   clientName?: string | null;
   binderNumber?: string | null;
+  category?: string | null;
+  dueLabel?: string | null;
 }

@@ -34,6 +34,8 @@ export const mapActions = (
         confirm: mapConfirm(action.confirm),
         clientName: action.client_name ?? null,
         binderNumber: action.binder_number ?? null,
+        category: action.category ?? null,
+        dueLabel: action.due_label ?? null,
       } as ActionCommand;
     })
     .filter((a): a is ActionCommand => Boolean(a));
