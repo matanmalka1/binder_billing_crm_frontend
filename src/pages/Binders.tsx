@@ -94,7 +94,7 @@ export const Binders: React.FC = () => {
         title="קלסרים"
         description="רשימת כל הקלסרים במערכת — סינון לפי סטטוס ומצב עבודה"
         actions={
-          <Button variant="secondary" onClick={handleOpenReceive}>
+          <Button variant="primary" size="sm" onClick={handleOpenReceive}>
             קליטת חומר
           </Button>
         }
