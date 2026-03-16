@@ -7,6 +7,7 @@ import { EXPENSE_LABELS } from "../../report.constants";
 
 interface Props {
   reportId: number;
+  taxYear: number;
 }
 
 const fmt = (n: number) =>
@@ -27,7 +28,7 @@ const CATEGORY_ICONS: Record<string, string> = {
   other: "📋",
 };
 
-export const DeductionsTab: React.FC<Props> = ({ reportId }) => {
+export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
   const { data, isLoading } = useQuery({
     queryKey: QK.tax.annualReportFinancials(reportId),
     queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
@@ -83,7 +84,7 @@ export const DeductionsTab: React.FC<Props> = ({ reportId }) => {
         </div>
 
         {/* Right: tax credits */}
-        <TaxCreditsPanel reportId={reportId} />
+        <TaxCreditsPanel reportId={reportId} taxYear={taxYear} />
       </div>
 
       {/* Savings opportunities */}

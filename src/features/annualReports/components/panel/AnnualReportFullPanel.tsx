@@ -68,7 +68,7 @@ export const AnnualReportFullPanel = ({ reportId, onClose }: AnnualReportFullPan
         );
       case "financials": return <IncomeExpensePanel reportId={reportId} />;
       case "tax": return <TaxCalculationPanel reportId={reportId} />;
-      case "deductions": return <DeductionsTab reportId={reportId} />;
+      case "deductions": return <DeductionsTab reportId={reportId} taxYear={report.tax_year} />;
       case "documents": return <DocumentsTab clientId={report.client_id} />;
       case "timeline": return <FilingTimelineTab reports={[report]} />;
     }

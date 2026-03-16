@@ -4,9 +4,14 @@ import { QK } from "../../../../lib/queryKeys";
 
 interface Props {
   reportId: number;
+  taxYear: number;
 }
 
-const CREDIT_POINT_VALUE = 2_904; // ₪ per credit point (2024)
+const CREDIT_POINT_VALUE_BY_YEAR: Record<number, number> = {
+  2024: 2_904,
+  2025: 3_003,
+  2026: 3_003,
+};
 
 const fmt = (n: number) =>
   n.toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
@@ -17,7 +22,7 @@ interface CreditRow {
   amount: number;
 }
 
-export const TaxCreditsPanel: React.FC<Props> = ({ reportId }) => {
+export const TaxCreditsPanel: React.FC<Props> = ({ reportId, taxYear }) => {
   const { data, isLoading } = useQuery({
     queryKey: QK.tax.annualReports.detail(reportId),
     queryFn: () => annualReportsApi.getReportDetails(reportId),
@@ -26,22 +31,23 @@ export const TaxCreditsPanel: React.FC<Props> = ({ reportId }) => {
   if (isLoading) return <p className="text-sm text-gray-400">טוען זיכויים...</p>;
   if (!data) return null;
 
+  const cpv = CREDIT_POINT_VALUE_BY_YEAR[taxYear] ?? 2_904;
   const creditPoints = data.credit_points ?? 2.25;
   const lifeInsuranceCredit = data.life_insurance_credit_points
-    ? data.life_insurance_credit_points * CREDIT_POINT_VALUE
+    ? data.life_insurance_credit_points * cpv
     : 0;
   const tuitionCredit = data.tuition_credit_points
-    ? data.tuition_credit_points * CREDIT_POINT_VALUE
+    ? data.tuition_credit_points * cpv
     : 0;
   const otherCredits = data.other_credits ?? 0;
 
-  const basicCredit = creditPoints * CREDIT_POINT_VALUE;
+  const basicCredit = creditPoints * cpv;
   const pensionContribution = data.pension_contribution ?? 0;
 
   const rows: CreditRow[] = [
     {
       label: "נקודות זיכוי בסיסיות",
-      description: `${creditPoints} נקודות × ₪${CREDIT_POINT_VALUE.toLocaleString("he-IL")}`,
+      description: `${creditPoints} נקודות × ₪${cpv.toLocaleString("he-IL")}`,
       amount: basicCredit,
     },
   ];
@@ -65,7 +71,7 @@ export const TaxCreditsPanel: React.FC<Props> = ({ reportId }) => {
   if (tuitionCredit > 0) {
     rows.push({
       label: "שכר לימוד (ילדים)",
-      description: `₪${CREDIT_POINT_VALUE.toLocaleString("he-IL")}/שנה`,
+      description: `₪${cpv.toLocaleString("he-IL")}/שנה`,
       amount: tuitionCredit,
     });
   }
