@@ -24,7 +24,7 @@ interface CreditRow {
 
 export const TaxCreditsPanel: React.FC<Props> = ({ reportId, taxYear }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.tax.annualReports.detail(reportId),
+    queryKey: QK.tax.annualReportDetails(reportId),
     queryFn: () => annualReportsApi.getReportDetails(reportId),
   });
 
