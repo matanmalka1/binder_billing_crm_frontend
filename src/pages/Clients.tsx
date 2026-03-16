@@ -74,6 +74,7 @@ export const Clients: React.FC = () => {
             {can.createClients && (
               <Button
                 variant="primary"
+                size="sm"
                 onClick={() => setShowCreateModal(true)}
               >
                 לקוח חדש
