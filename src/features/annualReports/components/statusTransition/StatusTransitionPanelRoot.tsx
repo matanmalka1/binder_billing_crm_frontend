@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ShieldCheck } from "lucide-react";
 import { annualReportsApi } from "../../../../api/annualReport.api";
-import { annualReportTaxApi } from "../../../../api/annualReport.tax.api";
 import {
   getAllowedTransitions,
   getStatusLabel,
@@ -18,6 +18,7 @@ import type { StatusTransitionPanelProps, TransitionForm } from "../../types";
 import { AmendReportModal } from "./AmendReportModal";
 import { TransitionDetailsForm } from "./TransitionDetailsForm";
 import { TransitionTargetSelector } from "./TransitionTargetSelector";
+import { ReadinessCheckPanel } from "../panel/ReadinessCheckPanel";
 
 export const StatusTransitionPanel = ({
   report,
@@ -50,12 +51,7 @@ export const StatusTransitionPanel = ({
     onError: (error) => showErrorToast(error, "שגיאה בשליחת תיקון"),
   });
 
-  const canSubmit = allowed.includes("submitted");
-  const { data: readiness } = useQuery({
-    queryKey: QK.tax.annualReportReadiness(report.id),
-    queryFn: () => annualReportTaxApi.getReadiness(report.id),
-    enabled: canSubmit,
-  });
+  const [readinessOpen, setReadinessOpen] = useState(false);
 
   const setField =
     (field: keyof TransitionForm) =>
@@ -109,8 +105,26 @@ export const StatusTransitionPanel = ({
         onSubmit={handleAmendSubmit}
       />
 
-      <Card title="מעבר סטטוס">
+      <Card
+        title="מעבר סטטוס"
+        actions={
+          <button
+            type="button"
+            onClick={() => setReadinessOpen((p) => !p)}
+            className="flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            <ShieldCheck className="h-3.5 w-3.5" />
+            בדיקת מוכנות להגשה
+          </button>
+        }
+      >
         <div className="space-y-4">
+          {readinessOpen && (
+            <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+              <ReadinessCheckPanel reportId={report.id} />
+            </div>
+          )}
+
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <span>סטטוס נוכחי:</span>
@@ -140,7 +154,6 @@ export const StatusTransitionPanel = ({
             <TransitionDetailsForm
               selected={selected}
               form={form}
-              readiness={readiness}
               isLoading={isLoading}
               onFieldChange={setField}
               onCancel={() => setSelected(null)}
