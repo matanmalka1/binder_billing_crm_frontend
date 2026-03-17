@@ -26,6 +26,12 @@ export interface VatWorkItemResponse {
   client_status?: string | null;
   created_at: string;
   updated_at: string;
+  submission_reference: string | null;
+  is_amendment: boolean;
+  amends_item_id: number | null;
+  submission_deadline: string | null;
+  days_until_deadline: number | null;
+  is_overdue: boolean | null;
 }
 
 export type VatWorkItemListResponse = PaginatedResponse<VatWorkItemResponse>;
@@ -57,6 +63,10 @@ export interface VatInvoiceResponse {
   net_amount: number;
   vat_amount: number;
   expense_category: string | null;
+  rate_type: string;
+  deduction_rate: number;
+  document_type: string | null;
+  is_exceptional: boolean;
   created_by: number;
   created_at: string;
 }
@@ -74,6 +84,8 @@ export interface CreateVatInvoicePayload {
   vat_amount: number;
   counterparty_id?: string | null;
   expense_category?: string | null;
+  rate_type?: string;
+  document_type?: string | null;
 }
 
 export interface UpdateVatInvoicePayload {
@@ -83,6 +95,8 @@ export interface UpdateVatInvoicePayload {
   invoice_date?: string;
   counterparty_name?: string;
   expense_category?: string | null;
+  rate_type?: string;
+  document_type?: string | null;
 }
 
 export interface VatAuditLogResponse {
@@ -133,6 +147,9 @@ export interface FileVatReturnPayload {
   filing_method: "manual" | "online";
   override_amount?: string | null;
   override_justification?: string | null;
+  submission_reference?: string;
+  is_amendment?: boolean;
+  amends_item_id?: number | null;
 }
 
 export const vatReportsApi = {

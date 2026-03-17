@@ -8,6 +8,9 @@ export const VatFiledBanner: React.FC<VatFiledBannerProps> = ({
   filedByName,
   filedBy,
   filingMethod,
+  submissionReference,
+  isAmendment,
+  amendsItemId,
 }) => {
   const methodLabel = filingMethod ? VAT_FILING_METHOD_LABELS[filingMethod] : null;
   const byLabel = filedByName ?? (filedBy != null ? `#${filedBy}` : null);
@@ -25,6 +28,12 @@ export const VatFiledBanner: React.FC<VatFiledBannerProps> = ({
         )}
         {methodLabel && (
           <span className="font-normal text-emerald-600"> · {methodLabel}</span>
+        )}
+        {submissionReference && (
+          <span className="font-normal text-emerald-600"> · אסמכתא: {submissionReference}</span>
+        )}
+        {isAmendment && amendsItemId && (
+          <span className="font-normal text-emerald-600"> · תיקון לפריט #{amendsItemId}</span>
         )}
       </p>
     </div>

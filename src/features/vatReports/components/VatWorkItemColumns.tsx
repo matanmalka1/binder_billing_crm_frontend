@@ -1,8 +1,9 @@
+import { AlertTriangle } from "lucide-react";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { VatWorkItemResponse } from "../../../api/vatReports.api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
-import { formatDateTime } from "../../../utils/utils";
+import { formatDate, formatDateTime } from "../../../utils/utils";
 import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { formatVatAmount } from "../utils";
 import { VatWorkItemRowActions } from "./VatWorkItemRowActions";
@@ -59,6 +60,24 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
               עוקף
             </span>
           )}
+        </span>
+      );
+    },
+  },
+  {
+    key: "submission_deadline",
+    header: "מועד הגשה",
+    render: (item) => {
+      if (!item.submission_deadline) return <span className="text-gray-400 text-sm">—</span>;
+      const cls = item.is_overdue
+        ? "text-red-600 font-semibold"
+        : item.days_until_deadline != null && item.days_until_deadline <= 3
+          ? "text-orange-600 font-medium"
+          : "text-gray-600";
+      return (
+        <span className={`font-mono text-sm tabular-nums inline-flex items-center gap-1 ${cls}`}>
+          {item.is_overdue && <AlertTriangle className="h-3.5 w-3.5" />}
+          {formatDate(item.submission_deadline)}
         </span>
       );
     },

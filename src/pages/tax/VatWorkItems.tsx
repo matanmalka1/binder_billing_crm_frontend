@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Clock, FileText, Hourglass, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, Clock, FileText, Hourglass, CheckCircle2 } from "lucide-react";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { VatComplianceReportView } from "../../features/reports/components/VatComplianceReportView";
 import { cn } from "../../utils/utils";
@@ -115,6 +115,27 @@ export const VatWorkItems: React.FC = () => {
               <StatsCard title="הוגש" value={statsFiled ?? 0} icon={CheckCircle2} variant="green" />
             </div>
           )}
+
+          {!loading && workItems.length > 0 && (() => {
+            const overdueCount = workItems.filter((i) => i.is_overdue).length;
+            const urgentCount = workItems.filter((i) => !i.is_overdue && i.days_until_deadline != null && i.days_until_deadline <= 3).length;
+            return (overdueCount > 0 || urgentCount > 0) ? (
+              <div className="flex flex-wrap gap-2" dir="rtl">
+                {overdueCount > 0 && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                    {overdueCount} תיקים בחריגת מועד
+                  </span>
+                )}
+                {urgentCount > 0 && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 text-sm font-medium text-orange-700">
+                    <Clock className="h-3.5 w-3.5" />
+                    {urgentCount} תיקים — נותרו עד 3 ימים
+                  </span>
+                )}
+              </div>
+            ) : null;
+          })()}
 
           <VatWorkItemsFiltersCard
             filters={filters}

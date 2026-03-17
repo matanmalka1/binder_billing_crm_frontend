@@ -79,6 +79,20 @@ export const getSignatureRequestTypeLabel = makeLabelGetter({
   custom: 'מותאם אישית',
 });
 
+export const getVatRateTypeLabel = makeLabelGetter({
+  standard: 'חייב במע"מ',
+  exempt: "פטור",
+  zero_rate: "אפס",
+});
+
+export const getDocumentTypeLabel = makeLabelGetter({
+  tax_invoice: "חשבונית מס",
+  transaction_invoice: "חשבונית עסקה",
+  receipt: "קבלה",
+  consolidated: "חשבונית מרוכזת",
+  self_invoice: "חשבונית עצמית",
+});
+
 export const getVatWorkItemStatusLabel = makeLabelGetter({
   pending_materials: "ממתין לחומרים",
   material_received: "חומרים התקבלו",

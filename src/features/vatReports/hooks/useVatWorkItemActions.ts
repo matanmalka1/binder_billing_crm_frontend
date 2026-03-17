@@ -34,13 +34,6 @@ export const useVatWorkItemActions = (workItemId: number) => {
       "שגיאה בשינוי סטטוס",
     );
 
-  const handleFile = () =>
-    run(
-      () => vatReportsApi.fileVatReturn(workItemId, { filing_method: "online" }),
-      'התיק הוגש בהצלחה',
-      "שגיאה בהגשה",
-    );
-
   const handleSendBack = (note: string) =>
     run(
       () => vatReportsApi.sendBack(workItemId, note),
@@ -48,5 +41,5 @@ export const useVatWorkItemActions = (workItemId: number) => {
       "שגיאה בהחזרה לתיקון",
     );
 
-  return { handleReadyForReview, handleFile, handleSendBack, isLoading: loading };
+  return { handleReadyForReview, handleSendBack, isLoading: loading };
 };

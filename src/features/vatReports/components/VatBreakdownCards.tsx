@@ -1,6 +1,7 @@
 import { ChevronLeft } from "lucide-react";
 import { cn } from "../../../utils/utils";
 import { formatVatAmount } from "../utils";
+import { ISRAEL_VAT_RATE_PERCENT } from "../constants";
 import type { VatInputCardProps, VatNetBannerProps, VatOutputCardProps } from "../types";
 
 // ── Output (income) card ──────────────────────────────────────────────────────
@@ -24,7 +25,7 @@ export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }
       </div>
       <div className="flex justify-between text-gray-400">
         <span>שיעור מע&quot;מ</span>
-        <span className="font-mono">17%</span>
+        <span className="font-mono">{ISRAEL_VAT_RATE_PERCENT}%</span>
       </div>
     </div>
     <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">

@@ -14,6 +14,9 @@ export const EXPENSE_CATEGORIES = [
   "rent",
   "salary",
   "marketing",
+  "vehicle",
+  "entertainment",
+  "gifts",
   "other",
 ] as const;
 
@@ -28,6 +31,9 @@ export const CATEGORY_LABELS: Record<string, string> = {
   rent: "שכירות",
   salary: "שכר עבודה",
   marketing: "שיווק",
+  vehicle: "רכב פרטי",
+  entertainment: "אירוח וכיבוד",
+  gifts: "מתנות",
   other: "אחר",
 };
 
@@ -39,6 +45,9 @@ export const CATEGORY_COLORS: Record<string, string> = {
   rent: "bg-amber-400",
   salary: "bg-rose-400",
   marketing: "bg-pink-400",
+  vehicle: "bg-red-300",
+  entertainment: "bg-yellow-400",
+  gifts: "bg-lime-400",
   other: "bg-slate-400",
 };
 
@@ -51,10 +60,13 @@ export const DEDUCTION_RATES: Record<string, number> = {
   rent: 1.0,
   salary: 0.0,
   marketing: 1.0,
+  vehicle: 0.0,
+  entertainment: 0.0,
+  gifts: 0.0,
   other: 0.0,
 };
 
-/** Like CATEGORY_LABELS but travel → "רכב" for the breakdown table */
+/** Like CATEGORY_LABELS but travel → "נסיעות/רכב" for the breakdown table */
 export const CATEGORY_TABLE_LABELS: Record<string, string> = {
   ...CATEGORY_LABELS,
   travel: "רכב",
@@ -101,3 +113,6 @@ export const VAT_FILING_METHOD_LABELS: Record<string, string> = {
   manual: "ידנית",
   online: "אונליין",
 };
+
+export const ISRAEL_VAT_RATE = 0.18;
+export const ISRAEL_VAT_RATE_PERCENT = 18;

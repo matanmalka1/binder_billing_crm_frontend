@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, Info, AlertTriangle, User } from "lucide-react";
+import { ChevronLeft, Clock, Info, AlertTriangle, User } from "lucide-react";
+import { formatDate } from "../../../utils/utils";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { useRole } from "../../../hooks/useRole";
@@ -10,14 +11,16 @@ import { VatProgressBar } from "./VatProgressBar";
 import { VatActionButtons } from "./VatActionButtons";
 import { VatExportButtons } from "./VatExportButtons";
 import { VatSendBackForm } from "./VatSendBackForm";
+import { VatFileModal } from "./VatFileModal";
 import { isFiled } from "../utils";
 import type { VatWorkItemSummaryBarProps } from "../types";
 
 export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem }) => {
   const { isAdvisor } = useRole();
-  const { handleReadyForReview, handleFile, handleSendBack, isLoading } =
+  const { handleReadyForReview, handleSendBack, isLoading } =
     useVatWorkItemActions(workItem.id);
   const [showSendBack, setShowSendBack] = useState(false);
+  const [showFileModal, setShowFileModal] = useState(false);
   const filed = isFiled(workItem.status);
 
   return (
@@ -65,6 +68,20 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
         </div>
       )}
 
+      {/* Submission deadline banners */}
+      {workItem.is_overdue && workItem.submission_deadline && (
+        <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+          <span>⚠️ תאריך הגשה חלף — {formatDate(workItem.submission_deadline)}</span>
+        </div>
+      )}
+      {!workItem.is_overdue && workItem.days_until_deadline != null && workItem.days_until_deadline <= 3 && (
+        <div className="flex items-center gap-2 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-sm text-orange-800">
+          <Clock className="mt-0.5 h-4 w-4 shrink-0 text-orange-500" />
+          <span>נותרו {workItem.days_until_deadline} ימים להגשה</span>
+        </div>
+      )}
+
       {/* Override warning */}
       {workItem.is_overridden && (
         <div className="flex items-start gap-2 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-sm">
@@ -106,7 +123,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
                 isLoading={isLoading}
                 clientStatus={workItem.client_status}
                 onReadyForReview={handleReadyForReview}
-                onFile={handleFile}
+                onFile={() => setShowFileModal(true)}
                 onSendBack={() => setShowSendBack(true)}
               />
               {isAdvisor && (
@@ -123,6 +140,11 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
           <VatExportButtons clientId={workItem.client_id} period={workItem.period} />
         </div>
       )}
+      <VatFileModal
+        open={showFileModal}
+        workItemId={workItem.id}
+        onClose={() => setShowFileModal(false)}
+      />
     </div>
   );
 };

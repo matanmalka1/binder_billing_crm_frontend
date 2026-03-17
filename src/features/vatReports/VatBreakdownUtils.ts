@@ -1,5 +1,5 @@
 import type { VatInvoiceResponse } from "../../api/vatReports.api";
-import { DEDUCTION_RATES, CATEGORY_TABLE_LABELS } from "./constants";
+import { CATEGORY_TABLE_LABELS } from "./constants";
 
 export interface ExpenseCategoryRow {
   categoryKey: string;
@@ -29,24 +29,27 @@ export const computeVatBreakdown = (
 
   const totalIncomeNet = income.reduce((s, i) => s + Number(i.net_amount), 0);
 
-  // Group expenses by category
-  const grouped: Record<string, { net: number; deductible: number }> = {};
+  // Group expenses by category — use backend-supplied deduction_rate per invoice
+  const grouped: Record<string, { net: number; deductible: number; grossVat: number }> = {};
   for (const inv of expense) {
     const key = inv.expense_category ?? "other";
-    if (!grouped[key]) grouped[key] = { net: 0, deductible: 0 };
+    if (!grouped[key]) grouped[key] = { net: 0, deductible: 0, grossVat: 0 };
+    const rate = Number(inv.deduction_rate);
+    const deductible = Number(inv.vat_amount);
+    const gross = rate > 0 ? deductible / rate : deductible;
     grouped[key].net += Number(inv.net_amount);
-    grouped[key].deductible += Number(inv.vat_amount);
+    grouped[key].deductible += deductible;
+    grouped[key].grossVat += gross;
   }
 
   const expenseRows: ExpenseCategoryRow[] = Object.entries(grouped).map(([key, val]) => {
-    const rate = DEDUCTION_RATES[key] ?? 0;
-    const grossVat = rate > 0 ? val.deductible / rate : val.deductible;
+    const deductionRate = val.grossVat > 0 ? val.deductible / val.grossVat : 0;
     return {
       categoryKey: key,
       label: CATEGORY_TABLE_LABELS[key] ?? key,
-      deductionRate: rate,
+      deductionRate,
       netAmount: val.net,
-      grossVat,
+      grossVat: val.grossVat,
       deductibleVat: val.deductible,
     };
   });

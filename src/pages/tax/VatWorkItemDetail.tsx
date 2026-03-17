@@ -52,6 +52,9 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
           filedBy={workItem.filed_by}
           filedByName={workItem.filed_by_name}
           filingMethod={workItem.filing_method}
+          submissionReference={workItem.submission_reference}
+          isAmendment={workItem.is_amendment}
+          amendsItemId={workItem.amends_item_id}
         />
       )}
 

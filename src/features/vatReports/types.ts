@@ -53,6 +53,9 @@ export interface VatFiledBannerProps {
   filedByName?: string | null;
   filedBy?: number | null;
   filingMethod?: string | null;
+  submissionReference?: string | null;
+  isAmendment?: boolean;
+  amendsItemId?: number | null;
 }
 
 export interface VatClientSummaryPanelProps {

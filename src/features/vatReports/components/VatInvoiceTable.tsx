@@ -77,6 +77,14 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                 <tr key={inv.id} className="group transition-colors hover:bg-gray-50/60">
                   <td className={`border-r-2 ${accentBorder} px-4 py-2.5 font-mono text-xs text-gray-500`}>
                     {inv.invoice_number}
+                    {inv.is_exceptional && (
+                      <span
+                        title='חשבונית מעל 25,000 ₪ — נדרש דיווח מיוחד'
+                        className="mr-1.5 rounded px-1 py-0.5 text-xs font-medium bg-orange-100 text-orange-700"
+                      >
+                        חריגה
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-2.5 text-gray-500">{formatDateTime(inv.invoice_date)}</td>
                   <td className="px-4 py-2.5 font-medium text-gray-700">{inv.counterparty_name}</td>
