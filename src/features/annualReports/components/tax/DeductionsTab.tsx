@@ -3,7 +3,6 @@ import { Scissors, Building2, Briefcase, Users, TrendingDown, Car, Megaphone, Sh
 import { annualReportFinancialsApi } from "../../../../api/annualReport.financials.api";
 import { QK } from "../../../../lib/queryKeys";
 import { TaxCreditsPanel } from "./TaxCreditsPanel";
-import { TaxSavingsOpportunities } from "./TaxSavingsOpportunities";
 import { EXPENSE_LABELS } from "../../report.constants";
 import type { ComponentType } from "react";
 
@@ -84,7 +83,6 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
         <TaxCreditsPanel reportId={reportId} taxYear={taxYear} />
       </div>
 
-      <TaxSavingsOpportunities />
     </div>
   );
 };
