@@ -20,6 +20,31 @@ export const useAnnualReportsKanban = (taxYear: number) => {
   const transitionMutation = useMutation({
     mutationFn: async ({ reportId, newStage }: { reportId: number; newStage: StageKey }) =>
       annualReportStatusApi.transitionStage(reportId, newStage),
+    onMutate: async ({ reportId, newStage }) => {
+      await queryClient.cancelQueries({ queryKey: QK.tax.annualReports.kanban });
+      const previous = queryClient.getQueryData(QK.tax.annualReports.kanban);
+      queryClient.setQueryData<{ stages: KanbanStage[] }>(QK.tax.annualReports.kanban, (prev) => {
+        if (!prev) return prev;
+        const report = prev.stages.flatMap((s) => s.reports).find((r) => r.id === reportId);
+        if (!report) return prev;
+        return {
+          stages: prev.stages.map((s) => ({
+            ...s,
+            reports:
+              s.stage === newStage
+                ? [...s.reports, report]
+                : s.reports.filter((r) => r.id !== reportId),
+          })),
+        };
+      });
+      return { previous };
+    },
+    onError: (error, _vars, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(QK.tax.annualReports.kanban, context.previous);
+      }
+      showErrorToast(error, "שגיאה בהעברת דוח");
+    },
     onSuccess: (_data, { reportId }) => {
       toast.success("דוח הועבר בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
@@ -28,9 +53,6 @@ export const useAnnualReportsKanban = (taxYear: number) => {
       if (report) {
         queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(report.client_id) });
       }
-    },
-    onError: (error) => {
-      showErrorToast(error, "שגיאה בהעברת דוח");
     },
     onSettled: () => {
       setTransitioning(null);

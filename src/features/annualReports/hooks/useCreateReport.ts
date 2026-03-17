@@ -8,32 +8,9 @@ import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { createReportSchema, type CreateReportFormValues } from "../schemas";
+import { computeTaxPreview } from "../taxPreview";
 
 type CreateReportFormOutput = z.output<typeof createReportSchema>;
-
-// Israeli income tax brackets (2024) — marginal rates
-const TAX_BRACKETS = [
-  { limit: 81_480, rate: 0.1 },
-  { limit: 116_760, rate: 0.14 },
-  { limit: 187_800, rate: 0.2 },
-  { limit: 261_360, rate: 0.31 },
-  { limit: 542_160, rate: 0.35 },
-  { limit: 698_280, rate: 0.47 },
-  { limit: Infinity, rate: 0.5 },
-];
-
-const CREDIT_POINT_VALUE = 2_904; // ILS per credit point (2024)
-
-const computeTax = (taxableIncome: number): number => {
-  let tax = 0;
-  let prev = 0;
-  for (const { limit, rate } of TAX_BRACKETS) {
-    if (taxableIncome <= prev) break;
-    tax += (Math.min(taxableIncome, limit) - prev) * rate;
-    prev = limit;
-  }
-  return Math.max(0, tax);
-};
 
 export const useCreateReport = (onSuccess?: () => void) => {
   const queryClient = useQueryClient();
@@ -59,9 +36,9 @@ export const useCreateReport = (onSuccess?: () => void) => {
     },
   });
 
-  const [grossIncome, expenses, advancesPaid, creditPoints] = useWatch({
+  const [grossIncome, expenses, advancesPaid, creditPoints, taxYearStr] = useWatch({
     control: form.control,
-    name: ["gross_income", "expenses", "advances_paid", "credit_points"],
+    name: ["gross_income", "expenses", "advances_paid", "credit_points", "tax_year"],
   });
 
   const preview = useMemo(() => {
@@ -69,15 +46,10 @@ export const useCreateReport = (onSuccess?: () => void) => {
     const exp = parseFloat(expenses ?? "") || 0;
     const advances = parseFloat(advancesPaid ?? "") || 0;
     const credits = parseFloat(creditPoints ?? "") || 0;
+    const taxYear = parseInt(taxYearStr ?? "") || new Date().getFullYear() - 1;
 
-    const netProfit = income - exp;
-    const grossTax = computeTax(Math.max(0, netProfit));
-    const creditReduction = credits * CREDIT_POINT_VALUE;
-    const estimatedTax = Math.max(0, grossTax - creditReduction);
-    const balance = estimatedTax - advances;
-
-    return { netProfit, estimatedTax, balance };
-  }, [grossIncome, expenses, advancesPaid, creditPoints]);
+    return computeTaxPreview(income, exp, advances, credits, taxYear);
+  }, [grossIncome, expenses, advancesPaid, creditPoints, taxYearStr]);
 
   const mutation = useMutation({
     mutationFn: (payload: CreateAnnualReportPayload) => annualReportsApi.createReport(payload),

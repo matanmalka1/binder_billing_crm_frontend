@@ -8,13 +8,6 @@ export const STATUS_VARIANT: Record<AdvancePaymentStatus, "success" | "warning" 
   pending: "neutral",
 };
 
-export const STATUS_LABEL: Record<AdvancePaymentStatus, string> = {
-  paid: "שולם",
-  partial: "חלקי",
-  overdue: "באיחור",
-  pending: "ממתין",
-};
-
 export const fmtCurrency = (n: number | null): string =>
   n != null
     ? `₪${n.toLocaleString("he-IL", { minimumFractionDigits: 0 })}`

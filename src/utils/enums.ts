@@ -26,6 +26,13 @@ export const getChargeStatusLabel = makeLabelGetter({
   canceled: "בוטל",
 });
 
+export const getAdvancePaymentStatusLabel = makeLabelGetter({
+  pending: "ממתין",
+  paid: "שולם",
+  partial: "חלקי",
+  overdue: "באיחור",
+});
+
 export const getRoleLabel = makeLabelGetter({
   advisor: "יועץ",
   secretary: "מזכירה",

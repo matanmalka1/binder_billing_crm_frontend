@@ -32,6 +32,21 @@ export const useReportMutations = (
       }
       return annualReportStatusApi.transitionStatus(reportId as number, payload);
     },
+    onMutate: async (payload) => {
+      if (!qk) return;
+      await queryClient.cancelQueries({ queryKey: qk });
+      const previous = queryClient.getQueryData<AnnualReportDetail>(qk);
+      queryClient.setQueryData<AnnualReportDetail>(qk, (prev) =>
+        prev ? { ...prev, status: payload.status as AnnualReportDetail["status"] } : prev
+      );
+      return { previous };
+    },
+    onError: (err, _payload, context) => {
+      if (qk && context?.previous) {
+        queryClient.setQueryData(qk, context.previous);
+      }
+      showErrorToast(err, "שגיאה בעדכון סטטוס");
+    },
     onSuccess: () => {
       toast.success("סטטוס עודכן בהצלחה");
       if (qk) void queryClient.invalidateQueries({ queryKey: qk });
@@ -41,7 +56,6 @@ export const useReportMutations = (
         void queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(clientId) });
       }
     },
-    onError: (err) => showErrorToast(err, "שגיאה בעדכון סטטוס"),
   });
 
   const updateMutation = useMutation({

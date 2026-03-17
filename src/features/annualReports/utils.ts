@@ -7,6 +7,7 @@ export const STAGE_ACCENT: Record<StageKey, string> = {
   final_review: "from-purple-400 to-purple-500",
   client_signature: "from-orange-400 to-orange-500",
   transmitted: "from-green-400 to-green-500",
+  post_submission: "from-yellow-400 to-yellow-500",
 };
 
 export const TERMINAL_STATUSES = new Set(["submitted", "accepted", "closed"]);

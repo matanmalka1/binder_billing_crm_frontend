@@ -2,20 +2,13 @@ import { useMemo, useState } from "react";
 import type { AnnualReportScheduleKey, ScheduleEntry } from "../../../../api/annualReport.api";
 import { getScheduleLabel } from "../../../../api/annualReport.extended.utils";
 import { Button } from "../../../../components/ui/Button";
+import { ALL_SCHEDULES } from "../../annex.constants";
 
 interface ScheduleAddFormProps {
   schedules: ScheduleEntry[];
   onAdd: (schedule: AnnualReportScheduleKey, notes?: string) => void;
   isAdding: boolean;
 }
-
-const ALL_SCHEDULES: AnnualReportScheduleKey[] = [
-  "schedule_b",
-  "schedule_bet",
-  "schedule_gimmel",
-  "schedule_dalet",
-  "schedule_heh",
-];
 
 export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onAdd, isAdding }) => {
   const [open, setOpen] = useState(false);

@@ -61,8 +61,8 @@ export const AnnualReportColumn: React.FC<AnnualReportColumnProps> = ({
               report={report}
               stageKey={stage.stage}
               isTransitioning={transitioningId === report.id}
-              canMoveBack={stageIndex > 0}
-              canMoveForward={stageIndex < 4}
+              canMoveBack={stageIndex > 0 && stage.stage !== "post_submission"}
+              canMoveForward={stageIndex < 4 && stage.stage !== "post_submission"}
               onTransition={onTransition}
               onOpenDetail={onOpenDetail}
               animationIndex={index}

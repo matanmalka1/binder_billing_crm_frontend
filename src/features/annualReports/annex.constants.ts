@@ -46,6 +46,14 @@ export const SCHEDULE_FIELDS: Record<AnnualReportScheduleKey, FieldDef[]> = {
   ],
 };
 
+export const ALL_SCHEDULES: AnnualReportScheduleKey[] = [
+  "schedule_b",
+  "schedule_bet",
+  "schedule_gimmel",
+  "schedule_dalet",
+  "schedule_heh",
+];
+
 export const buildEmptyForm = (
   schedule: AnnualReportScheduleKey,
 ): Record<string, string> =>

@@ -6,6 +6,7 @@ const stageLabels = {
   final_review: "סקירה סופית",
   client_signature: "חתימת לקוח",
   transmitted: "הועבר",
+  post_submission: "לאחר הגשה",
 };
 
 const statusLabels = {
@@ -21,6 +22,7 @@ const stageColors = {
   final_review: "bg-purple-100 text-purple-700",
   client_signature: "bg-orange-100 text-orange-700",
   transmitted: "bg-green-100 text-green-700",
+  post_submission: "bg-yellow-100 text-yellow-800",
 };
 
 export const getReportStageLabel = makeLabelGetter(stageLabels);

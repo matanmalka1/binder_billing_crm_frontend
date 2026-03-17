@@ -11,6 +11,7 @@ export const STAGE_ORDER = [
   "final_review",
   "client_signature",
   "transmitted",
+  "post_submission",
 ] as const;
 
 export type StageKey = (typeof STAGE_ORDER)[number];
