@@ -4,6 +4,7 @@ import { Button } from "../../../components/ui/Button";
 import { Select } from "../../../components/ui/Select";
 import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
 import { YEAR_OPTIONS } from "../utils";
+import { ADVANCE_PAYMENT_STATUS_FILTERS } from "../constants";
 
 interface ClientAdvancePaymentsHeaderProps {
   isAdvisor: boolean;
@@ -17,8 +18,6 @@ interface ClientAdvancePaymentsHeaderProps {
   onGenerateSchedule: () => void;
   isGenerating?: boolean;
 }
-
-const STATUS_FILTERS: AdvancePaymentStatus[] = ["pending", "paid", "partial", "overdue"];
 
 export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderProps> = ({
   isAdvisor,
@@ -51,7 +50,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
     )}
     <div className="flex items-center gap-2">
       <div className="flex flex-wrap gap-1">
-        {STATUS_FILTERS.map((status) => {
+        {ADVANCE_PAYMENT_STATUS_FILTERS.map((status) => {
           const active = statusFilter.includes(status);
           return (
             <button

@@ -10,16 +10,12 @@ import {
 } from "recharts";
 import { QK } from "../../../lib/queryKeys";
 import { advancePaymentsApi } from "../../../api/advancePayments.api";
+import { MONTH_SHORT_NAMES } from "../utils";
 
 interface AdvancePaymentsChartProps {
   clientId: number;
   year: number;
 }
-
-const MONTH_SHORT = [
-  "ינו", "פבר", "מרץ", "אפר", "מאי", "יונ",
-  "יול", "אוג", "ספט", "אוק", "נוב", "דצמ",
-];
 
 export const AdvancePaymentsChart: React.FC<AdvancePaymentsChartProps> = ({
   clientId,
@@ -34,7 +30,7 @@ export const AdvancePaymentsChart: React.FC<AdvancePaymentsChartProps> = ({
   if (isLoading || !data) return null;
 
   const chartData = data.months.map((row) => ({
-    name: MONTH_SHORT[row.month - 1] ?? String(row.month),
+    name: MONTH_SHORT_NAMES[row.month - 1] ?? String(row.month),
     צפוי: row.expected_amount,
     שולם: row.paid_amount,
     פיגור: row.overdue_amount,

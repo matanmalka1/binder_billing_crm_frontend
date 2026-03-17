@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { Check, X, Pencil, Loader2 } from "lucide-react";
-import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
-
-const STATUS_OPTIONS: { value: AdvancePaymentStatus; label: string }[] = [
-  { value: "pending", label: getAdvancePaymentStatusLabel("pending") },
-  { value: "partial", label: getAdvancePaymentStatusLabel("partial") },
-  { value: "paid", label: getAdvancePaymentStatusLabel("paid") },
-  { value: "overdue", label: getAdvancePaymentStatusLabel("overdue") },
-];
+import { ADVANCE_PAYMENT_STATUS_OPTIONS } from "../constants";
 
 interface EditAdvancePaymentInlineProps {
   row: AdvancePaymentRow;
@@ -98,7 +91,7 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
         onChange={(e) => setStatus(e.target.value as AdvancePaymentStatus)}
         className="rounded border border-gray-300 px-1 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
       >
-        {STATUS_OPTIONS.map((o) => (
+        {ADVANCE_PAYMENT_STATUS_OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
           </option>
