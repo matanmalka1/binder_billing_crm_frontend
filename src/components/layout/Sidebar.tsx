@@ -59,10 +59,10 @@ const NAV_GROUPS: NavGroup[] = [
     key: "tax",
     label: "מיסים",
     items: [
-      { to: "/tax/deadlines", label: "דוחות מס", icon: FileSpreadsheet },
-      { to: "/tax/reports", label: "קנבן דוחות", icon: KanbanSquare, end: true },
-      { to: "/tax/advance-payments", label: "מקדמות", icon: CalendarDays },
       { to: "/tax/vat", label: 'דוחות מע"מ', icon: ClipboardList },
+      { to: "/tax/reports", label: "לוח דוחות שנתיים", icon: KanbanSquare, end: true },
+      { to: "/tax/advance-payments", label: "מקדמות", icon: CalendarDays },
+      { to: "/tax/deadlines", label: "דוחות מס", icon: FileSpreadsheet },
     ],
   },
   {
@@ -168,7 +168,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     <aside
       className={cn(
         "bg-gradient-to-b from-[#101b2f] via-[#0c1526] to-[#0a0f1f] text-white flex flex-col relative transition-all duration-200 shadow-xl shadow-black/30 border-r border-white/5",
-        isSidebarOpen ? "w-55" : "w-16",
+        isSidebarOpen ? "w-56" : "w-16",
       )}
     >
       {/* Logo + Collapse */}

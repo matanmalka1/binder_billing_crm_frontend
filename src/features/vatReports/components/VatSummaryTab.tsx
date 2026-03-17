@@ -1,4 +1,5 @@
 import { AlertTriangle } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import { computeVatBreakdown } from "../VatBreakdownUtils";
 import { VatOutputCard, VatInputCard } from "./VatBreakdownCards";
 import { VatCategoryTable } from "./VatCategoryTable";
@@ -11,6 +12,7 @@ interface VatSummaryTabProps {
 }
 
 export const VatSummaryTab: React.FC<VatSummaryTabProps> = ({ workItem, invoices }) => {
+  const [, setSearchParams] = useSearchParams();
   const data = computeVatBreakdown(
     invoices,
     workItem.total_output_vat,
@@ -32,8 +34,8 @@ export const VatSummaryTab: React.FC<VatSummaryTabProps> = ({ workItem, invoices
       )}
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <VatOutputCard data={data} />
-        <VatInputCard data={data} />
+        <VatOutputCard data={data} onNavigate={() => setSearchParams({ tab: "income" })} />
+        <VatInputCard data={data} onNavigate={() => setSearchParams({ tab: "expense" })} />
       </div>
 
       <VatCategoryTable

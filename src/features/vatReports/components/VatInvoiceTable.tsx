@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Trash2, Receipt } from "lucide-react";
+import { Trash2, Receipt, Pencil } from "lucide-react";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { formatVatAmount } from "../utils";
 import { CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
-import { useDeleteInvoice } from "../hooks/useVatInvoiceMutations";
+import { useDeleteInvoice, useUpdateInvoice } from "../hooks/useVatInvoiceMutations";
+import { VatInvoiceEditRow } from "./VatInvoiceEditRow";
 import type { VatInvoiceResponse } from "../../../api/vatReports.api";
 import { formatDateTime } from "../../../utils/utils";
 
@@ -12,6 +13,7 @@ interface VatInvoiceTableProps {
   canEdit: boolean;
   workItemId: number;
   sectionType: "income" | "expense";
+  emptyMessage?: string;
 }
 
 export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
@@ -19,9 +21,12 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
   canEdit,
   workItemId,
   sectionType,
+  emptyMessage,
 }) => {
   const { deleteInvoice, isDeleting } = useDeleteInvoice(workItemId);
+  const { updateInvoice, isUpdating } = useUpdateInvoice(workItemId);
   const [confirmId, setConfirmId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   const totalNet = invoices.reduce((s, i) => s + Number(i.net_amount ?? 0), 0);
   const totalVat = invoices.reduce((s, i) => s + Number(i.vat_amount ?? 0), 0);
@@ -36,7 +41,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
     return (
       <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-gray-200 bg-gray-50/50 py-10 text-center">
         <Receipt className="h-8 w-8 text-gray-300" />
-        <p className="text-sm font-medium text-gray-400">אין חשבוניות עדיין</p>
+        <p className="text-sm font-medium text-gray-400">{emptyMessage ?? "אין חשבוניות עדיין"}</p>
         <p className="text-xs text-gray-300">לחץ על &apos;הוסף חשבונית&apos; כדי להוסיף</p>
       </div>
     );
@@ -56,11 +61,25 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
               <th className="px-4 py-2.5 text-right">מע&quot;מ ₪</th>
               <th className="px-4 py-2.5 text-right">נוצר ע&quot;י</th>
               <th className="px-4 py-2.5 text-right">נוצר ב</th>
-              {canEdit && <th className="w-8 px-2" />}
+              {canEdit && <th className="w-16 px-2" />}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
             {invoices.map((inv) => {
+              if (editingId === inv.id) {
+                return (
+                  <VatInvoiceEditRow
+                    key={inv.id}
+                    invoice={inv}
+                    sectionType={sectionType}
+                    accentBorder={accentBorder}
+                    onSave={(payload) => updateInvoice(inv.id, payload)}
+                    onCancel={() => setEditingId(null)}
+                    isSaving={isUpdating}
+                  />
+                );
+              }
+
               const catColor = inv.expense_category ? CATEGORY_COLORS[inv.expense_category] : "";
               return (
                 <tr key={inv.id} className="group transition-colors hover:bg-gray-50/60">
@@ -87,13 +106,24 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                   </td>
                   {canEdit && (
                     <td className="px-2 py-2">
-                      <button
-                        onClick={() => setConfirmId(inv.id)}
-                        className="rounded p-1 text-gray-300 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-red-50 hover:text-red-500"
-                        aria-label="מחק חשבונית"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
+                      <div className="flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+                        <button
+                          onClick={() => setEditingId(inv.id)}
+                          disabled={editingId !== null}
+                          className="rounded p-1 text-gray-300 hover:bg-blue-50 hover:text-blue-500 disabled:cursor-not-allowed disabled:opacity-30"
+                          aria-label="ערוך חשבונית"
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={() => setConfirmId(inv.id)}
+                          disabled={editingId !== null}
+                          className="rounded p-1 text-gray-300 hover:bg-red-50 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-30"
+                          aria-label="מחק חשבונית"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>

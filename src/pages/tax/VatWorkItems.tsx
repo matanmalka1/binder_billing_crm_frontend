@@ -38,6 +38,10 @@ export const VatWorkItems: React.FC = () => {
     runAction,
     setFilter,
     setSearchParams,
+    statsFiled,
+    statsPending,
+    statsReview,
+    statsTyping,
     submitCreate,
     total,
   } = useVatWorkItemsPage();
@@ -46,24 +50,13 @@ export const VatWorkItems: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const columns = useMemo(
     () => buildVatWorkItemColumns({
-      isAdvisor,
       isLoading: loading,
       isDisabled: actionLoadingId !== null,
       runAction,
     }),
-    [isAdvisor, loading, actionLoadingId, runAction],
+    [loading, actionLoadingId, runAction],
   );
   const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
-
-  const stats = useMemo(() => {
-    const typing = workItems.filter(
-      (i) => i.status === "data_entry_in_progress" || i.status === "material_received",
-    ).length;
-    const review = workItems.filter((i) => i.status === "ready_for_review").length;
-    const filed = workItems.filter((i) => i.status === "filed").length;
-    const pending = workItems.filter((i) => i.status === "pending_materials").length;
-    return { typing, review, filed, pending };
-  }, [workItems]);
 
   const tabToggle = (
     <div role="tablist" className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1">
@@ -116,10 +109,10 @@ export const VatWorkItems: React.FC = () => {
 
           {!loading && workItems.length > 0 && (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <StatsCard title="ממתין לחומרים" value={stats.pending} icon={Hourglass} variant="orange" />
-              <StatsCard title="בהקלדה" value={stats.typing} icon={Clock} variant="blue" />
-              <StatsCard title="ממתין לבדיקה" value={stats.review} icon={FileText} variant="orange" />
-              <StatsCard title="הוגש" value={stats.filed} icon={CheckCircle2} variant="green" />
+              <StatsCard title="ממתין לחומרים" value={statsPending ?? 0} icon={Hourglass} variant="orange" />
+              <StatsCard title="בהקלדה" value={statsTyping ?? 0} icon={Clock} variant="blue" />
+              <StatsCard title="ממתין לבדיקה" value={statsReview ?? 0} icon={FileText} variant="orange" />
+              <StatsCard title="הוגש" value={statsFiled ?? 0} icon={CheckCircle2} variant="green" />
             </div>
           )}
 

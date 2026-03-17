@@ -56,7 +56,8 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
           {workItem.assigned_to !== null && (
             <span className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-0.5 text-xs font-medium text-gray-600">
               <User className="h-3 w-3" />
-              #{workItem.assigned_to}
+              <span className="text-gray-400">מטפל:</span>
+              {workItem.assigned_to_name ?? `#${workItem.assigned_to}`}
             </span>
           )}
           <StatusBadge
@@ -98,6 +99,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-3">
           {showSendBack ? (
             <div className="w-full">
+              <p className="mb-2 text-sm font-medium text-orange-700">הוספת הערה לתיקון</p>
               <VatSendBackForm
                 loading={isLoading}
                 onCancel={() => setShowSendBack(false)}

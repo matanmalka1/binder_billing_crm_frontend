@@ -41,7 +41,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 
   const onSubmit = async (values: VatInvoiceRowValues) => {
     const ok = await addInvoice(toInvoiceRowPayload(values));
-    if (ok) { reset(defaultValues(invoiceType)); onCancel?.(); }
+    if (ok) { reset(defaultValues(invoiceType)); }
   };
 
   return (
@@ -99,10 +99,10 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
       >
         <div className="flex flex-wrap gap-3 pt-1">
           <FormField label="מספר חשבונית" className="w-40">
-            <Input {...register("invoice_number")} placeholder="אוטומטי" />
+            <Input {...register("invoice_number")} placeholder="לא חובה" />
           </FormField>
           <FormField label="שם ספק / לקוח" className="w-48">
-            <Input {...register("counterparty_name")} placeholder="אוטומטי" />
+            <Input {...register("counterparty_name")} placeholder="לא חובה" />
           </FormField>
           <FormField label="תאריך חשבונית" className="w-40">
             <Input {...register("invoice_date")} type="date" />

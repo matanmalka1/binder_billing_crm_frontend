@@ -19,8 +19,10 @@ export interface VatWorkItemResponse {
   filing_method: string | null;
   filed_at: string | null;
   filed_by: number | null;
+  filed_by_name?: string | null;
   created_by: number;
   assigned_to: number | null;
+  assigned_to_name?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -31,6 +33,8 @@ export interface VatWorkItemsListParams {
   status?: string;
   page?: number;
   page_size?: number;
+  period?: string;
+  client_name?: string;
 }
 
 export interface CreateVatWorkItemPayload {
@@ -71,10 +75,20 @@ export interface CreateVatInvoicePayload {
   expense_category?: string | null;
 }
 
+export interface UpdateVatInvoicePayload {
+  net_amount?: number;
+  vat_amount?: number;
+  invoice_number?: string;
+  invoice_date?: string;
+  counterparty_name?: string;
+  expense_category?: string | null;
+}
+
 export interface VatAuditLogResponse {
   id: number;
   work_item_id: number;
   performed_by: number;
+  performed_by_name?: string | null;
   action: string;
   old_value: string | null;
   new_value: string | null;
@@ -177,6 +191,14 @@ export const vatReportsApi = {
   addInvoice: async (id: number, payload: CreateVatInvoicePayload): Promise<VatInvoiceResponse> => {
     const response = await api.post<VatInvoiceResponse>(
       ENDPOINTS.vatWorkItemInvoices(id),
+      payload,
+    );
+    return response.data;
+  },
+
+  updateInvoice: async (id: number, invoiceId: number, payload: UpdateVatInvoicePayload): Promise<VatInvoiceResponse> => {
+    const response = await api.patch<VatInvoiceResponse>(
+      ENDPOINTS.vatWorkItemInvoiceById(id, invoiceId),
       payload,
     );
     return response.data;

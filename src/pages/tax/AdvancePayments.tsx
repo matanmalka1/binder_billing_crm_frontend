@@ -111,98 +111,101 @@ export const AdvancePayments: React.FC = () => {
     page,
   });
 
+  const tabToggle = (
+    <div
+      role="tablist"
+      aria-label="תצוגת מקדמות"
+      className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 w-fit"
+    >
+      {(["overview", "report"] as const).map((tab) => (
+        <button
+          key={tab}
+          type="button"
+          role="tab"
+          aria-selected={activeTab === tab}
+          onClick={() => setTab(tab)}
+          className={cn(
+            "rounded-md px-4 py-1.5 text-sm font-medium transition-all",
+            activeTab === tab
+              ? "bg-white text-gray-900 shadow-sm"
+              : "text-gray-500 hover:text-gray-700",
+          )}
+        >
+          {tab === "overview" ? "סקירה" : "דוח גבייה"}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <div className="space-y-6">
-      <div
-        role="tablist"
-        aria-label="תצוגת מקדמות"
-        className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 w-fit"
-      >
-        {(["overview", "report"] as const).map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            role="tab"
-            aria-selected={activeTab === tab}
-            onClick={() => setTab(tab)}
-            className={cn(
-              "rounded-md px-4 py-1.5 text-sm font-medium transition-all",
-              activeTab === tab
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700",
-            )}
-          >
-            {tab === "overview" ? "סקירה" : "דוח גבייה"}
-          </button>
-        ))}
-      </div>
+      <PageHeader
+        title="מקדמות"
+        description="סקירה ודוחות גבייה לפי שנה, חודש וסטטוס"
+        actions={tabToggle}
+      />
 
       {activeTab === "report" && <AdvancePaymentReportView />}
 
       {activeTab === "overview" && (
-      <>
-      <PageHeader
-        title="מקדמות — סקירה כללית"
-        description="כל הלקוחות עם מקדמות פתוחות, חלקיות או באיחור"
-      />
+        <>
+          {!isLoading && kpiData && (
+            <OverviewKPICards
+              year={year}
+              totalExpected={kpiData.total_expected}
+              totalPaid={kpiData.total_paid}
+              collectionRate={kpiData.collection_rate}
+            />
+          )}
 
-      {!isLoading && kpiData && (
-        <OverviewKPICards
-          year={year}
-          totalExpected={kpiData.total_expected}
-          totalPaid={kpiData.total_paid}
-          collectionRate={kpiData.collection_rate}
-        />
-      )}
+          <ToolbarContainer>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 max-w-2xl">
+              <Select
+                label="שנת מס"
+                value={String(year)}
+                onChange={(e) => setParam("year", e.target.value)}
+                options={YEAR_OPTIONS}
+              />
+              <Select
+                label="חודש"
+                value={month > 0 ? String(month) : ""}
+                onChange={(e) => setParam("month", e.target.value)}
+                options={MONTH_FILTER_OPTIONS}
+              />
+              <Select
+                label="סטטוס"
+                value={statusFilter}
+                onChange={(e) => setParam("status", e.target.value)}
+                options={STATUS_OPTIONS}
+              />
+            </div>
+          </ToolbarContainer>
 
-      <ToolbarContainer>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 max-w-2xl">
-          <Select
-            label="שנת מס"
-            value={String(year)}
-            onChange={(e) => setParam("year", e.target.value)}
-            options={YEAR_OPTIONS}
+          {error && <Alert variant="error" message="שגיאה בטעינת מקדמות" />}
+
+          {!isLoading && (
+            <p className="text-sm text-gray-500">{total.toLocaleString("he-IL")} רשומות</p>
+          )}
+
+          <DataTable
+            columns={columns}
+            data={rows}
+            getRowKey={(row) => row.id}
+            isLoading={isLoading}
+            onRowClick={(row) => navigate(`/clients/${row.client_id}?tab=advance-payments`)}
+            emptyMessage="אין מקדמות לפי הסינון הנבחר"
           />
-          <Select
-            label="חודש"
-            value={month > 0 ? String(month) : ""}
-            onChange={(e) => setParam("month", e.target.value)}
-            options={MONTH_FILTER_OPTIONS}
-          />
-          <Select
-            label="סטטוס"
-            value={statusFilter}
-            onChange={(e) => setParam("status", e.target.value)}
-            options={STATUS_OPTIONS}
-          />
-        </div>
-      </ToolbarContainer>
 
-      {error && <Alert variant="error" message="שגיאה בטעינת מקדמות" />}
-
-      {!isLoading && (
-        <p className="text-sm text-gray-500">{total.toLocaleString("he-IL")} רשומות</p>
-      )}
-
-      <DataTable
-        columns={columns}
-        data={rows}
-        getRowKey={(row) => row.id}
-        isLoading={isLoading}
-        onRowClick={(row) => navigate(`/clients/${row.client_id}?tab=advance-payments`)}
-        emptyMessage="אין מקדמות לפי הסינון הנבחר"
-      />
-
-      {totalPages > 1 && (
-        <PaginationCard
-          page={page}
-          totalPages={totalPages}
-          total={total}
-          label="מקדמות"
-          onPageChange={(p) => setParam("page", String(p))}
-        />
-      )}
-      </>
+          {totalPages > 1 && (
+            <PaginationCard
+              page={page}
+              totalPages={totalPages}
+              total={total}
+              label="מקדמות"
+              onPageChange={(p) => setParam("page", String(p))}
+            />
+          )}
+        </>
       )}
     </div>
   );

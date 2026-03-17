@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { vatReportsApi } from "../../../api/vatReports.api";
@@ -13,7 +13,7 @@ import { toOptionalString } from "../../../utils/filters";
 import { useRole } from "../../../hooks/useRole";
 import { QK } from "../../../lib/queryKeys";
 
-export type VatWorkItemAction = "materialsComplete" | "readyForReview" | "sendBack" | "file";
+export type VatWorkItemAction = "materialsComplete" | "readyForReview" | "sendBack";
 
 export const useVatWorkItemsPage = () => {
   const queryClient = useQueryClient();
@@ -32,7 +32,38 @@ export const useVatWorkItemsPage = () => {
     status: toOptionalString(filters.status),
     page: filters.page,
     page_size: filters.page_size,
+    period: toOptionalString(filters.period),
+    client_name: toOptionalString(filters.clientSearch),
   };
+
+  const { data: statsPendingData } = useQuery({
+    queryKey: QK.tax.vatWorkItems.list({ status: "pending_materials", page: 1, page_size: 1 }),
+    queryFn: () => vatReportsApi.list({ status: "pending_materials", page: 1, page_size: 1 }),
+  });
+  const { data: statsMaterialData } = useQuery({
+    queryKey: QK.tax.vatWorkItems.list({ status: "material_received", page: 1, page_size: 1 }),
+    queryFn: () => vatReportsApi.list({ status: "material_received", page: 1, page_size: 1 }),
+  });
+  const { data: statsDataEntryData } = useQuery({
+    queryKey: QK.tax.vatWorkItems.list({ status: "data_entry_in_progress", page: 1, page_size: 1 }),
+    queryFn: () => vatReportsApi.list({ status: "data_entry_in_progress", page: 1, page_size: 1 }),
+  });
+  const { data: statsReviewData } = useQuery({
+    queryKey: QK.tax.vatWorkItems.list({ status: "ready_for_review", page: 1, page_size: 1 }),
+    queryFn: () => vatReportsApi.list({ status: "ready_for_review", page: 1, page_size: 1 }),
+  });
+  const { data: statsFiledData } = useQuery({
+    queryKey: QK.tax.vatWorkItems.list({ status: "filed", page: 1, page_size: 1 }),
+    queryFn: () => vatReportsApi.list({ status: "filed", page: 1, page_size: 1 }),
+  });
+
+  const statsPending = statsPendingData?.total ?? undefined;
+  const statsTyping =
+    statsMaterialData !== undefined && statsDataEntryData !== undefined
+      ? statsMaterialData.total + statsDataEntryData.total
+      : undefined;
+  const statsReview = statsReviewData?.total ?? undefined;
+  const statsFiled = statsFiledData?.total ?? undefined;
 
   const { items: rawItems, total, loading, error } = usePaginatedList({
     queryKey: QK.tax.vatWorkItems.list(apiParams),
@@ -40,16 +71,7 @@ export const useVatWorkItemsPage = () => {
     errorMessage: 'שגיאה בטעינת תיקי מע"מ',
   });
 
-  // Client-side filters (period, clientSearch) not sent to backend
-  const workItems = rawItems.filter((item) => {
-    if (filters.period && !item.period.startsWith(filters.period)) return false;
-    if (filters.clientSearch) {
-      const q = filters.clientSearch.toLowerCase();
-      const name = (item.client_name ?? "").toLowerCase();
-      if (!name.includes(q)) return false;
-    }
-    return true;
-  });
+  const workItems = rawItems;
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateVatWorkItemPayload) => vatReportsApi.create(payload),
@@ -64,8 +86,7 @@ export const useVatWorkItemsPage = () => {
   const actionMutation = useMutation({
     mutationFn: ({ action, itemId }: { action: Exclude<VatWorkItemAction, "sendBack">; itemId: number }) => {
       if (action === "materialsComplete") return vatReportsApi.markMaterialsComplete(itemId);
-      if (action === "readyForReview") return vatReportsApi.markReadyForReview(itemId);
-      return vatReportsApi.fileVatReturn(itemId, { filing_method: "online" });
+      return vatReportsApi.markReadyForReview(itemId);
     },
     onSuccess: async () => {
       toast.success("הפעולה בוצעה בהצלחה");
@@ -84,7 +105,7 @@ export const useVatWorkItemsPage = () => {
 
   const runAction = useCallback(
     async (itemId: number, action: VatWorkItemAction) => {
-      if ((action === "sendBack" || action === "file") && !isAdvisor) {
+      if (action === "sendBack" && !isAdvisor) {
         toast.error("פעולה זו זמינה ליועץ בלבד");
         return;
       }
@@ -145,6 +166,10 @@ export const useVatWorkItemsPage = () => {
     sendBackWithNote,
     setFilter,
     setSearchParams,
+    statsFiled,
+    statsPending,
+    statsReview,
+    statsTyping,
     submitCreate,
     total,
   };

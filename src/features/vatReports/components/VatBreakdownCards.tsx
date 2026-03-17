@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import { cn } from "../../../utils/utils";
 import { formatVatAmount } from "../utils";
 import type { VatBreakdownData } from "../VatBreakdownUtils";
@@ -6,13 +7,21 @@ import type { VatBreakdownData } from "../VatBreakdownUtils";
 
 interface VatOutputCardProps {
   data: VatBreakdownData;
+  onNavigate?: () => void;
 }
 
-export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data }) => (
+export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }) => (
   <div className="rounded-xl border border-gray-100 border-r-4 border-r-emerald-400 bg-white p-4 shadow-sm" dir="rtl">
-    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-emerald-700">
-      מע&quot;מ עסקאות – מכירות
-    </p>
+    <div className="mb-3 flex items-center justify-between">
+      <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+        מע&quot;מ עסקאות – מכירות
+      </p>
+      {onNavigate && (
+        <button onClick={onNavigate} className="flex items-center text-emerald-600 hover:text-emerald-800 cursor-pointer">
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+      )}
+    </div>
     <div className="space-y-2 text-sm">
       <div className="flex justify-between text-gray-500">
         <span>סה&quot;כ מכירות (ללא מע&quot;מ)</span>
@@ -38,13 +47,21 @@ VatOutputCard.displayName = "VatOutputCard";
 
 interface VatInputCardProps {
   data: VatBreakdownData;
+  onNavigate?: () => void;
 }
 
-export const VatInputCard: React.FC<VatInputCardProps> = ({ data }) => (
+export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) => (
   <div className="rounded-xl border border-gray-100 border-r-4 border-r-orange-400 bg-white p-4 shadow-sm" dir="rtl">
-    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-orange-700">
-      מע&quot;מ תשומות – הוצאות
-    </p>
+    <div className="mb-3 flex items-center justify-between">
+      <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">
+        מע&quot;מ תשומות – הוצאות
+      </p>
+      {onNavigate && (
+        <button onClick={onNavigate} className="flex items-center text-orange-600 hover:text-orange-800 cursor-pointer">
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+      )}
+    </div>
     <div className="space-y-1.5 text-sm">
       {data.expenseRows.map((row) => (
         <div key={row.categoryKey} className="flex justify-between">

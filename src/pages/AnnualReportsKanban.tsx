@@ -81,7 +81,7 @@ export const AnnualReportsKanban: React.FC = () => {
             </Button>
             <Button variant="secondary" onClick={openComparison} className="gap-1.5">
               <BarChart2 className="h-4 w-4" />
-              השוואה <span aria-hidden="true">📊</span>
+              השוואה
             </Button>
             <Button variant="primary" onClick={openCreate} className="gap-2">
               <Plus className="h-4 w-4" />

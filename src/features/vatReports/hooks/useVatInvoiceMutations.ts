@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { vatReportsApi, type CreateVatInvoicePayload } from "../../../api/vatReports.api";
+import { vatReportsApi, type CreateVatInvoicePayload, type UpdateVatInvoicePayload } from "../../../api/vatReports.api";
 import { QK } from "../../../lib/queryKeys";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
@@ -55,4 +55,31 @@ export const useDeleteInvoice = (workItemId: number) => {
   };
 
   return { deleteInvoice, isDeleting: mutation.isPending };
+};
+
+export const useUpdateInvoice = (workItemId: number) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: ({ invoiceId, payload }: { invoiceId: number; payload: UpdateVatInvoicePayload }) =>
+      vatReportsApi.updateInvoice(workItemId, invoiceId, payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.invoices(workItemId) });
+      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.detail(workItemId) });
+      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+    },
+  });
+
+  const updateInvoice = async (invoiceId: number, payload: UpdateVatInvoicePayload): Promise<boolean> => {
+    try {
+      await mutation.mutateAsync({ invoiceId, payload });
+      toast.success("החשבונית עודכנה");
+      return true;
+    } catch (err) {
+      showErrorToast(err, "שגיאה בעדכון חשבונית");
+      return false;
+    }
+  };
+
+  return { updateInvoice, isUpdating: mutation.isPending };
 };

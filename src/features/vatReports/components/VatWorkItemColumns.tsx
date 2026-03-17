@@ -16,7 +16,6 @@ const statusVariants: Record<string, "success" | "warning" | "error" | "info" | 
 };
 
 interface ColumnOpts {
-  isAdvisor: boolean;
   isLoading: boolean;
   isDisabled: boolean;
   runAction: (itemId: number, action: VatWorkItemAction) => Promise<void>;
@@ -66,7 +65,7 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
           ? item.final_vat_amount
           : item.net_vat;
       return (
-        <span className="inline-flex items-center gap-1 font-mono text-sm font-semibold text-gray-900 tabular-nums">
+        <span className={`inline-flex items-center gap-1 font-mono text-sm font-semibold tabular-nums ${Number(amount) >= 0 ? "text-red-600" : "text-green-600"}`}>
           {formatVatAmount(amount)}
           {item.is_overridden && (
             <span className="rounded bg-amber-100 px-1 py-0.5 text-xs font-medium text-amber-700">
@@ -99,7 +98,6 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     render: (item) => (
       <VatWorkItemRowActions
         item={item}
-        isAdvisor={opts.isAdvisor}
         isLoading={opts.isLoading}
         isDisabled={opts.isDisabled}
         runAction={opts.runAction}

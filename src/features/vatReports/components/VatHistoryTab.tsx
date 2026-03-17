@@ -64,7 +64,7 @@ export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
                   {entry.note ?? entry.new_value ?? entry.old_value ?? "—"}
                 </td>
                 <td className="px-4 py-3 font-mono text-xs text-gray-400">
-                  #{entry.performed_by}
+                  {entry.performed_by_name ?? `#${entry.performed_by}`}
                 </td>
               </tr>
             ))}
