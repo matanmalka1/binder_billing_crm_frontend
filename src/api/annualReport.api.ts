@@ -155,7 +155,8 @@ export type StageKey =
   | "in_progress"
   | "final_review"
   | "client_signature"
-  | "transmitted";
+  | "transmitted"
+  | "post_submission";
 
 export interface KanbanStage {
   stage: StageKey;

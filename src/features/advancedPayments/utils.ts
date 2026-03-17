@@ -1,6 +1,8 @@
 import { buildYearOptions } from "../../utils/utils";
 import type { AdvancePaymentStatus } from "./types";
 
+export { fmtCurrency, MONTH_NAMES, MONTH_OPTIONS } from "../../utils/utils";
+
 export const STATUS_VARIANT: Record<AdvancePaymentStatus, "success" | "warning" | "error" | "neutral"> = {
   paid: "success",
   partial: "warning",
@@ -8,29 +10,29 @@ export const STATUS_VARIANT: Record<AdvancePaymentStatus, "success" | "warning" 
   pending: "neutral",
 };
 
-export const fmtCurrency = (n: number | null): string =>
-  n != null
-    ? `₪${n.toLocaleString("he-IL", { minimumFractionDigits: 0 })}`
-    : "—";
-
-export const MONTH_NAMES = [
-  "ינואר",
-  "פברואר",
+export const MONTH_SHORT_NAMES = [
+  "ינו",
+  "פבר",
   "מרץ",
-  "אפריל",
+  "אפר",
   "מאי",
-  "יוני",
-  "יולי",
-  "אוגוסט",
-  "ספטמבר",
-  "אוקטובר",
-  "נובמבר",
-  "דצמבר",
+  "יונ",
+  "יול",
+  "אוג",
+  "ספט",
+  "אוק",
+  "נוב",
+  "דצמ",
 ] as const;
 
-export const MONTH_OPTIONS = MONTH_NAMES.map((label, index) => ({
-  value: String(index + 1),
-  label,
-}));
-
 export const YEAR_OPTIONS = buildYearOptions();
+
+export const getAdvancePaymentBalanceMeta = (totalExpected: number, totalPaid: number) => {
+  const balance = totalExpected - totalPaid;
+  return {
+    balance,
+    absBalance: Math.abs(balance),
+    variant: balance > 0 ? "orange" : balance < 0 ? "blue" : "green",
+    description: balance > 0 ? "נותר לתשלום" : balance < 0 ? "שולם ביתר" : "הכל שולם",
+  };
+};

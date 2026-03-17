@@ -51,6 +51,35 @@ export const buildYearOptions = (
   }));
 };
 
+// ============================================================================
+// LOCALE / DISPLAY CONSTANTS
+// ============================================================================
+
+export const MONTH_NAMES = [
+  "ינואר",
+  "פברואר",
+  "מרץ",
+  "אפריל",
+  "מאי",
+  "יוני",
+  "יולי",
+  "אוגוסט",
+  "ספטמבר",
+  "אוקטובר",
+  "נובמבר",
+  "דצמבר",
+] as const;
+
+export const MONTH_OPTIONS = MONTH_NAMES.map((label, index) => ({
+  value: String(index + 1),
+  label,
+}));
+
+export const fmtCurrency = (n: number | null): string =>
+  n != null
+    ? `₪${n.toLocaleString("he-IL", { minimumFractionDigits: 0 })}`
+    : "—";
+
 export const formatFileSize = (bytes: number | null | undefined): string => {
   if (bytes == null) return "—";
   if (bytes < 1024) return `${bytes} B`;

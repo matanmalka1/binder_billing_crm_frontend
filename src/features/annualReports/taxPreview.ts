@@ -27,22 +27,22 @@ const CREDIT_POINT_VALUE_BY_YEAR: Record<number, number> = {
 const DEFAULT_BRACKETS = TAX_BRACKETS_2024;
 const DEFAULT_CREDIT_POINT_VALUE = 2_904;
 
-function getBrackets(taxYear: number): TaxBracket[] {
+const getBrackets = (_taxYear: number): TaxBracket[] => {
   // Extend this map as the backend adds new-year bracket tables.
   return DEFAULT_BRACKETS;
 }
 
-function getCreditPointValue(taxYear: number): number {
+const getCreditPointValue = (taxYear: number): number => {
   return CREDIT_POINT_VALUE_BY_YEAR[taxYear] ?? DEFAULT_CREDIT_POINT_VALUE;
 }
 
-export function computeTaxPreview(
+export const computeTaxPreview = (
   grossIncome: number,
   expenses: number,
   advancesPaid: number,
   creditPoints: number,
   taxYear: number
-): { netProfit: number; estimatedTax: number; balance: number } {
+): { netProfit: number; estimatedTax: number; balance: number } => {
   const brackets = getBrackets(taxYear);
   const creditPointValue = getCreditPointValue(taxYear);
   const netProfit = grossIncome - expenses;
@@ -60,4 +60,4 @@ export function computeTaxPreview(
   const balance = estimatedTax - advancesPaid;
 
   return { netProfit, estimatedTax, balance };
-}
+};

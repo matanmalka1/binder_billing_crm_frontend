@@ -19,7 +19,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const CATEGORY_ORDER = ["binders", "vat", "annual_reports", "charges"];
 
-function groupByCategory(actions: ActionCommand[]): [string, ActionCommand[]][] {
+const groupByCategory = (actions: ActionCommand[]): [string, ActionCommand[]][] => {
   const map = new Map<string, ActionCommand[]>();
   for (const action of actions) {
     const cat = action.category ?? "clients";
@@ -29,7 +29,7 @@ function groupByCategory(actions: ActionCommand[]): [string, ActionCommand[]][] 
   return CATEGORY_ORDER
     .filter((cat) => map.has(cat))
     .map((cat) => [cat, map.get(cat)!]);
-}
+};
 
 interface ActionButtonProps {
   action: ActionCommand;

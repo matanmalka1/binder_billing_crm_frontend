@@ -19,11 +19,11 @@ export interface VatBreakdownData {
   totalInputVat: number;    // authoritative from workItem
 }
 
-export function computeVatBreakdown(
+export const computeVatBreakdown = (
   invoices: VatInvoiceResponse[],
   totalOutputVat: number,
   totalInputVat: number,
-): VatBreakdownData {
+): VatBreakdownData => {
   const income = invoices.filter((i) => i.invoice_type === "income");
   const expense = invoices.filter((i) => i.invoice_type === "expense");
 
@@ -62,4 +62,4 @@ export function computeVatBreakdown(
     totalGrossVat,
     totalInputVat,
   };
-}
+};

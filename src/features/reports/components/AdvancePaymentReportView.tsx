@@ -2,23 +2,10 @@ import { PageHeader } from "../../../components/layout/PageHeader";
 import { PageStateGuard } from "../../../components/ui/PageStateGuard";
 import { AdvancePaymentReportTable } from "./AdvancePaymentReportTable";
 import { useAdvancePaymentReport } from "../hooks/useAdvancePaymentReport";
+import { MONTH_OPTIONS as BASE_MONTH_OPTIONS } from "../../../utils/utils";
 
 const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
-const MONTH_OPTIONS = [
-  { value: "", label: "כל החודשים" },
-  { value: "1", label: "ינואר" },
-  { value: "2", label: "פברואר" },
-  { value: "3", label: "מרץ" },
-  { value: "4", label: "אפריל" },
-  { value: "5", label: "מאי" },
-  { value: "6", label: "יוני" },
-  { value: "7", label: "יולי" },
-  { value: "8", label: "אוגוסט" },
-  { value: "9", label: "ספטמבר" },
-  { value: "10", label: "אוקטובר" },
-  { value: "11", label: "נובמבר" },
-  { value: "12", label: "דצמבר" },
-];
+const MONTH_OPTIONS = [{ value: "", label: "כל החודשים" }, ...BASE_MONTH_OPTIONS];
 
 const selectCls =
   "rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none";

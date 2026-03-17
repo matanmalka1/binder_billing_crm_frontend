@@ -3,7 +3,7 @@ import { DayPicker } from "react-day-picker";
 import { format, parse, isValid, setMonth, setYear, getMonth, getYear, addMonths, subMonths } from "date-fns";
 import { he } from "date-fns/locale";
 import { CalendarIcon, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "../../utils/utils";
+import { cn, MONTH_NAMES } from "../../utils/utils";
 import { FormField } from "./FormField";
 import "react-day-picker/style.css";
 
@@ -16,12 +16,10 @@ interface DatePickerProps {
   disabled?: boolean;
   name?: string;
 }
-
-const MONTH_NAMES = ["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"];
 const START_YEAR = 2000;
 const END_YEAR = 2099;
 
-function InlineSelect({
+const InlineSelect = ({
   value,
   options,
   onChange,
@@ -29,7 +27,7 @@ function InlineSelect({
   value: number;
   options: { label: string; value: number }[];
   onChange: (val: number) => void;
-}) {
+}) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -86,15 +84,15 @@ function InlineSelect({
       )}
     </div>
   );
-}
+};
 
-function CaptionRow({
+const CaptionRow = ({
   displayMonth,
   onMonthChange,
 }: {
   displayMonth: Date;
   onMonthChange: (month: Date) => void;
-}) {
+}) => {
   const monthOptions = MONTH_NAMES.map((label, i) => ({ label, value: i }));
   const yearOptions = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => ({
     label: String(START_YEAR + i),
@@ -133,7 +131,7 @@ function CaptionRow({
       </button>
     </div>
   );
-}
+};
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   label,
