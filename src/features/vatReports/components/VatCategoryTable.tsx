@@ -1,18 +1,6 @@
 import { cn } from "../../../utils/utils";
-import { formatVatAmount } from "../utils";
+import { formatVatAmount, getVatDeductionRateClass, getVatDeductionRateLabel } from "../utils";
 import type { VatCategoryTableProps } from "../types";
-
-const rateLabel = (rate: number): string => {
-  if (rate === 1) return "100%";
-  if (rate === 0) return "0%";
-  return `${(rate * 100).toFixed(2)}%`;
-};
-
-const rateClass = (rate: number): string => {
-  if (rate === 1) return "text-emerald-600 font-semibold";
-  if (rate === 0) return "text-gray-400";
-  return "text-accent-600 font-semibold";
-};
 
 export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
   rows,
@@ -42,8 +30,8 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
             {rows.map((row) => (
               <tr key={row.categoryKey} className="hover:bg-gray-50/60">
                 <td className="px-4 py-2.5 font-medium text-gray-700">{row.label}</td>
-                <td className={cn("px-4 py-2.5 font-mono tabular-nums", rateClass(row.deductionRate))}>
-                  {rateLabel(row.deductionRate)}
+                <td className={cn("px-4 py-2.5 font-mono tabular-nums", getVatDeductionRateClass(row.deductionRate))}>
+                  {getVatDeductionRateLabel(row.deductionRate)}
                 </td>
                 <td className="px-4 py-2.5 font-mono tabular-nums text-gray-600">
                   {formatVatAmount(row.netAmount + row.grossVat)}

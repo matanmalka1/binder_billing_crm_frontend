@@ -1,11 +1,7 @@
 import { CheckCircle2 } from "lucide-react";
 import { formatDateTime } from "../../../utils/utils";
+import { VAT_FILING_METHOD_LABELS } from "../constants";
 import type { VatFiledBannerProps } from "../types";
-
-const FILING_METHOD_LABELS: Record<string, string> = {
-  manual: "ידנית",
-  online: "אונליין",
-};
 
 export const VatFiledBanner: React.FC<VatFiledBannerProps> = ({
   filedAt,
@@ -13,7 +9,7 @@ export const VatFiledBanner: React.FC<VatFiledBannerProps> = ({
   filedBy,
   filingMethod,
 }) => {
-  const methodLabel = filingMethod ? FILING_METHOD_LABELS[filingMethod] : null;
+  const methodLabel = filingMethod ? VAT_FILING_METHOD_LABELS[filingMethod] : null;
   const byLabel = filedByName ?? (filedBy != null ? `#${filedBy}` : null);
 
   return (

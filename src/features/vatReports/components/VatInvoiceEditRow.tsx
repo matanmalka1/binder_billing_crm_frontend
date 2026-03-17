@@ -5,15 +5,8 @@ import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { vatInvoiceEditSchema, toInvoiceEditPayload, type VatInvoiceEditValues } from "../schemas";
 import { EXPENSE_CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
+import { toDateInputValue } from "../utils";
 import type { VatInvoiceEditRowProps } from "../types";
-
-const toDateInputValue = (dateStr: string): string => {
-  try {
-    return new Date(dateStr).toISOString().slice(0, 10);
-  } catch {
-    return "";
-  }
-};
 
 export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
   invoice,

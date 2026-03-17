@@ -3,17 +3,10 @@ import type { Column } from "../../../components/ui/DataTable";
 import type { VatWorkItemResponse } from "../../../api/vatReports.api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatDateTime } from "../../../utils/utils";
+import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { formatVatAmount } from "../utils";
 import { VatWorkItemRowActions } from "./VatWorkItemRowActions";
 import type { ColumnOpts } from "../types";
-
-const statusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
-  pending_materials: "warning",
-  material_received: "info",
-  data_entry_in_progress: "info",
-  ready_for_review: "warning",
-  filed: "success",
-};
 
 export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemResponse>[] => [
   {
@@ -46,7 +39,7 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
       <StatusBadge
         status={item.status}
         getLabel={getVatWorkItemStatusLabel}
-        variantMap={statusVariants}
+        variantMap={VAT_STATUS_BADGE_VARIANTS}
       />
     ),
   },

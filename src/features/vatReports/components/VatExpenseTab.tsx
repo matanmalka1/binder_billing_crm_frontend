@@ -5,15 +5,10 @@ import { Select } from "../../../components/ui/Select";
 import { canAddInvoice } from "../utils";
 import { isClientClosed } from "../../../utils/clientStatus";
 import { useAddInvoice } from "../hooks/useVatInvoiceMutations";
-import { EXPENSE_CATEGORIES, CATEGORY_LABELS } from "../constants";
+import { VAT_EXPENSE_CATEGORY_FILTER_OPTIONS } from "../constants";
 import { VatInvoiceTable } from "./VatInvoiceTable";
 import { VatInvoiceAddForm } from "./VatInvoiceAddForm";
 import type { VatExpenseTabProps } from "../types";
-
-const CATEGORY_FILTER_OPTIONS = [
-  { value: "", label: "כל הקטגוריות" },
-  ...EXPENSE_CATEGORIES.map((c) => ({ value: c, label: CATEGORY_LABELS[c] ?? c })),
-];
 
 export const VatExpenseTab: React.FC<VatExpenseTabProps> = ({ workItemId, status, invoices, clientStatus }) => {
   const canEdit = canAddInvoice(status) && !isClientClosed(clientStatus);
@@ -40,7 +35,7 @@ export const VatExpenseTab: React.FC<VatExpenseTabProps> = ({ workItemId, status
           <Select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            options={CATEGORY_FILTER_OPTIONS}
+            options={VAT_EXPENSE_CATEGORY_FILTER_OPTIONS}
           />
         </div>
         <VatInvoiceTable

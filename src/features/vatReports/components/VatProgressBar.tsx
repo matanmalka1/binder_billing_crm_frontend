@@ -1,18 +1,11 @@
 import { cn } from "../../../utils/utils";
+import { VAT_WORKFLOW_STEPS } from "../constants";
 import type { VatProgressBarProps } from "../types";
 
-const STATUS_STEPS = [
-  "pending_materials",
-  "material_received",
-  "data_entry_in_progress",
-  "ready_for_review",
-  "filed",
-] as const;
-
 export const VatProgressBar: React.FC<VatProgressBarProps> = ({ currentStatus }) => {
-  const currentIdx = STATUS_STEPS.indexOf(currentStatus as typeof STATUS_STEPS[number]);
+  const currentIdx = VAT_WORKFLOW_STEPS.indexOf(currentStatus as typeof VAT_WORKFLOW_STEPS[number]);
   const step = currentIdx >= 0 ? currentIdx + 1 : 1;
-  const total = STATUS_STEPS.length;
+  const total = VAT_WORKFLOW_STEPS.length;
   const percent = Math.round((step / total) * 100);
   const isFiled = currentStatus === "filed";
 

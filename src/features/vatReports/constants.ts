@@ -2,6 +2,7 @@
  * Single source of truth for VAT expense category keys and labels.
  * Imported by schemas.ts, useVatWorkItemDetail.ts, and enums.ts helpers.
  */
+import { getVatWorkItemStatusLabel } from "../../utils/enums";
 
 export const INCOME_KEY = "income";
 
@@ -57,4 +58,46 @@ export const DEDUCTION_RATES: Record<string, number> = {
 export const CATEGORY_TABLE_LABELS: Record<string, string> = {
   ...CATEGORY_LABELS,
   travel: "רכב",
+};
+
+export const VAT_STATUS_BADGE_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+  pending_materials: "warning",
+  material_received: "info",
+  data_entry_in_progress: "info",
+  ready_for_review: "warning",
+  filed: "success",
+};
+
+export const VAT_CLIENT_SUMMARY_STATUS_VARIANTS: Record<string, "success" | "warning" | "info" | "neutral"> = {
+  filed: "success",
+  ready_for_review: "warning",
+  data_entry_in_progress: "info",
+  material_received: "neutral",
+  pending_materials: "neutral",
+};
+
+export const VAT_WORKFLOW_STEPS = [
+  "pending_materials",
+  "material_received",
+  "data_entry_in_progress",
+  "ready_for_review",
+  "filed",
+] as const;
+
+export const VAT_WORK_ITEMS_STATUS_OPTIONS: Array<{ value: string; label: string }> = [
+  { value: "", label: "כל הסטטוסים" },
+  ...VAT_WORKFLOW_STEPS.map((status) => ({
+    value: status,
+    label: getVatWorkItemStatusLabel(status),
+  })),
+];
+
+export const VAT_EXPENSE_CATEGORY_FILTER_OPTIONS = [
+  { value: "", label: "כל הקטגוריות" },
+  ...EXPENSE_CATEGORIES.map((c) => ({ value: c, label: CATEGORY_LABELS[c] ?? c })),
+];
+
+export const VAT_FILING_METHOD_LABELS: Record<string, string> = {
+  manual: "ידנית",
+  online: "אונליין",
 };

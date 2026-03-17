@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { vatReportsApi } from "../../../api/vatReports.api";
 import { QK } from "../../../lib/queryKeys";
-import { CATEGORY_LABELS } from "../constants";
+import { getVatCategoryLabel } from "../utils";
 
 export interface VatCategorySummaryRow {
   label: string;
@@ -18,9 +18,6 @@ export interface VatWorkItemSummary {
   totalInputNet: number;
   totalInputVat: number;
 }
-
-const getCategoryLabel = (category: string | null): string =>
-  CATEGORY_LABELS[category ?? ""] ?? category ?? "כללי";
 
 export const useVatWorkItemDetail = (workItemId: number | null) => {
   const invoicesQuery = useQuery({
@@ -38,7 +35,7 @@ export const useVatWorkItemDetail = (workItemId: number | null) => {
     for (const inv of items) {
       const map = inv.invoice_type === "income" ? outputMap : inputMap;
       const key =
-        inv.invoice_type === "income" ? "הכנסות" : getCategoryLabel(inv.expense_category);
+        inv.invoice_type === "income" ? "הכנסות" : getVatCategoryLabel(inv.expense_category);
       const existing = map.get(key);
       if (existing) {
         existing.netAmount += inv.net_amount;

@@ -9,22 +9,9 @@ export const ACTION_LABELS: Record<string, string> = {
   filed: "הוגש",
 };
 
-export const STATUS_LABELS: Record<string, string> = {
-  pending_materials: "ממתין לחומרים",
-  material_received: "חומרים התקבלו",
-  data_entry_in_progress: "הקלדה בתהליך",
-  ready_for_review: "מוכן לבדיקה",
-  filed: "הוגש",
-};
-
 export const INVOICE_TYPE_LABELS: Record<string, string> = {
   income: "הכנסה",
   expense: "הוצאה",
-};
-
-export const FILING_METHOD_LABELS: Record<string, string> = {
-  manual: "ידני",
-  online: "מקוון",
 };
 
 export const AUTO_TRANSITION_NOTE = "Auto-transitioned on first invoice entry";

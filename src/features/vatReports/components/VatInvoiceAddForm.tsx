@@ -8,13 +8,8 @@ import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { vatInvoiceRowSchema, toInvoiceRowPayload, type VatInvoiceRowValues } from "../schemas";
 import { EXPENSE_CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
+import { getVatInvoiceDefaultValues } from "../utils";
 import type { VatInvoiceAddFormProps } from "../types";
-
-const defaultValues = (invoiceType: "income" | "expense"): VatInvoiceRowValues => ({
-  invoice_type: invoiceType,
-  net_amount: "",
-  expense_category: invoiceType === "expense" ? EXPENSE_CATEGORIES[0] : undefined,
-});
 
 export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
   invoiceType,
@@ -26,7 +21,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 
   const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<VatInvoiceRowValues>({
     resolver: zodResolver(vatInvoiceRowSchema),
-    defaultValues: defaultValues(invoiceType),
+    defaultValues: getVatInvoiceDefaultValues(invoiceType),
   });
 
   const selectedCategory = watch("expense_category");
@@ -34,7 +29,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 
   const onSubmit = async (values: VatInvoiceRowValues) => {
     const ok = await addInvoice(toInvoiceRowPayload(values));
-    if (ok) { reset(defaultValues(invoiceType)); }
+    if (ok) { reset(getVatInvoiceDefaultValues(invoiceType)); }
   };
 
   return (

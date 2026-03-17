@@ -16,32 +16,14 @@ import { DataTable, type Column } from "../../../components/ui/DataTable";
 import { useAuthStore } from "../../../store/auth.store";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
 import { toast } from "sonner";
+import {
+  VAT_CLIENT_SUMMARY_STATUS_VARIANTS,
+} from "../constants";
+import { getVatWorkItemStatusLabel } from "../../../utils/enums";
+import { formatVatAmountLtrSafe } from "../utils";
 import type { VatClientSummaryPanelProps } from "../types";
 
-// Format currency LTR-safe: negative sign before ₪, not after
-const fmt = (amount: number | null | undefined): string => {
-  if (amount === null || amount === undefined || isNaN(Number(amount))) return "—";
-  const n = Number(amount);
-  return n < 0 ? `-₪${Math.abs(n).toFixed(2)}` : `₪${n.toFixed(2)}`;
-};
-
-// ── Status label ─────────────────────────────────────────────────────────────
-
-const STATUS_LABELS: Record<string, string> = {
-  pending_materials: "ממתין לחומרים",
-  material_received: "חומרים התקבלו",
-  data_entry_in_progress: "הזנת נתונים",
-  ready_for_review: "ממתין לבדיקה",
-  filed: "הוגש",
-};
-
-const STATUS_VARIANT: Record<string, "success" | "warning" | "info" | "neutral"> = {
-  filed: "success",
-  ready_for_review: "warning",
-  data_entry_in_progress: "info",
-  material_received: "neutral",
-  pending_materials: "neutral",
-};
+const fmt = formatVatAmountLtrSafe;
 
 // ── Columns ──────────────────────────────────────────────────────────────────
 
@@ -55,8 +37,8 @@ const buildColumns = (): Column<VatPeriodRow>[] => [
     key: "status",
     header: "סטטוס",
     render: (r) => (
-      <Badge variant={STATUS_VARIANT[r.status] ?? "neutral"}>
-        {STATUS_LABELS[r.status] ?? r.status}
+      <Badge variant={VAT_CLIENT_SUMMARY_STATUS_VARIANTS[r.status] ?? "neutral"}>
+        {getVatWorkItemStatusLabel(r.status)}
       </Badge>
     ),
   },

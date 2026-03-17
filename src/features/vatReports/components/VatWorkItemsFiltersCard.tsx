@@ -5,16 +5,8 @@ import { Input } from "../../../components/ui/Input";
 import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
 import { ToolbarContainer } from "../../../components/ui/ToolbarContainer";
 import { cn } from "../../../utils/utils";
+import { VAT_WORK_ITEMS_STATUS_OPTIONS } from "../constants";
 import type { VatWorkItemsFiltersCardProps } from "../types";
-
-const STATUS_OPTIONS = [
-  { value: "", label: "כל הסטטוסים" },
-  { value: "pending_materials", label: "ממתין לחומרים" },
-  { value: "material_received", label: "חומרים התקבלו" },
-  { value: "data_entry_in_progress", label: "הקלדה בתהליך" },
-  { value: "ready_for_review", label: "ממתין לבדיקה" },
-  { value: "filed", label: "הוגש" },
-];
 
 export const VatWorkItemsFiltersCard = ({
   filters,
@@ -39,7 +31,7 @@ export const VatWorkItemsFiltersCard = ({
             label="סטטוס"
             value={filters.status}
             onChange={(e) => onFilterChange("status", e.target.value)}
-            options={STATUS_OPTIONS}
+            options={VAT_WORK_ITEMS_STATUS_OPTIONS}
             className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
           />
           <Input
@@ -62,7 +54,7 @@ export const VatWorkItemsFiltersCard = ({
         <ActiveFilterBadges
           badges={[
             filters.status
-              ? { key: "status", label: STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onFilterChange("status", "") }
+              ? { key: "status", label: VAT_WORK_ITEMS_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onFilterChange("status", "") }
               : null,
             filters.period
               ? { key: "period", label: `תקופה: ${filters.period}`, onRemove: () => onFilterChange("period", "") }

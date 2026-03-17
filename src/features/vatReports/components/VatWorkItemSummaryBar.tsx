@@ -5,20 +5,13 @@ import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { useRole } from "../../../hooks/useRole";
 import { useVatWorkItemActions } from "../hooks/useVatWorkItemActions";
+import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { VatProgressBar } from "./VatProgressBar";
 import { VatActionButtons } from "./VatActionButtons";
 import { VatExportButtons } from "./VatExportButtons";
 import { VatSendBackForm } from "./VatSendBackForm";
 import { isFiled } from "../utils";
 import type { VatWorkItemSummaryBarProps } from "../types";
-
-const STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
-  pending_materials: "warning",
-  material_received: "info",
-  data_entry_in_progress: "info",
-  ready_for_review: "warning",
-  filed: "success",
-};
 
 export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem }) => {
   const { isAdvisor } = useRole();
@@ -59,7 +52,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
           <StatusBadge
             status={workItem.status}
             getLabel={getVatWorkItemStatusLabel}
-            variantMap={STATUS_VARIANTS}
+            variantMap={VAT_STATUS_BADGE_VARIANTS}
           />
         </div>
       </div>
