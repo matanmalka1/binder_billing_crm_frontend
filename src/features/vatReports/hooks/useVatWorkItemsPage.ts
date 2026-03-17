@@ -22,6 +22,8 @@ export const useVatWorkItemsPage = () => {
 
   const filters = {
     status: searchParams.get("status") ?? "",
+    period: searchParams.get("period") ?? "",
+    clientSearch: searchParams.get("clientSearch") ?? "",
     page: parsePositiveInt(searchParams.get("page"), 1),
     page_size: parsePositiveInt(searchParams.get("page_size"), 20),
   };
@@ -32,10 +34,21 @@ export const useVatWorkItemsPage = () => {
     page_size: filters.page_size,
   };
 
-  const { items: workItems, total, loading, error } = usePaginatedList({
+  const { items: rawItems, total, loading, error } = usePaginatedList({
     queryKey: QK.tax.vatWorkItems.list(apiParams),
     queryFn: () => vatReportsApi.list(apiParams),
     errorMessage: 'שגיאה בטעינת תיקי מע"מ',
+  });
+
+  // Client-side filters (period, clientSearch) not sent to backend
+  const workItems = rawItems.filter((item) => {
+    if (filters.period && !item.period.startsWith(filters.period)) return false;
+    if (filters.clientSearch) {
+      const q = filters.clientSearch.toLowerCase();
+      const name = (item.client_name ?? "").toLowerCase();
+      if (!name.includes(q)) return false;
+    }
+    return true;
   });
 
   const createMutation = useMutation({

@@ -40,3 +40,21 @@ export const CATEGORY_COLORS: Record<string, string> = {
   marketing: "bg-pink-400",
   other: "bg-slate-400",
 };
+
+/** VAT deduction rates per expense category (frontend display only) */
+export const DEDUCTION_RATES: Record<string, number> = {
+  office: 1.0,
+  travel: 2 / 3, // רכב — 66.67%
+  professional_services: 1.0,
+  equipment: 1.0,
+  rent: 1.0,
+  salary: 0.0,
+  marketing: 1.0,
+  other: 0.0,
+};
+
+/** Like CATEGORY_LABELS but travel → "רכב" for the breakdown table */
+export const CATEGORY_TABLE_LABELS: Record<string, string> = {
+  ...CATEGORY_LABELS,
+  travel: "רכב",
+};

@@ -1,4 +1,5 @@
 import { Select } from "../../../components/ui/Select";
+import { Input } from "../../../components/ui/Input";
 import { ToolbarContainer } from "../../../components/ui/ToolbarContainer";
 import type { VatWorkItemsFilters } from "../types";
 
@@ -22,7 +23,7 @@ export const VatWorkItemsFiltersCard = ({
   onClear,
   onFilterChange,
 }: VatWorkItemsFiltersCardProps) => {
-  const hasActive = Boolean(filters.status);
+  const hasActive = Boolean(filters.status || filters.period || filters.clientSearch);
 
   return (
     <ToolbarContainer onReset={hasActive ? onClear : undefined}>
@@ -33,6 +34,23 @@ export const VatWorkItemsFiltersCard = ({
             value={filters.status}
             onChange={(e) => onFilterChange("status", e.target.value)}
             options={STATUS_OPTIONS}
+          />
+        </div>
+        <div className="w-36">
+          <Input
+            label="תקופה"
+            placeholder="YYYY-MM"
+            value={filters.period}
+            onChange={(e) => onFilterChange("period", e.target.value)}
+            dir="ltr"
+          />
+        </div>
+        <div className="w-52">
+          <Input
+            label="חיפוש לקוח"
+            placeholder="שם לקוח..."
+            value={filters.clientSearch}
+            onChange={(e) => onFilterChange("clientSearch", e.target.value)}
           />
         </div>
       </div>

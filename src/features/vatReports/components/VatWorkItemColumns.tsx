@@ -4,8 +4,8 @@ import type { VatWorkItemResponse } from "../../../api/vatReports.api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatDateTime } from "../../../utils/utils";
 import { formatVatAmount } from "../utils";
-import type { VatWorkItemAction } from "../hooks/useVatWorkItemsPage";
 import { VatWorkItemRowActions } from "./VatWorkItemRowActions";
+import type { VatWorkItemAction } from "../hooks/useVatWorkItemsPage";
 
 const statusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   pending_materials: "warning",
@@ -15,17 +15,14 @@ const statusVariants: Record<string, "success" | "warning" | "error" | "info" | 
   filed: "success",
 };
 
-interface BuildColumnsParams {
+interface ColumnOpts {
   isAdvisor: boolean;
-  actionLoadingId: number | null;
+  isLoading: boolean;
+  isDisabled: boolean;
   runAction: (itemId: number, action: VatWorkItemAction) => Promise<void>;
 }
 
-export const buildVatWorkItemColumns = ({
-  isAdvisor,
-  actionLoadingId,
-  runAction,
-}: BuildColumnsParams): Column<VatWorkItemResponse>[] => [
+export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemResponse>[] => [
   {
     key: "id",
     header: "מזהה",
@@ -63,42 +60,49 @@ export const buildVatWorkItemColumns = ({
   {
     key: "net_vat",
     header: 'מע"מ נטו',
-    render: (item) => (
-      <span className="font-mono text-sm font-semibold text-gray-900 tabular-nums">
-        {formatVatAmount(item.net_vat)}
-      </span>
-    ),
-  },
-  {
-    key: "final_vat_amount",
-    header: "סכום סופי",
-    render: (item) => (
-      <span className="font-mono text-sm text-gray-600 tabular-nums">
-        {formatVatAmount(item.final_vat_amount)}
-      </span>
-    ),
+    render: (item) => {
+      const amount =
+        item.is_overridden && item.final_vat_amount != null
+          ? item.final_vat_amount
+          : item.net_vat;
+      return (
+        <span className="inline-flex items-center gap-1 font-mono text-sm font-semibold text-gray-900 tabular-nums">
+          {formatVatAmount(amount)}
+          {item.is_overridden && (
+            <span className="rounded bg-amber-100 px-1 py-0.5 text-xs font-medium text-amber-700">
+              עוקף
+            </span>
+          )}
+        </span>
+      );
+    },
   },
   {
     key: "updated_at",
     header: "עדכון אחרון",
     render: (item) => (
+      <span className="text-sm text-gray-400 tabular-nums">{formatDateTime(item.updated_at)}</span>
+    ),
+  },
+  {
+    key: "filed_at",
+    header: "הוגש ב",
+    render: (item) => (
       <span className="text-sm text-gray-500 tabular-nums">
-        {formatDateTime(item.updated_at)}
+        {item.filed_at ? formatDateTime(item.filed_at) : "—"}
       </span>
     ),
   },
   {
     key: "actions",
     header: "",
-    headerClassName: "w-10",
-    className: "w-10",
     render: (item) => (
       <VatWorkItemRowActions
         item={item}
-        isAdvisor={isAdvisor}
-        isLoading={actionLoadingId === item.id}
-        isDisabled={actionLoadingId !== null && actionLoadingId !== item.id}
-        runAction={runAction}
+        isAdvisor={opts.isAdvisor}
+        isLoading={opts.isLoading}
+        isDisabled={opts.isDisabled}
+        runAction={opts.runAction}
       />
     ),
   },

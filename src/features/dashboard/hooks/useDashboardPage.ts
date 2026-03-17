@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Users, FolderOpen, Bell, FileText } from "lucide-react";
 import { dashboardApi } from "../../../api/dashboard.api";
@@ -116,6 +117,7 @@ const buildSecretaryStats = (data: DashboardSummaryResponse): StatItem[] => [
 
 export const useDashboardPage = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { role, isAdvisor, isSecretary } = useRole();
   const [actionDenied, setActionDenied] = useState(false);
   const hasRole = Boolean(role);
@@ -212,9 +214,13 @@ export const useDashboardPage = () => {
   const handleQuickAction = useCallback(
     (action: ActionCommand) => {
       setActionDenied(false);
+      if (action.method === "get") {
+        navigate(action.endpoint);
+        return;
+      }
       handleQuickActionBase(action);
     },
-    [handleQuickActionBase],
+    [handleQuickActionBase, navigate],
   );
 
   const confirmPendingAction = useCallback(async () => {

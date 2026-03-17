@@ -1,4 +1,4 @@
-export type ActionMethod = "post" | "patch" | "put" | "delete";
+export type ActionMethod = "get" | "post" | "patch" | "put" | "delete";
 
 export interface BackendActionInputField {
   name: string;

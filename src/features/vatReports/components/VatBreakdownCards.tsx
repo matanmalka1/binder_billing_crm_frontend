@@ -1,0 +1,117 @@
+import { cn } from "../../../utils/utils";
+import { formatVatAmount } from "../utils";
+import type { VatBreakdownData } from "../VatBreakdownUtils";
+
+// ── Output (income) card ──────────────────────────────────────────────────────
+
+interface VatOutputCardProps {
+  data: VatBreakdownData;
+}
+
+export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data }) => (
+  <div className="rounded-xl border border-gray-100 border-r-4 border-r-emerald-400 bg-white p-4 shadow-sm" dir="rtl">
+    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+      מע&quot;מ עסקאות – מכירות
+    </p>
+    <div className="space-y-2 text-sm">
+      <div className="flex justify-between text-gray-500">
+        <span>סה&quot;כ מכירות (ללא מע&quot;מ)</span>
+        <span className="font-mono tabular-nums">{formatVatAmount(data.totalIncomeNet)}</span>
+      </div>
+      <div className="flex justify-between text-gray-400">
+        <span>שיעור מע&quot;מ</span>
+        <span className="font-mono">17%</span>
+      </div>
+    </div>
+    <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+      <span className="text-sm font-semibold text-gray-700">מע&quot;מ עסקאות</span>
+      <span className="font-mono text-2xl font-bold text-emerald-700 tabular-nums">
+        {formatVatAmount(data.totalOutputVat)}
+      </span>
+    </div>
+  </div>
+);
+
+VatOutputCard.displayName = "VatOutputCard";
+
+// ── Input (expense) card ──────────────────────────────────────────────────────
+
+interface VatInputCardProps {
+  data: VatBreakdownData;
+}
+
+export const VatInputCard: React.FC<VatInputCardProps> = ({ data }) => (
+  <div className="rounded-xl border border-gray-100 border-r-4 border-r-orange-400 bg-white p-4 shadow-sm" dir="rtl">
+    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-orange-700">
+      מע&quot;מ תשומות – הוצאות
+    </p>
+    <div className="space-y-1.5 text-sm">
+      {data.expenseRows.map((row) => (
+        <div key={row.categoryKey} className="flex justify-between">
+          <span className="text-gray-500">
+            {row.label}
+            {row.deductionRate < 1 && row.deductionRate > 0 && (
+              <span className="mr-1 text-xs text-gray-400">
+                ({Math.round(row.deductionRate * 100)}%)
+              </span>
+            )}
+          </span>
+          <span className="font-mono tabular-nums text-orange-700">
+            {formatVatAmount(row.deductibleVat)}
+          </span>
+        </div>
+      ))}
+    </div>
+    <div className="mt-3 space-y-1.5 border-t border-gray-100 pt-3 text-sm">
+      <div className="flex justify-between text-gray-500">
+        <span>סה&quot;כ הוצאות (ללא מע&quot;מ)</span>
+        <span className="font-mono tabular-nums">{formatVatAmount(data.totalExpenseNet)}</span>
+      </div>
+      <div className="flex justify-between text-gray-500">
+        <span>מע&quot;מ בחשבוניות</span>
+        <span className="font-mono tabular-nums">{formatVatAmount(data.totalGrossVat)}</span>
+      </div>
+    </div>
+    <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+      <span className="text-sm font-semibold text-gray-700">מע&quot;מ תשומות לניכוי</span>
+      <span className="font-mono text-2xl font-bold text-orange-700 tabular-nums">
+        {formatVatAmount(data.totalInputVat)}
+      </span>
+    </div>
+  </div>
+);
+
+VatInputCard.displayName = "VatInputCard";
+
+// ── Net VAT banner ────────────────────────────────────────────────────────────
+
+interface VatNetBannerProps {
+  outputVat: number;
+  inputVat: number;
+  netVat: number;
+}
+
+export const VatNetBanner: React.FC<VatNetBannerProps> = ({ outputVat, inputVat, netVat }) => {
+  const isPositive = netVat > 0;
+  const isNegative = netVat < 0;
+  const label = isPositive ? "יתרת מע\"מ לתשלום" : isNegative ? "זיכוי מע\"מ" : "מאוזן";
+  const amountClass = isPositive ? "text-accent-400" : isNegative ? "text-emerald-400" : "text-gray-300";
+
+  return (
+    <div className={cn("rounded-xl px-6 py-5 text-white", "bg-primary-900")} dir="rtl">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <p className="text-sm text-primary-200">
+          מע&quot;מ עסקאות ({formatVatAmount(outputVat)}) &minus; מע&quot;מ תשומות ({formatVatAmount(inputVat)})
+        </p>
+        <div className="flex flex-col items-end gap-0.5">
+          <span className="text-xs font-medium text-primary-300">{label}</span>
+          <span className={cn("font-mono text-4xl font-bold tabular-nums", amountClass)}>
+            {formatVatAmount(Math.abs(netVat))}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+VatNetBanner.displayName = "VatNetBanner";

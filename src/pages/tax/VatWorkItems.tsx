@@ -12,9 +12,7 @@ import { StatsCard } from "../../components/ui/StatsCard";
 import { VatWorkItemsCreateModal } from "../../features/vatReports/components/VatWorkItemsCreateModal";
 import { VatWorkItemsFiltersCard } from "../../features/vatReports/components/VatWorkItemsFiltersCard";
 import { buildVatWorkItemColumns } from "../../features/vatReports/components/VatWorkItemColumns";
-import { VatWorkItemDrawer } from "../../features/vatReports/components/VatWorkItemDrawer";
 import { useVatWorkItemsPage } from "../../features/vatReports/hooks/useVatWorkItemsPage";
-import type { VatWorkItemResponse } from "../../api/vatReports.api";
 
 type ActiveTab = "list" | "compliance";
 
@@ -38,24 +36,28 @@ export const VatWorkItems: React.FC = () => {
     isAdvisor,
     loading,
     runAction,
-    sendBackWithNote,
     setFilter,
     setSearchParams,
     submitCreate,
     total,
   } = useVatWorkItemsPage();
+
   const navigate = useNavigate();
-  const [selectedItem, setSelectedItem] = useState<VatWorkItemResponse | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const columns = useMemo(
-    () => buildVatWorkItemColumns({ isAdvisor, actionLoadingId, runAction }),
-    [isAdvisor, actionLoadingId, runAction],
+    () => buildVatWorkItemColumns({
+      isAdvisor,
+      isLoading: loading,
+      isDisabled: actionLoadingId !== null,
+      runAction,
+    }),
+    [isAdvisor, loading, actionLoadingId, runAction],
   );
   const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
 
   const stats = useMemo(() => {
-    const typing = workItems.filter((i) =>
-      i.status === "data_entry_in_progress" || i.status === "material_received"
+    const typing = workItems.filter(
+      (i) => i.status === "data_entry_in_progress" || i.status === "material_received",
     ).length;
     const review = workItems.filter((i) => i.status === "ready_for_review").length;
     const filed = workItems.filter((i) => i.status === "filed").length;
@@ -161,11 +163,6 @@ export const VatWorkItems: React.FC = () => {
             />
           )}
 
-          <VatWorkItemDrawer
-            item={selectedItem}
-            onClose={() => setSelectedItem(null)}
-            onSendBack={sendBackWithNote}
-          />
           <VatWorkItemsCreateModal
             open={showCreateModal}
             createError={createError}

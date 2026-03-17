@@ -23,16 +23,21 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
   const { deleteInvoice, isDeleting } = useDeleteInvoice(workItemId);
   const [confirmId, setConfirmId] = useState<number | null>(null);
 
-  const totalNet = invoices.reduce((s, i) => s + i.net_amount, 0);
-  const totalVat = invoices.reduce((s, i) => s + i.vat_amount, 0);
+  const totalNet = invoices.reduce((s, i) => s + Number(i.net_amount ?? 0), 0);
+  const totalVat = invoices.reduce((s, i) => s + Number(i.vat_amount ?? 0), 0);
   const accentBorder = sectionType === "income" ? "border-emerald-300" : "border-orange-300";
+
+  // extra cols: category(expense), created_by, created_at, delete(canEdit)
+  const extraCols = (sectionType === "expense" ? 1 : 0) + 2 + (canEdit ? 1 : 0);
+  const baseDataCols = 3; // number, date, counterparty
+  const totalCols = baseDataCols + extraCols;
 
   if (invoices.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-gray-200 bg-gray-50/50 py-10 text-center">
         <Receipt className="h-8 w-8 text-gray-300" />
         <p className="text-sm font-medium text-gray-400">אין חשבוניות עדיין</p>
-        <p className="text-xs text-gray-300">הוסף את הראשונה בטופס למטה</p>
+        <p className="text-xs text-gray-300">לחץ על &apos;הוסף חשבונית&apos; כדי להוסיף</p>
       </div>
     );
   }
@@ -48,7 +53,9 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
               <th className="px-4 py-2.5 text-right">ספק / לקוח</th>
               {sectionType === "expense" && <th className="px-4 py-2.5 text-right">קטגוריה</th>}
               <th className="px-4 py-2.5 text-right">נטו ₪</th>
-              <th className="px-4 py-2.5 text-right">מע"מ ₪</th>
+              <th className="px-4 py-2.5 text-right">מע&quot;מ ₪</th>
+              <th className="px-4 py-2.5 text-right">נוצר ע&quot;י</th>
+              <th className="px-4 py-2.5 text-right">נוצר ב</th>
               {canEdit && <th className="w-8 px-2" />}
             </tr>
           </thead>
@@ -74,6 +81,10 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                   )}
                   <td className="px-4 py-2.5 font-mono tabular-nums font-medium">{formatVatAmount(inv.net_amount)}</td>
                   <td className="px-4 py-2.5 font-mono tabular-nums text-gray-500">{formatVatAmount(inv.vat_amount)}</td>
+                  <td className="px-4 py-2.5 font-mono text-xs text-gray-400">#{inv.created_by}</td>
+                  <td className="px-4 py-2.5 text-xs text-gray-400 tabular-nums whitespace-nowrap">
+                    {formatDateTime(inv.created_at)}
+                  </td>
                   {canEdit && (
                     <td className="px-2 py-2">
                       <button
@@ -91,15 +102,15 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
           </tbody>
           <tfoot className="border-t-2 border-gray-200 bg-gray-50">
             <tr>
-              <td colSpan={sectionType === "expense" ? (canEdit ? 5 : 4) : (canEdit ? 4 : 3)} className="px-4 py-2.5 text-right">
+              <td colSpan={totalCols - (canEdit ? 3 : 2)} className="px-4 py-2.5 text-right">
                 <span className="inline-flex items-center gap-2">
-                  <span className="text-xs font-semibold text-gray-500">סה"כ</span>
+                  <span className="text-xs font-semibold text-gray-500">סה&quot;כ</span>
                   <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs font-bold text-gray-600">{invoices.length}</span>
                 </span>
               </td>
               <td className="px-4 py-2.5 font-mono tabular-nums font-bold text-gray-800">{formatVatAmount(totalNet)}</td>
               <td className="px-4 py-2.5 font-mono tabular-nums font-semibold text-gray-600">{formatVatAmount(totalVat)}</td>
-              {canEdit && <td />}
+              <td colSpan={canEdit ? 3 : 2} />
             </tr>
           </tfoot>
         </table>

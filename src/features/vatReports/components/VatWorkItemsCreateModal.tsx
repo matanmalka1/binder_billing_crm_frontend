@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Modal } from "../../../components/ui/Modal";
@@ -17,6 +18,7 @@ interface VatWorkItemsCreateModalProps {
   createLoading: boolean;
   onClose: () => void;
   onSubmit: (payload: CreateVatWorkItemPayload) => Promise<boolean>;
+  initialClientId?: number;
 }
 
 export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = ({
@@ -25,6 +27,7 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
   createLoading,
   onClose,
   onSubmit,
+  initialClientId,
 }) => {
   const {
     formState: { errors, isDirty },
@@ -32,10 +35,17 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
     register,
     reset,
     watch,
+    setValue,
   } = useForm<VatWorkItemCreateFormValues>({
     defaultValues: vatWorkItemCreateDefaultValues,
     resolver: zodResolver(vatWorkItemCreateSchema),
   });
+
+  useEffect(() => {
+    if (open && initialClientId !== undefined) {
+      setValue("client_id", String(initialClientId));
+    }
+  }, [open, initialClientId, setValue]);
 
   const markPending = watch("mark_pending");
 
@@ -71,18 +81,21 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
     >
       <form onSubmit={submitForm} className="space-y-4">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Input
-            label="מזהה לקוח *"
-            type="number"
-            min={1}
-            placeholder="123"
-            error={errors.client_id?.message}
-            {...register("client_id")}
-          />
+          {initialClientId === undefined && (
+            <Input
+              label="מזהה לקוח *"
+              type="number"
+              min={1}
+              placeholder="123"
+              error={errors.client_id?.message}
+              {...register("client_id")}
+            />
+          )}
           <Input
             label="תקופה (YYYY-MM) *"
             placeholder="2026-02"
             error={errors.period?.message}
+            className={initialClientId !== undefined ? "col-span-2" : ""}
             {...register("period")}
           />
         </div>

@@ -93,6 +93,8 @@ export interface VatPeriodRow {
   total_output_vat: number;
   total_input_vat: number;
   net_vat: number;
+  total_output_net: number;
+  total_input_net: number;
   final_vat_amount: number | null;
   filed_at: string | null;
 }
