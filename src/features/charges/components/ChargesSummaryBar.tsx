@@ -1,19 +1,12 @@
 import { Clock, CheckCircle2, FileText, XCircle } from "lucide-react";
 import type { ChargeResponse } from "../../../api/charges.api";
+import { formatILS } from "../utils";
 
 interface ChargesSummaryBarProps {
   charges: ChargeResponse[];
   isAdvisor: boolean;
   total: number;
 }
-
-const formatILS = (amount: number): string =>
-  amount.toLocaleString("he-IL", {
-    style: "currency",
-    currency: "ILS",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).replace(/\s/g, "");
 
 interface StatCardProps {
   label: string;

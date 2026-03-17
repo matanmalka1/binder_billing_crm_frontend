@@ -1,5 +1,11 @@
 import type { ChargeResponse } from "../../api/charges.api";
 
+export const CHARGE_TYPE_LABELS: Record<string, string> = {
+  one_time: "חד פעמי",
+  retainer: "ריטיינר",
+  hourly: "שעתי",
+};
+
 export const canIssue = (status: string): boolean => status === "draft";
 
 export const canMarkPaid = (status: string): boolean => status === "issued";
@@ -17,11 +23,13 @@ export const getChargeAmountText = (charge: ChargeResponse): string => {
   }).replace(/\s/g, "");
 };
 
-const CHARGE_TYPE_LABELS: Record<string, string> = {
-  one_time: "חד פעמי",
-  retainer: "ריטיינר",
-  hourly: "שעתי",
-};
+export const formatILS = (amount: number): string =>
+  amount.toLocaleString("he-IL", {
+    style: "currency",
+    currency: "ILS",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).replace(/\s/g, "");
 
 export const getChargeTypeLabel = (type: string): string =>
   CHARGE_TYPE_LABELS[type] ?? type;

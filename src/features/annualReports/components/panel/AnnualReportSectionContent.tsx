@@ -5,7 +5,7 @@ import { AnnualReportOverviewSection } from "./AnnualReportOverviewSection";
 import { IncomeExpensePanel } from "../financials/IncomeExpensePanel";
 import { TaxCalculationPanel } from "../tax/TaxCalculationPanel";
 import { DeductionsTab } from "../tax/DeductionsTab";
-import { DocumentsTab } from "../shared/DocumentsTab";
+import { ClientDocumentsTab } from "../../../../features/documents/components/ClientDocumentsTab";
 import { FilingTimelineTab } from "../shared/FilingTimelineTab";
 
 interface AnnualReportSectionContentProps {
@@ -56,7 +56,7 @@ export const AnnualReportSectionContent = ({
     case "financials": return <IncomeExpensePanel reportId={reportId} />;
     case "tax": return <TaxCalculationPanel reportId={reportId} />;
     case "deductions": return <DeductionsTab reportId={reportId} taxYear={report.tax_year} />;
-    case "documents": return <DocumentsTab clientId={report.client_id} />;
+    case "documents": return <ClientDocumentsTab clientId={report.client_id} />;
     case "timeline": return <FilingTimelineTab reports={[report]} />;
   }
 };

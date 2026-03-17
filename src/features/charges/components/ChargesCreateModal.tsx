@@ -5,6 +5,7 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import type { CreateChargePayload } from "../../../api/charges.api";
+import { CHARGE_TYPE_OPTIONS } from "../constants";
 import {
   chargeCreateDefaultValues,
   chargeCreateSchema,
@@ -19,11 +20,6 @@ interface ChargesCreateModalProps {
   onClose: () => void;
   onSubmit: (payload: CreateChargePayload) => Promise<boolean>;
 }
-
-const CHARGE_TYPE_OPTIONS = [
-  { value: "one_time", label: "חד פעמי" },
-  { value: "retainer", label: "ריטיינר" },
-];
 
 export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
   open,
