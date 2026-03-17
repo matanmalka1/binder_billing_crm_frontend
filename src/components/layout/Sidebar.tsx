@@ -168,7 +168,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     <aside
       className={cn(
         "bg-gradient-to-b from-[#101b2f] via-[#0c1526] to-[#0a0f1f] text-white flex flex-col relative transition-all duration-200 shadow-xl shadow-black/30 border-r border-white/5",
-        isSidebarOpen ? "w-64" : "w-16",
+        isSidebarOpen ? "w-55" : "w-16",
       )}
     >
       {/* Logo + Collapse */}
