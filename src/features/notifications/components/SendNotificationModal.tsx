@@ -1,15 +1,15 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Textarea } from "../../../components/ui/Textarea";
 import { Select } from "../../../components/ui/Select";
-import { Input } from "../../../components/ui/Input";
+import { ClientSearchInput, SelectedClientDisplay } from "../../../components/ui/ClientSearchInput";
+import { clientsApi } from "../../../api/clients.api";
 import { useSendNotification } from "../hooks/useSendNotification";
 import type { SendNotificationModalProps } from "../types";
 
 interface FormValues {
-  client_id: number;
   channel: "WHATSAPP" | "EMAIL";
   message: string;
 }
@@ -19,30 +19,54 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
   onClose,
   clientId,
 }) => {
+  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(
+    clientId != null ? { id: clientId, name: "" } : null
+  );
+  const [clientQuery, setClientQuery] = useState("");
+  const [clientError, setClientError] = useState<string | undefined>();
+  const [clientContact, setClientContact] = useState<{ phone: string | null; email: string | null } | null>(null);
+
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isDirty },
   } = useForm<FormValues>({
     defaultValues: {
-      client_id: clientId ?? undefined,
       channel: "EMAIL",
       message: "",
     },
   });
 
+  const channel = useWatch({ control, name: "channel" });
+
   useEffect(() => {
     if (open) {
-      reset({ client_id: clientId ?? undefined, channel: "EMAIL", message: "" });
+      reset({ channel: "EMAIL", message: "" });
+      setSelectedClient(clientId != null ? { id: clientId, name: "" } : null);
+      setClientQuery("");
+      setClientError(undefined);
+      setClientContact(null);
+
+      if (clientId != null) {
+        clientsApi.getById(clientId).then((data) => {
+          setClientContact({ phone: data.phone, email: data.email });
+        }).catch(() => setClientContact(null));
+      }
     }
   }, [open, clientId, reset]);
 
   const { sendNotification, isSending } = useSendNotification(onClose);
 
   const onSubmit = (values: FormValues) => {
+    if (!selectedClient) {
+      setClientError("שדה חובה");
+      return;
+    }
+    setClientError(undefined);
     sendNotification({
-      client_id: values.client_id,
+      client_id: selectedClient.id,
       channel: values.channel,
       message: values.message,
     });
@@ -71,16 +95,46 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
         className="space-y-4"
         dir="rtl"
       >
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">מספר לקוח</label>
-          <Input
-            type="number"
-            {...register("client_id", { required: "שדה חובה", valueAsNumber: true })}
-            readOnly={clientId != null}
-            className={clientId != null ? "bg-gray-50 text-gray-500" : ""}
-          />
-          {errors.client_id && (
-            <p className="mt-1 text-xs text-red-600">{errors.client_id.message}</p>
+        <div className="space-y-1">
+          {clientId != null ? (
+            <SelectedClientDisplay
+              label="לקוח"
+              name={selectedClient?.name || `לקוח #${clientId}`}
+              id={clientId}
+              onClear={() => {}}
+            />
+          ) : selectedClient ? (
+            <SelectedClientDisplay
+              label="לקוח"
+              name={selectedClient.name}
+              id={selectedClient.id}
+              onClear={() => { setSelectedClient(null); setClientQuery(""); setClientContact(null); }}
+            />
+          ) : (
+            <ClientSearchInput
+              label="לקוח"
+              value={clientQuery}
+              onChange={setClientQuery}
+              onSelect={async (c) => {
+                setSelectedClient({ id: c.id, name: c.name });
+                setClientError(undefined);
+                try {
+                  const data = await clientsApi.getById(c.id);
+                  setClientContact({ phone: data.phone, email: data.email });
+                } catch {
+                  setClientContact(null);
+                }
+              }}
+              error={clientError}
+              placeholder="חפש לפי שם, ת.ז. / ח.פ..."
+            />
+          )}
+          {selectedClient && clientContact && (
+            <p className="text-xs text-gray-500 pe-1">
+              {channel === "WHATSAPP"
+                ? (clientContact.phone ?? "אין מספר טלפון ללקוח")
+                : (clientContact.email ?? "אין כתובת אימייל ללקוח")}
+            </p>
           )}
         </div>
 
