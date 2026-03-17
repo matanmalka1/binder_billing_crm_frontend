@@ -1,6 +1,6 @@
 import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
 import { Search } from "lucide-react";
-import { Select } from "../../../components/ui/Select";
+import { SelectDropdown } from "../../../components/ui/SelectDropdown";
 import { Input } from "../../../components/ui/Input";
 import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
 import { ToolbarContainer } from "../../../components/ui/ToolbarContainer";
@@ -27,13 +27,15 @@ export const VatWorkItemsFiltersCard = ({
     <ToolbarContainer>
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <Select
-            label="סטטוס"
-            value={filters.status}
-            onChange={(e) => onFilterChange("status", e.target.value)}
-            options={VAT_WORK_ITEMS_STATUS_OPTIONS}
-            className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">סטטוס</label>
+            <SelectDropdown
+              value={filters.status}
+              onChange={(e) => onFilterChange("status", e.target.value)}
+              options={VAT_WORK_ITEMS_STATUS_OPTIONS}
+              className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
+            />
+          </div>
           <Input
             label="תקופה"
             placeholder="YYYY-MM"

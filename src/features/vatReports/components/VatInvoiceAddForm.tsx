@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { FormField } from "../../../components/ui/FormField";
 import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
+import { SelectDropdown } from "../../../components/ui/SelectDropdown";
 import { vatInvoiceRowSchema, toInvoiceRowPayload, type VatInvoiceRowValues } from "../schemas";
 import { EXPENSE_CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS, DEDUCTION_RATES } from "../constants";
 import { getVatInvoiceDefaultValues } from "../utils";
@@ -23,7 +23,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 }) => {
   const [showOptional, setShowOptional] = useState(false);
 
-  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<VatInvoiceRowValues>({
+  const { register, handleSubmit, reset, watch, control, formState: { errors } } = useForm<VatInvoiceRowValues>({
     resolver: zodResolver(vatInvoiceRowSchema),
     defaultValues: { ...getVatInvoiceDefaultValues(invoiceType), rate_type: "standard" },
   });
@@ -48,31 +48,58 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
           <FormField label="קטגוריה" error={errors.expense_category?.message} className="min-w-[180px]">
             <div className="relative flex items-center gap-2">
               <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${categoryColor || "bg-gray-300"}`} />
-              <Select {...register("expense_category")} className="flex-1">
-                {EXPENSE_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>{CATEGORY_LABELS[cat]}</option>
-                ))}
-              </Select>
+              <Controller
+                control={control}
+                name="expense_category"
+                render={({ field }) => (
+                  <SelectDropdown
+                    name={field.name}
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    className="flex-1"
+                    options={EXPENSE_CATEGORIES.map((cat) => ({ value: cat, label: CATEGORY_LABELS[cat] }))}
+                  />
+                )}
+              />
             </div>
           </FormField>
         )}
 
         <FormField label='סוג מע"מ' className="min-w-[140px]">
-          <Select {...register("rate_type")}>
-            {VAT_RATE_TYPES.map((rt) => (
-              <option key={rt} value={rt}>{getVatRateTypeLabel(rt)}</option>
-            ))}
-          </Select>
+          <Controller
+            control={control}
+            name="rate_type"
+            render={({ field }) => (
+              <SelectDropdown
+                name={field.name}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                options={VAT_RATE_TYPES.map((rt) => ({ value: rt, label: getVatRateTypeLabel(rt) }))}
+              />
+            )}
+          />
         </FormField>
 
         {invoiceType === "expense" && (
           <FormField label="סוג מסמך" error={errors.document_type?.message} className="min-w-[160px]">
-            <Select {...register("document_type")}>
-              <option value="">— בחר —</option>
-              {DOCUMENT_TYPES.map((dt) => (
-                <option key={dt} value={dt}>{getDocumentTypeLabel(dt)}</option>
-              ))}
-            </Select>
+            <Controller
+              control={control}
+              name="document_type"
+              render={({ field }) => (
+                <SelectDropdown
+                  name={field.name}
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  options={[
+                    { value: "", label: "— בחר —" },
+                    ...DOCUMENT_TYPES.map((dt) => ({ value: dt, label: getDocumentTypeLabel(dt) })),
+                  ]}
+                />
+              )}
+            />
           </FormField>
         )}
 

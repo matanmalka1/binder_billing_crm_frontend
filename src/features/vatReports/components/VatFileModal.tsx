@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
+import { SelectDropdown } from "../../../components/ui/SelectDropdown";
 import { vatReportsApi } from "../../../api/vatReports.api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
@@ -80,14 +80,11 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
       <div className="space-y-4" dir="rtl">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">אופן הגשה</label>
-          <Select
+          <SelectDropdown
             value={filingMethod}
             onChange={(e) => setFilingMethod(e.target.value as "online" | "manual")}
-          >
-            {FILING_METHODS.map((m) => (
-              <option key={m} value={m}>{VAT_FILING_METHOD_LABELS[m]}</option>
-            ))}
-          </Select>
+            options={FILING_METHODS.map((m) => ({ value: m, label: VAT_FILING_METHOD_LABELS[m] }))}
+          />
         </div>
 
         <Input

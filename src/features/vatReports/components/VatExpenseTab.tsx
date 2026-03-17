@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
-import { Select } from "../../../components/ui/Select";
+import { SelectDropdown } from "../../../components/ui/SelectDropdown";
 import { canAddInvoice } from "../utils";
 import { isClientClosed } from "../../../utils/clientStatus";
 import { useAddInvoice } from "../hooks/useVatInvoiceMutations";
@@ -32,7 +32,7 @@ export const VatExpenseTab: React.FC<VatExpenseTabProps> = ({ workItemId, status
         }
       >
         <div className="mb-3 w-52">
-          <Select
+          <SelectDropdown
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             options={VAT_EXPENSE_CATEGORY_FILTER_OPTIONS}

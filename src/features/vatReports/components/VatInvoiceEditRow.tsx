@@ -1,8 +1,8 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
 import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
+import { SelectDropdown } from "../../../components/ui/SelectDropdown";
 import { vatInvoiceEditSchema, toInvoiceEditPayload, type VatInvoiceEditValues } from "../schemas";
 import { EXPENSE_CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
 import { toDateInputValue } from "../utils";
@@ -16,7 +16,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
   onCancel,
   isSaving,
 }) => {
-  const { register, handleSubmit } = useForm<VatInvoiceEditValues>({
+  const { register, handleSubmit, control } = useForm<VatInvoiceEditValues>({
     resolver: zodResolver(vatInvoiceEditSchema),
     defaultValues: {
       net_amount: String(invoice.net_amount),
@@ -50,11 +50,20 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
         <td className="px-2 py-1.5">
           <div className="flex items-center gap-1.5">
             <span className={`h-2 w-2 shrink-0 rounded-full ${catColor || "bg-gray-300"}`} />
-            <Select {...register("expense_category")} className="h-7 text-xs flex-1">
-              {EXPENSE_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>{CATEGORY_LABELS[cat]}</option>
-              ))}
-            </Select>
+            <Controller
+              control={control}
+              name="expense_category"
+              render={({ field }) => (
+                <SelectDropdown
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  className="h-7 text-xs flex-1"
+                  options={EXPENSE_CATEGORIES.map((cat) => ({ value: cat, label: CATEGORY_LABELS[cat] }))}
+                />
+              )}
+            />
           </div>
         </td>
       )}
