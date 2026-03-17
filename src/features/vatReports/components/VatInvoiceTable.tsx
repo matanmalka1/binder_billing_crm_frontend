@@ -5,16 +5,8 @@ import { formatVatAmount } from "../utils";
 import { CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
 import { useDeleteInvoice, useUpdateInvoice } from "../hooks/useVatInvoiceMutations";
 import { VatInvoiceEditRow } from "./VatInvoiceEditRow";
-import type { VatInvoiceResponse } from "../../../api/vatReports.api";
 import { formatDateTime } from "../../../utils/utils";
-
-interface VatInvoiceTableProps {
-  invoices: VatInvoiceResponse[];
-  canEdit: boolean;
-  workItemId: number;
-  sectionType: "income" | "expense";
-  emptyMessage?: string;
-}
+import type { VatInvoiceTableProps } from "../types";
 
 export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
   invoices,

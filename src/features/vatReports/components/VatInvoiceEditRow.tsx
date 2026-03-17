@@ -5,16 +5,7 @@ import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { vatInvoiceEditSchema, toInvoiceEditPayload, type VatInvoiceEditValues } from "../schemas";
 import { EXPENSE_CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
-import type { VatInvoiceResponse, UpdateVatInvoicePayload } from "../../../api/vatReports.api";
-
-interface VatInvoiceEditRowProps {
-  invoice: VatInvoiceResponse;
-  sectionType: "income" | "expense";
-  accentBorder: string;
-  onSave: (payload: UpdateVatInvoicePayload) => Promise<boolean>;
-  onCancel: () => void;
-  isSaving: boolean;
-}
+import type { VatInvoiceEditRowProps } from "../types";
 
 const toDateInputValue = (dateStr: string): string => {
   try {

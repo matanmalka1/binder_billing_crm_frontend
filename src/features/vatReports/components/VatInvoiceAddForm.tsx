@@ -8,14 +8,7 @@ import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { vatInvoiceRowSchema, toInvoiceRowPayload, type VatInvoiceRowValues } from "../schemas";
 import { EXPENSE_CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
-import type { useAddInvoice } from "../hooks/useVatInvoiceMutations";
-
-interface VatInvoiceAddFormProps {
-  invoiceType: "income" | "expense";
-  addInvoice: ReturnType<typeof useAddInvoice>["addInvoice"];
-  isAdding: boolean;
-  onCancel?: () => void;
-}
+import type { VatInvoiceAddFormProps } from "../types";
 
 const defaultValues = (invoiceType: "income" | "expense"): VatInvoiceRowValues => ({
   invoice_type: invoiceType,

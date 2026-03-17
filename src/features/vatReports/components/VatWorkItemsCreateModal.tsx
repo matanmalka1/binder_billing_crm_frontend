@@ -4,22 +4,13 @@ import { useForm } from "react-hook-form";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
-import type { CreateVatWorkItemPayload } from "../../../api/vatReports.api";
 import {
   vatWorkItemCreateDefaultValues,
   vatWorkItemCreateSchema,
   toCreateVatWorkItemPayload,
   type VatWorkItemCreateFormValues,
 } from "../schemas";
-
-interface VatWorkItemsCreateModalProps {
-  open: boolean;
-  createError: string | null;
-  createLoading: boolean;
-  onClose: () => void;
-  onSubmit: (payload: CreateVatWorkItemPayload) => Promise<boolean>;
-  initialClientId?: number;
-}
+import type { VatWorkItemsCreateModalProps } from "../types";
 
 export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = ({
   open,

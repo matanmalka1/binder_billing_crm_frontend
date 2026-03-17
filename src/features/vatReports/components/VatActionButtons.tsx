@@ -2,16 +2,7 @@ import { Send, RotateCcw } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { canMarkReadyForReview, canFile, canSendBack } from "../utils";
 import { isClientClosed } from "../../../utils/clientStatus";
-
-interface VatActionButtonsProps {
-  status: string;
-  isAdvisor: boolean;
-  isLoading: boolean;
-  clientStatus?: string | null;
-  onReadyForReview: () => void;
-  onFile: () => void;
-  onSendBack: () => void;
-}
+import type { VatActionButtonsProps } from "../types";
 
 export const VatActionButtons: React.FC<VatActionButtonsProps> = ({
   status,

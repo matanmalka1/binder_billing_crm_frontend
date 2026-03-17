@@ -5,13 +5,7 @@ import { Input } from "../../../components/ui/Input";
 import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
 import { ToolbarContainer } from "../../../components/ui/ToolbarContainer";
 import { cn } from "../../../utils/utils";
-import type { VatWorkItemsFilters } from "../types";
-
-interface VatWorkItemsFiltersCardProps {
-  filters: VatWorkItemsFilters;
-  onClear: () => void;
-  onFilterChange: (key: string, value: string) => void;
-}
+import type { VatWorkItemsFiltersCardProps } from "../types";
 
 const STATUS_OPTIONS = [
   { value: "", label: "כל הסטטוסים" },

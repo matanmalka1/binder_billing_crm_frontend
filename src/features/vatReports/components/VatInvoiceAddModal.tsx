@@ -1,14 +1,6 @@
 import { Modal } from "../../../components/ui/Modal";
 import { VatInvoiceAddForm } from "./VatInvoiceAddForm";
-import type { useAddInvoice } from "../hooks/useVatInvoiceMutations";
-
-interface VatInvoiceAddModalProps {
-  open: boolean;
-  invoiceType: "income" | "expense";
-  addInvoice: ReturnType<typeof useAddInvoice>["addInvoice"];
-  isAdding: boolean;
-  onClose: () => void;
-}
+import type { VatInvoiceAddModalProps } from "../types";
 
 export const VatInvoiceAddModal: React.FC<VatInvoiceAddModalProps> = ({
   open,

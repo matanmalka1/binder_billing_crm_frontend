@@ -3,11 +3,7 @@ import { FileSpreadsheet, FileText } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { vatReportsApi } from "../../../api/vatReports.api";
 import { toast } from "../../../utils/toast";
-
-interface VatExportButtonsProps {
-  clientId: number;
-  period: string;
-}
+import type { VatExportButtonsProps } from "../types";
 
 export const VatExportButtons: React.FC<VatExportButtonsProps> = ({ clientId, period }) => {
   const [loadingExcel, setLoadingExcel] = useState(false);

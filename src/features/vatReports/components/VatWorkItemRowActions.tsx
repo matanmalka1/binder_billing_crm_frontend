@@ -1,15 +1,7 @@
 import { PackageCheck, SendHorizontal } from "lucide-react";
 import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
-import type { VatWorkItemResponse } from "../../../api/vatReports.api";
 import { canMarkMaterialsComplete, canMarkReadyForReview, isFiled } from "../utils";
-import type { VatWorkItemAction } from "../hooks/useVatWorkItemsPage";
-
-interface VatWorkItemRowActionsProps {
-  item: VatWorkItemResponse;
-  isLoading: boolean;
-  isDisabled: boolean;
-  runAction: (itemId: number, action: VatWorkItemAction) => Promise<void>;
-}
+import type { VatWorkItemRowActionsProps } from "../types";
 
 export const VatWorkItemRowActions: React.FC<VatWorkItemRowActionsProps> = ({
   item,

@@ -1,4 +1,5 @@
 import { cn } from "../../../utils/utils";
+import type { VatProgressBarProps } from "../types";
 
 const STATUS_STEPS = [
   "pending_materials",
@@ -7,10 +8,6 @@ const STATUS_STEPS = [
   "ready_for_review",
   "filed",
 ] as const;
-
-interface VatProgressBarProps {
-  currentStatus: string;
-}
 
 export const VatProgressBar: React.FC<VatProgressBarProps> = ({ currentStatus }) => {
   const currentIdx = STATUS_STEPS.indexOf(currentStatus as typeof STATUS_STEPS[number]);

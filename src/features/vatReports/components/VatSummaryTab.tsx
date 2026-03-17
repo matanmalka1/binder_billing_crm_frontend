@@ -4,12 +4,7 @@ import { computeVatBreakdown } from "../VatBreakdownUtils";
 import { VatOutputCard, VatInputCard } from "./VatBreakdownCards";
 import { VatCategoryTable } from "./VatCategoryTable";
 import { formatVatAmount } from "../utils";
-import type { VatWorkItemResponse, VatInvoiceResponse } from "../../../api/vatReports.api";
-
-interface VatSummaryTabProps {
-  workItem: VatWorkItemResponse;
-  invoices: VatInvoiceResponse[];
-}
+import type { VatSummaryTabProps } from "../types";
 
 export const VatSummaryTab: React.FC<VatSummaryTabProps> = ({ workItem, invoices }) => {
   const [, setSearchParams] = useSearchParams();

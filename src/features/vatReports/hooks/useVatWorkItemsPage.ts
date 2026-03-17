@@ -12,8 +12,7 @@ import { toast } from "../../../utils/toast";
 import { toOptionalString } from "../../../utils/filters";
 import { useRole } from "../../../hooks/useRole";
 import { QK } from "../../../lib/queryKeys";
-
-export type VatWorkItemAction = "materialsComplete" | "readyForReview" | "sendBack";
+import type { VatWorkItemAction } from "../types";
 
 export const useVatWorkItemsPage = () => {
   const queryClient = useQueryClient();

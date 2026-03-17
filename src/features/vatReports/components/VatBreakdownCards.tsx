@@ -1,14 +1,9 @@
 import { ChevronLeft } from "lucide-react";
 import { cn } from "../../../utils/utils";
 import { formatVatAmount } from "../utils";
-import type { VatBreakdownData } from "../VatBreakdownUtils";
+import type { VatInputCardProps, VatNetBannerProps, VatOutputCardProps } from "../types";
 
 // ── Output (income) card ──────────────────────────────────────────────────────
-
-interface VatOutputCardProps {
-  data: VatBreakdownData;
-  onNavigate?: () => void;
-}
 
 export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }) => (
   <div className="rounded-xl border border-gray-100 border-r-4 border-r-emerald-400 bg-white p-4 shadow-sm" dir="rtl">
@@ -44,11 +39,6 @@ export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }
 VatOutputCard.displayName = "VatOutputCard";
 
 // ── Input (expense) card ──────────────────────────────────────────────────────
-
-interface VatInputCardProps {
-  data: VatBreakdownData;
-  onNavigate?: () => void;
-}
 
 export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) => (
   <div className="rounded-xl border border-gray-100 border-r-4 border-r-orange-400 bg-white p-4 shadow-sm" dir="rtl">
@@ -101,12 +91,6 @@ export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) 
 VatInputCard.displayName = "VatInputCard";
 
 // ── Net VAT banner ────────────────────────────────────────────────────────────
-
-interface VatNetBannerProps {
-  outputVat: number;
-  inputVat: number;
-  netVat: number;
-}
 
 export const VatNetBanner: React.FC<VatNetBannerProps> = ({ outputVat, inputVat, netVat }) => {
   const isPositive = netVat > 0;

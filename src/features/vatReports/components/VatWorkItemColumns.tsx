@@ -5,7 +5,7 @@ import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatDateTime } from "../../../utils/utils";
 import { formatVatAmount } from "../utils";
 import { VatWorkItemRowActions } from "./VatWorkItemRowActions";
-import type { VatWorkItemAction } from "../hooks/useVatWorkItemsPage";
+import type { ColumnOpts } from "../types";
 
 const statusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   pending_materials: "warning",
@@ -14,12 +14,6 @@ const statusVariants: Record<string, "success" | "warning" | "error" | "info" | 
   ready_for_review: "warning",
   filed: "success",
 };
-
-interface ColumnOpts {
-  isLoading: boolean;
-  isDisabled: boolean;
-  runAction: (itemId: number, action: VatWorkItemAction) => Promise<void>;
-}
 
 export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemResponse>[] => [
   {

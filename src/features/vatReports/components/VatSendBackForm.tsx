@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
-
-interface VatSendBackFormProps {
-  onCancel: () => void;
-  onSubmit: (note: string) => Promise<void>;
-  loading: boolean;
-}
+import type { VatSendBackFormProps } from "../types";
 
 export const VatSendBackForm: React.FC<VatSendBackFormProps> = ({ onCancel, onSubmit, loading }) => {
   const [note, setNote] = useState("");

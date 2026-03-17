@@ -16,6 +16,7 @@ import { DataTable, type Column } from "../../../components/ui/DataTable";
 import { useAuthStore } from "../../../store/auth.store";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
 import { toast } from "sonner";
+import type { VatClientSummaryPanelProps } from "../types";
 
 // Format currency LTR-safe: negative sign before ₪, not after
 const fmt = (amount: number | null | undefined): string => {
@@ -191,10 +192,6 @@ const ExportControls = ({ clientId }: { clientId: number }) => {
 };
 
 // ── Panel ─────────────────────────────────────────────────────────────────────
-
-interface VatClientSummaryPanelProps {
-  clientId: number;
-}
 
 export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) => {
   const role = useAuthStore((s) => s.user?.role);

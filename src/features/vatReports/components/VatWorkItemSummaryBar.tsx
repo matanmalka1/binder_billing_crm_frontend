@@ -10,7 +10,7 @@ import { VatActionButtons } from "./VatActionButtons";
 import { VatExportButtons } from "./VatExportButtons";
 import { VatSendBackForm } from "./VatSendBackForm";
 import { isFiled } from "../utils";
-import type { VatWorkItemResponse } from "../../../api/vatReports.api";
+import type { VatWorkItemSummaryBarProps } from "../types";
 
 const STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   pending_materials: "warning",
@@ -19,10 +19,6 @@ const STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" |
   ready_for_review: "warning",
   filed: "success",
 };
-
-interface VatWorkItemSummaryBarProps {
-  workItem: VatWorkItemResponse;
-}
 
 export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem }) => {
   const { isAdvisor } = useRole();

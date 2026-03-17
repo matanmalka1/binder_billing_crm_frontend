@@ -5,14 +5,7 @@ import { isClientClosed } from "../../../utils/clientStatus";
 import { useAddInvoice } from "../hooks/useVatInvoiceMutations";
 import { VatInvoiceTable } from "./VatInvoiceTable";
 import { VatInvoiceAddForm } from "./VatInvoiceAddForm";
-import type { VatInvoiceResponse } from "../../../api/vatReports.api";
-
-interface VatIncomeTabProps {
-  workItemId: number;
-  status: string;
-  invoices: VatInvoiceResponse[];
-  clientStatus?: string | null;
-}
+import type { VatIncomeTabProps } from "../types";
 
 export const VatIncomeTab: React.FC<VatIncomeTabProps> = ({ workItemId, status, invoices, clientStatus }) => {
   const canEdit = canAddInvoice(status) && !isClientClosed(clientStatus);

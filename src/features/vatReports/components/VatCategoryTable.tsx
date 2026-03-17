@@ -1,25 +1,18 @@
 import { cn } from "../../../utils/utils";
 import { formatVatAmount } from "../utils";
-import type { ExpenseCategoryRow } from "../VatBreakdownUtils";
+import type { VatCategoryTableProps } from "../types";
 
-interface VatCategoryTableProps {
-  rows: ExpenseCategoryRow[];
-  totalExpenseNet: number;
-  totalGrossVat: number;
-  totalInputVat: number;
-}
-
-function rateLabel(rate: number): string {
+const rateLabel = (rate: number): string => {
   if (rate === 1) return "100%";
   if (rate === 0) return "0%";
   return `${(rate * 100).toFixed(2)}%`;
-}
+};
 
-function rateClass(rate: number): string {
+const rateClass = (rate: number): string => {
   if (rate === 1) return "text-emerald-600 font-semibold";
   if (rate === 0) return "text-gray-400";
   return "text-accent-600 font-semibold";
-}
+};
 
 export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
   rows,

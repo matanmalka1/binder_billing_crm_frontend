@@ -8,14 +8,7 @@ import { useAddInvoice } from "../hooks/useVatInvoiceMutations";
 import { EXPENSE_CATEGORIES, CATEGORY_LABELS } from "../constants";
 import { VatInvoiceTable } from "./VatInvoiceTable";
 import { VatInvoiceAddForm } from "./VatInvoiceAddForm";
-import type { VatInvoiceResponse } from "../../../api/vatReports.api";
-
-interface VatExpenseTabProps {
-  workItemId: number;
-  status: string;
-  invoices: VatInvoiceResponse[];
-  clientStatus?: string | null;
-}
+import type { VatExpenseTabProps } from "../types";
 
 const CATEGORY_FILTER_OPTIONS = [
   { value: "", label: "כל הקטגוריות" },
