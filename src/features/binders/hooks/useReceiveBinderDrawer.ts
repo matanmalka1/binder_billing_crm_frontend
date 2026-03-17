@@ -20,7 +20,7 @@ const getDefaultValues = (): ReceiveBinderFormValues => ({
 
 export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   const [clientQuery, setClientQuery] = useState("");
-  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
+  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string; client_status?: string | null } | null>(null);
   const queryClient = useQueryClient();
   const userId = useAuthStore((s) => s.user?.id);
 
@@ -66,8 +66,8 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     },
   });
 
-  const handleClientSelect = (client: { id: number; name: string; id_number: string }) => {
-    setSelectedClient({ id: client.id, name: client.name });
+  const handleClientSelect = (client: { id: number; name: string; id_number: string; client_status?: string | null }) => {
+    setSelectedClient({ id: client.id, name: client.name, client_status: client.client_status });
     setClientQuery(client.name);
     form.setValue("client_id", client.id, { shouldValidate: true });
   };

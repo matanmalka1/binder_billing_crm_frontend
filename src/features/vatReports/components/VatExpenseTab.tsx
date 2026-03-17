@@ -3,6 +3,7 @@ import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { Select } from "../../../components/ui/Select";
 import { canAddInvoice } from "../utils";
+import { isClientClosed } from "../../../utils/clientStatus";
 import { useAddInvoice } from "../hooks/useVatInvoiceMutations";
 import { EXPENSE_CATEGORIES, CATEGORY_LABELS } from "../constants";
 import { VatInvoiceTable } from "./VatInvoiceTable";
@@ -13,6 +14,7 @@ interface VatExpenseTabProps {
   workItemId: number;
   status: string;
   invoices: VatInvoiceResponse[];
+  clientStatus?: string | null;
 }
 
 const CATEGORY_FILTER_OPTIONS = [
@@ -20,8 +22,8 @@ const CATEGORY_FILTER_OPTIONS = [
   ...EXPENSE_CATEGORIES.map((c) => ({ value: c, label: CATEGORY_LABELS[c] ?? c })),
 ];
 
-export const VatExpenseTab: React.FC<VatExpenseTabProps> = ({ workItemId, status, invoices }) => {
-  const canEdit = canAddInvoice(status);
+export const VatExpenseTab: React.FC<VatExpenseTabProps> = ({ workItemId, status, invoices, clientStatus }) => {
+  const canEdit = canAddInvoice(status) && !isClientClosed(clientStatus);
   const { addInvoice, isAdding } = useAddInvoice(workItemId);
   const [categoryFilter, setCategoryFilter] = useState("");
 

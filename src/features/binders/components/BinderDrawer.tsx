@@ -22,9 +22,9 @@ interface BinderDrawerProps {
   actionLoading?: boolean;
   receiveForm?: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery?: string;
-  selectedClient?: { id: number; name: string } | null;
+  selectedClient?: { id: number; name: string; client_status?: string | null } | null;
   activeBinder?: BinderResponse | null;
-  onClientSelect?: (client: { id: number; name: string; id_number: string }) => void;
+  onClientSelect?: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
   onClientQueryChange?: (query: string) => void;
   onReceiveSubmit?: (e?: React.BaseSyntheticEvent) => void;
   isSubmitting?: boolean;

@@ -9,13 +9,15 @@ import type { UseFormReturn } from "react-hook-form";
 import type { ReceiveBinderFormValues } from "../schemas";
 import type { BinderResponse } from "../types";
 import { BINDER_TYPE_OPTIONS } from "../constants";
+import { Alert } from "../../../components/ui/Alert";
+import { isClientLockedForCreate } from "../../../utils/clientStatus";
 
 interface BinderReceivePanelProps {
   form: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery: string;
-  selectedClient: { id: number; name: string } | null;
+  selectedClient: { id: number; name: string; client_status?: string | null } | null;
   activeBinder?: BinderResponse | null;
-  onClientSelect: (client: { id: number; name: string; id_number: string }) => void;
+  onClientSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
   onClientQueryChange: (query: string) => void;
   onSubmit: (e?: React.BaseSyntheticEvent) => void;
   onClose: () => void;
@@ -39,6 +41,8 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
     formState: { errors },
   } = form;
 
+  const clientLocked = isClientLockedForCreate(selectedClient?.client_status);
+
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       {activeBinder && (
@@ -61,6 +65,17 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         <p className="text-xs text-green-700 font-medium -mt-2">
           ✓ נבחר: {selectedClient.name} (#{selectedClient.id})
         </p>
+      )}
+
+      {selectedClient && clientLocked && (
+        <Alert
+          variant={selectedClient.client_status === "closed" ? "error" : "warning"}
+          message={
+            selectedClient.client_status === "closed"
+              ? "לקוח סגור – לא ניתן לקלוט קלסר"
+              : "לקוח מוקפא – לא ניתן לקלוט קלסר חדש"
+          }
+        />
       )}
 
       <Select
@@ -102,7 +117,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         <Button type="button" variant="ghost" onClick={onClose}>
           ביטול
         </Button>
-        <Button type="submit" variant="primary" isLoading={isSubmitting}>
+        <Button type="submit" variant="primary" isLoading={isSubmitting} disabled={isSubmitting || clientLocked}>
           קליטה
         </Button>
       </div>

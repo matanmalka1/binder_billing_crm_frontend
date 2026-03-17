@@ -11,6 +11,7 @@ import { ClientStatusCard } from "./ClientStatusCard";
 import { ClientInfoSection } from "./ClientInfoSection";
 import { ClientRelatedData } from "./ClientRelatedData";
 import { ClientEditForm } from "./ClientEditForm";
+import { ClientStatusBanner } from "../../../components/ui/ClientStatusBanner";
 import type { UpdateClientPayload, ClientResponse } from "../../../api/clients.api";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 
@@ -61,6 +62,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
 
   return (
     <div className="space-y-6">
+      <ClientStatusBanner status={client.status} />
       <ClientStatusCard clientId={client.id} />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">

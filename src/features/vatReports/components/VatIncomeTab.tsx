@@ -1,6 +1,7 @@
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { canAddInvoice } from "../utils";
+import { isClientClosed } from "../../../utils/clientStatus";
 import { useAddInvoice } from "../hooks/useVatInvoiceMutations";
 import { VatInvoiceTable } from "./VatInvoiceTable";
 import { VatInvoiceAddForm } from "./VatInvoiceAddForm";
@@ -10,10 +11,11 @@ interface VatIncomeTabProps {
   workItemId: number;
   status: string;
   invoices: VatInvoiceResponse[];
+  clientStatus?: string | null;
 }
 
-export const VatIncomeTab: React.FC<VatIncomeTabProps> = ({ workItemId, status, invoices }) => {
-  const canEdit = canAddInvoice(status);
+export const VatIncomeTab: React.FC<VatIncomeTabProps> = ({ workItemId, status, invoices, clientStatus }) => {
+  const canEdit = canAddInvoice(status) && !isClientClosed(clientStatus);
   const { addInvoice, isAdding } = useAddInvoice(workItemId);
 
   const incomeInvoices = invoices.filter((i) => i.invoice_type === "income");

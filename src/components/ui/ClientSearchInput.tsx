@@ -9,7 +9,7 @@ import type { SearchResult } from "../../api/search.api";
 interface ClientSearchInputProps {
   value: string;
   onChange: (query: string) => void;
-  onSelect: (client: { id: number; name: string; id_number: string }) => void;
+  onSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
   error?: string;
   label?: string;
   placeholder?: string;
@@ -66,7 +66,7 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
   };
 
   const handleSelect = (result: SearchResult) => {
-    onSelect({ id: result.client_id, name: result.client_name, id_number: "" });
+    onSelect({ id: result.client_id, name: result.client_name, id_number: "", client_status: result.client_status });
     setOpen(false);
   };
 

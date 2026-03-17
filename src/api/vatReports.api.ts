@@ -23,6 +23,7 @@ export interface VatWorkItemResponse {
   created_by: number;
   assigned_to: number | null;
   assigned_to_name?: string | null;
+  client_status?: string | null;
   created_at: string;
   updated_at: string;
 }

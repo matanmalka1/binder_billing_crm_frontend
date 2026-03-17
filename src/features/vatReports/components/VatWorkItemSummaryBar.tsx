@@ -115,6 +115,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
                 status={workItem.status}
                 isAdvisor={isAdvisor}
                 isLoading={isLoading}
+                clientStatus={workItem.client_status}
                 onReadyForReview={handleReadyForReview}
                 onFile={handleFile}
                 onSendBack={() => setShowSendBack(true)}

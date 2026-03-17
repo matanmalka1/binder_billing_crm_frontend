@@ -89,10 +89,10 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
       <div>
         {activeTab === "summary" && <VatSummaryTab workItem={workItem} invoices={invoices} />}
         {activeTab === "income" && (
-          <VatIncomeTab workItemId={workItem.id} status={workItem.status} invoices={invoices} />
+          <VatIncomeTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.client_status} />
         )}
         {activeTab === "expense" && (
-          <VatExpenseTab workItemId={workItem.id} status={workItem.status} invoices={invoices} />
+          <VatExpenseTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.client_status} />
         )}
         {activeTab === "history" && <VatHistoryTab workItemId={workItem.id} />}
       </div>
