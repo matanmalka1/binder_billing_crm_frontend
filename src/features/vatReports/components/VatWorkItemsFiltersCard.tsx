@@ -1,6 +1,10 @@
+import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
+import { Search } from "lucide-react";
 import { Select } from "../../../components/ui/Select";
 import { Input } from "../../../components/ui/Input";
+import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
 import { ToolbarContainer } from "../../../components/ui/ToolbarContainer";
+import { cn } from "../../../utils/utils";
 import type { VatWorkItemsFilters } from "../types";
 
 interface VatWorkItemsFiltersCardProps {
@@ -23,36 +27,58 @@ export const VatWorkItemsFiltersCard = ({
   onClear,
   onFilterChange,
 }: VatWorkItemsFiltersCardProps) => {
-  const hasActive = Boolean(filters.status || filters.period || filters.clientSearch);
+  const [clientSearchDraft, setClientSearchDraft] = useSearchDebounce(
+    filters.clientSearch,
+    (v) => onFilterChange("clientSearch", v),
+  );
+
+  const handleReset = () => {
+    setClientSearchDraft("");
+    onClear();
+  };
 
   return (
-    <ToolbarContainer onReset={hasActive ? onClear : undefined}>
-      <div className="flex flex-wrap items-end gap-3" dir="rtl">
-        <div className="w-48">
+    <ToolbarContainer>
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Select
             label="סטטוס"
             value={filters.status}
             onChange={(e) => onFilterChange("status", e.target.value)}
             options={STATUS_OPTIONS}
+            className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
           />
-        </div>
-        <div className="w-36">
           <Input
             label="תקופה"
             placeholder="YYYY-MM"
             value={filters.period}
             onChange={(e) => onFilterChange("period", e.target.value)}
             dir="ltr"
+            className={cn(filters.period && "border-primary-400 ring-1 ring-primary-200")}
           />
-        </div>
-        <div className="w-52">
           <Input
             label="חיפוש לקוח"
             placeholder="שם לקוח..."
-            value={filters.clientSearch}
-            onChange={(e) => onFilterChange("clientSearch", e.target.value)}
+            value={clientSearchDraft}
+            onChange={(e) => setClientSearchDraft(e.target.value)}
+            startIcon={<Search className="h-4 w-4" />}
           />
         </div>
+
+        <ActiveFilterBadges
+          badges={[
+            filters.status
+              ? { key: "status", label: STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onFilterChange("status", "") }
+              : null,
+            filters.period
+              ? { key: "period", label: `תקופה: ${filters.period}`, onRemove: () => onFilterChange("period", "") }
+              : null,
+            filters.clientSearch
+              ? { key: "clientSearch", label: `חיפוש: ${filters.clientSearch}`, onRemove: () => { setClientSearchDraft(""); onFilterChange("clientSearch", ""); } }
+              : null,
+          ].filter((b): b is NonNullable<typeof b> => b !== null)}
+          onReset={handleReset}
+        />
       </div>
     </ToolbarContainer>
   );

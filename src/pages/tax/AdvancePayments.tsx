@@ -5,28 +5,16 @@ import { AdvancePaymentReportView } from "../../features/reports/components/Adva
 import { cn } from "../../utils/utils";
 import { Alert } from "../../components/ui/Alert";
 import { ToolbarContainer } from "../../components/ui/ToolbarContainer";
-import { Select } from "../../components/ui/Select";
 import { DataTable, type Column } from "../../components/ui/DataTable";
 import { Badge } from "../../components/ui/Badge";
 import { PaginationCard } from "../../components/ui/PaginationCard";
 import { OverviewKPICards } from "../../features/advancedPayments/components/OverviewKPICards";
+import { AdvancePaymentsFiltersBar } from "../../features/advancedPayments/components/AdvancePaymentsFiltersBar";
 import { useAdvancePaymentsOverview } from "../../features/advancedPayments/hooks/useAdvancePaymentsOverview";
 import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "../../features/advancedPayments/types";
-import { MONTH_NAMES, MONTH_OPTIONS, YEAR_OPTIONS, fmtCurrency, STATUS_LABEL, STATUS_VARIANT } from "../../features/advancedPayments/utils";
+import { MONTH_NAMES, fmtCurrency, STATUS_LABEL, STATUS_VARIANT } from "../../features/advancedPayments/utils";
 import { formatDate, parsePositiveInt } from "../../utils/utils";
 
-const STATUS_OPTIONS = [
-  { value: "", label: "כל הסטטוסים" },
-  { value: "overdue", label: "באיחור" },
-  { value: "pending", label: "ממתין" },
-  { value: "partial", label: "חלקי" },
-  { value: "paid", label: "שולם" },
-];
-
-const MONTH_FILTER_OPTIONS = [
-  { value: "", label: "כל החודשים" },
-  ...MONTH_OPTIONS,
-];
 
 const columns: Column<AdvancePaymentOverviewRow>[] = [
   {
@@ -159,26 +147,12 @@ export const AdvancePayments: React.FC = () => {
           )}
 
           <ToolbarContainer>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 max-w-2xl">
-              <Select
-                label="שנת מס"
-                value={String(year)}
-                onChange={(e) => setParam("year", e.target.value)}
-                options={YEAR_OPTIONS}
-              />
-              <Select
-                label="חודש"
-                value={month > 0 ? String(month) : ""}
-                onChange={(e) => setParam("month", e.target.value)}
-                options={MONTH_FILTER_OPTIONS}
-              />
-              <Select
-                label="סטטוס"
-                value={statusFilter}
-                onChange={(e) => setParam("status", e.target.value)}
-                options={STATUS_OPTIONS}
-              />
-            </div>
+            <AdvancePaymentsFiltersBar
+              year={year}
+              month={month}
+              status={statusFilter}
+              onParamChange={setParam}
+            />
           </ToolbarContainer>
 
           {error && <Alert variant="error" message="שגיאה בטעינת מקדמות" />}

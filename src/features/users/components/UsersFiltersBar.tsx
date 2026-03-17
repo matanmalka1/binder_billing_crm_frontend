@@ -1,4 +1,5 @@
 import { Select } from "../../../components/ui/Select";
+import { cn } from "../../../utils/utils";
 import type { UsersFilters } from "../types";
 
 interface UsersFiltersBarProps {
@@ -22,6 +23,7 @@ export const UsersFiltersBar: React.FC<UsersFiltersBarProps> = ({
       value={filters.is_active}
       onChange={(e) => onFilterChange("is_active", e.target.value)}
       options={ACTIVE_OPTIONS}
+      className={cn(filters.is_active && "border-primary-400 ring-1 ring-primary-200")}
     />
   </div>
 );

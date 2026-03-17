@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
-import { RotateCcw, Search } from "lucide-react";
+import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
+import { Search } from "lucide-react";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
-import { Button } from "../../../components/ui/Button";
+import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
+import { cn } from "../../../utils/utils";
 import type { TaxDeadlineFilters } from "../types";
 
 interface TaxDeadlinesFiltersProps {
@@ -27,21 +27,10 @@ const STATUS_OPTIONS = [
 ];
 
 export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersProps) => {
-  const [searchDraft, setSearchDraft] = useState(filters.client_name ?? "");
-  const [debouncedSearch] = useDebounce(searchDraft, 350);
-
-  useEffect(() => {
-    setSearchDraft(filters.client_name ?? "");
-  }, [filters.client_name]);
-
-  useEffect(() => {
-    if (debouncedSearch !== (filters.client_name ?? "")) {
-      onChange("client_name", debouncedSearch);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
-
-  const hasActive = Boolean(filters.client_name || filters.deadline_type || filters.status);
+  const [searchDraft, setSearchDraft] = useSearchDebounce(
+    filters.client_name ?? "",
+    (v) => onChange("client_name", v),
+  );
 
   const handleReset = () => {
     setSearchDraft("");
@@ -51,8 +40,8 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
   };
 
   return (
-    <div className="flex flex-wrap items-end gap-3">
-      <div className="w-52">
+    <div className="space-y-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Input
           label="חיפוש לקוח"
           type="text"
@@ -61,29 +50,36 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
           placeholder="שם לקוח..."
           startIcon={<Search className="h-4 w-4" />}
         />
-      </div>
-      <div className="w-40">
         <Select
           label="סוג מועד"
           value={filters.deadline_type}
           onChange={(e) => onChange("deadline_type", e.target.value)}
           options={DEADLINE_TYPE_OPTIONS}
+          className={cn(filters.deadline_type && "border-primary-400 ring-1 ring-primary-200")}
         />
-      </div>
-      <div className="w-36">
         <Select
           label="סטטוס"
           value={filters.status}
           onChange={(e) => onChange("status", e.target.value)}
           options={STATUS_OPTIONS}
+          className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
         />
       </div>
-      {hasActive && (
-        <Button variant="ghost" size="sm" onClick={handleReset} className="mb-0.5 gap-1.5">
-          <RotateCcw className="h-3.5 w-3.5" />
-          איפוס
-        </Button>
-      )}
+
+      <ActiveFilterBadges
+        badges={[
+          filters.client_name
+            ? { key: "client_name", label: `חיפוש: ${filters.client_name}`, onRemove: () => { setSearchDraft(""); onChange("client_name", ""); } }
+            : null,
+          filters.deadline_type
+            ? { key: "deadline_type", label: DEADLINE_TYPE_OPTIONS.find((o) => o.value === filters.deadline_type)?.label ?? filters.deadline_type, onRemove: () => onChange("deadline_type", "") }
+            : null,
+          filters.status
+            ? { key: "status", label: STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onChange("status", "") }
+            : null,
+        ].filter((b): b is NonNullable<typeof b> => b !== null)}
+        onReset={handleReset}
+      />
     </div>
   );
 };

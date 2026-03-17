@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
 import { Search } from "lucide-react";
-import { useDebounce } from "use-debounce";
 import { Select } from "../../../components/ui/Select";
 import { Input } from "../../../components/ui/Input";
 import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
@@ -18,19 +17,10 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
   filters,
   onFilterChange,
 }) => {
-  const [searchDraft, setSearchDraft] = useState(filters.search);
-  const [debouncedSearch] = useDebounce(searchDraft, 350);
-
-  useEffect(() => {
-    setSearchDraft(filters.search);
-  }, [filters.search]);
-
-  useEffect(() => {
-    if (debouncedSearch !== filters.search) {
-      onFilterChange("search", debouncedSearch);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
+  const [searchDraft, setSearchDraft] = useSearchDebounce(
+    filters.search,
+    (v) => onFilterChange("search", v),
+  );
 
   const handleReset = () => {
     setSearchDraft("");

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
+import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
 import { Select } from "../../../components/ui/Select";
 import { Input } from "../../../components/ui/Input";
 import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
@@ -18,21 +17,10 @@ export const BindersFiltersBar = ({
   filters,
   onFilterChange,
 }: BindersFiltersBarProps) => {
-  const [searchDraft, setSearchDraft] = useState(filters.query ?? "");
-  const [debouncedSearch] = useDebounce(searchDraft, 350);
-
-  // Sync draft when URL resets externally
-  useEffect(() => {
-    setSearchDraft(filters.query ?? "");
-  }, [filters.query]);
-
-  // Propagate debounced value
-  useEffect(() => {
-    if (debouncedSearch !== (filters.query ?? "")) {
-      onFilterChange("query", debouncedSearch);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
+  const [searchDraft, setSearchDraft] = useSearchDebounce(
+    filters.query ?? "",
+    (v) => onFilterChange("query", v),
+  );
 
   const handleReset = () => {
     setSearchDraft("");
