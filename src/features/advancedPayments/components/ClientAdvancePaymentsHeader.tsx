@@ -2,6 +2,7 @@ import { TrendingDown, Edit2 } from "lucide-react";
 import type { AdvancePaymentStatus } from "../types";
 import { Button } from "../../../components/ui/Button";
 import { Select } from "../../../components/ui/Select";
+import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
 import { YEAR_OPTIONS } from "../utils";
 
 interface ClientAdvancePaymentsHeaderProps {
@@ -18,12 +19,6 @@ interface ClientAdvancePaymentsHeaderProps {
 }
 
 const STATUS_FILTERS: AdvancePaymentStatus[] = ["pending", "paid", "partial", "overdue"];
-const STATUS_LABELS: Record<AdvancePaymentStatus, string> = {
-  pending: "ממתין",
-  paid: "שולם",
-  partial: "חלקי",
-  overdue: "באיחור",
-};
 
 export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderProps> = ({
   isAdvisor,
@@ -67,7 +62,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
                 active ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-600 border-gray-300 hover:border-blue-400"
               }`}
             >
-              {STATUS_LABELS[status]}
+              {getAdvancePaymentStatusLabel(status)}
             </button>
           );
         })}

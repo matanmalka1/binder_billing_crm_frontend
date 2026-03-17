@@ -12,7 +12,8 @@ import { OverviewKPICards } from "../../features/advancedPayments/components/Ove
 import { AdvancePaymentsFiltersBar } from "../../features/advancedPayments/components/AdvancePaymentsFiltersBar";
 import { useAdvancePaymentsOverview } from "../../features/advancedPayments/hooks/useAdvancePaymentsOverview";
 import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "../../features/advancedPayments/types";
-import { MONTH_NAMES, fmtCurrency, STATUS_LABEL, STATUS_VARIANT } from "../../features/advancedPayments/utils";
+import { MONTH_NAMES, fmtCurrency, STATUS_VARIANT } from "../../features/advancedPayments/utils";
+import { getAdvancePaymentStatusLabel } from "../../utils/enums";
 import { formatDate, parsePositiveInt } from "../../utils/utils";
 
 
@@ -61,7 +62,7 @@ const columns: Column<AdvancePaymentOverviewRow>[] = [
     header: "סטטוס",
     render: (row) => (
       <Badge variant={STATUS_VARIANT[row.status] ?? "neutral"}>
-        {STATUS_LABEL[row.status] ?? row.status}
+        {getAdvancePaymentStatusLabel(row.status)}
       </Badge>
     ),
   },

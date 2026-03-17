@@ -4,7 +4,8 @@ import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { Badge } from "../../../components/ui/Badge";
 import { MonoValue } from "../../../components/ui/MonoValue";
 import { formatDate } from "../../../utils/utils";
-import { fmtCurrency, MONTH_NAMES, STATUS_LABEL, STATUS_VARIANT } from "../utils";
+import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
+import { fmtCurrency, MONTH_NAMES, STATUS_VARIANT } from "../utils";
 import { AdvancePaymentRowActions } from "./AdvancePaymentRowActions";
 
 interface BuildColumnsOptions {
@@ -43,7 +44,7 @@ export const buildAdvancePaymentColumns = (
       header: "סטטוס",
       render: (row) => (
         <Badge variant={STATUS_VARIANT[row.status] ?? "neutral"}>
-          {STATUS_LABEL[row.status] ?? row.status}
+          {getAdvancePaymentStatusLabel(row.status)}
         </Badge>
       ),
     },

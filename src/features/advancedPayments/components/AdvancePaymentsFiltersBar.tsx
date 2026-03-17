@@ -1,15 +1,16 @@
 import { Select } from "../../../components/ui/Select";
 import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
 import { cn } from "../../../utils/utils";
+import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
 import { MONTH_OPTIONS, YEAR_OPTIONS } from "../utils";
 import type { AdvancePaymentStatus } from "../types";
 
-const STATUS_OPTIONS = [
+const STATUS_OPTIONS: { value: AdvancePaymentStatus | ""; label: string }[] = [
   { value: "", label: "כל הסטטוסים" },
-  { value: "overdue", label: "באיחור" },
-  { value: "pending", label: "ממתין" },
-  { value: "partial", label: "חלקי" },
-  { value: "paid", label: "שולם" },
+  { value: "overdue", label: getAdvancePaymentStatusLabel("overdue") },
+  { value: "pending", label: getAdvancePaymentStatusLabel("pending") },
+  { value: "partial", label: getAdvancePaymentStatusLabel("partial") },
+  { value: "paid", label: getAdvancePaymentStatusLabel("paid") },
 ];
 
 const MONTH_FILTER_OPTIONS = [
@@ -63,10 +64,18 @@ export const AdvancePaymentsFiltersBar = ({
       <ActiveFilterBadges
         badges={[
           month > 0
-            ? { key: "month", label: MONTH_FILTER_OPTIONS.find((o) => o.value === String(month))?.label ?? String(month), onRemove: () => onParamChange("month", "") }
+            ? {
+                key: "month",
+                label: MONTH_FILTER_OPTIONS.find((o) => o.value === String(month))?.label ?? String(month),
+                onRemove: () => onParamChange("month", ""),
+              }
             : null,
           status
-            ? { key: "status", label: STATUS_OPTIONS.find((o) => o.value === status)?.label ?? status, onRemove: () => onParamChange("status", "") }
+            ? {
+                key: "status",
+                label: STATUS_OPTIONS.find((o) => o.value === status)?.label ?? status,
+                onRemove: () => onParamChange("status", ""),
+              }
             : null,
         ].filter((b): b is NonNullable<typeof b> => b !== null)}
         onReset={handleReset}

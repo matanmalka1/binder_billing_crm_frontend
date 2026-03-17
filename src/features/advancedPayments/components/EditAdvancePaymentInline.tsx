@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Check, X, Pencil, Loader2 } from "lucide-react";
+import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
-import { STATUS_LABEL } from "../utils";
 
 const STATUS_OPTIONS: { value: AdvancePaymentStatus; label: string }[] = [
-  { value: "pending", label: STATUS_LABEL.pending },
-  { value: "partial", label: STATUS_LABEL.partial },
-  { value: "paid", label: STATUS_LABEL.paid },
-  { value: "overdue", label: STATUS_LABEL.overdue },
+  { value: "pending", label: getAdvancePaymentStatusLabel("pending") },
+  { value: "partial", label: getAdvancePaymentStatusLabel("partial") },
+  { value: "paid", label: getAdvancePaymentStatusLabel("paid") },
+  { value: "overdue", label: getAdvancePaymentStatusLabel("overdue") },
 ];
 
 interface EditAdvancePaymentInlineProps {
@@ -44,10 +44,16 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
     setEditing(false);
   };
 
-  const handleCancel = () => { setEditing(false); onCancelProp?.(); };
+  const handleCancel = () => {
+    setEditing(false);
+    onCancelProp?.();
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") { e.preventDefault(); handleSave(); }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSave();
+    }
     if (e.key === "Escape") handleCancel();
   };
 
