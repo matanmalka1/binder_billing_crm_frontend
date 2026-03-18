@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
-import { PageHeader } from "../components/layout/PageHeader";
-import { ToolbarContainer } from "../components/ui/ToolbarContainer";
-import { DataTable } from "../components/ui/DataTable";
 import { Alert } from "../components/ui/Alert";
 import { Button } from "../components/ui/Button";
-import { PaginationCard } from "../components/ui/PaginationCard";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
-import { BindersFiltersBar } from "../features/binders/components/BindersFiltersBar";
-import { buildBindersColumns } from "../features/binders/components/BindersColumns";
+import { DataTable } from "../components/ui/DataTable";
+import { PaginationCard } from "../components/ui/PaginationCard";
+import { ToolbarContainer } from "../components/ui/ToolbarContainer";
+import { PageHeader } from "../components/layout/PageHeader";
 import { BinderDrawer } from "../features/binders/components/BinderDrawer";
+import { buildBindersColumns } from "../features/binders/components/BindersColumns";
+import { BindersFiltersBar } from "../features/binders/components/BindersFiltersBar";
 import { useBindersPage } from "../features/binders/hooks/useBindersPage";
 import { useReceiveBinderDrawer } from "../features/binders/hooks/useReceiveBinderDrawer";
 
@@ -43,7 +43,6 @@ export const Binders: React.FC = () => {
   } = useBindersPage();
 
   const handleOpenReceive = () => setDrawerMode("receive");
-
   const receive = useReceiveBinderDrawer(() => setDrawerMode(null));
 
   const handleCloseDrawerAll = () => {
@@ -74,7 +73,10 @@ export const Binders: React.FC = () => {
         actionLoadingId,
         onMarkReady: (id) => void markReady(id),
         onReturn: (id) => setConfirmReturnForId(id),
-        onOpenDetail: (id) => { handleSelectBinder({ id }); setDrawerMode("detail"); },
+        onOpenDetail: (id) => {
+          handleSelectBinder({ id });
+          setDrawerMode("detail");
+        },
         onDelete: (id) => setConfirmDeleteForId(id),
         sortBy: filters.sort_by,
         sortDir: filters.sort_dir,
@@ -85,8 +87,7 @@ export const Binders: React.FC = () => {
 
   const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
   const drawerOpen = drawerMode !== null || deepLinkBinderId !== undefined;
-  const effectiveMode: "detail" | "receive" =
-    drawerMode === "receive" ? "receive" : "detail";
+  const effectiveMode: "detail" | "receive" = drawerMode === "receive" ? "receive" : "detail";
 
   return (
     <div className="space-y-6">
@@ -145,7 +146,10 @@ export const Binders: React.FC = () => {
         cancelLabel="ביטול"
         isLoading={isReturning}
         onConfirm={() => void handleReturnConfirm()}
-        onCancel={() => { setConfirmReturnForId(null); setPickupPersonName(""); }}
+        onCancel={() => {
+          setConfirmReturnForId(null);
+          setPickupPersonName("");
+        }}
       >
         <input
           type="text"
@@ -182,9 +186,11 @@ export const Binders: React.FC = () => {
         receiveForm={receive.form}
         clientQuery={receive.clientQuery}
         selectedClient={receive.selectedClient}
-        activeBinder={receive.activeBinder}
+        clientBinders={receive.clientBinders}
+        allBinders={receive.allBinders}
         onClientSelect={receive.handleClientSelect}
         onClientQueryChange={receive.handleClientQueryChange}
+        onBinderSelect={receive.handleBinderSelect}
         onReceiveSubmit={receive.handleSubmit}
         isSubmitting={receive.isSubmitting}
       />

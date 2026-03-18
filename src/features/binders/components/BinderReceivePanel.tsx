@@ -1,24 +1,26 @@
+import type { UseFormReturn } from "react-hook-form";
 import { Controller } from "react-hook-form";
+import { Alert } from "../../../components/ui/Alert";
 import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
+import { ClientSearchInput } from "../../../components/ui/ClientSearchInput";
+import { DatePicker } from "../../../components/ui/DatePicker";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
-import { DatePicker } from "../../../components/ui/DatePicker";
-import { ClientSearchInput } from "../../../components/ui/ClientSearchInput";
-import type { UseFormReturn } from "react-hook-form";
+import { isClientLockedForCreate } from "../../../utils/clientStatus";
+import { BINDER_TYPE_OPTIONS } from "../constants";
 import type { ReceiveBinderFormValues } from "../schemas";
 import type { BinderResponse } from "../types";
-import { BINDER_TYPE_OPTIONS } from "../constants";
-import { Alert } from "../../../components/ui/Alert";
-import { isClientLockedForCreate } from "../../../utils/clientStatus";
+import { BinderNumberField } from "./BinderNumberField";
 
 interface BinderReceivePanelProps {
   form: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery: string;
   selectedClient: { id: number; name: string; client_status?: string | null } | null;
-  activeBinder?: BinderResponse | null;
+  clientBinders: BinderResponse[];
+  allBinders: BinderResponse[];
   onClientSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
   onClientQueryChange: (query: string) => void;
+  onBinderSelect: (binderNumber: string, clientId: number, clientName: string, clientStatus: string | null) => void;
   onSubmit: (e?: React.BaseSyntheticEvent) => void;
   onClose: () => void;
   isSubmitting: boolean;
@@ -28,9 +30,11 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
   form,
   clientQuery,
   selectedClient,
-  activeBinder,
+  clientBinders,
+  allBinders,
   onClientSelect,
   onClientQueryChange,
+  onBinderSelect,
   onSubmit,
   onClose,
   isSubmitting,
@@ -45,12 +49,6 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      {activeBinder && (
-        <div className="rounded border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800" dir="rtl">
-          נמצא קלסר פעיל #{activeBinder.binder_number} — החומר יתווסף אליו
-        </div>
-      )}
-
       <ClientSearchInput
         value={clientQuery}
         onChange={onClientQueryChange}
@@ -85,11 +83,12 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         {...register("binder_type")}
       />
 
-      <Input
-        label="מספר קלסר"
-        error={errors.binder_number?.message}
-        placeholder="לדוגמה: 2024-003"
-        {...register("binder_number")}
+      <BinderNumberField
+        form={form}
+        selectedClient={selectedClient ? { id: selectedClient.id, name: selectedClient.name } : null}
+        clientBinders={clientBinders}
+        allBinders={allBinders}
+        onBinderSelect={onBinderSelect}
       />
 
       <Controller

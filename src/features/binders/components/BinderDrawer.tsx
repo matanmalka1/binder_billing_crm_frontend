@@ -1,15 +1,13 @@
+import type { UseFormReturn } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { DetailDrawer } from "../../../components/ui/DetailDrawer";
-import type { BinderResponse } from "../types";
-import type { UseFormReturn } from "react-hook-form";
 import type { ReceiveBinderFormValues } from "../schemas";
-import { BinderDetailsPanel } from "./BinderDetailsPanel";
+import type { BinderResponse } from "../types";
 import { BinderActionsPanel } from "./BinderActionsPanel";
-import { BinderReceivePanel } from "./BinderReceivePanel";
+import { BinderDetailsPanel } from "./BinderDetailsPanel";
 import { BinderHistorySection } from "./BinderHistorySection";
 import { BinderIntakesSection } from "./BinderIntakesSection";
-
-/* ─── Main drawer ────────────────────────────────────────────── */
+import { BinderReceivePanel } from "./BinderReceivePanel";
 
 type DrawerMode = "detail" | "receive";
 
@@ -23,9 +21,11 @@ interface BinderDrawerProps {
   receiveForm?: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery?: string;
   selectedClient?: { id: number; name: string; client_status?: string | null } | null;
-  activeBinder?: BinderResponse | null;
+  clientBinders?: BinderResponse[];
+  allBinders?: BinderResponse[];
   onClientSelect?: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
   onClientQueryChange?: (query: string) => void;
+  onBinderSelect?: (binderNumber: string, clientId: number, clientName: string, clientStatus: string | null) => void;
   onReceiveSubmit?: (e?: React.BaseSyntheticEvent) => void;
   isSubmitting?: boolean;
 }
@@ -40,28 +40,22 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   receiveForm,
   clientQuery = "",
   selectedClient = null,
-  activeBinder = null,
+  clientBinders = [],
+  allBinders = [],
   onClientSelect,
   onClientQueryChange,
+  onBinderSelect,
   onReceiveSubmit,
   isSubmitting = false,
 }) => {
-  const title =
-    mode === "receive"
-      ? "קליטת חומר מלקוח"
-      : binder
-      ? `קלסר ${binder.binder_number}`
-      : "";
+  const title = mode === "receive" ? "קליטת חומר מלקוח" : binder ? `קלסר ${binder.binder_number}` : "";
 
   const subtitle =
     mode === "receive"
       ? undefined
       : binder
       ? (
-          <Link
-            to={`/clients/${binder.client_id}`}
-            className="text-sm text-primary-600 hover:underline"
-          >
+          <Link to={`/clients/${binder.client_id}`} className="text-sm text-primary-600 hover:underline">
             {binder.client_name ?? `לקוח #${binder.client_id}`}
           </Link>
         )
@@ -80,9 +74,11 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
           form={receiveForm}
           clientQuery={clientQuery}
           selectedClient={selectedClient}
-          activeBinder={activeBinder}
+          clientBinders={clientBinders}
+          allBinders={allBinders}
           onClientSelect={onClientSelect!}
           onClientQueryChange={onClientQueryChange!}
+          onBinderSelect={onBinderSelect!}
           onSubmit={onReceiveSubmit!}
           onClose={onClose}
           isSubmitting={isSubmitting}
@@ -108,4 +104,5 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
     </DetailDrawer>
   );
 };
+
 BinderDrawer.displayName = "BinderDrawer";
