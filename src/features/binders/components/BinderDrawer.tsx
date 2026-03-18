@@ -23,6 +23,7 @@ interface BinderDrawerProps {
   selectedClient?: { id: number; name: string; client_status?: string | null } | null;
   clientBinders?: BinderResponse[];
   allBinders?: BinderResponse[];
+  vatType?: "monthly" | "bimonthly" | "exempt" | null;
   onClientSelect?: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
   onClientQueryChange?: (query: string) => void;
   onBinderSelect?: (binderNumber: string, clientId: number, clientName: string, clientStatus: string | null) => void;
@@ -42,6 +43,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   selectedClient = null,
   clientBinders = [],
   allBinders = [],
+  vatType = null,
   onClientSelect,
   onClientQueryChange,
   onBinderSelect,
@@ -76,6 +78,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
           selectedClient={selectedClient}
           clientBinders={clientBinders}
           allBinders={allBinders}
+          vatType={vatType}
           onClientSelect={onClientSelect!}
           onClientQueryChange={onClientQueryChange!}
           onBinderSelect={onBinderSelect!}

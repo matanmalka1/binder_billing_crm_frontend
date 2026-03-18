@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { bindersApi } from "../../../api/binders.api";
+import { taxProfileApi } from "../../../api/taxProfile.api";
 import { QK } from "../../../lib/queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
 import { toast } from "../../../utils/toast";
@@ -15,6 +16,7 @@ const getDefaultValues = (): ReceiveBinderFormValues => ({
   client_id: undefined as unknown as number,
   binder_type: "",
   binder_number: "",
+  vat_period: null,
   received_at: format(new Date(), "yyyy-MM-dd"),
   notes: null,
 });
@@ -31,6 +33,13 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   });
 
   const clientId: number | undefined = form.watch("client_id");
+  const binderType: string = form.watch("binder_type") ?? "";
+
+  useEffect(() => {
+    if (binderType !== "vat") {
+      form.setValue("vat_period", null);
+    }
+  }, [binderType, form]);
 
   const clientBindersQuery = useQuery({
     queryKey: QK.binders.list({ client_id: clientId, page_size: 50 }),
@@ -50,6 +59,17 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     refetchOnWindowFocus: false,
   });
 
+  const { data: taxProfile } = useQuery({
+    queryKey: QK.clients.taxProfile(clientId!),
+    queryFn: () => taxProfileApi.get(clientId!),
+    enabled: !!clientId && binderType === "vat",
+    staleTime: 30_000,
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  const vatType = taxProfile?.vat_type ?? null;
+
   const clientBindersData = clientBindersQuery.data;
   const allBindersData = allBindersQuery.data;
   const clientBinders: BinderResponse[] = clientBindersData?.items ?? [];
@@ -62,15 +82,20 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   };
 
   const mutation = useMutation({
-    mutationFn: (values: ReceiveBinderFormValues) =>
-      bindersApi.receive({
+    mutationFn: (values: ReceiveBinderFormValues) => {
+      const notesWithPeriod = values.vat_period
+        ? [values.vat_period, values.notes].filter(Boolean).join(" | ")
+        : values.notes ?? null;
+
+      return bindersApi.receive({
         client_id: values.client_id,
         binder_type: values.binder_type,
         binder_number: values.binder_number,
         received_at: values.received_at,
         received_by: userId!,
-        notes: values.notes ?? null,
-      }),
+        notes: notesWithPeriod,
+      });
+    },
     onSuccess: async (result) => {
       toast.success(result.is_new_binder ? "קלסר חדש נפתח והחומר נקלט" : "החומר נוסף לקלסר קיים");
       await queryClient.invalidateQueries({ queryKey: QK.binders.all });
@@ -87,6 +112,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     setClientQuery(client.name);
     form.setValue("client_id", client.id, { shouldValidate: true });
     form.setValue("binder_number", "");
+    form.setValue("vat_period", null);
   };
 
   const handleClientQueryChange = (query: string) => {
@@ -95,12 +121,14 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
       setSelectedClient(null);
       form.setValue("client_id", undefined as unknown as number);
       form.setValue("binder_number", "");
+      form.setValue("vat_period", null);
     }
   };
 
   const handleBinderSelect = (binderNumber: string, clientIdValue: number, clientName: string, clientStatus: string | null) => {
     form.setValue("binder_number", binderNumber, { shouldValidate: true });
     form.setValue("client_id", clientIdValue, { shouldValidate: true });
+    form.setValue("vat_period", null);
     setSelectedClient({ id: clientIdValue, name: clientName, client_status: clientStatus });
     setClientQuery(clientName);
   };
@@ -114,6 +142,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     selectedClient,
     clientBinders,
     allBinders,
+    vatType,
     isSubmitting: mutation.isPending,
     handleSubmit,
     handleClientSelect,

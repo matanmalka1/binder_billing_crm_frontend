@@ -8,7 +8,7 @@ import type { BinderResponse } from "../types";
 
 interface BinderNumberFieldProps {
   form: UseFormReturn<ReceiveBinderFormValues>;
-  selectedClient: { id: number; name: string } | null;
+  selectedClient: { id: number; name: string; client_status?: string | null } | null;
   clientBinders: BinderResponse[];
   allBinders: BinderResponse[];
   onBinderSelect: (binderNumber: string, clientId: number, clientName: string, clientStatus: string | null) => void;
@@ -24,7 +24,6 @@ export const BinderNumberField: React.FC<BinderNumberFieldProps> = ({
   const [isNewMode, setIsNewMode] = useState(false);
 
   const {
-    register,
     setValue,
     formState: { errors },
   } = form;
@@ -41,8 +40,8 @@ export const BinderNumberField: React.FC<BinderNumberFieldProps> = ({
   }, [selectedClient, clientBinders, setValue, isNewMode]);
 
   const handleEnableNewBinder = () => {
+    setValue("binder_number", "", { shouldValidate: false });
     setIsNewMode(true);
-    setValue("binder_number", "", { shouldValidate: true });
   };
 
   const handleBackToSelection = () => {
@@ -70,7 +69,8 @@ export const BinderNumberField: React.FC<BinderNumberFieldProps> = ({
         label="מספר קלסר"
         error={errors.binder_number?.message}
         placeholder="לדוגמה: 2024-003"
-        {...register("binder_number")}
+        value={binderNumber}
+        onChange={(e) => setValue("binder_number", e.target.value, { shouldValidate: true })}
       />
     );
   }
@@ -82,7 +82,8 @@ export const BinderNumberField: React.FC<BinderNumberFieldProps> = ({
           label="מספר קלסר"
           error={errors.binder_number?.message}
           placeholder="לדוגמה: 2024-003"
-          {...register("binder_number")}
+          value={binderNumber}
+          onChange={(e) => setValue("binder_number", e.target.value, { shouldValidate: true })}
         />
         <Button type="button" variant="ghost" size="sm" onClick={handleBackToSelection}>
           חזור לבחירה

@@ -11,6 +11,7 @@ import { BINDER_TYPE_OPTIONS } from "../constants";
 import type { ReceiveBinderFormValues } from "../schemas";
 import type { BinderResponse } from "../types";
 import { BinderNumberField } from "./BinderNumberField";
+import { VatPeriodField } from "./VatPeriodField";
 
 interface BinderReceivePanelProps {
   form: UseFormReturn<ReceiveBinderFormValues>;
@@ -18,6 +19,7 @@ interface BinderReceivePanelProps {
   selectedClient: { id: number; name: string; client_status?: string | null } | null;
   clientBinders: BinderResponse[];
   allBinders: BinderResponse[];
+  vatType: "monthly" | "bimonthly" | "exempt" | null;
   onClientSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
   onClientQueryChange: (query: string) => void;
   onBinderSelect: (binderNumber: string, clientId: number, clientName: string, clientStatus: string | null) => void;
@@ -32,6 +34,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
   selectedClient,
   clientBinders,
   allBinders,
+  vatType,
   onClientSelect,
   onClientQueryChange,
   onBinderSelect,
@@ -44,6 +47,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
     control,
     formState: { errors },
   } = form;
+  const binderType = form.watch("binder_type");
 
   const clientLocked = isClientLockedForCreate(selectedClient?.client_status);
 
@@ -83,9 +87,24 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         {...register("binder_type")}
       />
 
+      {binderType === "vat" && (vatType === "monthly" || vatType === "bimonthly") && (
+        <Controller
+          name="vat_period"
+          control={control}
+          render={({ field }) => (
+            <VatPeriodField
+              vatType={vatType}
+              value={field.value ?? ""}
+              onChange={field.onChange}
+              error={errors.vat_period?.message}
+            />
+          )}
+        />
+      )}
+
       <BinderNumberField
         form={form}
-        selectedClient={selectedClient ? { id: selectedClient.id, name: selectedClient.name } : null}
+        selectedClient={selectedClient}
         clientBinders={clientBinders}
         allBinders={allBinders}
         onBinderSelect={onBinderSelect}
