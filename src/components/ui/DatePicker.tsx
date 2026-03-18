@@ -15,6 +15,7 @@ interface DatePickerProps {
   onBlur?: () => void;
   disabled?: boolean;
   name?: string;
+  maxDate?: Date;
 }
 const START_YEAR = 2000;
 const END_YEAR = 2099;
@@ -140,6 +141,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   onChange,
   onBlur,
   disabled,
+  maxDate,
 }) => {
   const [open, setOpen] = useState(false);
   const [month, setMonthState] = useState<Date>(new Date());
@@ -207,6 +209,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 onSelect={handleSelect}
                 month={month}
                 onMonthChange={setMonthState}
+                disabled={maxDate ? { after: maxDate } : undefined}
                 locale={he}
                 dir="rtl"
                 hideNavigation

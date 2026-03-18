@@ -33,12 +33,15 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
   name,
 }) => {
   const [open, setOpen] = useState(false);
+  const [internalValue, setInternalValue] = useState<string>("");
   const [coords, setCoords] = useState<{ top: number; bottom: number; left: number; width: number } | null>(null);
   const [openAbove, setOpenAbove] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const portalRef = useRef<HTMLDivElement>(null);
+  const isControlled = value !== undefined;
+  const currentValue = isControlled ? String(value ?? "") : internalValue;
 
-  const selectedLabel = options.find((o) => String(o.value) === String(value))?.label ?? "בחר...";
+  const selectedLabel = options.find((o) => String(o.value) === currentValue)?.label ?? "בחר...";
 
   const toggle = () => {
     if (disabled) return;
@@ -52,12 +55,21 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
   };
 
   const select = (optValue: string) => {
-    if (!onChange) return;
-    const syntheticEvent = { target: { value: optValue, name: name ?? "" } } as React.ChangeEvent<HTMLSelectElement>;
-    onChange(syntheticEvent);
+    if (!isControlled) setInternalValue(optValue);
+    if (onChange) {
+      const syntheticEvent = {
+        type: "change",
+        target: { value: optValue, name: name ?? "", type: "select-one" },
+        currentTarget: { value: optValue, name: name ?? "", type: "select-one" },
+      } as React.ChangeEvent<HTMLSelectElement>;
+      onChange(syntheticEvent);
+    }
     setOpen(false);
     if (onBlur) {
-      const blurEvent = { target: { name: name ?? "" } } as React.FocusEvent<HTMLSelectElement>;
+      const blurEvent = {
+        target: { name: name ?? "", value: optValue },
+        currentTarget: { name: name ?? "", value: optValue },
+      } as React.FocusEvent<HTMLSelectElement>;
       onBlur(blurEvent);
     }
   };
@@ -72,11 +84,9 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
     document.addEventListener("mousedown", close);
     document.addEventListener("keydown", onKey);
-    window.addEventListener("scroll", () => setOpen(false), true);
     return () => {
       document.removeEventListener("mousedown", close);
       document.removeEventListener("keydown", onKey);
-      window.removeEventListener("scroll", () => setOpen(false), true);
     };
   }, [open]);
 
@@ -91,7 +101,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
   return (
     <>
       <button ref={triggerRef} type="button" onClick={toggle} disabled={disabled} className={triggerClass}>
-        <span className={cn("truncate", !value || value === "" ? "text-gray-400" : "text-gray-800")}>
+        <span className={cn("truncate", !currentValue ? "text-gray-400" : "text-gray-800")}>
           {selectedLabel}
         </span>
         {CHEVRON}
@@ -108,7 +118,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
             width: coords.width,
             zIndex: 9999,
           }}
-          className="rounded-lg border border-gray-200 bg-white py-1 shadow-lg overflow-auto max-h-60"
+          className="rounded-lg border border-gray-200 bg-white py-1 shadow-lg overflow-auto max-h-60 overscroll-contain"
         >
           {options.map((opt) => (
             <button
@@ -119,11 +129,11 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
               className={cn(
                 "flex w-full items-center gap-2 px-3 py-2 text-right text-sm transition-colors",
                 "hover:bg-primary-50 disabled:opacity-40 disabled:cursor-not-allowed",
-                String(value) === String(opt.value) ? "text-primary-600 font-medium" : "text-gray-700",
+                currentValue === String(opt.value) ? "text-primary-600 font-medium" : "text-gray-700",
               )}
             >
               <span className="flex-1 truncate">{opt.label}</span>
-              {String(value) === String(opt.value) && (
+              {currentValue === String(opt.value) && (
                 <Check className="h-3.5 w-3.5 shrink-0 text-primary-500" />
               )}
             </button>
