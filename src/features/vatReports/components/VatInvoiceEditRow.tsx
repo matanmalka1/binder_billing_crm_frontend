@@ -3,7 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
 import { Input } from "../../../components/ui/Input";
 import { SelectDropdown } from "../../../components/ui/SelectDropdown";
-import { vatInvoiceEditSchema, toInvoiceEditPayload, type VatInvoiceEditValues } from "../schemas";
+import {
+  vatInvoiceEditSchema,
+  toInvoiceEditPayload,
+  type VatInvoiceEditValues,
+} from "../schemas/invoice.schema";
 import { EXPENSE_CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
 import { toDateInputValue } from "../utils";
 import type { VatInvoiceEditRowProps } from "../types";

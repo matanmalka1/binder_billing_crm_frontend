@@ -6,7 +6,7 @@ import { showErrorToast } from "../../../utils/utils";
 import {
   toCategoryInvoicePayloads,
   type CategoryEntryFormValues,
-} from "../schemas";
+} from "../schemas/categoryEntry.schema";
 
 export const useAddCategoryInvoices = (workItemId: number) => {
   const queryClient = useQueryClient();

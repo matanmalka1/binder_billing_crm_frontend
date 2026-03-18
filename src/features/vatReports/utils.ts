@@ -1,6 +1,6 @@
 import { CATEGORY_LABELS } from "./constants";
 import { EXPENSE_CATEGORIES } from "./constants";
-import type { VatInvoiceRowValues } from "./schemas";
+import type { VatInvoiceRowValues } from "./schemas/invoice.schema";
 
 export const canMarkMaterialsComplete = (status: string): boolean =>
   status === "pending_materials";

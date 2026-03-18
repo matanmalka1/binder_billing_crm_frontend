@@ -6,7 +6,7 @@ import type {
   VatInvoiceResponse,
   VatWorkItemResponse,
 } from "../../api/vatReports.api";
-import type { ExpenseCategoryRow, VatBreakdownData } from "./VatBreakdownUtils";
+import type { ExpenseCategoryRow, VatBreakdownData } from "./vatBreakdown.utils";
 
 export type VatWorkItemsFilters = PagedFilters<{
   status: string;

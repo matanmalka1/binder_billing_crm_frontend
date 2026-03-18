@@ -1,67 +1,66 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { remindersApi } from "../../../api/reminders.api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { QK } from "../../../lib/queryKeys";
 import type { Reminder } from "../../../api/reminders.api";
-import type {
-  CreateReminderRequest,
-  CreateReminderFormValues,
-} from "../types";
+import type { CreateReminderRequest } from "../types";
+import {
+  createReminderSchema,
+  createReminderDefaultValues,
+  type CreateReminderFormValues,
+} from "../schemas";
 
 const makeDefaultFormValues = (
   clientId?: number,
 ): CreateReminderFormValues => ({
-  reminder_type: "custom",
-  target_date: "",
+  ...createReminderDefaultValues,
   client_id: clientId ? String(clientId) : "",
-  days_before: 7,
-  message: "",
 });
 
 const buildPayload = (
   values: CreateReminderFormValues,
   fixedClientId?: number,
-): CreateReminderRequest | null => {
+): CreateReminderRequest => {
+  // Schema guarantees all fields are valid at this point.
   const clientId = fixedClientId ?? Number(values.client_id);
-  if (!clientId || clientId <= 0) return null;
-  if (!values.target_date) return null;
-  if (values.days_before < 0) return null;
-
   const base = {
     client_id: clientId,
     target_date: values.target_date,
-    days_before: Number(values.days_before),
+    days_before: values.days_before,
     message: values.message || undefined,
   };
 
   if (values.reminder_type === "tax_deadline_approaching") {
-    const tax_deadline_id = Number(values.tax_deadline_id);
-    if (!tax_deadline_id) return null;
     return {
       ...base,
       reminder_type: "tax_deadline_approaching",
-      tax_deadline_id,
+      tax_deadline_id: Number(values.tax_deadline_id),
     };
   }
-
   if (values.reminder_type === "binder_idle") {
-    const binder_id = Number(values.binder_id);
-    if (!binder_id) return null;
-    return { ...base, reminder_type: "binder_idle", binder_id };
+    return {
+      ...base,
+      reminder_type: "binder_idle",
+      binder_id: Number(values.binder_id),
+    };
   }
-
   if (values.reminder_type === "unpaid_charge") {
-    const charge_id = Number(values.charge_id);
-    if (!charge_id) return null;
-    return { ...base, reminder_type: "unpaid_charge", charge_id };
+    return {
+      ...base,
+      reminder_type: "unpaid_charge",
+      charge_id: Number(values.charge_id),
+    };
   }
-
-  // custom
-  if (!values.message?.trim()) return null;
-  return { ...base, reminder_type: "custom", message: values.message.trim() };
+  // custom — schema guarantees message is non-empty
+  return {
+    ...base,
+    reminder_type: "custom",
+    message: values.message as string,
+  };
 };
 
 export const useReminders = (opts?: { clientId?: number }) => {
@@ -74,6 +73,7 @@ export const useReminders = (opts?: { clientId?: number }) => {
 
   const form = useForm<CreateReminderFormValues>({
     defaultValues: makeDefaultFormValues(clientId),
+    resolver: zodResolver(createReminderSchema),
   });
 
   const remindersQuery = useQuery({
@@ -115,27 +115,8 @@ export const useReminders = (opts?: { clientId?: number }) => {
   });
 
   const onSubmit = form.handleSubmit((values) => {
-    const payload = buildPayload(values, clientId);
-    if (!payload) {
-      // Surface validation errors for missing FK fields
-      if (!values.client_id && !clientId)
-        form.setError("client_id", { message: "נא להזין מזהה לקוח תקין" });
-      if (!values.target_date)
-        form.setError("target_date", { message: "נא לבחור תאריך יעד" });
-      if (
-        values.reminder_type === "tax_deadline_approaching" &&
-        !values.tax_deadline_id
-      )
-        form.setError("tax_deadline_id", { message: "נא להזין מזהה מועד מס" });
-      if (values.reminder_type === "binder_idle" && !values.binder_id)
-        form.setError("binder_id", { message: "נא להזין מזהה תיק" });
-      if (values.reminder_type === "unpaid_charge" && !values.charge_id)
-        form.setError("charge_id", { message: "נא להזין מזהה חשבונית" });
-      if (values.reminder_type === "custom" && !values.message?.trim())
-        form.setError("message", { message: "נא להזין הודעת תזכורת" });
-      return;
-    }
-    void createMutation.mutateAsync(payload);
+    // zodResolver has already validated; buildPayload is now total (no null branch).
+    void createMutation.mutateAsync(buildPayload(values, clientId));
   });
 
   const handleCancel = (id: number) => {

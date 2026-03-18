@@ -9,7 +9,7 @@ import {
   vatWorkItemCreateSchema,
   toCreateVatWorkItemPayload,
   type VatWorkItemCreateFormValues,
-} from "../schemas";
+} from "../schemas/workItem.schema";
 import type { VatWorkItemsCreateModalProps } from "../types";
 
 export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = ({

@@ -6,17 +6,17 @@ export interface ExpenseCategoryRow {
   label: string;
   deductionRate: number;
   netAmount: number;
-  grossVat: number;      // raw VAT before deduction (shown as "מע"מ בחשבוניות")
-  deductibleVat: number; // stored vat_amount — the deductible portion
+  grossVat: number;
+  deductibleVat: number;
 }
 
 export interface VatBreakdownData {
   totalIncomeNet: number;
-  totalOutputVat: number;   // authoritative from workItem
+  totalOutputVat: number;
   expenseRows: ExpenseCategoryRow[];
   totalExpenseNet: number;
-  totalGrossVat: number;    // sum of grossVat — "מע"מ בחשבוניות"
-  totalInputVat: number;    // authoritative from workItem
+  totalGrossVat: number;
+  totalInputVat: number;
 }
 
 export const computeVatBreakdown = (
@@ -29,7 +29,6 @@ export const computeVatBreakdown = (
 
   const totalIncomeNet = income.reduce((s, i) => s + Number(i.net_amount), 0);
 
-  // Group expenses by category — use backend-supplied deduction_rate per invoice
   const grouped: Record<string, { net: number; deductible: number; grossVat: number }> = {};
   for (const inv of expense) {
     const key = inv.expense_category ?? "other";

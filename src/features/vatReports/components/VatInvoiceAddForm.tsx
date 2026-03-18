@@ -6,7 +6,11 @@ import { Button } from "../../../components/ui/Button";
 import { FormField } from "../../../components/ui/FormField";
 import { Input } from "../../../components/ui/Input";
 import { SelectDropdown } from "../../../components/ui/SelectDropdown";
-import { vatInvoiceRowSchema, toInvoiceRowPayload, type VatInvoiceRowValues } from "../schemas";
+import {
+  vatInvoiceRowSchema,
+  toInvoiceRowPayload,
+  type VatInvoiceRowValues,
+} from "../schemas/invoice.schema";
 import { EXPENSE_CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS, DEDUCTION_RATES } from "../constants";
 import { getVatInvoiceDefaultValues } from "../utils";
 import { getVatRateTypeLabel, getDocumentTypeLabel } from "../../../utils/enums";

@@ -1,6 +1,6 @@
 import { AlertTriangle } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
-import { computeVatBreakdown } from "../VatBreakdownUtils";
+import { computeVatBreakdown } from "../vatBreakdown.utils";
 import { VatOutputCard, VatInputCard } from "./VatBreakdownCards";
 import { VatCategoryTable } from "./VatCategoryTable";
 import { formatVatAmount } from "../utils";
