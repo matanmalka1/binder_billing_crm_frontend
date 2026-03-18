@@ -70,7 +70,7 @@ const buildAdvisorStats = (data: DashboardOverviewResponse): StatItem[] => [
     icon: FileText,
     variant: data.vat_due_this_month > 0 ? "red" : "green",
     urgent: data.vat_due_this_month > 0,
-    href: "/vat-reports",
+    href: "/tax/vat",
   },
 ];
 
@@ -111,7 +111,7 @@ const buildSecretaryStats = (data: DashboardSummaryResponse): StatItem[] => [
     icon: FileText,
     variant: data.vat_due_this_month > 0 ? "red" : "green",
     urgent: data.vat_due_this_month > 0,
-    href: "/vat-reports",
+    href: "/tax/vat",
   },
 ];
 
