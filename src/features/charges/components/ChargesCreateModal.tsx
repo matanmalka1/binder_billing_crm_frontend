@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
+import { FormField } from "../../../components/ui/FormField";
+import { SelectDropdown } from "../../../components/ui/SelectDropdown";
 import type { CreateChargePayload } from "../../../api/charges.api";
 import { CHARGE_TYPE_OPTIONS } from "../constants";
 import {
@@ -31,6 +32,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
   const {
     formState: { errors, isDirty },
     handleSubmit,
+    control,
     register,
     reset,
   } = useForm<ChargeCreateFormValues>({
@@ -87,11 +89,21 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
             error={errors.amount?.message}
             {...register("amount")}
           />
-          <Select
-            label="סוג חיוב *"
-            error={errors.charge_type?.message}
-            options={CHARGE_TYPE_OPTIONS}
-            {...register("charge_type")}
+          <Controller
+            control={control}
+            name="charge_type"
+            render={({ field }) => (
+              <FormField label="סוג חיוב *" error={errors.charge_type?.message}>
+                <SelectDropdown
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  options={CHARGE_TYPE_OPTIONS}
+                  className={errors.charge_type ? "border-red-500" : undefined}
+                />
+              </FormField>
+            )}
           />
           <Input
             label="תקופה (YYYY-MM)"
