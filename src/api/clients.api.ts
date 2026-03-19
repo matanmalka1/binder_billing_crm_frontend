@@ -160,9 +160,13 @@ export const clientsApi = {
     await api.delete(ENDPOINTS.clientById(clientId));
   },
 
-  getStatusCard: async (clientId: number): Promise<ClientStatusCardResponse> => {
+  getStatusCard: async (
+    clientId: number,
+    year?: number,
+  ): Promise<ClientStatusCardResponse> => {
     const response = await api.get<ClientStatusCardResponse>(
       ENDPOINTS.clientStatusCard(clientId),
+      { params: year ? { year } : undefined },
     );
     return response.data;
   },

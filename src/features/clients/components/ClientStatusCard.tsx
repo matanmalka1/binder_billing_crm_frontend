@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck } from "lucide-react";
@@ -34,11 +35,16 @@ const Tile: React.FC<TileProps> = ({ icon, title, primary, secondary, onClick })
 const fmt = (n: number | null | undefined) =>
   n != null ? `₪${Number(n).toLocaleString("he-IL", { maximumFractionDigits: 0 })}` : "—";
 
+const CURRENT_YEAR = new Date().getFullYear();
+const YEAR_OPTIONS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2];
+
 export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
   const navigate = useNavigate();
+  const [selectedYear, setSelectedYear] = useState<number>(CURRENT_YEAR);
+
   const { data, isLoading } = useQuery({
-    queryKey: QK.clients.statusCard(clientId),
-    queryFn: () => clientsApi.getStatusCard(clientId),
+    queryKey: QK.clients.statusCard(clientId, selectedYear),
+    queryFn: () => clientsApi.getStatusCard(clientId, selectedYear),
     staleTime: 30_000,
     retry: 1,
   });
@@ -78,12 +84,31 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
         ? `תשלום: ${fmt(annual_report.tax_due)}`
         : "—";
 
+  const yearSelector = (
+    <div className="flex gap-1">
+      {YEAR_OPTIONS.map((y) => (
+        <button
+          key={y}
+          type="button"
+          onClick={() => setSelectedYear(y)}
+          className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${
+            selectedYear === y
+              ? "bg-primary-100 text-primary-700"
+              : "text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          {y}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
-    <Card title={`סטטוס לקוח — ${year}`}>
+    <Card title={`סטטוס לקוח — ${year}`} actions={yearSelector}>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
         <Tile
           icon={<Receipt size={18} />}
-          title='מע"מ שנה נוכחית'
+          title='מע"מ'
           primary={fmt(vat.net_vat_total)}
           secondary={vatStatus}
           onClick={() => navigate(`/clients/${clientId}/vat`)}

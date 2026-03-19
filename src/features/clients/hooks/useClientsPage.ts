@@ -9,6 +9,15 @@ import { QK } from "../../../lib/queryKeys";
 import type { CreateClientPayload } from "../../../api/clients.api";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
+import axios from "axios";
+
+/** Extract the application-level error code from an Axios error response. */
+const extractErrorCode = (err: unknown): string | null => {
+  if (axios.isAxiosError(err)) {
+    return err.response?.data?.code ?? null;
+  }
+  return null;
+};
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
@@ -43,8 +52,14 @@ export const useClientsPage = () => {
       toast.success("לקוח נוצר בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.clients.all });
     },
-    onError: (err) =>
-      showErrorToast(err, "שגיאה ביצירת לקוח"),
+    onError: (err) => {
+      const code = extractErrorCode(err);
+      if (code === "CLIENT.DELETED_EXISTS") {
+        toast.error("לקוח עם מספר זהות זה נמחק בעבר. פנה למנהל לשחזור.");
+      } else {
+        showErrorToast(err, "שגיאה ביצירת לקוח");
+      }
+    },
   });
 
   const {
