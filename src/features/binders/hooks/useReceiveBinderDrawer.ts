@@ -83,7 +83,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
 
   const mutation = useMutation({
     mutationFn: (values: ReceiveBinderFormValues) => {
-      const notesWithPeriod = values.vat_period
+      const notesWithPeriod = values.binder_type === "vat" && values.vat_period
         ? [values.vat_period, values.notes].filter(Boolean).join(" | ")
         : values.notes ?? null;
 

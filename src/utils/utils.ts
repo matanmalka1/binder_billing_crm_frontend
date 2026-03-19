@@ -109,6 +109,10 @@ const resolveErrorMessage = (
   }
 
   if (axios.isAxiosError(error)) {
+    if (error.code === "ECONNABORTED" || /timeout/i.test(error.message ?? "")) {
+      return "הבקשה נמשכה יותר מדי זמן. נסה שוב.";
+    }
+
     const detail = error.response?.data?.detail;
     if (typeof detail === "string" && detail.trim()) return detail.trim();
     if (Array.isArray(detail)) return fallbackMessage;
