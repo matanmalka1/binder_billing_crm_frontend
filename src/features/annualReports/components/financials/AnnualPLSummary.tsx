@@ -19,8 +19,8 @@ interface Props {
   clientId: number;
 }
 
-const fmt = (n: number) =>
-  n.toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
+const fmt = (n: string | number) =>
+  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
 
@@ -67,10 +67,10 @@ export const AnnualPLSummary: React.FC<Props> = ({ reportId, clientId }) => {
   const fin = financialsQ.data;
   const tax = taxQ.data;
 
-  const grossIncome = fin.total_income;
-  const expenses = fin.recognized_expenses;
+  const grossIncome = Number(fin.total_income);
+  const expenses = Number(fin.recognized_expenses);
   const profitBeforeTax = grossIncome - expenses;
-  const taxAmount = tax.tax_after_credits;
+  const taxAmount = Number(tax.tax_after_credits);
   const netProfitAfterTax = profitBeforeTax - taxAmount;
   const grossMargin = grossIncome > 0 ? (profitBeforeTax / grossIncome) : 0;
 
@@ -153,10 +153,10 @@ const MultiYearChart: React.FC<MultiYearChartProps> = ({ clientId, currentReport
     const fin = finResults[i].data;
     const tax = taxResults[i].data;
     if (!fin || !tax) return null;
-    const income = fin.total_income;
-    const expenses = fin.recognized_expenses;
+    const income = Number(fin.total_income);
+    const expenses = Number(fin.recognized_expenses);
     const profit = income - expenses;
-    const taxAmt = tax.tax_after_credits;
+    const taxAmt = Number(tax.tax_after_credits);
     return { שנה: r.year, הכנסות: income, הוצאות: expenses, רווח: profit, מס: taxAmt };
   }).filter(Boolean) as { שנה: number; הכנסות: number; הוצאות: number; רווח: number; מס: number }[];
 

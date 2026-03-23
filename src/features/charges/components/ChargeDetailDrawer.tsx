@@ -103,11 +103,11 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
           charge ? (
             <div className="flex items-center gap-2 flex-wrap">
               <Link
-                to={`/clients/${charge.client_id}`}
+                to={`/clients/${charge.business_id}`}
                 className="text-blue-600 hover:underline"
                 onClick={onClose}
               >
-                {charge.client_name ?? `לקוח #${charge.client_id}`}
+                {charge.business_name ?? `עסק #${charge.business_id}`}
               </Link>
               <StatusBadge
                 status={charge.status}
@@ -127,18 +127,18 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
         {charge && (
           <DrawerSection title="פרטים">
             <DrawerField
-              label="לקוח"
+              label="עסק"
               value={
-                charge.client_name ? (
+                charge.business_name ? (
                   <Link
-                    to={`/clients/${charge.client_id}`}
+                    to={`/clients/${charge.business_id}`}
                     className="text-blue-600 hover:underline"
                     onClick={onClose}
                   >
-                    {charge.client_name}
+                    {charge.business_name}
                   </Link>
                 ) : (
-                  `לקוח #${charge.client_id}`
+                  `עסק #${charge.business_id}`
                 )
               }
             />

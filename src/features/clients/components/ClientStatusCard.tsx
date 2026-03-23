@@ -32,7 +32,7 @@ const Tile: React.FC<TileProps> = ({ icon, title, primary, secondary, onClick })
   </div>
 );
 
-const fmt = (n: number | null | undefined) =>
+const fmt = (n: string | number | null | undefined) =>
   n != null ? `₪${Number(n).toLocaleString("he-IL", { maximumFractionDigits: 0 })}` : "—";
 
 const CURRENT_YEAR = new Date().getFullYear();

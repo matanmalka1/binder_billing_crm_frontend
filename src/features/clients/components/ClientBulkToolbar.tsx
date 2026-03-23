@@ -1,10 +1,9 @@
 import { Loader2 } from "lucide-react";
-import type { BulkClientActionPayload } from "../api";
 
 interface ClientBulkToolbarProps {
   selectedCount: number;
   loading: boolean;
-  onAction: (action: BulkClientActionPayload["action"]) => Promise<void>;
+  onAction: (action: "freeze" | "close" | "activate") => Promise<void>;
   onClear: () => void;
 }
 

@@ -3,6 +3,7 @@ import { ENDPOINTS } from "@/api/endpoints";
 import { toQueryParams } from "@/api/queryParams";
 import type {
   NotificationItem,
+  NotificationListResponse,
   UnreadCountResponse,
   MarkReadResponse,
   ListNotificationsParams,
@@ -10,13 +11,20 @@ import type {
   SendNotificationResponse,
 } from "./contracts";
 
+const normalizeNotifications = (
+  data: NotificationItem[] | NotificationListResponse,
+): NotificationItem[] => {
+  if (Array.isArray(data)) return data;
+  return Array.isArray(data.items) ? data.items : [];
+};
+
 export const notificationsApi = {
   list: async (params?: ListNotificationsParams): Promise<NotificationItem[]> => {
-    const response = await api.get<NotificationItem[]>(
+    const response = await api.get<NotificationItem[] | NotificationListResponse>(
       ENDPOINTS.notifications,
       params ? { params: toQueryParams(params) } : undefined,
     );
-    return response.data;
+    return normalizeNotifications(response.data);
   },
 
   getUnreadCount: async (clientId?: number): Promise<UnreadCountResponse> => {
@@ -45,9 +53,15 @@ export const notificationsApi = {
   },
 
   send: async (payload: SendNotificationPayload): Promise<SendNotificationResponse> => {
+    const businessId = payload.business_id ?? payload.client_id;
     const response = await api.post<SendNotificationResponse>(
       ENDPOINTS.notificationsSend,
-      payload,
+      {
+        business_id: businessId,
+        channel: payload.channel,
+        message: payload.message,
+        severity: payload.severity,
+      },
     );
     return response.data;
   },

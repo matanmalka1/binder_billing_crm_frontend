@@ -1,12 +1,14 @@
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/Alert";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { DashboardStatsGrid } from "@/features/dashboard/components/DashboardStatsGrid";
-import { AdvisorTodayCard } from "@/features/dashboard/components/AdvisorTodayCard";
-import { AttentionPanel } from "@/features/dashboard/components/AttentionPanel";
-import { OperationalPanel } from "@/features/dashboard/components/OperationalPanel";
-import { SeasonSummaryWidget } from "@/features/dashboard/components/SeasonSummaryWidget";
-import { useDashboardPage } from "@/features/dashboard/hooks/useDashboardPage";
+import {
+  AdvisorTodayCard,
+  AttentionPanel,
+  DashboardStatsGrid,
+  OperationalPanel,
+  SeasonSummaryWidget,
+  useDashboardPage,
+} from "@/features/dashboard";
 
 export const Dashboard: React.FC = () => {
   const {

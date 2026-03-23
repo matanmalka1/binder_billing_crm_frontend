@@ -3,10 +3,12 @@ import { useParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/Alert";
 import { PageStateGuard } from "@/components/ui/PageStateGuard";
-import { ClientDetailsTabBar } from "@/features/clients/components/ClientDetailsTabBar";
-import { ClientDetailsTabContent } from "@/features/clients/components/ClientDetailsTabContent";
-import { useClientDetails } from "@/features/clients/hooks/useClientDetails";
-import type { ActiveClientDetailsTab } from "@/features/clients/constants";
+import {
+  ClientDetailsTabBar,
+  ClientDetailsTabContent,
+  useClientDetails,
+} from "@/features/clients";
+import type { ActiveClientDetailsTab } from "@/features/clients";
 
 interface ClientDetailsProps {
   initialTab?: ActiveClientDetailsTab;

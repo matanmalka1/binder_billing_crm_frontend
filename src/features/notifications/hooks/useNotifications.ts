@@ -9,11 +9,11 @@ export const useNotifications = (clientId?: number) => {
 
   const { data: notifications = [], isLoading } = useQuery({
     queryKey: QK.notifications.list(
-      clientId != null ? { client_id: clientId } : {},
+      clientId != null ? { business_id: clientId } : {},
     ),
     queryFn: () =>
       notificationsApi.list(
-        clientId != null ? { client_id: clientId } : undefined,
+        clientId != null ? { business_id: clientId } : undefined,
       ),
   });
 

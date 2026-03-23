@@ -22,27 +22,29 @@ export const canFile = (status: string): boolean =>
 export const isFiled = (status: string): boolean => status === "filed";
 
 /** Formats a VAT amount as ₪X.XX, or "—" for null/NaN */
-export const formatVatAmount = (amount: number | null | undefined): string => {
+export const formatVatAmount = (amount: string | number | null | undefined): string => {
   if (amount === null || amount === undefined || isNaN(Number(amount))) return "—";
   return `₪${Number(amount).toFixed(2)}`;
 };
 
 /** LTR-safe currency (negative sign before ₪), or "—" for null/NaN */
-export const formatVatAmountLtrSafe = (amount: number | null | undefined): string => {
+export const formatVatAmountLtrSafe = (amount: string | number | null | undefined): string => {
   if (amount === null || amount === undefined || isNaN(Number(amount))) return "—";
   const n = Number(amount);
   return n < 0 ? `-₪${Math.abs(n).toFixed(2)}` : `₪${n.toFixed(2)}`;
 };
 
-export const getVatDeductionRateLabel = (rate: number): string => {
-  if (rate === 1) return "100%";
-  if (rate === 0) return "0%";
-  return `${(rate * 100).toFixed(2)}%`;
+export const getVatDeductionRateLabel = (rate: string | number): string => {
+  const numeric = Number(rate);
+  if (numeric === 1) return "100%";
+  if (numeric === 0) return "0%";
+  return `${(numeric * 100).toFixed(2)}%`;
 };
 
-export const getVatDeductionRateClass = (rate: number): string => {
-  if (rate === 1) return "text-emerald-600 font-semibold";
-  if (rate === 0) return "text-gray-400";
+export const getVatDeductionRateClass = (rate: string | number): string => {
+  const numeric = Number(rate);
+  if (numeric === 1) return "text-emerald-600 font-semibold";
+  if (numeric === 0) return "text-gray-400";
   return "text-accent-600 font-semibold";
 };
 

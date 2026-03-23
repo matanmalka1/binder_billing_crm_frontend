@@ -61,6 +61,9 @@ export interface CreateClientPayload {
   address_zip_code?: string | null;
 }
 
+export type BulkClientActionPayload = never;
+export type DeletedClientInfo = DeletedClientSummary;
+
 export interface UpdateClientPayload {
   full_name?: string;
   phone?: string | null;
@@ -143,7 +146,7 @@ export interface BulkBusinessActionResult {
 }
 
 export interface VatSummaryCard {
-  net_vat_total: number;
+  net_vat_total: string;
   periods_filed: number;
   periods_total: number;
   latest_period: string | null;
@@ -153,17 +156,17 @@ export interface AnnualReportCard {
   status: string | null;
   form_type: string | null;
   filing_deadline: string | null;
-  refund_due: number | null;
-  tax_due: number | null;
+  refund_due: string | null;
+  tax_due: string | null;
 }
 
 export interface ChargesCard {
-  total_outstanding: number;
+  total_outstanding: string;
   unpaid_count: number;
 }
 
 export interface AdvancePaymentsCard {
-  total_paid: number;
+  total_paid: string;
   count: number;
 }
 

@@ -77,10 +77,10 @@ export const StatusTransitionPanel = ({
       note: form.note || null,
       ita_reference: form.itaRef || null,
       assessment_amount: form.assessmentAmount
-        ? Number(form.assessmentAmount)
+        ? form.assessmentAmount
         : null,
-      refund_due: form.refundDue ? Number(form.refundDue) : null,
-      tax_due: form.taxDue ? Number(form.taxDue) : null,
+      refund_due: form.refundDue ? form.refundDue : null,
+      tax_due: form.taxDue ? form.taxDue : null,
     });
     setSelected(null);
     setForm(EMPTY_FORM);

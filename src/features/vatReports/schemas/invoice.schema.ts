@@ -40,8 +40,8 @@ export type VatInvoiceEditValues = z.infer<typeof vatInvoiceEditSchema>;
 export const toInvoiceEditPayload = (
   values: VatInvoiceEditValues,
 ): UpdateVatInvoicePayload => ({
-  net_amount: Number(values.net_amount),
-  vat_amount: parseFloat((Number(values.net_amount) * 0.18).toFixed(2)),
+  net_amount: values.net_amount,
+  vat_amount: (Number(values.net_amount) * 0.18).toFixed(2),
   expense_category: values.expense_category || null,
   rate_type: values.rate_type || undefined,
   document_type: values.document_type || null,
@@ -54,8 +54,8 @@ export const toInvoiceRowPayload = (
   values: VatInvoiceRowValues,
 ): CreateVatInvoicePayload => ({
   invoice_type: values.invoice_type,
-  net_amount: Number(values.net_amount),
-  vat_amount: parseFloat((Number(values.net_amount) * 0.18).toFixed(2)),
+  net_amount: values.net_amount,
+  vat_amount: (Number(values.net_amount) * 0.18).toFixed(2),
   expense_category: values.expense_category || null,
   rate_type: values.rate_type || undefined,
   document_type: values.document_type || null,

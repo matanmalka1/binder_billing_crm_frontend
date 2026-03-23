@@ -4,8 +4,8 @@ import { fmtCurrency } from "../utils";
 
 interface OverviewKPICardsProps {
   year: number;
-  totalExpected: number | null;
-  totalPaid: number | null;
+  totalExpected: string | number | null;
+  totalPaid: string | number | null;
   collectionRate: number | null;
 }
 

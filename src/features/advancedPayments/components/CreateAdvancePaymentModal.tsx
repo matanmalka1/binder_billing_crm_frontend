@@ -63,8 +63,8 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
       period: `${year}-${String(data.month).padStart(2, "0")}`,
       period_months_count: data.period_months_count,
       due_date: data.due_date,
-      expected_amount: data.expected_amount,
-      paid_amount: data.paid_amount,
+      expected_amount: data.expected_amount != null ? String(data.expected_amount) : null,
+      paid_amount: data.paid_amount != null ? String(data.paid_amount) : null,
       notes: data.notes ?? null,
     });
     reset(CREATE_ADVANCE_PAYMENT_DEFAULTS);
@@ -156,7 +156,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
                   onClick={applySuggestion}
                   className="text-sm text-blue-600 hover:underline text-right w-full"
                 >
-                  הצעה לפי מחזור שנה קודמת: ₪{suggestion.suggested_amount.toLocaleString("he-IL")} — לחץ למילוי
+                  הצעה לפי מחזור שנה קודמת: ₪{Number(suggestion.suggested_amount).toLocaleString("he-IL")} — לחץ למילוי
                 </button>
               )}
             </div>

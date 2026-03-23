@@ -1,10 +1,9 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
-import { DatePicker } from "../../../components/ui/DatePicker";
 import type { CreateClientPayload } from "../api";
 import { createClientSchema, type CreateClientFormValues } from "../schemas";
 
@@ -16,18 +15,22 @@ interface Props {
 }
 
 export const CreateClientModal: React.FC<Props> = ({ open, onClose, onSubmit, isLoading = false }) => {
-  const { register, handleSubmit, control, formState: { errors }, reset } = useForm<CreateClientFormValues>({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<CreateClientFormValues>({
     resolver: zodResolver(createClientSchema),
-    defaultValues: { full_name: "", id_number: "", client_type: "osek_patur", phone: "", email: "", opened_at: new Date().toISOString().split("T")[0] },
+    defaultValues: { full_name: "", id_number: "", id_number_type: "individual", phone: "", email: "" },
   });
 
   const handleClose = () => { if (!isLoading) { reset(); onClose(); } };
   const onFormSubmit = handleSubmit(async (data) => {
     const payload: CreateClientPayload = {
       ...data,
-      opened_at: data.opened_at as CreateClientPayload["opened_at"],
       phone: data.phone ? data.phone : null,
       email: data.email ? data.email : null,
+      address_street: null,
+      address_building_number: null,
+      address_apartment: null,
+      address_city: null,
+      address_zip_code: null,
     };
     await onSubmit(payload);
     reset();
@@ -49,26 +52,12 @@ export const CreateClientModal: React.FC<Props> = ({ open, onClose, onSubmit, is
         <div className="space-y-4">
           <Input label="שם מלא *" placeholder="ישראל ישראלי" error={errors.full_name?.message} disabled={isLoading} {...register("full_name")} />
           <Input label="מספר זהות / ח.פ *" placeholder="123456789" error={errors.id_number?.message} disabled={isLoading} {...register("id_number")} />
-          <Select label="סוג לקוח *" error={errors.client_type?.message} disabled={isLoading} {...register("client_type")}> 
-            <option value="osek_patur">עוסק פטור</option>
-            <option value="osek_murshe">עוסק מורשה</option>
-            <option value="company">חברה</option>
-            <option value="employee">שכיר</option>
+          <Select label="סוג מזהה *" error={errors.id_number_type?.message} disabled={isLoading} {...register("id_number_type")}>
+            <option value="individual">יחיד</option>
+            <option value="corporation">תאגיד</option>
+            <option value="passport">דרכון</option>
+            <option value="other">אחר</option>
           </Select>
-          <Controller
-            name="opened_at"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                label="תאריך פתיחה *"
-                error={errors.opened_at?.message}
-                value={field.value}
-                onChange={field.onChange}
-                onBlur={field.onBlur}
-                disabled={isLoading}
-              />
-            )}
-          />
         </div>
 
         <div className="space-y-4 border-t border-gray-200 pt-4">

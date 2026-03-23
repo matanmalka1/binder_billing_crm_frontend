@@ -5,8 +5,7 @@ import { AnnualReportOverviewSection } from "./AnnualReportOverviewSection";
 import { IncomeExpensePanel } from "../financials/IncomeExpensePanel";
 import { TaxCalculationPanel } from "../tax/TaxCalculationPanel";
 import { DeductionsTab } from "../tax/DeductionsTab";
-// eslint-disable-next-line no-restricted-imports -- TODO Wave 4: replace with documents feature barrel
-import { ClientDocumentsTab } from "../../../../features/documents/components/ClientDocumentsTab";
+import { ClientDocumentsTab } from "@/features/documents";
 import { FilingTimelineTab } from "../shared/FilingTimelineTab";
 
 interface AnnualReportSectionContentProps {
@@ -49,7 +48,7 @@ export const AnnualReportSectionContent = ({
           onScheduleAdd={addSchedule}
           isScheduleLoading={isCompletingSchedule}
           isScheduleAdding={isAddingSchedule}
-          clientId={report.client_id}
+          clientId={report.business_id ?? 0}
           onDirtyChange={setIsDirty}
           submitRef={submitRef}
         />
@@ -57,7 +56,7 @@ export const AnnualReportSectionContent = ({
     case "financials": return <IncomeExpensePanel reportId={reportId} />;
     case "tax": return <TaxCalculationPanel reportId={reportId} />;
     case "deductions": return <DeductionsTab reportId={reportId} taxYear={report.tax_year} />;
-    case "documents": return <ClientDocumentsTab clientId={report.client_id} />;
+    case "documents": return <ClientDocumentsTab clientId={report.business_id ?? 0} />;
     case "timeline": return <FilingTimelineTab reports={[report]} />;
   }
 };

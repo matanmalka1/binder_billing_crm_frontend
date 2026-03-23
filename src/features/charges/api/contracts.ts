@@ -1,31 +1,35 @@
 import type { PaginatedResponse } from "@/types/common";
 
-export interface ChargeBase {
+export interface ChargeResponse {
   id: number;
-  client_id: number;
-  client_name: string | null;
+  business_id: number;
+  business_name: string | null;
+  annual_report_id: number | null;
   charge_type: string;
-  period: string | null;
   status: string;
+  amount: string;
+  period: string | null;
+  months_covered: number | null;
+  description: string | null;
   created_at: string;
+  created_by: number | null;
   issued_at: string | null;
+  issued_by: number | null;
   paid_at: string | null;
+  paid_by: number | null;
+  canceled_at: string | null;
+  canceled_by: number | null;
+  cancellation_reason: string | null;
 }
 
-export interface ChargeAdvisorResponse extends ChargeBase {
-  amount: number;
-  currency: string;
-}
+export type ChargeBase = ChargeResponse;
+export type ChargeAdvisorResponse = ChargeResponse;
+export type ChargeSecretaryResponse = ChargeResponse;
 
-export interface ChargeSecretaryResponse extends ChargeBase {
-  amount?: never;
-  currency?: never;
-}
-
-export type ChargeResponse = ChargeAdvisorResponse | ChargeSecretaryResponse;
 export type ChargesListResponse = PaginatedResponse<ChargeResponse>;
 
 export interface ChargesListParams {
+  business_id?: number;
   client_id?: number;
   status?: string;
   charge_type?: string;
@@ -35,11 +39,19 @@ export interface ChargesListParams {
 }
 
 export interface CreateChargePayload {
-  client_id: number;
-  amount: number;
-  charge_type: "retainer" | "one_time";
+  business_id: number;
+  amount: string;
+  charge_type:
+    | "monthly_retainer"
+    | "annual_report_fee"
+    | "vat_filing_fee"
+    | "representation_fee"
+    | "consultation_fee"
+    | "other";
   period?: string | null;
-  currency?: string;
+  months_covered?: number | null;
+  description?: string | null;
+  annual_report_id?: number | null;
 }
 
 export interface BulkChargeActionPayload {

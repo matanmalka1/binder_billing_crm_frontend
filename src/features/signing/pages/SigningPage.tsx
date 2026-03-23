@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
 import { FileSignature } from "lucide-react";
-import { SigningForm } from "@/features/signing/components/SigningForm";
-import { SigningStatus } from "@/features/signing/components/SigningStatus";
-import { useSigningPageState } from "@/features/signing/hooks/useSigningPageState";
-import type { SigningTerminalState } from "@/features/signing/types";
+import {
+  SigningForm,
+  SigningStatus,
+  useSigningPageState,
+  type SigningTerminalState,
+} from "@/features/signing";
 
 const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">

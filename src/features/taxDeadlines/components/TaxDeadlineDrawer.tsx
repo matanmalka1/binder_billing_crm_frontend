@@ -29,7 +29,7 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
     <DetailDrawer
       open={deadline !== null}
       title={deadline ? getDeadlineTypeLabel(deadline.deadline_type) : ""}
-      subtitle={deadline?.client_name ?? (deadline ? `לקוח #${deadline.client_id}` : undefined)}
+      subtitle={deadline?.business_name ?? (deadline ? `עסק #${deadline.business_id}` : undefined)}
       onClose={onClose}
     >
       {deadline && (
@@ -40,7 +40,7 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
               size="sm"
               onClick={() => {
                 const year = getYear(new Date(deadline.due_date));
-                navigate(`/tax/advance-payments?client_id=${deadline.client_id}&year=${year}`);
+                navigate(`/tax/advance-payments?client_id=${deadline.business_id}&year=${year}`);
                 onClose();
               }}
             >
@@ -49,14 +49,14 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
           </DrawerSection>
 
           <DrawerSection title="פרטי מועד">
-            <DrawerField label="לקוח" value={deadline.client_name ?? `#${deadline.client_id}`} />
+            <DrawerField label="עסק" value={deadline.business_name ?? `#${deadline.business_id}`} />
             <DrawerField label="סוג מועד" value={getDeadlineTypeLabel(deadline.deadline_type)} />
             <DrawerField label="תאריך יעד" value={formatDate(deadline.due_date)} />
             <DrawerField
               label="סכום לתשלום"
               value={
                 <span className="font-mono font-semibold">
-                  {formatCurrency(deadline.payment_amount, deadline.currency)}
+                  {formatCurrency(deadline.payment_amount)}
                 </span>
               }
             />

@@ -8,7 +8,6 @@ export const ENDPOINTS = {
   clients: "/clients",
   clientById: (clientId: number | string) => `/clients/${clientId}`,
   clientRestore: (clientId: number | string) => `/clients/${clientId}/restore`,
-  // FIX: was /clients/deleted/:idNumber — backend uses /clients/conflict/:id_number
   clientConflictByIdNumber: (idNumber: string) => `/clients/conflict/${idNumber}`,
   clientsExport: "/clients/export",
   clientsTemplate: "/clients/template",
@@ -19,11 +18,8 @@ export const ENDPOINTS = {
   businessById: (businessId: number | string) => `/businesses/${businessId}`,
   businessRestore: (businessId: number | string) => `/businesses/${businessId}/restore`,
   businessesBulkAction: "/businesses/bulk-action",
-  // FIX: was /clients/:id/status-card
   businessStatusCard: (businessId: number | string) => `/businesses/${businessId}/status-card`,
-  // FIX: was /clients/:id/tax-profile
   businessTaxProfile: (businessId: number | string) => `/businesses/${businessId}/tax-profile`,
-  // FIX: was /clients/:id/binders
   businessBinders: (businessId: number | string) => `/businesses/${businessId}/binders`,
 
   // ── Binders ───────────────────────────────────────────────────────────────
@@ -56,11 +52,8 @@ export const ENDPOINTS = {
 
   // ── Documents ─────────────────────────────────────────────────────────────
   documentsUpload: "/documents/upload",
-  // FIX: was /documents/client/:id — backend uses /documents/business/:id
   documentsByBusiness: (businessId: number | string) => `/documents/business/${businessId}`,
-  // FIX: was /documents/client/:id/signals
   documentSignalsByBusiness: (businessId: number | string) => `/documents/business/${businessId}/signals`,
-  // FIX: was /documents/client/:id/versions
   documentVersionsByBusiness: (businessId: number | string) => `/documents/business/${businessId}/versions`,
   documentsByAnnualReport: (reportId: number | string) => `/documents/annual-report/${reportId}`,
   documentById: (id: number | string) => `/documents/${id}`,
@@ -102,8 +95,8 @@ export const ENDPOINTS = {
   ) => `/annual-reports/${id}/annex/${schedule}/${lineId}`,
   annualReportsKanban: "/annual-reports/kanban/view",
   annualReportOverdue: "/annual-reports/overdue",
-  // FIX: was /clients/:id/annual-reports
   businessAnnualReports: (businessId: number | string) => `/businesses/${businessId}/annual-reports`,
+  clientAnnualReports: (businessId: number | string) => `/businesses/${businessId}/annual-reports`,
   taxYearSummary: (taxYear: number | string) => `/tax-year/${taxYear}/summary`,
   taxYearReports: (taxYear: number | string) => `/tax-year/${taxYear}/reports`,
 
@@ -116,7 +109,6 @@ export const ENDPOINTS = {
   taxDeadlinesGenerate: "/tax-deadlines/generate",
 
   // ── Advance Payments ──────────────────────────────────────────────────────
-  // FIX: all advance payment endpoints are scoped under /businesses/:id
   businessAdvancePayments: (businessId: number | string) =>
     `/businesses/${businessId}/advance-payments`,
   businessAdvancePaymentById: (businessId: number | string, id: number | string) =>
@@ -134,7 +126,6 @@ export const ENDPOINTS = {
   // ── VAT ───────────────────────────────────────────────────────────────────
   vatWorkItems: "/vat/work-items",
   vatWorkItemById: (id: number | string) => `/vat/work-items/${id}`,
-  // FIX: was /vat/clients/:id/work-items
   vatWorkItemsByBusiness: (businessId: number | string) =>
     `/vat/businesses/${businessId}/work-items`,
   vatWorkItemMaterialsComplete: (id: number | string) =>
@@ -147,29 +138,24 @@ export const ENDPOINTS = {
   vatWorkItemSendBack: (id: number | string) => `/vat/work-items/${id}/send-back`,
   vatWorkItemFile: (id: number | string) => `/vat/work-items/${id}/file`,
   vatWorkItemAudit: (id: number | string) => `/vat/work-items/${id}/audit`,
-  // FIX: was /vat/client/:id/summary and /vat/client/:id/export
   vatBusinessSummary: (businessId: number | string) =>
     `/vat/businesses/${businessId}/summary`,
   vatBusinessExport: (businessId: number | string) =>
     `/vat/businesses/${businessId}/export`,
 
   // ── Authority Contacts ────────────────────────────────────────────────────
-  // FIX: was /clients/:id/authority-contacts — backend uses /businesses/:id
   businessAuthorityContacts: (businessId: number | string) =>
     `/businesses/${businessId}/authority-contacts`,
-  // FIX: was /clients/authority-contacts/:id
   authorityContactById: (id: number | string) =>
     `/businesses/authority-contacts/${id}`,
 
   // ── Correspondence ────────────────────────────────────────────────────────
-  // FIX: was /clients/:id/correspondence — backend uses /businesses/:id
   correspondenceList: (businessId: number | string) =>
     `/businesses/${businessId}/correspondence`,
   correspondenceById: (businessId: number | string, id: number | string) =>
     `/businesses/${businessId}/correspondence/${id}`,
 
   // ── Timeline ──────────────────────────────────────────────────────────────
-  // FIX: was /clients/:id/timeline — backend uses /businesses/:id
   businessTimeline: (businessId: number | string) =>
     `/businesses/${businessId}/timeline`,
 
@@ -182,7 +168,6 @@ export const ENDPOINTS = {
     `/signature-requests/${id}/cancel`,
   signatureRequestAuditTrail: (id: number | string) =>
     `/signature-requests/${id}/audit-trail`,
-  // FIX: was /clients/:id/signature-requests
   businessSignatureRequests: (businessId: number | string) =>
     `/businesses/${businessId}/signature-requests`,
   signerView: (token: string) => `/sign/${token}`,

@@ -10,10 +10,11 @@ import type {
 
 export const taxDeadlinesApi = {
   createTaxDeadline: async (payload: {
-    client_id: number;
+    business_id: number;
     deadline_type: string;
     due_date: string;
-    payment_amount?: number | null;
+    period?: string | null;
+    payment_amount?: string | null;
     description?: string | null;
   }): Promise<TaxDeadlineResponse> => {
     const response = await api.post<TaxDeadlineResponse>(ENDPOINTS.taxDeadlines, payload);
@@ -21,15 +22,20 @@ export const taxDeadlinesApi = {
   },
 
   listTaxDeadlines: async (params: {
+    business_name?: string;
     client_name?: string;
     deadline_type?: string;
     status?: string;
     page?: number;
     page_size?: number;
   }): Promise<TaxDeadlineListResponse> => {
+    const normalizedParams =
+      params.business_name == null && params.client_name != null
+        ? { ...params, business_name: params.client_name }
+        : params;
     const response = await api.get<TaxDeadlineListResponse>(
       ENDPOINTS.taxDeadlines,
-      { params: toQueryParams(params) },
+      { params: toQueryParams(normalizedParams) },
     );
     return response.data;
   },
@@ -49,7 +55,8 @@ export const taxDeadlinesApi = {
     payload: {
       deadline_type?: string;
       due_date?: string;
-      payment_amount?: number | null;
+      period?: string | null;
+      payment_amount?: string | null;
       description?: string | null;
     },
   ): Promise<TaxDeadlineResponse> => {
@@ -72,16 +79,16 @@ export const taxDeadlinesApi = {
     return response.data;
   },
 
-  getTimeline: async (clientId: number): Promise<TimelineEntry[]> => {
+  getTimeline: async (businessId: number): Promise<TimelineEntry[]> => {
     const response = await api.get<TimelineEntry[]>(
       ENDPOINTS.taxDeadlinesTimeline,
-      { params: toQueryParams({ client_id: clientId }) },
+      { params: toQueryParams({ business_id: businessId }) },
     );
     return response.data;
   },
 
   generateDeadlines: async (payload: {
-    client_id: number;
+    business_id: number;
     year: number;
   }): Promise<{ created_count: number }> => {
     const response = await api.post<{ created_count: number }>(

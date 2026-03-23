@@ -14,8 +14,8 @@ import { EditExpenseLineForm } from "./EditExpenseLineForm";
 
 interface IncomeExpensePanelProps { reportId: number; }
 
-const fmt = (n: number) =>
-  n.toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
+const fmt = (n: string | number) =>
+  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId }) => {
   const [editingIncomeId, setEditingIncomeId] = useState<number | null>(null);
@@ -34,9 +34,9 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
 
   const incomeLines: IncomeLineResponse[] = data?.income_lines ?? [];
   const expenseLines: ExpenseLineResponse[] = data?.expense_lines ?? [];
-  const totalIncome = data?.total_income ?? 0;
-  const totalExpenses = data?.recognized_expenses ?? data?.gross_expenses ?? 0;
-  const taxableIncome = data?.taxable_income ?? 0;
+  const totalIncome = Number(data?.total_income ?? 0);
+  const totalExpenses = Number(data?.recognized_expenses ?? data?.gross_expenses ?? 0);
+  const taxableIncome = Number(data?.taxable_income ?? 0);
 
   return (
     <div className="space-y-5">
@@ -86,7 +86,7 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
           </div>
           <div className="px-4 pb-3 pt-2">
             <AddLineForm typeOptions={INCOME_LABELS}
-              onAdd={(key, amt, desc) => addIncome.mutate({ type_key: key, amount: amt, description: desc })}
+              onAdd={(key, amt, desc) => addIncome.mutate({ type_key: key, amount: Number(amt), description: desc })}
               isAdding={addIncome.isPending} label="הוסף הכנסה" />
           </div>
         </div>

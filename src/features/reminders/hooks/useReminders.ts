@@ -15,20 +15,20 @@ import {
 } from "../schemas";
 
 const makeDefaultFormValues = (
-  clientId?: number,
+  businessId?: number,
 ): CreateReminderFormValues => ({
   ...createReminderDefaultValues,
-  client_id: clientId ? String(clientId) : "",
+  client_id: businessId ? String(businessId) : "",
 });
 
 const buildPayload = (
   values: CreateReminderFormValues,
-  fixedClientId?: number,
+  fixedBusinessId?: number,
 ): CreateReminderRequest => {
   // Schema guarantees all fields are valid at this point.
-  const clientId = fixedClientId ?? Number(values.client_id);
+  const businessId = fixedBusinessId ?? Number(values.client_id);
   const base = {
-    client_id: clientId,
+    business_id: businessId,
     target_date: values.target_date,
     days_before: values.days_before,
     message: values.message || undefined,
@@ -79,7 +79,7 @@ export const useReminders = (opts?: { clientId?: number }) => {
   const remindersQuery = useQuery({
     queryKey: QK.reminders.list(clientId),
     queryFn: () =>
-      remindersApi.list(clientId ? { client_id: clientId } : undefined),
+      remindersApi.list(clientId ? { business_id: clientId } : undefined),
   });
 
   const createMutation = useMutation({

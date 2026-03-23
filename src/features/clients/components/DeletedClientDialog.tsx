@@ -1,13 +1,12 @@
 import { AlertTriangle } from "lucide-react";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
-import { getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
-import type { DeletedClientInfo } from "../api";
+import type { DeletedClientSummary } from "../api";
 
 interface Props {
   open: boolean;
-  deletedClient: DeletedClientInfo | null;
+  deletedClient: DeletedClientSummary | null;
   isAdvisor: boolean;
   onRestore: () => void;
   onForceCreate: () => void;
@@ -80,12 +79,6 @@ export const DeletedClientDialog: React.FC<Props> = ({
             <span className="text-gray-500">שם</span>
             <span className="font-medium text-gray-900">
               {deletedClient.full_name}
-            </span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">סוג לקוח</span>
-            <span className="font-medium text-gray-900">
-              {getClientTypeLabel(deletedClient.client_type)}
             </span>
           </div>
           <div className="flex justify-between text-sm">

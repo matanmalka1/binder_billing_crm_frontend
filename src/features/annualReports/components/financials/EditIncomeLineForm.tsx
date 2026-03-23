@@ -6,7 +6,7 @@ interface EditIncomeLineFormProps {
   line: IncomeLineResponse;
   typeOptions: Record<string, string>;
   isSaving: boolean;
-  onSave: (payload: { source_type: IncomeSourceType; amount: number; description?: string }) => void;
+  onSave: (payload: { source_type: IncomeSourceType; amount: string; description?: string }) => void;
   onCancel: () => void;
 }
 
@@ -33,7 +33,7 @@ export const EditIncomeLineForm: React.FC<EditIncomeLineFormProps> = ({
       setError("יש להזין סכום חיובי");
       return;
     }
-    onSave({ source_type: typeKey, amount: parsed, description: description || undefined });
+    onSave({ source_type: typeKey, amount: String(parsed), description: description || undefined });
   };
 
   return (

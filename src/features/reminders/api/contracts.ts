@@ -8,26 +8,32 @@ export type ReminderStatus = "pending" | "sent" | "canceled";
 
 export interface Reminder {
   id: number;
-  client_id: number;
-  client_name: string | null;
+  business_id: number;
+  business_name: string | null;
   reminder_type: ReminderType;
   status: ReminderStatus;
   target_date: string;
   days_before: number;
   send_on: string;
   message: string;
-  created_at: string;
-  sent_at: string | null;
-  canceled_at: string | null;
   binder_id: number | null;
   charge_id: number | null;
   tax_deadline_id: number | null;
+  annual_report_id: number | null;
+  advance_payment_id: number | null;
+  created_at: string;
+  created_by: number | null;
+  sent_at: string | null;
+  canceled_at: string | null;
+  canceled_by: number | null;
 }
 
 type BaseCreateReminderRequest = {
-  client_id: number;
+  business_id: number;
   target_date: string;
   days_before: number;
+  annual_report_id?: number | null;
+  advance_payment_id?: number | null;
 };
 
 export type CreateReminderRequest =

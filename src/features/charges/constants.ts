@@ -20,12 +20,19 @@ export const CHARGE_STATUS_OPTIONS: { value: string; label: string }[] = [
 
 export const CHARGE_TYPE_OPTIONS_WITH_ALL: { value: string; label: string }[] = [
   { value: "", label: "כל הסוגים" },
-  { value: "one_time", label: getChargeTypeLabel("one_time") },
-  { value: "retainer", label: getChargeTypeLabel("retainer") },
-  { value: "hourly", label: getChargeTypeLabel("hourly") },
+  { value: "monthly_retainer", label: getChargeTypeLabel("monthly_retainer") },
+  { value: "annual_report_fee", label: getChargeTypeLabel("annual_report_fee") },
+  { value: "vat_filing_fee", label: getChargeTypeLabel("vat_filing_fee") },
+  { value: "representation_fee", label: getChargeTypeLabel("representation_fee") },
+  { value: "consultation_fee", label: getChargeTypeLabel("consultation_fee") },
+  { value: "other", label: getChargeTypeLabel("other") },
 ];
 
 export const CHARGE_TYPE_OPTIONS: { value: string; label: string }[] = [
-  { value: "one_time", label: getChargeTypeLabel("one_time") },
-  { value: "retainer", label: getChargeTypeLabel("retainer") },
+  { value: "monthly_retainer", label: getChargeTypeLabel("monthly_retainer") },
+  { value: "annual_report_fee", label: getChargeTypeLabel("annual_report_fee") },
+  { value: "vat_filing_fee", label: getChargeTypeLabel("vat_filing_fee") },
+  { value: "representation_fee", label: getChargeTypeLabel("representation_fee") },
+  { value: "consultation_fee", label: getChargeTypeLabel("consultation_fee") },
+  { value: "other", label: getChargeTypeLabel("other") },
 ];

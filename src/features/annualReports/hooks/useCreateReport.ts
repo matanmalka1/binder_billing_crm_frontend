@@ -55,7 +55,7 @@ export const useCreateReport = (onSuccess?: () => void) => {
     mutationFn: (payload: CreateAnnualReportPayload) => annualReportsApi.createReport(payload),
     onSuccess: (data) => {
       const message = data.profit != null
-        ? `דוח נוצר | רווח ראשוני: ₪${data.profit.toLocaleString("he-IL")}`
+        ? `דוח נוצר | רווח ראשוני: ₪${Number(data.profit).toLocaleString("he-IL")}`
         : "דוח שנתי נוצר בהצלחה";
       toast.success(message);
       queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
@@ -66,11 +66,10 @@ export const useCreateReport = (onSuccess?: () => void) => {
   });
 
   const buildPayload = (values: CreateReportFormOutput): CreateAnnualReportPayload => ({
-    client_id: Number(values.client_id),
+    business_id: Number(values.client_id),
     tax_year: Number(values.tax_year),
     client_type: values.client_type,
     deadline_type: values.deadline_type,
-    filing_date: values.filing_date || null,
     notes: values.notes || null,
     has_rental_income: values.has_rental_income,
     has_capital_gains: values.has_capital_gains,

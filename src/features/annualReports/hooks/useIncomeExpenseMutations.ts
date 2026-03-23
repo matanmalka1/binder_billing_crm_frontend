@@ -19,7 +19,7 @@ export const useIncomeExpenseMutations = (reportId: number) => {
     mutationFn: ({ type_key, amount, description }: { type_key: string; amount: number; description?: string }) =>
       annualReportFinancialsApi.addIncomeLine(reportId, {
         source_type: type_key as IncomeSourceType,
-        amount,
+        amount: String(amount),
         description,
       }),
     onSuccess: () => { toast.success("הכנסה נוספה"); invalidate(); },
@@ -36,9 +36,9 @@ export const useIncomeExpenseMutations = (reportId: number) => {
     mutationFn: (payload: AddExpensePayload) =>
       annualReportFinancialsApi.addExpenseLine(reportId, {
         category: payload.category,
-        amount: payload.amount,
+        amount: String(payload.amount),
         description: payload.description,
-        recognition_rate: payload.recognition_rate,
+        recognition_rate: payload.recognition_rate != null ? String(payload.recognition_rate) : undefined,
         supporting_document_ref: payload.supporting_document_ref,
       }),
     onSuccess: () => { toast.success("הוצאה נוספה"); invalidate(); },

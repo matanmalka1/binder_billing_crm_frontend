@@ -1,17 +1,8 @@
 import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
 import { Search } from "lucide-react";
-import { Select } from "../../../components/ui/Select";
 import { Input } from "../../../components/ui/Input";
 import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
-import { cn } from "../../../utils/utils";
 import type { ClientsFiltersBarProps } from "../types";
-
-const STATUS_OPTIONS = [
-  { value: "", label: "הכל" },
-  { value: "active", label: "פעיל" },
-  { value: "frozen", label: "מוקפא" },
-  { value: "closed", label: "סגור" },
-];
 
 export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
   filters,
@@ -25,12 +16,11 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
   const handleReset = () => {
     setSearchDraft("");
     onFilterChange("search", "");
-    onFilterChange("status", "");
   };
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3">
         <Input
           label="חיפוש לקוח"
           value={searchDraft}
@@ -38,19 +28,11 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
           placeholder="שם, ת.ז. / ח.פ."
           startIcon={<Search className="h-4 w-4" />}
         />
-        <Select
-          label="סטטוס לקוח"
-          value={filters.status}
-          onChange={(e) => onFilterChange("status", e.target.value)}
-          options={STATUS_OPTIONS}
-          className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
-        />
       </div>
 
       <ActiveFilterBadges
         badges={[
           filters.search ? { key: "search", label: `חיפוש: ${filters.search}`, onRemove: () => { setSearchDraft(""); onFilterChange("search", ""); } } : null,
-          filters.status ? { key: "status", label: STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onFilterChange("status", "") } : null,
         ].filter((b): b is NonNullable<typeof b> => b !== null)}
         onReset={handleReset}
       />

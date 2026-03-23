@@ -2,9 +2,7 @@ import { type FC } from "react";
 import { Edit2, Trash2 } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
-import { Badge } from "../../../components/ui/Badge";
 import { DefinitionList } from "../../../components/ui/DefinitionList";
-import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
 import type { ClientResponse } from "../api";
 
@@ -14,12 +12,6 @@ type ClientInfoSectionProps = {
   onEditStart: () => void;
   onDeleteStart?: () => void;
 };
-
-const statusBadge = (status: string) => (
-  <Badge variant={status === "active" ? "success" : status === "frozen" ? "warning" : "neutral"}>
-    {getClientStatusLabel(status)}
-  </Badge>
-);
 
 /** Formats the five structured address fields into a single human-readable string. */
 const formatStructuredAddress = (client: ClientResponse): string => {
@@ -42,14 +34,12 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
 }) => {
   const infoItems = [
     { label: "מספר זהות / ח.פ", value: client.id_number },
-    { label: "סוג לקוח", value: getClientTypeLabel(client.client_type) },
-    { label: "סטטוס", value: statusBadge(client.status) },
+    { label: "סוג מזהה", value: client.id_number_type ?? "—" },
     { label: "טלפון", value: client.phone || "—" },
     { label: "אימייל", value: client.email || "—" },
     { label: "כתובת למשלוח", value: formatStructuredAddress(client) },
-    { label: "תיק קלסר ראשי", value: client.primary_binder_number || "—" },
-    { label: "תאריך פתיחה", value: formatDate(client.opened_at) },
-    { label: "תאריך סגירה", value: client.closed_at ? formatDate(client.closed_at) : "—" },
+    { label: "נוצר בתאריך", value: formatDate(client.created_at) },
+    { label: "עודכן בתאריך", value: client.updated_at ? formatDate(client.updated_at) : "—" },
   ];
 
   return (

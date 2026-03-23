@@ -23,9 +23,11 @@ export const getUrgencyColor = makeClassGetter(
   "bg-gray-100 text-gray-800 border-gray-200",
 );
 
-export const formatCurrency = (amount: number | null, currency = "ILS"): string => {
+export const formatCurrency = (amount: string | number | null): string => {
   if (amount === null) return "—";
-  return `${amount.toLocaleString("he-IL", { minimumFractionDigits: 2 })} ${currency}`;
+  const numeric = Number(amount);
+  if (Number.isNaN(numeric)) return "—";
+  return `${numeric.toLocaleString("he-IL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₪`;
 };
 
 export const calculateDaysRemaining = (dueDate: string): number => {

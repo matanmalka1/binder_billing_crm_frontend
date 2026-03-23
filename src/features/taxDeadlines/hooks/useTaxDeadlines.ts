@@ -34,7 +34,7 @@ export const useTaxDeadlines = () => {
 
   const apiParams = useMemo(
     () => ({
-      client_name: toOptionalString(filters.client_name),
+      business_name: toOptionalString(filters.client_name),
       deadline_type: toOptionalString(filters.deadline_type),
       status: toOptionalString(filters.status),
       page: filters.page,
@@ -50,16 +50,17 @@ export const useTaxDeadlines = () => {
 
   const createMutation = useMutation({
     mutationFn: (payload: {
-      client_id: number;
+      business_id: number;
       deadline_type: string;
       due_date: string;
-      payment_amount?: number | null;
+      period?: string | null;
+      payment_amount?: string | null;
       description?: string | null;
     }) => taxDeadlinesApi.createTaxDeadline(payload),
     onSuccess: (_data, payload) => {
       toast.success("מועד נוצר בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
-      queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(payload.client_id) });
+      queryClient.invalidateQueries({ queryKey: QK.timeline.businessRoot(payload.business_id) });
       setShowCreateModal(false);
     },
     onError: (error) => showErrorToast(error, "שגיאה ביצירת מועד"),
@@ -68,7 +69,7 @@ export const useTaxDeadlines = () => {
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: {
       id: number;
-      payload: { deadline_type?: string; due_date?: string; payment_amount?: number | null; description?: string | null };
+      payload: { deadline_type?: string; due_date?: string; period?: string | null; payment_amount?: string | null; description?: string | null };
     }) => taxDeadlinesApi.updateTaxDeadline(id, payload),
     onSuccess: () => {
       toast.success("מועד עודכן בהצלחה");
@@ -89,12 +90,12 @@ export const useTaxDeadlines = () => {
   });
 
   const generateMutation = useMutation({
-    mutationFn: (payload: { client_id: number; year: number }) =>
+    mutationFn: (payload: { business_id: number; year: number }) =>
       taxDeadlinesApi.generateDeadlines(payload),
     onSuccess: (data, payload) => {
       toast.success(`נוצרו ${data.created_count} דדליינים בהצלחה`);
       queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
-      queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(payload.client_id) });
+      queryClient.invalidateQueries({ queryKey: QK.timeline.businessRoot(payload.business_id) });
     },
     onError: (error) => showErrorToast(error, "שגיאה ביצירת דדליינים"),
   });
@@ -125,10 +126,10 @@ export const useTaxDeadlines = () => {
 
   const onSubmit = form.handleSubmit(async (values) => {
     await createMutation.mutateAsync({
-      client_id: Number(values.client_id),
+      business_id: Number(values.client_id),
       deadline_type: values.deadline_type,
       due_date: values.due_date,
-      payment_amount: values.payment_amount ? Number(values.payment_amount) : null,
+      payment_amount: values.payment_amount ? values.payment_amount : null,
       description: values.description || null,
     });
     form.reset();
@@ -141,7 +142,7 @@ export const useTaxDeadlines = () => {
       payload: {
         deadline_type: values.deadline_type || undefined,
         due_date: values.due_date || undefined,
-        payment_amount: values.payment_amount ? Number(values.payment_amount) : null,
+        payment_amount: values.payment_amount ? values.payment_amount : null,
         description: values.description || null,
       },
     });
@@ -199,8 +200,8 @@ export const useTaxDeadlines = () => {
     handleEdit,
     handleDelete,
     // Generate
-    handleGenerate: (clientId: number, year: number) =>
-      generateMutation.mutate({ client_id: clientId, year }),
+    handleGenerate: (businessId: number, year: number) =>
+      generateMutation.mutate({ business_id: businessId, year }),
     isGenerating: generateMutation.isPending,
     // Forms
     form,

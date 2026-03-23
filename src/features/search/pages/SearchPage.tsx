@@ -7,11 +7,13 @@ import { DataTable } from "@/components/ui/DataTable";
 import { Alert } from "@/components/ui/Alert";
 import { PaginationCard } from "@/components/ui/PaginationCard";
 import { StateCard } from "@/components/ui/StateCard";
-import { SearchFiltersBar } from "@/features/search/components/SearchFiltersBar";
-import { searchColumns } from "@/features/search/components/SearchColumns";
-import { DocumentResultsSection } from "@/features/search/components/DocumentResultsSection";
-import { useSearchPage } from "@/features/search/hooks/useSearchPage";
-import type { SearchResult } from "@/features/search/api";
+import {
+  DocumentResultsSection,
+  searchColumns,
+  SearchFiltersBar,
+  useSearchPage,
+  type SearchResult,
+} from "@/features/search";
 
 export const Search: React.FC = () => {
   const { error, filters, handleFilterChange, handleReset, loading, results, documents, total } = useSearchPage();

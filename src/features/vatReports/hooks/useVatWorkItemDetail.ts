@@ -37,11 +37,13 @@ export const useVatWorkItemDetail = (workItemId: number | null) => {
       const key =
         inv.invoice_type === "income" ? "הכנסות" : getVatCategoryLabel(inv.expense_category);
       const existing = map.get(key);
+      const netAmount = Number(inv.net_amount);
+      const vatAmount = Number(inv.vat_amount);
       if (existing) {
-        existing.netAmount += inv.net_amount;
-        existing.vatAmount += inv.vat_amount;
+        existing.netAmount += netAmount;
+        existing.vatAmount += vatAmount;
       } else {
-        map.set(key, { label: key, netAmount: inv.net_amount, vatAmount: inv.vat_amount });
+        map.set(key, { label: key, netAmount, vatAmount });
       }
     }
 

@@ -45,7 +45,7 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
     setIsLoading(true);
     try {
       await vatReportsApi.fileVatReturn(workItemId, {
-        filing_method: filingMethod,
+        submission_method: filingMethod,
         submission_reference: submissionReference.trim() || undefined,
         is_amendment: isAmendment,
         amends_item_id: isAmendment && amendsItemId ? Number(amendsItemId) : null,

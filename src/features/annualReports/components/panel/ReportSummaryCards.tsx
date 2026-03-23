@@ -9,8 +9,8 @@ interface Props {
   reportId: number;
 }
 
-const fmt = (n: number) =>
-  n.toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
+const fmt = (n: string | number) =>
+  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 interface MetricCardProps {
   label: string;
@@ -106,15 +106,21 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
 
   const balanceIsDue = adv.balance_type === "due";
   const balanceIsRefund = adv.balance_type === "refund";
-  const absBalance = Math.abs(adv.final_balance);
+  const absBalance = Math.abs(Number(adv.final_balance));
   const balanceSub = balanceIsDue
     ? `יתרה: ₪${absBalance.toLocaleString("he-IL")} לתשלום`
     : balanceIsRefund
       ? `יתרה: ₪${absBalance.toLocaleString("he-IL")} החזר`
       : "מאוזן";
 
-  const profitMargin = fin.total_income > 0
-    ? ((tax.net_profit / fin.total_income) * 100)
+  const totalIncome = Number(fin.total_income);
+  const recognizedExpenses = Number(fin.recognized_expenses);
+  const grossExpenses = Number(fin.gross_expenses);
+  const netProfit = Number(tax.net_profit);
+  const taxAfterCredits = Number(tax.tax_after_credits);
+  const totalAdvancesPaid = Number(adv.total_advances_paid);
+  const profitMargin = totalIncome > 0
+    ? ((netProfit / totalIncome) * 100)
     : 0;
 
   return (
@@ -122,17 +128,17 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
       {/* ניכויים מוכרים */}
       <MetricCard
         label="ניכויים מוכרים"
-        value={fmt(fin.recognized_expenses)}
-        sub={`מתוך ${fmt(fin.gross_expenses)} הוצאות`}
+        value={fmt(recognizedExpenses)}
+        sub={`מתוך ${fmt(grossExpenses)} הוצאות`}
         colorClass="border-purple-100"
         trend={null}
-        trendLabel={`${((fin.recognized_expenses / Math.max(fin.total_income, 1)) * 100).toFixed(1)}% מהכנסות`}
+        trendLabel={`${((recognizedExpenses / Math.max(totalIncome, 1)) * 100).toFixed(1)}% מהכנסות`}
       />
 
       {/* מקדמות ששולמו */}
       <MetricCard
         label="מקדמות ששולמו"
-        value={fmt(adv.total_advances_paid)}
+        value={fmt(totalAdvancesPaid)}
         sub={balanceSub}
         subClass={balanceIsDue ? "text-red-500" : balanceIsRefund ? "text-green-600" : "text-gray-400"}
         colorClass="border-blue-100"
@@ -155,7 +161,7 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
       {/* חבות מס שנתית */}
       <MetricCard
         label="חבות מס שנתית"
-        value={fmt(tax.tax_after_credits)}
+        value={fmt(taxAfterCredits)}
         sub={`שיעור אפקטיבי`}
         colorClass="border-red-100"
         trend={-(tax.effective_rate * 100)}
@@ -165,7 +171,7 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
       {/* רווח נקי */}
       <MetricCard
         label="רווח נקי"
-        value={fmt(tax.net_profit)}
+        value={fmt(netProfit)}
         colorClass="border-green-100"
         trend={profitMargin}
         trendLabel={`${profitMargin.toFixed(1)}% שיעור רווח`}
@@ -174,7 +180,7 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
       {/* הכנסות ברוטו */}
       <MetricCard
         label="הכנסות ברוטו"
-        value={fmt(fin.total_income)}
+        value={fmt(totalIncome)}
         colorClass="border-gray-200"
         trend={null}
         trendLabel="סך הכנסות"

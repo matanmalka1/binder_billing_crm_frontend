@@ -7,8 +7,8 @@ import type { StageKey } from "../../types";
 interface AnnualReportCardProps {
   report: {
     id: number;
-    client_id: number;
-    client_name: string;
+    business_id: number;
+    business_name: string;
     tax_year: number;
     days_until_due: number | null;
   };
@@ -72,11 +72,11 @@ export const AnnualReportCard: React.FC<AnnualReportCardProps> = ({
         type="button"
         onClick={() => onOpenDetail(report.id)}
         className="w-full text-right px-4 pt-4 pb-3 block"
-        aria-label={`${report.client_name}, שנת ${report.tax_year}${report.days_until_due !== null && report.days_until_due < 0 ? `, באיחור ${Math.abs(report.days_until_due)} ימים` : report.days_until_due !== null ? `, ${report.days_until_due} ימים נותרו` : ""}`}
+        aria-label={`${report.business_name}, שנת ${report.tax_year}${report.days_until_due !== null && report.days_until_due < 0 ? `, באיחור ${Math.abs(report.days_until_due)} ימים` : report.days_until_due !== null ? `, ${report.days_until_due} ימים נותרו` : ""}`}
       >
         <div className="flex items-start justify-between gap-1.5">
           <TruncateText
-            text={report.client_name}
+            text={report.business_name}
             className="font-semibold text-gray-900 leading-tight flex-1"
           />
           <span className="shrink-0 rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-500 tabular-nums">

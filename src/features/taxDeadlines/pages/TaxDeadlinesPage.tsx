@@ -5,16 +5,17 @@ import { PaginationCard } from "@/components/ui/PaginationCard";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
-import { TaxDeadlinesFilters } from "@/features/taxDeadlines/components/TaxDeadlinesFilters";
-import { TaxDeadlinesTable } from "@/features/taxDeadlines/components/TaxDeadlinesTable";
-import { TaxDeadlineForm } from "@/features/taxDeadlines/components/TaxDeadlineForm";
-import { EditTaxDeadlineFormModal } from "@/features/taxDeadlines/components/EditTaxDeadlineForm";
-import { TaxDeadlineDrawer } from "@/features/taxDeadlines/components/TaxDeadlineDrawer";
-import { useTaxDeadlines } from "@/features/taxDeadlines/hooks/useTaxDeadlines";
-import { useTaxDashboard } from "@/features/taxDashboard/hooks/useTaxDashboard";
-import { TaxSubmissionStats } from "@/features/taxDashboard/components/TaxSubmissionStats";
+import {
+  EditTaxDeadlineFormModal,
+  TaxDeadlineDrawer,
+  TaxDeadlineForm,
+  TaxDeadlinesFilters,
+  TaxDeadlinesTable,
+  useTaxDeadlines,
+  type TaxDeadlineResponse,
+} from "@/features/taxDeadlines";
+import { TaxSubmissionStats, useTaxDashboard } from "@/features/taxDashboard";
 import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
-import type { TaxDeadlineResponse } from "@/features/taxDeadlines/api";
 
 export const TaxDeadlines: React.FC = () => {
   const {

@@ -21,8 +21,8 @@ export interface VatBreakdownData {
 
 export const computeVatBreakdown = (
   invoices: VatInvoiceResponse[],
-  totalOutputVat: number,
-  totalInputVat: number,
+  totalOutputVat: string | number,
+  totalInputVat: string | number,
 ): VatBreakdownData => {
   const income = invoices.filter((i) => i.invoice_type === "income");
   const expense = invoices.filter((i) => i.invoice_type === "expense");
@@ -58,10 +58,10 @@ export const computeVatBreakdown = (
 
   return {
     totalIncomeNet,
-    totalOutputVat,
+    totalOutputVat: Number(totalOutputVat),
     expenseRows,
     totalExpenseNet,
     totalGrossVat,
-    totalInputVat,
+    totalInputVat: Number(totalInputVat),
   };
 };

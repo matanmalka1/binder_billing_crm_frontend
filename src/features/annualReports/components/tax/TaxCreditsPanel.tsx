@@ -13,8 +13,8 @@ const CREDIT_POINT_VALUE_BY_YEAR: Record<number, number> = {
   2026: 3_003,
 };
 
-const fmt = (n: number) =>
-  n.toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
+const fmt = (n: string | number) =>
+  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 interface CreditRow {
   label: string;
@@ -39,10 +39,10 @@ export const TaxCreditsPanel: React.FC<Props> = ({ reportId, taxYear }) => {
   const tuitionCredit = data.tuition_credit_points
     ? data.tuition_credit_points * cpv
     : 0;
-  const otherCredits = data.other_credits ?? 0;
+  const otherCredits = Number(data.other_credits ?? 0);
 
   const basicCredit = creditPoints * cpv;
-  const pensionContribution = data.pension_contribution ?? 0;
+  const pensionContribution = Number(data.pension_contribution ?? 0);
 
   const rows: CreditRow[] = [
     {

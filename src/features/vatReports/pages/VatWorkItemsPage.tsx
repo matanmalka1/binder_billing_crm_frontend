@@ -2,17 +2,19 @@ import { useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { AlertTriangle, Clock, FileText, Hourglass, CheckCircle2 } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { VatComplianceReportView } from "@/features/reports/components/VatComplianceReportView";
+import {
+  buildVatWorkItemColumns,
+  useVatWorkItemsPage,
+  VatWorkItemsCreateModal,
+  VatWorkItemsFiltersCard,
+} from "@/features/vatReports";
+import { VatComplianceReportView } from "@/features/reports";
 import { cn } from "@/utils/utils";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { DataTable } from "@/components/ui/DataTable";
 import { PaginationCard } from "@/components/ui/PaginationCard";
 import { StatsCard } from "@/components/ui/StatsCard";
-import { VatWorkItemsCreateModal } from "@/features/vatReports/components/VatWorkItemsCreateModal";
-import { VatWorkItemsFiltersCard } from "@/features/vatReports/components/VatWorkItemsFiltersCard";
-import { buildVatWorkItemColumns } from "@/features/vatReports/components/VatWorkItemColumns";
-import { useVatWorkItemsPage } from "@/features/vatReports/hooks/useVatWorkItemsPage";
 
 type ActiveTab = "list" | "compliance";
 

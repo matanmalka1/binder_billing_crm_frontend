@@ -51,9 +51,9 @@ export const useReportMutations = (
       toast.success("סטטוס עודכן בהצלחה");
       if (qk) void queryClient.invalidateQueries({ queryKey: qk });
       void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
-      const clientId = reportData?.client_id;
-      if (clientId) {
-        void queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(clientId) });
+      const businessId = reportData?.business_id;
+      if (businessId) {
+        void queryClient.invalidateQueries({ queryKey: QK.timeline.businessRoot(businessId) });
       }
     },
   });
@@ -68,8 +68,8 @@ export const useReportMutations = (
           prev
             ? {
                 ...prev,
-                tax_refund_amount: updated.tax_refund_amount,
-                tax_due_amount: updated.tax_due_amount,
+                tax_refund_amount: updated.tax_refund_amount ?? prev.tax_refund_amount,
+                tax_due_amount: updated.tax_due_amount ?? prev.tax_due_amount,
                 client_approved_at: updated.client_approved_at,
                 internal_notes: updated.internal_notes,
               }

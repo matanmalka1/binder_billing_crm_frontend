@@ -1,3 +1,5 @@
+import type { BackendAction } from "@/lib/actions/types";
+
 export type AnnualReportStatus =
   | "not_started"
   | "collecting_docs"
@@ -61,8 +63,10 @@ export type ExpenseCategoryType =
 
 export interface AnnualReportFull {
   id: number;
-  client_id: number;
+  business_id: number;
+  client_id?: number | null;
   client_name?: string | null;
+  business_name?: string | null;
   tax_year: number;
   client_type: ClientTypeForReport;
   form_type: string;
@@ -72,14 +76,16 @@ export interface AnnualReportFull {
   custom_deadline_note: string | null;
   submitted_at: string | null;
   ita_reference: string | null;
-  assessment_amount: number | null;
-  refund_due: number | null;
-  tax_due: number | null;
+  assessment_amount: string | null;
+  refund_due: string | null;
+  tax_due: string | null;
   has_rental_income: boolean;
   has_capital_gains: boolean;
   has_foreign_income: boolean;
   has_depreciation: boolean;
   has_exempt_rental: boolean;
+  submission_method: string | null;
+  extension_reason: string | null;
   notes: string | null;
   created_at: string;
   updated_at: string;
@@ -87,45 +93,35 @@ export interface AnnualReportFull {
   created_by: number;
   schedules?: ScheduleEntry[];
   status_history?: StatusHistoryEntry[];
-  tax_refund_amount?: number | null;
-  tax_due_amount?: number | null;
+  pension_contribution?: string | null;
+  donation_amount?: string | null;
+  other_credits?: string | null;
   client_approved_at?: string | null;
   internal_notes?: string | null;
   amendment_reason?: string | null;
-  profit?: number | null;
-  final_balance?: number | null;
-  available_actions?: {
-    id: string;
-    key: string;
-    label: string;
-    method: string;
-    endpoint: string;
-    payload?: Record<string, unknown>;
-    confirm?: {
-      title: string;
-      message: string;
-      confirm_label: string;
-      cancel_label: string;
-    };
-  }[];
-  total_income?: number;
-  total_expenses?: number;
-  taxable_income?: number;
+  tax_refund_amount?: number | null;
+  tax_due_amount?: number | null;
+  total_income?: string | null;
+  total_expenses?: string | null;
+  taxable_income?: string | null;
+  profit?: string | null;
+  final_balance?: string | null;
+  available_actions?: BackendAction[];
 }
 
 export interface ReportDetailResponse {
   report_id: number;
-  tax_refund_amount: number | null;
-  tax_due_amount: number | null;
+  pension_contribution: string | null;
+  donation_amount: string | null;
+  other_credits: string | null;
+  credit_points?: number | null;
+  life_insurance_credit_points?: number | null;
+  tuition_credit_points?: number | null;
+  tax_refund_amount?: number | null;
+  tax_due_amount?: number | null;
   client_approved_at: string | null;
   internal_notes: string | null;
-  credit_points: number | null;
-  pension_credit_points: number | null;
-  life_insurance_credit_points: number | null;
-  tuition_credit_points: number | null;
-  pension_contribution: number | null;
-  donation_amount: number | null;
-  other_credits: number | null;
+  amendment_reason: string | null;
   created_at: string | null;
   updated_at: string | null;
 }
@@ -139,6 +135,7 @@ export interface ScheduleEntry {
   notes: string | null;
   created_at: string;
   completed_at: string | null;
+  completed_by: number | null;
 }
 
 export interface StatusHistoryEntry {
@@ -147,7 +144,7 @@ export interface StatusHistoryEntry {
   from_status: AnnualReportStatus | null;
   to_status: AnnualReportStatus;
   changed_by: number;
-  changed_by_name: string;
+  changed_by_name?: string | null;
   note: string | null;
   occurred_at: string;
 }
@@ -181,22 +178,22 @@ export interface KanbanStage {
   stage: StageKey;
   reports: Array<{
     id: number;
-    client_id: number;
-    client_name: string;
+    business_id: number;
+    business_name: string;
     tax_year: number;
     days_until_due: number | null;
   }>;
 }
 
 export interface CreateAnnualReportPayload {
-  client_id: number;
+  business_id: number;
   tax_year: number;
   client_type: ClientTypeForReport;
   deadline_type?: DeadlineType;
-  filing_date?: string | null;
-  status?: string;
   assigned_to?: number | null;
   notes?: string | null;
+  submission_method?: string | null;
+  extension_reason?: string | null;
   has_rental_income?: boolean;
   has_capital_gains?: boolean;
   has_foreign_income?: boolean;
@@ -208,16 +205,16 @@ export interface StatusTransitionPayload {
   status: AnnualReportStatus;
   note?: string | null;
   ita_reference?: string | null;
-  assessment_amount?: number | null;
-  refund_due?: number | null;
-  tax_due?: number | null;
+  assessment_amount?: string | null;
+  refund_due?: string | null;
+  tax_due?: string | null;
 }
 
 export interface IncomeLineResponse {
   id: number;
   annual_report_id: number;
   source_type: IncomeSourceType;
-  amount: number;
+  amount: string;
   description: string | null;
   created_at: string;
   updated_at: string | null;
@@ -227,9 +224,9 @@ export interface ExpenseLineResponse {
   id: number;
   annual_report_id: number;
   category: ExpenseCategoryType;
-  amount: number;
-  recognition_rate: number;
-  recognized_amount: number;
+  amount: string;
+  recognition_rate: string;
+  recognized_amount: string;
   supporting_document_ref: string | null;
   supporting_document_id: number | null;
   supporting_document_filename: string | null;
@@ -240,10 +237,10 @@ export interface ExpenseLineResponse {
 
 export interface FinancialSummaryResponse {
   annual_report_id: number;
-  total_income: number;
-  gross_expenses: number;
-  recognized_expenses: number;
-  taxable_income: number;
+  total_income: string;
+  gross_expenses: string;
+  recognized_expenses: string;
+  taxable_income: string;
   income_lines: IncomeLineResponse[];
   expense_lines: ExpenseLineResponse[];
 }
@@ -257,31 +254,32 @@ export interface ReadinessCheckResponse {
 
 export interface BracketBreakdownItem {
   rate: number;
-  from_amount: number;
-  to_amount: number | null;
-  taxable_in_bracket: number;
-  tax_in_bracket: number;
+  from_amount: string;
+  to_amount: string | null;
+  taxable_in_bracket: string;
+  tax_in_bracket: string;
 }
 
 export interface NationalInsuranceBreakdown {
-  base_amount: number;
-  high_amount: number;
-  total: number;
+  base_amount: string;
+  high_amount: string;
+  total: string;
 }
 
 export interface TaxCalculationResult {
-  taxable_income: number;
-  pension_deduction: number;
-  tax_before_credits: number;
-  credit_points_value: number;
-  donation_credit: number;
-  other_credits: number;
-  tax_after_credits: number;
-  net_profit: number;
+  taxable_income: string;
+  pension_deduction: string;
+  tax_before_credits: string;
+  credit_points_value: string;
+  donation_credit: string;
+  other_credits: string;
+  tax_after_credits: string;
+  net_profit: string;
   effective_rate: number;
   national_insurance: NationalInsuranceBreakdown;
   brackets: BracketBreakdownItem[];
-  total_liability: number | null;
+  total_liability: string | null;
+  total_credit_points: number;
 }
 
 export interface AnnexDataLine {
@@ -301,23 +299,23 @@ export interface AnnexDataAddPayload {
 }
 
 export interface AdvancesSummary {
-  total_advances_paid: number;
+  total_advances_paid: string;
   advances_count: number;
-  final_balance: number;
+  final_balance: string;
   balance_type: "due" | "refund" | "zero";
 }
 
 export interface IncomeLinePayload {
   source_type: IncomeSourceType;
-  amount: number;
+  amount: string;
   description?: string | null;
 }
 
 export interface ExpenseLinePayload {
   category: ExpenseCategoryType;
-  amount: number;
+  amount: string;
   description?: string | null;
-  recognition_rate?: number | null;
+  recognition_rate?: string | null;
   supporting_document_ref?: string | null;
   supporting_document_id?: number | null;
 }

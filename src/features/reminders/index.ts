@@ -1,5 +1,11 @@
 // Public surface of the reminders feature
 export { remindersApi, remindersQK } from "./api";
+export { CreateReminderModal } from "./components/CreateReminderModal";
+export { ReminderDrawer } from "./components/ReminderDrawer";
+export { RemindersSummaryCards } from "./components/RemindersSummaryCards";
+export { RemindersTable } from "./components/RemindersTable";
+export { useReminders } from "./hooks/useReminders";
+export { RemindersPage } from "./pages/RemindersPage";
 export type {
   ReminderType,
   ReminderStatus,

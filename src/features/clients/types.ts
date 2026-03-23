@@ -1,13 +1,12 @@
 import type { ListClientsParams } from "./api";
 
-export interface ClientsFilters extends Omit<ListClientsParams, "has_signals"> {
-  has_signals: string;
+export interface ClientsFilters extends ListClientsParams {
   search: string;
 }
 
 export interface ClientsFiltersBarProps {
   filters: ClientsFilters;
-  onFilterChange: (name: "has_signals" | "status" | "page_size" | "search", value: string) => void;
+  onFilterChange: (name: "page_size" | "search", value: string) => void;
 }
 
 export interface ClientBinderSummary {

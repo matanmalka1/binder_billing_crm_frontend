@@ -51,7 +51,7 @@ export const useAnnualReportsKanban = (taxYear: number) => {
       const allReports = kanbanQuery.data?.stages.flatMap((s) => s.reports) ?? [];
       const report = allReports.find((r) => r.id === reportId);
       if (report) {
-        queryClient.invalidateQueries({ queryKey: QK.timeline.clientRoot(report.client_id) });
+        queryClient.invalidateQueries({ queryKey: QK.timeline.businessRoot(report.business_id) });
       }
     },
     onSettled: () => {

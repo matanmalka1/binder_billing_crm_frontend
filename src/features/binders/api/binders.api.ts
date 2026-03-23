@@ -13,7 +13,7 @@ import type {
   ReceiveBinderPayload,
   ReturnBinderPayload,
 } from "../types";
-import type { BinderDetailResponse, BinderListResponseExtended } from "./contracts";
+import type { BinderListResponseExtended } from "./contracts";
 
 export const bindersApi = {
   list: async (params: ListBindersParams): Promise<BinderListResponse> => {
@@ -49,10 +49,10 @@ export const bindersApi = {
   },
 
   listClientBinders: async (
-    clientId: number,
+    businessId: number,
     params: ListOperationalBindersParams,
   ): Promise<BinderExtendedListResponse> => {
-    const response = await api.get<BinderExtendedListResponse>(ENDPOINTS.clientBinders(clientId), {
+    const response = await api.get<BinderExtendedListResponse>(ENDPOINTS.businessBinders(businessId), {
       params: toQueryParams(params),
     });
     return response.data;

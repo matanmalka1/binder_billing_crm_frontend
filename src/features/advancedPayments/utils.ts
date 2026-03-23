@@ -27,8 +27,11 @@ export const MONTH_SHORT_NAMES = [
 
 export const YEAR_OPTIONS = buildYearOptions();
 
-export const getAdvancePaymentBalanceMeta = (totalExpected: number, totalPaid: number) => {
-  const balance = totalExpected - totalPaid;
+export const getAdvancePaymentBalanceMeta = (
+  totalExpected: string | number,
+  totalPaid: string | number,
+) => {
+  const balance = Number(totalExpected) - Number(totalPaid);
   return {
     balance,
     absBalance: Math.abs(balance),

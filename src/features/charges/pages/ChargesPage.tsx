@@ -6,15 +6,17 @@ import { Alert } from "@/components/ui/Alert";
 import { DataTable } from "@/components/ui/DataTable";
 import { PaginationCard } from "@/components/ui/PaginationCard";
 import { Button } from "@/components/ui/Button";
-import { ChargesCreateModal } from "@/features/charges/components/ChargesCreateModal";
-import { ChargesFiltersCard } from "@/features/charges/components/ChargesFiltersCard";
+import {
+  ChargeBulkToolbar,
+  buildChargeColumns,
+  ChargesCreateModal,
+  ChargeDetailDrawer,
+  ChargesFiltersCard,
+  ChargesSummaryBar,
+  useChargesPage,
+} from "@/features/charges";
+import { ImportExportModal } from "@/features/importExport";
 import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
-import { ChargesSummaryBar } from "@/features/charges/components/ChargesSummaryBar";
-import { buildChargeColumns } from "@/features/charges/components/ChargeColumns";
-import { ChargeDetailDrawer } from "@/features/charges/components/ChargeDetailDrawer";
-import { ChargeBulkToolbar } from "@/features/charges/components/ChargeBulkToolbar";
-import { useChargesPage } from "@/features/charges/hooks/useChargesPage";
-import { ImportExportModal } from "@/features/importExport/components/ImportExportModal";
 
 export const Charges: React.FC = () => {
   const [, setSearchParams] = useSearchParams();

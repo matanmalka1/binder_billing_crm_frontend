@@ -17,10 +17,10 @@ interface Props {
   onSelect?: (reportId: number) => void;
 }
 
-const fmt = (n: number | null | undefined) =>
+const fmt = (n: string | number | null | undefined) =>
   n == null
     ? "—"
-    : n.toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
+    : Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 export const ReportHistoryTable: React.FC<Props> = ({
   clientId,
@@ -71,7 +71,7 @@ export const ReportHistoryTable: React.FC<Props> = ({
           key: "profit",
           header: "רווח נקי",
           render: (r) => (
-            <span className={r.profit != null && r.profit >= 0 ? "text-green-600" : "text-red-600"}>
+            <span className={r.profit != null && Number(r.profit) >= 0 ? "text-green-600" : "text-red-600"}>
               {fmt(r.profit)}
             </span>
           ),
@@ -89,8 +89,8 @@ export const ReportHistoryTable: React.FC<Props> = ({
           render: (r) => {
             if (r.final_balance == null) return <span className="text-gray-400">—</span>;
             return (
-              <span className={r.final_balance > 0 ? "text-red-600" : "text-green-600"}>
-                {r.final_balance > 0 ? `${fmt(r.final_balance)} לתשלום` : `${fmt(Math.abs(r.final_balance))} החזר`}
+              <span className={Number(r.final_balance) > 0 ? "text-red-600" : "text-green-600"}>
+                {Number(r.final_balance) > 0 ? `${fmt(r.final_balance)} לתשלום` : `${fmt(Math.abs(Number(r.final_balance)))} החזר`}
               </span>
             );
           },

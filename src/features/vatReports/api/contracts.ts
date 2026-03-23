@@ -2,25 +2,28 @@ import type { PaginatedResponse } from "@/types/common";
 
 export interface VatWorkItemResponse {
   id: number;
-  client_id: number;
-  client_name: string | null;
+  business_id: number;
+  business_name: string | null;
+  business_status: string | null;
   period: string;
+  period_type: string | null;
   status: string;
   pending_materials_note: string | null;
-  total_output_vat: number;
-  total_input_vat: number;
-  net_vat: number;
-  final_vat_amount: number | null;
+  total_output_vat: string;
+  total_input_vat: string;
+  net_vat: string;
+  total_output_net: string;
+  total_input_net: string;
+  final_vat_amount: string | null;
   is_overridden: boolean;
   override_justification: string | null;
-  filing_method: string | null;
+  submission_method: string | null;
   filed_at: string | null;
   filed_by: number | null;
   filed_by_name?: string | null;
   created_by: number;
   assigned_to: number | null;
   assigned_to_name?: string | null;
-  client_status?: string | null;
   created_at: string;
   updated_at: string;
   submission_reference: string | null;
@@ -42,7 +45,7 @@ export interface VatWorkItemsListParams {
 }
 
 export interface CreateVatWorkItemPayload {
-  client_id: number;
+  business_id: number;
   period: string;
   assigned_to?: number | null;
   mark_pending?: boolean;
@@ -53,16 +56,17 @@ export interface VatInvoiceResponse {
   id: number;
   work_item_id: number;
   invoice_type: string;
+  document_type: string | null;
   invoice_number: string;
   invoice_date: string;
   counterparty_name: string;
   counterparty_id: string | null;
-  net_amount: number;
-  vat_amount: number;
+  counterparty_id_type: string | null;
+  net_amount: string;
+  vat_amount: string;
   expense_category: string | null;
   rate_type: string;
-  deduction_rate: number;
-  document_type: string | null;
+  deduction_rate: string;
   is_exceptional: boolean;
   created_by: number;
   created_at: string;
@@ -77,20 +81,23 @@ export interface CreateVatInvoicePayload {
   invoice_number?: string;
   invoice_date?: string;
   counterparty_name?: string;
-  net_amount: number;
-  vat_amount: number;
+  net_amount: string;
+  vat_amount: string;
   counterparty_id?: string | null;
+  counterparty_id_type?: string | null;
   expense_category?: string | null;
   rate_type?: string;
   document_type?: string | null;
 }
 
 export interface UpdateVatInvoicePayload {
-  net_amount?: number;
-  vat_amount?: number;
+  net_amount?: string;
+  vat_amount?: string;
   invoice_number?: string;
   invoice_date?: string;
   counterparty_name?: string;
+  counterparty_id?: string | null;
+  counterparty_id_type?: string | null;
   expense_category?: string | null;
   rate_type?: string;
   document_type?: string | null;
@@ -116,32 +123,32 @@ export interface VatPeriodRow {
   work_item_id: number;
   period: string;
   status: string;
-  total_output_vat: number;
-  total_input_vat: number;
-  net_vat: number;
-  total_output_net: number;
-  total_input_net: number;
-  final_vat_amount: number | null;
+  total_output_vat: string;
+  total_input_vat: string;
+  net_vat: string;
+  total_output_net: string;
+  total_input_net: string;
+  final_vat_amount: string | null;
   filed_at: string | null;
 }
 
 export interface VatAnnualSummary {
   year: number;
-  total_output_vat: number;
-  total_input_vat: number;
-  net_vat: number;
+  total_output_vat: string;
+  total_input_vat: string;
+  net_vat: string;
   periods_count: number;
   filed_count: number;
 }
 
 export interface VatClientSummaryResponse {
-  client_id: number;
+  business_id: number;
   periods: VatPeriodRow[];
   annual: VatAnnualSummary[];
 }
 
 export interface FileVatReturnPayload {
-  filing_method: "manual" | "online";
+  submission_method: "manual" | "online";
   override_amount?: string | null;
   override_justification?: string | null;
   submission_reference?: string;

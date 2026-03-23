@@ -86,25 +86,31 @@ export const vatReportsApi = {
     return response.data;
   },
 
-  listByClient: async (clientId: number): Promise<VatWorkItemListResponse> => {
-    const response = await api.get<VatWorkItemListResponse>(ENDPOINTS.vatWorkItemsByClient(clientId));
+  listByBusiness: async (businessId: number): Promise<VatWorkItemListResponse> => {
+    const response = await api.get<VatWorkItemListResponse>(ENDPOINTS.vatWorkItemsByBusiness(businessId));
     return response.data;
   },
-
-  getClientSummary: async (clientId: number): Promise<VatClientSummaryResponse> => {
-    const response = await api.get<VatClientSummaryResponse>(ENDPOINTS.vatClientSummary(clientId));
-    return response.data;
+  listByClient: async (businessId: number): Promise<VatWorkItemListResponse> => {
+    return vatReportsApi.listByBusiness(businessId);
   },
 
-  exportClientVat: async (clientId: number, format: "excel" | "pdf", year: number): Promise<void> => {
-    const response = await api.get<Blob>(ENDPOINTS.vatClientExport(clientId), {
+  getBusinessSummary: async (businessId: number): Promise<VatClientSummaryResponse> => {
+    const response = await api.get<VatClientSummaryResponse>(ENDPOINTS.vatBusinessSummary(businessId));
+    return response.data;
+  },
+  getClientSummary: async (businessId: number): Promise<VatClientSummaryResponse> => {
+    return vatReportsApi.getBusinessSummary(businessId);
+  },
+
+  exportBusinessVat: async (businessId: number, format: "excel" | "pdf", year: number): Promise<void> => {
+    const response = await api.get<Blob>(ENDPOINTS.vatBusinessExport(businessId), {
       params: { format, year },
       responseType: "blob",
     });
     const contentDisposition = response.headers["content-disposition"];
     const filenameMatch = contentDisposition?.match(/filename="?([^";]+)"?/);
     const ext = format === "excel" ? "xlsx" : "pdf";
-    const filename = filenameMatch?.[1] || `vat_${clientId}_${year}.${ext}`;
+    const filename = filenameMatch?.[1] || `vat_business_${businessId}_${year}.${ext}`;
     const mimeType =
       format === "excel"
         ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -118,5 +124,8 @@ export const vatReportsApi = {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+  },
+  exportClientVat: async (businessId: number, format: "excel" | "pdf", year: number): Promise<void> => {
+    return vatReportsApi.exportBusinessVat(businessId, format, year);
   },
 };

@@ -14,7 +14,7 @@ export const VatExportButtons: React.FC<VatExportButtonsProps> = ({ clientId, pe
     const setLoad = format === "excel" ? setLoadingExcel : setLoadingPdf;
     setLoad(true);
     try {
-      await vatReportsApi.exportClientVat(clientId, format, year);
+      await vatReportsApi.exportBusinessVat(clientId, format, year);
     } catch {
       toast.error("ייצוא נכשל, נסה שוב");
     } finally {

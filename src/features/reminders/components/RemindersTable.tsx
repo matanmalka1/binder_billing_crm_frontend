@@ -51,7 +51,7 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
             header: "לקוח",
             render: (r: Reminder) => (
               <span className="font-mono text-sm text-gray-500">
-                לקוח #{r.client_id}
+                עסק #{r.business_id}
               </span>
             ),
           },

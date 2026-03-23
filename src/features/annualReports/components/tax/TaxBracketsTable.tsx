@@ -4,12 +4,12 @@ interface Props {
   brackets: BracketBreakdownItem[];
 }
 
-const fmt = (n: number) =>
-  n.toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
+const fmt = (n: string | number) =>
+  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
-const fmtRate = (rate: number) => `${(rate * 100).toFixed(0)}%`;
+const fmtRate = (rate: string | number) => `${(Number(rate) * 100).toFixed(0)}%`;
 
-const fmtRange = (from: number, to: number | null) =>
+const fmtRange = (from: string | number, to: string | number | null) =>
   to === null ? `מעל ${fmt(from)}` : `${fmt(from)} – ${fmt(to)}`;
 
 export const TaxBracketsTable: React.FC<Props> = ({ brackets }) => {

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
@@ -7,13 +7,14 @@ import { DataTable } from "@/components/ui/DataTable";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { ClientsFiltersBar } from "@/features/clients/components/ClientsFiltersBar";
-import { CreateClientModal } from "@/features/clients/components/CreateClientModal";
-import { buildClientColumns } from "@/features/clients/components/ClientColumns";
-import { ClientBulkToolbar } from "@/features/clients/components/ClientBulkToolbar";
-import { DeletedClientDialog } from "@/features/clients/components/DeletedClientDialog";
-import { useClientsPage } from "@/features/clients/hooks/useClientsPage";
-import { ImportExportModal } from "@/features/importExport/components/ImportExportModal";
+import {
+  buildClientColumns,
+  ClientsFiltersBar,
+  CreateClientModal,
+  DeletedClientDialog,
+  useClientsPage,
+} from "@/features/clients";
+import { ImportExportModal } from "@/features/importExport";
 
 export const Clients: React.FC = () => {
   const navigate = useNavigate();
@@ -21,9 +22,7 @@ export const Clients: React.FC = () => {
   const [showImportExport, setShowImportExport] = useState(false);
   const {
     activeActionKey,
-    bulkLoading,
     clients,
-    clearSelection,
     error,
     filters,
     handleFilterChange,
@@ -32,39 +31,19 @@ export const Clients: React.FC = () => {
     pendingAction,
     cancelPendingAction,
     confirmPendingAction,
-    runBulkAction,
-    selectedIds,
     setPage,
-    toggleSelect,
-    toggleSelectAll,
     total,
     createClient,
     createLoading,
     deletedClientInfo,
     deletedClientDialogOpen,
     handleRestoreClient,
-    handleForceCreate,
     handleDismissDeletedDialog,
     restoreLoading,
-    forceCreateLoading,
     can,
   } = useClientsPage();
 
-  const activeCount = clients.filter((c) => c.status === "active").length;
-  const frozenCount = clients.filter((c) => c.status === "frozen").length;
-  const allIds = useMemo(() => clients.map((c) => c.id), [clients]);
-  const columns = useMemo(
-    () =>
-      isAdvisor
-        ? buildClientColumns({
-            selectedIds,
-            onToggleSelect: toggleSelect,
-            onToggleAll: toggleSelectAll,
-            allIds,
-          })
-        : buildClientColumns(),
-    [isAdvisor, selectedIds, toggleSelect, toggleSelectAll, allIds],
-  );
+  const columns = buildClientColumns();
   const totalPages = Math.max(
     1,
     Math.ceil(Math.max(total, 1) / filters.page_size),
@@ -108,19 +87,10 @@ export const Clients: React.FC = () => {
           onFilterChange={handleFilterChange}
         />
       </ToolbarContainer>
-      {isAdvisor && selectedIds.size > 0 && (
-        <ClientBulkToolbar
-          selectedCount={selectedIds.size}
-          loading={bulkLoading}
-          onAction={runBulkAction}
-          onClear={clearSelection}
-        />
-      )}
       {error && <Alert variant="error" message={error} />}
       {!loading && total > 0 && (
         <p className="text-sm text-gray-500">
-          סה&quot;כ {total} לקוחות · {activeCount} פעילים · {frozenCount}{" "}
-          מוקפאים
+          סה&quot;כ {total} לקוחות
         </p>
       )}
       <DataTable
@@ -178,13 +148,13 @@ export const Clients: React.FC = () => {
       deletedClient={deletedClientInfo}
       isAdvisor={isAdvisor}
       onRestore={handleRestoreClient}
-      onForceCreate={handleForceCreate}
+      onForceCreate={handleDismissDeletedDialog}
       onDismiss={() => {
         handleDismissDeletedDialog();
         setShowCreateModal(true);
       }}
       restoreLoading={restoreLoading}
-      forceCreateLoading={forceCreateLoading}
+      forceCreateLoading={false}
     />
     </div>
   );

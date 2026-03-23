@@ -30,7 +30,7 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
         ? (reminderTypeLabels[reminder.reminder_type] ?? reminder.reminder_type)
         : ""
     }
-    subtitle={reminder ? (reminder.client_name ? `${reminder.client_name} (#${reminder.client_id})` : `לקוח #${reminder.client_id}`) : undefined}
+    subtitle={reminder ? (reminder.business_name ? `${reminder.business_name} (#${reminder.business_id})` : `עסק #${reminder.business_id}`) : undefined}
     onClose={onClose}
   >
     {reminder && (
@@ -43,7 +43,7 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
               reminder.reminder_type
             }
           />
-          <DrawerField label="לקוח" value={reminder.client_name ? `${reminder.client_name} (#${reminder.client_id})` : `#${reminder.client_id}`} />
+          <DrawerField label="עסק" value={reminder.business_name ? `${reminder.business_name} (#${reminder.business_id})` : `#${reminder.business_id}`} />
           <DrawerField
             label="סטטוס"
             value={

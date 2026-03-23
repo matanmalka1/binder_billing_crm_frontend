@@ -18,11 +18,11 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     ),
   },
   {
-    key: "client_id",
-    header: "לקוח",
+    key: "business_id",
+    header: "עסק",
     render: (item) => (
       <span className="text-sm font-semibold text-gray-900">
-        {item.client_name ?? `#${item.client_id}`}
+        {item.business_name ?? `#${item.business_id}`}
       </span>
     ),
   },

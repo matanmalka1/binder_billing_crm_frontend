@@ -8,8 +8,8 @@ import type { ComponentType } from "react";
 
 interface Props { reportId: number; taxYear: number; }
 
-const fmt = (n: number) =>
-  n.toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
+const fmt = (n: string | number) =>
+  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 const CATEGORY_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   office_rent:           Building2,
@@ -36,7 +36,7 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
     return <p className="py-8 text-center text-sm text-gray-400">טוען ניכויים...</p>;
 
   const expenses = data?.expense_lines ?? [];
-  const totalRecognized = expenses.reduce((s, e) => s + e.recognized_amount, 0);
+  const totalRecognized = expenses.reduce((s, e) => s + Number(e.recognized_amount), 0);
 
   return (
     <div className="space-y-5">
@@ -68,8 +68,8 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
                       <p className="text-sm font-medium text-gray-800">
                         {EXPENSE_LABELS[e.category] ?? e.category}
                       </p>
-                      {e.recognition_rate < 100 && (
-                        <p className="text-xs text-amber-600">{e.recognition_rate}% מוכר</p>
+                      {Number(e.recognition_rate) < 100 && (
+                        <p className="text-xs text-amber-600">{Number(e.recognition_rate)}% מוכר</p>
                       )}
                     </div>
                   </div>

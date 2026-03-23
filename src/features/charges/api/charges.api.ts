@@ -1,6 +1,7 @@
 import { api } from "@/api/client";
 import { ENDPOINTS } from "@/api/endpoints";
 import { toQueryParams } from "@/api/queryParams";
+import { randomUUID } from "@/utils/random";
 import type {
   ChargeResponse,
   ChargeAdvisorResponse,
@@ -13,8 +14,12 @@ import type {
 
 export const chargesApi = {
   list: async (params: ChargesListParams): Promise<ChargesListResponse> => {
+    const normalizedParams =
+      params.business_id == null && params.client_id != null
+        ? { ...params, business_id: params.client_id }
+        : params;
     const response = await api.get<ChargesListResponse>(ENDPOINTS.charges, {
-      params: toQueryParams(params),
+      params: toQueryParams(normalizedParams),
     });
     return response.data;
   },
@@ -52,7 +57,11 @@ export const chargesApi = {
   },
 
   bulkAction: async (payload: BulkChargeActionPayload): Promise<BulkChargeActionResult> => {
-    const response = await api.post<BulkChargeActionResult>(ENDPOINTS.chargesBulkAction, payload);
+    const response = await api.post<BulkChargeActionResult>(ENDPOINTS.chargesBulkAction, payload, {
+      headers: {
+        "X-Idempotency-Key": randomUUID(),
+      },
+    });
     return response.data;
   },
 };

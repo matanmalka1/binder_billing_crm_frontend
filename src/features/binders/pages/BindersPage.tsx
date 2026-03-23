@@ -6,11 +6,13 @@ import { DataTable } from "@/components/ui/DataTable";
 import { PaginationCard } from "@/components/ui/PaginationCard";
 import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { BinderDrawer } from "@/features/binders/components/BinderDrawer";
-import { buildBindersColumns } from "@/features/binders/components/BindersColumns";
-import { BindersFiltersBar } from "@/features/binders/components/BindersFiltersBar";
-import { useBindersPage } from "@/features/binders/hooks/useBindersPage";
-import { useReceiveBinderDrawer } from "@/features/binders/hooks/useReceiveBinderDrawer";
+import {
+  BinderDrawer,
+  buildBindersColumns,
+  BindersFiltersBar,
+  useBindersPage,
+  useReceiveBinderDrawer,
+} from "@/features/binders";
 
 type DrawerMode = "detail" | "receive" | null;
 

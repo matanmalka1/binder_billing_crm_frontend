@@ -1,18 +1,23 @@
 import { getYear } from "date-fns";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { AdvancePaymentReportView } from "@/features/reports/components/AdvancePaymentReportView";
+import {
+  AdvancePaymentsFiltersBar,
+  OverviewKPICards,
+  useAdvancePaymentsOverview,
+  type AdvancePaymentOverviewRow,
+  type AdvancePaymentStatus,
+  MONTH_NAMES,
+  fmtCurrency,
+  STATUS_VARIANT,
+} from "@/features/advancedPayments";
+import { AdvancePaymentReportView } from "@/features/reports";
 import { cn } from "@/utils/utils";
 import { Alert } from "@/components/ui/Alert";
 import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
 import { DataTable, type Column } from "@/components/ui/DataTable";
 import { Badge } from "@/components/ui/Badge";
 import { PaginationCard } from "@/components/ui/PaginationCard";
-import { OverviewKPICards } from "@/features/advancedPayments/components/OverviewKPICards";
-import { AdvancePaymentsFiltersBar } from "@/features/advancedPayments/components/AdvancePaymentsFiltersBar";
-import { useAdvancePaymentsOverview } from "@/features/advancedPayments/hooks/useAdvancePaymentsOverview";
-import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "@/features/advancedPayments/types";
-import { MONTH_NAMES, fmtCurrency, STATUS_VARIANT } from "@/features/advancedPayments/utils";
 import { getAdvancePaymentStatusLabel } from "@/utils/enums";
 import { formatDate, parsePositiveInt } from "@/utils/utils";
 

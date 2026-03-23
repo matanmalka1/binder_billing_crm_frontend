@@ -1,5 +1,5 @@
 import { useParams, Navigate } from "react-router-dom";
-import { AnnualReportFullPanel } from "@/features/annualReports/components/panel/AnnualReportFullPanel";
+import { AnnualReportFullPanel } from "@/features/annualReports";
 
 export const AnnualReportDetail: React.FC = () => {
   const { reportId } = useParams<{ reportId: string }>();

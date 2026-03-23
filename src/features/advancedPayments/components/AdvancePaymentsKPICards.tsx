@@ -27,13 +27,13 @@ export const AdvancePaymentsKPICards: React.FC<AdvancePaymentsKPICardsProps> = (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
       <StatsCard
         title="סה״כ צפוי"
-        value={`₪${data.total_expected.toLocaleString("he-IL")}`}
+        value={`₪${Number(data.total_expected).toLocaleString("he-IL")}`}
         icon={Banknote}
         variant="blue"
       />
       <StatsCard
         title="סה״כ שולם"
-        value={`₪${data.total_paid.toLocaleString("he-IL")}`}
+        value={`₪${Number(data.total_paid).toLocaleString("he-IL")}`}
         icon={CheckCircle}
         variant="green"
       />

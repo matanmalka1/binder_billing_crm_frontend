@@ -7,13 +7,16 @@ import { DataTable } from "@/components/ui/DataTable";
 import { StatsCard } from "@/components/ui/StatsCard";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { SignatureRequestAuditDrawer } from "@/features/signatureRequests/components/SignatureRequestAuditDrawer";
-import { SignatureRequestsPageRowActions } from "@/features/signatureRequests/components/SignatureRequestsPageRowActions";
-import { CreateSignatureRequestModal } from "@/features/signatureRequests/components/CreateSignatureRequestModal";
-import { usePendingSignatureRequests } from "@/features/signatureRequests/hooks/usePendingSignatureRequests";
-import { useSignatureRequestActions } from "@/features/signatureRequests/hooks/useSignatureRequestActions";
-import { buildSigningUrl } from "@/features/signatureRequests/utils";
-import type { SignatureRequestResponse } from "@/features/signatureRequests/api";
+import {
+  buildSigningUrl,
+  CreateSignatureRequestModal,
+  SignatureRequestAuditDrawer,
+  SignatureRequestsPageRowActions,
+  usePendingSignatureRequests,
+  useSignatureRequestActions,
+  type SendSignatureRequestResponse,
+  type SignatureRequestResponse,
+} from "@/features/signatureRequests";
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "@/utils/enums";
 
 const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "success" | "error"> = {
@@ -25,7 +28,6 @@ const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "
   canceled: "neutral",
 };
 import { formatDate } from "@/utils/utils";
-import type { SendSignatureRequestResponse } from "@/features/signatureRequests/api";
 
 const TERMINAL_STATUSES = new Set(["signed", "expired", "canceled", "declined"]);
 

@@ -30,7 +30,7 @@ const urgencyRowMap: Record<string, string> = {
   yellow: "bg-yellow-50/30",
 };
 
-const TABLE_HEADERS = ["לקוח", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", ""];
+const TABLE_HEADERS = ["עסק", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", ""];
 
 export const TaxDeadlinesTable = ({
   deadlines,
@@ -88,7 +88,7 @@ export const TaxDeadlinesTable = ({
                 >
                   <td className="py-3.5 pr-4">
                     <span className="font-mono text-sm font-semibold text-gray-800">
-                      #{deadline.client_id}
+                      {deadline.business_name ?? `#${deadline.business_id}`}
                     </span>
                   </td>
                   <td className="py-3.5 pr-4 text-sm text-gray-700">
@@ -111,7 +111,7 @@ export const TaxDeadlinesTable = ({
                     )}
                   </td>
                   <td className="py-3.5 pr-4 text-sm font-medium text-gray-800">
-                    {formatCurrency(deadline.payment_amount, deadline.currency)}
+                    {formatCurrency(deadline.payment_amount)}
                   </td>
                   <td className="py-3.5 pr-4">
                     {isCompleted ? (

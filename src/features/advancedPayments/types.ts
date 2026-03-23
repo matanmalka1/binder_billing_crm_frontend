@@ -5,15 +5,15 @@ export interface AdvancePaymentRow {
   business_id: number;
   period: string;
   period_months_count: 1 | 2;
-  expected_amount: number | null;
-  paid_amount: number | null;
+  expected_amount: string | null;
+  paid_amount: string | null;
   status: AdvancePaymentStatus;
   due_date: string;
   paid_at: string | null;
   payment_method: string | null;
   annual_report_id: number | null;
   notes: string | null;
-  delta: number | null;
+  delta: string | null;
   created_at: string;
   updated_at: string | null;
 }
@@ -31,15 +31,15 @@ export interface CreateAdvancePaymentPayload {
   period: string;
   period_months_count: 1 | 2;
   due_date: string;
-  expected_amount?: number | null;
-  paid_amount?: number | null;
+  expected_amount?: string | null;
+  paid_amount?: string | null;
   payment_method?: string | null;
   notes?: string | null;
 }
 
 export interface UpdateAdvancePaymentPayload {
-  paid_amount?: number | null;
-  expected_amount?: number | null;
+  paid_amount?: string | null;
+  expected_amount?: string | null;
   status?: AdvancePaymentStatus;
   paid_at?: string | null;
   payment_method?: string | null;
@@ -51,8 +51,8 @@ export interface AdvancePaymentOverviewRow {
   business_id: number;
   business_name: string;
   period: string;
-  expected_amount: number | null;
-  paid_amount: number | null;
+  expected_amount: string | null;
+  paid_amount: string | null;
   status: AdvancePaymentStatus;
   due_date: string;
 }
@@ -70,23 +70,23 @@ export interface AdvancePaymentOverviewResponse {
   page: number;
   page_size: number;
   total: number;
-  total_expected: number | null;
-  total_paid: number | null;
+  total_expected: string | null;
+  total_paid: string | null;
   collection_rate: number | null;
 }
 
 export interface AdvancePaymentSuggestionResponse {
   business_id: number;
   year: number;
-  suggested_amount: number | null;
+  suggested_amount: string | null;
   has_data: boolean;
 }
 
 export interface AnnualKPIResponse {
   business_id: number;
   year: number;
-  total_expected: number;
-  total_paid: number;
+  total_expected: string;
+  total_paid: string;
   collection_rate: number;
   overdue_count: number;
   on_time_count: number;
@@ -94,9 +94,9 @@ export interface AnnualKPIResponse {
 
 export interface MonthlyChartRow {
   period: string;
-  expected_amount: number;
-  paid_amount: number;
-  overdue_amount: number;
+  expected_amount: string;
+  paid_amount: string;
+  overdue_amount: string;
 }
 
 export interface ChartDataResponse {

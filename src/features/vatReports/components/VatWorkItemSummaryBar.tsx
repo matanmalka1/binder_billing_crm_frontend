@@ -39,7 +39,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
           </Link>
           <ChevronLeft className="h-3.5 w-3.5 text-gray-300" />
           <span className="font-semibold text-gray-800">
-            {workItem.client_name ?? `לקוח #${workItem.client_id}`}
+            {workItem.business_name ?? `עסק #${workItem.business_id}`}
             <span className="mx-1.5 font-normal text-gray-400">—</span>
             <span className="font-mono">{workItem.period}</span>
           </span>
@@ -121,13 +121,13 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
                 status={workItem.status}
                 isAdvisor={isAdvisor}
                 isLoading={isLoading}
-                clientStatus={workItem.client_status}
+                clientStatus={workItem.business_status}
                 onReadyForReview={handleReadyForReview}
                 onFile={() => setShowFileModal(true)}
                 onSendBack={() => setShowSendBack(true)}
               />
               {isAdvisor && (
-                <VatExportButtons clientId={workItem.client_id} period={workItem.period} />
+                <VatExportButtons clientId={workItem.business_id} period={workItem.period} />
               )}
             </>
           )}
@@ -137,7 +137,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
       {/* Export only row when filed */}
       {filed && isAdvisor && (
         <div className="flex justify-end border-t border-gray-100 pt-3">
-          <VatExportButtons clientId={workItem.client_id} period={workItem.period} />
+          <VatExportButtons clientId={workItem.business_id} period={workItem.period} />
         </div>
       )}
       <VatFileModal

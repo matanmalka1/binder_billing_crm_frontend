@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
 import type { ClientResponse, UpdateClientPayload } from "../api";
 import { clientEditSchema, type ClientEditFormValues } from "../schemas";
@@ -34,11 +33,8 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
     resolver: zodResolver(clientEditSchema),
     defaultValues: {
       full_name: client.full_name,
-      client_type: client.client_type as ClientEditFormValues["client_type"],
       phone: client.phone ?? "",
       email: client.email ?? "",
-      status: client.status as ClientEditFormValues["status"],
-      primary_binder_number: client.primary_binder_number ?? "",
       address_street: client.address_street ?? "",
       address_building_number: client.address_building_number ?? "",
       address_apartment: client.address_apartment ?? "",
@@ -53,7 +49,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       ...data,
       phone: data.phone || null,
       email: data.email || null,
-      primary_binder_number: data.primary_binder_number || null,
       address_street: data.address_street || null,
       address_building_number: data.address_building_number || null,
       address_apartment: data.address_apartment || null,
@@ -84,30 +79,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
             disabled={isLoading}
             {...register("full_name")}
           />
-          <Select
-            label="סטטוס *"
-            error={errors.status?.message}
-            disabled={isLoading}
-            {...register("status")}
-          >
-            <option value="active">פעיל</option>
-            <option value="frozen">מוקפא</option>
-            <option value="closed">סגור</option>
-          </Select>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Select
-            label="סוג לקוח *"
-            error={errors.client_type?.message}
-            disabled={isLoading}
-            {...register("client_type")}
-          >
-            <option value="osek_patur">עוסק פטור</option>
-            <option value="osek_murshe">עוסק מורשה</option>
-            <option value="company">חברה</option>
-            <option value="employee">שכיר</option>
-          </Select>
           <Input
             label="טלפון"
             placeholder="05X-XXXXXXX"
@@ -177,13 +148,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       {/* Admin fields */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900">נתונים אדמיניסטרטיביים</h3>
-        <Input
-          label="מספר תיק קלסר ראשי"
-          placeholder="לדוגמה: B-10001"
-          error={errors.primary_binder_number?.message}
-          disabled={isLoading}
-          {...register("primary_binder_number")}
-        />
         <Textarea
           label="הערות לעדכון (אופציונלי)"
           rows={4}

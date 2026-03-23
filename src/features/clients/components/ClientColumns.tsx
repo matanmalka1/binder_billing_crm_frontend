@@ -1,15 +1,7 @@
-import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ClientResponse } from "../api";
-import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
 import { ClientRowActions } from "./ClientRowActions";
-
-const clientStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
-  active: "success",
-  frozen: "warning",
-  closed: "neutral",
-};
 
 interface BuildClientColumnsParams {
   selectedIds?: Set<number>;
@@ -43,24 +35,6 @@ export const buildClientColumns = ({
       ),
     },
     {
-      key: "client_type",
-      header: "סוג",
-      render: (client) => (
-        <span className="text-sm text-gray-600">{getClientTypeLabel(client.client_type)}</span>
-      ),
-    },
-    {
-      key: "status",
-      header: "סטטוס",
-      render: (client) => (
-        <StatusBadge
-          status={client.status}
-          getLabel={getClientStatusLabel}
-          variantMap={clientStatusVariants}
-        />
-      ),
-    },
-    {
       key: "phone",
       header: "טלפון",
       render: (client) => (
@@ -68,10 +42,10 @@ export const buildClientColumns = ({
       ),
     },
     {
-      key: "opened_at",
-      header: "תאריך פתיחה",
+      key: "created_at",
+      header: "נוצר בתאריך",
       render: (client) => (
-        <span className="text-sm text-gray-500 tabular-nums">{formatDate(client.opened_at)}</span>
+        <span className="text-sm text-gray-500 tabular-nums">{formatDate(client.created_at)}</span>
       ),
     },
     {

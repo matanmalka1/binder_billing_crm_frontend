@@ -6,9 +6,9 @@ import { EXPENSE_LABELS } from "../../report.constants";
 
 export interface AddExpensePayload {
   category: ExpenseCategoryType;
-  amount: number;
+  amount: string;
   description?: string;
-  recognition_rate?: number;
+  recognition_rate?: string;
   supporting_document_ref?: string;
 }
 
@@ -56,9 +56,9 @@ export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({
     }
     onAdd({
       category: category as ExpenseCategoryType,
-      amount: parsed,
+      amount: String(parsed),
       description: description || undefined,
-      recognition_rate: rate,
+      recognition_rate: String(rate),
       supporting_document_ref: docRef || undefined,
     });
     reset();

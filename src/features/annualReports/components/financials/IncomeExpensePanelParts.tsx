@@ -4,7 +4,7 @@ import { Button } from "../../../../components/ui/Button";
 
 export interface AddLineFormProps {
   typeOptions: Record<string, string>;
-  onAdd: (typeKey: string, amount: number, description?: string) => void;
+  onAdd: (typeKey: string, amount: string, description?: string) => void;
   isAdding: boolean;
   label: string;
 }
@@ -39,7 +39,7 @@ export const AddLineForm: React.FC<AddLineFormProps> = ({
       setError("יש להזין סכום חיובי");
       return;
     }
-    onAdd(typeKey, parsed, description || undefined);
+    onAdd(typeKey, String(parsed), description || undefined);
     reset();
     setOpen(false);
   };

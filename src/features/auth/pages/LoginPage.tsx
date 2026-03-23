@@ -9,7 +9,7 @@ import {
   loginDefaultValues,
   loginSchema,
   type LoginFormValues,
-} from "@/features/auth/schemas";
+} from "@/features/auth";
 import { useAuthStore } from "@/store/auth.store";
 import { selectIsAuthenticated } from "@/store/auth.selectors";
 import { useShallow } from "zustand/react/shallow";

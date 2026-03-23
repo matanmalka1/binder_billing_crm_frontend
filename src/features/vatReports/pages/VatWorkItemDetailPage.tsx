@@ -4,14 +4,16 @@ import { Alert } from "@/components/ui/Alert";
 import { Badge } from "@/components/ui/Badge";
 import { TableSkeleton } from "@/components/ui/TableSkeleton";
 import { cn } from "@/utils/utils";
-import { useVatWorkItemPage } from "@/features/vatReports/hooks/useVatWorkItemPage";
-import { VatWorkItemSummaryBar } from "@/features/vatReports/components/VatWorkItemSummaryBar";
-import { VatFiledBanner } from "@/features/vatReports/components/VatFiledBanner";
-import { VatSummaryTab } from "@/features/vatReports/components/VatSummaryTab";
-import { VatIncomeTab } from "@/features/vatReports/components/VatIncomeTab";
-import { VatExpenseTab } from "@/features/vatReports/components/VatExpenseTab";
-import { VatHistoryTab } from "@/features/vatReports/components/VatHistoryTab";
-import { isFiled } from "@/features/vatReports/utils";
+import {
+  isFiled,
+  useVatWorkItemPage,
+  VatExpenseTab,
+  VatFiledBanner,
+  VatHistoryTab,
+  VatIncomeTab,
+  VatSummaryTab,
+  VatWorkItemSummaryBar,
+} from "@/features/vatReports";
 
 type TabKey = "summary" | "income" | "expense" | "history";
 
@@ -51,7 +53,7 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
           filedAt={workItem.filed_at}
           filedBy={workItem.filed_by}
           filedByName={workItem.filed_by_name}
-          filingMethod={workItem.filing_method}
+          filingMethod={workItem.submission_method}
           submissionReference={workItem.submission_reference}
           isAmendment={workItem.is_amendment}
           amendsItemId={workItem.amends_item_id}
@@ -92,10 +94,10 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
       <div>
         {activeTab === "summary" && <VatSummaryTab workItem={workItem} invoices={invoices} />}
         {activeTab === "income" && (
-          <VatIncomeTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.client_status} />
+          <VatIncomeTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.business_status} />
         )}
         {activeTab === "expense" && (
-          <VatExpenseTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.client_status} />
+          <VatExpenseTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.business_status} />
         )}
         {activeTab === "history" && <VatHistoryTab workItemId={workItem.id} />}
       </div>

@@ -3,9 +3,9 @@ import { documentsApi } from "@/features/documents/api";
 
 export interface LineRowProps {
   label: string;
-  amount: number;
+  amount: string | number;
   description?: string | null;
-  recognitionRate?: number | null;
+  recognitionRate?: string | number | null;
   supportingDocumentRef?: string | null;
   supportingDocumentId?: number | null;
   supportingDocumentFilename?: string | null;
@@ -31,9 +31,9 @@ export const LineRow: React.FC<LineRowProps> = ({
       <div className="flex-1 min-w-0 flex items-center gap-1.5 flex-wrap">
         <span className="font-medium text-gray-800">{label}</span>
         {description && <span className="text-gray-500 mr-1">— {description}</span>}
-        {recognitionRate != null && recognitionRate < 100 && (
+        {recognitionRate != null && Number(recognitionRate) < 100 && (
           <span className="inline-flex items-center rounded bg-yellow-100 px-1.5 py-0.5 text-xs font-medium text-yellow-800">
-            {recognitionRate}%
+            {Number(recognitionRate)}%
           </span>
         )}
         {supportingDocumentId ? (
@@ -50,7 +50,7 @@ export const LineRow: React.FC<LineRowProps> = ({
         ) : null}
       </div>
       <div className="flex items-center gap-2 mr-2">
-        <span className="text-gray-700 font-mono">₪{amount.toLocaleString("he-IL")}</span>
+        <span className="text-gray-700 font-mono">₪{Number(amount).toLocaleString("he-IL")}</span>
         {onEdit ? (
           <button
             type="button"

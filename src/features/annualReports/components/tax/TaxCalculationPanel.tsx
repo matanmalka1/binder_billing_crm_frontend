@@ -9,8 +9,8 @@ import { TaxCalculatorInputs } from "./TaxCalculatorInputs";
 
 interface Props { reportId: number; }
 
-const fmt = (n: number) =>
-  n.toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
+const fmt = (n: string | number) =>
+  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 const Row: React.FC<{ label: string; value: string; className?: string; muted?: boolean }> = ({
   label, value, className, muted,
@@ -69,8 +69,8 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
   const handleSave = () => {
     updateMutation.mutate({
       credit_points: creditPoints !== "" ? Number(creditPoints) : undefined,
-      pension_contribution: pension !== "" ? Number(pension) : undefined,
-      other_credits: otherCredits !== "" ? Number(otherCredits) : undefined,
+      pension_contribution: pension !== "" ? pension : undefined,
+      other_credits: otherCredits !== "" ? otherCredits : undefined,
     });
   };
 
@@ -79,9 +79,11 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
   if (isError || !data)
     return <p className="py-8 text-center text-sm text-red-500">שגיאה בטעינת חישוב מס</p>;
 
-  const liabilityColor = data.total_liability == null ? ""
-    : data.total_liability > 0 ? "text-red-600" : "text-green-600";
-  const totalCredits = data.credit_points_value + data.donation_credit + (data.other_credits ?? 0);
+  const totalLiability = data.total_liability == null ? null : Number(data.total_liability);
+  const liabilityColor = totalLiability == null ? ""
+    : totalLiability > 0 ? "text-red-600" : "text-green-600";
+  const totalCredits =
+    Number(data.credit_points_value) + Number(data.donation_credit) + Number(data.other_credits ?? 0);
 
   return (
     <div className="space-y-5">
@@ -112,7 +114,7 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
           <Row label="ניכוי פנסיה" value={fmt(data.pension_deduction)} muted />
           <Row label="מס לפני זיכויים" value={fmt(data.tax_before_credits)} />
           <Row label="שווי נקודות זיכוי" value={fmt(data.credit_points_value)} muted />
-          {data.donation_credit > 0 && <Row label="זיכוי תרומות (סע׳ 46)" value={fmt(data.donation_credit)} muted />}
+          {Number(data.donation_credit) > 0 && <Row label="זיכוי תרומות (סע׳ 46)" value={fmt(data.donation_credit)} muted />}
           <Row label="שיעור אפקטיבי" value={`${(data.effective_rate * 100).toFixed(2)}%`} muted />
           <Row label="מס לתשלום" value={fmt(data.tax_after_credits)} className="text-green-700 font-semibold" />
         </SectionCard>
@@ -127,8 +129,8 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
       <div className="rounded-xl border border-gray-200 bg-gray-50 px-5 py-1 shadow-sm">
         <dl className="divide-y divide-gray-100">
           <Row label="רווח נקי" value={fmt(data.net_profit)} />
-          {data.total_liability !== null && (
-            <Row label='חבות כוללת (מס + בל + מע"מ − מקדמות)' value={fmt(data.total_liability)} className={liabilityColor} />
+          {totalLiability !== null && (
+            <Row label='חבות כוללת (מס + בל + מע"מ − מקדמות)' value={fmt(totalLiability)} className={liabilityColor} />
           )}
         </dl>
       </div>

@@ -75,10 +75,12 @@ export const MONTH_OPTIONS = MONTH_NAMES.map((label, index) => ({
   label,
 }));
 
-export const fmtCurrency = (n: number | null): string =>
-  n != null
-    ? `₪${n.toLocaleString("he-IL", { minimumFractionDigits: 0 })}`
-    : "—";
+export const fmtCurrency = (n: string | number | null): string => {
+  if (n == null) return "—";
+  const numeric = Number(n);
+  if (Number.isNaN(numeric)) return "—";
+  return `₪${numeric.toLocaleString("he-IL", { minimumFractionDigits: 0 })}`;
+};
 
 export const formatFileSize = (bytes: number | null | undefined): string => {
   if (bytes == null) return "—";

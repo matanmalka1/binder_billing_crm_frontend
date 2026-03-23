@@ -8,9 +8,9 @@ interface EditExpenseLineFormProps {
   isSaving: boolean;
   onSave: (payload: {
     category: ExpenseCategoryType;
-    amount: number;
+    amount: string;
     description?: string;
-    recognition_rate?: number;
+    recognition_rate?: string;
     supporting_document_ref?: string;
   }) => void;
   onCancel: () => void;
@@ -43,9 +43,9 @@ export const EditExpenseLineForm: React.FC<EditExpenseLineFormProps> = ({
     }
     onSave({
       category: category as ExpenseCategoryType,
-      amount: parsed,
+      amount: String(parsed),
       description: description || undefined,
-      recognition_rate: rate,
+      recognition_rate: String(rate),
       supporting_document_ref: docRef || undefined,
     });
   };

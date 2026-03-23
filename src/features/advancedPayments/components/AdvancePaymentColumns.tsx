@@ -12,7 +12,7 @@ interface BuildColumnsOptions {
   canEdit: boolean;
   updatingId: number | null;
   deletingId: number | null;
-  onUpdate: (id: number, paid_amount: number | null, status: AdvancePaymentStatus, expected_amount: number | null) => void;
+  onUpdate: (id: number, paid_amount: string | null, status: AdvancePaymentStatus, expected_amount: string | null) => void;
   onDelete: (id: number) => void;
 }
 
@@ -60,7 +60,8 @@ export const buildAdvancePaymentColumns = (
       header: "הפרש",
       render: (row) => {
         if (row.delta == null) return <span className="text-gray-400 text-sm">—</span>;
-        const tone = row.delta > 0 ? "negative" : row.delta < 0 ? "positive" : "neutral";
+        const numericDelta = Number(row.delta);
+        const tone = numericDelta > 0 ? "negative" : numericDelta < 0 ? "positive" : "neutral";
         return <MonoValue value={fmtCurrency(row.delta)} tone={tone} />;
       },
     },

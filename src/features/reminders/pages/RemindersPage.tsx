@@ -3,11 +3,13 @@ import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { PageStateGuard } from "@/components/ui/PageStateGuard";
-import { RemindersSummaryCards } from "@/features/reminders/components/RemindersSummaryCards";
-import { RemindersTable } from "@/features/reminders/components/RemindersTable";
-import { ReminderDrawer } from "@/features/reminders/components/ReminderDrawer";
-import { CreateReminderModal } from "@/features/reminders/components/CreateReminderModal";
-import { useReminders } from "@/features/reminders/hooks/useReminders";
+import {
+  CreateReminderModal,
+  ReminderDrawer,
+  RemindersSummaryCards,
+  RemindersTable,
+  useReminders,
+} from "@/features/reminders";
 
 export const RemindersPage: React.FC = () => {
   const {

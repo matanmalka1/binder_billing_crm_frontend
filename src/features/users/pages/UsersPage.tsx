@@ -7,14 +7,16 @@ import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useAuthStore } from "@/store/auth.store";
-import { useUsersPage } from "@/features/users/hooks/useUsersPage";
-import { buildUserColumns } from "@/features/users/components/UsersColumns";
-import { UsersFiltersBar } from "@/features/users/components/UsersFiltersBar";
-import { CreateUserModal } from "@/features/users/components/CreateUserModal";
-import { EditUserModal } from "@/features/users/components/EditUserModal";
-import { ResetPasswordModal } from "@/features/users/components/ResetPasswordModal";
-import { AuditLogsDrawer } from "@/features/users/components/AuditLogsDrawer";
-import type { UserResponse } from "@/features/users/api";
+import {
+  AuditLogsDrawer,
+  buildUserColumns,
+  CreateUserModal,
+  EditUserModal,
+  ResetPasswordModal,
+  useUsersPage,
+  type UserResponse,
+  UsersFiltersBar,
+} from "@/features/users";
 
 export const Users: React.FC = () => {
   const currentUserId = useAuthStore((s) => s.user?.id);

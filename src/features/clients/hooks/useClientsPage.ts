@@ -4,9 +4,7 @@ import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   clientsApi,
-  type BulkClientActionPayload,
   type CreateClientPayload,
-  type DeletedClientInfo,
   type ListClientsParams,
 } from "../api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
@@ -30,24 +28,16 @@ export const useClientsPage = () => {
   const { isAdvisor, can } = useRole();
 
   // Pending payload held while the "deleted client" dialog is open.
-  const [pendingCreatePayload, setPendingCreatePayload] =
-    useState<CreateClientPayload | null>(null);
   const [deletedClientInfo, setDeletedClientInfo] =
-    useState<DeletedClientInfo | null>(null);
+    useState<{ id: number; full_name: string; id_number: string; deleted_at: string } | null>(null);
 
   const filters = {
-    has_signals: searchParams.get("has_signals") ?? "",
-    status: searchParams.get("status") ?? "",
     search: searchParams.get("search") ?? "",
     page: parsePositiveInt(searchParams.get("page"), 1),
     page_size: parsePositiveInt(searchParams.get("page_size"), 20),
   };
 
   const apiParams: ListClientsParams = {
-    has_signals: filters.has_signals
-      ? filters.has_signals === "true"
-      : undefined,
-    status: filters.status || undefined,
     search: filters.search || undefined,
     page: filters.page,
     page_size: filters.page_size,
@@ -69,18 +59,16 @@ export const useClientsPage = () => {
     onSuccess: () => {
       toast.success("לקוח נוצר בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.clients.all });
-      setPendingCreatePayload(null);
       setDeletedClientInfo(null);
     },
     onError: async (err, payload) => {
       const code = extractErrorCode(err);
       if (code === "CLIENT.DELETED_EXISTS") {
         try {
-          const deleted = await clientsApi.getDeletedByIdNumber(
+          const deleted = await clientsApi.getConflictByIdNumber(
             payload.id_number,
           );
-          setDeletedClientInfo(deleted);
-          setPendingCreatePayload(payload);
+          setDeletedClientInfo(deleted.deleted_clients[0] ?? null);
         } catch {
           showErrorToast(err, "שגיאה ביצירת לקוח");
         }
@@ -95,7 +83,6 @@ export const useClientsPage = () => {
     onSuccess: () => {
       toast.success("הלקוח שוחזר בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.clients.all });
-      setPendingCreatePayload(null);
       setDeletedClientInfo(null);
     },
     onError: (err) => showErrorToast(err, "שגיאה בשחזור לקוח"),
@@ -106,13 +93,7 @@ export const useClientsPage = () => {
     restoreMutation.mutate(deletedClientInfo.id);
   }, [deletedClientInfo, restoreMutation]);
 
-  const handleForceCreate = useCallback(() => {
-    if (!pendingCreatePayload) return;
-    createMutation.mutate({ ...pendingCreatePayload, force: true });
-  }, [pendingCreatePayload, createMutation]);
-
   const handleDismissDeletedDialog = useCallback(() => {
-    setPendingCreatePayload(null);
     setDeletedClientInfo(null);
   }, []);
 
@@ -130,58 +111,8 @@ export const useClientsPage = () => {
     canonicalAction: true,
   });
 
-  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
-  const [bulkLoading, setBulkLoading] = useState(false);
-
-  const toggleSelect = useCallback((id: number) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
-
-  const toggleSelectAll = useCallback((ids: number[]) => {
-    setSelectedIds((prev) => {
-      const allSelected = ids.every((id) => prev.has(id));
-      if (allSelected) return new Set();
-      return new Set(ids);
-    });
-  }, []);
-
-  const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
-
-  const runBulkAction = useCallback(
-    async (action: BulkClientActionPayload["action"]) => {
-      if (!isAdvisor || selectedIds.size === 0) return;
-      setBulkLoading(true);
-      try {
-        const result = await clientsApi.bulkAction({
-          client_ids: Array.from(selectedIds),
-          action,
-        });
-        if (result.succeeded.length > 0) {
-          toast.success(`${result.succeeded.length} לקוחות עודכנו בהצלחה`);
-        }
-        if (result.failed.length > 0) {
-          result.failed.forEach((f) =>
-            toast.error(`לקוח #${f.id}: ${f.error}`),
-          );
-        }
-        await queryClient.invalidateQueries({ queryKey: QK.clients.all });
-        clearSelection();
-      } catch (requestError: unknown) {
-        showErrorToast(requestError, "שגיאה בביצוע פעולה מרובה");
-      } finally {
-        setBulkLoading(false);
-      }
-    },
-    [isAdvisor, selectedIds, clearSelection, queryClient],
-  );
-
   const handleFilterChange = (
-    name: "has_signals" | "status" | "page_size" | "search",
+    name: "page_size" | "search",
     value: string,
   ) => {
     setFilter(name, value);
@@ -190,20 +121,14 @@ export const useClientsPage = () => {
   return {
     activeActionKey,
     activeActionKeyRef,
-    bulkLoading,
     clients: clientItems,
-    clearSelection,
     error,
     filters,
     onAction,
     handleFilterChange,
     loading,
     pendingAction,
-    runBulkAction,
-    selectedIds,
     setPage,
-    toggleSelect,
-    toggleSelectAll,
     total,
     cancelPendingAction,
     confirmPendingAction,
@@ -216,10 +141,8 @@ export const useClientsPage = () => {
     deletedClientInfo,
     deletedClientDialogOpen: deletedClientInfo !== null,
     handleRestoreClient,
-    handleForceCreate,
     handleDismissDeletedDialog,
     restoreLoading: restoreMutation.isPending,
-    forceCreateLoading: createMutation.isPending,
     isAdvisor,
     can,
   };

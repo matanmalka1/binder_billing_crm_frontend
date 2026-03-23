@@ -1,3 +1,3 @@
-import { AgingReportView } from "@/features/reports/components/AgingReportView";
+import { AgingReportView } from "@/features/reports";
 
 export const AgingReport: React.FC = () => <AgingReportView />;

@@ -6,8 +6,8 @@ interface Props {
   reportId: number;
 }
 
-const fmt = (n: number) =>
-  n.toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
+const fmt = (n: string | number) =>
+  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 const BALANCE_STYLES = {
   due: { label: "עוד לתשלום", className: "text-red-600 font-semibold" },
@@ -37,7 +37,7 @@ export const FinalBalancePanel: React.FC<Props> = ({ reportId }) => {
   const tax = taxQuery.data;
   const adv = advancesQuery.data;
   const style = BALANCE_STYLES[adv.balance_type];
-  const absBalance = Math.abs(adv.final_balance);
+  const absBalance = Math.abs(Number(adv.final_balance));
 
   return (
     <div className="space-y-2">

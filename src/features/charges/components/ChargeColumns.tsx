@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
 import type { ChargeResponse } from "../api";
@@ -73,18 +72,14 @@ export const buildChargeColumns = ({
       ),
     },
     {
-      key: "client_id",
-      header: "לקוח",
+      key: "business_id",
+      header: "עסק",
       headerClassName: "w-48",
       className: "w-48 max-w-[12rem]",
       render: (charge) => (
-        <Link
-          to={`/clients/${charge.client_id}`}
-          onClick={(e) => e.stopPropagation()}
-          className="text-sm font-semibold text-gray-900 hover:text-primary-700 hover:underline"
-        >
-          {charge.client_name ?? `#${charge.client_id}`}
-        </Link>
+        <span className="text-sm font-semibold text-gray-900">
+          {charge.business_name ?? `עסק #${charge.business_id}`}
+        </span>
       ),
     },
     {

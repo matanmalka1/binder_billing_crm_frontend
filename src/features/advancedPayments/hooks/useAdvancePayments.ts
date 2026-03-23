@@ -10,8 +10,8 @@ import { toast } from "../../../utils/toast";
 
 interface UpdatePayload {
   id: number;
-  paid_amount?: number | null;
-  expected_amount?: number | null;
+  paid_amount?: string | null;
+  expected_amount?: string | null;
   status?: AdvancePaymentStatus;
 }
 
@@ -79,8 +79,8 @@ export const useAdvancePayments = (
   });
 
   const rows = enabled ? (listQuery.data?.items ?? []) : [];
-  const totalExpected = rows.reduce((sum, row) => sum + (row.expected_amount ?? 0), 0);
-  const totalPaid = rows.reduce((sum, row) => sum + (row.paid_amount ?? 0), 0);
+  const totalExpected = rows.reduce((sum, row) => sum + Number(row.expected_amount ?? 0), 0);
+  const totalPaid = rows.reduce((sum, row) => sum + Number(row.paid_amount ?? 0), 0);
 
   const updatingId = updateMutation.isPending
     ? (updateMutation.variables?.id ?? null)
@@ -95,7 +95,7 @@ export const useAdvancePayments = (
     totalExpected,
     totalPaid,
     total: listQuery.data?.total ?? 0,
-    updateRow: (id: number, paid_amount: number | null, status?: AdvancePaymentStatus, expected_amount?: number | null) =>
+    updateRow: (id: number, paid_amount: string | null, status?: AdvancePaymentStatus, expected_amount?: string | null) =>
       updateMutation.mutate({ id, paid_amount, status, expected_amount }),
     isUpdating: updateMutation.isPending,
     updatingId,

@@ -3,6 +3,7 @@ export { notificationsQK } from "./queryKeys";
 export type {
   NotificationSeverity,
   NotificationItem,
+  NotificationListResponse,
   UnreadCountResponse,
   MarkReadResponse,
   ListNotificationsParams,

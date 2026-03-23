@@ -82,9 +82,9 @@ export const useAdvisorToday = () => {
         .filter((d) => d.due_date >= today && d.due_date <= weekEnd)
         .map((d) => ({
           id: d.id,
-          label: d.client_name ?? `לקוח #${d.client_id}`,
+          label: d.business_name ?? `עסק #${d.business_id}`,
           sublabel: `${getDeadlineTypeLabel(d.deadline_type)} — ${formatDate(d.due_date)}`,
-          href: `/clients/${d.client_id}`,
+          href: `/tax/deadlines`,
         })),
     [deadlinesQuery.data, today, weekEnd],
   );
@@ -95,9 +95,9 @@ export const useAdvisorToday = () => {
         .filter((r) => r.created_at <= fourteenDaysAgo && !DONE_STATUSES.includes(r.status))
         .map((r) => ({
           id: r.id,
-          label: r.client_name ?? `לקוח #${r.client_id}`,
+          label: r.business_name ?? `עסק #${r.business_id}`,
           sublabel: `${r.tax_year} — ${getStatusLabel(r.status)}`,
-          href: `/clients/${r.client_id}`,
+          href: `/tax/reports/${r.id}`,
         })),
     [reportsQuery.data, fourteenDaysAgo],
   );
@@ -108,9 +108,9 @@ export const useAdvisorToday = () => {
         .filter((r) => r.created_at <= sevenDaysAgo)
         .map((r) => ({
           id: r.id,
-          label: r.client_name ?? `לקוח #${r.client_id}`,
+          label: r.business_name ?? `עסק #${r.business_id}`,
           sublabel: r.message.slice(0, 48),
-          href: `/clients/${r.client_id}`,
+          href: `/reminders`,
         })),
     [remindersQuery.data, sevenDaysAgo],
   );
@@ -121,7 +121,7 @@ export const useAdvisorToday = () => {
         .filter((c) => c.issued_at !== null && c.issued_at! <= sixtyDaysAgo)
         .map((c) => ({
           id: c.id,
-          label: c.client_name ?? `לקוח #${c.client_id}`,
+          label: c.business_name ?? `עסק #${c.business_id}`,
           sublabel: `חיוב #${c.id}${c.issued_at ? ` — ${formatDate(c.issued_at)}` : ""}`,
           href: `/charges/${c.id}`,
         })),

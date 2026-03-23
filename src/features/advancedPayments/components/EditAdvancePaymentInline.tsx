@@ -6,7 +6,7 @@ import { ADVANCE_PAYMENT_STATUS_OPTIONS } from "../constants";
 interface EditAdvancePaymentInlineProps {
   row: AdvancePaymentRow;
   isUpdating: boolean;
-  onSave: (paid_amount: number | null, status: AdvancePaymentStatus, expected_amount: number | null) => void;
+  onSave: (paid_amount: string | null, status: AdvancePaymentStatus, expected_amount: string | null) => void;
   onCancel?: () => void;
 }
 
@@ -30,9 +30,9 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
 
   const handleSave = () => {
     onSave(
-      paidAmount === "" ? null : Number(paidAmount),
+      paidAmount === "" ? null : paidAmount,
       status,
-      expectedAmount === "" ? null : Number(expectedAmount),
+      expectedAmount === "" ? null : expectedAmount,
     );
     setEditing(false);
   };

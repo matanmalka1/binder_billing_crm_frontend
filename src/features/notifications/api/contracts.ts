@@ -2,15 +2,30 @@ export type NotificationSeverity = "info" | "warning" | "urgent" | "critical";
 
 export interface NotificationItem {
   id: number;
-  client_id: number;
+  business_id: number;
+  business_name?: string | null;
+  binder_id?: number | null;
   trigger: string;
   channel: string;
   status: string;
   severity: NotificationSeverity;
+  recipient?: string | null;
   content_snapshot: string;
+  sent_at?: string | null;
+  failed_at?: string | null;
+  error_message?: string | null;
+  retry_count?: number;
   is_read: boolean;
   read_at: string | null;
+  triggered_by?: number | null;
   created_at: string;
+}
+
+export interface NotificationListResponse {
+  items: NotificationItem[];
+  total: number;
+  page: number;
+  page_size: number;
 }
 
 export interface UnreadCountResponse {
@@ -22,12 +37,15 @@ export interface MarkReadResponse {
 }
 
 export interface ListNotificationsParams {
-  client_id?: number;
+  business_id?: number;
   limit?: number;
+  page?: number;
+  page_size?: number;
 }
 
 export interface SendNotificationPayload {
-  client_id: number;
+  business_id?: number;
+  client_id?: number;
   channel: "WHATSAPP" | "EMAIL";
   message: string;
   severity?: string;
