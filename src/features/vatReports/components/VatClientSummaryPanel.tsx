@@ -8,7 +8,7 @@ import type {
   VatAnnualSummary,
   VatPeriodRow,
 } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { vatReportsQK } from "../api/queryKeys";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
@@ -183,7 +183,7 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
   const [createError, setCreateError] = useState<string | null>(null);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: QK.tax.vatWorkItems.clientSummary(clientId),
+    queryKey: vatReportsQK.clientSummary(clientId),
     queryFn: () => vatReportsApi.getClientSummary(clientId),
     staleTime: 30_000,
     retry: 1,
@@ -194,7 +194,7 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
     onSuccess: async () => {
       toast.success('תיק מע"מ נוצר בהצלחה');
       await queryClient.invalidateQueries({
-        queryKey: QK.tax.vatWorkItems.clientSummary(clientId),
+        queryKey: vatReportsQK.clientSummary(clientId),
       });
     },
   });

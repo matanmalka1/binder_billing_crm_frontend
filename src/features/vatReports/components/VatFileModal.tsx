@@ -7,7 +7,7 @@ import { SelectDropdown } from "../../../components/ui/SelectDropdown";
 import { vatReportsApi } from "../api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
+import { vatReportsQK } from "../api/queryKeys";
 import { VAT_FILING_METHOD_LABELS } from "../constants";
 
 interface VatFileModalProps {
@@ -51,8 +51,8 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
         amends_item_id: isAmendment && amendsItemId ? Number(amendsItemId) : null,
       });
       toast.success("התיק הוגש בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.detail(workItemId) });
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
       handleClose();
     } catch (err) {
       showErrorToast(err, "שגיאה בהגשה");

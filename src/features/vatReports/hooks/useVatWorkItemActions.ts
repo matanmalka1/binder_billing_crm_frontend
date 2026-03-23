@@ -3,15 +3,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { vatReportsApi } from "../api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
+import { vatReportsQK } from "../api/queryKeys";
 
 export const useVatWorkItemActions = (workItemId: number) => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
   const invalidate = async () => {
-    await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.detail(workItemId) });
-    await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+    await queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) });
+    await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
   };
 
   const run = async (fn: () => Promise<unknown>, successMsg: string, errMsg: string) => {

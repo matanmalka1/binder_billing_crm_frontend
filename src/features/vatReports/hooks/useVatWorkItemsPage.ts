@@ -11,7 +11,7 @@ import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../util
 import { toast } from "../../../utils/toast";
 import { toOptionalString } from "../../../utils/filters";
 import { useRole } from "../../../hooks/useRole";
-import { QK } from "../../../lib/queryKeys";
+import { vatReportsQK } from "../api/queryKeys";
 import type { VatWorkItemAction } from "../types";
 
 export const useVatWorkItemsPage = () => {
@@ -36,23 +36,23 @@ export const useVatWorkItemsPage = () => {
   };
 
   const { data: statsPendingData } = useQuery({
-    queryKey: QK.tax.vatWorkItems.list({ status: "pending_materials", page: 1, page_size: 1 }),
+    queryKey: vatReportsQK.list({ status: "pending_materials", page: 1, page_size: 1 }),
     queryFn: () => vatReportsApi.list({ status: "pending_materials", page: 1, page_size: 1 }),
   });
   const { data: statsMaterialData } = useQuery({
-    queryKey: QK.tax.vatWorkItems.list({ status: "material_received", page: 1, page_size: 1 }),
+    queryKey: vatReportsQK.list({ status: "material_received", page: 1, page_size: 1 }),
     queryFn: () => vatReportsApi.list({ status: "material_received", page: 1, page_size: 1 }),
   });
   const { data: statsDataEntryData } = useQuery({
-    queryKey: QK.tax.vatWorkItems.list({ status: "data_entry_in_progress", page: 1, page_size: 1 }),
+    queryKey: vatReportsQK.list({ status: "data_entry_in_progress", page: 1, page_size: 1 }),
     queryFn: () => vatReportsApi.list({ status: "data_entry_in_progress", page: 1, page_size: 1 }),
   });
   const { data: statsReviewData } = useQuery({
-    queryKey: QK.tax.vatWorkItems.list({ status: "ready_for_review", page: 1, page_size: 1 }),
+    queryKey: vatReportsQK.list({ status: "ready_for_review", page: 1, page_size: 1 }),
     queryFn: () => vatReportsApi.list({ status: "ready_for_review", page: 1, page_size: 1 }),
   });
   const { data: statsFiledData } = useQuery({
-    queryKey: QK.tax.vatWorkItems.list({ status: "filed", page: 1, page_size: 1 }),
+    queryKey: vatReportsQK.list({ status: "filed", page: 1, page_size: 1 }),
     queryFn: () => vatReportsApi.list({ status: "filed", page: 1, page_size: 1 }),
   });
 
@@ -65,7 +65,7 @@ export const useVatWorkItemsPage = () => {
   const statsFiled = statsFiledData?.total ?? undefined;
 
   const { items: rawItems, total, loading, error } = usePaginatedList({
-    queryKey: QK.tax.vatWorkItems.list(apiParams),
+    queryKey: vatReportsQK.list(apiParams),
     queryFn: () => vatReportsApi.list(apiParams),
     errorMessage: 'שגיאה בטעינת תיקי מע"מ',
   });
@@ -76,7 +76,7 @@ export const useVatWorkItemsPage = () => {
     mutationFn: (payload: CreateVatWorkItemPayload) => vatReportsApi.create(payload),
     onSuccess: async () => {
       toast.success('תיק מע"מ נוצר בהצלחה');
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
     },
   });
 
@@ -89,7 +89,7 @@ export const useVatWorkItemsPage = () => {
     },
     onSuccess: async () => {
       toast.success("הפעולה בוצעה בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
     },
   });
 
@@ -98,7 +98,7 @@ export const useVatWorkItemsPage = () => {
       vatReportsApi.sendBack(itemId, note),
     onSuccess: async () => {
       toast.success("התיק הוחזר לתיקון");
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
     },
   });
 

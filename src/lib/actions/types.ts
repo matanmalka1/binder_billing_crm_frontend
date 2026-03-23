@@ -1,3 +1,5 @@
+// INFRASTRUCTURE LAYER: Shared type contracts for the action system.
+// Consumed by: lib/actions/runtime.ts, features/actions/hooks/*.ts
 export type ActionMethod = "get" | "post" | "patch" | "put" | "delete";
 
 export interface BackendActionInputField {

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { vatReportsApi, type CreateVatInvoicePayload, type UpdateVatInvoicePayload } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { vatReportsQK } from "../api/queryKeys";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
@@ -11,9 +11,9 @@ export const useAddInvoice = (workItemId: number) => {
     mutationFn: (payload: CreateVatInvoicePayload) =>
       vatReportsApi.addInvoice(workItemId, payload),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.invoices(workItemId) });
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.detail(workItemId) });
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.invoices(workItemId) });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
     },
   });
 
@@ -37,9 +37,9 @@ export const useDeleteInvoice = (workItemId: number) => {
   const mutation = useMutation({
     mutationFn: (invoiceId: number) => vatReportsApi.deleteInvoice(workItemId, invoiceId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.invoices(workItemId) });
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.detail(workItemId) });
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.invoices(workItemId) });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
     },
   });
 
@@ -64,9 +64,9 @@ export const useUpdateInvoice = (workItemId: number) => {
     mutationFn: ({ invoiceId, payload }: { invoiceId: number; payload: UpdateVatInvoicePayload }) =>
       vatReportsApi.updateInvoice(workItemId, invoiceId, payload),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.invoices(workItemId) });
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.detail(workItemId) });
-      await queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.invoices(workItemId) });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) });
+      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
     },
   });
 

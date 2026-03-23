@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { vatReportsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { vatReportsQK } from "../api/queryKeys";
 import { getVatCategoryLabel } from "../utils";
 
 export interface VatCategorySummaryRow {
@@ -21,7 +21,7 @@ export interface VatWorkItemSummary {
 
 export const useVatWorkItemDetail = (workItemId: number | null) => {
   const invoicesQuery = useQuery({
-    queryKey: QK.tax.vatWorkItems.invoices(workItemId ?? 0),
+    queryKey: vatReportsQK.invoices(workItemId ?? 0),
     queryFn: () => vatReportsApi.listInvoices(workItemId!),
     enabled: workItemId !== null,
   });

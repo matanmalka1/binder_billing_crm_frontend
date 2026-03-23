@@ -1,22 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { vatReportsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { vatReportsQK } from "../api/queryKeys";
 
 export const useVatWorkItemPage = (workItemId: number) => {
   const workItemQuery = useQuery({
-    queryKey: QK.tax.vatWorkItems.detail(workItemId),
+    queryKey: vatReportsQK.detail(workItemId),
     queryFn: () => vatReportsApi.getById(workItemId),
     enabled: workItemId > 0,
   });
 
   const invoicesQuery = useQuery({
-    queryKey: QK.tax.vatWorkItems.invoices(workItemId),
+    queryKey: vatReportsQK.invoices(workItemId),
     queryFn: () => vatReportsApi.listInvoices(workItemId),
     enabled: workItemId > 0,
   });
 
   const auditQuery = useQuery({
-    queryKey: QK.tax.vatWorkItems.audit(workItemId),
+    queryKey: vatReportsQK.audit(workItemId),
     queryFn: () => vatReportsApi.getAuditTrail(workItemId),
     enabled: workItemId > 0,
   });

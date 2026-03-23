@@ -1,5 +1,4 @@
-export { signatureRequestsApi } from "./signatureRequests.api";
-export { signerApi } from "./signatureRequests.mutations.api";
+export { signatureRequestsApi, signerApi } from "./signatureRequests.api";
 export { signatureRequestsQK } from "./queryKeys";
 export type {
   SignatureRequestStatus,

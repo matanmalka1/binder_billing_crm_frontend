@@ -1,3 +1,5 @@
+// INFRASTRUCTURE LAYER: Pure HTTP execution. No React, no hooks.
+// Consumer: features/actions/hooks only. Do not import from here outside of features/actions.
 import { api } from "../../api/client";
 import { ACTION_ENDPOINT_PATTERNS } from "../../api/endpoints";
 import type { ActionCommand } from "./types";

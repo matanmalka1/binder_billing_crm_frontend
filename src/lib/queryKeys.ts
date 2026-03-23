@@ -1,3 +1,10 @@
+/**
+ * GLOBAL QUERY KEY REGISTRY
+ * Source of truth for all cache keys.
+ * Feature-local queryKeys files (features/*/api/queryKeys.ts) are mirrors used within feature boundaries.
+ * Cross-domain invalidation must use this file.
+ * Do not add new keys here without also adding them to the relevant feature queryKeys.ts.
+ */
 export const QK = {
   clients: {
     all: ["clients"] as const,

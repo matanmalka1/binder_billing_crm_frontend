@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { vatReportsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { vatReportsQK } from "../api/queryKeys";
 import { formatDateTime } from "../../../utils/utils";
 import {
   ACTION_LABELS,
@@ -13,7 +13,7 @@ import type { VatHistoryTabProps } from "../types";
 export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
   const [page, setPage] = useState(0);
   const { data, isPending } = useQuery({
-    queryKey: QK.tax.vatWorkItems.audit(workItemId),
+    queryKey: vatReportsQK.audit(workItemId),
     queryFn: () => vatReportsApi.getAuditTrail(workItemId),
   });
 

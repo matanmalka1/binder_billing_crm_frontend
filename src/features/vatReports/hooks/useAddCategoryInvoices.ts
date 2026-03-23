@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { vatReportsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { vatReportsQK } from "../api/queryKeys";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import {
@@ -21,8 +21,8 @@ export const useAddCategoryInvoices = (workItemId: number) => {
     onSuccess: async () => {
       toast.success("הנתונים נשמרו בהצלחה");
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.invoices(workItemId) }),
-        queryClient.invalidateQueries({ queryKey: QK.tax.vatWorkItems.all }),
+        queryClient.invalidateQueries({ queryKey: vatReportsQK.invoices(workItemId) }),
+        queryClient.invalidateQueries({ queryKey: vatReportsQK.all }),
       ]);
     },
   });
