@@ -3,12 +3,30 @@ export const ENDPOINTS = {
   info: "/info",
   authLogin: "/auth/login",
   authLogout: "/auth/logout",
+
+  // ── Clients (identity only) ───────────────────────────────────────────────
   clients: "/clients",
   clientById: (clientId: number | string) => `/clients/${clientId}`,
-  clientsBulkAction: "/clients/bulk-action",
-  clientBinders: (clientId: number | string) => `/clients/${clientId}/binders`,
-  clientTimeline: (clientId: number | string) =>
-    `/clients/${clientId}/timeline`,
+  clientRestore: (clientId: number | string) => `/clients/${clientId}/restore`,
+  // FIX: was /clients/deleted/:idNumber — backend uses /clients/conflict/:id_number
+  clientConflictByIdNumber: (idNumber: string) => `/clients/conflict/${idNumber}`,
+  clientsExport: "/clients/export",
+  clientsTemplate: "/clients/template",
+  clientsImport: "/clients/import",
+
+  // ── Businesses ────────────────────────────────────────────────────────────
+  businesses: "/businesses",
+  businessById: (businessId: number | string) => `/businesses/${businessId}`,
+  businessRestore: (businessId: number | string) => `/businesses/${businessId}/restore`,
+  businessesBulkAction: "/businesses/bulk-action",
+  // FIX: was /clients/:id/status-card
+  businessStatusCard: (businessId: number | string) => `/businesses/${businessId}/status-card`,
+  // FIX: was /clients/:id/tax-profile
+  businessTaxProfile: (businessId: number | string) => `/businesses/${businessId}/tax-profile`,
+  // FIX: was /clients/:id/binders
+  businessBinders: (businessId: number | string) => `/businesses/${businessId}/binders`,
+
+  // ── Binders ───────────────────────────────────────────────────────────────
   binders: "/binders",
   binderById: (binderId: number | string) => `/binders/${binderId}`,
   binderReady: (binderId: number | string) => `/binders/${binderId}/ready`,
@@ -17,136 +35,187 @@ export const ENDPOINTS = {
   binderHistory: (binderId: number | string) => `/binders/${binderId}/history`,
   binderIntakes: (binderId: number | string) => `/binders/${binderId}/intakes`,
   bindersOpen: "/binders/open",
+
+  // ── Dashboard ─────────────────────────────────────────────────────────────
   dashboardSummary: "/dashboard/summary",
   dashboardOverview: "/dashboard/overview",
   dashboardWorkQueue: "/dashboard/work-queue",
   dashboardAttention: "/dashboard/attention",
+  dashboardTaxSubmissions: "/dashboard/tax-submissions",
+
+  // ── Search ────────────────────────────────────────────────────────────────
   search: "/search",
+
+  // ── Charges ───────────────────────────────────────────────────────────────
   charges: "/charges",
   chargeById: (chargeId: number | string) => `/charges/${chargeId}`,
   chargeIssue: (chargeId: number | string) => `/charges/${chargeId}/issue`,
-  chargeMarkPaid: (chargeId: number | string) =>
-    `/charges/${chargeId}/mark-paid`,
+  chargeMarkPaid: (chargeId: number | string) => `/charges/${chargeId}/mark-paid`,
   chargeCancel: (chargeId: number | string) => `/charges/${chargeId}/cancel`,
   chargesBulkAction: "/charges/bulk-action",
+
+  // ── Documents ─────────────────────────────────────────────────────────────
   documentsUpload: "/documents/upload",
-  documentsByClient: (clientId: number | string) =>
-    `/documents/client/${clientId}`,
-  documentSignalsByClient: (clientId: number | string) =>
-    `/documents/client/${clientId}/signals`,
+  // FIX: was /documents/client/:id — backend uses /documents/business/:id
+  documentsByBusiness: (businessId: number | string) => `/documents/business/${businessId}`,
+  // FIX: was /documents/client/:id/signals
+  documentSignalsByBusiness: (businessId: number | string) => `/documents/business/${businessId}/signals`,
+  // FIX: was /documents/client/:id/versions
+  documentVersionsByBusiness: (businessId: number | string) => `/documents/business/${businessId}/versions`,
+  documentsByAnnualReport: (reportId: number | string) => `/documents/annual-report/${reportId}`,
+  documentById: (id: number | string) => `/documents/${id}`,
+  documentReplace: (id: number | string) => `/documents/${id}/replace`,
+  documentDownloadUrl: (id: number | string) => `/documents/${id}/download-url`,
+  documentApprove: (id: number | string) => `/documents/${id}/approve`,
+  documentReject: (id: number | string) => `/documents/${id}/reject`,
+  documentNotes: (id: number | string) => `/documents/${id}/notes`,
+
+  // ── Annual Reports ────────────────────────────────────────────────────────
   annualReports: "/annual-reports",
   annualReportById: (id: number | string) => `/annual-reports/${id}`,
-  annualReportTransition: (id: number | string) =>
-    `/annual-reports/${id}/transition`,
+  annualReportTransition: (id: number | string) => `/annual-reports/${id}/transition`,
   annualReportSubmit: (id: number | string) => `/annual-reports/${id}/submit`,
-  annualReportsKanban: "/annual-reports/kanban/view",
-  taxDeadlines: "/tax-deadlines",
-  taxDeadlineById: (id: number | string) => `/tax-deadlines/${id}`,
-  taxDeadlineComplete: (id: number | string) => `/tax-deadlines/${id}/complete`,
-  taxDeadlinesDashboard: "/tax-deadlines/dashboard/urgent",
-  clientAuthorityContacts: (clientId: number | string) =>
-    `/clients/${clientId}/authority-contacts`,
-  authorityContactById: (id: number | string) =>
-    `/clients/authority-contacts/${id}`,
-  clientTaxProfile: (clientId: number | string) =>
-    `/clients/${clientId}/tax-profile`,
-  clientSignatureRequests: (clientId: number | string) =>
-    `/clients/${clientId}/signature-requests`,
-  correspondenceList: (clientId: number | string) => `/clients/${clientId}/correspondence`,
-  correspondenceById: (clientId: number | string, id: number | string) =>
-    `/clients/${clientId}/correspondence/${id}`,
-  clientsExport: "/clients/export",
-  clientsTemplate: "/clients/template",
-  clientsImport: "/clients/import",
-  signatureRequests: "/signature-requests",
-  signatureRequestsPending: "/signature-requests/pending",
-  signatureRequestById: (id: number | string) => `/signature-requests/${id}`,
-  signatureRequestSend: (id: number | string) =>
-    `/signature-requests/${id}/send`,
-  signatureRequestCancel: (id: number | string) =>
-    `/signature-requests/${id}/cancel`,
-  signatureRequestAuditTrail: (id: number | string) =>
-    `/signature-requests/${id}/audit-trail`,
-  signerView: (token: string) => `/sign/${token}`,
-  signerApprove: (token: string) => `/sign/${token}/approve`,
-  signerDecline: (token: string) => `/sign/${token}/decline`,
-  users: "/users",
-  userById: (id: number | string) => `/users/${id}`,
-  userActivate: (id: number | string) => `/users/${id}/activate`,
-  userDeactivate: (id: number | string) => `/users/${id}/deactivate`,
-  userResetPassword: (id: number | string) => `/users/${id}/reset-password`,
-  userAuditLogs: "/users/audit-logs",
-  dashboardTaxSubmissions: "/dashboard/tax-submissions",
-  reportsAging: "/reports/aging",
-  reportsAgingExport: "/reports/aging/export",
-  reportsAnnualReportStatus: "/reports/annual-reports",
-  reportsAdvancePayments: "/reports/advance-payments",
-  reportsVatCompliance: "/reports/vat-compliance",
-  reminders: "/reminders/",
-  reminderById: (id: number) => `/reminders/${id}`,
-  reminderCancel: (id: number) => `/reminders/${id}/cancel`,
-  reminderMarkSent: (id: number) => `/reminders/${id}/mark-sent`,
-  vatWorkItems: "/vat/work-items",
-  vatWorkItemById: (id: number | string) => `/vat/work-items/${id}`,
-  vatWorkItemsByClient: (clientId: number | string) => `/vat/clients/${clientId}/work-items`,
-  vatWorkItemMaterialsComplete: (id: number | string) => `/vat/work-items/${id}/materials-complete`,
-  vatWorkItemInvoices: (id: number | string) => `/vat/work-items/${id}/invoices`,
-  vatWorkItemInvoiceById: (id: number | string, invoiceId: number | string) => `/vat/work-items/${id}/invoices/${invoiceId}`,
-  vatWorkItemReadyForReview: (id: number | string) => `/vat/work-items/${id}/ready-for-review`,
-  vatWorkItemSendBack: (id: number | string) => `/vat/work-items/${id}/send-back`,
-  vatWorkItemFile: (id: number | string) => `/vat/work-items/${id}/file`,
-  vatWorkItemAudit: (id: number | string) => `/vat/work-items/${id}/audit`,
-  annualReportOverdue: "/annual-reports/overdue",
   annualReportTransitionStatus: (id: number | string) => `/annual-reports/${id}/status`,
   annualReportDeadline: (id: number | string) => `/annual-reports/${id}/deadline`,
   annualReportSchedules: (id: number | string) => `/annual-reports/${id}/schedules`,
   annualReportSchedulesComplete: (id: number | string) => `/annual-reports/${id}/schedules/complete`,
   annualReportHistory: (id: number | string) => `/annual-reports/${id}/history`,
-  clientAnnualReports: (clientId: number | string) => `/clients/${clientId}/annual-reports`,
-  taxYearSummary: (taxYear: number | string) => `/tax-year/${taxYear}/summary`,
-  taxYearReports: (taxYear: number | string) => `/tax-year/${taxYear}/reports`,
   annualReportDetails: (id: number | string) => `/annual-reports/${id}/details`,
-  advancePayments: "/advance-payments",
-  advancePaymentById: (id: number | string) => `/advance-payments/${id}`,
-  advancePaymentSuggest: "/advance-payments/suggest",
-  advancePaymentsOverview: "/advance-payments/overview",
-  vatClientSummary: (clientId: number | string) => `/vat/client/${clientId}/summary`,
-  vatClientExport: (clientId: number | string) => `/vat/client/${clientId}/export`,
-  clientStatusCard: (clientId: number | string) => `/clients/${clientId}/status-card`,
-  documentById: (id: number | string) => `/documents/${id}`,
-  documentReplace: (id: number | string) => `/documents/${id}/replace`,
+  annualReportAmend: (id: number | string) => `/annual-reports/${id}/amend`,
+  annualReportExportPdf: (id: number | string) => `/annual-reports/${id}/export/pdf`,
   annualReportFinancials: (id: number | string) => `/annual-reports/${id}/financials`,
   annualReportReadiness: (id: number | string) => `/annual-reports/${id}/readiness`,
+  annualReportTaxCalculation: (id: number | string) => `/annual-reports/${id}/tax-calculation`,
+  annualReportAdvancesSummary: (id: number | string) => `/annual-reports/${id}/advances-summary`,
   annualReportIncome: (id: number | string) => `/annual-reports/${id}/income`,
   annualReportIncomeById: (id: number | string, lineId: number | string) =>
     `/annual-reports/${id}/income/${lineId}`,
   annualReportExpenses: (id: number | string) => `/annual-reports/${id}/expenses`,
   annualReportExpenseById: (id: number | string, lineId: number | string) =>
     `/annual-reports/${id}/expenses/${lineId}`,
-  annualReportTaxCalculation: (id: number | string) => `/annual-reports/${id}/tax-calculation`,
-  annualReportAdvancesSummary: (id: number | string) => `/annual-reports/${id}/advances-summary`,
   annualReportAnnex: (id: number | string, schedule: string) =>
     `/annual-reports/${id}/annex/${schedule}`,
-  annualReportAnnexLine: (id: number | string, schedule: string, lineId: number | string) =>
-    `/annual-reports/${id}/annex/${schedule}/${lineId}`,
-  annualReportAmend: (id: number | string) => `/annual-reports/${id}/amend`,
-  annualReportExportPdf: (id: number | string) => `/annual-reports/${id}/export/pdf`,
+  annualReportAnnexLine: (
+    id: number | string,
+    schedule: string,
+    lineId: number | string,
+  ) => `/annual-reports/${id}/annex/${schedule}/${lineId}`,
+  annualReportsKanban: "/annual-reports/kanban/view",
+  annualReportOverdue: "/annual-reports/overdue",
+  // FIX: was /clients/:id/annual-reports
+  businessAnnualReports: (businessId: number | string) => `/businesses/${businessId}/annual-reports`,
+  taxYearSummary: (taxYear: number | string) => `/tax-year/${taxYear}/summary`,
+  taxYearReports: (taxYear: number | string) => `/tax-year/${taxYear}/reports`,
+
+  // ── Tax Deadlines ─────────────────────────────────────────────────────────
+  taxDeadlines: "/tax-deadlines",
+  taxDeadlineById: (id: number | string) => `/tax-deadlines/${id}`,
+  taxDeadlineComplete: (id: number | string) => `/tax-deadlines/${id}/complete`,
+  taxDeadlinesDashboard: "/tax-deadlines/dashboard/urgent",
   taxDeadlinesTimeline: "/tax-deadlines/timeline",
   taxDeadlinesGenerate: "/tax-deadlines/generate",
-  advancePaymentsKPI: "/advance-payments/kpi",
-  advancePaymentsChart: "/advance-payments/chart",
+
+  // ── Advance Payments ──────────────────────────────────────────────────────
+  // FIX: all advance payment endpoints are scoped under /businesses/:id
+  businessAdvancePayments: (businessId: number | string) =>
+    `/businesses/${businessId}/advance-payments`,
+  businessAdvancePaymentById: (businessId: number | string, id: number | string) =>
+    `/businesses/${businessId}/advance-payments/${id}`,
+  businessAdvancePaymentSuggest: (businessId: number | string) =>
+    `/businesses/${businessId}/advance-payments/suggest`,
+  businessAdvancePaymentsKPI: (businessId: number | string) =>
+    `/businesses/${businessId}/advance-payments/kpi`,
+  businessAdvancePaymentsChart: (businessId: number | string) =>
+    `/businesses/${businessId}/advance-payments/chart`,
+  // Standalone (not business-scoped)
+  advancePaymentsOverview: "/advance-payments/overview",
   advancePaymentsGenerate: "/advance-payments/generate",
+
+  // ── VAT ───────────────────────────────────────────────────────────────────
+  vatWorkItems: "/vat/work-items",
+  vatWorkItemById: (id: number | string) => `/vat/work-items/${id}`,
+  // FIX: was /vat/clients/:id/work-items
+  vatWorkItemsByBusiness: (businessId: number | string) =>
+    `/vat/businesses/${businessId}/work-items`,
+  vatWorkItemMaterialsComplete: (id: number | string) =>
+    `/vat/work-items/${id}/materials-complete`,
+  vatWorkItemInvoices: (id: number | string) => `/vat/work-items/${id}/invoices`,
+  vatWorkItemInvoiceById: (id: number | string, invoiceId: number | string) =>
+    `/vat/work-items/${id}/invoices/${invoiceId}`,
+  vatWorkItemReadyForReview: (id: number | string) =>
+    `/vat/work-items/${id}/ready-for-review`,
+  vatWorkItemSendBack: (id: number | string) => `/vat/work-items/${id}/send-back`,
+  vatWorkItemFile: (id: number | string) => `/vat/work-items/${id}/file`,
+  vatWorkItemAudit: (id: number | string) => `/vat/work-items/${id}/audit`,
+  // FIX: was /vat/client/:id/summary and /vat/client/:id/export
+  vatBusinessSummary: (businessId: number | string) =>
+    `/vat/businesses/${businessId}/summary`,
+  vatBusinessExport: (businessId: number | string) =>
+    `/vat/businesses/${businessId}/export`,
+
+  // ── Authority Contacts ────────────────────────────────────────────────────
+  // FIX: was /clients/:id/authority-contacts — backend uses /businesses/:id
+  businessAuthorityContacts: (businessId: number | string) =>
+    `/businesses/${businessId}/authority-contacts`,
+  // FIX: was /clients/authority-contacts/:id
+  authorityContactById: (id: number | string) =>
+    `/businesses/authority-contacts/${id}`,
+
+  // ── Correspondence ────────────────────────────────────────────────────────
+  // FIX: was /clients/:id/correspondence — backend uses /businesses/:id
+  correspondenceList: (businessId: number | string) =>
+    `/businesses/${businessId}/correspondence`,
+  correspondenceById: (businessId: number | string, id: number | string) =>
+    `/businesses/${businessId}/correspondence/${id}`,
+
+  // ── Timeline ──────────────────────────────────────────────────────────────
+  // FIX: was /clients/:id/timeline — backend uses /businesses/:id
+  businessTimeline: (businessId: number | string) =>
+    `/businesses/${businessId}/timeline`,
+
+  // ── Signature Requests ────────────────────────────────────────────────────
+  signatureRequests: "/signature-requests",
+  signatureRequestsPending: "/signature-requests/pending",
+  signatureRequestById: (id: number | string) => `/signature-requests/${id}`,
+  signatureRequestSend: (id: number | string) => `/signature-requests/${id}/send`,
+  signatureRequestCancel: (id: number | string) =>
+    `/signature-requests/${id}/cancel`,
+  signatureRequestAuditTrail: (id: number | string) =>
+    `/signature-requests/${id}/audit-trail`,
+  // FIX: was /clients/:id/signature-requests
+  businessSignatureRequests: (businessId: number | string) =>
+    `/businesses/${businessId}/signature-requests`,
+  signerView: (token: string) => `/sign/${token}`,
+  signerApprove: (token: string) => `/sign/${token}/approve`,
+  signerDecline: (token: string) => `/sign/${token}/decline`,
+
+  // ── Users ─────────────────────────────────────────────────────────────────
+  users: "/users",
+  userById: (id: number | string) => `/users/${id}`,
+  userActivate: (id: number | string) => `/users/${id}/activate`,
+  userDeactivate: (id: number | string) => `/users/${id}/deactivate`,
+  userResetPassword: (id: number | string) => `/users/${id}/reset-password`,
+  userAuditLogs: "/users/audit-logs",
+
+  // ── Reports ───────────────────────────────────────────────────────────────
+  reportsAging: "/reports/aging",
+  reportsAgingExport: "/reports/aging/export",
+  reportsAnnualReportStatus: "/reports/annual-reports",
+  reportsAdvancePayments: "/reports/advance-payments",
+  reportsVatCompliance: "/reports/vat-compliance",
+
+  // ── Reminders ─────────────────────────────────────────────────────────────
+  reminders: "/reminders/",
+  reminderById: (id: number) => `/reminders/${id}`,
+  reminderCancel: (id: number) => `/reminders/${id}/cancel`,
+  reminderMarkSent: (id: number) => `/reminders/${id}/mark-sent`,
+
+  // ── Notifications ─────────────────────────────────────────────────────────
   notifications: "/notifications",
   notificationsUnreadCount: "/notifications/unread-count",
   notificationsMarkRead: "/notifications/mark-read",
   notificationsMarkAllRead: "/notifications/mark-all-read",
   notificationsSend: "/notifications/send",
-  documentDownloadUrl: (id: number | string) => `/documents/${id}/download-url`,
-  documentApprove: (id: number | string) => `/documents/${id}/approve`,
-  documentReject: (id: number | string) => `/documents/${id}/reject`,
-  documentVersions: (clientId: number | string) => `/documents/client/${clientId}/versions`,
-  documentsByAnnualReport: (reportId: number | string) => `/documents/annual-report/${reportId}`,
-  documentNotes: (id: number | string) => `/documents/${id}/notes`,
 } as const;
 
 export const ACTION_ENDPOINT_PATTERNS: RegExp[] = [
@@ -155,7 +224,7 @@ export const ACTION_ENDPOINT_PATTERNS: RegExp[] = [
   /^\/charges\/\d+\/issue$/,
   /^\/charges\/\d+\/mark-paid$/,
   /^\/charges\/\d+\/cancel$/,
-  /^\/clients\/\d+$/,
+  /^\/businesses\/\d+$/,
   /^\/tax-deadlines\/\d+\/complete$/,
   /^\/tax-deadlines\/\d+$/,
   /^\/annual-reports\/\d+\/amend$/,

@@ -2,11 +2,16 @@ import { useCallback, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
-import { clientsApi, type BulkClientActionPayload, type ListClientsParams } from "../../../api/clients.api";
+import {
+  clientsApi,
+  type BulkClientActionPayload,
+  type CreateClientPayload,
+  type DeletedClientInfo,
+  type ListClientsParams,
+} from "../../../api/clients.api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useActionRunner } from "../../actions/hooks/useActionRunner";
 import { QK } from "../../../lib/queryKeys";
-import type { CreateClientPayload } from "../../../api/clients.api";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
 import axios from "axios";
@@ -14,7 +19,7 @@ import axios from "axios";
 /** Extract the application-level error code from an Axios error response. */
 const extractErrorCode = (err: unknown): string | null => {
   if (axios.isAxiosError(err)) {
-    return err.response?.data?.code ?? null;
+    return err.response?.data?.error ?? err.response?.data?.code ?? null;
   }
   return null;
 };
@@ -23,6 +28,12 @@ export const useClientsPage = () => {
   const queryClient = useQueryClient();
   const { searchParams, setFilter, setPage } = useSearchParamFilters();
   const { isAdvisor, can } = useRole();
+
+  // Pending payload held while the "deleted client" dialog is open.
+  const [pendingCreatePayload, setPendingCreatePayload] =
+    useState<CreateClientPayload | null>(null);
+  const [deletedClientInfo, setDeletedClientInfo] =
+    useState<DeletedClientInfo | null>(null);
 
   const filters = {
     has_signals: searchParams.get("has_signals") ?? "",
@@ -33,14 +44,21 @@ export const useClientsPage = () => {
   };
 
   const apiParams: ListClientsParams = {
-    has_signals: filters.has_signals ? filters.has_signals === "true" : undefined,
+    has_signals: filters.has_signals
+      ? filters.has_signals === "true"
+      : undefined,
     status: filters.status || undefined,
     search: filters.search || undefined,
     page: filters.page,
     page_size: filters.page_size,
   };
 
-  const { items: clientItems, total, loading, error } = usePaginatedList({
+  const {
+    items: clientItems,
+    total,
+    loading,
+    error,
+  } = usePaginatedList({
     queryKey: QK.clients.list(apiParams),
     queryFn: () => clientsApi.list(apiParams),
     errorMessage: "שגיאה בטעינת רשימת לקוחות",
@@ -51,16 +69,52 @@ export const useClientsPage = () => {
     onSuccess: () => {
       toast.success("לקוח נוצר בהצלחה");
       queryClient.invalidateQueries({ queryKey: QK.clients.all });
+      setPendingCreatePayload(null);
+      setDeletedClientInfo(null);
     },
-    onError: (err) => {
+    onError: async (err, payload) => {
       const code = extractErrorCode(err);
       if (code === "CLIENT.DELETED_EXISTS") {
-        toast.error("לקוח עם מספר זהות זה נמחק בעבר. פנה למנהל לשחזור.");
+        try {
+          const deleted = await clientsApi.getDeletedByIdNumber(
+            payload.id_number,
+          );
+          setDeletedClientInfo(deleted);
+          setPendingCreatePayload(payload);
+        } catch {
+          showErrorToast(err, "שגיאה ביצירת לקוח");
+        }
       } else {
         showErrorToast(err, "שגיאה ביצירת לקוח");
       }
     },
   });
+
+  const restoreMutation = useMutation({
+    mutationFn: (clientId: number) => clientsApi.restore(clientId),
+    onSuccess: () => {
+      toast.success("הלקוח שוחזר בהצלחה");
+      queryClient.invalidateQueries({ queryKey: QK.clients.all });
+      setPendingCreatePayload(null);
+      setDeletedClientInfo(null);
+    },
+    onError: (err) => showErrorToast(err, "שגיאה בשחזור לקוח"),
+  });
+
+  const handleRestoreClient = useCallback(() => {
+    if (!deletedClientInfo) return;
+    restoreMutation.mutate(deletedClientInfo.id);
+  }, [deletedClientInfo, restoreMutation]);
+
+  const handleForceCreate = useCallback(() => {
+    if (!pendingCreatePayload) return;
+    createMutation.mutate({ ...pendingCreatePayload, force: true });
+  }, [pendingCreatePayload, createMutation]);
+
+  const handleDismissDeletedDialog = useCallback(() => {
+    setPendingCreatePayload(null);
+    setDeletedClientInfo(null);
+  }, []);
 
   const {
     activeActionKey,
@@ -70,7 +124,8 @@ export const useClientsPage = () => {
     handleAction: onAction,
     pendingAction,
   } = useActionRunner({
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: QK.clients.all }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: QK.clients.all }),
     errorFallback: "שגיאה בביצוע פעולת לקוח",
     canonicalAction: true,
   });
@@ -110,7 +165,9 @@ export const useClientsPage = () => {
           toast.success(`${result.succeeded.length} לקוחות עודכנו בהצלחה`);
         }
         if (result.failed.length > 0) {
-          result.failed.forEach((f) => toast.error(`לקוח #${f.id}: ${f.error}`));
+          result.failed.forEach((f) =>
+            toast.error(`לקוח #${f.id}: ${f.error}`),
+          );
         }
         await queryClient.invalidateQueries({ queryKey: QK.clients.all });
         clearSelection();
@@ -123,7 +180,10 @@ export const useClientsPage = () => {
     [isAdvisor, selectedIds, clearSelection, queryClient],
   );
 
-  const handleFilterChange = (name: "has_signals" | "status" | "page_size" | "search", value: string) => {
+  const handleFilterChange = (
+    name: "has_signals" | "status" | "page_size" | "search",
+    value: string,
+  ) => {
     setFilter(name, value);
   };
 
@@ -148,9 +208,18 @@ export const useClientsPage = () => {
     cancelPendingAction,
     confirmPendingAction,
     createClient: async (payload: CreateClientPayload): Promise<void> => {
-      await createMutation.mutateAsync(payload);
+      await createMutation.mutateAsync(payload).catch(() => {
+        // onError handles all error cases (409 → deleted dialog, others → toast)
+      });
     },
     createLoading: createMutation.isPending,
+    deletedClientInfo,
+    deletedClientDialogOpen: deletedClientInfo !== null,
+    handleRestoreClient,
+    handleForceCreate,
+    handleDismissDeletedDialog,
+    restoreLoading: restoreMutation.isPending,
+    forceCreateLoading: createMutation.isPending,
     isAdvisor,
     can,
   };

@@ -11,6 +11,7 @@ import { ClientsFiltersBar } from "../features/clients/components/ClientsFilters
 import { CreateClientModal } from "../features/clients/components/CreateClientModal";
 import { buildClientColumns } from "../features/clients/components/ClientColumns";
 import { ClientBulkToolbar } from "../features/clients/components/ClientBulkToolbar";
+import { DeletedClientDialog } from "../features/clients/components/DeletedClientDialog";
 import { useClientsPage } from "../features/clients/hooks/useClientsPage";
 import { ImportExportModal } from "../features/importExport/components/ImportExportModal";
 
@@ -39,6 +40,13 @@ export const Clients: React.FC = () => {
     total,
     createClient,
     createLoading,
+    deletedClientInfo,
+    deletedClientDialogOpen,
+    handleRestoreClient,
+    handleForceCreate,
+    handleDismissDeletedDialog,
+    restoreLoading,
+    forceCreateLoading,
     can,
   } = useClientsPage();
 
@@ -48,7 +56,12 @@ export const Clients: React.FC = () => {
   const columns = useMemo(
     () =>
       isAdvisor
-        ? buildClientColumns({ selectedIds, onToggleSelect: toggleSelect, onToggleAll: toggleSelectAll, allIds })
+        ? buildClientColumns({
+            selectedIds,
+            onToggleSelect: toggleSelect,
+            onToggleAll: toggleSelectAll,
+            allIds,
+          })
         : buildClientColumns(),
     [isAdvisor, selectedIds, toggleSelect, toggleSelectAll, allIds],
   );
@@ -141,7 +154,7 @@ export const Clients: React.FC = () => {
         />
       )}
       <CreateClientModal
-        open={showCreateModal}
+        open={showCreateModal && !deletedClientDialogOpen}
         onClose={() => setShowCreateModal(false)}
         onSubmit={createClient}
         isLoading={createLoading}
@@ -160,6 +173,19 @@ export const Clients: React.FC = () => {
         onConfirm={confirmPendingAction}
         onCancel={cancelPendingAction}
       />
+      <DeletedClientDialog
+      open={deletedClientDialogOpen}
+      deletedClient={deletedClientInfo}
+      isAdvisor={isAdvisor}
+      onRestore={handleRestoreClient}
+      onForceCreate={handleForceCreate}
+      onDismiss={() => {
+        handleDismissDeletedDialog();
+        setShowCreateModal(true);
+      }}
+      restoreLoading={restoreLoading}
+      forceCreateLoading={forceCreateLoading}
+    />
     </div>
   );
 };
