@@ -1,8 +1,8 @@
 import { Edit2, Trash2, MapPin, Phone, Mail } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
-import type { AuthorityContactResponse } from "../../../api/authorityContacts.api";
-import { getContactTypeLabel } from "../../../api/authorityContacts.utils";
+import type { AuthorityContactResponse } from "../api";
+import { getContactTypeLabel } from "../api";
 
 interface AuthorityContactRowProps {
   contact: AuthorityContactResponse;

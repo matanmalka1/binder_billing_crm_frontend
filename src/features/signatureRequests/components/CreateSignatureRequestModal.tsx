@@ -5,8 +5,8 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
-import { ClientSearchInput, SelectedClientDisplay } from "../../../components/ui/ClientSearchInput";
-import type { CreateSignatureRequestPayload, SignatureRequestType } from "../../../api/signatureRequests.api";
+import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
+import type { CreateSignatureRequestPayload, SignatureRequestType } from "../api";
 import { getSignatureRequestTypeLabel } from "../../../utils/enums";
 
 const REQUEST_TYPES: SignatureRequestType[] = [

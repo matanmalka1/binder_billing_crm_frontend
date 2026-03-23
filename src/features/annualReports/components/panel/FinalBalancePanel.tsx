@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { annualReportTaxApi } from "../../../../api/annualReport.tax.api";
+import { annualReportTaxApi } from "../../api";
 import { QK } from "../../../../lib/queryKeys";
 
 interface Props {

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
-import { annualReportFinancialsApi } from "../../../../api/annualReport.financials.api";
-import type { IncomeLineResponse, ExpenseLineResponse } from "../../../../api/annualReport.api";
+import { annualReportFinancialsApi } from "../../api";
+import type { IncomeLineResponse, ExpenseLineResponse } from "../../api";
 import { QK } from "../../../../lib/queryKeys";
 import { cn } from "../../../../utils/utils";
 import { AddLineForm } from "./IncomeExpensePanelParts";

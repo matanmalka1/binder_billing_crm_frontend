@@ -4,8 +4,8 @@ import {
   annualReportsApi,
   type StatusTransitionPayload,
   type ReportDetailResponse,
-} from "../../../api/annualReport.api";
-import { annualReportStatusApi } from "../../../api/annualReport.status.api";
+} from "../api";
+import { annualReportStatusApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";

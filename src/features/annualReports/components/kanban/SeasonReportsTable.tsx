@@ -1,12 +1,12 @@
 import { DataTable, type Column } from "../../../../components/ui/DataTable";
 import { Badge } from "../../../../components/ui/Badge";
-import type { AnnualReportFull } from "../../../../api/annualReport.api";
+import type { AnnualReportFull } from "../../api";
 import {
   getStatusLabel,
   getStatusVariant,
   getClientTypeLabel,
-} from "../../../../api/annualReport.extended.utils";
-import { getDeadlineTypeLabel } from "../../../../api/taxDeadlines.utils";
+} from "../../api";
+import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
 import { formatDate } from "../../../../utils/utils";
 import { AlertTriangle, Clock } from "lucide-react";
 import { cn } from "../../../../utils/utils";

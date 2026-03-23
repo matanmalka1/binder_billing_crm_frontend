@@ -1,6 +1,6 @@
 import React from "react";
 import { CalendarClock, CalendarCheck, AlertCircle, Clock } from "lucide-react";
-import type { AnnualReportFull } from "../../../../api/annualReport.api";
+import type { AnnualReportFull } from "../../api";
 import type { TimelineEventStatus } from "../statusTransition/TimelineEvent";
 import { cn } from "../../../../utils/utils";
 import { STATUS_LABELS } from "./annualReports.constants";

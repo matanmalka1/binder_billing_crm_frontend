@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { advancePaymentsApi } from "../../../api/advancePayments.api";
+import { advancePaymentsApi } from "../api";
 import type {
   AdvancePaymentStatus,
   CreateAdvancePaymentPayload,
@@ -32,7 +32,7 @@ export const useAdvancePayments = (
       : [...qk, page],
     queryFn: () =>
       advancePaymentsApi.list({
-        client_id: clientId,
+        business_id: clientId,
         year,
         page,
         page_size: 20,
@@ -43,7 +43,7 @@ export const useAdvancePayments = (
 
   const updateMutation = useMutation({
     mutationFn: ({ id, ...payload }: UpdatePayload) =>
-      advancePaymentsApi.update(id, payload),
+      advancePaymentsApi.update(clientId, id, payload),
     onSuccess: () => {
       toast.success("מקדמה עודכנה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
@@ -69,7 +69,7 @@ export const useAdvancePayments = (
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => advancePaymentsApi.delete(id),
+    mutationFn: (id: number) => advancePaymentsApi.delete(clientId, id),
     onSuccess: () => {
       toast.success("מקדמה נמחקה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });

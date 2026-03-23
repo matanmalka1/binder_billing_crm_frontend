@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
-import { annualReportFinancialsApi } from "../../../../api/annualReport.financials.api";
-import { annualReportTaxApi } from "../../../../api/annualReport.tax.api";
+import { annualReportFinancialsApi } from "../../api";
+import { annualReportTaxApi } from "../../api";
 import { QK } from "../../../../lib/queryKeys";
 import { cn } from "../../../../utils/utils";
 

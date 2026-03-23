@@ -4,7 +4,7 @@ import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { SelectDropdown } from "../../../components/ui/SelectDropdown";
-import { vatReportsApi } from "../../../api/vatReports.api";
+import { vatReportsApi } from "../api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";

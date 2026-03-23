@@ -1,6 +1,6 @@
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
-import type { ClientResponse } from "../../../api/clients.api";
+import type { ClientResponse } from "../api";
 import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
 import { ClientRowActions } from "./ClientRowActions";

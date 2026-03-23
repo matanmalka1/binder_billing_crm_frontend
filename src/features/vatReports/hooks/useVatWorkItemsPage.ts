@@ -2,11 +2,11 @@ import { useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
-import { vatReportsApi } from "../../../api/vatReports.api";
+import { vatReportsApi } from "../api";
 import type {
   CreateVatWorkItemPayload,
   VatWorkItemsListParams,
-} from "../../../api/vatReports.api";
+} from "../api";
 import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { toOptionalString } from "../../../utils/filters";

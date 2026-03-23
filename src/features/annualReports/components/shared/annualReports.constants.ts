@@ -1,4 +1,4 @@
-import type { AnnualReportFull } from "../../../../api/annualReport.api";
+import type { AnnualReportFull } from "../../api";
 
 export const STATUS_LABELS: Record<AnnualReportFull["status"], string> = {
   not_started: "טרם החל",

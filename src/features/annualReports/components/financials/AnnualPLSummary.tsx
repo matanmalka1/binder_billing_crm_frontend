@@ -8,9 +8,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { annualReportFinancialsApi } from "../../../../api/annualReport.financials.api";
-import { annualReportTaxApi } from "../../../../api/annualReport.tax.api";
-import { annualReportsApi } from "../../../../api/annualReport.api";
+import { annualReportFinancialsApi } from "../../api";
+import { annualReportTaxApi } from "../../api";
+import { annualReportsApi } from "../../api";
 import { QK } from "../../../../lib/queryKeys";
 import { DrawerSection } from "../../../../components/ui/DetailDrawer";
 

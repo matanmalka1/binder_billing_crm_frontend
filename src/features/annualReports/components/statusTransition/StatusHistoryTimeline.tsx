@@ -3,8 +3,8 @@ import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
 import { Card } from "../../../../components/ui/Card";
 import { Badge } from "../../../../components/ui/Badge";
-import type { StatusHistoryEntry } from "../../../../api/annualReport.api";
-import { getStatusLabel, getStatusVariant } from "../../../../api/annualReport.extended.utils";
+import type { StatusHistoryEntry } from "../../api";
+import { getStatusLabel, getStatusVariant } from "../../api";
 import { staggerDelay } from "../../../../utils/animation";
 
 interface StatusHistoryTimelineProps {

@@ -1,6 +1,6 @@
 import { AlertTriangle, DollarSign } from "lucide-react";
 import { StatsCard } from "../../../components/ui/StatsCard";
-import type { AgingReportResponse } from "../../../api/reports.api";
+import type { AgingReportResponse } from "../api";
 
 interface AgingReportHeaderProps {
   data: AgingReportResponse;

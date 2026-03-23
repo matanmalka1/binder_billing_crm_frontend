@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { documentsApi, type UploadDocumentPayload } from "../../../api/documents.api";
+import { documentsApi, type UploadDocumentPayload } from "../api";
 import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { QK } from "../../../lib/queryKeys";

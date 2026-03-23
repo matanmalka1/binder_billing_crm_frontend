@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { vatReportsApi } from "../../../api/vatReports.api";
+import { vatReportsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { getVatCategoryLabel } from "../utils";
 

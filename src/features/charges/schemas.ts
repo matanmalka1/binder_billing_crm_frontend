@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { CreateChargePayload } from "../../api/charges.api";
+import type { CreateChargePayload } from "./api";
 
 const periodPattern = /^\d{4}-(0[1-9]|1[0-2])$/;
 

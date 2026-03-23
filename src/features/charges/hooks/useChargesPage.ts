@@ -7,7 +7,7 @@ import {
   type BulkChargeActionPayload,
   type ChargesListParams,
   type CreateChargePayload,
-} from "../../../api/charges.api";
+} from "../api";
 import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
 import { useRole } from "../../../hooks/useRole";

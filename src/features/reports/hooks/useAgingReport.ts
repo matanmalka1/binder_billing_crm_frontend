@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { format as formatDate } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import { reportsApi, type ExportFormat } from "../../../api/reports.api";
+import { reportsApi, type ExportFormat } from "../api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";

@@ -1,6 +1,6 @@
 import { Download, Eye, History, CheckCircle, XCircle, RefreshCw, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
-import type { PermanentDocumentResponse } from "../../../api/documents.api";
+import type { PermanentDocumentResponse } from "../api";
 
 interface DocumentRowActionsProps {
   doc: PermanentDocumentResponse;

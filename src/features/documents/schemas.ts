@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { UploadDocumentPayload } from "../../api/documents.api";
+import type { UploadDocumentPayload } from "./api";
 
 export type DocumentStatus = "pending" | "received" | "approved" | "rejected";
 

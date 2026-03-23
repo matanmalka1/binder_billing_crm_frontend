@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { vatReportsApi, type CreateVatInvoicePayload, type UpdateVatInvoicePayload } from "../../../api/vatReports.api";
+import { vatReportsApi, type CreateVatInvoicePayload, type UpdateVatInvoicePayload } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";

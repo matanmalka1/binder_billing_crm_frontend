@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Inbox } from "lucide-react";
-import type { AttentionItem } from "../../../api/dashboard.api";
+import type { AttentionItem } from "../api";
 import { cn } from "../../../utils/utils";
 import type { SectionConfig } from "../utils";
 import { attentionSeverityCfg } from "../utils";

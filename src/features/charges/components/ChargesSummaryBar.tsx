@@ -1,5 +1,5 @@
 import { Clock, CheckCircle2, FileText, XCircle } from "lucide-react";
-import type { ChargeResponse } from "../../../api/charges.api";
+import type { ChargeResponse } from "../api";
 import { formatILS } from "../utils";
 
 interface ChargesSummaryBarProps {

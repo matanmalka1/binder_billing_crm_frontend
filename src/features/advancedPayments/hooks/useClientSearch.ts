@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { clientsApi } from "../../../api/clients.api";
+import { clientsApi } from "@/features/clients/api";
 
 export interface ClientSuggestion {
   id: number;

@@ -1,11 +1,11 @@
 import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../../hooks/useRole";
-import { annualReportsApi } from "../../../api/annualReport.api";
+import { annualReportsApi } from "../api";
 import { toast } from "../../../utils/toast";
 import { useReportDetail } from "./useReportDetail";
 import type { SectionKey } from "../types";
-import type { StatusTransitionPayload } from "../../../api/annualReport.api";
+import type { StatusTransitionPayload } from "../api";
 
 export const useAnnualReportDetailPage = (reportId: number, backPath: string) => {
   const [activeSection, setActiveSection] = useState<SectionKey>("overview");

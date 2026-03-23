@@ -1,5 +1,5 @@
 import { DataTable, type Column } from "../../../components/ui/DataTable";
-import type { AdvancePaymentReportItem, AdvancePaymentReportResponse } from "../../../api/reports.api";
+import type { AdvancePaymentReportItem, AdvancePaymentReportResponse } from "../api";
 
 interface Props {
   data: AdvancePaymentReportResponse;

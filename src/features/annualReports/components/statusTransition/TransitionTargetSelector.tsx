@@ -1,4 +1,4 @@
-import { getStatusLabel } from "../../../../api/annualReport.extended.utils";
+import { getStatusLabel } from "../../api";
 import { cn } from "../../../../utils/utils";
 import type { TransitionTargetSelectorProps } from "../../types";
 

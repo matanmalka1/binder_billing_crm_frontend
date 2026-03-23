@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { DetailDrawer } from "../../../components/ui/DetailDrawer";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
-import { usersApi } from "../../../api/users.api";
+import { usersApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { formatDateTime } from "../../../utils/utils";
 

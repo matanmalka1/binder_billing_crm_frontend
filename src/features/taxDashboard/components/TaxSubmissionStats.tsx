@@ -1,4 +1,4 @@
-import type { TaxSubmissionWidgetResponse } from "../../../api/taxDashboard.api";
+import type { TaxSubmissionWidgetResponse } from "../api";
 
 interface TaxSubmissionStatsProps {
   data?: TaxSubmissionWidgetResponse;

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   annualReportsApi,
   type AnnualReportScheduleKey,
-} from "../../../api/annualReport.api";
+} from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";

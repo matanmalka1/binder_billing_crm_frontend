@@ -5,7 +5,7 @@ import type {
   UpdateVatInvoicePayload,
   VatInvoiceResponse,
   VatWorkItemResponse,
-} from "../../api/vatReports.api";
+} from "./api";
 import type { ExpenseCategoryRow, VatBreakdownData } from "./vatBreakdown.utils";
 
 export type VatWorkItemsFilters = PagedFilters<{

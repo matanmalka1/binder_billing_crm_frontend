@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { remindersApi } from "../../../api/reminders.api";
+import { remindersApi } from "../api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { QK } from "../../../lib/queryKeys";
-import type { Reminder } from "../../../api/reminders.api";
+import type { Reminder } from "../api";
 import type { CreateReminderRequest } from "../types";
 import {
   createReminderSchema,

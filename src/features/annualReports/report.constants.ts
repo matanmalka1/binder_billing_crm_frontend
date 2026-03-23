@@ -1,4 +1,4 @@
-import type { IncomeSourceType, ExpenseCategoryType } from "../../api/annualReport.api";
+import type { IncomeSourceType, ExpenseCategoryType } from "./api";
 
 export { LineRow } from "./components/financials/FinancialLineRow";
 export type { LineRowProps } from "./components/financials/FinancialLineRow";

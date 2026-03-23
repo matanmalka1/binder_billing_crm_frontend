@@ -6,7 +6,7 @@ import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { Timeline, TimelineEntry } from "../../../components/ui/Timeline";
 import { QK } from "../../../lib/queryKeys";
-import { bindersApi } from "../../../api/binders.api";
+import { bindersApi } from "../api";
 import { getStatusLabel } from "../../../utils/enums";
 import { staggerDelay } from "../../../utils/animation";
 import { BINDER_STATUS_VARIANTS } from "../constants";

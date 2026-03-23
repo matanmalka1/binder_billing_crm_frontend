@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import type { ExpenseCategoryType } from "../../../../api/annualReport.api";
+import type { ExpenseCategoryType } from "../../api";
 import { Button } from "../../../../components/ui/Button";
 import { EXPENSE_LABELS } from "../../report.constants";
 

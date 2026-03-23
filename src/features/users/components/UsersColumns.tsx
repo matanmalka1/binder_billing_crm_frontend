@@ -1,6 +1,6 @@
 import { Badge } from "../../../components/ui/Badge";
 import type { Column } from "../../../components/ui/DataTable";
-import type { UserResponse } from "../../../api/users.api";
+import type { UserResponse } from "../api";
 import { formatDateTime } from "../../../utils/utils";
 import { UserRowActions } from "./UserRowActions";
 

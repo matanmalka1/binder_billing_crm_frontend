@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { authorityContactsApi } from "../../../api/authorityContacts.api";
+import { authorityContactsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 
 export const useAuthorityContact = (contactId: number) =>

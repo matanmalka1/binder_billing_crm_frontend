@@ -4,7 +4,7 @@ import { useNotifications } from "../hooks/useNotifications";
 import { useRole } from "../../../hooks/useRole";
 import { SeverityBadge } from "./SeverityBadge";
 import { SendNotificationModal } from "./SendNotificationModal";
-import type { NotificationItem } from "../../../api/notifications.api";
+import type { NotificationItem } from "../api";
 import type { NotificationDrawerProps } from "../types";
 
 export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, onClose }) => {

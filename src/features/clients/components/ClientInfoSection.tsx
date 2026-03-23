@@ -6,7 +6,7 @@ import { Badge } from "../../../components/ui/Badge";
 import { DefinitionList } from "../../../components/ui/DefinitionList";
 import { getClientStatusLabel, getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
-import type { ClientResponse } from "../../../api/clients.api";
+import type { ClientResponse } from "../api";
 
 type ClientInfoSectionProps = {
   client: ClientResponse;

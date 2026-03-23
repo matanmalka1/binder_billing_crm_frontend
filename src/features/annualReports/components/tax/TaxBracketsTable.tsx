@@ -1,4 +1,4 @@
-import type { BracketBreakdownItem } from "../../../../api/annualReport.api";
+import type { BracketBreakdownItem } from "../../api";
 
 interface Props {
   brackets: BracketBreakdownItem[];

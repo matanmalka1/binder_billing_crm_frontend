@@ -5,7 +5,7 @@ import { he } from "date-fns/locale";
 import { Card } from "../../../components/ui/Card";
 import { Timeline, TimelineEntry } from "../../../components/ui/Timeline";
 import { QK } from "../../../lib/queryKeys";
-import { bindersApi } from "../../../api/binders.api";
+import { bindersApi } from "../api";
 import { staggerDelay } from "../../../utils/animation";
 import { getBinderTypeLabel } from "../constants";
 

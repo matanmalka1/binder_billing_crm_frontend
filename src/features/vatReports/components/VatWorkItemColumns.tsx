@@ -1,7 +1,7 @@
 import { AlertTriangle } from "lucide-react";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
-import type { VatWorkItemResponse } from "../../../api/vatReports.api";
+import type { VatWorkItemResponse } from "../api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatDate, formatDateTime } from "../../../utils/utils";
 import { VAT_STATUS_BADGE_VARIANTS } from "../constants";

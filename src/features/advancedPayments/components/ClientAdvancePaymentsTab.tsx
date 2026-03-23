@@ -4,7 +4,7 @@ import type { AdvancePaymentStatus } from "../types";
 import { useAdvancePayments } from "../hooks/useAdvancePayments";
 import { useAdvanceRateInsights } from "../hooks/useAdvanceRateInsights";
 import { useRole } from "../../../hooks/useRole";
-import { advancePaymentsApi } from "../../../api/advancePayments.api";
+import { advancePaymentsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
@@ -40,7 +40,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const { advanceRate, annualIncome, updateAdvanceRate, isUpdatingRate } = useAdvanceRateInsights(clientId, year);
 
   const generateMutation = useMutation({
-    mutationFn: () => advancePaymentsApi.generateSchedule(clientId, year),
+    mutationFn: () => advancePaymentsApi.generateSchedule(clientId, year, 1),
     onSuccess: (data) => {
       const msg = data.created > 0 ? `נוצרו ${data.created} מקדמות` : "הכול קיים";
       toast.success(msg);

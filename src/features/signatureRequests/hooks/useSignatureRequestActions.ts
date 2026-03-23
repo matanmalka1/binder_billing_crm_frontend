@@ -3,7 +3,7 @@ import {
   signatureRequestsApi,
   type CreateSignatureRequestPayload,
   type SendSignatureRequestResponse,
-} from "../../../api/signatureRequests.api";
+} from "../api";
 import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";

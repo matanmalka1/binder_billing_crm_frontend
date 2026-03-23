@@ -1,4 +1,4 @@
-import type { AnnualReportFull, ClientTypeForReport } from "../../../../api/annualReport.api";
+import type { AnnualReportFull, ClientTypeForReport } from "../../api";
 import { DefinitionList } from "../../../../components/ui/DefinitionList";
 
 interface ReportMetaGridProps {

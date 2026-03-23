@@ -2,15 +2,15 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Users, FolderOpen, Bell, FileText } from "lucide-react";
-import { dashboardApi } from "../../../api/dashboard.api";
+import { dashboardApi } from "../api";
 import type {
   DashboardOverviewResponse,
   DashboardSummaryResponse,
-} from "../../../api/dashboard.api";
+} from "../api";
 import { getErrorMessage, getHttpStatus } from "../../../utils/utils";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { useRole } from "../../../hooks/useRole";
-import { useActionRunner } from "../../actions/hooks/useActionRunner";
+import { useActionRunner } from "@/features/actions";
 import { QK } from "../../../lib/queryKeys";
 import type { StatItem } from "../components/DashboardStatsGrid";
 

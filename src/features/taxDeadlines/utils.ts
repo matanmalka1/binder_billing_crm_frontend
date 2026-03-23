@@ -1,4 +1,4 @@
-import { calculateDaysRemaining } from "../../api/taxDeadlines.utils";
+import { calculateDaysRemaining } from "./api";
 
 export type DeadlineUrgency = "green" | "yellow" | "red" | "overdue";
 

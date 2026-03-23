@@ -1,10 +1,10 @@
 import { Badge } from "../../../components/ui/Badge";
 import { DataTable, type Column } from "../../../components/ui/DataTable";
-import type { AnnualReportClientEntry, AnnualReportStatusGroup } from "../../../api/reports.api";
+import type { AnnualReportClientEntry, AnnualReportStatusGroup } from "../api";
 import {
   getStatusLabel,
   getStatusVariant,
-} from "../../../api/annualReport.extended.utils";
+} from "@/features/annualReports/api";
 import { formatDate } from "../../../utils/utils";
 
 interface Props {

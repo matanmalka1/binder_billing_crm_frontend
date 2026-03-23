@@ -1,4 +1,4 @@
-import { getStatusLabel } from "../../../../api/annualReport.extended.utils";
+import { getStatusLabel } from "../../api";
 import { Button } from "../../../../components/ui/Button";
 import { Input } from "../../../../components/ui/Input";
 import type { TransitionDetailsFormProps } from "../../types";

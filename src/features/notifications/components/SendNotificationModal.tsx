@@ -4,8 +4,8 @@ import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { Textarea } from "../../../components/ui/Textarea";
 import { Select } from "../../../components/ui/Select";
-import { ClientSearchInput, SelectedClientDisplay } from "../../../components/ui/ClientSearchInput";
-import { clientsApi } from "../../../api/clients.api";
+import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
+import { clientsApi } from "@/features/clients/api";
 import { useSendNotification } from "../hooks/useSendNotification";
 import type { SendNotificationModalProps } from "../types";
 

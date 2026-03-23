@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { AnnualReportFull, ReportDetailResponse, StatusTransitionPayload } from "../../../../api/annualReport.api";
+import type { AnnualReportFull, ReportDetailResponse, StatusTransitionPayload } from "../../api";
 import { StatusTransitionPanel } from "../statusTransition/StatusTransitionPanel";
 
 interface AnnualReportSidebarStatusProps {

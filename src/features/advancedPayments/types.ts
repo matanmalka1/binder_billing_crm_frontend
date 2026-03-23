@@ -2,14 +2,15 @@ export type AdvancePaymentStatus = "pending" | "paid" | "partial" | "overdue";
 
 export interface AdvancePaymentRow {
   id: number;
-  client_id: number;
-  month: number;
-  year: number;
+  business_id: number;
+  period: string;
+  period_months_count: 1 | 2;
   expected_amount: number | null;
   paid_amount: number | null;
   status: AdvancePaymentStatus;
   due_date: string;
-  tax_deadline_id: number | null;
+  paid_at: string | null;
+  payment_method: string | null;
   annual_report_id: number | null;
   notes: string | null;
   delta: number | null;
@@ -18,7 +19,7 @@ export interface AdvancePaymentRow {
 }
 
 export interface ListAdvancePaymentsParams {
-  client_id: number;
+  business_id: number;
   year: number;
   status?: AdvancePaymentStatus[];
   page?: number;
@@ -26,13 +27,13 @@ export interface ListAdvancePaymentsParams {
 }
 
 export interface CreateAdvancePaymentPayload {
-  client_id: number;
-  year: number;
-  month: number;
+  business_id: number;
+  period: string;
+  period_months_count: 1 | 2;
   due_date: string;
   expected_amount?: number | null;
   paid_amount?: number | null;
-  tax_deadline_id?: number | null;
+  payment_method?: string | null;
   notes?: string | null;
 }
 
@@ -40,15 +41,16 @@ export interface UpdateAdvancePaymentPayload {
   paid_amount?: number | null;
   expected_amount?: number | null;
   status?: AdvancePaymentStatus;
+  paid_at?: string | null;
+  payment_method?: string | null;
   notes?: string | null;
 }
 
 export interface AdvancePaymentOverviewRow {
   id: number;
-  client_id: number;
-  client_name: string;
-  month: number;
-  year: number;
+  business_id: number;
+  business_name: string;
+  period: string;
   expected_amount: number | null;
   paid_amount: number | null;
   status: AdvancePaymentStatus;
@@ -74,14 +76,14 @@ export interface AdvancePaymentOverviewResponse {
 }
 
 export interface AdvancePaymentSuggestionResponse {
-  client_id: number;
+  business_id: number;
   year: number;
   suggested_amount: number | null;
   has_data: boolean;
 }
 
 export interface AnnualKPIResponse {
-  client_id: number;
+  business_id: number;
   year: number;
   total_expected: number;
   total_paid: number;
@@ -91,14 +93,14 @@ export interface AnnualKPIResponse {
 }
 
 export interface MonthlyChartRow {
-  month: number;
+  period: string;
   expected_amount: number;
   paid_amount: number;
   overdue_amount: number;
 }
 
 export interface ChartDataResponse {
-  client_id: number;
+  business_id: number;
   year: number;
   months: MonthlyChartRow[];
 }

@@ -11,7 +11,7 @@ import { SearchFiltersBar } from "../features/search/components/SearchFiltersBar
 import { searchColumns } from "../features/search/components/SearchColumns";
 import { DocumentResultsSection } from "../features/search/components/DocumentResultsSection";
 import { useSearchPage } from "../features/search/hooks/useSearchPage";
-import type { SearchResult } from "../api/search.api";
+import type { SearchResult } from "../features/search/api";
 
 export const Search: React.FC = () => {
   const { error, filters, handleFilterChange, handleReset, loading, results, documents, total } = useSearchPage();

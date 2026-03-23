@@ -1,6 +1,6 @@
 import React from "react";
 import { CalendarCheck } from "lucide-react";
-import type { AnnualReportFull } from "../../../../api/annualReport.api";
+import type { AnnualReportFull } from "../../api";
 import { TimelineEvent } from "../statusTransition/TimelineEvent";
 import type { TimelineEventStatus } from "../statusTransition/TimelineEvent";
 import { cn } from "../../../../utils/utils";

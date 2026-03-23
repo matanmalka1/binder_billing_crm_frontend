@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { signatureRequestsApi } from "../../../api/signatureRequests.api";
+import { signatureRequestsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import {
   DetailDrawer,

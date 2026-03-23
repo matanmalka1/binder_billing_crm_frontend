@@ -6,9 +6,9 @@ import { RemindersTable } from "./RemindersTable";
 import { ReminderDrawer } from "./ReminderDrawer";
 import { CreateReminderModal } from "./CreateReminderModal";
 import { useReminders } from "../hooks/useReminders";
-import { bindersApi } from "../../../api/binders.api";
-import { chargesApi } from "../../../api/charges.api";
-import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
+import { bindersApi } from "@/features/binders/api";
+import { chargesApi } from "@/features/charges/api";
+import { taxDeadlinesApi } from "@/features/taxDeadlines/api";
 
 interface ClientRemindersCardProps {
   clientId: number;

@@ -5,7 +5,7 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { DatePicker } from "../../../components/ui/DatePicker";
-import type { CreateClientPayload } from "../../../api/clients.api";
+import type { CreateClientPayload } from "../api";
 import { createClientSchema, type CreateClientFormValues } from "../schemas";
 
 interface Props {

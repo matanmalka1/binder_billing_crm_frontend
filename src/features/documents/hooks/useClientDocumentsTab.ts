@@ -3,7 +3,7 @@ import {
   documentsApi,
   type OperationalSignalsResponse,
   type PermanentDocumentListResponse,
-} from "../../../api/documents.api";
+} from "../api";
 import { getErrorMessage } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { useDocumentUpload } from "./useDocumentUpload";

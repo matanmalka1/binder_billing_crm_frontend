@@ -8,12 +8,12 @@ import { DocumentVersionsPanel } from "./DocumentVersionsPanel";
 import { DocumentPreviewModal } from "./DocumentPreviewModal";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { buildDocumentColumns } from "./DocumentsColumns";
-import { documentsApi } from "../../../api/documents.api";
+import { documentsApi } from "../api";
 import type {
   OperationalSignalsResponse,
   PermanentDocumentResponse,
   UploadDocumentPayload,
-} from "../../../api/documents.api";
+} from "../api";
 import { useAuthStore } from "../../../store/auth.store";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";

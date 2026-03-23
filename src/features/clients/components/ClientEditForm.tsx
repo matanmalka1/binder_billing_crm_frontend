@@ -4,7 +4,7 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
-import type { ClientResponse, UpdateClientPayload } from "../../../api/clients.api";
+import type { ClientResponse, UpdateClientPayload } from "../api";
 import { clientEditSchema, type ClientEditFormValues } from "../schemas";
 
 interface ClientEditFormProps {

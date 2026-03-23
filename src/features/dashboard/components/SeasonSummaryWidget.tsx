@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getYear } from "date-fns";
 import { TrendingUp, AlertTriangle, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { annualReportSeasonApi } from "../../../api/annualReport.season.api";
+import { annualReportSeasonApi } from "@/features/annualReports/api";
 import { QK } from "../../../lib/queryKeys";
 import { cn } from "../../../utils/utils";
 

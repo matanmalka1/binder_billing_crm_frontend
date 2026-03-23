@@ -9,6 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "lint": "eslint . --ext ts,tsx --max-warnings=0",
+    "arch:check": "node scripts/arch-check.mjs",
+    "arch:check:strict": "node scripts/arch-check.mjs --strict",
     "smoke:api": "bash ./scripts/smoke-api.sh",
     "test": "vitest run",
     "test:watch": "vitest"

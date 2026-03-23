@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { vatReportsApi } from "../../../api/vatReports.api";
+import { vatReportsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";

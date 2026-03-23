@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { timelineApi } from "../../../api/timeline.api";
+import { timelineApi } from "../api";
 import { getErrorMessage, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
-import { useActionRunner } from "../../actions/hooks/useActionRunner";
+import { useActionRunner } from "@/features/actions";
 import { QK } from "../../../lib/queryKeys";
 
 export const useClientTimelinePage = (clientId: string | undefined) => {

@@ -1,6 +1,6 @@
 import { Modal } from "../../../components/ui/Modal";
 import { TaxProfileForm } from "../../taxProfile/components/TaxProfileForm";
-import { useTaxProfile } from "../../taxProfile/hooks/useTaxProfile";
+import { useTaxProfile } from "@/features/taxProfile";
 
 interface EditAdvanceRateModalProps {
   clientId: number;

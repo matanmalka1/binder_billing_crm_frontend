@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { buildYearOptions } from "../../../utils/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { vatReportsApi } from "../../../api/vatReports.api";
+import { vatReportsApi } from "../api";
 import type {
   CreateVatWorkItemPayload,
   VatAnnualSummary,
   VatPeriodRow,
-} from "../../../api/vatReports.api";
+} from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";

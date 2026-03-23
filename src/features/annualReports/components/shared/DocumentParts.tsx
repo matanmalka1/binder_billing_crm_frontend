@@ -3,12 +3,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Upload, CreditCard, ScrollText, FileSignature, FileText } from "lucide-react";
 import type { ComponentType } from "react";
 import { QK } from "../../../../lib/queryKeys";
-import { documentsApi } from "../../../../api/documents.api";
-import type { PermanentDocumentResponse } from "../../../../api/documents.api";
+import { documentsApi } from "@/features/documents/api";
+import type { PermanentDocumentResponse } from "@/features/documents/api";
 import { cn, getErrorMessage } from "../../../../utils/utils";
 import { toast } from "../../../../utils/toast";
 import { Badge } from "../../../../components/ui/Badge";
-import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "../../../documents/documents.constants";
+import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "@/features/documents";
 
 const DOC_TYPE_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   id_copy:                 CreditCard,

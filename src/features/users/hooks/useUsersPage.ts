@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { usersApi } from "../../../api/users.api";
-import type { CreateUserPayload, UpdateUserPayload, UserResponse } from "../../../api/users.api";
+import { usersApi } from "../api";
+import type { CreateUserPayload, UpdateUserPayload, UserResponse } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";

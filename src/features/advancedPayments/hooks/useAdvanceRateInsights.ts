@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { advancePaymentsApi } from "../../../api/advancePayments.api";
-import { useTaxProfile } from "../../taxProfile/hooks/useTaxProfile";
+import { advancePaymentsApi } from "../api";
+import { useTaxProfile } from "@/features/taxProfile";
 import { QK } from "../../../lib/queryKeys";
 
 export const useAdvanceRateInsights = (clientId: number, year: number) => {

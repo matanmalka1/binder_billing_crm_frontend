@@ -8,9 +8,9 @@ import {
   type CreateClientPayload,
   type DeletedClientInfo,
   type ListClientsParams,
-} from "../../../api/clients.api";
+} from "../api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
-import { useActionRunner } from "../../actions/hooks/useActionRunner";
+import { useActionRunner } from "@/features/actions";
 import { QK } from "../../../lib/queryKeys";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";

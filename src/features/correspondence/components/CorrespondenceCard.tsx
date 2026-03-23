@@ -8,7 +8,7 @@ import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { CorrespondenceEntryItem } from "./CorrespondenceEntry";
 import { CorrespondenceModal } from "./CorrespondenceModal";
 import { useCorrespondence } from "../hooks/useCorrespondence";
-import type { CorrespondenceEntry } from "../../../api/correspondence.api";
+import type { CorrespondenceEntry } from "../api";
 import type { CorrespondenceFormValues } from "../schemas";
 
 interface CorrespondenceCardProps {

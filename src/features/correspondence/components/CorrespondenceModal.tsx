@@ -8,8 +8,8 @@ import { Select } from "../../../components/ui/Select";
 import { DatePicker } from "../../../components/ui/DatePicker";
 import { Textarea } from "../../../components/ui/Textarea";
 import { correspondenceSchema, correspondenceDefaults, type CorrespondenceFormValues } from "../schemas";
-import type { CorrespondenceEntry } from "../../../api/correspondence.api";
-import type { AuthorityContactResponse } from "../../../api/authorityContacts.api";
+import type { CorrespondenceEntry } from "../api";
+import type { AuthorityContactResponse } from "@/features/authorityContacts/api";
 import { format } from "date-fns";
 
 interface CorrespondenceModalProps {

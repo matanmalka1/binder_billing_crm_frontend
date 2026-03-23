@@ -1,4 +1,4 @@
-import type { ChargeResponse } from "../../api/charges.api";
+import type { ChargeResponse } from "./api";
 
 export const CHARGE_TYPE_LABELS: Record<string, string> = {
   one_time: "חד פעמי",

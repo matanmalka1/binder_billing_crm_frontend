@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck } from "lucide-react";
-import { clientsApi } from "../../../api/clients.api";
+import { clientsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { Card } from "../../../components/ui/Card";
 

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ShieldCheck } from "lucide-react";
-import { annualReportsApi } from "../../../../api/annualReport.api";
+import { annualReportsApi } from "../../api";
 import {
   getAllowedTransitions,
   getStatusLabel,
   getStatusVariant,
-} from "../../../../api/annualReport.extended.utils";
+} from "../../api";
 import { Badge } from "../../../../components/ui/Badge";
 import { Button } from "../../../../components/ui/Button";
 import { Card } from "../../../../components/ui/Card";

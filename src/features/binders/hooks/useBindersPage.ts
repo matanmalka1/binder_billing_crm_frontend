@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { bindersApi } from "../../../api/binders.api";
+import { bindersApi } from "../api";
 import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { QK } from "../../../lib/queryKeys";

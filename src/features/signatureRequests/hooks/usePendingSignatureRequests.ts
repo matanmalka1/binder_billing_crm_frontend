@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { signatureRequestsApi } from "../../../api/signatureRequests.api";
-import type { SignatureRequestResponse } from "../../../api/signatureRequests.api";
-import { clientsApi } from "../../../api/clients.api";
+import { signatureRequestsApi } from "../api";
+import type { SignatureRequestResponse } from "../api";
+import { clientsApi } from "@/features/clients/api";
 import { getErrorMessage } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 

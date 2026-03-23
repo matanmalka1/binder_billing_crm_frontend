@@ -2,7 +2,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { Alert } from "../../../components/ui/Alert";
 import { Button } from "../../../components/ui/Button";
-import { ClientSearchInput } from "../../../components/ui/ClientSearchInput";
+import { ClientSearchInput } from "@/components/shared/client";
 import { DatePicker } from "../../../components/ui/DatePicker";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";

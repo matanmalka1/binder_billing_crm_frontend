@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, XCircle } from "lucide-react";
-import { annualReportTaxApi } from "../../../../api/annualReport.tax.api";
+import { annualReportTaxApi } from "../../api";
 import { QK } from "../../../../lib/queryKeys";
 import { cn } from "../../../../utils/utils";
 

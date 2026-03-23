@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { QK } from "../../../lib/queryKeys";
-import { documentsApi } from "../../../api/documents.api";
+import { documentsApi } from "../api";
 import { Badge } from "../../../components/ui/Badge";
 import { STATUS_LABELS, STATUS_BADGE_VARIANT } from "../documents.constants";
 import { formatDate, formatFileSize } from "../../../utils/utils";

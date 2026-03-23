@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { annualReportsApi } from "../../../api/annualReport.api";
+import { annualReportsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import type { AnnualReportDetail } from "../types";
 import { useReportMutations } from "./useReportMutations";

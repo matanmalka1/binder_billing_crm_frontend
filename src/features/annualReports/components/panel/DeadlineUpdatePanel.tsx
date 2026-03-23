@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { annualReportStatusApi } from "../../../../api/annualReport.status.api";
-import type { DeadlineType } from "../../../../api/annualReport.api";
+import { annualReportStatusApi } from "../../api";
+import type { DeadlineType } from "../../api";
 import { QK } from "../../../../lib/queryKeys";
 import { Button } from "../../../../components/ui/Button";
 import { toast } from "../../../../utils/toast";
 import { formatDate } from "../../../../utils/utils";
-import { getDeadlineTypeLabel } from "../../../../api/taxDeadlines.utils";
+import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
 
 interface Props {
   reportId: number;

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Scissors, Building2, Briefcase, Users, TrendingDown, Car, Megaphone, Shield, Smartphone, Plane, GraduationCap, Landmark, MoreHorizontal } from "lucide-react";
-import { annualReportFinancialsApi } from "../../../../api/annualReport.financials.api";
+import { annualReportFinancialsApi } from "../../api";
 import { QK } from "../../../../lib/queryKeys";
 import { TaxCreditsPanel } from "./TaxCreditsPanel";
 import { EXPENSE_LABELS } from "../../report.constants";

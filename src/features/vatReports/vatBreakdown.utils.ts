@@ -1,4 +1,4 @@
-import type { VatInvoiceResponse } from "../../api/vatReports.api";
+import type { VatInvoiceResponse } from "./api";
 import { CATEGORY_TABLE_LABELS } from "./constants";
 
 export interface ExpenseCategoryRow {

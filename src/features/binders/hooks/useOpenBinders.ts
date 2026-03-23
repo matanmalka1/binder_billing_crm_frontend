@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { bindersApi } from "../../../api/binders.api";
+import { bindersApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 
 export const useOpenBinders = (page = 1, pageSize = 20) =>

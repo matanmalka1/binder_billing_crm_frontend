@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { taxProfileApi, type TaxProfileData } from "../../../api/taxProfile.api";
+import { taxProfileApi, type TaxProfileData } from "../api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";

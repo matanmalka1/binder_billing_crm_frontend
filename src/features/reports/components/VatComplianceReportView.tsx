@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { QK } from "../../../lib/queryKeys";
-import { reportsApi, type VatComplianceItem, type StalePendingItem } from "../../../api/reports.api";
+import { reportsApi, type VatComplianceItem, type StalePendingItem } from "../api";
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { PageStateGuard } from "../../../components/ui/PageStateGuard";
 import { Badge } from "../../../components/ui/Badge";

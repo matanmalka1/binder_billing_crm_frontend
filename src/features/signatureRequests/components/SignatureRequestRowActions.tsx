@@ -3,7 +3,7 @@ import { Send, Copy, Check, X, History } from "lucide-react";
 import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { toast } from "../../../utils/toast";
-import type { SignatureRequestResponse } from "../../../api/signatureRequests.api";
+import type { SignatureRequestResponse } from "../api";
 
 interface SignatureRequestRowActionsProps {
   request: SignatureRequestResponse;

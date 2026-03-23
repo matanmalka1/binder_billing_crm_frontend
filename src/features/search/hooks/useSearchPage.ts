@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { searchApi } from "../../../api/search.api";
+import { searchApi } from "../api";
 import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 import type { SearchFilters } from "../types";
 import { QK } from "../../../lib/queryKeys";

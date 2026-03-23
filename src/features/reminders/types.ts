@@ -5,7 +5,7 @@ export type {
   ReminderStatus,
   CreateReminderRequest,
   RemindersListResponse,
-} from "../../api/reminders.api";
+} from "./api";
 
 // Form value type is derived from the Zod schema — single source of truth
 export type { CreateReminderFormValues } from "./schemas";

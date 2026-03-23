@@ -11,8 +11,8 @@ import { ClientStatusCard } from "./ClientStatusCard";
 import { ClientInfoSection } from "./ClientInfoSection";
 import { ClientRelatedData } from "./ClientRelatedData";
 import { ClientEditForm } from "./ClientEditForm";
-import { ClientStatusBanner } from "../../../components/ui/ClientStatusBanner";
-import type { UpdateClientPayload, ClientResponse } from "../../../api/clients.api";
+import { ClientStatusBanner } from "@/components/shared/client";
+import type { UpdateClientPayload, ClientResponse } from "../api";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 
 const EDIT_FORM_ID = "client-edit-form";

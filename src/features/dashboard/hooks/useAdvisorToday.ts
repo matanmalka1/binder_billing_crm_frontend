@@ -1,15 +1,14 @@
 import { useMemo } from "react";
 import { format, addDays, subDays } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
-import { annualReportsApi } from "../../../api/annualReport.api";
-import { remindersApi } from "../../../api/reminders.api";
-import { chargesApi } from "../../../api/charges.api";
+import { taxDeadlinesApi } from "@/features/taxDeadlines/api";
+import { annualReportsApi, getStatusLabel } from "@/features/annualReports/api";
+import { remindersApi } from "@/features/reminders/api";
+import { chargesApi } from "@/features/charges/api";
 import { QK } from "../../../lib/queryKeys";
 import { useRole } from "../../../hooks/useRole";
 import { formatDate } from "../../../utils/utils";
-import { getStatusLabel } from "../../../api/annualReport.extended.utils";
-import { getDeadlineTypeLabel } from "../../../api/taxDeadlines.utils";
+import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
 import type { SectionItem } from "../utils";
 
 // Compute once per calendar day — stable across re-renders within the same day

@@ -13,7 +13,7 @@ import { CreateSignatureRequestModal } from "../../features/signatureRequests/co
 import { usePendingSignatureRequests } from "../../features/signatureRequests/hooks/usePendingSignatureRequests";
 import { useSignatureRequestActions } from "../../features/signatureRequests/hooks/useSignatureRequestActions";
 import { buildSigningUrl } from "../../features/signatureRequests/utils";
-import type { SignatureRequestResponse } from "../../api/signatureRequests.api";
+import type { SignatureRequestResponse } from "../../features/signatureRequests/api";
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "../../utils/enums";
 
 const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "success" | "error"> = {
@@ -25,7 +25,7 @@ const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "
   canceled: "neutral",
 };
 import { formatDate } from "../../utils/utils";
-import type { SendSignatureRequestResponse } from "../../api/signatureRequests.api";
+import type { SendSignatureRequestResponse } from "../../features/signatureRequests/api";
 
 const TERMINAL_STATUSES = new Set(["signed", "expired", "canceled", "declined"]);
 

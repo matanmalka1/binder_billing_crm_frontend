@@ -1,10 +1,11 @@
 import type { MutableRefObject } from "react";
 import type { SectionKey, AnnualReportDetail } from "../../types";
-import type { ReportDetailResponse, AnnualReportScheduleKey } from "../../../../api/annualReport.api";
+import type { ReportDetailResponse, AnnualReportScheduleKey } from "../../api";
 import { AnnualReportOverviewSection } from "./AnnualReportOverviewSection";
 import { IncomeExpensePanel } from "../financials/IncomeExpensePanel";
 import { TaxCalculationPanel } from "../tax/TaxCalculationPanel";
 import { DeductionsTab } from "../tax/DeductionsTab";
+// eslint-disable-next-line no-restricted-imports -- TODO Wave 4: replace with documents feature barrel
 import { ClientDocumentsTab } from "../../../../features/documents/components/ClientDocumentsTab";
 import { FilingTimelineTab } from "../shared/FilingTimelineTab";
 

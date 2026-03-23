@@ -1,4 +1,4 @@
-import type { NotificationSeverity } from "../../../api/notifications.api";
+import type { NotificationSeverity } from "../api";
 import { cn } from "../../../utils/utils";
 import type { SeverityBadgeProps } from "../types";
 

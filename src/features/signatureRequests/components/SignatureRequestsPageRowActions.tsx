@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Send, Link2, Copy, Check, X, History } from "lucide-react";
 import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
-import type { SignatureRequestResponse } from "../../../api/signatureRequests.api";
+import type { SignatureRequestResponse } from "../api";
 
 const TERMINAL_STATUSES = new Set(["signed", "expired", "canceled", "declined"]);
 

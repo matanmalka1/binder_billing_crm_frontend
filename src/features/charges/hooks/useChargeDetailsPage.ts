@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { chargesApi } from "../../../api/charges.api";
+import { chargesApi } from "../api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage, getHttpStatus, isPositiveInt, showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";

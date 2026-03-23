@@ -5,7 +5,7 @@ import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { UserFormFields } from "./UserFormFields";
 import { editUserSchema, type EditUserFormValues } from "../schemas";
-import type { UserResponse, UpdateUserPayload } from "../../../api/users.api";
+import type { UserResponse, UpdateUserPayload } from "../api";
 
 interface EditUserModalProps {
   open: boolean;

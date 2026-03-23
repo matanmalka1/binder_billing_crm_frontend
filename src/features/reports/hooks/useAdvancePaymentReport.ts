@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { QK } from "../../../lib/queryKeys";
-import { reportsApi } from "../../../api/reports.api";
+import { reportsApi } from "../api";
 
 export const useAdvancePaymentReport = () => {
   const [year, setYear] = useState(new Date().getFullYear());

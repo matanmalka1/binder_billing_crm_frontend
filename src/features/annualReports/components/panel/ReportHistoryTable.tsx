@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Eye } from "lucide-react";
-import { annualReportsApi, type AnnualReportFull } from "../../../../api/annualReport.api";
+import { annualReportsApi, type AnnualReportFull } from "../../api";
 import { QK } from "../../../../lib/queryKeys";
 import { DataTable } from "../../../../components/ui/DataTable";
 import { Badge } from "../../../../components/ui/Badge";
@@ -8,7 +8,7 @@ import { Button } from "../../../../components/ui/Button";
 import {
   getStatusLabel,
   getStatusVariant,
-} from "../../../../api/annualReport.extended.utils";
+} from "../../api";
 import { formatDate } from "../../../../utils/utils";
 
 interface Props {

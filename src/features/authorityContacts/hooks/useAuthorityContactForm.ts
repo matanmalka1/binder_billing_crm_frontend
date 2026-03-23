@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { authorityContactsApi, type AuthorityContactResponse } from "../../../api/authorityContacts.api";
+import { authorityContactsApi, type AuthorityContactResponse } from "../api";
 import { showErrorToast } from "../../../utils/utils";
 import { authorityContactSchema, authorityContactDefaults, type AuthorityContactFormValues } from "../schemas";
 import { QK } from "../../../lib/queryKeys";

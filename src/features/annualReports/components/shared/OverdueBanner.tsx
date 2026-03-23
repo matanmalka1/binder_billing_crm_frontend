@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
-import type { AnnualReportFull } from "../../../../api/annualReport.api";
+import type { AnnualReportFull } from "../../api";
 import { formatDate, cn } from "../../../../utils/utils";
 
 interface OverdueBannerProps {

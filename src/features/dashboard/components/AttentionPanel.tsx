@@ -1,5 +1,5 @@
 import { CheckCircle2, ShieldAlert } from "lucide-react";
-import type { AttentionItem } from "../../../api/dashboard.api";
+import type { AttentionItem } from "../api";
 import { AttentionSection } from "./AttentionSection";
 import { SECTIONS } from "../utils";
 import { cn } from "../../../utils/utils";

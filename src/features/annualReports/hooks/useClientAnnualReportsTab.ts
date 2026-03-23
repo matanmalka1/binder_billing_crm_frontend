@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { annualReportsApi } from "../../../api/annualReport.api";
+import { annualReportsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { getErrorMessage } from "../../../utils/utils";
 import { CURRENT_YEAR } from "../types";

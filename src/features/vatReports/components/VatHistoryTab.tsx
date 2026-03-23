@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { vatReportsApi } from "../../../api/vatReports.api";
+import { vatReportsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { formatDateTime } from "../../../utils/utils";
 import {

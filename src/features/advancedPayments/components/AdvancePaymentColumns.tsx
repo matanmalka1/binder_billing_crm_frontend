@@ -21,11 +21,11 @@ export const buildAdvancePaymentColumns = (
 ): Column<AdvancePaymentRow>[] => {
   const base: Column<AdvancePaymentRow>[] = [
     {
-      key: "month",
+      key: "period",
       header: "תקופה",
       render: (row) => (
         <span className="text-sm font-semibold text-gray-900">
-          {MONTH_NAMES[row.month - 1] ?? row.month}
+          {MONTH_NAMES[Number(row.period.split("-")[1]) - 1] ?? row.period}
         </span>
       ),
     },

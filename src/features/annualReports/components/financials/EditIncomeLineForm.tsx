@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { IncomeLineResponse, IncomeSourceType } from "../../../../api/annualReport.api";
+import type { IncomeLineResponse, IncomeSourceType } from "../../api";
 import { Button } from "../../../../components/ui/Button";
 
 interface EditIncomeLineFormProps {

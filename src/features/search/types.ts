@@ -1,4 +1,4 @@
-import type { SearchParams } from "../../api/search.api";
+import type { SearchParams } from "./api";
 
 export interface SearchFilters extends Omit<SearchParams, "has_signals" | "signal_type"> {
   query: string;

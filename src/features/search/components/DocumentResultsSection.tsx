@@ -1,8 +1,8 @@
 import { FileText, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "../../../components/ui/Badge";
-import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "../../documents/documents.constants";
-import type { DocumentSearchResult } from "../../../api/search.api";
+import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "@/features/documents";
+import type { DocumentSearchResult } from "../api";
 import { cn } from "../../../utils/utils";
 
 interface DocumentResultsSectionProps {

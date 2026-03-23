@@ -1,11 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { clientsApi, type UpdateClientPayload, type ClientResponse } from "../../../api/clients.api";
-import { bindersApi } from "../../../api/binders.api";
-import { chargesApi } from "../../../api/charges.api";
-import { annualReportsApi } from "../../../api/annualReport.api";
-import { vatReportsApi } from "../../../api/vatReports.api";
-import { documentsApi } from "../../../api/documents.api";
+import { clientsApi, type UpdateClientPayload, type ClientResponse } from "../api";
+import { bindersApi } from "@/features/binders/api";
+import { chargesApi } from "@/features/charges/api";
+import { annualReportsApi } from "@/features/annualReports/api";
+import { vatReportsApi } from "@/features/vatReports/api";
+import { documentsApi } from "@/features/documents/api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 import { QK } from "../../../lib/queryKeys";

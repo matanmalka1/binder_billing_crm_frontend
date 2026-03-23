@@ -12,7 +12,7 @@ import {
   type CreateAdvancePaymentFormValues,
 } from "../schemas";
 import { MONTH_OPTIONS } from "../utils";
-import { advancePaymentsApi } from "../../../api/advancePayments.api";
+import { advancePaymentsApi } from "../api";
 import type { CreateAdvancePaymentPayload } from "../types";
 import { QK } from "../../../lib/queryKeys";
 
@@ -59,9 +59,9 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
 
   const onSubmit = handleSubmit(async (data) => {
     await onCreate({
-      client_id: clientId,
-      year,
-      month: data.month,
+      business_id: clientId,
+      period: `${year}-${String(data.month).padStart(2, "0")}`,
+      period_months_count: data.period_months_count,
       due_date: data.due_date,
       expected_amount: data.expected_amount,
       paid_amount: data.paid_amount,
@@ -104,6 +104,21 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
               onChange={(e) => field.onChange(Number(e.target.value))}
               options={MONTH_OPTIONS}
               error={errors.month?.message}
+            />
+          )}
+        />
+        <Controller
+          name="period_months_count"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="תדירות"
+              value={String(field.value)}
+              onChange={(e) => field.onChange(Number(e.target.value) as 1 | 2)}
+              options={[
+                { value: "1", label: "חודשי" },
+                { value: "2", label: "דו-חודשי" },
+              ]}
             />
           )}
         />

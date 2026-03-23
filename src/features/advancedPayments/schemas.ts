@@ -6,6 +6,7 @@ export const createAdvancePaymentSchema = z.object({
     .int()
     .min(1, "חודש חייב להיות בין 1 ל-12")
     .max(12, "חודש חייב להיות בין 1 ל-12"),
+  period_months_count: z.union([z.literal(1), z.literal(2)]).default(1),
   due_date: z.string().min(1, "יש להזין תאריך יעד"),
   expected_amount: z.number().min(0, "הסכום חייב להיות חיובי").nullable(),
   paid_amount: z.number().min(0, "הסכום חייב להיות חיובי").nullable(),
@@ -16,6 +17,7 @@ export type CreateAdvancePaymentFormValues = z.infer<typeof createAdvancePayment
 
 export const CREATE_ADVANCE_PAYMENT_DEFAULTS: CreateAdvancePaymentFormValues = {
   month: new Date().getMonth() + 1,
+  period_months_count: 1,
   due_date: "",
   expected_amount: null,
   paid_amount: null,

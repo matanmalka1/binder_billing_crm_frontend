@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { TimelineEvent } from "../../../api/timeline.api";
+import type { TimelineEvent } from "../api";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { TimelineEventItem } from "./TimelineEventItem";
 import { Clock, InboxIcon } from "lucide-react";

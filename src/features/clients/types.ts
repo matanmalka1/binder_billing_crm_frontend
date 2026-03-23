@@ -1,4 +1,4 @@
-import type { ListClientsParams } from "../../api/clients.api";
+import type { ListClientsParams } from "./api";
 
 export interface ClientsFilters extends Omit<ListClientsParams, "has_signals"> {
   has_signals: string;

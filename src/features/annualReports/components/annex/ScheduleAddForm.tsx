@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import type { AnnualReportScheduleKey, ScheduleEntry } from "../../../../api/annualReport.api";
-import { getScheduleLabel } from "../../../../api/annualReport.extended.utils";
+import type { AnnualReportScheduleKey, ScheduleEntry } from "../../api";
+import { getScheduleLabel } from "../../api";
 import { Button } from "../../../../components/ui/Button";
 import { ALL_SCHEDULES } from "../../annex.constants";
 

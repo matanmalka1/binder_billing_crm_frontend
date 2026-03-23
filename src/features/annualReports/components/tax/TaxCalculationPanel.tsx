@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { annualReportTaxApi } from "../../../../api/annualReport.tax.api";
-import { annualReportsApi } from "../../../../api/annualReport.api";
+import { annualReportTaxApi } from "../../api";
+import { annualReportsApi } from "../../api";
 import { QK } from "../../../../lib/queryKeys";
 import { cn } from "../../../../utils/utils";
 import { TaxBracketsTable } from "./TaxBracketsTable";

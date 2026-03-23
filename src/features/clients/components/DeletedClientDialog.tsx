@@ -3,7 +3,7 @@ import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { getClientTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
-import type { DeletedClientInfo } from "../../../api/clients.api";
+import type { DeletedClientInfo } from "../api";
 
 interface Props {
   open: boolean;

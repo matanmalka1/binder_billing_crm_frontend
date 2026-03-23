@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { annualReportSeasonApi } from "../../../api/annualReport.season.api";
-import { annualReportStatusApi } from "../../../api/annualReport.status.api";
+import { annualReportSeasonApi } from "../api";
+import { annualReportStatusApi } from "../api";
 import { showErrorToast } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";

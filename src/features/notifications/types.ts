@@ -1,4 +1,4 @@
-import type { NotificationSeverity } from "../../api/notifications.api";
+import type { NotificationSeverity } from "./api";
 
 export interface NotificationDrawerProps {
   open: boolean;

@@ -3,7 +3,7 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
-import type { AuthorityContactResponse } from "../../../api/authorityContacts.api";
+import type { AuthorityContactResponse } from "../api";
 import { useAuthorityContactForm } from "../hooks/useAuthorityContactForm";
 
 interface AuthorityContactModalProps {

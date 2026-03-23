@@ -4,7 +4,7 @@ import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { UserFormFields } from "./UserFormFields";
 import { createUserSchema, type CreateUserFormValues } from "../schemas";
-import type { CreateUserPayload } from "../../../api/users.api";
+import type { CreateUserPayload } from "../api";
 
 interface CreateUserModalProps {
   open: boolean;

@@ -9,10 +9,10 @@ import { ScheduleChecklist } from "../annex/ScheduleChecklist";
 import { AnnualPLSummary } from "../financials/AnnualPLSummary";
 import { ReportHistoryTable } from "./ReportHistoryTable";
 import { StatusHistoryTimeline } from "../statusTransition/StatusHistoryTimeline";
-import { annualReportsApi } from "../../../../api/annualReport.api";
+import { annualReportsApi } from "../../api";
 import { QK } from "../../../../lib/queryKeys";
 import type { AnnualReportDetail } from "../../types";
-import type { AnnualReportFull, AnnualReportScheduleKey, ScheduleEntry } from "../../../../api/annualReport.api";
+import type { AnnualReportFull, AnnualReportScheduleKey, ScheduleEntry } from "../../api";
 
 interface Props {
   report: AnnualReportFull;

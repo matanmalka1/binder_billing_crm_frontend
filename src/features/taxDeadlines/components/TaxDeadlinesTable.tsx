@@ -4,12 +4,12 @@ import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { StateCard } from "../../../components/ui/StateCard";
 import { TaxDeadlineRowActions } from "./TaxDeadlineRowActions";
-import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
+import type { TaxDeadlineResponse } from "../api";
 import {
   formatCurrency,
   getDeadlineTypeLabel,
   getUrgencyColor,
-} from "../../../api/taxDeadlines.utils";
+} from "../api";
 import { getDeadlineUrgency, getDeadlineDaysLabelShort } from "../utils";
 import { staggerDelay } from "../../../utils/animation";
 import { formatDate, cn } from "../../../utils/utils";

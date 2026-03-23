@@ -14,7 +14,7 @@ import { useTaxDeadlines } from "../features/taxDeadlines/hooks/useTaxDeadlines"
 import { useTaxDashboard } from "../features/taxDashboard/hooks/useTaxDashboard";
 import { TaxSubmissionStats } from "../features/taxDashboard/components/TaxSubmissionStats";
 import { ToolbarContainer } from "../components/ui/ToolbarContainer";
-import type { TaxDeadlineResponse } from "../api/taxDeadlines.api";
+import type { TaxDeadlineResponse } from "../features/taxDeadlines/api";
 
 export const TaxDeadlines: React.FC = () => {
   const {

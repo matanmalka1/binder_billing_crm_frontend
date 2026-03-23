@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { advancePaymentsApi } from "../../../api/advancePayments.api";
+import { advancePaymentsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "../types";
 

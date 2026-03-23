@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Select } from "../../../components/ui/Select";
 import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
-import { ClientSearchInput, SelectedClientDisplay } from "../../../components/ui/ClientSearchInput";
+import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
 import { cn } from "../../../utils/utils";
 import { CHARGE_STATUS_OPTIONS, CHARGE_TYPE_OPTIONS_WITH_ALL } from "../constants";
 import type { ChargesFilters } from "../types";

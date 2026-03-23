@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { FileCheck, FileWarning, FileText } from "lucide-react";
 import { QK } from "../../../../lib/queryKeys";
-import { documentsApi } from "../../../../api/documents.api";
+import { documentsApi } from "@/features/documents/api";
 import { DocumentCard, MissingDocRow } from "./DocumentParts";
 
 const ALL_REQUIRED_TYPES = ["id_copy", "power_of_attorney", "engagement_agreement"] as const;

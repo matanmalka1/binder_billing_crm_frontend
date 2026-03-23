@@ -1,4 +1,4 @@
-import type { CreateVatInvoicePayload } from "../../../api/vatReports.api";
+import type { CreateVatInvoicePayload } from "../api";
 import { z } from "zod";
 import {
   CATEGORY_LABELS,

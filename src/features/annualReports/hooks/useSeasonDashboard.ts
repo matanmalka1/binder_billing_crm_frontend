@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { annualReportSeasonApi } from "../../../api/annualReport.season.api";
+import { annualReportSeasonApi } from "../api";
 import { getErrorMessage } from "../../../utils/utils";
 import { QK } from "../../../lib/queryKeys";
 

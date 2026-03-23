@@ -5,7 +5,7 @@ import { Button } from "../../../components/ui/Button";
 import { Alert } from "../../../components/ui/Alert";
 import { StateCard } from "../../../components/ui/StateCard";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
-import type { AuthorityContactResponse } from "../../../api/authorityContacts.api";
+import type { AuthorityContactResponse } from "../api";
 import { useAuthorityContacts } from "../hooks/useAuthorityContacts";
 import { AuthorityContactRow } from "./AuthorityContactRow";
 import { AuthorityContactModal } from "./AuthorityContactModal";

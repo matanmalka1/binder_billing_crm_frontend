@@ -5,7 +5,7 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { FormField } from "../../../components/ui/FormField";
 import { SelectDropdown } from "../../../components/ui/SelectDropdown";
-import type { CreateChargePayload } from "../../../api/charges.api";
+import type { CreateChargePayload } from "../api";
 import { CHARGE_TYPE_OPTIONS } from "../constants";
 import {
   chargeCreateDefaultValues,

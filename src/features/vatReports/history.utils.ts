@@ -1,4 +1,4 @@
-import type { VatAuditLogResponse } from "../../api/vatReports.api";
+import type { VatAuditLogResponse } from "./api";
 import { formatVatAmount } from "./utils";
 import {
   AUTO_TRANSITION_NOTE,

@@ -19,17 +19,17 @@ import { formatDate, parsePositiveInt } from "../../utils/utils";
 
 const columns: Column<AdvancePaymentOverviewRow>[] = [
   {
-    key: "client_name",
+    key: "business_name",
     header: "לקוח",
     render: (row) => (
-      <span className="text-sm font-semibold text-gray-900">{row.client_name}</span>
+      <span className="text-sm font-semibold text-gray-900">{row.business_name}</span>
     ),
   },
   {
-    key: "month",
+    key: "period",
     header: "חודש",
     render: (row) => (
-      <span className="text-sm text-gray-700">{MONTH_NAMES[row.month - 1] ?? row.month}</span>
+      <span className="text-sm text-gray-700">{MONTH_NAMES[Number(row.period.split("-")[1]) - 1] ?? row.period}</span>
     ),
   },
   {
@@ -167,7 +167,7 @@ export const AdvancePayments: React.FC = () => {
             data={rows}
             getRowKey={(row) => row.id}
             isLoading={isLoading}
-            onRowClick={(row) => navigate(`/clients/${row.client_id}?tab=advance-payments`)}
+            onRowClick={(row) => navigate(`/clients/${row.business_id}?tab=advance-payments`)}
             emptyMessage="אין מקדמות לפי הסינון הנבחר"
           />
 

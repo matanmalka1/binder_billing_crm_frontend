@@ -3,7 +3,7 @@ import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
 import { StateCard } from "../../../components/ui/StateCard";
 import { Inbox } from "lucide-react";
-import type { AgingReportItem } from "../../../api/reports.api";
+import type { AgingReportItem } from "../api";
 
 interface AgingReportTableProps {
   items: AgingReportItem[];

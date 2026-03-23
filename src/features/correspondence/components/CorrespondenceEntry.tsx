@@ -1,7 +1,7 @@
 import { Phone, Mail, FileText, Users, Edit2, Trash2 } from "lucide-react";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
-import type { CorrespondenceEntry as CorrespondenceEntryType } from "../../../api/correspondence.api";
+import type { CorrespondenceEntry as CorrespondenceEntryType } from "../api";
 import { formatDate } from "../../../utils/utils";
 
 interface TypeConfig {

@@ -7,13 +7,13 @@ import { DatePicker } from "../../../components/ui/DatePicker";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
 import type { CreateReminderFormValues } from "../types";
-import type { BinderResponse } from "../../binders/types";
-import { getBinderTypeLabel } from "../../binders/constants";
-import type { ChargeResponse } from "../../../api/charges.api";
-import { getChargeTypeLabel } from "../../charges/utils";
+import type { BinderResponse } from "@/features/binders";
+import { getBinderTypeLabel } from "@/features/binders";
+import type { ChargeResponse } from "@/features/charges/api";
+import { getChargeTypeLabel } from "@/features/charges";
 import { getChargeStatusLabel } from "../../../utils/enums";
-import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
-import { getDeadlineTypeLabel } from "../../../api/taxDeadlines.utils";
+import type { TaxDeadlineResponse } from "@/features/taxDeadlines/api";
+import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
 
 interface CreateReminderModalProps {
   open: boolean;

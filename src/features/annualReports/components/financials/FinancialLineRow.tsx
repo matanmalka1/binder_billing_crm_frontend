@@ -1,5 +1,5 @@
 import { Paperclip, Pencil, Trash2 } from "lucide-react";
-import { documentsApi } from "../../../../api/documents.api";
+import { documentsApi } from "@/features/documents/api";
 
 export interface LineRowProps {
   label: string;

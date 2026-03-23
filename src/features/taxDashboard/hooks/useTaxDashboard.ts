@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { getYear } from "date-fns";
-import { taxDashboardApi } from "../../../api/taxDashboard.api";
-import { taxDeadlinesApi } from "../../../api/taxDeadlines.api";
-import type { TaxSubmissionWidgetResponse } from "../../../api/taxDashboard.api";
-import type { DeadlineUrgentItem, TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
+import { taxDashboardApi } from "../api";
+import { taxDeadlinesApi } from "@/features/taxDeadlines/api";
+import type { TaxSubmissionWidgetResponse } from "../api";
+import type { DeadlineUrgentItem, TaxDeadlineResponse } from "@/features/taxDeadlines/api";
 import { QK } from "../../../lib/queryKeys";
 
 export interface TaxDashboardData {

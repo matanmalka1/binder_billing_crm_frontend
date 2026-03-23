@@ -1,6 +1,6 @@
 import { Badge } from "../../../components/ui/Badge";
 import type { Column } from "../../../components/ui/DataTable";
-import type { SearchResult } from "../../../api/search.api";
+import type { SearchResult } from "../api";
 import { cn } from "../../../utils/utils";
 import { getSignalLabel, getWorkStateLabel } from "../../../utils/enums";
 import { getResultColor, getResultIcon, getResultLabel } from "./SearchResultMeta";

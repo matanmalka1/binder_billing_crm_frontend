@@ -1,5 +1,5 @@
 import type { Column } from "../../../components/ui/DataTable";
-import type { PermanentDocumentResponse } from "../../../api/documents.api";
+import type { PermanentDocumentResponse } from "../api";
 import { Badge } from "../../../components/ui/Badge";
 import { formatDate } from "../../../utils/utils";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "../documents.constants";

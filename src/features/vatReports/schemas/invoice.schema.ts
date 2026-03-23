@@ -2,7 +2,7 @@ import { z } from "zod";
 import type {
   CreateVatInvoicePayload,
   UpdateVatInvoicePayload,
-} from "../../../api/vatReports.api";
+} from "../api";
 
 const netAmountSchema = z
   .string()

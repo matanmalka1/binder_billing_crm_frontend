@@ -7,7 +7,7 @@ import type { LucideIcon } from "lucide-react";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 import { formatDate } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
-import { getChargeTypeLabel } from "../../charges/utils";
+import { getChargeTypeLabel } from "@/features/charges";
 
 // ── Stat pill ───────────────────────────────────────────────────────────────
 

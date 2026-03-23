@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { notificationsApi } from "../../../api/notifications.api";
+import { notificationsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 
 export const useNotificationBell = () => {

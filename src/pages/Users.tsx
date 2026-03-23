@@ -14,7 +14,7 @@ import { CreateUserModal } from "../features/users/components/CreateUserModal";
 import { EditUserModal } from "../features/users/components/EditUserModal";
 import { ResetPasswordModal } from "../features/users/components/ResetPasswordModal";
 import { AuditLogsDrawer } from "../features/users/components/AuditLogsDrawer";
-import type { UserResponse } from "../api/users.api";
+import type { UserResponse } from "../features/users/api";
 
 export const Users: React.FC = () => {
   const currentUserId = useAuthStore((s) => s.user?.id);

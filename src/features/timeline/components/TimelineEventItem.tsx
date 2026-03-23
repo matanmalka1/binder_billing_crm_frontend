@@ -2,7 +2,7 @@ import { Button } from "../../../components/ui/Button";
 import { IconLabel } from "../../../components/ui/IconLabel";
 import { ChevronLeft, FileText, CreditCard } from "lucide-react";
 import { mapActions } from "../../../lib/actions/mapActions";
-import type { TimelineEvent } from "../../../api/timeline.api";
+import type { TimelineEvent } from "../api";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";

@@ -4,12 +4,12 @@ import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { CheckCircle2 } from "lucide-react";
-import type { TaxDeadlineResponse } from "../../../api/taxDeadlines.api";
+import type { TaxDeadlineResponse } from "../api";
 import {
   formatCurrency,
   getDeadlineTypeLabel,
   getUrgencyColor,
-} from "../../../api/taxDeadlines.utils";
+} from "../api";
 import { getDeadlineUrgency } from "../utils";
 import { formatDate, cn } from "../../../utils/utils";
 

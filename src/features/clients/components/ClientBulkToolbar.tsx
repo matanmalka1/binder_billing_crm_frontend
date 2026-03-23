@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react";
-import type { BulkClientActionPayload } from "../../../api/clients.api";
+import type { BulkClientActionPayload } from "../api";
 
 interface ClientBulkToolbarProps {
   selectedCount: number;

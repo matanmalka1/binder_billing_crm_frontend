@@ -1,6 +1,6 @@
 import { User } from "lucide-react";
 import { Card } from "../../../../components/ui/Card";
-import { getReportStageLabel, getStageColor } from "../../../../api/annualReport.utils";
+import { getReportStageLabel, getStageColor } from "../../api";
 import { STAGE_ORDER } from "../../types";
 import { cn } from "../../../../utils/utils";
 
