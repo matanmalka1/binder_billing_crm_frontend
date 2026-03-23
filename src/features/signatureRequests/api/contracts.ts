@@ -17,7 +17,7 @@ export type SignatureRequestType =
 
 export interface SignatureRequestResponse {
   id: number;
-  client_id: number;
+  business_id: number;
   created_by: number;
   request_type: SignatureRequestType;
   title: string;
@@ -52,7 +52,7 @@ export interface SignatureRequestWithAudit extends SignatureRequestResponse {
 }
 
 export interface CreateSignatureRequestPayload {
-  client_id: number;
+  business_id: number;
   request_type: SignatureRequestType;
   title: string;
   description?: string;

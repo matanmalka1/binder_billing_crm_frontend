@@ -10,7 +10,7 @@ type Params = { page?: number; pageSize?: number };
 type Result = {
   items: SignatureRequestResponse[];
   total: number;
-  clientNames: Record<number, string>;
+  businessLookup: Record<number, { name: string; clientId: number }>;
   isLoading: boolean;
   error: string | null;
 };
@@ -22,21 +22,29 @@ export const usePendingSignatureRequests = ({ page = 1, pageSize = 50 }: Params 
   });
 
   const items = listQuery.data?.items ?? [];
-  const uniqueClientIds = [...new Set(items.map((r) => r.client_id))];
+  const uniqueBusinessIds = [...new Set(items.map((r) => r.business_id))];
 
-  const clientQueries = useQuery({
-    queryKey: ["client-names-batch", uniqueClientIds],
+  const businessQueries = useQuery({
+    queryKey: ["business-names-batch", uniqueBusinessIds],
     queryFn: async () => {
-      const results = await Promise.all(uniqueClientIds.map((id) => clientsApi.getById(id)));
-      return Object.fromEntries(results.map((c) => [c.id, c.full_name]));
+      const results = await Promise.all(uniqueBusinessIds.map((id) => clientsApi.getBusinessById(id)));
+      return Object.fromEntries(
+        results.map((business) => [
+          business.id,
+          {
+            name: business.business_name ?? `עסק #${business.id}`,
+            clientId: business.client_id,
+          },
+        ]),
+      );
     },
-    enabled: uniqueClientIds.length > 0,
+    enabled: uniqueBusinessIds.length > 0,
   });
 
   return {
     items,
     total: listQuery.data?.total ?? 0,
-    clientNames: clientQueries.data ?? {},
+    businessLookup: businessQueries.data ?? {},
     isLoading: listQuery.isLoading,
     error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת בקשות חתימה") : null,
   };

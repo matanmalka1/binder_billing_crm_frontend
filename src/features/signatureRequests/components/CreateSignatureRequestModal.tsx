@@ -67,7 +67,7 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
     const resolvedSignerNameFinal = overrideName.trim() || resolvedSignerName;
     if (!title.trim() || !resolvedClientId || !resolvedSignerNameFinal) return;
     await onCreate({
-      client_id: resolvedClientId,
+      business_id: resolvedClientId,
       request_type: requestType,
       title: title.trim(),
       description: description.trim() || undefined,

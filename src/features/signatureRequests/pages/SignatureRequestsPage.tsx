@@ -32,7 +32,7 @@ import { formatDate } from "@/utils/utils";
 const TERMINAL_STATUSES = new Set(["signed", "expired", "canceled", "declined"]);
 
 export const SignatureRequestsPage: React.FC = () => {
-  const { items, total, clientNames, isLoading, error } = usePendingSignatureRequests();
+  const { items, total, businessLookup, isLoading, error } = usePendingSignatureRequests();
   const { send, isSending, cancel, isCanceling, create, isCreating } = useSignatureRequestActions();
 
   const [signingUrls, setSigningUrls] = useState<Record<number, string>>({});
@@ -70,11 +70,11 @@ export const SignatureRequestsPage: React.FC = () => {
         header: "לקוח",
         render: (req: SignatureRequestResponse) => (
           <Link
-            to={`/clients/${req.client_id}`}
+            to={`/clients/${businessLookup[req.business_id]?.clientId ?? req.business_id}`}
             onClick={(e) => e.stopPropagation()}
             className="text-sm text-gray-700 hover:text-primary-600 hover:underline"
           >
-            {clientNames[req.client_id] ?? `#${req.client_id}`}
+            {businessLookup[req.business_id]?.name ?? `עסק #${req.business_id}`}
           </Link>
         ),
       },
@@ -123,7 +123,7 @@ export const SignatureRequestsPage: React.FC = () => {
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [clientNames, signingUrls, isSending, isCanceling],
+    [businessLookup, signingUrls, isSending, isCanceling],
   );
 
   const header = (
