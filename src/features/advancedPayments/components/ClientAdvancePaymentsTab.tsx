@@ -19,11 +19,11 @@ import { AdvanceReductionModal } from "./AdvanceReductionModal";
 import { PaginationCard } from "../../../components/ui/PaginationCard";
 
 interface ClientAdvancePaymentsTabProps {
-  clientId: number;
+  businessId: number;
 }
 
 export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> = ({
-  clientId,
+  businessId,
 }) => {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
@@ -36,15 +36,15 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
 
   const queryClient = useQueryClient();
   const { rows, isLoading, totalExpected, totalPaid, total, create, isCreating, updateRow, updatingId, deleteRow, isDeletingId } =
-    useAdvancePayments(clientId, year, statusFilter, page);
-  const { advanceRate, annualIncome, updateAdvanceRate, isUpdatingRate } = useAdvanceRateInsights(clientId, year);
+    useAdvancePayments(businessId, year, statusFilter, page);
+  const { advanceRate, annualIncome, updateAdvanceRate, isUpdatingRate } = useAdvanceRateInsights(businessId, year);
 
   const generateMutation = useMutation({
-    mutationFn: () => advancePaymentsApi.generateSchedule(clientId, year, 1),
+    mutationFn: () => advancePaymentsApi.generateSchedule(businessId, year, 1),
     onSuccess: (data) => {
       const msg = data.created > 0 ? `נוצרו ${data.created} מקדמות` : "הכול קיים";
       toast.success(msg);
-      void queryClient.invalidateQueries({ queryKey: QK.tax.advancePayments.forClientYear(clientId, year) });
+      void queryClient.invalidateQueries({ queryKey: QK.tax.advancePayments.forClientYear(businessId, year) });
     },
     onError: (err) => showErrorToast(err, "שגיאה ביצירת לוח מקדמות"),
   });
@@ -76,8 +76,8 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         totalPaid={totalPaid}
       />
 
-      <AdvancePaymentsKPICards clientId={clientId} year={year} />
-      <AdvancePaymentsChart clientId={clientId} year={year} />
+      <AdvancePaymentsKPICards businessId={businessId} year={year} />
+      <AdvancePaymentsChart businessId={businessId} year={year} />
       <AdvancePaymentTable
         rows={rows}
         isLoading={isLoading}
@@ -103,7 +103,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
       {isAdvisor && (
         <CreateAdvancePaymentModal
           open={modalOpen}
-          clientId={clientId}
+          businessId={businessId}
           year={year}
           isCreating={isCreating}
           onClose={() => setModalOpen(false)}
@@ -111,7 +111,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         />
       )}
       {isAdvisor && (
-        <EditAdvanceRateModal clientId={clientId} isOpen={editRateOpen} onClose={() => setEditRateOpen(false)} />
+        <EditAdvanceRateModal businessId={businessId} isOpen={editRateOpen} onClose={() => setEditRateOpen(false)} />
       )}
       {isAdvisor && (
         <AdvanceReductionModal

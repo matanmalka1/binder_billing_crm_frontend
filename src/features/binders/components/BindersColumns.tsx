@@ -7,10 +7,9 @@ import { SortableHeader } from "../../../components/ui/SortableHeader";
 import type { BinderResponse } from "../types";
 import {
   getStatusLabel,
-  getBinderTypeLabel,
   getSignalLabel,
 } from "../../../utils/enums";
-import { formatDate } from "../../../utils/utils";
+import { formatMonthYear } from "../../../utils/utils";
 import { BINDER_SIGNAL_VARIANTS, BINDER_STATUS_VARIANTS, SIGNAL_DOT_COLORS } from "../constants";
 import { BinderRowActions } from "./BinderRowActions";
 
@@ -19,7 +18,7 @@ import { BinderRowActions } from "./BinderRowActions";
 // eslint-disable-next-line react-refresh/only-export-components
 const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
   const signals = (Array.isArray(binder.signals) ? binder.signals : []).filter(
-    (s) => s !== "ready_for_pickup"
+    (s) => s !== "ready_for_pickup" && s !== "idle_binder"
   );
   return (
     <div className="flex flex-col gap-0.5">
@@ -89,13 +88,17 @@ export const buildBindersColumns = ({
     ),
   },
   {
-    key: "binder_type",
-    header: "סוג חומר",
-    render: (binder) => (
-      <span className="text-sm text-gray-600">
-        {getBinderTypeLabel(binder.binder_type)}
-      </span>
-    ),
+    key: "period_start",
+    header: "תקופה",
+    render: (binder) => {
+      const start = formatMonthYear(binder.period_start);
+      const end = binder.period_end ? formatMonthYear(binder.period_end) : "פעיל";
+      return (
+        <span className="text-sm text-gray-600 tabular-nums">
+          {`${start} - ${end}`}
+        </span>
+      );
+    },
   },
   {
     key: "status",
@@ -109,18 +112,6 @@ export const buildBindersColumns = ({
         getLabel={getStatusLabel}
         variantMap={BINDER_STATUS_VARIANTS}
       />
-    ),
-  },
-  {
-    key: "received_at",
-    header: "תאריך קבלה",
-    headerRender: () => (
-      <SortableHeader label="תאריך קבלה" columnKey="received_at" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
-    ),
-    render: (binder) => (
-      <span className="text-sm text-gray-500 tabular-nums">
-        {formatDate(binder.received_at)}
-      </span>
     ),
   },
   {

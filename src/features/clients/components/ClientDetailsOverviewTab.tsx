@@ -2,55 +2,58 @@ import { type FC, useEffect, useState } from "react";
 import { DetailDrawer } from "../../../components/ui/DetailDrawer";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
-import { TaxProfileCard } from "../../taxProfile/components/TaxProfileCard";
 import { AuthorityContactsCard } from "../../authorityContacts/components/AuthorityContactsCard";
 import { CorrespondenceCard } from "../../correspondence/components/CorrespondenceCard";
 import { SignatureRequestsCard } from "../../signatureRequests/components/SignatureRequestsCard";
 import { ClientRemindersCard } from "../../reminders/components/ClientRemindersCard";
+import { NotificationsTab } from "../../notifications/components/NotificationsTab";
 import { ClientStatusCard } from "./ClientStatusCard";
 import { ClientInfoSection } from "./ClientInfoSection";
 import { ClientRelatedData } from "./ClientRelatedData";
 import { ClientEditForm } from "./ClientEditForm";
-import type { UpdateClientPayload, ClientResponse } from "../api";
+import { ClientBusinessesCard } from "./ClientBusinessesCard";
+import { CreateBusinessModal } from "./CreateBusinessModal";
+import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from "../api";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 
 const EDIT_FORM_ID = "client-edit-form";
 
 export type ClientDetailsOverviewTabProps = {
   client: ClientResponse;
+  clientId: number;
   canEditClients: boolean;
   canViewCharges: boolean;
   binders: ClientBinderSummary[];
   bindersTotal: number;
   charges: ClientChargeSummary[];
   chargesTotal: number;
-  annualReportsTotal: number;
-  vatWorkItemsTotal: number;
-  documentsTotal: number;
   updateClient: (payload: UpdateClientPayload) => Promise<void>;
   isUpdating: boolean;
   deleteClient: () => Promise<void>;
   isDeleting: boolean;
+  createBusiness: (payload: CreateBusinessPayload) => Promise<void>;
+  isCreatingBusiness: boolean;
 };
 
 export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   client,
+  clientId,
   canEditClients,
   canViewCharges,
   binders,
   bindersTotal,
   charges,
   chargesTotal,
-  annualReportsTotal,
-  vatWorkItemsTotal,
-  documentsTotal,
   updateClient,
   isUpdating,
   deleteClient,
   isDeleting,
+  createBusiness,
+  isCreatingBusiness,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [showBusinessModal, setShowBusinessModal] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = isEditing ? "hidden" : "";
@@ -70,7 +73,11 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
             onEditStart={() => setIsEditing(true)}
             onDeleteStart={canEditClients ? () => setIsConfirmingDelete(true) : undefined}
           />
-          <TaxProfileCard clientId={client.id} readOnly={!canEditClients} />
+          <ClientBusinessesCard
+            clientId={client.id}
+            canEdit={canEditClients}
+            onAddBusiness={() => setShowBusinessModal(true)}
+          />
           <AuthorityContactsCard clientId={client.id} />
           <CorrespondenceCard clientId={client.id} />
           <SignatureRequestsCard client={client} canManage={canEditClients} />
@@ -84,14 +91,12 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
             charges={charges}
             chargesTotal={chargesTotal}
             canViewCharges={canViewCharges}
-            annualReportsTotal={annualReportsTotal}
-            vatWorkItemsTotal={vatWorkItemsTotal}
-            documentsTotal={documentsTotal}
           />
         </div>
       </div>
 
       <ClientRemindersCard clientId={client.id} clientName={client.full_name} />
+      <NotificationsTab clientId={clientId} />
 
       <Modal
         open={isConfirmingDelete}
@@ -127,6 +132,16 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
           האם למחוק את הלקוח <span className="font-semibold">{client.full_name}</span>? פעולה זו אינה ניתנת לביטול.
         </p>
       </Modal>
+
+      <CreateBusinessModal
+        open={showBusinessModal}
+        onClose={() => setShowBusinessModal(false)}
+        onSubmit={async (data) => {
+          await createBusiness(data);
+          setShowBusinessModal(false);
+        }}
+        isLoading={isCreatingBusiness}
+      />
 
       {canEditClients && (
         <DetailDrawer

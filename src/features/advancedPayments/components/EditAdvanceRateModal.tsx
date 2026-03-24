@@ -3,17 +3,17 @@ import { TaxProfileForm } from "../../taxProfile/components/TaxProfileForm";
 import { useTaxProfile } from "@/features/taxProfile";
 
 interface EditAdvanceRateModalProps {
-  clientId: number;
+  businessId: number;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const EditAdvanceRateModal: React.FC<EditAdvanceRateModalProps> = ({
-  clientId,
+  businessId,
   isOpen,
   onClose,
 }) => {
-  const { profile, updateProfile, isUpdating } = useTaxProfile(clientId);
+  const { profile, updateProfile, isUpdating } = useTaxProfile(businessId);
 
   return (
     <Modal open={isOpen} title="עריכת פרטי מס" onClose={onClose} footer={null}>

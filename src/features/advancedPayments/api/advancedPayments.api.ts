@@ -56,38 +56,38 @@ export const advancePaymentsApi = {
     await api.delete(ENDPOINTS.businessAdvancePaymentById(businessId, id));
   },
 
-  getSuggestion: async (clientId: number, year: number): Promise<AdvancePaymentSuggestionResponse> => {
+  getSuggestion: async (businessId: number, year: number): Promise<AdvancePaymentSuggestionResponse> => {
     const response = await api.get<AdvancePaymentSuggestionResponse>(
-      ENDPOINTS.businessAdvancePaymentSuggest(clientId),
+      ENDPOINTS.businessAdvancePaymentSuggest(businessId),
       { params: toQueryParams({ year }) },
     );
     return response.data;
   },
 
-  getAnnualKPIs: async (clientId: number, year: number): Promise<AnnualKPIResponse> => {
+  getAnnualKPIs: async (businessId: number, year: number): Promise<AnnualKPIResponse> => {
     const response = await api.get<AnnualKPIResponse>(
-      ENDPOINTS.businessAdvancePaymentsKPI(clientId),
+      ENDPOINTS.businessAdvancePaymentsKPI(businessId),
       { params: toQueryParams({ year }) },
     );
     return response.data;
   },
 
-  getChartData: async (clientId: number, year: number): Promise<ChartDataResponse> => {
+  getChartData: async (businessId: number, year: number): Promise<ChartDataResponse> => {
     const response = await api.get<ChartDataResponse>(
-      ENDPOINTS.businessAdvancePaymentsChart(clientId),
+      ENDPOINTS.businessAdvancePaymentsChart(businessId),
       { params: toQueryParams({ year }) },
     );
     return response.data;
   },
 
   generateSchedule: async (
-    clientId: number,
+    businessId: number,
     year: number,
     periodMonthsCount: 1 | 2,
   ): Promise<{ created: number; skipped: number }> => {
     const response = await api.post<{ created: number; skipped: number }>(
       ENDPOINTS.advancePaymentsGenerate,
-      { business_id: clientId, year, period_months_count: periodMonthsCount },
+      { business_id: businessId, year, period_months_count: periodMonthsCount },
     );
     return response.data;
   },

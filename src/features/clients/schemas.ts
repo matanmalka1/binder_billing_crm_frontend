@@ -1,5 +1,17 @@
 import { z } from "zod";
 import { validateIsraeliIdChecksum } from "../../utils/validation";
+import type { BusinessType } from "./api/contracts";
+
+const BUSINESS_TYPES: [BusinessType, ...BusinessType[]] = ["osek_patur", "osek_murshe", "company", "employee"];
+
+export const createBusinessSchema = z.object({
+  business_type: z.enum(BUSINESS_TYPES),
+  opened_at: z.string().min(1, "יש לבחור תאריך פתיחה"),
+  business_name: z.string().trim().max(100).optional().or(z.literal("")),
+  notes: z.string().trim().optional().or(z.literal("")),
+});
+
+export type CreateBusinessFormValues = z.infer<typeof createBusinessSchema>;
 
 const idNumberField = z
   .string()

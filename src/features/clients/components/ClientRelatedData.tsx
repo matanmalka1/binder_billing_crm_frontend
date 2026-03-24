@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { ChevronRight, FolderOpen, Receipt, FileText, Calculator, FileArchive } from "lucide-react";
+import { ChevronRight, FolderOpen, Receipt } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
@@ -44,9 +44,6 @@ type ClientRelatedDataProps = {
   charges: ClientChargeSummary[];
   chargesTotal: number;
   canViewCharges: boolean;
-  annualReportsTotal: number;
-  vatWorkItemsTotal: number;
-  documentsTotal: number;
 };
 
 export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
@@ -56,9 +53,6 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
   charges,
   chargesTotal,
   canViewCharges,
-  annualReportsTotal,
-  vatWorkItemsTotal,
-  documentsTotal,
 }) => {
   const hasBinderList = binders.length > 0;
   const hasChargeList = canViewCharges && charges.length > 0;
@@ -66,7 +60,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
   return (
     <Card title="נתונים קשורים">
       {/* Stat pills — 3-col grid wraps to 2 rows in narrow right column */}
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <StatPill
           icon={FolderOpen}
           iconColor="bg-primary-100 text-primary-600"
@@ -81,27 +75,6 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
             label="חיובים"
           />
         )}
-        <StatPill
-          icon={FileText}
-          iconColor="bg-purple-100 text-purple-600"
-          count={annualReportsTotal}
-          label="דוחות שנתיים"
-          href={`/tax/reports/season?client_id=${clientId}`}
-        />
-        <StatPill
-          icon={Calculator}
-          iconColor="bg-orange-100 text-orange-600"
-          count={vatWorkItemsTotal}
-          label='מע"מ'
-          href={`/tax/vat?client_id=${clientId}`}
-        />
-        <StatPill
-          icon={FileArchive}
-          iconColor="bg-teal-100 text-teal-600"
-          count={documentsTotal}
-          label="מסמכים"
-          href={`/documents?client_id=${clientId}`}
-        />
       </div>
 
       {/* Recent binders */}

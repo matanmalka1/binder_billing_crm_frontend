@@ -7,10 +7,10 @@ import { useClientDocumentsTab } from "../hooks/useClientDocumentsTab";
 const TAX_YEARS = [2020, 2021, 2022, 2023, 2024, 2025];
 
 interface ClientDocumentsTabProps {
-  clientId: number;
+  businessId: number;
 }
 
-export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId }) => {
+export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ businessId }) => {
   const [taxYear, setTaxYear] = useState<number | null>(null);
 
   const {
@@ -25,7 +25,7 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
     handleReplace,
     handleApprove,
     handleReject,
-  } = useClientDocumentsTab(clientId, taxYear);
+  } = useClientDocumentsTab(businessId, taxYear);
 
   if (loading) return <TableSkeleton rows={4} columns={2} />;
   if (error) return <Alert variant="error" message={error} />;

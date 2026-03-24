@@ -6,19 +6,19 @@ import { QK } from "../../../lib/queryKeys";
 
 export type { TaxProfileData };
 
-export const useTaxProfile = (clientId: number) => {
+export const useTaxProfile = (businessId: number) => {
   const queryClient = useQueryClient();
-  const qk = QK.clients.taxProfile(clientId);
+  const qk = QK.clients.taxProfile(businessId);
 
   const profileQuery = useQuery({
-    enabled: clientId > 0,
+    enabled: businessId > 0,
     queryKey: qk,
-    queryFn: () => taxProfileApi.get(clientId),
+    queryFn: () => taxProfileApi.get(businessId),
     retry: false,
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data: Partial<TaxProfileData>) => taxProfileApi.update(clientId, data),
+    mutationFn: (data: Partial<TaxProfileData>) => taxProfileApi.update(businessId, data),
     onSuccess: (updated) => {
       toast.success("פרטי מס עודכנו בהצלחה");
       queryClient.setQueryData(qk, updated);

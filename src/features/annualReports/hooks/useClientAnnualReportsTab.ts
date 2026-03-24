@@ -8,13 +8,13 @@ import { CURRENT_YEAR } from "../types";
 
 const YEAR_LIST = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2, CURRENT_YEAR - 3];
 
-export const useClientAnnualReportsTab = (clientId: number) => {
+export const useClientAnnualReportsTab = (businessId: number) => {
   const [selectedYear, setSelectedYear] = useState<number>(CURRENT_YEAR);
   const navigate = useNavigate();
 
   const { data, isPending, error } = useQuery({
-    queryKey: QK.tax.annualReportsForClient(clientId),
-    queryFn: () => annualReportsApi.listClientReports(clientId),
+    queryKey: QK.tax.annualReportsForClient(businessId),
+    queryFn: () => annualReportsApi.listClientReports(businessId),
   });
 
   const allReports = data ?? [];

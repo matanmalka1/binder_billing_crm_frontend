@@ -12,6 +12,7 @@ export interface SearchResult {
 export interface DocumentSearchResult {
   id: number;
   client_id: number;
+  business_id: number;
   client_name: string;
   document_type: string;
   original_filename: string | null;

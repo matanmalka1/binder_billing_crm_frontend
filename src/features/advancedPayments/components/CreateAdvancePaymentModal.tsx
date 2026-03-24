@@ -18,7 +18,7 @@ import { QK } from "../../../lib/queryKeys";
 
 interface CreateAdvancePaymentModalProps {
   open: boolean;
-  clientId: number;
+  businessId: number;
   year: number;
   isCreating: boolean;
   onClose: () => void;
@@ -27,7 +27,7 @@ interface CreateAdvancePaymentModalProps {
 
 export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps> = ({
   open,
-  clientId,
+  businessId,
   year,
   isCreating,
   onClose,
@@ -46,9 +46,9 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
   });
 
   const { data: suggestion } = useQuery({
-    queryKey: QK.tax.advancePayments.suggestion(clientId, year),
-    queryFn: () => advancePaymentsApi.getSuggestion(clientId, year),
-    enabled: open && clientId > 0 && year > 0,
+    queryKey: QK.tax.advancePayments.suggestion(businessId, year),
+    queryFn: () => advancePaymentsApi.getSuggestion(businessId, year),
+    enabled: open && businessId > 0 && year > 0,
     staleTime: 60_000,
   });
 
@@ -59,7 +59,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
 
   const onSubmit = handleSubmit(async (data) => {
     await onCreate({
-      business_id: clientId,
+      business_id: businessId,
       period: `${year}-${String(data.month).padStart(2, "0")}`,
       period_months_count: data.period_months_count,
       due_date: data.due_date,

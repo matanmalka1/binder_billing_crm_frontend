@@ -5,18 +5,18 @@ import { advancePaymentsApi } from "../api";
 import { StatsCard } from "../../../components/ui/StatsCard";
 
 interface AdvancePaymentsKPICardsProps {
-  clientId: number;
+  businessId: number;
   year: number;
 }
 
 export const AdvancePaymentsKPICards: React.FC<AdvancePaymentsKPICardsProps> = ({
-  clientId,
+  businessId,
   year,
 }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.tax.advancePayments.kpi(clientId, year),
-    queryFn: () => advancePaymentsApi.getAnnualKPIs(clientId, year),
-    enabled: clientId > 0 && year > 0,
+    queryKey: QK.tax.advancePayments.kpi(businessId, year),
+    queryFn: () => advancePaymentsApi.getAnnualKPIs(businessId, year),
+    enabled: businessId > 0 && year > 0,
   });
 
   if (isLoading || !data) return null;

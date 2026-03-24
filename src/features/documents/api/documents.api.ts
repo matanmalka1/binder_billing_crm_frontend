@@ -16,11 +16,11 @@ export const documentsApi = {
   // ── Queries ──────────────────────────────────────────────────────────────
 
   listByClient: async (
-    clientId: number,
+    businessId: number,
     params?: ListDocumentsByClientParams,
   ): Promise<PermanentDocumentListResponse> => {
     const response = await api.get<PermanentDocumentListResponse>(
-      ENDPOINTS.documentsByBusiness(clientId),
+      ENDPOINTS.documentsByBusiness(businessId),
       params ? { params: toQueryParams(params) } : undefined,
     );
     return response.data;
@@ -31,20 +31,20 @@ export const documentsApi = {
     return response.data;
   },
 
-  getSignalsByClient: async (clientId: number): Promise<OperationalSignalsResponse> => {
+  getSignalsByClient: async (businessId: number): Promise<OperationalSignalsResponse> => {
     const response = await api.get<OperationalSignalsResponse>(
-      ENDPOINTS.documentSignalsByBusiness(clientId),
+      ENDPOINTS.documentSignalsByBusiness(businessId),
     );
     return response.data;
   },
 
   getVersions: async (
-    clientId: number,
+    businessId: number,
     documentType: string,
     taxYear?: number,
   ): Promise<DocumentVersionsResponse> => {
     const response = await api.get<DocumentVersionsResponse>(
-      ENDPOINTS.documentVersionsByBusiness(clientId),
+      ENDPOINTS.documentVersionsByBusiness(businessId),
       {
         params: toQueryParams({
           document_type: documentType,

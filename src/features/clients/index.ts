@@ -1,7 +1,6 @@
 // Public surface of the clients feature — only import from this barrel externally
 export { clientsApi, clientsQK } from "./api";
 export { buildClientColumns } from "./components/ClientColumns";
-export { ClientDetailsTabBar } from "./components/ClientDetailsTabBar";
 export { ClientDetailsTabContent } from "./components/ClientDetailsTabContent";
 export { ClientsFiltersBar } from "./components/ClientsFiltersBar";
 export { CreateClientModal } from "./components/CreateClientModal";
@@ -19,4 +18,3 @@ export type {
   BusinessType,
   ISODateString,
 } from "./api";
-export type { ActiveClientDetailsTab } from "./constants";

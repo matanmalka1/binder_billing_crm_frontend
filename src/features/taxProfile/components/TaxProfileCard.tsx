@@ -13,10 +13,10 @@ const VAT_TYPE_LABELS: Record<string, string> = {
   exempt: "פטור",
 };
 
-interface Props { clientId: number; readOnly?: boolean }
+interface Props { businessId: number; readOnly?: boolean }
 
-export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) => {
-  const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(clientId);
+export const TaxProfileCard: React.FC<Props> = ({ businessId, readOnly = false }) => {
+  const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(businessId);
   const [isEditing, setIsEditing] = useState(false);
 
   const items = [

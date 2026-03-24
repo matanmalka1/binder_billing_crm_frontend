@@ -54,7 +54,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
                 <td className="px-4 py-3 text-gray-700">{doc.client_name}</td>
                 <td className="px-4 py-3">
                   <Link
-                    to={`/clients/${doc.client_id}/documents`}
+                    to={`/clients/${doc.client_id}/businesses/${doc.business_id}/documents`}
                     className={cn(
                       "inline-flex items-center gap-1.5 rounded-lg",
                       "border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium",

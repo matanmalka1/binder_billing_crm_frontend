@@ -1,11 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { clientsApi, type UpdateClientPayload, type ClientResponse } from "../api";
+import { clientsApi, type UpdateClientPayload, type ClientResponse, type CreateBusinessPayload } from "../api";
 import { bindersApi } from "@/features/binders/api";
 import { chargesApi } from "@/features/charges/api";
-import { annualReportsApi } from "@/features/annualReports/api";
-import { vatReportsApi } from "@/features/vatReports/api";
-import { documentsApi } from "@/features/documents/api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 import { QK } from "../../../lib/queryKeys";
@@ -23,13 +20,12 @@ type UseClientDetailsResult = {
   bindersTotal: number;
   charges: ClientChargeSummary[];
   chargesTotal: number;
-  annualReportsTotal: number;
-  vatWorkItemsTotal: number;
-  documentsTotal: number;
   updateClient: (payload: UpdateClientPayload) => Promise<void>;
   isUpdating: boolean;
   deleteClient: () => Promise<void>;
   isDeleting: boolean;
+  createBusiness: (payload: CreateBusinessPayload) => Promise<void>;
+  isCreatingBusiness: boolean;
   can: ReturnType<typeof useRole>["can"];
 };
 
@@ -53,35 +49,15 @@ export const useClientDetails = ({
   });
 
   const bindersQuery = useQuery({
-    // Include page/page_size in key so cache is scoped correctly
     queryKey: QK.binders.forClientPage(id, BINDERS_PAGE.page, BINDERS_PAGE.page_size),
     queryFn: () => bindersApi.listClientBinders(id, BINDERS_PAGE),
     enabled,
   });
 
   const chargesQuery = useQuery({
-    // Include page/page_size in key so cache is scoped correctly
     queryKey: QK.charges.forClientPage(id, CHARGES_PAGE.page, CHARGES_PAGE.page_size),
     queryFn: () => chargesApi.list({ client_id: id, ...CHARGES_PAGE }),
     enabled: enabled && isAdvisor,
-  });
-
-  const annualReportsQuery = useQuery({
-    queryKey: QK.tax.annualReportsForClient(id),
-    queryFn: () => annualReportsApi.listClientReports(id),
-    enabled,
-  });
-
-  const vatWorkItemsQuery = useQuery({
-    queryKey: QK.tax.vatWorkItems.forClient(id),
-    queryFn: () => vatReportsApi.listByClient(id),
-    enabled,
-  });
-
-  const documentsQuery = useQuery({
-    queryKey: QK.documents.clientList(id),
-    queryFn: () => documentsApi.listByClient(id),
-    enabled,
   });
 
   const updateMutation = useMutation({
@@ -106,8 +82,22 @@ export const useClientDetails = ({
     onError: (err) => showErrorToast(err, "שגיאה במחיקת לקוח"),
   });
 
+  const createBusinessMutation = useMutation({
+    mutationFn: (payload: CreateBusinessPayload) =>
+      clientsApi.createBusiness(id, payload),
+    onSuccess: () => {
+      toast.success("העסק נוצר בהצלחה");
+      queryClient.invalidateQueries({ queryKey: QK.clients.businesses(id) });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה ביצירת עסק"),
+  });
+
   const updateClient = async (payload: UpdateClientPayload) => {
     await updateMutation.mutateAsync(payload);
+  };
+
+  const createBusiness = async (payload: CreateBusinessPayload) => {
+    await createBusinessMutation.mutateAsync(payload);
   };
 
   return {
@@ -121,13 +111,12 @@ export const useClientDetails = ({
     bindersTotal: bindersQuery.data?.total ?? 0,
     charges: chargesQuery.data?.items ?? [],
     chargesTotal: chargesQuery.data?.total ?? 0,
-    annualReportsTotal: annualReportsQuery.data?.length ?? 0,
-    vatWorkItemsTotal: vatWorkItemsQuery.data?.total ?? 0,
-    documentsTotal: documentsQuery.data?.items?.length ?? 0,
     updateClient,
     isUpdating: updateMutation.isPending,
     deleteClient: () => deleteMutation.mutateAsync(),
     isDeleting: deleteMutation.isPending,
+    createBusiness,
+    isCreatingBusiness: createBusinessMutation.isPending,
     can,
   };
 };

@@ -9,26 +9,26 @@ import { QK } from "../../../lib/queryKeys";
 import { useDocumentUpload } from "./useDocumentUpload";
 import { toast } from "../../../utils/toast";
 
-export const useClientDocumentsTab = (clientId: number, taxYear?: number | null) => {
+export const useClientDocumentsTab = (businessId: number, taxYear?: number | null) => {
   const queryClient = useQueryClient();
 
   const documentsQuery = useQuery<PermanentDocumentListResponse>({
-    enabled: clientId > 0,
-    queryKey: [...QK.documents.clientList(clientId), taxYear ?? null],
-    queryFn: () => documentsApi.listByClient(clientId, taxYear ? { tax_year: taxYear } : undefined),
+    enabled: businessId > 0,
+    queryKey: [...QK.documents.clientList(businessId), taxYear ?? null],
+    queryFn: () => documentsApi.listByClient(businessId, taxYear ? { tax_year: taxYear } : undefined),
   });
 
   const signalsQuery = useQuery<OperationalSignalsResponse>({
-    enabled: clientId > 0,
-    queryKey: QK.documents.clientSignals(clientId),
-    queryFn: () => documentsApi.getSignalsByClient(clientId),
+    enabled: businessId > 0,
+    queryKey: QK.documents.clientSignals(businessId),
+    queryFn: () => documentsApi.getSignalsByClient(businessId),
   });
 
-  const { submitUpload, uploadError, uploading } = useDocumentUpload(clientId);
+  const { submitUpload, uploadError, uploading } = useDocumentUpload(businessId);
 
   const invalidateDocs = () => {
-    void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) });
-    void queryClient.invalidateQueries({ queryKey: QK.documents.clientSignals(clientId) });
+    void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(businessId) });
+    void queryClient.invalidateQueries({ queryKey: QK.documents.clientSignals(businessId) });
   };
 
   const handleDelete = async (id: number) => {
@@ -46,7 +46,7 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
   const approveMutation = useMutation({
     mutationFn: (id: number) => documentsApi.approveDocument(id),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) });
+      void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(businessId) });
       void queryClient.invalidateQueries({ queryKey: QK.clients.list({}) });
       toast.success("המסמך אושר");
     },
@@ -57,7 +57,7 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
     mutationFn: ({ id, notes }: { id: number; notes: string }) =>
       documentsApi.rejectDocument(id, notes),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) });
+      void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(businessId) });
       void queryClient.invalidateQueries({ queryKey: QK.clients.list({}) });
       toast.success("המסמך נדחה");
     },
@@ -68,7 +68,7 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
     mutationFn: ({ id, notes }: { id: number; notes: string }) =>
       documentsApi.updateNotes(id, notes),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) });
+      void queryClient.invalidateQueries({ queryKey: QK.documents.clientList(businessId) });
       toast.success("ההערה עודכנה");
     },
     onError: (error) => toast.error(getErrorMessage(error, "שגיאה בפעולה")),
@@ -78,7 +78,7 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
 
   return {
     documents: documentsQuery.data?.items ?? [],
-    signals: signalsQuery.data ?? { client_id: clientId, missing_documents: [] },
+    signals: signalsQuery.data ?? { client_id: businessId, missing_documents: [] },
     loading: documentsQuery.isPending || signalsQuery.isPending,
     error: errorSource ? getErrorMessage(errorSource, "שגיאה בטעינת מסמכים") : null,
     submitUpload,

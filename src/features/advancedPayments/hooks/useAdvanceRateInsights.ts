@@ -3,12 +3,12 @@ import { advancePaymentsApi } from "../api";
 import { useTaxProfile } from "@/features/taxProfile";
 import { QK } from "../../../lib/queryKeys";
 
-export const useAdvanceRateInsights = (clientId: number, year: number) => {
-  const { profile, updateProfile, isUpdating } = useTaxProfile(clientId);
+export const useAdvanceRateInsights = (businessId: number, year: number) => {
+  const { profile, updateProfile, isUpdating } = useTaxProfile(businessId);
   const { data: suggestion } = useQuery({
-    queryKey: QK.tax.advancePayments.suggestion(clientId, year),
-    queryFn: () => advancePaymentsApi.getSuggestion(clientId, year),
-    enabled: clientId > 0 && year > 0,
+    queryKey: QK.tax.advancePayments.suggestion(businessId, year),
+    queryFn: () => advancePaymentsApi.getSuggestion(businessId, year),
+    enabled: businessId > 0 && year > 0,
     staleTime: 60_000,
   });
 

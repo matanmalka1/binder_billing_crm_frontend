@@ -1,21 +1,15 @@
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import { useParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/Alert";
 import { PageStateGuard } from "@/components/ui/PageStateGuard";
 import {
-  ClientDetailsTabBar,
   ClientDetailsTabContent,
   useClientDetails,
 } from "@/features/clients";
-import type { ActiveClientDetailsTab } from "@/features/clients";
 
-interface ClientDetailsProps {
-  initialTab?: ActiveClientDetailsTab;
-}
-export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = "details" }) => {
+export const ClientDetails: FC = () => {
   const { clientId } = useParams<{ clientId: string }>();
-  const [activeTab, setActiveTab] = useState<ActiveClientDetailsTab>(initialTab);
   const clientIdNum = clientId ? Number(clientId) : null;
   const {
     client,
@@ -26,15 +20,15 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = "details" }
     bindersTotal,
     charges,
     chargesTotal,
-    annualReportsTotal,
-    vatWorkItemsTotal,
-    documentsTotal,
     updateClient,
     isUpdating,
     deleteClient,
     isDeleting,
+    createBusiness,
+    isCreatingBusiness,
     can,
   } = useClientDetails({ clientId: clientIdNum });
+
   if (!isValidId) return (
     <div className="space-y-6">
       <PageHeader title="פרטי לקוח" />
@@ -57,31 +51,26 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = "details" }
       }
       loadingMessage="טוען פרטי לקוח..."
     >
-      {client && (
-        <>
-          <ClientDetailsTabBar activeTab={activeTab} onTabChange={setActiveTab} />
-          <ClientDetailsTabContent
-            activeTab={activeTab}
-            clientId={client.id}
-            overviewProps={{
-              client,
-              canEditClients: can.editClients,
-              canViewCharges: can.viewChargeAmounts,
-              binders,
-              bindersTotal,
-              charges,
-              chargesTotal,
-              annualReportsTotal,
-              vatWorkItemsTotal,
-              documentsTotal,
-              updateClient,
-              isUpdating,
-              deleteClient,
-              isDeleting,
-            }}
-          />
-        </>
-      )}
+      {client ? (
+        <ClientDetailsTabContent
+          overviewProps={{
+            client,
+            clientId: client.id,
+            canEditClients: can.editClients,
+            canViewCharges: can.viewChargeAmounts,
+            binders,
+            bindersTotal,
+            charges,
+            chargesTotal,
+            updateClient,
+            isUpdating,
+            deleteClient,
+            isDeleting,
+            createBusiness,
+            isCreatingBusiness,
+          }}
+        />
+      ) : null}
     </PageStateGuard>
   );
 };

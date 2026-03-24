@@ -5,7 +5,6 @@ import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck } from
 import { clientsApi } from "../api";
 import { QK } from "../../../lib/queryKeys";
 import { Card } from "../../../components/ui/Card";
-
 interface Props {
   clientId: number;
 }
@@ -41,6 +40,13 @@ const YEAR_OPTIONS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2];
 export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
   const navigate = useNavigate();
   const [selectedYear, setSelectedYear] = useState<number>(CURRENT_YEAR);
+
+  const { data: businesses } = useQuery({
+    queryKey: QK.clients.businesses(clientId),
+    queryFn: () => clientsApi.listBusinessesForClient(clientId),
+    staleTime: 60_000,
+  });
+  const firstBusinessId = businesses?.items?.[0]?.id ?? null;
 
   const { data, isLoading } = useQuery({
     queryKey: QK.clients.statusCard(clientId, selectedYear),
@@ -111,14 +117,14 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title='מע"מ'
           primary={fmt(vat.net_vat_total)}
           secondary={vatStatus}
-          onClick={() => navigate(`/clients/${clientId}/vat`)}
+          onClick={firstBusinessId != null ? () => navigate(`/clients/${clientId}/businesses/${firstBusinessId}/vat`) : undefined}
         />
         <Tile
           icon={<FileText size={18} />}
           title="דוח שנתי"
           primary={arStatus}
           secondary={arSecondary}
-          onClick={() => navigate(`/clients/${clientId}/annual-reports`)}
+          onClick={firstBusinessId != null ? () => navigate(`/clients/${clientId}/businesses/${firstBusinessId}/annual-reports`) : undefined}
         />
         <Tile
           icon={<CreditCard size={18} />}
@@ -132,7 +138,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title="מקדמות"
           primary={fmt(advance_payments.total_paid)}
           secondary={`${advance_payments.count} תשלומים`}
-          onClick={() => navigate(`/clients/${clientId}/advance-payments`)}
+          onClick={firstBusinessId != null ? () => navigate(`/clients/${clientId}/businesses/${firstBusinessId}/advance-payments`) : undefined}
         />
         <Tile
           icon={<FolderOpen size={18} />}
@@ -146,7 +152,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title="מסמכים"
           primary={`${documents.present_count}/${documents.total_count}`}
           secondary="מסמכים קיימים"
-          onClick={() => navigate(`/clients/${clientId}/documents`)}
+          onClick={firstBusinessId != null ? () => navigate(`/clients/${clientId}/businesses/${firstBusinessId}/documents`) : undefined}
         />
       </div>
     </Card>

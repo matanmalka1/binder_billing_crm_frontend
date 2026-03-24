@@ -90,18 +90,10 @@ export const vatReportsApi = {
     const response = await api.get<VatWorkItemListResponse>(ENDPOINTS.vatWorkItemsByBusiness(businessId));
     return response.data;
   },
-  listByClient: async (businessId: number): Promise<VatWorkItemListResponse> => {
-    return vatReportsApi.listByBusiness(businessId);
-  },
-
   getBusinessSummary: async (businessId: number): Promise<VatClientSummaryResponse> => {
     const response = await api.get<VatClientSummaryResponse>(ENDPOINTS.vatBusinessSummary(businessId));
     return response.data;
   },
-  getClientSummary: async (businessId: number): Promise<VatClientSummaryResponse> => {
-    return vatReportsApi.getBusinessSummary(businessId);
-  },
-
   exportBusinessVat: async (businessId: number, format: "excel" | "pdf", year: number): Promise<void> => {
     const response = await api.get<Blob>(ENDPOINTS.vatBusinessExport(businessId), {
       params: { format, year },
@@ -124,8 +116,5 @@ export const vatReportsApi = {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
-  },
-  exportClientVat: async (businessId: number, format: "excel" | "pdf", year: number): Promise<void> => {
-    return vatReportsApi.exportBusinessVat(businessId, format, year);
   },
 };

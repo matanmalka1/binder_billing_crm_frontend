@@ -30,6 +30,11 @@ export const formatDate = (value: string | null): string => {
   return format(parseISO(value), "d.M.yyyy", { locale: he });
 };
 
+export const formatMonthYear = (value: string | null): string => {
+  if (!value) return "—";
+  return format(parseISO(value), "MM.yyyy", { locale: he });
+};
+
 export const formatDateTime = (value: string | null): string => {
   if (!value) return "—";
   return format(parseISO(value), "d.M.yyyy HH:mm", { locale: he });

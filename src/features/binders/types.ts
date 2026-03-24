@@ -6,6 +6,8 @@ export interface BinderResponse {
   client_id: number;
   client_name: string | null;
   binder_number: string;
+  period_start: string | null;
+  period_end: string | null;
   binder_type: string;
   status: string;
   received_at: string;

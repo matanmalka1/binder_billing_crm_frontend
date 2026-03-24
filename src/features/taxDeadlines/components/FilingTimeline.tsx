@@ -6,7 +6,7 @@ import { QK } from "../../../lib/queryKeys";
 import { cn } from "../../../utils/utils";
 
 interface FilingTimelineProps {
-  clientId: number;
+  businessId: number;
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -44,10 +44,10 @@ const daysLabelClass = (entry: TimelineEntry): string => {
 const sortByDate = (a: TimelineEntry, b: TimelineEntry) =>
   new Date(a.due_date).getTime() - new Date(b.due_date).getTime();
 
-export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
+export const FilingTimeline: React.FC<FilingTimelineProps> = ({ businessId }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.taxDeadlines.timeline(clientId),
-    queryFn: () => taxDeadlinesApi.getTimeline(clientId),
+    queryKey: QK.taxDeadlines.timeline(businessId),
+    queryFn: () => taxDeadlinesApi.getTimeline(businessId),
   });
 
   if (isLoading) {

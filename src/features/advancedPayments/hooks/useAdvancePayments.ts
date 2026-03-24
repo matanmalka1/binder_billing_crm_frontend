@@ -16,14 +16,14 @@ interface UpdatePayload {
 }
 
 export const useAdvancePayments = (
-  clientId: number,
+  businessId: number,
   year: number,
   statusFilter?: AdvancePaymentStatus[],
   page = 1,
 ) => {
   const queryClient = useQueryClient();
-  const qk = QK.tax.advancePayments.forClientYear(clientId, year);
-  const enabled = clientId > 0;
+  const qk = QK.tax.advancePayments.forClientYear(businessId, year);
+  const enabled = businessId > 0;
 
   const listQuery = useQuery({
     enabled,
@@ -32,7 +32,7 @@ export const useAdvancePayments = (
       : [...qk, page],
     queryFn: () =>
       advancePaymentsApi.list({
-        business_id: clientId,
+        business_id: businessId,
         year,
         page,
         page_size: 20,
@@ -43,7 +43,7 @@ export const useAdvancePayments = (
 
   const updateMutation = useMutation({
     mutationFn: ({ id, ...payload }: UpdatePayload) =>
-      advancePaymentsApi.update(clientId, id, payload),
+      advancePaymentsApi.update(businessId, id, payload),
     onSuccess: () => {
       toast.success("מקדמה עודכנה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
@@ -69,7 +69,7 @@ export const useAdvancePayments = (
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => advancePaymentsApi.delete(clientId, id),
+    mutationFn: (id: number) => advancePaymentsApi.delete(businessId, id),
     onSuccess: () => {
       toast.success("מקדמה נמחקה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });

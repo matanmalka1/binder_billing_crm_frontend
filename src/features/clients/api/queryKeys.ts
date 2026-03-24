@@ -1,3 +1,4 @@
+// mirror: frontend/src/lib/queryKeys.ts (QK.clients)
 export const clientsQK = {
   all: ["clients"] as const,
   list: (params: object) => ["clients", "list", params] as const,
@@ -5,4 +6,5 @@ export const clientsQK = {
   taxProfile: (id: number) => ["clients", "tax-profile", id] as const,
   statusCard: (id: number, year?: number) =>
     ["clients", "status-card", id, year ?? "current"] as const,
+  businesses: (clientId: number) => ["clients", "businesses", clientId] as const,
 } as const;

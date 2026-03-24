@@ -13,18 +13,18 @@ import { advancePaymentsApi } from "../api";
 import { MONTH_SHORT_NAMES } from "../utils";
 
 interface AdvancePaymentsChartProps {
-  clientId: number;
+  businessId: number;
   year: number;
 }
 
 export const AdvancePaymentsChart: React.FC<AdvancePaymentsChartProps> = ({
-  clientId,
+  businessId,
   year,
 }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.tax.advancePayments.chart(clientId, year),
-    queryFn: () => advancePaymentsApi.getChartData(clientId, year),
-    enabled: clientId > 0 && year > 0,
+    queryKey: QK.tax.advancePayments.chart(businessId, year),
+    queryFn: () => advancePaymentsApi.getChartData(businessId, year),
+    enabled: businessId > 0 && year > 0,
   });
 
   if (isLoading || !data) return null;

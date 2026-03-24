@@ -5,12 +5,12 @@ import { Alert } from "../../../../components/ui/Alert";
 import { cn } from "../../../../utils/utils";
 
 interface ClientAnnualReportsTabProps {
-  clientId: number;
+  businessId: number;
 }
 
-export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ clientId }) => {
+export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ businessId }) => {
   const { selectedYear, setSelectedYear, filteredReports, yearHasReports, openReport, isPending, errorMessage, YEAR_LIST } =
-    useClientAnnualReportsTab(clientId);
+    useClientAnnualReportsTab(businessId);
 
   if (isPending) return <PageLoading message="טוען דוחות שנתיים..." />;
   if (errorMessage) return <Alert variant="error" message={errorMessage} />;
