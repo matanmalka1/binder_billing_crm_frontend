@@ -48,6 +48,10 @@ export const BinderHistorySection: React.FC<BinderHistorySectionProps> = ({ bind
               </div>
 
               <div className="flex items-center justify-end gap-1 text-xs text-gray-500">
+                {entry.changed_by_name && (
+                  <span className="text-gray-600">{entry.changed_by_name}</span>
+                )}
+                {entry.changed_by_name && <span>·</span>}
                 <Clock className="h-3 w-3" />
                 {format(parseISO(entry.changed_at), "d MMM yyyy HH:mm", { locale: he })}
               </div>

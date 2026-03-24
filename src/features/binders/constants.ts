@@ -44,4 +44,5 @@ export const BINDER_STATUS_OPTIONS = [
   { value: "", label: "כל הסטטוסים" },
   { value: "in_office", label: "במשרד" },
   { value: "ready_for_pickup", label: "מוכן לאיסוף" },
+  { value: "returned", label: "הוחזר" },
 ] as const;

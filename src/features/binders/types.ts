@@ -44,6 +44,7 @@ export interface BinderHistoryEntry {
   old_status: string;
   new_status: string;
   changed_by: number;
+  changed_by_name?: string | null;
   changed_at: string;
   notes?: string | null;
 }
