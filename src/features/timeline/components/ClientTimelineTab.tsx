@@ -1,7 +1,6 @@
 import { useClientTimelinePage } from "../hooks/useClientTimelinePage";
 import { TimelineCommandBar } from "./TimelineCommandBar";
 import { TimelineCard } from "./TimelineCard";
-import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { PaginationCard } from "../../../components/ui/PaginationCard";
 import { PageLoading } from "../../../components/ui/PageLoading";
 import { Alert } from "../../../components/ui/Alert";
@@ -12,20 +11,15 @@ interface ClientTimelineTabProps {
 
 export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ businessId }) => {
   const {
-    activeActionKey,
     error,
     filteredEvents,
-    handleAction,
     loading,
     refreshing,
     page,
     pageSize,
-    pendingAction,
     setPage,
     setPageSize,
     total,
-    cancelPendingAction,
-    confirmPendingAction,
     refresh,
     filters,
     eventTypeStats,
@@ -55,11 +49,7 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ businessId
         eventTypeStats={eventTypeStats}
       />
 
-      <TimelineCard
-        events={filteredEvents}
-        activeActionKey={activeActionKey}
-        onAction={handleAction}
-      />
+      <TimelineCard events={filteredEvents} />
 
       {totalPages > 1 && (
         <PaginationCard
@@ -70,17 +60,6 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ businessId
           onPageChange={setPage}
         />
       )}
-
-      <ConfirmDialog
-        open={Boolean(pendingAction)}
-        title={pendingAction?.confirm?.title ?? "אישור פעולה"}
-        message={pendingAction?.confirm?.message ?? "האם להמשיך בביצוע הפעולה?"}
-        confirmLabel={pendingAction?.confirm?.confirmLabel ?? "אישור"}
-        cancelLabel={pendingAction?.confirm?.cancelLabel ?? "ביטול"}
-        isLoading={activeActionKey === pendingAction?.uiKey}
-        onConfirm={confirmPendingAction}
-        onCancel={cancelPendingAction}
-      />
     </div>
   );
 };

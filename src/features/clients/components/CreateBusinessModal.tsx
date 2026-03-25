@@ -1,4 +1,5 @@
-import { useController, useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useController, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
@@ -14,15 +15,31 @@ interface Props {
   onClose: () => void;
   onSubmit: (data: CreateBusinessPayload) => Promise<void>;
   isLoading?: boolean;
+  clientNationalId: string;
 }
 
-export const CreateBusinessModal: React.FC<Props> = ({ open, onClose, onSubmit, isLoading = false }) => {
-  const { register, handleSubmit, control, formState: { errors }, reset } = useForm<CreateBusinessFormValues>({
+export const CreateBusinessModal: React.FC<Props> = ({ open, onClose, onSubmit, isLoading = false, clientNationalId }) => {
+  const { register, handleSubmit, control, setValue, formState: { errors }, reset } = useForm<CreateBusinessFormValues>({
     resolver: zodResolver(createBusinessSchema),
-    defaultValues: { business_type: "osek_patur", opened_at: "", business_name: "", notes: "" },
+    defaultValues: { business_type: "osek_patur", opened_at: "", business_name: "", tax_id_number: "", notes: "" },
   });
 
   const { field: openedAtField } = useController({ name: "opened_at", control });
+  const businessType = useWatch({ control, name: "business_type" });
+  const taxIdValue = useWatch({ control, name: "tax_id_number" });
+
+  useEffect(() => {
+    setValue(
+      "tax_id_number",
+      businessType === "company" ? "" : clientNationalId,
+      { shouldValidate: false },
+    );
+  }, [businessType, clientNationalId, setValue]);
+
+  const showHpHint =
+    businessType === "company" &&
+    taxIdValue.length > 0 &&
+    !taxIdValue.startsWith("51");
 
   const handleClose = () => { if (!isLoading) { reset(); onClose(); } };
 
@@ -31,6 +48,7 @@ export const CreateBusinessModal: React.FC<Props> = ({ open, onClose, onSubmit, 
       business_type: data.business_type,
       opened_at: data.opened_at as ISODateString,
       business_name: data.business_name || null,
+      tax_id_number: data.tax_id_number || null,
       notes: data.notes || null,
     };
     await onSubmit(payload);
@@ -72,11 +90,23 @@ export const CreateBusinessModal: React.FC<Props> = ({ open, onClose, onSubmit, 
             onBlur={openedAtField.onBlur}
             name={openedAtField.name}
           />
+          <div>
+            <Input
+              label="מספר עוסק / ח.פ *"
+              placeholder={businessType === "company" ? "הזן ח.פ" : ""}
+              error={errors.tax_id_number?.message}
+              disabled={isLoading}
+              {...register("tax_id_number")}
+            />
+            {showHpHint && (
+              <p className="mt-1 text-xs text-amber-600">מספרי ח.פ תקניים מתחילים ב-51</p>
+            )}
+          </div>
         </div>
 
         <div className="space-y-4 border-t border-gray-200 pt-4">
-          <p className="text-sm font-medium text-gray-700">פרטים נוספים (אופציונלי)</p>
-          <Input label="שם עסק" placeholder="לדוגמה: מסעדת ישראל" error={errors.business_name?.message} disabled={isLoading} {...register("business_name")} />
+          <p className="text-sm font-medium text-gray-700">פרטים נוספים</p>
+          <Input label="שם עסק *" placeholder="לדוגמה: מסעדת ישראל" error={errors.business_name?.message} disabled={isLoading} {...register("business_name")} />
           <Textarea label="הערות" placeholder="הערות חופשיות" error={errors.notes?.message} disabled={isLoading} {...register("notes")} />
         </div>
 

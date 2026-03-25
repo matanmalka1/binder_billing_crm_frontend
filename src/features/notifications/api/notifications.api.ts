@@ -58,7 +58,7 @@ export const notificationsApi = {
       ENDPOINTS.notificationsSend,
       {
         business_id: businessId,
-        channel: payload.channel,
+        channel: payload.channel.toLowerCase() as "whatsapp" | "email",
         message: payload.message,
         severity: payload.severity,
       },

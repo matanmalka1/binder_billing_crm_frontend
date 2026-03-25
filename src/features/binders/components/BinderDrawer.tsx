@@ -100,7 +100,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
             onMarkReady={() => onMarkReady?.()}
             onRevertReady={() => onRevertReady?.()}
           />
-          <BinderIntakesSection binderId={binder.id} binderType={binder.binder_type} />
+          <BinderIntakesSection binderId={binder.id} />
           <BinderHistorySection binderId={binder.id} />
         </>
       )}

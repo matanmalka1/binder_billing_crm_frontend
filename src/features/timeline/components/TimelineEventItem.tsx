@@ -1,9 +1,6 @@
-import { Button } from "../../../components/ui/Button";
 import { IconLabel } from "../../../components/ui/IconLabel";
-import { ChevronLeft, FileText, CreditCard } from "lucide-react";
-import { mapActions } from "../../../lib/actions/mapActions";
+import { FileText, CreditCard } from "lucide-react";
 import type { TimelineEvent } from "../api";
-import type { ActionCommand } from "../../../lib/actions/types";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
 import { getEventColor } from "../constants";
@@ -13,26 +10,46 @@ import {
   getEventTypeLabel,
 } from "../utils";
 
+// Status translation map
+const STATUS_HE: Record<string, string> = {
+  "none": "חדש",
+  "in_office": "במשרד",
+  "ready_for_pickup": "מוכן לאיסוף",
+  "returned": "הוחזר",
+};
+
+// Channel translation map
+const CHANNEL_HE: Record<string, string> = {
+  "whatsapp": "WhatsApp",
+  "email": "דוא״ל",
+  "sms": "SMS",
+};
+
+// Trigger translation map
+const TRIGGER_HE: Record<string, string> = {
+  "binder_received": "קלסר התקבל",
+  "binder_ready_for_pickup": "קלסר מוכן לאיסוף",
+  "manual_payment_reminder": "תזכורת תשלום",
+};
+
+const formatStatus = (status: string): string => STATUS_HE[status] || status;
+const formatChannel = (channel: string): string => CHANNEL_HE[channel] || channel;
+const formatTrigger = (trigger: string): string => TRIGGER_HE[trigger] || trigger;
+
 interface TimelineEventItemProps {
   event: TimelineEvent;
   index: number;
-  onAction: (action: ActionCommand) => void;
-  activeActionKey: string | null;
 }
-
 
 export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
   event,
   index,
-  onAction,
-  activeActionKey,
 }) => {
-  const resolvedActions = mapActions(event.actions ?? event.available_actions);
   const colors = getEventColor(event.event_type);
 
   return (
     <li
-      className="relative flex gap-3 animate-fade-in"
+      className="relative flex gap-4 animate-fade-in"
       style={{ animationDelay: staggerDelay(index) }}
     >
       {/* Timeline dot */}
@@ -50,20 +67,20 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
       {/* Event card */}
       <div
         className={cn(
-          "flex-1 mb-1 rounded-xl border border-gray-200/80 bg-white overflow-hidden",
+          "flex-1 mb-2 rounded-lg border border-gray-100 bg-white/95 overflow-hidden",
           "border-r-2",
           colors.cardBorder,
-          "transition-all duration-200 hover:shadow-md hover:-translate-y-0.5",
+          "transition-all duration-200 hover:shadow-md hover:border-gray-200",
         )}
       >
-        <div className={cn("h-0.5 w-full bg-gradient-to-l", colors.cardTint, "to-transparent")} />
+        <div className={cn("h-1 w-full bg-gradient-to-l", colors.cardTint, "to-transparent")} />
 
-        <div className="px-3 py-2.5 space-y-2">
+        <div className="px-4 py-3 space-y-3">
           {/* Header: badge + time */}
-          <div className="flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center justify-between gap-3">
             <span
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold",
+                "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold flex-shrink-0",
                 colors.badgeBg,
                 colors.badgeText,
               )}
@@ -74,7 +91,7 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
 
             <time
               dateTime={event.timestamp}
-              className="text-xs text-gray-400 font-mono tabular-nums"
+              className="text-xs text-gray-400 font-mono tabular-nums flex-shrink-0"
             >
               {formatTimestamp(event.timestamp)}
             </time>
@@ -85,8 +102,8 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
             <p className="text-sm leading-relaxed text-gray-700">{event.description}</p>
           )}
 
-          {/* Meta chips */}
-          {(event.binder_id ?? event.charge_id) && (
+          {/* Related IDs */}
+          {(event.binder_id || event.charge_id) && (
             <div className="flex flex-wrap gap-2">
               {event.binder_id && (
                 <IconLabel
@@ -105,26 +122,43 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
             </div>
           )}
 
-          {/* Actions */}
-          {resolvedActions.length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100/80">
-              {resolvedActions.map((action) => (
-                <Button
-                  key={action.uiKey}
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onAction(action)}
-                  isLoading={activeActionKey === action.uiKey}
-                  disabled={activeActionKey !== null && activeActionKey !== action.uiKey}
-                  className="text-xs h-7 px-3 bg-white shadow-sm"
-                >
-                  {action.label || "—"}
-                  <ChevronLeft className="h-3 w-3 opacity-60" />
-                </Button>
-              ))}
+          {/* Status transitions */}
+          {event.metadata?.old_status && event.metadata?.new_status && (
+            <div className="flex items-center gap-2 text-xs bg-blue-50 border border-blue-100 rounded px-3 py-2">
+              <span className="inline-block px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-medium text-[11px]">
+                {formatStatus(event.metadata.old_status as string)}
+              </span>
+              <span className="text-blue-400">←</span>
+              <span className="inline-block px-2 py-0.5 rounded bg-green-100 text-green-700 font-medium text-[11px]">
+                {formatStatus(event.metadata.new_status as string)}
+              </span>
             </div>
           )}
+
+          {/* Amount display */}
+          {event.metadata?.amount && (
+            <div className="text-xs text-gray-600 bg-emerald-50 border border-emerald-100 rounded px-3 py-2">
+              <span className="font-medium">סכום:</span> ₪{Number(event.metadata.amount).toFixed(2)}
+            </div>
+          )}
+
+          {/* Notification channel info */}
+          {event.metadata?.trigger && event.metadata?.channel && (
+            <div className="text-xs text-gray-600 bg-purple-50 border border-purple-100 rounded px-3 py-2">
+              <div><span className="font-medium">ערוץ:</span> {formatChannel(event.metadata.channel as string)}</div>
+              <div><span className="font-medium">סוג:</span> {formatTrigger(event.metadata.trigger as string)}</div>
+            </div>
+          )}
+
+          {/* Invoice info */}
+          {event.metadata?.external_invoice_id && (
+            <div className="text-xs text-gray-600 bg-orange-50 border border-orange-100 rounded px-3 py-2">
+              <div><span className="font-medium">ספק:</span> {String(event.metadata.provider || 'לא ידוע')}</div>
+              <div><span className="font-medium">ID חשבונית:</span> {event.metadata.external_invoice_id}</div>
+            </div>
+          )}
+
+
         </div>
       </div>
     </li>

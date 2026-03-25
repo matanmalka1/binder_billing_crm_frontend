@@ -101,13 +101,13 @@ const AnnualCard = ({ row }: { row: VatAnnualSummary }) => {
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-lg bg-gray-50 p-3">
-          <div className="text-xs font-medium text-gray-500 mb-1">נטו הכנסות</div>
+          <div className="text-xs font-medium text-gray-500 mb-1">מע״מ עסקאות</div>
           <div dir="ltr" className="text-sm font-semibold tabular-nums text-gray-900">
             {fmt(row.total_output_vat)}
           </div>
         </div>
         <div className="rounded-lg bg-gray-50 p-3">
-          <div className="text-xs font-medium text-gray-500 mb-1">נטו תשומות</div>
+          <div className="text-xs font-medium text-gray-500 mb-1">מע״מ תשומות</div>
           <div dir="ltr" className="text-sm font-semibold tabular-nums text-gray-900">
             {fmt(row.total_input_vat)}
           </div>
@@ -139,6 +139,8 @@ const ExportControls = ({ businessId }: { businessId: number }) => {
     setLoading(true);
     try {
       await vatReportsApi.exportBusinessVat(businessId, format, year);
+    } catch {
+      toast.error("ייצוא נכשל, נסה שוב");
     } finally {
       setLoading(false);
     }

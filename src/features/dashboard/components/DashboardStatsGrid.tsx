@@ -85,25 +85,25 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
   );
 
   const inner = (
-    <div className="relative flex items-center gap-4 p-4">
+    <div className="relative flex items-center gap-3 p-3">
       {/* Icon */}
       <div className={cn(
-        "shrink-0 rounded-xl p-2.5 shadow-sm transition-transform duration-300 group-hover:scale-110",
+        "shrink-0 rounded-lg p-2 shadow-sm transition-transform duration-300 group-hover:scale-110",
         styles.iconBg
       )}>
-        <IconComponent className="h-5 w-5" />
+        <IconComponent className="h-4 w-4" />
       </div>
 
       {/* Text */}
       <div className="min-w-0 flex-1">
         <div className={cn(
-          "text-3xl font-black tabular-nums tracking-tight leading-none",
+          "text-2xl font-black tabular-nums tracking-tight leading-none",
           styles.value
         )}>
           {count.toLocaleString("he-IL")}
         </div>
-        <p className="mt-1 text-sm font-semibold text-gray-800 truncate">{stat.title}</p>
-        <p className="text-xs text-gray-400 truncate">{stat.description}</p>
+        <p className="mt-0.5 text-xs font-semibold text-gray-800 truncate">{stat.title}</p>
+        <p className="text-[0.65rem] text-gray-400 truncate">{stat.description}</p>
       </div>
 
       {stat.urgent && (

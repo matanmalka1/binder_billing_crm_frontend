@@ -120,6 +120,7 @@ export interface CreateBusinessPayload {
   opened_at: ISODateString;
   business_name?: string | null;
   notes?: string | null;
+  tax_id_number?: string | null;
 }
 
 export interface UpdateBusinessPayload {

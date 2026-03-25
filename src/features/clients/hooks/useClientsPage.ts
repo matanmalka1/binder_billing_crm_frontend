@@ -5,6 +5,7 @@ import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   clientsApi,
   type CreateClientPayload,
+  type UpdateClientPayload,
   type ListClientsParams,
 } from "../api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
@@ -78,6 +79,16 @@ export const useClientsPage = () => {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: ({ clientId, payload }: { clientId: number; payload: UpdateClientPayload }) =>
+      clientsApi.update(clientId, payload),
+    onSuccess: () => {
+      toast.success("הלקוח עודכן בהצלחה");
+      queryClient.invalidateQueries({ queryKey: QK.clients.all });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה בעדכון לקוח"),
+  });
+
   const restoreMutation = useMutation({
     mutationFn: (clientId: number) => clientsApi.restore(clientId),
     onSuccess: () => {
@@ -143,6 +154,10 @@ export const useClientsPage = () => {
     handleRestoreClient,
     handleDismissDeletedDialog,
     restoreLoading: restoreMutation.isPending,
+    updateClient: async (clientId: number, payload: UpdateClientPayload): Promise<void> => {
+      await updateMutation.mutateAsync({ clientId, payload });
+    },
+    updateLoading: updateMutation.isPending,
     isAdvisor,
     can,
   };

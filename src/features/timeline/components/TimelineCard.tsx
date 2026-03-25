@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import type { TimelineEvent } from "../api";
-import type { ActionCommand } from "../../../lib/actions/types";
 import { TimelineEventItem } from "./TimelineEventItem";
 import { Clock, InboxIcon } from "lucide-react";
 import { formatDateHeading } from "../utils";
@@ -8,14 +7,10 @@ import { cn } from "../../../utils/utils";
 
 export interface TimelineCardProps {
   events: TimelineEvent[];
-  activeActionKey: string | null;
-  onAction: (action: ActionCommand) => void;
 }
 
 export const TimelineCard: React.FC<TimelineCardProps> = ({
   events,
-  activeActionKey,
-  onAction,
 }) => {
   const groupedEvents = useMemo(() => {
     const groups: Record<string, TimelineEvent[]> = {};
@@ -60,14 +55,12 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({
 
           <div className="relative pr-5">
             <div className="pointer-events-none absolute top-3 bottom-3 right-[9px] w-px bg-gradient-to-b from-slate-200 via-slate-200/70 to-transparent" />
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               {group.items.map((event, index) => (
                 <TimelineEventItem
                   key={`${event.timestamp}-${event.event_type}-${index}`}
                   event={event}
                   index={index + groupIndex * 1000}
-                  onAction={onAction}
-                  activeActionKey={activeActionKey}
                 />
               ))}
             </ul>

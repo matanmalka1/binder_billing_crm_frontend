@@ -5,12 +5,10 @@ import { MonoValue } from "../../../components/ui/MonoValue";
 import type { BinderResponse } from "../types";
 import {
   getStatusLabel,
-  getWorkStateLabel,
   getSignalLabel,
-  getBinderTypeLabel,
 } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
-import { BINDER_WORK_STATE_VARIANTS, BINDER_SIGNAL_VARIANTS, BINDER_STATUS_VARIANTS } from "../constants";
+import {  BINDER_SIGNAL_VARIANTS, BINDER_STATUS_VARIANTS } from "../constants";
 
 interface BinderDetailsPanelProps {
   binder: BinderResponse;
@@ -21,25 +19,15 @@ export const BinderDetailsPanel: React.FC<BinderDetailsPanelProps> = ({ binder }
     <>
       <DrawerSection title="פרטי קלסר">
         <DrawerField label="מספר קלסר" value={binder.binder_number} />
-        <DrawerField label="סוג חומר" value={getBinderTypeLabel(binder.binder_type)} />
         <DrawerField label="סטטוס" value={
           <StatusBadge status={binder.status} getLabel={getStatusLabel} variantMap={BINDER_STATUS_VARIANTS} />
         } />
-        <DrawerField label="תאריך קבלה" value={formatDate(binder.received_at)} />
         {binder.returned_at && (
           <DrawerField label="תאריך החזרה" value={formatDate(binder.returned_at)} />
         )}
         {binder.pickup_person_name && (
           <DrawerField label="נאסף על ידי" value={binder.pickup_person_name} />
         )}
-        <DrawerField
-          label="מצב עבודה"
-          value={
-            <Badge variant={BINDER_WORK_STATE_VARIANTS[binder.work_state ?? ""] ?? "neutral"}>
-              {getWorkStateLabel(binder.work_state ?? "")}
-            </Badge>
-          }
-        />
         <DrawerField
           label="ימים במשרד"
           value={<MonoValue value={binder.days_in_office} format="days" />}

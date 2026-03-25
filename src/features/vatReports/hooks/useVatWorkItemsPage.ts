@@ -35,25 +35,32 @@ export const useVatWorkItemsPage = () => {
     client_name: toOptionalString(filters.clientSearch),
   };
 
+  const statsBase = {
+    period: apiParams.period,
+    client_name: apiParams.client_name,
+    page: 1,
+    page_size: 1,
+  };
+
   const { data: statsPendingData } = useQuery({
-    queryKey: vatReportsQK.list({ status: "pending_materials", page: 1, page_size: 1 }),
-    queryFn: () => vatReportsApi.list({ status: "pending_materials", page: 1, page_size: 1 }),
+    queryKey: vatReportsQK.list({ ...statsBase, status: "pending_materials" }),
+    queryFn: () => vatReportsApi.list({ ...statsBase, status: "pending_materials" }),
   });
   const { data: statsMaterialData } = useQuery({
-    queryKey: vatReportsQK.list({ status: "material_received", page: 1, page_size: 1 }),
-    queryFn: () => vatReportsApi.list({ status: "material_received", page: 1, page_size: 1 }),
+    queryKey: vatReportsQK.list({ ...statsBase, status: "material_received" }),
+    queryFn: () => vatReportsApi.list({ ...statsBase, status: "material_received" }),
   });
   const { data: statsDataEntryData } = useQuery({
-    queryKey: vatReportsQK.list({ status: "data_entry_in_progress", page: 1, page_size: 1 }),
-    queryFn: () => vatReportsApi.list({ status: "data_entry_in_progress", page: 1, page_size: 1 }),
+    queryKey: vatReportsQK.list({ ...statsBase, status: "data_entry_in_progress" }),
+    queryFn: () => vatReportsApi.list({ ...statsBase, status: "data_entry_in_progress" }),
   });
   const { data: statsReviewData } = useQuery({
-    queryKey: vatReportsQK.list({ status: "ready_for_review", page: 1, page_size: 1 }),
-    queryFn: () => vatReportsApi.list({ status: "ready_for_review", page: 1, page_size: 1 }),
+    queryKey: vatReportsQK.list({ ...statsBase, status: "ready_for_review" }),
+    queryFn: () => vatReportsApi.list({ ...statsBase, status: "ready_for_review" }),
   });
   const { data: statsFiledData } = useQuery({
-    queryKey: vatReportsQK.list({ status: "filed", page: 1, page_size: 1 }),
-    queryFn: () => vatReportsApi.list({ status: "filed", page: 1, page_size: 1 }),
+    queryKey: vatReportsQK.list({ ...statsBase, status: "filed" }),
+    queryFn: () => vatReportsApi.list({ ...statsBase, status: "filed" }),
   });
 
   const statsPending = statsPendingData?.total ?? undefined;

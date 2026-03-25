@@ -46,6 +46,16 @@ export const searchColumns: Column<SearchResult>[] = [
     ),
   },
   {
+    key: "id_number",
+    header: "מספר ת.ז. / ח.פ",
+    render: (result) =>
+      result.id_number ? (
+        <span className="font-mono text-sm text-gray-700">{result.id_number}</span>
+      ) : (
+        <span className="text-sm text-gray-300">—</span>
+      ),
+  },
+  {
     key: "binder_number",
     header: "מספר קלסר",
     render: (result) =>

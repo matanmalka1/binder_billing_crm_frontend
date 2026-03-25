@@ -101,9 +101,15 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
                   <span className="h-2 w-2 rounded-full bg-blue-500 shrink-0" aria-label="לא נקרא" />
                 )}
               </div>
+              {item.business_name && (
+                <span className="text-xs font-medium text-gray-600">{item.business_name}</span>
+              )}
               <p className="text-sm text-gray-800 leading-snug">{item.content_snapshot}</p>
+              {item.recipient && (
+                <span className="text-xs text-gray-500">נשלח ל: {item.recipient}</span>
+              )}
               <span className="text-xs text-gray-400">
-                {new Date(item.created_at).toLocaleDateString("he-IL")}
+                {new Date(item.created_at).toLocaleDateString("he-IL", { hour: "2-digit", minute: "2-digit" })}
               </span>
             </button>
           ))}

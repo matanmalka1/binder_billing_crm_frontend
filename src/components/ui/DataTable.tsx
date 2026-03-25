@@ -75,7 +75,7 @@ export const DataTable = <T,>({
                 <th
                   key={column.key}
                   className={cn(
-                    "px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500",
+                    "px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500",
                     column.headerClassName,
                   )}
                 >
@@ -99,7 +99,7 @@ export const DataTable = <T,>({
                 {columns.map((column) => (
                   <td
                     key={column.key}
-                    className={cn("px-4 py-3.5 align-middle", column.className)}
+                    className={cn("px-3 py-2.5 align-middle", column.className)}
                   >
                     {column.render(item, index)}
                   </td>

@@ -1,4 +1,4 @@
-import { Clock } from "lucide-react";
+import { Clock, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
@@ -7,9 +7,10 @@ import { QK } from "../../../lib/queryKeys";
 
 interface ClientRowActionsProps {
   clientId: number;
+  onEditClient?: () => void;
 }
 
-export const ClientRowActions: React.FC<ClientRowActionsProps> = ({ clientId }) => {
+export const ClientRowActions: React.FC<ClientRowActionsProps> = ({ clientId, onEditClient }) => {
   const navigate = useNavigate();
 
   const { data: businesses } = useQuery({
@@ -22,6 +23,11 @@ export const ClientRowActions: React.FC<ClientRowActionsProps> = ({ clientId }) 
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <DropdownMenu ariaLabel={`פעולות ללקוח ${clientId}`}>
+        <DropdownMenuItem
+          label="עריכת לקוח"
+          onClick={() => onEditClient?.()}
+          icon={<Pencil className="h-4 w-4" />}
+        />
         {firstBusinessId != null && (
           <DropdownMenuItem
             label="ציר זמן"

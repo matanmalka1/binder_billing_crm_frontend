@@ -14,10 +14,10 @@ import { receiveBinderSchema, type ReceiveBinderFormValues } from "../schemas";
 
 const getDefaultValues = (): ReceiveBinderFormValues => ({
   client_id: undefined as unknown as number,
-  business_id: null,
+  business_id: undefined as unknown as number,
   binder_type: "",
   open_new_binder: false,
-  vat_period: null,
+  reporting_period: null,
   received_at: format(new Date(), "yyyy-MM-dd"),
   notes: null,
 });
@@ -35,12 +35,15 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
 
   const clientId: number | undefined = form.watch("client_id");
   const binderType: string = form.watch("binder_type") ?? "";
+  const businessId: number | undefined = form.watch("business_id");
 
   useEffect(() => {
-    if (binderType !== "vat") {
-      form.setValue("vat_period", null);
-    }
+    form.setValue("reporting_period", null);
   }, [binderType, form]);
+
+  useEffect(() => {
+    form.setValue("reporting_period", null);
+  }, [businessId, form]);
 
   const { data: businessesData } = useQuery({
     queryKey: QK.clients.businesses(clientId!),
@@ -55,9 +58,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
 
   useEffect(() => {
     if (businesses.length === 1) {
-      form.setValue("business_id", businesses[0].id);
-    } else {
-      form.setValue("business_id", null);
+      form.setValue("business_id", businesses[0].id, { shouldValidate: true });
     }
   }, [businesses.length, businesses[0]?.id]);
 
@@ -75,9 +76,9 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   );
 
   const { data: taxProfile } = useQuery({
-    queryKey: QK.clients.taxProfile(clientId!),
-    queryFn: () => taxProfileApi.get(clientId!),
-    enabled: !!clientId && binderType === "vat",
+    queryKey: QK.businesses.taxProfile(businessId!),
+    queryFn: () => taxProfileApi.get(businessId!),
+    enabled: !!businessId,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
@@ -93,17 +94,17 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
 
   const mutation = useMutation({
     mutationFn: (values: ReceiveBinderFormValues) => {
-      const notesWithPeriod = values.binder_type === "vat" && values.vat_period
-        ? [values.vat_period, values.notes].filter(Boolean).join(" | ")
-        : values.notes ?? null;
-
       return bindersApi.receive({
         client_id: values.client_id,
         received_at: values.received_at,
         received_by: userId!,
         open_new_binder: values.open_new_binder ?? false,
-        notes: notesWithPeriod,
-        materials: [{ material_type: values.binder_type, business_id: values.business_id ?? null }],
+        notes: values.notes ?? null,
+        materials: [{
+          material_type: values.binder_type,
+          business_id: values.business_id ?? null,
+          description: values.reporting_period ?? null,
+        }],
       });
     },
     onSuccess: async (result) => {
@@ -121,7 +122,8 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     setSelectedClient({ id: client.id, name: client.name, client_status: client.client_status });
     setClientQuery(client.name);
     form.setValue("client_id", client.id, { shouldValidate: true });
-    form.setValue("vat_period", null);
+    form.setValue("reporting_period", null);
+    form.setValue("business_id", undefined as unknown as number);
   };
 
   const handleClientQueryChange = (query: string) => {
@@ -129,7 +131,8 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     if (selectedClient) {
       setSelectedClient(null);
       form.setValue("client_id", undefined as unknown as number);
-      form.setValue("vat_period", null);
+      form.setValue("reporting_period", null);
+      form.setValue("business_id", undefined as unknown as number);
     }
   };
 

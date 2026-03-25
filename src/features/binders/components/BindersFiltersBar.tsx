@@ -25,14 +25,13 @@ export const BindersFiltersBar = ({
   const handleReset = () => {
     setSearchDraft("");
     onFilterChange("status", "");
-    onFilterChange("work_state", "");
     onFilterChange("query", "");
     onFilterChange("year", "");
   };
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Input
           label="חיפוש"
           type="text"
@@ -48,15 +47,6 @@ export const BindersFiltersBar = ({
           options={[...BINDER_STATUS_OPTIONS]}
           className={cn(
             filters.status && "border-primary-400 ring-1 ring-primary-200",
-          )}
-        />
-        <Select
-          label="מצב עבודה"
-          value={filters.work_state ?? ""}
-          onChange={(e) => onFilterChange("work_state", e.target.value)}
-          options={WORK_STATE_OPTIONS}
-          className={cn(
-            filters.work_state && "border-primary-400 ring-1 ring-primary-200",
           )}
         />
         <Select
@@ -89,15 +79,6 @@ export const BindersFiltersBar = ({
                   BINDER_STATUS_OPTIONS.find((o) => o.value === filters.status)
                     ?.label ?? filters.status,
                 onRemove: () => onFilterChange("status", ""),
-              }
-            : null,
-          filters.work_state
-            ? {
-                key: "work_state",
-                label:
-                  WORK_STATE_OPTIONS.find((o) => o.value === filters.work_state)
-                    ?.label ?? filters.work_state,
-                onRemove: () => onFilterChange("work_state", ""),
               }
             : null,
           filters.year

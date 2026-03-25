@@ -22,6 +22,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
   const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(
     clientId != null ? { id: clientId, name: "" } : null
   );
+  const [selectedBusinessId, setSelectedBusinessId] = useState<number | null>(null);
   const [clientQuery, setClientQuery] = useState("");
   const [clientError, setClientError] = useState<string | undefined>();
   const [clientContact, setClientContact] = useState<{ phone: string | null; email: string | null } | null>(null);
@@ -45,6 +46,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
     if (open) {
       reset({ channel: "EMAIL", message: "" });
       setSelectedClient(clientId != null ? { id: clientId, name: "" } : null);
+      setSelectedBusinessId(null);
       setClientQuery("");
       setClientError(undefined);
       setClientContact(null);
@@ -53,6 +55,10 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
         clientsApi.getById(clientId).then((data) => {
           setClientContact({ phone: data.phone, email: data.email });
         }).catch(() => setClientContact(null));
+        clientsApi.listBusinessesForClient(clientId).then((data) => {
+          const active = data.items.find((b) => b.status === "ACTIVE") ?? data.items[0];
+          setSelectedBusinessId(active?.id ?? null);
+        }).catch(() => setSelectedBusinessId(null));
       }
     }
   }, [open, clientId, reset]);
@@ -64,9 +70,13 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
       setClientError("שדה חובה");
       return;
     }
+    if (!selectedBusinessId) {
+      setClientError("לא נמצא עסק פעיל ללקוח זה");
+      return;
+    }
     setClientError(undefined);
     sendNotification({
-      client_id: selectedClient.id,
+      business_id: selectedBusinessId,
       channel: values.channel,
       message: values.message,
     });
@@ -117,12 +127,19 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
               onChange={setClientQuery}
               onSelect={async (c) => {
                 setSelectedClient({ id: c.id, name: c.name });
+                setSelectedBusinessId(null);
                 setClientError(undefined);
                 try {
-                  const data = await clientsApi.getById(c.id);
-                  setClientContact({ phone: data.phone, email: data.email });
+                  const [clientData, bizData] = await Promise.all([
+                    clientsApi.getById(c.id),
+                    clientsApi.listBusinessesForClient(c.id),
+                  ]);
+                  setClientContact({ phone: clientData.phone, email: clientData.email });
+                  const active = bizData.items.find((b) => b.status === "ACTIVE") ?? bizData.items[0];
+                  setSelectedBusinessId(active?.id ?? null);
                 } catch {
                   setClientContact(null);
+                  setSelectedBusinessId(null);
                 }
               }}
               error={clientError}

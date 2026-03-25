@@ -24,8 +24,8 @@ export const CreateClientModal: React.FC<Props> = ({ open, onClose, onSubmit, is
   const onFormSubmit = handleSubmit(async (data) => {
     const payload: CreateClientPayload = {
       ...data,
-      phone: data.phone ? data.phone : null,
-      email: data.email ? data.email : null,
+      phone: data.phone,
+      email: data.email,
       address_street: null,
       address_building_number: null,
       address_apartment: null,
@@ -61,9 +61,9 @@ export const CreateClientModal: React.FC<Props> = ({ open, onClose, onSubmit, is
         </div>
 
         <div className="space-y-4 border-t border-gray-200 pt-4">
-          <p className="text-sm font-medium text-gray-700">פרטי התקשרות (אופציונלי)</p>
-          <Input label="טלפון" type="tel" placeholder="050-1234567" error={errors.phone?.message} disabled={isLoading} {...register("phone")} />
-          <Input label="אימייל" type="email" placeholder="הזן כתובת אימייל" error={errors.email?.message} disabled={isLoading} {...register("email")} />
+          <p className="text-sm font-medium text-gray-700">פרטי התקשרות</p>
+          <Input label="טלפון *" type="tel" placeholder="050-1234567" error={errors.phone?.message} disabled={isLoading} {...register("phone")} />
+          <Input label="אימייל *" type="email" placeholder="הזן כתובת אימייל" error={errors.email?.message} disabled={isLoading} {...register("email")} />
         </div>
 
         <p className="text-xs text-gray-500">* שדות חובה</p>

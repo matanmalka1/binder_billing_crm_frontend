@@ -9,7 +9,7 @@ import { Textarea } from "../../../components/ui/Textarea";
 import { isClientLockedForCreate } from "../../../utils/clientStatus";
 import { BINDER_TYPE_OPTIONS } from "../constants";
 import type { ReceiveBinderFormValues } from "../schemas";
-import { VatPeriodField } from "./VatPeriodField";
+import { ReportingPeriodField } from "./ReportingPeriodField";
 
 interface BinderReceivePanelProps {
   form: UseFormReturn<ReceiveBinderFormValues>;
@@ -44,9 +44,13 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
     formState: { errors },
   } = form;
   const binderType = form.watch("binder_type");
-  const showBusinessField = selectedClient && businesses.length > 1;
 
   const clientLocked = isClientLockedForCreate(selectedClient?.client_status);
+
+  const businessOptions = [
+    { value: "", label: "בחר עסק...", disabled: businesses.length > 0 ? true : false },
+    ...businesses.map((b) => ({ value: String(b.id), label: b.business_name ?? `עסק #${b.id}` })),
+  ];
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
@@ -84,28 +88,39 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         {...register("binder_type")}
       />
 
-      {showBusinessField && (
-        <Select
-          label="עסק"
-          error={errors.business_id?.message}
-          options={[
-            { value: "", label: "בחר עסק..." },
-            ...businesses.map((b) => ({ value: String(b.id), label: b.business_name ?? `עסק #${b.id}` })),
-          ]}
-          {...register("business_id", { setValueAs: (v) => (v === "" ? null : Number(v)) })}
+      {selectedClient && (
+        <Controller
+          name="business_id"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="עסק"
+              error={errors.business_id?.message}
+              disabled={businesses.length === 0}
+              options={businessOptions}
+              value={field.value !== undefined ? String(field.value) : ""}
+              onChange={(e) => {
+                const v = e.target.value;
+                field.onChange(v === "" ? undefined : Number(v));
+              }}
+              onBlur={field.onBlur}
+              name={field.name}
+            />
+          )}
         />
       )}
 
-      {binderType === "vat" && (vatType === "monthly" || vatType === "bimonthly") && (
+      {selectedClient && binderType && (
         <Controller
-          name="vat_period"
+          name="reporting_period"
           control={control}
           render={({ field }) => (
-            <VatPeriodField
+            <ReportingPeriodField
+              materialType={binderType}
               vatType={vatType}
               value={field.value ?? ""}
               onChange={field.onChange}
-              error={errors.vat_period?.message}
+              error={errors.reporting_period?.message}
             />
           )}
         />

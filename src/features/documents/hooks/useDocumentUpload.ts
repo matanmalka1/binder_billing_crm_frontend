@@ -5,7 +5,7 @@ import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import { QK } from "../../../lib/queryKeys";
 
-export const useDocumentUpload = (clientId: number) => {
+export const useDocumentUpload = (businessId: number) => {
   const queryClient = useQueryClient();
   const [uploadError, setUploadError] = useState<string | null>(null);
 
@@ -14,8 +14,8 @@ export const useDocumentUpload = (clientId: number) => {
     onSuccess: async (_, variables) => {
       toast.success("מסמך הועלה בהצלחה");
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: QK.documents.clientList(variables.client_id) }),
-        queryClient.invalidateQueries({ queryKey: QK.documents.clientSignals(variables.client_id) }),
+        queryClient.invalidateQueries({ queryKey: QK.documents.clientList(variables.business_id) }),
+        queryClient.invalidateQueries({ queryKey: QK.documents.clientSignals(variables.business_id) }),
       ]);
     },
   });
@@ -23,13 +23,13 @@ export const useDocumentUpload = (clientId: number) => {
   const submitUpload = async (
     payload: Pick<UploadDocumentPayload, "document_type" | "file"> & { tax_year?: number | null },
   ): Promise<boolean> => {
-    if (!clientId) {
+    if (!businessId) {
       setUploadError("יש לבחור לקוח לפני העלאה");
       return false;
     }
     try {
       setUploadError(null);
-      await uploadMutation.mutateAsync({ client_id: clientId, ...payload });
+      await uploadMutation.mutateAsync({ business_id: businessId, ...payload });
       return true;
     } catch (err: unknown) {
       setUploadError(getErrorMessage(err, "שגיאה בהעלאת מסמך"));

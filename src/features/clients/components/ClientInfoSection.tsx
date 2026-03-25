@@ -37,7 +37,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
     { label: "סוג מזהה", value: client.id_number_type ?? "—" },
     { label: "טלפון", value: client.phone || "—" },
     { label: "אימייל", value: client.email || "—" },
-    { label: "כתובת למשלוח", value: formatStructuredAddress(client) },
+    { label: "כתובת", value: formatStructuredAddress(client) },
     { label: "נוצר בתאריך", value: formatDate(client.created_at) },
     { label: "עודכן בתאריך", value: client.updated_at ? formatDate(client.updated_at) : "—" },
   ];

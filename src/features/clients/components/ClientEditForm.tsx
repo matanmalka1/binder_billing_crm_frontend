@@ -100,7 +100,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
 
       {/* Shipment address */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">כתובת למשלוח</h3>
+        <h3 className="text-lg font-semibold text-gray-900">כתובת</h3>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Input

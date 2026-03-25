@@ -42,7 +42,7 @@ export interface UpdateNotesRequest {
 }
 
 export interface UploadDocumentPayload {
-  client_id: number;
+  business_id: number;
   document_type:
     | "id_copy"
     | "power_of_attorney"

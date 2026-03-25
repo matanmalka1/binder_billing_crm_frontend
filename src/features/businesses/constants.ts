@@ -4,9 +4,11 @@ export type ActiveBusinessDetailsTab =
   | "vat"
   | "advance-payments"
   | "deadlines"
-  | "annual-reports";
+  | "annual-reports"
+  | "details";
 
 export const BUSINESS_DETAILS_TABS: ActiveBusinessDetailsTab[] = [
+  "details",
   "documents",
   "timeline",
   "vat",
@@ -22,4 +24,5 @@ export const BUSINESS_DETAILS_TAB_LABELS: Record<ActiveBusinessDetailsTab, strin
   "advance-payments": "מקדמות",
   deadlines: "מועדים",
   "annual-reports": "דוחות שנתיים",
+  details: "פרטים",
 };

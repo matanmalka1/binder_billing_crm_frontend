@@ -9,7 +9,6 @@ import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import { ClientAdvancePaymentsHeader } from "./ClientAdvancePaymentsHeader";
-import { AdvancePaymentsStatsRow } from "./AdvancePaymentsStatsRow";
 import { AdvancePaymentTable } from "./AdvancePaymentTable";
 import { AdvancePaymentsKPICards } from "./AdvancePaymentsKPICards";
 import { AdvancePaymentsChart } from "./AdvancePaymentsChart";
@@ -69,13 +68,6 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         onGenerateSchedule={() => generateMutation.mutate()}
         isGenerating={generateMutation.isPending}
       />
-      <AdvancePaymentsStatsRow
-        advanceRate={advanceRate}
-        annualIncome={annualIncome}
-        totalExpected={totalExpected}
-        totalPaid={totalPaid}
-      />
-
       <AdvancePaymentsKPICards businessId={businessId} year={year} />
       <AdvancePaymentsChart businessId={businessId} year={year} />
       <AdvancePaymentTable

@@ -80,7 +80,7 @@ export interface ReceiveBinderPayload {
   received_by: number;
   open_new_binder?: boolean;
   notes?: string | null;
-  materials?: { material_type: string; business_id?: number | null }[];
+  materials?: { material_type: string; business_id?: number | null; description?: string | null }[];
 }
 
 export interface ReturnBinderPayload {
@@ -97,6 +97,16 @@ export interface BindersFiltersBarProps {
   onFilterChange: (name: string, value: string) => void;
 }
 
+export interface BinderIntakeMaterialResponse {
+  id: number;
+  intake_id: number;
+  material_type: string;
+  business_id?: number | null;
+  annual_report_id?: number | null;
+  description?: string | null;
+  created_at: string;
+}
+
 export interface BinderIntakeResponse {
   id: number;
   binder_id: number;
@@ -105,6 +115,7 @@ export interface BinderIntakeResponse {
   received_by_name?: string | null;
   notes?: string | null;
   created_at: string;
+  materials: BinderIntakeMaterialResponse[];
 }
 
 export interface BinderIntakeListResponse {

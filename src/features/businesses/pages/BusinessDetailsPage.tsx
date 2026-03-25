@@ -32,7 +32,7 @@ interface BusinessDetailsProps {
 }
 
 export const BusinessDetails: FC<BusinessDetailsProps> = ({
-  initialTab = "documents",
+  initialTab = "details",
 }) => {
   const { clientId, businessId } = useParams<{
     clientId: string;
@@ -100,22 +100,23 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
             ))}
           </div>
 
-          {/* Main content + sidebar */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              {activeTab === "documents" && <ClientDocumentsTab businessId={businessIdNum} />}
-              {activeTab === "timeline" && <ClientTimelineTab businessId={String(businessIdNum)} />}
-              {activeTab === "vat" && <VatClientSummaryPanel businessId={businessIdNum} />}
-              {activeTab === "advance-payments" && <ClientAdvancePaymentsTab businessId={businessIdNum} />}
-              {activeTab === "deadlines" && <FilingTimeline businessId={businessIdNum} />}
-              {activeTab === "annual-reports" && <ClientAnnualReportsTab businessId={businessIdNum} />}
-            </div>
-
-            <div className="space-y-6">
-              <TaxProfileCard businessId={businessIdNum} readOnly={!can.editClients} />
-              {client && clientIdNum != null && <CorrespondenceCard clientId={clientIdNum} />}
-              {client && <SignatureRequestsCard client={client} canManage={can.editClients} />}
-            </div>
+          {/* Main content */}
+          <div>
+            {activeTab === "details" && (
+              <div className="space-y-6">
+                <TaxProfileCard businessId={businessIdNum} readOnly={!can.editClients} />
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                  {client && clientIdNum != null && <CorrespondenceCard clientId={clientIdNum} />}
+                  {client && <SignatureRequestsCard client={client} canManage={can.editClients} />}
+                </div>
+              </div>
+            )}
+            {activeTab === "documents" && <ClientDocumentsTab businessId={businessIdNum} />}
+            {activeTab === "timeline" && <ClientTimelineTab businessId={String(businessIdNum)} />}
+            {activeTab === "vat" && <VatClientSummaryPanel businessId={businessIdNum} />}
+            {activeTab === "advance-payments" && <ClientAdvancePaymentsTab businessId={businessIdNum} />}
+            {activeTab === "deadlines" && <FilingTimeline businessId={businessIdNum} />}
+            {activeTab === "annual-reports" && <ClientAnnualReportsTab businessId={businessIdNum} />}
           </div>
         </div>
       ) : null}

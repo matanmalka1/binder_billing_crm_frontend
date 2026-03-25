@@ -7,6 +7,7 @@ import { DataTable } from "@/components/ui/DataTable";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { DetailDrawer } from "@/components/ui/DetailDrawer";
 import {
   buildClientColumns,
   ClientsFiltersBar,
@@ -14,12 +15,17 @@ import {
   DeletedClientDialog,
   useClientsPage,
 } from "@/features/clients";
+import { ClientEditForm } from "@/features/clients/components/ClientEditForm";
+import type { ClientResponse } from "@/features/clients/api";
 import { ImportExportModal } from "@/features/importExport";
+
+const EDIT_FORM_ID = "client-edit-form-list";
 
 export const Clients: React.FC = () => {
   const navigate = useNavigate();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showImportExport, setShowImportExport] = useState(false);
+  const [editingClient, setEditingClient] = useState<ClientResponse | null>(null);
   const {
     activeActionKey,
     clients,
@@ -40,17 +46,21 @@ export const Clients: React.FC = () => {
     handleRestoreClient,
     handleDismissDeletedDialog,
     restoreLoading,
+    updateClient,
+    updateLoading,
     can,
   } = useClientsPage();
 
-  const columns = buildClientColumns();
+  const columns = buildClientColumns({
+    onEditClient: can.editClients ? (client) => setEditingClient(client) : undefined,
+  });
   const totalPages = Math.max(
     1,
     Math.ceil(Math.max(total, 1) / filters.page_size),
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="לקוחות"
         description="רשימת כל הלקוחות במערכת"
@@ -144,18 +154,43 @@ export const Clients: React.FC = () => {
         onCancel={cancelPendingAction}
       />
       <DeletedClientDialog
-      open={deletedClientDialogOpen}
-      deletedClient={deletedClientInfo}
-      isAdvisor={isAdvisor}
-      onRestore={handleRestoreClient}
-      onForceCreate={handleDismissDeletedDialog}
-      onDismiss={() => {
-        handleDismissDeletedDialog();
-        setShowCreateModal(true);
-      }}
-      restoreLoading={restoreLoading}
-      forceCreateLoading={false}
-    />
+        open={deletedClientDialogOpen}
+        deletedClient={deletedClientInfo}
+        isAdvisor={isAdvisor}
+        onRestore={handleRestoreClient}
+        onForceCreate={handleDismissDeletedDialog}
+        onDismiss={() => {
+          handleDismissDeletedDialog();
+          setShowCreateModal(true);
+        }}
+        restoreLoading={restoreLoading}
+        forceCreateLoading={false}
+      />
+      {editingClient && (
+        <DetailDrawer
+          open
+          onClose={() => setEditingClient(null)}
+          title="עריכת לקוח"
+          footer={
+            <div className="flex items-center justify-end gap-2">
+              <Button type="button" variant="outline" onClick={() => setEditingClient(null)} disabled={updateLoading}>ביטול</Button>
+              <Button type="submit" form={EDIT_FORM_ID} variant="primary" isLoading={updateLoading} disabled={updateLoading}>שמור שינויים</Button>
+            </div>
+          }
+        >
+          <ClientEditForm
+            client={editingClient}
+            formId={EDIT_FORM_ID}
+            onSave={async (payload) => {
+              await updateClient(editingClient.id, payload);
+              setEditingClient(null);
+            }}
+            onCancel={() => setEditingClient(null)}
+            isLoading={updateLoading}
+            hideFooter
+          />
+        </DetailDrawer>
+      )}
     </div>
   );
 };

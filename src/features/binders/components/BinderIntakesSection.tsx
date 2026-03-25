@@ -11,10 +11,9 @@ import { getBinderTypeLabel } from "../constants";
 
 interface BinderIntakesSectionProps {
   binderId: number;
-  binderType: string;
 }
 
-export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ binderId, binderType }) => {
+export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ binderId }) => {
   const { data, isLoading } = useQuery({
     queryKey: QK.binders.intakes(binderId),
     queryFn: () => bindersApi.getIntakes(binderId),
@@ -37,7 +36,18 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ bind
                 {format(parseISO(intake.received_at), "d MMM yyyy", { locale: he })}
               </div>
 
-              <p className="text-xs text-gray-700 font-medium mt-0.5">{getBinderTypeLabel(binderType)}</p>
+              {intake.materials.length > 0 && (
+                <div className="mt-0.5 flex flex-col gap-0.5">
+                  {intake.materials.map((m) => (
+                    <p key={m.id} className="text-xs text-gray-700 font-medium">
+                      {getBinderTypeLabel(m.material_type)}
+                      {m.description && (
+                        <span className="font-normal text-gray-500"> · {m.description}</span>
+                      )}
+                    </p>
+                  ))}
+                </div>
+              )}
 
               {intake.received_by_name && (
                 <p className="text-xs text-gray-500 mt-0.5">{intake.received_by_name}</p>

@@ -141,6 +141,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
           setShowBusinessModal(false);
         }}
         isLoading={isCreatingBusiness}
+        clientNationalId={client.id_number}
       />
 
       {canEditClients && (

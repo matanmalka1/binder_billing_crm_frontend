@@ -2,6 +2,7 @@ export interface SearchResult {
   result_type: string;
   client_id: number;
   client_name: string;
+  id_number?: string | null;
   client_status?: string | null;
   binder_id: number | null;
   binder_number: string | null;
