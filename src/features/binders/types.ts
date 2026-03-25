@@ -16,6 +16,7 @@ export interface BinderResponse {
   days_in_office?: number | null;
   work_state?: string | null;
   signals?: string[] | null;
+  is_full: boolean;
   available_actions?: BackendAction[] | null;
 }
 
@@ -75,11 +76,11 @@ export interface ListOperationalBindersParams {
 
 export interface ReceiveBinderPayload {
   client_id: number;
-  binder_number: string;
-  binder_type: string;
   received_at: string;
   received_by: number;
+  open_new_binder?: boolean;
   notes?: string | null;
+  materials?: { material_type: string; business_id?: number | null }[];
 }
 
 export interface ReturnBinderPayload {

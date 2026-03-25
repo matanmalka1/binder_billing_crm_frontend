@@ -9,20 +9,17 @@ import { Textarea } from "../../../components/ui/Textarea";
 import { isClientLockedForCreate } from "../../../utils/clientStatus";
 import { BINDER_TYPE_OPTIONS } from "../constants";
 import type { ReceiveBinderFormValues } from "../schemas";
-import type { BinderResponse } from "../types";
-import { BinderNumberField } from "./BinderNumberField";
 import { VatPeriodField } from "./VatPeriodField";
 
 interface BinderReceivePanelProps {
   form: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery: string;
   selectedClient: { id: number; name: string; client_status?: string | null } | null;
-  clientBinders: BinderResponse[];
-  allBinders: BinderResponse[];
+  businesses: { id: number; business_name: string | null; business_type: string }[];
+  hasActiveBinder: boolean;
   vatType: "monthly" | "bimonthly" | "exempt" | null;
   onClientSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
   onClientQueryChange: (query: string) => void;
-  onBinderSelect: (binderNumber: string, clientId: number, clientName: string, clientStatus: string | null) => void;
   onSubmit: (e?: React.BaseSyntheticEvent) => void;
   onClose: () => void;
   isSubmitting: boolean;
@@ -32,12 +29,11 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
   form,
   clientQuery,
   selectedClient,
-  clientBinders,
-  allBinders,
+  businesses,
+  hasActiveBinder,
   vatType,
   onClientSelect,
   onClientQueryChange,
-  onBinderSelect,
   onSubmit,
   onClose,
   isSubmitting,
@@ -48,6 +44,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
     formState: { errors },
   } = form;
   const binderType = form.watch("binder_type");
+  const showBusinessField = selectedClient && businesses.length > 1;
 
   const clientLocked = isClientLockedForCreate(selectedClient?.client_status);
 
@@ -87,6 +84,18 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         {...register("binder_type")}
       />
 
+      {showBusinessField && (
+        <Select
+          label="עסק"
+          error={errors.business_id?.message}
+          options={[
+            { value: "", label: "בחר עסק..." },
+            ...businesses.map((b) => ({ value: String(b.id), label: b.business_name ?? `עסק #${b.id}` })),
+          ]}
+          {...register("business_id", { setValueAs: (v) => (v === "" ? null : Number(v)) })}
+        />
+      )}
+
       {binderType === "vat" && (vatType === "monthly" || vatType === "bimonthly") && (
         <Controller
           name="vat_period"
@@ -102,14 +111,6 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         />
       )}
 
-      <BinderNumberField
-        form={form}
-        selectedClient={selectedClient}
-        clientBinders={clientBinders}
-        allBinders={allBinders}
-        onBinderSelect={onBinderSelect}
-      />
-
       <Controller
         name="received_at"
         control={control}
@@ -123,6 +124,13 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
           />
         )}
       />
+
+      {selectedClient && hasActiveBinder && (
+        <label className="flex items-center gap-2 text-sm text-amber-700 cursor-pointer" dir="rtl">
+          <input type="checkbox" {...register("open_new_binder")} className="rounded" />
+          קלסר מלא – פתח קלסר חדש
+        </label>
+      )}
 
       <Textarea
         label="הערות"

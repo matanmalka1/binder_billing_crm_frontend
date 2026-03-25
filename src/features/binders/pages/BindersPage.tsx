@@ -188,12 +188,11 @@ export const Binders: React.FC = () => {
         receiveForm={receive.form}
         clientQuery={receive.clientQuery}
         selectedClient={receive.selectedClient}
-        clientBinders={receive.clientBinders}
-        allBinders={receive.allBinders}
+        businesses={receive.businesses}
+        hasActiveBinder={receive.hasActiveBinder}
         vatType={receive.vatType}
         onClientSelect={receive.handleClientSelect}
         onClientQueryChange={receive.handleClientQueryChange}
-        onBinderSelect={receive.handleBinderSelect}
         onReceiveSubmit={receive.handleSubmit}
         isSubmitting={receive.isSubmitting}
       />

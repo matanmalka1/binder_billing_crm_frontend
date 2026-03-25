@@ -3,13 +3,14 @@ import { format } from "date-fns";
 
 export const receiveBinderSchema = z.object({
   client_id: z.number({ error: "נא לבחור לקוח" }).positive("נא לבחור לקוח"),
+  business_id: z.number().nullable().optional(),
   binder_type: z.string().min(1, "נא לבחור סוג חומר"),
-  binder_number: z.string().min(1, "נא להזין מספר קלסר"),
   vat_period: z.string().nullable().optional(),
   received_at: z
     .string()
     .min(1, "נא לבחור תאריך קבלה")
     .refine((value) => value <= format(new Date(), "yyyy-MM-dd"), "לא ניתן לבחור תאריך עתידי"),
+  open_new_binder: z.boolean().optional(),
   notes: z.string().optional().nullable(),
 });
 

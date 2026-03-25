@@ -21,12 +21,11 @@ interface BinderDrawerProps {
   receiveForm?: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery?: string;
   selectedClient?: { id: number; name: string; client_status?: string | null } | null;
-  clientBinders?: BinderResponse[];
-  allBinders?: BinderResponse[];
+  businesses?: { id: number; business_name: string | null; business_type: string }[];
+  hasActiveBinder?: boolean;
   vatType?: "monthly" | "bimonthly" | "exempt" | null;
   onClientSelect?: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
   onClientQueryChange?: (query: string) => void;
-  onBinderSelect?: (binderNumber: string, clientId: number, clientName: string, clientStatus: string | null) => void;
   onReceiveSubmit?: (e?: React.BaseSyntheticEvent) => void;
   isSubmitting?: boolean;
 }
@@ -41,12 +40,11 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   receiveForm,
   clientQuery = "",
   selectedClient = null,
-  clientBinders = [],
-  allBinders = [],
+  businesses = [],
+  hasActiveBinder = false,
   vatType = null,
   onClientSelect,
   onClientQueryChange,
-  onBinderSelect,
   onReceiveSubmit,
   isSubmitting = false,
 }) => {
@@ -76,12 +74,11 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
           form={receiveForm}
           clientQuery={clientQuery}
           selectedClient={selectedClient}
-          clientBinders={clientBinders}
-          allBinders={allBinders}
+          businesses={businesses}
+          hasActiveBinder={hasActiveBinder}
           vatType={vatType}
           onClientSelect={onClientSelect!}
           onClientQueryChange={onClientQueryChange!}
-          onBinderSelect={onBinderSelect!}
           onSubmit={onReceiveSubmit!}
           onClose={onClose}
           isSubmitting={isSubmitting}

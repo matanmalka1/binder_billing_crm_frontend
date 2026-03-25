@@ -4,18 +4,19 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { bindersApi } from "../api";
+import { clientsApi } from "@/features/clients/api";
 import { taxProfileApi } from "@/features/taxProfile/api";
 import { QK } from "../../../lib/queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import { receiveBinderSchema, type ReceiveBinderFormValues } from "../schemas";
-import type { BinderResponse } from "../types";
 
 const getDefaultValues = (): ReceiveBinderFormValues => ({
   client_id: undefined as unknown as number,
+  business_id: null,
   binder_type: "",
-  binder_number: "",
+  open_new_binder: false,
   vat_period: null,
   received_at: format(new Date(), "yyyy-MM-dd"),
   notes: null,
@@ -41,23 +42,37 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     }
   }, [binderType, form]);
 
-  const clientBindersQuery = useQuery({
-    queryKey: QK.binders.list({ client_id: clientId, page_size: 50 }),
-    queryFn: () => bindersApi.list({ client_id: clientId, page_size: 50 }),
+  const { data: businessesData } = useQuery({
+    queryKey: QK.clients.businesses(clientId!),
+    queryFn: () => clientsApi.listBusinessesForClient(clientId!),
     enabled: !!clientId,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
   });
 
-  const allBindersQuery = useQuery({
-    queryKey: QK.binders.list({ page_size: 100 }),
-    queryFn: () => bindersApi.list({ page_size: 100 }),
-    enabled: !clientId,
+  const businesses = businessesData?.items ?? [];
+
+  useEffect(() => {
+    if (businesses.length === 1) {
+      form.setValue("business_id", businesses[0].id);
+    } else {
+      form.setValue("business_id", null);
+    }
+  }, [businesses.length, businesses[0]?.id]);
+
+  const { data: clientBindersData } = useQuery({
+    queryKey: QK.binders.list({ client_id: clientId, page_size: 10 }),
+    queryFn: () => bindersApi.list({ client_id: clientId, page_size: 10 }),
+    enabled: !!clientId,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
   });
+
+  const hasActiveBinder = (clientBindersData?.items ?? []).some(
+    (b) => b.status !== "returned" && !b.is_full,
+  );
 
   const { data: taxProfile } = useQuery({
     queryKey: QK.clients.taxProfile(clientId!),
@@ -69,11 +84,6 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   });
 
   const vatType = taxProfile?.vat_type ?? null;
-
-  const clientBindersData = clientBindersQuery.data;
-  const allBindersData = allBindersQuery.data;
-  const clientBinders: BinderResponse[] = clientBindersData?.items ?? [];
-  const allBinders: BinderResponse[] = allBindersData?.items ?? [];
 
   const resetState = () => {
     form.reset(getDefaultValues());
@@ -89,11 +99,11 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
 
       return bindersApi.receive({
         client_id: values.client_id,
-        binder_type: values.binder_type,
-        binder_number: values.binder_number,
         received_at: values.received_at,
         received_by: userId!,
+        open_new_binder: values.open_new_binder ?? false,
         notes: notesWithPeriod,
+        materials: [{ material_type: values.binder_type, business_id: values.business_id ?? null }],
       });
     },
     onSuccess: async (result) => {
@@ -111,7 +121,6 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     setSelectedClient({ id: client.id, name: client.name, client_status: client.client_status });
     setClientQuery(client.name);
     form.setValue("client_id", client.id, { shouldValidate: true });
-    form.setValue("binder_number", "");
     form.setValue("vat_period", null);
   };
 
@@ -120,17 +129,8 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     if (selectedClient) {
       setSelectedClient(null);
       form.setValue("client_id", undefined as unknown as number);
-      form.setValue("binder_number", "");
       form.setValue("vat_period", null);
     }
-  };
-
-  const handleBinderSelect = (binderNumber: string, clientIdValue: number, clientName: string, clientStatus: string | null) => {
-    form.setValue("binder_number", binderNumber, { shouldValidate: true });
-    form.setValue("client_id", clientIdValue, { shouldValidate: true });
-    form.setValue("vat_period", null);
-    setSelectedClient({ id: clientIdValue, name: clientName, client_status: clientStatus });
-    setClientQuery(clientName);
   };
 
   const handleReset = () => resetState();
@@ -140,14 +140,13 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     form,
     clientQuery,
     selectedClient,
-    clientBinders,
-    allBinders,
+    businesses,
+    hasActiveBinder,
     vatType,
     isSubmitting: mutation.isPending,
     handleSubmit,
     handleClientSelect,
     handleClientQueryChange,
-    handleBinderSelect,
     handleReset,
   };
 };
