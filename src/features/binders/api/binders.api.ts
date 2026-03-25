@@ -38,6 +38,11 @@ export const bindersApi = {
     return response.data;
   },
 
+  revertReady: async (binderId: number): Promise<BinderResponse> => {
+    const response = await api.post<BinderResponse>(ENDPOINTS.binderRevertReady(binderId));
+    return response.data;
+  },
+
   returnBinder: async (binderId: number, payload?: ReturnBinderPayload): Promise<BinderResponse> => {
     const response = await api.post<BinderResponse>(ENDPOINTS.binderReturn(binderId), payload);
     return response.data;

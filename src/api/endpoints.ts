@@ -26,6 +26,7 @@ export const ENDPOINTS = {
   binders: "/binders",
   binderById: (binderId: number | string) => `/binders/${binderId}`,
   binderReady: (binderId: number | string) => `/binders/${binderId}/ready`,
+  binderRevertReady: (binderId: number | string) => `/binders/${binderId}/revert-ready`,
   binderReturn: (binderId: number | string) => `/binders/${binderId}/return`,
   binderReceive: "/binders/receive",
   binderHistory: (binderId: number | string) => `/binders/${binderId}/history`,
@@ -205,6 +206,7 @@ export const ENDPOINTS = {
 
 export const ACTION_ENDPOINT_PATTERNS: RegExp[] = [
   /^\/binders\/\d+\/ready$/,
+  /^\/binders\/\d+\/revert-ready$/,
   /^\/binders\/\d+\/return$/,
   /^\/charges\/\d+\/issue$/,
   /^\/charges\/\d+\/mark-paid$/,

@@ -17,6 +17,7 @@ interface BinderDrawerProps {
   binder?: BinderResponse | null;
   onClose: () => void;
   onMarkReady?: () => void;
+  onRevertReady?: () => void;
   actionLoading?: boolean;
   receiveForm?: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery?: string;
@@ -36,6 +37,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   binder,
   onClose,
   onMarkReady,
+  onRevertReady,
   actionLoading = false,
   receiveForm,
   clientQuery = "",
@@ -96,6 +98,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
             status={binder.status}
             disabled={actionLoading}
             onMarkReady={() => onMarkReady?.()}
+            onRevertReady={() => onRevertReady?.()}
           />
           <BinderIntakesSection binderId={binder.id} binderType={binder.binder_type} />
           <BinderHistorySection binderId={binder.id} />

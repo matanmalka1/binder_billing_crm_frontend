@@ -2,12 +2,9 @@ export const BINDER_STATUS_VARIANTS: Record<string, "success" | "warning" | "err
   in_office: "info",
   ready_for_pickup: "success",
   returned: "neutral",
-  overdue: "error",
 };
 
 export const SIGNAL_DOT_COLORS: Record<string, string> = {
-  missing_permanent_documents: "bg-yellow-400",
-  unpaid_charges: "bg-yellow-400",
   ready_for_pickup: "bg-blue-400",
   idle_binder: "bg-gray-400",
 };
@@ -19,8 +16,6 @@ export const BINDER_WORK_STATE_VARIANTS: Record<string, "neutral" | "info" | "su
 };
 
 export const BINDER_SIGNAL_VARIANTS: Record<string, "error" | "warning" | "info" | "neutral"> = {
-  missing_permanent_documents: "warning",
-  unpaid_charges: "warning",
   ready_for_pickup: "info",
   idle_binder: "neutral",
 };

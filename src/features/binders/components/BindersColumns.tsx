@@ -52,6 +52,7 @@ ClientCell.displayName = "ClientCell";
 interface BuildBindersColumnsParams {
   actionLoadingId: number | null;
   onMarkReady: (binderId: number) => void;
+  onRevertReady: (binderId: number) => void;
   onReturn: (binderId: number) => void;
   onOpenDetail: (binderId: number) => void;
   onDelete: (binderId: number) => void;
@@ -63,6 +64,7 @@ interface BuildBindersColumnsParams {
 export const buildBindersColumns = ({
   actionLoadingId,
   onMarkReady,
+  onRevertReady,
   onReturn,
   onOpenDetail,
   onDelete,
@@ -134,6 +136,7 @@ export const buildBindersColumns = ({
         disabled={actionLoadingId !== null}
         onOpenDetail={() => onOpenDetail(binder.id)}
         onMarkReady={() => onMarkReady(binder.id)}
+        onRevertReady={() => onRevertReady(binder.id)}
         onReturn={() => onReturn(binder.id)}
         onDelete={() => onDelete(binder.id)}
       />

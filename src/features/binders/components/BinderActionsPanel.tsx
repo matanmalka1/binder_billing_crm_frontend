@@ -4,14 +4,16 @@ interface BinderActionsPanelProps {
   status: string;
   disabled?: boolean;
   onMarkReady: React.MouseEventHandler<HTMLButtonElement>;
+  onRevertReady?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export const BinderActionsPanel: React.FC<BinderActionsPanelProps> = ({
   status,
   disabled = false,
   onMarkReady,
+  onRevertReady,
 }) => {
-  if (status !== "in_office") {
+  if (status !== "in_office" && status !== "ready_for_pickup") {
     return null;
   }
 
@@ -21,6 +23,7 @@ export const BinderActionsPanel: React.FC<BinderActionsPanelProps> = ({
         status={status}
         disabled={disabled}
         onMarkReady={onMarkReady}
+        onRevertReady={onRevertReady}
         size="sm"
       />
     </div>

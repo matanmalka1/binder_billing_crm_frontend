@@ -40,6 +40,7 @@ export const Binders: React.FC = () => {
     isDeleting,
     markReady,
     isMarkingReady,
+    revertReady,
     returnBinder,
     isReturning,
   } = useBindersPage();
@@ -74,6 +75,7 @@ export const Binders: React.FC = () => {
       buildBindersColumns({
         actionLoadingId,
         onMarkReady: (id) => void markReady(id),
+        onRevertReady: (id) => void revertReady(id),
         onReturn: (id) => setConfirmReturnForId(id),
         onOpenDetail: (id) => {
           handleSelectBinder({ id });
@@ -84,7 +86,7 @@ export const Binders: React.FC = () => {
         sortDir: filters.sort_dir,
         onSort: handleSort,
       }),
-    [actionLoadingId, markReady, handleSelectBinder, handleSort, filters.sort_by, filters.sort_dir],
+    [actionLoadingId, markReady, revertReady, handleSelectBinder, handleSort, filters.sort_by, filters.sort_dir],
   );
 
   const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
@@ -184,6 +186,7 @@ export const Binders: React.FC = () => {
         binder={selectedBinder}
         onClose={handleCloseDrawerAll}
         onMarkReady={selectedBinder ? () => void markReady(selectedBinder.id) : undefined}
+        onRevertReady={selectedBinder ? () => void revertReady(selectedBinder.id) : undefined}
         actionLoading={isMarkingReady}
         receiveForm={receive.form}
         clientQuery={receive.clientQuery}

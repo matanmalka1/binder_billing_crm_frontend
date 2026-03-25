@@ -103,9 +103,20 @@ export const useBindersPage = () => {
     onError: (err) => showErrorToast(err, "שגיאה בהחזרת קלסר"),
   });
 
+  const revertReadyMutation = useMutation({
+    mutationFn: (binderId: number) => bindersApi.revertReady(binderId),
+    onSuccess: () => {
+      toast.success("סטטוס מוכן לאיסוף בוטל");
+      void queryClient.invalidateQueries({ queryKey: QK.binders.all });
+    },
+    onError: (err) => showErrorToast(err, "שגיאה בביטול סטטוס מוכן"),
+  });
+
   const actionLoadingId =
     markReadyMutation.isPending
       ? (markReadyMutation.variables as number | undefined) ?? null
+      : revertReadyMutation.isPending
+      ? (revertReadyMutation.variables as number | undefined) ?? null
       : returnBinderMutation.isPending
       ? (returnBinderMutation.variables as { binderId: number } | undefined)?.binderId ?? null
       : null;
@@ -130,6 +141,8 @@ export const useBindersPage = () => {
     isDeleting: deleteMutation.isPending,
     markReady: (binderId: number) => markReadyMutation.mutateAsync(binderId),
     isMarkingReady: markReadyMutation.isPending,
+    revertReady: (binderId: number) => revertReadyMutation.mutateAsync(binderId),
+    isRevertingReady: revertReadyMutation.isPending,
     returnBinder: (binderId: number, pickupPersonName: string) =>
       returnBinderMutation.mutateAsync({ binderId, pickupPersonName }),
     isReturning: returnBinderMutation.isPending,
