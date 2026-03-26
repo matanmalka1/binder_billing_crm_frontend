@@ -1,1 +1,3 @@
-// TODO: add types as feature grows
+import type { TaxSubmissionWidgetResponse } from "./api";
+
+export type { TaxSubmissionWidgetResponse };

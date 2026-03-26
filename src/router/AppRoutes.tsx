@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AUTH_EXPIRED_EVENT } from "../api/client";
 import { useAuthStore } from "../store/auth.store";
 import { selectIsAuthenticated } from "../store/auth.selectors";
+import type { UserRole } from "../types/store";
 import { Login } from "../features/auth";
 import { AnnualReportDetail, AnnualReportsKanban } from "../features/annualReports";
 import { AdvancePayments } from "../features/advancedPayments";
@@ -21,6 +22,7 @@ import { SigningPage } from "../features/signing";
 import { TaxDeadlines } from "../features/taxDeadlines";
 import { Users } from "../features/users";
 import { VatWorkItemDetail, VatWorkItems } from "../features/vatReports";
+import { VatComplianceReportPage } from "../features/reports";
 
 const AuthExpiredNavigationHandler: React.FC = () => {
   const navigate = useNavigate();
@@ -43,9 +45,17 @@ const AuthExpiredNavigationHandler: React.FC = () => {
   return null;
 };
 
-const ProtectedRoute: React.FC = () => {
+interface ProtectedRouteProps {
+  requiredRole?: UserRole;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
   const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const user = useAuthStore((s) => s.user);
+
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (requiredRole && user?.role !== requiredRole) return <Navigate to="/" replace />;
+
   return <Outlet />;
 };
 
@@ -93,11 +103,14 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax/advance-payments" element={<AdvancePayments />} />
             <Route path="tax/vat" element={<VatWorkItems />} />
             <Route path="tax/vat/:id" element={<VatWorkItemDetail />} />
-            <Route path="reports/advance-payments" element={<Navigate to="/tax/advance-payments?tab=report" replace />} />
-            <Route path="reports/aging" element={<Navigate to="/charges?tab=aging" replace />} />
-            <Route path="reports/annual-reports" element={<Navigate to="/tax/reports?tab=status" replace />} />
-            <Route path="reminders" element={<RemindersPage />} />
+            <Route path="tax/vat-compliance" element={<VatComplianceReportPage />} />
+<Route path="reminders" element={<RemindersPage />} />
             <Route path="signature-requests" element={<SignatureRequestsPage />} />
+          </Route>
+        </Route>
+
+        <Route path="/" element={<ProtectedRoute requiredRole="advisor" />}>
+          <Route element={<AuthenticatedLayout />}>
             <Route path="settings/users" element={<Users />} />
           </Route>
         </Route>

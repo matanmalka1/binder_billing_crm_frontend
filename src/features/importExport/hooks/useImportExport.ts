@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { api } from "../../../api/client";
-import { ENDPOINTS } from "../../../api/endpoints";
+import { importExportApi } from "../api";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
@@ -24,7 +23,7 @@ export const useImportExport = () => {
   const handleExport = async () => {
     setExporting(true);
     try {
-      const { data } = await api.get(ENDPOINTS.clientsExport, { responseType: "blob" });
+      const { data } = await importExportApi.exportClients();
       downloadBlob(data, `clients_export_${format(new Date(), "yyyy-MM-dd")}.xlsx`);
       toast.success("ייצוא לקוחות הושלם בהצלחה");
     } catch (error) {
@@ -41,11 +40,7 @@ export const useImportExport = () => {
     }
     setImporting(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      await api.post(ENDPOINTS.clientsImport, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await importExportApi.importClients(file);
       toast.success("ייבוא לקוחות הושלם בהצלחה");
     } catch (error) {
       showErrorToast(error, "שגיאה בייבוא לקוחות");
@@ -56,7 +51,7 @@ export const useImportExport = () => {
 
   const handleDownloadTemplate = async () => {
     try {
-      const { data } = await api.get(ENDPOINTS.clientsTemplate, { responseType: "blob" });
+      const { data } = await importExportApi.downloadTemplate();
       downloadBlob(data, "clients_template.xlsx");
       toast.success("תבנית הורדה בהצלחה");
     } catch (error) {

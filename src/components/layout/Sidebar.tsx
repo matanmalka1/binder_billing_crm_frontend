@@ -63,6 +63,7 @@ const NAV_GROUPS: NavGroup[] = [
       { to: "/tax/reports", label: "לוח דוחות שנתיים", icon: KanbanSquare, end: true },
       { to: "/tax/advance-payments", label: "מקדמות", icon: CalendarDays },
       { to: "/tax/deadlines", label: "דוחות מס", icon: FileSpreadsheet },
+      { to: "/tax/vat-compliance", label: 'דוח ציות מע"מ', icon: ClipboardList },
     ],
   },
   {
