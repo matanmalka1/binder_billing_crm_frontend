@@ -40,7 +40,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_apartment: client.address_apartment ?? "",
       address_city: client.address_city ?? "",
       address_zip_code: client.address_zip_code ?? "",
-      notes: "",
+      notes: client.notes ?? "",
     },
   });
 

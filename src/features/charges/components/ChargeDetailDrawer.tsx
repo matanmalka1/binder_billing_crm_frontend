@@ -101,9 +101,9 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
         title={charge ? `חיוב #${charge.id}` : "פירוט חיוב"}
         subtitle={
           charge ? (
-            <div className="flex items-center gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-2 flex-wrap">
               <Link
-                to={`/clients/${charge.business_id}`}
+                to={`/clients/${charge.client_id ?? charge.business_id}`}
                 className="text-blue-600 hover:underline"
                 onClick={onClose}
               >
@@ -114,7 +114,7 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
                 getLabel={getChargeStatusLabel}
                 variantMap={chargeStatusVariants}
               />
-            </div>
+            </span>
           ) : undefined
         }
         onClose={onClose}
@@ -131,7 +131,7 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
               value={
                 charge.business_name ? (
                   <Link
-                    to={`/clients/${charge.business_id}`}
+                    to={`/clients/${charge.client_id ?? charge.business_id}`}
                     className="text-blue-600 hover:underline"
                     onClick={onClose}
                   >
