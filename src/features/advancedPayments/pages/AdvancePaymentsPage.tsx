@@ -7,19 +7,17 @@ import {
   useAdvancePaymentsOverview,
   type AdvancePaymentOverviewRow,
   type AdvancePaymentStatus,
-  MONTH_NAMES,
   fmtCurrency,
-  STATUS_VARIANT,
 } from "@/features/advancedPayments";
 import { AdvancePaymentReportView } from "@/features/reports";
 import { cn } from "@/utils/utils";
 import { Alert } from "@/components/ui/Alert";
 import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
 import { DataTable, type Column } from "@/components/ui/DataTable";
-import { Badge } from "@/components/ui/Badge";
 import { PaginationCard } from "@/components/ui/PaginationCard";
-import { getAdvancePaymentStatusLabel } from "@/utils/enums";
 import { formatDate, parsePositiveInt } from "@/utils/utils";
+import { AdvancePaymentStatusBadge } from "../components/AdvancePaymentStatusBadge";
+import { getAdvancePaymentMonthLabel } from "../utils";
 
 
 const columns: Column<AdvancePaymentOverviewRow>[] = [
@@ -34,7 +32,7 @@ const columns: Column<AdvancePaymentOverviewRow>[] = [
     key: "period",
     header: "חודש",
     render: (row) => (
-      <span className="text-sm text-gray-700">{MONTH_NAMES[Number(row.period.split("-")[1]) - 1] ?? row.period}</span>
+      <span className="text-sm text-gray-700">{getAdvancePaymentMonthLabel(row.period)}</span>
     ),
   },
   {
@@ -65,11 +63,7 @@ const columns: Column<AdvancePaymentOverviewRow>[] = [
   {
     key: "status",
     header: "סטטוס",
-    render: (row) => (
-      <Badge variant={STATUS_VARIANT[row.status] ?? "neutral"}>
-        {getAdvancePaymentStatusLabel(row.status)}
-      </Badge>
-    ),
+    render: (row) => <AdvancePaymentStatusBadge status={row.status} />,
   },
 ];
 

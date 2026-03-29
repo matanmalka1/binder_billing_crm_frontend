@@ -13,7 +13,7 @@ import { ClientDetails, Clients } from "../features/clients";
 import { BusinessDetails } from "../features/businesses";
 import { Dashboard } from "../features/dashboard";
 import { Navbar } from "../components/layout/Navbar";
-import { Sidebar } from "../components/layout/Sidebar";
+import { Sidebar } from "../components/layout/Sidebar/Sidebar";
 import { PageLayout } from "../components/layout/PageLayout";
 import { RemindersPage } from "../features/reminders";
 import { Search } from "../features/search";

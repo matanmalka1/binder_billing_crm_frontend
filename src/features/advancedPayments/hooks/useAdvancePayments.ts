@@ -4,8 +4,7 @@ import type {
   AdvancePaymentStatus,
   CreateAdvancePaymentPayload,
 } from "../types";
-import { getErrorMessage, getHttpStatus, showErrorToast } from "../../../utils/utils";
-import { toast } from "../../../utils/toast";
+import { getErrorMessage } from "../../../utils/utils";
 
 interface UpdatePayload {
   id: number;
@@ -44,37 +43,25 @@ export const useAdvancePayments = (
     mutationFn: ({ id, ...payload }: UpdatePayload) =>
       advancePaymentsApi.update(businessId, id, payload),
     onSuccess: () => {
-      toast.success("מקדמה עודכנה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all });
     },
-    onError: (err) => showErrorToast(err, "שגיאה בעדכון מקדמה"),
   });
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateAdvancePaymentPayload) =>
       advancePaymentsApi.create(payload),
     onSuccess: () => {
-      toast.success("מקדמה נוצרה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
-    },
-    onError: (err) => {
-      if (getHttpStatus(err) === 409) {
-        toast.error("מקדמה לחודש זה כבר קיימת");
-      } else {
-        showErrorToast(err, "שגיאה ביצירת מקדמה");
-      }
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => advancePaymentsApi.delete(businessId, id),
     onSuccess: () => {
-      toast.success("מקדמה נמחקה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all });
     },
-    onError: (err) => showErrorToast(err, "שגיאה במחיקת מקדמה"),
   });
 
   const rows = enabled ? (listQuery.data?.items ?? []) : [];
@@ -95,12 +82,12 @@ export const useAdvancePayments = (
     totalPaid,
     total: listQuery.data?.total ?? 0,
     updateRow: (id: number, paid_amount: string | null, status?: AdvancePaymentStatus, expected_amount?: string | null) =>
-      updateMutation.mutate({ id, paid_amount, status, expected_amount }),
+      updateMutation.mutateAsync({ id, paid_amount, status, expected_amount }),
     isUpdating: updateMutation.isPending,
     updatingId,
     create: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
-    deleteRow: (id: number) => deleteMutation.mutate(id),
+    deleteRow: (id: number) => deleteMutation.mutateAsync(id),
     isDeletingId: deleteMutation.isPending ? (deleteMutation.variables ?? null) : null,
   };
 };

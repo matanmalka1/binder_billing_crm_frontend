@@ -1,12 +1,11 @@
 import { MessageSquare } from "lucide-react";
 import type { Column } from "../../../components/ui/DataTable";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
-import { Badge } from "../../../components/ui/Badge";
 import { MonoValue } from "../../../components/ui/MonoValue";
 import { formatDate } from "../../../utils/utils";
-import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
-import { fmtCurrency, MONTH_NAMES, STATUS_VARIANT } from "../utils";
+import { fmtCurrency, getAdvancePaymentMonthLabel } from "../utils";
 import { AdvancePaymentRowActions } from "./AdvancePaymentRowActions";
+import { AdvancePaymentStatusBadge } from "./AdvancePaymentStatusBadge";
 
 interface BuildColumnsOptions {
   canEdit: boolean;
@@ -25,7 +24,7 @@ export const buildAdvancePaymentColumns = (
       header: "תקופה",
       render: (row) => (
         <span className="text-sm font-semibold text-gray-900">
-          {MONTH_NAMES[Number(row.period.split("-")[1]) - 1] ?? row.period}
+          {getAdvancePaymentMonthLabel(row.period)}
         </span>
       ),
     },
@@ -42,11 +41,7 @@ export const buildAdvancePaymentColumns = (
     {
       key: "status",
       header: "סטטוס",
-      render: (row) => (
-        <Badge variant={STATUS_VARIANT[row.status] ?? "neutral"}>
-          {getAdvancePaymentStatusLabel(row.status)}
-        </Badge>
-      ),
+      render: (row) => <AdvancePaymentStatusBadge status={row.status} />,
     },
     {
       key: "due_date",

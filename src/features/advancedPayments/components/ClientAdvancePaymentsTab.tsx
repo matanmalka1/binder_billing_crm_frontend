@@ -6,7 +6,7 @@ import { useAdvanceRateInsights } from "../hooks/useAdvanceRateInsights";
 import { useRole } from "../../../hooks/useRole";
 import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import { toast } from "../../../utils/toast";
-import { showErrorToast } from "../../../utils/utils";
+import { getHttpStatus, showErrorToast } from "../../../utils/utils";
 import { ClientAdvancePaymentsHeader } from "./ClientAdvancePaymentsHeader";
 import { AdvancePaymentTable } from "./AdvancePaymentTable";
 import { AdvancePaymentsKPICards } from "./AdvancePaymentsKPICards";
@@ -33,9 +33,9 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const { isAdvisor } = useRole();
 
   const queryClient = useQueryClient();
-  const { rows, isLoading, totalExpected, totalPaid, total, create, isCreating, updateRow, updatingId, deleteRow, isDeletingId } =
+  const { rows, isLoading, total, create, isCreating, updateRow, updatingId, deleteRow, isDeletingId } =
     useAdvancePayments(businessId, year, statusFilter, page);
-  const { advanceRate, annualIncome, updateAdvanceRate, isUpdatingRate } = useAdvanceRateInsights(businessId, year);
+  const { advanceRate, updateAdvanceRate, isUpdatingRate } = useAdvanceRateInsights(businessId);
 
   const generateMutation = useMutation({
     mutationFn: () => advancePaymentsApi.generateSchedule(businessId, year, 1),
@@ -51,6 +51,44 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const handleStatusToggle = (status: AdvancePaymentStatus) => {
     setPage(1);
     setStatusFilter((prev) => (prev.includes(status) ? prev.filter((x) => x !== status) : [...prev, status]));
+  };
+
+  const handleUpdateRow = async (
+    id: number,
+    paid_amount: string | null,
+    status?: AdvancePaymentStatus,
+    expected_amount?: string | null,
+  ) => {
+    try {
+      await updateRow(id, paid_amount, status, expected_amount);
+      toast.success("מקדמה עודכנה בהצלחה");
+    } catch (err) {
+      showErrorToast(err, "שגיאה בעדכון מקדמה");
+    }
+  };
+
+  const handleCreate = async (...args: Parameters<typeof create>) => {
+    try {
+      const result = await create(...args);
+      toast.success("מקדמה נוצרה בהצלחה");
+      return result;
+    } catch (err) {
+      if (getHttpStatus(err) === 409) {
+        toast.error("מקדמה לחודש זה כבר קיימת");
+      } else {
+        showErrorToast(err, "שגיאה ביצירת מקדמה");
+      }
+      throw err;
+    }
+  };
+
+  const handleDeleteRow = async (id: number) => {
+    try {
+      await deleteRow(id);
+      toast.success("מקדמה נמחקה בהצלחה");
+    } catch (err) {
+      showErrorToast(err, "שגיאה במחיקת מקדמה");
+    }
   };
 
   return (
@@ -75,10 +113,8 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         canEdit={isAdvisor}
         updatingId={updatingId}
         deletingId={isDeletingId}
-        onUpdate={(id, paid_amount, status, expected_amount) =>
-          updateRow(id, paid_amount, status, expected_amount)
-        }
-        onDelete={deleteRow}
+        onUpdate={handleUpdateRow}
+        onDelete={handleDeleteRow}
       />
 
       {totalPages > 1 && (
@@ -98,7 +134,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
           year={year}
           isCreating={isCreating}
           onClose={() => setModalOpen(false)}
-          onCreate={create}
+          onCreate={handleCreate}
         />
       )}
       {isAdvisor && (

@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { advancePaymentsApi, advancedPaymentsQK } from "../api";
-import { MONTH_SHORT_NAMES } from "../utils";
+import { getAdvancePaymentShortMonthLabel } from "../utils";
 
 interface AdvancePaymentsChartProps {
   businessId: number;
@@ -29,7 +29,7 @@ export const AdvancePaymentsChart: React.FC<AdvancePaymentsChartProps> = ({
   if (isLoading || !data) return null;
 
   const chartData = data.months.map((row) => ({
-    name: MONTH_SHORT_NAMES[Number(row.period.split("-")[1]) - 1] ?? row.period,
+    name: getAdvancePaymentShortMonthLabel(row.period),
     צפוי: row.expected_amount,
     שולם: row.paid_amount,
     פיגור: row.overdue_amount,
