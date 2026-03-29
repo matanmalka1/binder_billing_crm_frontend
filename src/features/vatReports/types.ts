@@ -147,6 +147,7 @@ export interface VatWorkItemsCreateModalProps {
   onClose: () => void;
   onSubmit: (payload: CreateVatWorkItemPayload) => Promise<boolean>;
   initialClientId?: number;
+  initialPeriod?: string;
 }
 
 export interface VatWorkItemsFiltersCardProps {

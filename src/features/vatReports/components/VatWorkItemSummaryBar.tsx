@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, Clock, Info, AlertTriangle, User } from "lucide-react";
+import { ChevronLeft, Clock, FolderOpen, Info, AlertTriangle, User } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { formatDate } from "../../../utils/utils";
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { useRole } from "../../../hooks/useRole";
 import { useVatWorkItemActions } from "../hooks/useVatWorkItemActions";
+import { bindersApi } from "@/features/binders/api";
+import { QK } from "../../../lib/queryKeys";
 import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { VatProgressBar } from "./VatProgressBar";
 import { VatActionButtons } from "./VatActionButtons";
@@ -22,6 +25,14 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
   const [showSendBack, setShowSendBack] = useState(false);
   const [showFileModal, setShowFileModal] = useState(false);
   const filed = isFiled(workItem.status);
+
+  const { data: binderData } = useQuery({
+    queryKey: QK.binders.list({ client_id: workItem.client_id!, page_size: 1 }),
+    queryFn: () => bindersApi.list({ client_id: workItem.client_id!, page_size: 1, status: "in_office" }),
+    enabled: !!workItem.client_id,
+    staleTime: 60_000,
+  });
+  const activeBinder = binderData?.items?.[0] ?? null;
 
   return (
     <div
@@ -45,6 +56,15 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
           </span>
         </div>
         <div className="flex items-center gap-2">
+          {activeBinder && (
+            <Link
+              to={`/binders?binder_number=${activeBinder.binder_number}`}
+              className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+            >
+              <FolderOpen className="h-3 w-3" />
+              קלסר {activeBinder.binder_number}
+            </Link>
+          )}
           {workItem.assigned_to !== null && (
             <span className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-0.5 text-xs font-medium text-gray-600">
               <User className="h-3 w-3" />

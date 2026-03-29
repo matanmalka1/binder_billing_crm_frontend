@@ -2,12 +2,52 @@ import { useQuery } from "@tanstack/react-query";
 import { Clock } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
+import { useNavigate } from "react-router-dom";
 import { Card } from "../../../components/ui/Card";
+import { Badge } from "../../../components/ui/Badge";
 import { Timeline, TimelineEntry } from "../../../components/ui/Timeline";
 import { QK } from "../../../lib/queryKeys";
 import { bindersApi } from "../api";
+import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
 import { staggerDelay } from "../../../utils/animation";
 import { getBinderTypeLabel } from "../constants";
+import { getVatWorkItemStatusLabel } from "../../../utils/enums";
+import type { BinderIntakeMaterialResponse } from "../types";
+
+const VAT_STATUS_VARIANTS: Record<string, "success" | "warning" | "info" | "neutral"> = {
+  filed: "success",
+  ready_for_review: "warning",
+  data_entry_in_progress: "info",
+  material_received: "info",
+  pending_materials: "neutral",
+};
+
+const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse }> = ({ material }) => {
+  const navigate = useNavigate();
+  const period = material.description?.slice(0, 7);
+
+  const { data: lookup } = useQuery({
+    queryKey: vatReportsQK.lookup(material.business_id!, period!),
+    queryFn: () => vatReportsApi.lookup(material.business_id!, period!),
+    enabled: !!material.business_id && !!period && /^\d{4}-\d{2}$/.test(period),
+    staleTime: 30_000,
+  });
+
+  if (!lookup) return null;
+
+  return (
+    <Badge
+      variant={VAT_STATUS_VARIANTS[lookup.status] ?? "neutral"}
+      className="cursor-pointer mr-1"
+      onClick={(e) => {
+        e.stopPropagation();
+        navigate(`/tax/vat/${lookup.id}`);
+      }}
+    >
+      {getVatWorkItemStatusLabel(lookup.status)}
+    </Badge>
+  );
+};
 
 interface BinderIntakesSectionProps {
   binderId: number;
@@ -39,12 +79,15 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ bind
               {intake.materials.length > 0 && (
                 <div className="mt-0.5 flex flex-col gap-0.5">
                   {intake.materials.map((m) => (
-                    <p key={m.id} className="text-xs text-gray-700 font-medium">
-                      {getBinderTypeLabel(m.material_type)}
+                    <div key={m.id} className="flex items-center gap-1 text-xs text-gray-700 font-medium">
+                      <span>{getBinderTypeLabel(m.material_type)}</span>
                       {m.description && (
                         <span className="font-normal text-gray-500"> · {m.description}</span>
                       )}
-                    </p>
+                      {m.material_type === "vat" && m.business_id && m.description && (
+                        <VatStatusBadge material={m} />
+                      )}
+                    </div>
                   ))}
                 </div>
               )}

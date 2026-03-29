@@ -5,6 +5,7 @@ import type {
   VatWorkItemResponse,
   VatWorkItemListResponse,
   VatWorkItemsListParams,
+  VatWorkItemLookupResponse,
   CreateVatWorkItemPayload,
   VatInvoiceResponse,
   VatInvoiceListResponse,
@@ -19,6 +20,13 @@ export const vatReportsApi = {
   list: async (params: VatWorkItemsListParams): Promise<VatWorkItemListResponse> => {
     const response = await api.get<VatWorkItemListResponse>(ENDPOINTS.vatWorkItems, {
       params: toQueryParams(params),
+    });
+    return response.data;
+  },
+
+  lookup: async (businessId: number, period: string): Promise<VatWorkItemLookupResponse | null> => {
+    const response = await api.get<VatWorkItemLookupResponse | null>(ENDPOINTS.vatWorkItemLookup, {
+      params: { business_id: businessId, period },
     });
     return response.data;
   },

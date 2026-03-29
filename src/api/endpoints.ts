@@ -125,6 +125,7 @@ export const ENDPOINTS = {
   advancePaymentsGenerate: "/advance-payments/generate",
 
   // ── VAT ───────────────────────────────────────────────────────────────────
+  vatWorkItemLookup: "/vat/work-items/lookup",
   vatWorkItems: "/vat/work-items",
   vatWorkItemById: (id: number | string) => `/vat/work-items/${id}`,
   vatWorkItemsByBusiness: (businessId: number | string) =>

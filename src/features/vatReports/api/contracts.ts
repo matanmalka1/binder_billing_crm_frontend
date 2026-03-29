@@ -3,6 +3,7 @@ import type { PaginatedResponse } from "@/types/common";
 export interface VatWorkItemResponse {
   id: number;
   business_id: number;
+  client_id: number | null;
   business_name: string | null;
   business_status: string | null;
   period: string;
@@ -42,6 +43,12 @@ export interface VatWorkItemsListParams {
   page_size?: number;
   period?: string;
   client_name?: string;
+}
+
+export interface VatWorkItemLookupResponse {
+  id: number;
+  status: string;
+  period: string;
 }
 
 export interface CreateVatWorkItemPayload {

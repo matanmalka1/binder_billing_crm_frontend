@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { AlertTriangle, Clock, FileText, Hourglass, CheckCircle2 } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -50,6 +50,16 @@ export const VatWorkItems: React.FC = () => {
 
   const navigate = useNavigate();
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const createBusinessId = urlParams.get("business_id");
+  const createPeriod = urlParams.get("period");
+
+  useEffect(() => {
+    if (urlParams.get("create") === "1") {
+      setShowCreateModal(true);
+      urlParams.delete("create");
+      setUrlParams(urlParams, { replace: true });
+    }
+  }, []);
   const columns = useMemo(
     () => buildVatWorkItemColumns({
       isLoading: loading,
@@ -185,6 +195,8 @@ export const VatWorkItems: React.FC = () => {
             createLoading={createLoading}
             onClose={() => setShowCreateModal(false)}
             onSubmit={submitCreate}
+            initialClientId={createBusinessId ? Number(createBusinessId) : undefined}
+            initialPeriod={createPeriod ?? undefined}
           />
         </>
       )}

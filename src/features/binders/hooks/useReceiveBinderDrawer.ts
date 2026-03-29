@@ -3,9 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { bindersApi } from "../api";
 import { clientsApi } from "@/features/clients/api";
 import { taxProfileApi } from "@/features/taxProfile/api";
+import { vatReportsApi } from "@/features/vatReports/api";
 import { QK } from "../../../lib/queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
 import { toast } from "../../../utils/toast";
@@ -26,6 +28,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   const [clientQuery, setClientQuery] = useState("");
   const [selectedClient, setSelectedClient] = useState<{ id: number; name: string; client_status?: string | null } | null>(null);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const userId = useAuthStore((s) => s.user?.id);
 
   const form = useForm<ReceiveBinderFormValues>({
@@ -107,9 +110,31 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
         }],
       });
     },
-    onSuccess: async (result) => {
+    onSuccess: async (result, values) => {
       toast.success(result.is_new_binder ? "קלסר חדש נפתח והחומר נקלט" : "החומר נוסף לקלסר קיים");
       await queryClient.invalidateQueries({ queryKey: QK.binders.all });
+
+      if (values.binder_type === "vat" && values.business_id && values.reporting_period) {
+        const period = values.reporting_period.slice(0, 7);
+        try {
+          const existing = await vatReportsApi.lookup(values.business_id, period);
+          if (existing) {
+            toast.info("קיים תיק מע״מ לתקופה זו", {
+              action: { label: "פתח", onClick: () => navigate(`/tax/vat/${existing.id}`) },
+            });
+          } else {
+            toast.info('לא קיים תיק מע"מ לתקופה זו', {
+              action: {
+                label: "צור תיק מע״מ",
+                onClick: () => navigate(`/tax/vat?create=1&business_id=${values.business_id}&period=${period}`),
+              },
+            });
+          }
+        } catch {
+          // lookup failed — silently ignore
+        }
+      }
+
       resetState();
       onSuccess?.();
     },

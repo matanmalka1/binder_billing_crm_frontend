@@ -19,6 +19,7 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
   onClose,
   onSubmit,
   initialClientId,
+  initialPeriod,
 }) => {
   const {
     formState: { errors, isDirty },
@@ -36,7 +37,10 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
     if (open && initialClientId !== undefined) {
       setValue("client_id", String(initialClientId));
     }
-  }, [open, initialClientId, setValue]);
+    if (open && initialPeriod) {
+      setValue("period", initialPeriod);
+    }
+  }, [open, initialClientId, initialPeriod, setValue]);
 
   const markPending = watch("mark_pending");
 

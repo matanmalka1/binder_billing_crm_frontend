@@ -12,6 +12,7 @@ import { ClientInfoSection } from "./ClientInfoSection";
 import { ClientRelatedData } from "./ClientRelatedData";
 import { ClientEditForm } from "./ClientEditForm";
 import { ClientBusinessesCard } from "./ClientBusinessesCard";
+import { ClientVatOverviewCard } from "./ClientVatOverviewCard";
 import { CreateBusinessModal } from "./CreateBusinessModal";
 import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from "../api";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
@@ -78,6 +79,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
             canEdit={canEditClients}
             onAddBusiness={() => setShowBusinessModal(true)}
           />
+          <ClientVatOverviewCard clientId={client.id} />
           <AuthorityContactsCard clientId={client.id} />
           <CorrespondenceCard clientId={client.id} />
           <SignatureRequestsCard client={client} canManage={canEditClients} />

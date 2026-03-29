@@ -4,6 +4,7 @@ export type {
   VatWorkItemResponse,
   VatWorkItemListResponse,
   VatWorkItemsListParams,
+  VatWorkItemLookupResponse,
   CreateVatWorkItemPayload,
   VatInvoiceResponse,
   VatInvoiceListResponse,
