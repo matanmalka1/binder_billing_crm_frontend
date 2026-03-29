@@ -2,8 +2,8 @@ import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Modal } from "../../../components/ui/Modal";
-import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
+import { ModalFormActions } from "../../../components/ui/ModalFormActions";
 import { FormField } from "../../../components/ui/FormField";
 import { SelectDropdown } from "../../../components/ui/SelectDropdown";
 import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
@@ -49,16 +49,16 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
 
   const periodOptions = useMemo(() => {
     const currentYear = new Date().getFullYear();
-    const opts = [{ value: "", label: "ללא תקופה" }];
+    const options = [{ value: "", label: "ללא תקופה" }];
     for (const year of [currentYear - 1, currentYear, currentYear + 1]) {
-      for (let m = 0; m < 12; m++) {
-        opts.push({
-          value: `${year}-${String(m + 1).padStart(2, "0")}`,
-          label: `${MONTH_NAMES[m]} ${year}`,
+      for (let month = 0; month < 12; month += 1) {
+        options.push({
+          value: `${year}-${String(month + 1).padStart(2, "0")}`,
+          label: `${MONTH_NAMES[month]} ${year}`,
         });
       }
     }
-    return opts;
+    return options;
   }, []);
 
   const handleSelectClient = (client: { id: number; name: string }) => {
@@ -105,14 +105,14 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
       isDirty={isDirty}
       onClose={handleClose}
       footer={
-        <div className="flex items-center justify-end gap-2">
-          <Button type="button" variant="secondary" onClick={handleClose} disabled={createLoading}>
-            ביטול
-          </Button>
-          <Button type="button" isLoading={createLoading} onClick={() => void submitForm()}>
-            יצירת חיוב
-          </Button>
-        </div>
+        <ModalFormActions
+          onCancel={handleClose}
+          onSubmit={() => void submitForm()}
+          cancelVariant="secondary"
+          cancelDisabled={createLoading}
+          submitLabel="יצירת חיוב"
+          submitLoading={createLoading}
+        />
       }
     >
       <form id="charges-create-form" onSubmit={submitForm} className="space-y-4">

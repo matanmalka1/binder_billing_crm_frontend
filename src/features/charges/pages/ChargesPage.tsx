@@ -3,9 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { Plus, ArrowUpDown } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/Alert";
-import { DataTable } from "@/components/ui/DataTable";
-import { PaginationCard } from "@/components/ui/PaginationCard";
 import { Button } from "@/components/ui/Button";
+import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
 import {
   ChargeBulkToolbar,
   buildChargeColumns,
@@ -58,7 +57,6 @@ export const Charges: React.FC = () => {
       }),
     [isAdvisor, actionLoadingId, runAction, selectedIds, toggleSelect, toggleSelectAll, allIds],
   );
-  const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
 
   return (
     <div className="space-y-6">
@@ -107,14 +105,19 @@ export const Charges: React.FC = () => {
         />
       )}
 
-      {error && <Alert variant="error" message={error} />}
-
-      <DataTable
+      <PaginatedDataTable
         data={charges}
         columns={columns}
         getRowKey={(charge) => charge.id}
         onRowClick={(charge) => setSelectedChargeId(charge.id)}
         isLoading={loading}
+        error={error}
+        page={filters.page}
+        pageSize={filters.page_size}
+        total={total}
+        label="חיובים"
+        onPageChange={(page) => setFilter("page", String(page))}
+        onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
         rowClassName={(charge) => {
           if (charge.status === "canceled") return "text-gray-400";
           if (charge.status === "issued") return "bg-primary-50/20";
@@ -132,24 +135,7 @@ export const Charges: React.FC = () => {
         }}
       />
 
-      {!loading && total > 0 && (
-        <PaginationCard
-          page={filters.page}
-          totalPages={totalPages}
-          total={total}
-          label="חיובים"
-          onPageChange={(page) => setFilter("page", String(page))}
-          showPageSizeSelect
-          pageSize={filters.page_size}
-          pageSizeOptions={[20, 50, 100]}
-          onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
-        />
-      )}
-
-      <ChargeDetailDrawer
-        chargeId={selectedChargeId}
-        onClose={() => setSelectedChargeId(null)}
-      />
+      <ChargeDetailDrawer chargeId={selectedChargeId} onClose={() => setSelectedChargeId(null)} />
       <ChargesCreateModal
         open={showCreateModal}
         createError={createError}
@@ -157,10 +143,7 @@ export const Charges: React.FC = () => {
         onClose={() => setShowCreateModal(false)}
         onSubmit={submitCreate}
       />
-      <ImportExportModal
-        open={showImportExport}
-        onClose={() => setShowImportExport(false)}
-      />
+      <ImportExportModal open={showImportExport} onClose={() => setShowImportExport(false)} />
     </div>
   );
 };

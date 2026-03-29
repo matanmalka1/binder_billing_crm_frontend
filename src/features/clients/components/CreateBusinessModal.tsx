@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useController, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/Modal";
-import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
+import { ModalFormActions } from "../../../components/ui/ModalFormActions";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
 import { DatePicker } from "../../../components/ui/DatePicker";
@@ -18,10 +18,29 @@ interface Props {
   clientNationalId: string;
 }
 
-export const CreateBusinessModal: React.FC<Props> = ({ open, onClose, onSubmit, isLoading = false, clientNationalId }) => {
-  const { register, handleSubmit, control, setValue, formState: { errors }, reset } = useForm<CreateBusinessFormValues>({
+export const CreateBusinessModal: React.FC<Props> = ({
+  open,
+  onClose,
+  onSubmit,
+  isLoading = false,
+  clientNationalId,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+    reset,
+  } = useForm<CreateBusinessFormValues>({
     resolver: zodResolver(createBusinessSchema),
-    defaultValues: { business_type: "osek_patur", opened_at: "", business_name: "", tax_id_number: "", notes: "" },
+    defaultValues: {
+      business_type: "osek_patur",
+      opened_at: "",
+      business_name: "",
+      tax_id_number: "",
+      notes: "",
+    },
   });
 
   const { field: openedAtField } = useController({ name: "opened_at", control });
@@ -29,19 +48,19 @@ export const CreateBusinessModal: React.FC<Props> = ({ open, onClose, onSubmit, 
   const taxIdValue = useWatch({ control, name: "tax_id_number" });
 
   useEffect(() => {
-    setValue(
-      "tax_id_number",
-      businessType === "company" ? "" : clientNationalId,
-      { shouldValidate: false },
-    );
+    setValue("tax_id_number", businessType === "company" ? "" : clientNationalId, {
+      shouldValidate: false,
+    });
   }, [businessType, clientNationalId, setValue]);
 
-  const showHpHint =
-    businessType === "company" &&
-    taxIdValue.length > 0 &&
-    !taxIdValue.startsWith("51");
+  const showHpHint = businessType === "company" && taxIdValue.length > 0 && !taxIdValue.startsWith("51");
 
-  const handleClose = () => { if (!isLoading) { reset(); onClose(); } };
+  const handleClose = () => {
+    if (!isLoading) {
+      reset();
+      onClose();
+    }
+  };
 
   const onFormSubmit = handleSubmit(async (data) => {
     const payload: CreateBusinessPayload = {
@@ -61,10 +80,14 @@ export const CreateBusinessModal: React.FC<Props> = ({ open, onClose, onSubmit, 
       onClose={handleClose}
       title="הוספת עסק"
       footer={
-        <div className="flex items-center justify-end gap-2">
-          <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading}>ביטול</Button>
-          <Button type="submit" variant="primary" isLoading={isLoading} disabled={isLoading} onClick={onFormSubmit}>הוסף עסק</Button>
-        </div>
+        <ModalFormActions
+          onCancel={handleClose}
+          onSubmit={onFormSubmit}
+          cancelDisabled={isLoading}
+          submitLabel="הוסף עסק"
+          submitLoading={isLoading}
+          submitDisabled={isLoading}
+        />
       }
     >
       <form onSubmit={onFormSubmit} className="space-y-4">
@@ -106,8 +129,20 @@ export const CreateBusinessModal: React.FC<Props> = ({ open, onClose, onSubmit, 
 
         <div className="space-y-4 border-t border-gray-200 pt-4">
           <p className="text-sm font-medium text-gray-700">פרטים נוספים</p>
-          <Input label="שם עסק *" placeholder="לדוגמה: מסעדת ישראל" error={errors.business_name?.message} disabled={isLoading} {...register("business_name")} />
-          <Textarea label="הערות" placeholder="הערות חופשיות" error={errors.notes?.message} disabled={isLoading} {...register("notes")} />
+          <Input
+            label="שם עסק *"
+            placeholder="לדוגמה: מסעדת ישראל"
+            error={errors.business_name?.message}
+            disabled={isLoading}
+            {...register("business_name")}
+          />
+          <Textarea
+            label="הערות"
+            placeholder="הערות חופשיות"
+            error={errors.notes?.message}
+            disabled={isLoading}
+            {...register("notes")}
+          />
         </div>
 
         <p className="text-xs text-gray-500">* שדות חובה</p>

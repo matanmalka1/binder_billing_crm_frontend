@@ -1,11 +1,10 @@
 import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
-import { PaginationCard } from "@/components/ui/PaginationCard";
-import { DataTable } from "@/components/ui/DataTable";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
 import { useAuthStore } from "@/store/auth.store";
 import {
   AuditLogsDrawer,
@@ -22,28 +21,42 @@ export const Users: React.FC = () => {
   const currentUserId = useAuthStore((s) => s.user?.id);
   const [pendingToggle, setPendingToggle] = useState<UserResponse | null>(null);
   const {
-    users, total, loading, error, filters,
-    handleFilterChange, setPage,
-    editUser, setEditUser,
-    resetUser, setResetUser,
-    showCreateModal, setShowCreateModal,
-    showAuditLogs, setShowAuditLogs,
-    createUser, createLoading,
-    updateUser, updateLoading,
-    toggleActive, toggleActiveLoading,
-    resetPassword, resetPasswordLoading,
+    users,
+    total,
+    loading,
+    error,
+    filters,
+    handleFilterChange,
+    setPage,
+    editUser,
+    setEditUser,
+    resetUser,
+    setResetUser,
+    showCreateModal,
+    setShowCreateModal,
+    showAuditLogs,
+    setShowAuditLogs,
+    createUser,
+    createLoading,
+    updateUser,
+    updateLoading,
+    toggleActive,
+    toggleActiveLoading,
+    resetPassword,
+    resetPasswordLoading,
     isAdvisor,
   } = useUsersPage();
   const columns = useMemo(
-    () => buildUserColumns({
-      onEdit: setEditUser,
-      onToggleActive: (user) => setPendingToggle(user),
-      onResetPassword: setResetUser,
-      currentUserId,
-    }),
+    () =>
+      buildUserColumns({
+        onEdit: setEditUser,
+        onToggleActive: (user) => setPendingToggle(user),
+        onResetPassword: setResetUser,
+        currentUserId,
+      }),
     [setEditUser, setResetUser, currentUserId],
   );
-  const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
+
   if (!isAdvisor) {
     return (
       <div className="space-y-6">
@@ -52,6 +65,7 @@ export const Users: React.FC = () => {
       </div>
     );
   }
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -59,38 +73,35 @@ export const Users: React.FC = () => {
         description="ניהול חשבונות משתמשים, תפקידים והרשאות"
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => setShowAuditLogs(true)}>לוג ביקורת</Button>
-            <Button variant="primary" onClick={() => setShowCreateModal(true)}>משתמש חדש</Button>
+            <Button variant="outline" onClick={() => setShowAuditLogs(true)}>
+              לוג ביקורת
+            </Button>
+            <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+              משתמש חדש
+            </Button>
           </div>
         }
       />
       <ToolbarContainer>
         <UsersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </ToolbarContainer>
-      {error && <Alert variant="error" message={error} />}
-      <DataTable
+      <PaginatedDataTable
         data={users}
         columns={columns}
         getRowKey={(user) => user.id}
         isLoading={loading}
+        error={error}
+        page={filters.page}
+        pageSize={filters.page_size}
+        total={total}
+        onPageChange={setPage}
+        onPageSizeChange={(size) => handleFilterChange("page_size", String(size))}
         emptyState={{
           title: "אין משתמשים להצגה",
           message: "לא נמצאו משתמשים. הוסף משתמש חדש למערכת.",
           action: { label: "משתמש חדש", onClick: () => setShowCreateModal(true) },
         }}
       />
-      {!loading && users.length > 0 && (
-        <PaginationCard
-          page={filters.page}
-          totalPages={totalPages}
-          total={total}
-          onPageChange={setPage}
-          showPageSizeSelect
-          pageSize={filters.page_size}
-          pageSizeOptions={[20, 50, 100]}
-          onPageSizeChange={(size) => handleFilterChange("page_size", String(size))}
-        />
-      )}
       <CreateUserModal
         open={showCreateModal}
         onClose={() => setShowCreateModal(false)}
@@ -111,10 +122,7 @@ export const Users: React.FC = () => {
         onSubmit={resetPassword}
         isLoading={resetPasswordLoading}
       />
-      <AuditLogsDrawer
-        open={showAuditLogs}
-        onClose={() => setShowAuditLogs(false)}
-      />
+      <AuditLogsDrawer open={showAuditLogs} onClose={() => setShowAuditLogs(false)} />
       <ConfirmDialog
         open={Boolean(pendingToggle)}
         title={pendingToggle?.is_active ? "השבתת משתמש" : "הפעלת משתמש"}

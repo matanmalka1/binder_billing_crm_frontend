@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Modal } from "../../../components/ui/Modal";
-import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
+import { ModalFormActions } from "../../../components/ui/ModalFormActions";
 import { FormField } from "../../../components/ui/FormField";
 import { SelectDropdown } from "../../../components/ui/SelectDropdown";
 import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
@@ -49,7 +49,8 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
     clientId: selectedClient?.id,
     enabled: open && initialClientId === undefined,
     onAutoSelect: useCallback(
-      (biz: { id: number }) => setValue("business_id", String(biz.id), { shouldValidate: true }),
+      (business: { id: number }) =>
+        setValue("business_id", String(business.id), { shouldValidate: true }),
       [setValue],
     ),
   });
@@ -111,14 +112,14 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
       isDirty={isDirty}
       onClose={handleClose}
       footer={
-        <div className="flex items-center justify-end gap-2">
-          <Button type="button" variant="secondary" onClick={handleClose} disabled={createLoading}>
-            ביטול
-          </Button>
-          <Button type="button" isLoading={createLoading} onClick={() => void submitForm()}>
-            פתיחת תיק
-          </Button>
-        </div>
+        <ModalFormActions
+          onCancel={handleClose}
+          onSubmit={() => void submitForm()}
+          cancelVariant="secondary"
+          cancelDisabled={createLoading}
+          submitLabel="פתיחת תיק"
+          submitLoading={createLoading}
+        />
       }
     >
       <form onSubmit={submitForm} className="space-y-4">
@@ -173,7 +174,9 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
             businessId={businessId}
             year={periodYear}
             value={periodValue}
-            onChange={(v) => setValue("period", v, { shouldDirty: true, shouldValidate: true, shouldTouch: true })}
+            onChange={(value) =>
+              setValue("period", value, { shouldDirty: true, shouldValidate: true, shouldTouch: true })
+            }
             error={errors.period?.message}
             className={colSpanClass}
             enabled={open}
@@ -181,7 +184,7 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
           <input type="hidden" {...register("period")} />
         </div>
 
-        <label className="flex items-center gap-2 cursor-pointer select-none">
+        <label className="flex cursor-pointer select-none items-center gap-2">
           <input
             type="checkbox"
             className="h-4 w-4 rounded border-gray-300 text-primary-600"

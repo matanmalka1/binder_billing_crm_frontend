@@ -1,4 +1,5 @@
 import type { Column } from "../../../components/ui/DataTable";
+import { buildSelectionColumn } from "../../../components/ui/tableSelection";
 import type { ClientResponse } from "../api";
 import { formatDate } from "../../../utils/utils";
 import { ClientRowActions } from "./ClientRowActions";
@@ -18,9 +19,6 @@ export const buildClientColumns = ({
   allIds = [],
   onEditClient,
 }: BuildClientColumnsParams = {}): Column<ClientResponse>[] => {
-  const allSelected = allIds.length > 0 && allIds.every((id) => selectedIds?.has(id));
-  const someSelected = !allSelected && allIds.some((id) => selectedIds?.has(id));
-
   const dataColumns: Column<ClientResponse>[] = [
     {
       key: "full_name",
@@ -46,9 +44,7 @@ export const buildClientColumns = ({
     {
       key: "email",
       header: "אימייל",
-      render: (client) => (
-        <span className="text-sm text-gray-500">{client.email || "—"}</span>
-      ),
+      render: (client) => <span className="text-sm text-gray-500">{client.email || "—"}</span>,
     },
     {
       key: "created_at",
@@ -62,38 +58,28 @@ export const buildClientColumns = ({
       header: "",
       headerClassName: "w-10",
       className: "w-10",
-      render: (client) => <ClientRowActions clientId={client.id} onEditClient={onEditClient ? () => onEditClient(client) : undefined} />,
+      render: (client) => (
+        <ClientRowActions
+          clientId={client.id}
+          onEditClient={onEditClient ? () => onEditClient(client) : undefined}
+        />
+      ),
     },
   ];
 
-  if (!onToggleSelect) return dataColumns;
+  if (!onToggleSelect) {
+    return dataColumns;
+  }
 
-  const checkboxColumn: Column<ClientResponse> = {
-    key: "select",
-    header: "",
-    headerClassName: "w-10",
-    className: "w-10",
-    headerRender: () => (
-      <input
-        type="checkbox"
-        checked={allSelected}
-        ref={(el) => { if (el) el.indeterminate = someSelected; }}
-        onChange={() => onToggleAll?.(allIds)}
-        className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-        aria-label="בחר הכל"
-      />
-    ),
-    render: (client) => (
-      <input
-        type="checkbox"
-        checked={selectedIds?.has(client.id) ?? false}
-        onChange={() => onToggleSelect(client.id)}
-        onClick={(e) => e.stopPropagation()}
-        className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-        aria-label={`בחר לקוח ${client.id}`}
-      />
-    ),
-  };
-
-  return [checkboxColumn, ...dataColumns];
+  return [
+    buildSelectionColumn<ClientResponse>({
+      allIds,
+      selectedIds,
+      onToggleSelect,
+      onToggleAll,
+      getId: (client) => client.id,
+      getItemAriaLabel: (client) => `בחר לקוח ${client.id}`,
+    }),
+    ...dataColumns,
+  ];
 };

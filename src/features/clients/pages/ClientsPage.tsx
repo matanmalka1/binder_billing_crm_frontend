@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
-import { PaginationCard } from "@/components/ui/PaginationCard";
-import { DataTable } from "@/components/ui/DataTable";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { DetailDrawer } from "@/components/ui/DetailDrawer";
+import { ModalFormActions } from "@/components/ui/ModalFormActions";
+import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
 import {
   buildClientColumns,
   ClientsFiltersBar,
@@ -15,7 +15,7 @@ import {
   DeletedClientDialog,
   useClientsPage,
 } from "@/features/clients";
-import { ClientEditForm } from "../components/ClientEditForm";
+import { ClientEditForm } from "@/features/clients/components/ClientEditForm";
 import type { ClientResponse } from "@/features/clients/api";
 import { ImportExportModal } from "@/features/importExport";
 
@@ -54,10 +54,6 @@ export const Clients: React.FC = () => {
   const columns = buildClientColumns({
     onEditClient: can.editClients ? (client) => setEditingClient(client) : undefined,
   });
-  const totalPages = Math.max(
-    1,
-    Math.ceil(Math.max(total, 1) / filters.page_size),
-  );
 
   return (
     <div className="space-y-4">
@@ -66,19 +62,11 @@ export const Clients: React.FC = () => {
         description="רשימת כל הלקוחות במערכת"
         actions={
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowImportExport(true)}
-            >
+            <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)}>
               ייבוא / ייצוא
             </Button>
             {can.createClients && (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setShowCreateModal(true)}
-              >
+              <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)}>
                 לקוח חדש
               </Button>
             )}
@@ -92,23 +80,25 @@ export const Clients: React.FC = () => {
         />
       )}
       <ToolbarContainer>
-        <ClientsFiltersBar
-          filters={filters}
-          onFilterChange={handleFilterChange}
-        />
+        <ClientsFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </ToolbarContainer>
-      {error && <Alert variant="error" message={error} />}
-      {!loading && total > 0 && (
-        <p className="text-sm text-gray-500">
-          סה&quot;כ {total} לקוחות
-        </p>
-      )}
-      <DataTable
+      <PaginatedDataTable
         data={clients}
         columns={columns}
         getRowKey={(client) => client.id}
         onRowClick={(client) => navigate(`/clients/${client.id}`)}
         isLoading={loading}
+        error={error}
+        summary={
+          !loading && total > 0 ? (
+            <p className="text-sm text-gray-500">סה&quot;כ {total} לקוחות</p>
+          ) : undefined
+        }
+        page={filters.page}
+        pageSize={filters.page_size}
+        total={total}
+        onPageChange={setPage}
+        onPageSizeChange={(size) => handleFilterChange("page_size", String(size))}
         emptyState={{
           title: "אין לקוחות להצגה",
           message: can.createClients
@@ -119,30 +109,13 @@ export const Clients: React.FC = () => {
             : undefined,
         }}
       />
-      {!loading && clients.length > 0 && (
-        <PaginationCard
-          page={filters.page}
-          totalPages={totalPages}
-          total={total}
-          onPageChange={setPage}
-          showPageSizeSelect
-          pageSize={filters.page_size}
-          pageSizeOptions={[20, 50, 100]}
-          onPageSizeChange={(size) =>
-            handleFilterChange("page_size", String(size))
-          }
-        />
-      )}
       <CreateClientModal
         open={showCreateModal && !deletedClientDialogOpen}
         onClose={() => setShowCreateModal(false)}
         onSubmit={createClient}
         isLoading={createLoading}
       />
-      <ImportExportModal
-        open={showImportExport}
-        onClose={() => setShowImportExport(false)}
-      />
+      <ImportExportModal open={showImportExport} onClose={() => setShowImportExport(false)} />
       <ConfirmDialog
         open={Boolean(pendingAction)}
         title={pendingAction?.confirm?.title ?? "אישור פעולה"}
@@ -172,10 +145,15 @@ export const Clients: React.FC = () => {
           onClose={() => setEditingClient(null)}
           title="עריכת לקוח"
           footer={
-            <div className="flex items-center justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => setEditingClient(null)} disabled={updateLoading}>ביטול</Button>
-              <Button type="submit" form={EDIT_FORM_ID} variant="primary" isLoading={updateLoading} disabled={updateLoading}>שמור שינויים</Button>
-            </div>
+            <ModalFormActions
+              onCancel={() => setEditingClient(null)}
+              cancelDisabled={updateLoading}
+              submitLabel="שמור שינויים"
+              submitType="submit"
+              submitForm={EDIT_FORM_ID}
+              submitLoading={updateLoading}
+              submitDisabled={updateLoading}
+            />
           }
         >
           <ClientEditForm

@@ -1,5 +1,6 @@
 import { StatusBadge } from "../../../components/ui/StatusBadge";
 import type { Column } from "../../../components/ui/DataTable";
+import { buildSelectionColumn } from "../../../components/ui/tableSelection";
 import type { ChargeResponse } from "../api";
 import { getChargeAmountText, getChargeTypeLabel } from "../utils";
 import { formatDate } from "../../../utils/utils";
@@ -30,37 +31,6 @@ export const buildChargeColumns = ({
   onToggleAll,
   allIds = [],
 }: BuildChargeColumnsParams): Column<ChargeResponse>[] => {
-  const allSelected = allIds.length > 0 && allIds.every((id) => selectedIds?.has(id));
-  const someSelected = !allSelected && allIds.some((id) => selectedIds?.has(id));
-
-  /* Checkbox — rightmost in RTL (first in DOM) */
-  const checkboxColumn: Column<ChargeResponse> = {
-    key: "select",
-    header: "",
-    headerClassName: "w-10",
-    className: "w-10",
-    headerRender: () => (
-      <input
-        type="checkbox"
-        checked={allSelected}
-        ref={(el) => { if (el) el.indeterminate = someSelected; }}
-        onChange={() => onToggleAll?.(allIds)}
-        className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-        aria-label="בחר הכל"
-      />
-    ),
-    render: (charge) => (
-      <input
-        type="checkbox"
-        checked={selectedIds?.has(charge.id) ?? false}
-        onChange={() => onToggleSelect?.(charge.id)}
-        onClick={(e) => e.stopPropagation()}
-        className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-        aria-label={`בחר חיוב ${charge.id}`}
-      />
-    ),
-  };
-
   const dataColumns: Column<ChargeResponse>[] = [
     {
       key: "id",
@@ -133,7 +103,6 @@ export const buildChargeColumns = ({
         <span className="text-sm text-gray-400 tabular-nums">{formatDate(charge.created_at)}</span>
       ),
     },
-    /* Actions — last in DOM = leftmost in RTL */
     {
       key: "actions",
       header: "",
@@ -155,7 +124,18 @@ export const buildChargeColumns = ({
   ];
 
   if (isAdvisor && onToggleSelect) {
-    return [checkboxColumn, ...dataColumns];
+    return [
+      buildSelectionColumn<ChargeResponse>({
+        allIds,
+        selectedIds,
+        onToggleSelect,
+        onToggleAll,
+        getId: (charge) => charge.id,
+        getItemAriaLabel: (charge) => `בחר חיוב ${charge.id}`,
+      }),
+      ...dataColumns,
+    ];
   }
+
   return dataColumns;
 };

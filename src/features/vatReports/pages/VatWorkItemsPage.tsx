@@ -12,8 +12,7 @@ import { VatComplianceReportView } from "@/features/reports";
 import { cn } from "@/utils/utils";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
-import { DataTable } from "@/components/ui/DataTable";
-import { PaginationCard } from "@/components/ui/PaginationCard";
+import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
 import { StatsCard } from "@/components/ui/StatsCard";
 
 type ActiveTab = "list" | "compliance";
@@ -59,16 +58,17 @@ export const VatWorkItems: React.FC = () => {
       urlParams.delete("create");
       setUrlParams(urlParams, { replace: true });
     }
-  }, [urlParams, setUrlParams]);
+  }, []);
+
   const columns = useMemo(
-    () => buildVatWorkItemColumns({
-      isLoading: loading,
-      isDisabled: actionLoadingId !== null,
-      runAction,
-    }),
+    () =>
+      buildVatWorkItemColumns({
+        isLoading: loading,
+        isDisabled: actionLoadingId !== null,
+        runAction,
+      }),
     [loading, actionLoadingId, runAction],
   );
-  const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
 
   const tabToggle = (
     <div role="tablist" className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1">
@@ -129,9 +129,14 @@ export const VatWorkItems: React.FC = () => {
           )}
 
           {!loading && workItems.length > 0 && (() => {
-            const overdueCount = workItems.filter((i) => i.is_overdue).length;
-            const urgentCount = workItems.filter((i) => !i.is_overdue && i.days_until_deadline != null && i.days_until_deadline <= 3).length;
-            return (overdueCount > 0 || urgentCount > 0) ? (
+            const overdueCount = workItems.filter((item) => item.is_overdue).length;
+            const urgentCount = workItems.filter(
+              (item) =>
+                !item.is_overdue &&
+                item.days_until_deadline != null &&
+                item.days_until_deadline <= 3,
+            ).length;
+            return overdueCount > 0 || urgentCount > 0 ? (
               <div className="flex flex-wrap gap-2" dir="rtl">
                 {overdueCount > 0 && (
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
@@ -155,39 +160,28 @@ export const VatWorkItems: React.FC = () => {
             onClear={() => setSearchParams(new URLSearchParams())}
           />
 
-          {error && <Alert variant="error" message={error} />}
-
-          <DataTable
+          <PaginatedDataTable
             data={workItems}
             columns={columns}
             getRowKey={(item) => item.id}
             isLoading={loading}
+            error={error}
             onRowClick={(item) => navigate(`/tax/vat/${item.id}`)}
+            page={filters.page}
+            pageSize={filters.page_size}
+            total={total}
+            label='תיקי מע"מ'
+            onPageChange={(page) => setFilter("page", String(page))}
+            onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
             emptyMessage='אין תיקי מע"מ להצגה'
             emptyState={{
               title: 'לא נמצאו תיקי מע"מ',
-              message: isAdvisor
-                ? "נסה לשנות את הסינון או לפתוח תיק חדש"
-                : "נסה לשנות את הסינון",
+              message: isAdvisor ? "נסה לשנות את הסינון או לפתוח תיק חדש" : "נסה לשנות את הסינון",
               action: isAdvisor
                 ? { label: "תיק חדש", onClick: () => setShowCreateModal(true) }
                 : undefined,
             }}
           />
-
-          {!loading && total > 0 && (
-            <PaginationCard
-              page={filters.page}
-              totalPages={totalPages}
-              total={total}
-              label='תיקי מע"מ'
-              onPageChange={(page) => setFilter("page", String(page))}
-              showPageSizeSelect
-              pageSize={filters.page_size}
-              pageSizeOptions={[20, 50, 100]}
-              onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
-            />
-          )}
 
           <VatWorkItemsCreateModal
             open={showCreateModal}

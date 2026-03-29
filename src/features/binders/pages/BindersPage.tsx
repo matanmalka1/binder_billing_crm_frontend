@@ -1,9 +1,7 @@
 import { useMemo, useState } from "react";
-import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { DataTable } from "@/components/ui/DataTable";
-import { PaginationCard } from "@/components/ui/PaginationCard";
+import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
 import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
 import { PageHeader } from "@/components/layout/PageHeader";
 import {
@@ -89,7 +87,6 @@ export const Binders: React.FC = () => {
     [actionLoadingId, markReady, revertReady, handleSelectBinder, handleSort, filters.sort_by, filters.sort_dir],
   );
 
-  const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
   const drawerOpen = drawerMode !== null || deepLinkBinderId !== undefined;
   const effectiveMode: "detail" | "receive" = drawerMode === "receive" ? "receive" : "detail";
 
@@ -109,14 +106,18 @@ export const Binders: React.FC = () => {
         <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       </ToolbarContainer>
 
-      {error && <Alert variant="error" message={error} />}
-
-      <DataTable
+      <PaginatedDataTable
         data={binders}
         columns={columns}
         getRowKey={(binder) => binder.id}
         isLoading={loading}
+        error={error}
         onRowClick={handleRowClick}
+        page={filters.page}
+        pageSize={filters.page_size}
+        total={total}
+        onPageChange={setPage}
+        onPageSizeChange={(pageSize) => handleFilterChange("page_size", String(pageSize))}
         emptyMessage="אין קלסרים התואמים לסינון הנוכחי"
         emptyState={{
           title: "לא נמצאו קלסרים",
@@ -124,19 +125,6 @@ export const Binders: React.FC = () => {
           action: { label: "קליטת חומר", onClick: handleOpenReceive },
         }}
       />
-
-      {!loading && total > 0 && (
-        <PaginationCard
-          page={filters.page}
-          totalPages={totalPages}
-          total={total}
-          onPageChange={setPage}
-          showPageSizeSelect
-          pageSize={filters.page_size}
-          pageSizeOptions={[20, 50, 100]}
-          onPageSizeChange={(pageSize) => handleFilterChange("page_size", String(pageSize))}
-        />
-      )}
 
       <ConfirmDialog
         open={confirmReturnForId !== null}
