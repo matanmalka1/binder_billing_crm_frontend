@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
 import { Input } from "../../../components/ui/Input";
 import { SelectDropdown } from "../../../components/ui/SelectDropdown";
+import { DatePicker } from "../../../components/ui/DatePicker";
 import {
   vatInvoiceEditSchema,
   toInvoiceEditPayload,
@@ -44,8 +45,21 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
       <td className={`border-r-2 ${accentBorder} px-2 py-1.5`}>
         <Input {...register("invoice_number")} className="h-7 w-28 text-xs px-1 font-mono" />
       </td>
-      <td className="px-2 py-1.5">
-        <Input {...register("invoice_date")} type="date" className="h-7 w-32 text-xs px-1" />
+      <td className="px-2 py-1.5 w-32">
+        <Controller
+          control={control}
+          name="invoice_date"
+          render={({ field }) => (
+            <DatePicker
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              compact
+              noWrapper
+              usePortal
+            />
+          )}
+        />
       </td>
       <td className="px-2 py-1.5">
         <Input {...register("counterparty_name")} className="h-7 w-36 text-xs px-1" />
@@ -72,7 +86,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
         </td>
       )}
       <td className="px-2 py-1.5">
-        <Input {...register("net_amount")} dir="ltr" className="h-7 w-24 text-xs px-1 font-mono" />
+        <Input {...register("net_amount")} dir="ltr" className="h-7 w-24 text-xs px-1 font-mono" inputMode="decimal" onKeyDown={(e) => { if (!/[\d.\b]/.test(e.key) && !["ArrowLeft","ArrowRight","Delete","Tab"].includes(e.key)) e.preventDefault(); }} />
       </td>
       <td className="px-2 py-1.5 text-xs text-gray-400">—</td>
       <td className="px-2 py-1.5 text-xs text-gray-400 font-mono">#{invoice.created_by}</td>

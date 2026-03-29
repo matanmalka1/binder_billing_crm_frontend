@@ -111,7 +111,13 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 
         {requiresCounterpartyId && (
           <FormField label="מספר עוסק של הספק" error={errors.counterparty_id?.message} className="w-40">
-            <Input {...register("counterparty_id")} placeholder="9 ספרות" dir="ltr" />
+            <Input
+              {...register("counterparty_id")}
+              placeholder="9 ספרות"
+              dir="rtl"
+              inputMode="numeric"
+              onKeyDown={(e) => { if (!/[\d\b]/.test(e.key) && !["ArrowLeft","ArrowRight","Delete","Tab"].includes(e.key)) e.preventDefault(); }}
+            />
           </FormField>
         )}
 
@@ -119,8 +125,10 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
           <Input
             {...register("net_amount")}
             placeholder="0.00"
-            dir="ltr"
+            dir="rtl"
+            inputMode="decimal"
             autoFocus={invoiceType === "income"}
+            onKeyDown={(e) => { if (!/[\d.\b]/.test(e.key) && !["ArrowLeft","ArrowRight","Delete","Tab"].includes(e.key)) e.preventDefault(); }}
           />
         </FormField>
 
