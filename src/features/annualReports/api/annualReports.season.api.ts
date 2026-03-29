@@ -1,4 +1,5 @@
 import { api } from "@/api/client";
+import { toQueryParams } from "@/api/queryParams";
 import { ANNUAL_REPORT_ENDPOINTS } from "./endpoints";
 import type { AnnualReportFull, AnnualReportListResponse, KanbanStage, SeasonSummary } from "./contracts";
 
@@ -13,7 +14,7 @@ export const annualReportSeasonApi = {
     params: { page?: number; page_size?: number },
   ): Promise<AnnualReportListResponse> => {
     const response = await api.get<AnnualReportListResponse>(ANNUAL_REPORT_ENDPOINTS.taxYearReports(taxYear), {
-      params,
+      params: toQueryParams(params),
     });
     return response.data;
   },
@@ -25,7 +26,7 @@ export const annualReportSeasonApi = {
 
   getOverdue: async (taxYear?: number): Promise<AnnualReportFull[]> => {
     const response = await api.get<AnnualReportFull[]>(ANNUAL_REPORT_ENDPOINTS.annualReportOverdue, {
-      params: taxYear ? { tax_year: taxYear } : undefined,
+      params: toQueryParams({ tax_year: taxYear }),
     });
     return response.data;
   },

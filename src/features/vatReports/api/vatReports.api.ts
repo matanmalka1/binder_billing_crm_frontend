@@ -27,7 +27,7 @@ export const vatReportsApi = {
 
   lookup: async (businessId: number, period: string): Promise<VatWorkItemLookupResponse | null> => {
     const response = await api.get<VatWorkItemLookupResponse | null>(VAT_ENDPOINTS.vatWorkItemLookup, {
-      params: { business_id: businessId, period },
+      params: toQueryParams({ business_id: businessId, period }),
     });
     return response.data;
   },
@@ -44,7 +44,7 @@ export const vatReportsApi = {
 
   getPeriodOptions: async (businessId: number, year?: number): Promise<VatPeriodOptionsResponse> => {
     const response = await api.get<VatPeriodOptionsResponse>(VAT_ENDPOINTS.vatPeriodOptions(businessId), {
-      params: year ? { year } : undefined,
+      params: toQueryParams({ year }),
     });
     return response.data;
   },
@@ -114,7 +114,7 @@ export const vatReportsApi = {
 
   exportBusinessVat: async (businessId: number, format: "excel" | "pdf", year: number): Promise<void> => {
     const response = await api.get<Blob>(VAT_ENDPOINTS.vatBusinessExport(businessId), {
-      params: { format, year },
+      params: toQueryParams({ format, year }),
       responseType: "blob",
     });
     const contentDisposition = response.headers["content-disposition"];

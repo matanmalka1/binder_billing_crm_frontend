@@ -1,4 +1,5 @@
 import { api } from "@/api/client";
+import { toQueryParams } from "@/api/queryParams";
 import { AUTHORITY_CONTACT_ENDPOINTS } from "./endpoints";
 import type {
   AuthorityContactResponse,
@@ -27,7 +28,7 @@ export const authorityContactsApi = {
   ): Promise<{ items: AuthorityContactResponse[]; page: number; page_size: number; total: number }> => {
     const response = await api.get<{ items: AuthorityContactResponse[]; page: number; page_size: number; total: number }>(
       AUTHORITY_CONTACT_ENDPOINTS.businessAuthorityContacts(clientId),
-      { params: { ...(contactType ? { contact_type: contactType } : {}), page, page_size } },
+      { params: toQueryParams({ ...(contactType ? { contact_type: contactType } : {}), page, page_size }) },
     );
     return response.data;
   },

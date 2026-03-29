@@ -1,4 +1,5 @@
 import { api } from "@/api/client";
+import { toQueryParams } from "@/api/queryParams";
 import { REPORT_ENDPOINTS } from "./endpoints";
 import type {
   AgingReportResponse,
@@ -13,8 +14,9 @@ export const reportsApi = {
   // ── Queries ──────────────────────────────────────────────────────────────
 
   getAgingReport: async (asOfDate?: string): Promise<AgingReportResponse> => {
-    const params = asOfDate ? { as_of_date: asOfDate } : undefined;
-    const response = await api.get<AgingReportResponse>(REPORT_ENDPOINTS.reportsAging, { params });
+    const response = await api.get<AgingReportResponse>(REPORT_ENDPOINTS.reportsAging, {
+      params: toQueryParams({ as_of_date: asOfDate }),
+    });
     return response.data;
   },
 
@@ -26,7 +28,7 @@ export const reportsApi = {
     if (month !== undefined) params.month = month;
     const response = await api.get<AdvancePaymentReportResponse>(
       REPORT_ENDPOINTS.reportsAdvancePayments,
-      { params },
+      { params: toQueryParams(params) },
     );
     return response.data;
   },
@@ -36,7 +38,7 @@ export const reportsApi = {
   ): Promise<AnnualReportStatusReportResponse> => {
     const response = await api.get<AnnualReportStatusReportResponse>(
       REPORT_ENDPOINTS.reportsAnnualReportStatus,
-      { params: { tax_year: taxYear } },
+      { params: toQueryParams({ tax_year: taxYear }) },
     );
     return response.data;
   },
@@ -44,7 +46,7 @@ export const reportsApi = {
   getVatComplianceReport: async (year: number): Promise<VatComplianceReportResponse> => {
     const response = await api.get<VatComplianceReportResponse>(
       REPORT_ENDPOINTS.reportsVatCompliance,
-      { params: { year } },
+      { params: toQueryParams({ year }) },
     );
     return response.data;
   },
@@ -56,7 +58,7 @@ export const reportsApi = {
     asOfDate?: string,
   ): Promise<ReportExportResult> => {
     const response = await api.get<Blob>(REPORT_ENDPOINTS.reportsAgingExport, {
-      params: { format, ...(asOfDate ? { as_of_date: asOfDate } : {}) },
+      params: toQueryParams({ format, as_of_date: asOfDate }),
       responseType: "blob",
     });
 

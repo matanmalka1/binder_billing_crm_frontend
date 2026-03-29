@@ -1,4 +1,5 @@
 import { api } from "@/api/client";
+import { toQueryParams } from "@/api/queryParams";
 import { ANNUAL_REPORT_ENDPOINTS } from "./endpoints";
 import type {
   AnnualReportFull,
@@ -28,7 +29,9 @@ export const annualReportsApi = {
     page?: number;
     page_size?: number;
   }): Promise<AnnualReportListResponse> => {
-    const response = await api.get<AnnualReportListResponse>(ANNUAL_REPORT_ENDPOINTS.annualReports, { params });
+    const response = await api.get<AnnualReportListResponse>(ANNUAL_REPORT_ENDPOINTS.annualReports, {
+      params: toQueryParams(params),
+    });
     return response.data;
   },
 
