@@ -5,36 +5,15 @@ import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
 import { getEventColor } from "../constants";
 import {
+  getTimelineChannelLabel,
+  getTimelineStatusLabel,
+  getTimelineTriggerLabel,
+} from "../labels";
+import {
   formatTimestamp,
   getEventIcon,
   getEventTypeLabel,
 } from "../utils";
-
-// Status translation map
-const STATUS_HE: Record<string, string> = {
-  "none": "חדש",
-  "in_office": "במשרד",
-  "ready_for_pickup": "מוכן לאיסוף",
-  "returned": "הוחזר",
-};
-
-// Channel translation map
-const CHANNEL_HE: Record<string, string> = {
-  "whatsapp": "WhatsApp",
-  "email": "דוא״ל",
-  "sms": "SMS",
-};
-
-// Trigger translation map
-const TRIGGER_HE: Record<string, string> = {
-  "binder_received": "קלסר התקבל",
-  "binder_ready_for_pickup": "קלסר מוכן לאיסוף",
-  "manual_payment_reminder": "תזכורת תשלום",
-};
-
-const formatStatus = (status: string): string => STATUS_HE[status] || status;
-const formatChannel = (channel: string): string => CHANNEL_HE[channel] || channel;
-const formatTrigger = (trigger: string): string => TRIGGER_HE[trigger] || trigger;
 
 interface TimelineEventItemProps {
   timelineEvent: TimelineEvent;
@@ -126,11 +105,11 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
           {!!(ev.metadata?.old_status && ev.metadata?.new_status) && (
             <div className="flex items-center gap-2 text-xs bg-blue-50 border border-blue-100 rounded px-3 py-2">
               <span className="inline-block px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-medium text-[11px]">
-                {formatStatus(ev.metadata.old_status as string)}
+                {getTimelineStatusLabel(ev.metadata.old_status)}
               </span>
               <span className="text-blue-400">←</span>
               <span className="inline-block px-2 py-0.5 rounded bg-green-100 text-green-700 font-medium text-[11px]">
-                {formatStatus(ev.metadata.new_status as string)}
+                {getTimelineStatusLabel(ev.metadata.new_status)}
               </span>
             </div>
           )}
@@ -145,8 +124,8 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
           {/* Notification channel info */}
           {!!(ev.metadata?.trigger && ev.metadata?.channel) && (
             <div className="text-xs text-gray-600 bg-purple-50 border border-purple-100 rounded px-3 py-2">
-              <div><span className="font-medium">ערוץ:</span> {formatChannel(ev.metadata.channel as string)}</div>
-              <div><span className="font-medium">סוג:</span> {formatTrigger(ev.metadata.trigger as string)}</div>
+              <div><span className="font-medium">ערוץ:</span> {getTimelineChannelLabel(ev.metadata.channel)}</div>
+              <div><span className="font-medium">סוג:</span> {getTimelineTriggerLabel(ev.metadata.trigger)}</div>
             </div>
           )}
 
