@@ -3,8 +3,8 @@ import {
   FinancialAddFormShell,
   FinancialAmountDescriptionFields,
   FinancialSelectField,
-  validatePositiveAmount,
 } from "./FinancialLineFormParts";
+import { validatePositiveAmount } from "./financialValidators";
 
 export interface AddLineFormProps {
   typeOptions: Record<string, string>;

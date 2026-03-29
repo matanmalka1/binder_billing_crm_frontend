@@ -13,5 +13,6 @@ export { useVatWorkItemPage } from "./hooks/useVatWorkItemPage";
 export { useVatWorkItemsPage } from "./hooks/useVatWorkItemsPage";
 export { VatWorkItemDetail } from "./pages/VatWorkItemDetailPage";
 export { VatWorkItems } from "./pages/VatWorkItemsPage";
+export { VatClientSummaryPanel } from "./components/VatClientSummaryPanel";
 export { isFiled } from "./utils";
 export type { VatWorkItemResponse, VatClientSummaryResponse } from "./api";

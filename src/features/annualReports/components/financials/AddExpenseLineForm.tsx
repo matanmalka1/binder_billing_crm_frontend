@@ -6,9 +6,8 @@ import {
   FinancialAddFormShell,
   FinancialAmountDescriptionFields,
   FinancialSelectField,
-  validatePercentage,
-  validatePositiveAmount,
 } from "./FinancialLineFormParts";
+import { validatePercentage, validatePositiveAmount } from "./financialValidators";
 
 export interface AddExpensePayload {
   category: ExpenseCategoryType;

@@ -4,15 +4,15 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/Alert";
 import { PageStateGuard } from "@/components/ui/PageStateGuard";
 import { cn } from "@/utils/utils";
-import { ClientDocumentsTab } from "@/features/documents/components/ClientDocumentsTab";
-import { ClientTimelineTab } from "@/features/timeline/components/ClientTimelineTab";
-import { VatClientSummaryPanel } from "@/features/vatReports/components/VatClientSummaryPanel";
-import { ClientAdvancePaymentsTab } from "@/features/advancedPayments/components/ClientAdvancePaymentsTab";
-import { FilingTimeline } from "@/features/taxDeadlines/components/FilingTimeline";
-import { ClientAnnualReportsTab } from "@/features/annualReports/components/shared/ClientAnnualReportsTab";
-import { TaxProfileCard } from "@/features/taxProfile/components/TaxProfileCard";
-import { CorrespondenceCard } from "@/features/correspondence/components/CorrespondenceCard";
-import { SignatureRequestsCard } from "@/features/signatureRequests/components/SignatureRequestsCard";
+import { ClientDocumentsTab } from "@/features/documents";
+import { ClientTimelineTab } from "@/features/timeline";
+import { VatClientSummaryPanel } from "@/features/vatReports";
+import { ClientAdvancePaymentsTab } from "@/features/advancedPayments";
+import { FilingTimeline } from "@/features/taxDeadlines";
+import { ClientAnnualReportsTab } from "@/features/annualReports";
+import { TaxProfileCard } from "@/features/taxProfile";
+import { CorrespondenceCard } from "@/features/correspondence";
+import { SignatureRequestsCard } from "@/features/signatureRequests";
 import {
   BUSINESS_DETAILS_TABS,
   BUSINESS_DETAILS_TAB_LABELS,

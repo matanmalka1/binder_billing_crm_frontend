@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { DASHBOARD_ENDPOINTS } from "@/features/dashboard/api/endpoints";
+import { DASHBOARD_ENDPOINTS } from "@/features/dashboard";
 import type { TaxSubmissionWidgetResponse } from "./contracts";
 
 export const taxDashboardApi = {

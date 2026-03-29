@@ -15,7 +15,7 @@ import {
   DeletedClientDialog,
   useClientsPage,
 } from "@/features/clients";
-import { ClientEditForm } from "@/features/clients/components/ClientEditForm";
+import { ClientEditForm } from "../components/ClientEditForm";
 import type { ClientResponse } from "@/features/clients/api";
 import { ImportExportModal } from "@/features/importExport";
 

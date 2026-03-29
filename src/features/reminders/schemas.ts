@@ -25,31 +25,26 @@ const unusedIds = {
   charge_id: z.string().optional(),
 };
 
+const buildEntityReminderSchema = <
+  TReminderType extends "tax_deadline_approaching" | "binder_idle" | "unpaid_charge",
+  TField extends "tax_deadline_id" | "binder_id" | "charge_id",
+>(
+  reminderType: TReminderType,
+  requiredField: TField,
+  fieldLabel: string,
+) =>
+  z.object({
+    ...baseFields,
+    reminder_type: z.literal(reminderType),
+    ...unusedIds,
+    [requiredField]: positiveIdString(fieldLabel),
+    message: z.string().optional(),
+  });
+
 export const createReminderSchema = z.discriminatedUnion("reminder_type", [
-  z.object({
-    ...baseFields,
-    reminder_type: z.literal("tax_deadline_approaching"),
-    tax_deadline_id: positiveIdString("מזהה מועד מס"),
-    binder_id: z.string().optional(),
-    charge_id: z.string().optional(),
-    message: z.string().optional(),
-  }),
-  z.object({
-    ...baseFields,
-    reminder_type: z.literal("binder_idle"),
-    binder_id: positiveIdString("מזהה תיק"),
-    tax_deadline_id: z.string().optional(),
-    charge_id: z.string().optional(),
-    message: z.string().optional(),
-  }),
-  z.object({
-    ...baseFields,
-    reminder_type: z.literal("unpaid_charge"),
-    charge_id: positiveIdString("מזהה חשבונית"),
-    tax_deadline_id: z.string().optional(),
-    binder_id: z.string().optional(),
-    message: z.string().optional(),
-  }),
+  buildEntityReminderSchema("tax_deadline_approaching", "tax_deadline_id", "מזהה מועד מס"),
+  buildEntityReminderSchema("binder_idle", "binder_id", "מזהה תיק"),
+  buildEntityReminderSchema("unpaid_charge", "charge_id", "מזהה חשבונית"),
   z.object({
     ...baseFields,
     reminder_type: z.literal("custom"),

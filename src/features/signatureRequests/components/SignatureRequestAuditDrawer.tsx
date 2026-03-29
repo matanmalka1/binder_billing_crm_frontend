@@ -11,15 +11,7 @@ import {
   getSignatureRequestTypeLabel,
   getSignatureRequestStatusLabel,
 } from "../../../utils/enums";
-
-const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "success" | "error"> = {
-  draft: "neutral",
-  pending_signature: "info",
-  signed: "success",
-  declined: "error",
-  expired: "warning",
-  canceled: "neutral",
-};
+import { signatureRequestStatusVariants } from "../utils";
 
 interface Props {
   requestId: number | null;
@@ -80,7 +72,7 @@ export const SignatureRequestAuditDrawer: React.FC<Props> = ({
           <DrawerSection title="פרטי הבקשה">
             <DrawerField
               label="סטטוס"
-              value={<StatusBadge status={data.status} getLabel={getSignatureRequestStatusLabel} variantMap={signatureStatusVariants} />}
+              value={<StatusBadge status={data.status} getLabel={getSignatureRequestStatusLabel} variantMap={signatureRequestStatusVariants} />}
             />
             <DrawerField label="חותם" value={data.signer_name} />
             {data.signer_email && (

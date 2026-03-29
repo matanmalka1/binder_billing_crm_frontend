@@ -8,53 +8,36 @@ import { StatsCard } from "@/components/ui/StatsCard";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import {
-  buildSigningUrl,
   CreateSignatureRequestModal,
+  SIGNATURE_REQUEST_TERMINAL_STATUSES,
   SignatureRequestAuditDrawer,
   SignatureRequestsPageRowActions,
+  signatureRequestStatusVariants,
+  useSignatureRequestSigningUrls,
   usePendingSignatureRequests,
   useSignatureRequestActions,
-  type SendSignatureRequestResponse,
   type SignatureRequestResponse,
 } from "@/features/signatureRequests";
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "@/utils/enums";
-
-const signatureStatusVariants: Record<string, "neutral" | "info" | "warning" | "success" | "error"> = {
-  draft: "neutral",
-  pending_signature: "info",
-  signed: "success",
-  declined: "error",
-  expired: "warning",
-  canceled: "neutral",
-};
 import { formatDate } from "@/utils/utils";
-
-const TERMINAL_STATUSES = new Set(["signed", "expired", "canceled", "declined"]);
 
 export const SignatureRequestsPage: React.FC = () => {
   const { items, total, businessLookup, isLoading, error } = usePendingSignatureRequests();
   const { send, isSending, cancel, isCanceling, create, isCreating } = useSignatureRequestActions();
 
-  const [signingUrls, setSigningUrls] = useState<Record<number, string>>({});
   const [auditRequestId, setAuditRequestId] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
+  const { signingUrls, handleSend } = useSignatureRequestSigningUrls(send);
 
   const draft = items.filter((r) => r.status === "draft").length;
   const pending = items.filter((r) => r.status === "pending_signature").length;
   const terminal = items.filter((r) => ["expired", "declined"].includes(r.status)).length;
 
   const displayedItems = useMemo(
-    () => showAll ? items : items.filter((r) => !TERMINAL_STATUSES.has(r.status)),
+    () => showAll ? items : items.filter((r) => !SIGNATURE_REQUEST_TERMINAL_STATUSES.has(r.status)),
     [items, showAll],
   );
-
-  const handleSend = async (id: number) => {
-    const result = (await send(id)) as SendSignatureRequestResponse;
-    if (result?.signing_url_hint) {
-      setSigningUrls((prev) => ({ ...prev, [id]: buildSigningUrl(result.signing_url_hint) }));
-    }
-  };
 
   const columns = useMemo(
     () => [
@@ -95,7 +78,7 @@ export const SignatureRequestsPage: React.FC = () => {
       {
         key: "status",
         header: "סטטוס",
-        render: (req: SignatureRequestResponse) => <StatusBadge status={req.status} getLabel={getSignatureRequestStatusLabel} variantMap={signatureStatusVariants} />,
+        render: (req: SignatureRequestResponse) => <StatusBadge status={req.status} getLabel={getSignatureRequestStatusLabel} variantMap={signatureRequestStatusVariants} />,
       },
       {
         key: "created_at",

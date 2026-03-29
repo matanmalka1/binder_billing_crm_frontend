@@ -1,5 +1,5 @@
 import { api } from "../../../api/client";
-import { CLIENT_ENDPOINTS } from "@/features/clients/api/endpoints";
+import { CLIENT_ENDPOINTS } from "@/features/clients";
 
 export const importExportApi = {
   exportClients: () =>

@@ -1,18 +1,17 @@
 import { MessageSquare } from "lucide-react";
 import type { Column } from "../../../components/ui/DataTable";
-import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
+import type { AdvancePaymentRow } from "../types";
 import { MonoValue } from "../../../components/ui/MonoValue";
 import { formatDate } from "../../../utils/utils";
 import { fmtCurrency, getAdvancePaymentMonthLabel } from "../utils";
-import { AdvancePaymentRowActions } from "./AdvancePaymentRowActions";
+import {
+  AdvancePaymentRowActions,
+  type AdvancePaymentRowActionsProps,
+} from "./AdvancePaymentRowActions";
 import { AdvancePaymentStatusBadge } from "./AdvancePaymentStatusBadge";
 
-interface BuildColumnsOptions {
+interface BuildColumnsOptions extends Omit<AdvancePaymentRowActionsProps, "row"> {
   canEdit: boolean;
-  updatingId: number | null;
-  deletingId: number | null;
-  onUpdate: (id: number, paid_amount: string | null, status: AdvancePaymentStatus, expected_amount: string | null) => void;
-  onDelete: (id: number) => void;
 }
 
 export const buildAdvancePaymentColumns = (

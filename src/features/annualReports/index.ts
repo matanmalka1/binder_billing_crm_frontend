@@ -22,6 +22,7 @@ export { SeasonReportsTable } from "./components/kanban/SeasonReportsTable";
 export { SeasonSummaryCards } from "./components/kanban/SeasonSummaryCards";
 export { YearComparisonModal } from "./components/kanban/YearComparisonModal";
 export { AnnualReportFullPanel } from "./components/panel/AnnualReportFullPanel";
+export { ClientAnnualReportsTab } from "./components/shared/ClientAnnualReportsTab";
 export { CreateReportModal } from "./components/shared/CreateReportModal";
 export { OverdueBanner } from "./components/shared/OverdueBanner";
 export { useAnnualReportsKanbanPage } from "./hooks/useAnnualReportsKanbanPage";

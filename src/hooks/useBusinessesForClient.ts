@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { clientsApi, clientsQK } from "@/features/clients/api";
 import type { BusinessResponse } from "@/features/clients/api";
@@ -23,13 +23,13 @@ export const useBusinessesForClient = ({
     refetchOnWindowFocus: false,
   });
 
-  const businesses = data?.items ?? [];
+  const businesses = useMemo(() => data?.items ?? [], [data?.items]);
 
   useEffect(() => {
     if (businesses.length === 1 && onAutoSelect) {
       onAutoSelect(businesses[0]);
     }
-  }, [businesses.length, businesses[0]?.id]);
+  }, [businesses, onAutoSelect]);
 
   return { businesses, isLoading };
 };

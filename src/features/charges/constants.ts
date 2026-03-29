@@ -18,8 +18,7 @@ export const CHARGE_STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: "canceled", label: getChargeStatusLabel("canceled") },
 ];
 
-export const CHARGE_TYPE_OPTIONS_WITH_ALL: { value: string; label: string }[] = [
-  { value: "", label: "כל הסוגים" },
+export const CHARGE_TYPE_OPTIONS: { value: string; label: string }[] = [
   { value: "monthly_retainer", label: getChargeTypeLabel("monthly_retainer") },
   { value: "annual_report_fee", label: getChargeTypeLabel("annual_report_fee") },
   { value: "vat_filing_fee", label: getChargeTypeLabel("vat_filing_fee") },
@@ -28,11 +27,7 @@ export const CHARGE_TYPE_OPTIONS_WITH_ALL: { value: string; label: string }[] = 
   { value: "other", label: getChargeTypeLabel("other") },
 ];
 
-export const CHARGE_TYPE_OPTIONS: { value: string; label: string }[] = [
-  { value: "monthly_retainer", label: getChargeTypeLabel("monthly_retainer") },
-  { value: "annual_report_fee", label: getChargeTypeLabel("annual_report_fee") },
-  { value: "vat_filing_fee", label: getChargeTypeLabel("vat_filing_fee") },
-  { value: "representation_fee", label: getChargeTypeLabel("representation_fee") },
-  { value: "consultation_fee", label: getChargeTypeLabel("consultation_fee") },
-  { value: "other", label: getChargeTypeLabel("other") },
+export const CHARGE_TYPE_OPTIONS_WITH_ALL: { value: string; label: string }[] = [
+  { value: "", label: "כל הסוגים" },
+  ...CHARGE_TYPE_OPTIONS,
 ];

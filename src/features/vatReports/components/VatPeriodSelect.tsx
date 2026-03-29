@@ -35,7 +35,7 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const periodOptions = data?.options ?? [];
+  const periodOptions = useMemo(() => data?.options ?? [], [data]);
   const selectedPeriodExists = !value || periodOptions.some((opt) => opt.period === value);
 
   const options = useMemo(

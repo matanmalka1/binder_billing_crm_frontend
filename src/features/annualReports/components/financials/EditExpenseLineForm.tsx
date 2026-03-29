@@ -6,9 +6,8 @@ import {
   FinancialAmountDescriptionFields,
   FinancialEditFormShell,
   FinancialSelectField,
-  validatePercentage,
-  validatePositiveAmount,
 } from "./FinancialLineFormParts";
+import { validatePercentage, validatePositiveAmount } from "./financialValidators";
 
 interface EditExpenseLineFormProps {
   line: ExpenseLineResponse;

@@ -32,25 +32,11 @@ const isSummaryData = (
 ): data is DashboardSummaryResponse =>
   Boolean(data && "binders_in_office" in data);
 
-const buildAdvisorStats = (data: DashboardOverviewResponse): StatItem[] => [
-  {
-    key: "total_clients",
-    title: "לקוחות",
-    value: data.total_clients,
-    description: "סך הכל לקוחות פעילים",
-    icon: Users,
-    variant: "blue",
-    href: "/clients",
-  },
-  {
-    key: "active_binders",
-    title: "קלסרים פעילים",
-    value: data.active_binders,
-    description: "טרם הוחזרו ללקוח",
-    icon: FolderOpen,
-    variant: "blue",
-    href: "/binders?status=in_office",
-  },
+const buildSharedStats = <
+  T extends Pick<DashboardOverviewResponse, "open_reminders" | "vat_due_this_month">,
+>(
+  data: T,
+): StatItem[] => [
   {
     key: "open_reminders",
     title: "תזכורות פתוחות",
@@ -73,6 +59,28 @@ const buildAdvisorStats = (data: DashboardOverviewResponse): StatItem[] => [
   },
 ];
 
+const buildAdvisorStats = (data: DashboardOverviewResponse): StatItem[] => [
+  {
+    key: "total_clients",
+    title: "לקוחות",
+    value: data.total_clients,
+    description: "סך הכל לקוחות פעילים",
+    icon: Users,
+    variant: "blue",
+    href: "/clients",
+  },
+  {
+    key: "active_binders",
+    title: "קלסרים פעילים",
+    value: data.active_binders,
+    description: "טרם הוחזרו ללקוח",
+    icon: FolderOpen,
+    variant: "blue",
+    href: "/binders?status=in_office",
+  },
+  ...buildSharedStats(data),
+];
+
 const buildSecretaryStats = (data: DashboardSummaryResponse): StatItem[] => [
   {
     key: "in_office",
@@ -92,26 +100,7 @@ const buildSecretaryStats = (data: DashboardSummaryResponse): StatItem[] => [
     variant: "green",
     href: "/binders?status=ready_for_pickup",
   },
-  {
-    key: "open_reminders",
-    title: "תזכורות פתוחות",
-    value: data.open_reminders,
-    description: "תזכורות הממתינות לטיפול",
-    icon: Bell,
-    variant: "amber",
-    urgent: data.open_reminders > 0,
-    href: "/reminders",
-  },
-  {
-    key: "vat_due_this_month",
-    title: "דוחות מע״מ לחודש",
-    value: data.vat_due_this_month,
-    description: "טרם הוגשו לחודש הנוכחי",
-    icon: FileText,
-    variant: data.vat_due_this_month > 0 ? "red" : "green",
-    urgent: data.vat_due_this_month > 0,
-    href: "/tax/vat",
-  },
+  ...buildSharedStats(data),
 ];
 
 export const useDashboardPage = () => {

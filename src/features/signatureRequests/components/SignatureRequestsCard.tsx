@@ -10,9 +10,8 @@ import { SignatureRequestAuditDrawer } from "./SignatureRequestAuditDrawer";
 import { CreateSignatureRequestModal } from "./CreateSignatureRequestModal";
 import { useClientSignatureRequests } from "../hooks/useClientSignatureRequests";
 import { useSignatureRequestActions } from "../hooks/useSignatureRequestActions";
-import { buildSigningUrl } from "../utils";
+import { useSignatureRequestSigningUrls } from "../utils";
 import type { ClientResponse } from "@/features/clients/api";
-import type { SendSignatureRequestResponse } from "../api";
 
 interface Props {
   client: ClientResponse;
@@ -21,18 +20,11 @@ interface Props {
 
 export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) => {
   const [showCreate, setShowCreate] = useState(false);
-  const [signingUrls, setSigningUrls] = useState<Record<number, string>>({});
   const [auditRequestId, setAuditRequestId] = useState<number | null>(null);
 
   const { items, total, isLoading, error } = useClientSignatureRequests({ clientId: client.id });
   const { create, isCreating, send, isSending, cancel, isCanceling } = useSignatureRequestActions(client.id);
-
-  const handleSend = async (id: number) => {
-    const result = (await send(id)) as SendSignatureRequestResponse;
-    if (result?.signing_url_hint) {
-      setSigningUrls((prev) => ({ ...prev, [id]: buildSigningUrl(result.signing_url_hint) }));
-    }
-  };
+  const { signingUrls, handleSend } = useSignatureRequestSigningUrls(send);
 
   return (
     <>

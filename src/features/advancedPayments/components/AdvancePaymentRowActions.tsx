@@ -5,7 +5,7 @@ import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { EditAdvancePaymentInline } from "./EditAdvancePaymentInline";
 
-interface AdvancePaymentRowActionsProps {
+export interface AdvancePaymentRowActionsProps {
   row: AdvancePaymentRow;
   updatingId: number | null;
   deletingId: number | null;

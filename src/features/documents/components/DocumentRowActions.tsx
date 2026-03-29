@@ -2,7 +2,7 @@ import { Download, Eye, History, CheckCircle, XCircle, RefreshCw, Trash2 } from 
 import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
 import type { PermanentDocumentResponse } from "../api";
 
-interface DocumentRowActionsProps {
+export interface DocumentRowActionsProps {
   doc: PermanentDocumentResponse;
   isAdvisor: boolean;
   canPerformActions: boolean;

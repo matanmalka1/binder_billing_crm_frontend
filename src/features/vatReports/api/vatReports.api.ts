@@ -118,7 +118,7 @@ export const vatReportsApi = {
       responseType: "blob",
     });
     const contentDisposition = response.headers["content-disposition"];
-    const filenameMatch = contentDisposition?.match(/filename=\"?([^\";]+)\"?/);
+    const filenameMatch = contentDisposition?.match(/filename="?([^";]+)"?/);
     const ext = format === "excel" ? "xlsx" : "pdf";
     const filename = filenameMatch?.[1] || `vat_business_${businessId}_${year}.${ext}`;
     const mimeType =

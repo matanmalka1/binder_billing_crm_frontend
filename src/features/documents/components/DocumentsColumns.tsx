@@ -3,23 +3,9 @@ import type { PermanentDocumentResponse } from "../api";
 import { Badge } from "../../../components/ui/Badge";
 import { formatDate } from "../../../utils/utils";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "../documents.constants";
-import { DocumentRowActions } from "./DocumentRowActions";
+import { DocumentRowActions, type DocumentRowActionsProps } from "./DocumentRowActions";
 
-interface BuildDocColumnsOptions {
-  isAdvisor: boolean;
-  canPerformActions: boolean;
-  downloadingId: number | null;
-  replacingId: number | null;
-  deletingId: number | null;
-  rejectingId: number | null;
-  onDownload: (id: number) => void;
-  onPreview: (doc: PermanentDocumentResponse) => void;
-  onReplace: (id: number) => void;
-  onDelete: (id: number) => void;
-  handleApprove: (id: number) => void;
-  handleReject: (id: number) => void;
-  handleExpandVersions: (id: number) => void;
-}
+type BuildDocColumnsOptions = Omit<DocumentRowActionsProps, "doc">;
 
 export const buildDocumentColumns = ({
   isAdvisor,

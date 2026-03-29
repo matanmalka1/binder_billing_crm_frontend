@@ -17,4 +17,4 @@ export interface CreateTaxDeadlineForm extends TaxDeadlineFormValues {
   client_id: string;
 }
 
-export interface EditTaxDeadlineForm extends TaxDeadlineFormValues {}
+export type EditTaxDeadlineForm = TaxDeadlineFormValues;

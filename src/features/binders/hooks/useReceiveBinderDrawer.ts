@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { bindersApi, bindersQK } from "../api";
@@ -56,13 +56,13 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     refetchOnWindowFocus: false,
   });
 
-  const businesses = businessesData?.items ?? [];
+  const businesses = useMemo(() => businessesData?.items ?? [], [businessesData?.items]);
 
   useEffect(() => {
     if (businesses.length === 1) {
       form.setValue("business_id", businesses[0].id, { shouldValidate: true });
     }
-  }, [businesses.length, businesses[0]?.id]);
+  }, [businesses, form]);
 
   const { data: clientBindersData } = useQuery({
     queryKey: bindersQK.list({ client_id: clientId, page_size: 10 }),

@@ -4,8 +4,8 @@ import {
   FinancialAmountDescriptionFields,
   FinancialEditFormShell,
   FinancialSelectField,
-  validatePositiveAmount,
 } from "./FinancialLineFormParts";
+import { validatePositiveAmount } from "./financialValidators";
 
 interface EditIncomeLineFormProps {
   line: IncomeLineResponse;
