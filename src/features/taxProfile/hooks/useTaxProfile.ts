@@ -1,14 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { taxProfileApi, type TaxProfileData } from "../api";
+import { taxProfileApi, taxProfileQK, type TaxProfileData } from "../api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
 
 export type { TaxProfileData };
 
 export const useTaxProfile = (businessId: number) => {
   const queryClient = useQueryClient();
-  const qk = QK.clients.taxProfile(businessId);
+  const qk = taxProfileQK.forBusiness(businessId);
 
   const profileQuery = useQuery({
     enabled: businessId > 0,

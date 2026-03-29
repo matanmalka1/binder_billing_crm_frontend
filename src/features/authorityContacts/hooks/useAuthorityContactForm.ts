@@ -2,10 +2,9 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { authorityContactsApi, type AuthorityContactResponse } from "../api";
+import { authorityContactsApi, authorityContactsQK, type AuthorityContactResponse } from "../api";
 import { showErrorToast } from "../../../utils/utils";
 import { authorityContactSchema, authorityContactDefaults, type AuthorityContactFormValues } from "../schemas";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
 export const useAuthorityContactForm = (
@@ -14,7 +13,7 @@ export const useAuthorityContactForm = (
   existing?: AuthorityContactResponse | null,
 ) => {
   const queryClient = useQueryClient();
-  const qk = QK.authorityContacts.forClient(clientId);
+  const qk = authorityContactsQK.forBusiness(clientId);
 
   const form = useForm<AuthorityContactFormValues>({
     resolver: zodResolver(authorityContactSchema),

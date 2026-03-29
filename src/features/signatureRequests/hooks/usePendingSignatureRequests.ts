@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { signatureRequestsApi } from "../api";
+import { signatureRequestsApi, signatureRequestsQK } from "../api";
 import type { SignatureRequestResponse } from "../api";
 import { clientsApi } from "@/features/clients/api";
 import { getErrorMessage } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
 
 type Params = { page?: number; pageSize?: number };
 
@@ -17,7 +16,7 @@ type Result = {
 
 export const usePendingSignatureRequests = ({ page = 1, pageSize = 50 }: Params = {}): Result => {
   const listQuery = useQuery({
-    queryKey: QK.signatureRequests.pending({ page, page_size: pageSize }),
+    queryKey: signatureRequestsQK.pending({ page, page_size: pageSize }),
     queryFn: () => signatureRequestsApi.listPending({ page, page_size: pageSize }),
   });
 

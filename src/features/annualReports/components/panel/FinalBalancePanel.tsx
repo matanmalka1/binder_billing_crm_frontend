@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { annualReportTaxApi } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
+import { annualReportTaxApi, annualReportsQK } from "../../api";
 
 interface Props {
   reportId: number;
@@ -17,13 +16,13 @@ const BALANCE_STYLES = {
 
 export const FinalBalancePanel: React.FC<Props> = ({ reportId }) => {
   const taxQuery = useQuery({
-    queryKey: QK.tax.annualReportTaxCalc(reportId),
+    queryKey: annualReportsQK.taxCalc(reportId),
     queryFn: () => annualReportTaxApi.getTaxCalculation(reportId),
     enabled: !!reportId,
   });
 
   const advancesQuery = useQuery({
-    queryKey: QK.tax.annualReportAdvancesSummary(reportId),
+    queryKey: annualReportsQK.advancesSummary(reportId),
     queryFn: () => annualReportTaxApi.getAdvancesSummary(reportId),
     enabled: !!reportId,
   });

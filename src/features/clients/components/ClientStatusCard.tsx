@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck } from "lucide-react";
-import { clientsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { clientsApi, clientsQK } from "../api";
 import { Card } from "../../../components/ui/Card";
 interface Props {
   clientId: number;
@@ -42,14 +41,14 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
   const [selectedYear, setSelectedYear] = useState<number>(CURRENT_YEAR);
 
   const { data: businesses } = useQuery({
-    queryKey: QK.clients.businesses(clientId),
+    queryKey: clientsQK.businesses(clientId),
     queryFn: () => clientsApi.listBusinessesForClient(clientId),
     staleTime: 60_000,
   });
   const firstBusinessId = businesses?.items?.[0]?.id ?? null;
 
   const { data, isLoading } = useQuery({
-    queryKey: QK.clients.statusCard(clientId, selectedYear),
+    queryKey: clientsQK.statusCard(clientId, selectedYear),
     queryFn: () => clientsApi.getStatusCard(clientId, selectedYear),
     staleTime: 30_000,
     retry: 1,

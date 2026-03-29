@@ -3,9 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { annualReportsApi, type CreateAnnualReportPayload } from "../api";
+import { annualReportsApi, annualReportsQK, type CreateAnnualReportPayload } from "../api";
 import { showErrorToast } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { createReportSchema, type CreateReportFormValues } from "../schemas";
 import { computeTaxPreview } from "../taxPreview";
@@ -58,7 +57,7 @@ export const useCreateReport = (onSuccess?: () => void) => {
         ? `דוח נוצר | רווח ראשוני: ₪${Number(data.profit).toLocaleString("he-IL")}`
         : "דוח שנתי נוצר בהצלחה";
       toast.success(message);
-      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.all });
       form.reset();
       onSuccess?.();
     },

@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle, Clock, AlertTriangle } from "lucide-react";
-import { taxDeadlinesApi } from "../api";
+import { taxDeadlinesApi, taxDeadlinesQK } from "../api";
 import type { TimelineEntry } from "../api";
-import { QK } from "../../../lib/queryKeys";
 import { cn } from "../../../utils/utils";
 
 interface FilingTimelineProps {
@@ -46,7 +45,7 @@ const sortByDate = (a: TimelineEntry, b: TimelineEntry) =>
 
 export const FilingTimeline: React.FC<FilingTimelineProps> = ({ businessId }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.taxDeadlines.timeline(businessId),
+    queryKey: taxDeadlinesQK.timeline(businessId),
     queryFn: () => taxDeadlinesApi.getTimeline(businessId),
   });
 

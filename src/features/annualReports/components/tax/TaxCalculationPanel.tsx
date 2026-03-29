@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { annualReportTaxApi } from "../../api";
-import { annualReportsApi } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
+import { annualReportsApi, annualReportsQK } from "../../api";
 import { cn } from "../../../../utils/utils";
 import { TaxBracketsTable } from "./TaxBracketsTable";
 import { TaxCalculatorInputs } from "./TaxCalculatorInputs";
@@ -37,13 +36,13 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
   const [otherCredits, setOtherCredits] = useState("");
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: QK.tax.annualReportTaxCalc(reportId),
+    queryKey: annualReportsQK.taxCalc(reportId),
     queryFn: () => annualReportTaxApi.getTaxCalculation(reportId),
     enabled: !!reportId,
   });
 
   const detailQ = useQuery({
-    queryKey: QK.tax.annualReportDetails(reportId),
+    queryKey: annualReportsQK.details(reportId),
     queryFn: () => annualReportsApi.getReportDetails(reportId),
     enabled: !!reportId,
   });
@@ -52,8 +51,8 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
     mutationFn: (payload: Parameters<typeof annualReportsApi.patchReportDetails>[1]) =>
       annualReportsApi.patchReportDetails(reportId, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QK.tax.annualReportTaxCalc(reportId) });
-      queryClient.invalidateQueries({ queryKey: QK.tax.annualReportDetails(reportId) });
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.taxCalc(reportId) });
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.details(reportId) });
     },
   });
 

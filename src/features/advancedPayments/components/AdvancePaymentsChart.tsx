@@ -8,8 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { QK } from "../../../lib/queryKeys";
-import { advancePaymentsApi } from "../api";
+import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import { MONTH_SHORT_NAMES } from "../utils";
 
 interface AdvancePaymentsChartProps {
@@ -22,7 +21,7 @@ export const AdvancePaymentsChart: React.FC<AdvancePaymentsChartProps> = ({
   year,
 }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.tax.advancePayments.chart(businessId, year),
+    queryKey: advancedPaymentsQK.chart(businessId, year),
     queryFn: () => advancePaymentsApi.getChartData(businessId, year),
     enabled: businessId > 0 && year > 0,
   });

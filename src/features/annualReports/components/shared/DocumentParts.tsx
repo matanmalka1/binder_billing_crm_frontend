@@ -2,8 +2,7 @@ import { useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Upload, CreditCard, ScrollText, FileSignature, FileText } from "lucide-react";
 import type { ComponentType } from "react";
-import { QK } from "../../../../lib/queryKeys";
-import { documentsApi } from "@/features/documents/api";
+import { documentsApi, documentsQK } from "@/features/documents/api";
 import type { PermanentDocumentResponse } from "@/features/documents/api";
 import { cn, getErrorMessage } from "../../../../utils/utils";
 import { toast } from "../../../../utils/toast";
@@ -65,10 +64,10 @@ export const MissingDocRow = ({ clientId, docType, annualReportId }: MissingDocR
       ...(annualReportId != null ? { annual_report_id: annualReportId } : {}),
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QK.documents.clientList(clientId) });
-      queryClient.invalidateQueries({ queryKey: QK.documents.clientSignals(clientId) });
+      queryClient.invalidateQueries({ queryKey: documentsQK.businessList(clientId) });
+      queryClient.invalidateQueries({ queryKey: documentsQK.businessSignals(clientId) });
       if (annualReportId != null)
-        queryClient.invalidateQueries({ queryKey: QK.documents.byAnnualReport(annualReportId) });
+        queryClient.invalidateQueries({ queryKey: documentsQK.byAnnualReport(annualReportId) });
     },
     onError: (error) => { toast.error(getErrorMessage(error, "שגיאה בהעלאת המסמך")); },
   });

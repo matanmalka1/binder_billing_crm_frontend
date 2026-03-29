@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, Plus, X } from "lucide-react";
-import { annualReportsApi, type AnnualReportScheduleKey } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
+import { annualReportsApi, annualReportsQK, type AnnualReportScheduleKey } from "../../api";
 import { Button } from "../../../../components/ui/Button";
 import {
   SCHEDULE_FIELDS,
@@ -24,7 +23,7 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
   const [editingLineId, setEditingLineId] = useState<number | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>(buildEmptyForm(schedule));
 
-  const qk = QK.tax.annualReportAnnex(reportId, schedule);
+  const qk = annualReportsQK.annex(reportId, schedule);
 
   const { data: lines = [], isLoading } = useQuery({
     queryKey: qk,
@@ -33,7 +32,7 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
 
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: qk });
-    qc.invalidateQueries({ queryKey: QK.tax.annualReportReadiness(reportId) });
+    qc.invalidateQueries({ queryKey: annualReportsQK.readiness(reportId) });
   };
 
   const addMutation = useMutation({

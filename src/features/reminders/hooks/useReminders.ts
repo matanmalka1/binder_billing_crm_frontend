@@ -2,10 +2,9 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { remindersApi } from "../api";
+import { remindersApi, remindersQK } from "../api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
-import { QK } from "../../../lib/queryKeys";
 import type { Reminder } from "../api";
 import type { CreateReminderRequest } from "../types";
 import {
@@ -77,7 +76,7 @@ export const useReminders = (opts?: { clientId?: number }) => {
   });
 
   const remindersQuery = useQuery({
-    queryKey: QK.reminders.list(clientId),
+    queryKey: remindersQK.list(clientId),
     queryFn: () =>
       remindersApi.list(clientId ? { business_id: clientId } : undefined),
   });
@@ -86,8 +85,8 @@ export const useReminders = (opts?: { clientId?: number }) => {
     mutationFn: remindersApi.create,
     onSuccess: () => {
       toast.success("תזכורת נוצרה בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.reminders.all });
-      queryClient.invalidateQueries({ queryKey: QK.reminders.list(clientId) });
+      queryClient.invalidateQueries({ queryKey: remindersQK.all });
+      queryClient.invalidateQueries({ queryKey: remindersQK.list(clientId) });
       setShowCreateModal(false);
       form.reset(makeDefaultFormValues(clientId));
     },
@@ -98,7 +97,7 @@ export const useReminders = (opts?: { clientId?: number }) => {
     mutationFn: remindersApi.cancel,
     onSuccess: () => {
       toast.success("תזכורת בוטלה");
-      queryClient.invalidateQueries({ queryKey: QK.reminders.all });
+      queryClient.invalidateQueries({ queryKey: remindersQK.all });
     },
     onError: (error) => showErrorToast(error, "שגיאה בביטול תזכורת"),
     onSettled: () => setCancelingId(null),
@@ -108,7 +107,7 @@ export const useReminders = (opts?: { clientId?: number }) => {
     mutationFn: remindersApi.markSent,
     onSuccess: () => {
       toast.success("תזכורת סומנה כנשלחה");
-      queryClient.invalidateQueries({ queryKey: QK.reminders.all });
+      queryClient.invalidateQueries({ queryKey: remindersQK.all });
     },
     onError: (error) => showErrorToast(error, "שגיאה בסימון התזכורת"),
     onSettled: () => setMarkingSentId(null),

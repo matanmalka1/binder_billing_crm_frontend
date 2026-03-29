@@ -1,16 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   annualReportsApi,
+  annualReportsQK,
   type AnnualReportScheduleKey,
 } from "../api";
-import { QK } from "../../../lib/queryKeys";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
 export const useReportSchedules = (reportId: number | null) => {
   const queryClient = useQueryClient();
   const enabled = reportId !== null && reportId > 0;
-  const queryKey = QK.tax.annualReports.detail(reportId ?? 0);
+  const queryKey = annualReportsQK.detail(reportId ?? 0);
   const qk = enabled ? queryKey : null;
 
   const completeScheduleMutation = useMutation({

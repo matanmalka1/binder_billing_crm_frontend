@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { QK } from "../../../lib/queryKeys";
-import { documentsApi } from "../api";
+import { documentsApi, documentsQK } from "../api";
 import { Badge } from "../../../components/ui/Badge";
 import { STATUS_LABELS, STATUS_BADGE_VARIANT } from "../documents.constants";
 import { formatDate, formatFileSize } from "../../../utils/utils";
@@ -17,7 +16,7 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
   taxYear,
 }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.documents.versions(clientId, documentType, taxYear),
+    queryKey: documentsQK.versions(clientId, documentType, taxYear),
     queryFn: () => documentsApi.getVersions(clientId, documentType, taxYear),
   });
 

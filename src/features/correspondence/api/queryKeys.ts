@@ -1,3 +1,4 @@
 export const correspondenceQK = {
-  forClient: (clientId: number) => ["correspondence", "client", clientId] as const,
+  forBusiness: (businessId: number) => ["correspondence", "business", businessId] as const,
+  forClient: (businessId: number) => ["correspondence", "business", businessId] as const,
 } as const;

@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { reportsApi } from "../api";
+import { reportsApi, reportsQK } from "../api";
 import { getErrorMessage } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
 
 export const useAnnualReportStatusReport = () => {
   const currentYear = new Date().getFullYear();
   const [taxYear, setTaxYear] = useState<number>(currentYear);
 
   const query = useQuery({
-    queryKey: QK.reports.annualReportStatus(taxYear),
+    queryKey: reportsQK.annualReportStatus(taxYear),
     queryFn: () => reportsApi.getAnnualReportStatusReport(taxYear),
   });
 

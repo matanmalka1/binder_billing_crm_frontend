@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Scissors, Building2, Briefcase, Users, TrendingDown, Car, Megaphone, Shield, Smartphone, Plane, GraduationCap, Landmark, MoreHorizontal } from "lucide-react";
-import { annualReportFinancialsApi } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
+import { annualReportFinancialsApi, annualReportsQK } from "../../api";
 import { TaxCreditsPanel } from "./TaxCreditsPanel";
 import { EXPENSE_LABELS } from "../../report.constants";
 import type { ComponentType } from "react";
@@ -28,7 +27,7 @@ const CATEGORY_ICONS: Record<string, ComponentType<{ className?: string }>> = {
 
 export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.tax.annualReportFinancials(reportId),
+    queryKey: annualReportsQK.financials(reportId),
     queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
   });
 

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { annualReportStatusApi } from "../../api";
+import { annualReportStatusApi, annualReportsQK } from "../../api";
 import type { DeadlineType } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
 import { Button } from "../../../../components/ui/Button";
 import { toast } from "../../../../utils/toast";
 import { formatDate } from "../../../../utils/utils";
@@ -36,7 +35,7 @@ export const DeadlineUpdatePanel: React.FC<Props> = ({
         ...(selected === "custom" && customNote ? { custom_deadline_note: customNote } : {}),
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.detail(reportId) });
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.detail(reportId) });
       toast.success("מועד ההגשה עודכן בהצלחה");
     },
     onError: () => {

@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { signatureRequestsApi } from "../api";
+import { signatureRequestsApi, signatureRequestsQK } from "../api";
 import type { SignatureRequestResponse } from "../api";
 import { getErrorMessage } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
 
 type Params = { clientId: number | null; page?: number; pageSize?: number };
 
@@ -17,7 +16,7 @@ export const useClientSignatureRequests = ({ clientId, page = 1, pageSize = 10 }
   const enabled = clientId != null && clientId > 0;
 
   const query = useQuery({
-    queryKey: QK.signatureRequests.forClientPage(clientId ?? 0, { page, page_size: pageSize }),
+    queryKey: signatureRequestsQK.forBusinessPage(clientId ?? 0, { page, page_size: pageSize }),
     queryFn: () => signatureRequestsApi.listForClient(clientId!, { page, page_size: pageSize }),
     enabled,
   });

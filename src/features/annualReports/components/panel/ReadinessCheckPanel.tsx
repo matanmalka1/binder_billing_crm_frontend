@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, XCircle } from "lucide-react";
-import { annualReportTaxApi } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
+import { annualReportTaxApi, annualReportsQK } from "../../api";
 import { cn } from "../../../../utils/utils";
 
 interface ReadinessCheckPanelProps {
@@ -10,7 +9,7 @@ interface ReadinessCheckPanelProps {
 
 export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ reportId }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.tax.annualReportReadiness(reportId),
+    queryKey: annualReportsQK.readiness(reportId),
     queryFn: () => annualReportTaxApi.getReadiness(reportId),
     enabled: !!reportId,
   });

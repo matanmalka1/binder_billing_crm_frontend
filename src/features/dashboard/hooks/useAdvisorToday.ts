@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { taxDeadlinesApi } from "@/features/taxDeadlines/api";
 import { annualReportsApi, getStatusLabel } from "@/features/annualReports/api";
 import { remindersApi } from "@/features/reminders/api";
-import { chargesApi } from "@/features/charges/api";
-import { QK } from "../../../lib/queryKeys";
+import { chargesApi, chargesQK } from "@/features/charges/api";
+import { dashboardQK } from "../api";
 import { useRole } from "../../../hooks/useRole";
 import { formatDate } from "../../../utils/utils";
 import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
@@ -34,7 +34,7 @@ export const useAdvisorToday = () => {
 
   const deadlinesQuery = useQuery({
     enabled: isAdvisor,
-    queryKey: QK.advisorToday.deadlines,
+    queryKey: dashboardQK.advisorToday.deadlines,
     queryFn: () =>
       taxDeadlinesApi.listTaxDeadlines({
         status: "pending",
@@ -46,7 +46,7 @@ export const useAdvisorToday = () => {
 
   const reportsQuery = useQuery({
     enabled: isAdvisor,
-    queryKey: QK.advisorToday.reports,
+    queryKey: dashboardQK.advisorToday.reports,
     queryFn: () =>
       annualReportsApi.listReports({ page: 1, page_size: 100 }),
     staleTime: 5 * 60 * 1000,
@@ -54,14 +54,14 @@ export const useAdvisorToday = () => {
 
   const remindersQuery = useQuery({
     enabled: isAdvisor,
-    queryKey: QK.advisorToday.reminders,
+    queryKey: dashboardQK.advisorToday.reminders,
     queryFn: () => remindersApi.list({ status: "pending", page_size: 50 }),
     staleTime: 5 * 60 * 1000,
   });
 
   const chargesQuery = useQuery({
     enabled: isAdvisor,
-    queryKey: QK.charges.list({
+    queryKey: chargesQK.list({
       status: "issued",
       issued_before: sixtyDaysAgo,
       page_size: 20,

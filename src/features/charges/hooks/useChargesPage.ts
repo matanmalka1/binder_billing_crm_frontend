@@ -4,6 +4,7 @@ import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   chargesApi,
+  chargesQK,
   type BulkChargeActionPayload,
   type ChargesListParams,
   type CreateChargePayload,
@@ -11,7 +12,6 @@ import {
 import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
 import { useRole } from "../../../hooks/useRole";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
 export const useChargesPage = () => {
@@ -35,7 +35,7 @@ export const useChargesPage = () => {
   };
 
   const { items: chargeItems, total, loading, error } = usePaginatedList({
-    queryKey: QK.charges.list(apiParams),
+    queryKey: chargesQK.list(apiParams),
     queryFn: () => chargesApi.list(apiParams),
     errorMessage: "שגיאה בטעינת רשימת חיובים",
   });
@@ -45,7 +45,7 @@ export const useChargesPage = () => {
     mutationFn: (payload: CreateChargePayload) => chargesApi.create(payload),
     onSuccess: async () => {
       toast.success("חיוב נוצר בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: QK.charges.all });
+      await queryClient.invalidateQueries({ queryKey: chargesQK.all });
     },
   });
 
@@ -87,7 +87,7 @@ export const useChargesPage = () => {
     },
     onSuccess: async () => {
       toast.success("פעולת חיוב בוצעה בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: QK.charges.all });
+      await queryClient.invalidateQueries({ queryKey: chargesQK.all });
     },
   });
 
@@ -126,7 +126,7 @@ export const useChargesPage = () => {
         if (result.failed.length > 0) {
           result.failed.forEach((f) => toast.error(`חיוב #${f.id}: ${f.error}`));
         }
-        await queryClient.invalidateQueries({ queryKey: QK.charges.all });
+        await queryClient.invalidateQueries({ queryKey: chargesQK.all });
         clearSelection();
       } catch (requestError: unknown) {
         showErrorToast(requestError, "שגיאה בביצוע פעולה מרובה");

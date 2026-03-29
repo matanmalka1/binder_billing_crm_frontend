@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { clientsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { clientsApi, clientsQK } from "../api";
 import { formatDate } from "../../../utils/utils";
 import type { BusinessStatus } from "../api/contracts";
 
@@ -27,7 +26,7 @@ interface Props {
 
 export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAddBusiness }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.clients.businesses(clientId),
+    queryKey: clientsQK.businesses(clientId),
     queryFn: () => clientsApi.listBusinessesForClient(clientId),
   });
 

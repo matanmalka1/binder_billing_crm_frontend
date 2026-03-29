@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { clientsApi } from "@/features/clients/api";
+import { clientsApi, clientsQK } from "@/features/clients/api";
 import type { BusinessResponse } from "@/features/clients/api";
-import { QK } from "../lib/queryKeys";
 
 interface UseBusinessesForClientOptions {
   clientId: number | null | undefined;
@@ -16,7 +15,7 @@ export const useBusinessesForClient = ({
   onAutoSelect,
 }: UseBusinessesForClientOptions) => {
   const { data, isLoading } = useQuery({
-    queryKey: clientId ? QK.clients.businesses(clientId) : ["clients", "businesses", "none"],
+    queryKey: clientId ? clientsQK.businesses(clientId) : ["clients", "businesses", "none"],
     queryFn: () => clientsApi.listBusinessesForClient(clientId!),
     enabled: enabled && !!clientId,
     staleTime: 30_000,

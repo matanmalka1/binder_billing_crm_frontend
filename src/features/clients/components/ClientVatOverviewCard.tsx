@@ -1,9 +1,8 @@
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { clientsApi } from "../api";
+import { clientsApi, clientsQK } from "../api";
 import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
 import type { VatClientSummaryResponse } from "@/features/vatReports/api";
-import { QK } from "../../../lib/queryKeys";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 
@@ -18,7 +17,7 @@ export const ClientVatOverviewCard: React.FC<Props> = ({ clientId }) => {
   const navigate = useNavigate();
 
   const { data: businessesData, isLoading: loadingBiz } = useQuery({
-    queryKey: QK.clients.businesses(clientId),
+    queryKey: clientsQK.businesses(clientId),
     queryFn: () => clientsApi.listBusinessesForClient(clientId),
     staleTime: 60_000,
   });

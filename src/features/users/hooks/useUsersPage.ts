@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { usersApi } from "../api";
+import { usersApi, usersQK } from "../api";
 import type { CreateUserPayload, UpdateUserPayload, UserResponse } from "../api";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
@@ -12,7 +11,7 @@ import { useRole } from "../../../hooks/useRole";
 const PAGE_SIZE = 20;
 
 const invalidateUsers = (queryClient: ReturnType<typeof useQueryClient>) =>
-  queryClient.invalidateQueries({ queryKey: QK.users.all });
+  queryClient.invalidateQueries({ queryKey: usersQK.all });
 
 export const useUsersPage = () => {
   const queryClient = useQueryClient();
@@ -26,7 +25,7 @@ export const useUsersPage = () => {
   const filters = { page, page_size, is_active };
 
   const listQuery = useQuery({
-    queryKey: QK.users.list(filters),
+    queryKey: usersQK.list(filters),
     queryFn: () => usersApi.list(filters),
   });
 

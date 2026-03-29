@@ -2,11 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   annualReportsApi,
+  annualReportsQK,
   type StatusTransitionPayload,
   type ReportDetailResponse,
 } from "../api";
 import { annualReportStatusApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { timelineQK } from "@/features/timeline/api";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import type { AnnualReportDetail } from "../types";
@@ -19,7 +20,7 @@ export const useReportMutations = (
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const enabled = reportId !== null && reportId > 0;
-  const queryKey = QK.tax.annualReports.detail(reportId ?? 0);
+  const queryKey = annualReportsQK.detail(reportId ?? 0);
   const qk = enabled ? queryKey : null;
 
   const transitionMutation = useMutation({
@@ -50,10 +51,10 @@ export const useReportMutations = (
     onSuccess: () => {
       toast.success("סטטוס עודכן בהצלחה");
       if (qk) void queryClient.invalidateQueries({ queryKey: qk });
-      void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      void queryClient.invalidateQueries({ queryKey: annualReportsQK.all });
       const businessId = reportData?.business_id;
       if (businessId) {
-        void queryClient.invalidateQueries({ queryKey: QK.timeline.businessRoot(businessId) });
+        void queryClient.invalidateQueries({ queryKey: timelineQK.businessRoot(businessId) });
       }
     },
   });
@@ -76,7 +77,7 @@ export const useReportMutations = (
             : prev,
         );
       }
-      void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      void queryClient.invalidateQueries({ queryKey: annualReportsQK.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון דוח"),
   });
@@ -85,7 +86,7 @@ export const useReportMutations = (
     mutationFn: () => annualReportsApi.deleteReport(reportId as number),
     onSuccess: async () => {
       toast.success("הדוח נמחק בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      await queryClient.invalidateQueries({ queryKey: annualReportsQK.all });
       if (onDeleted) {
         onDeleted();
       } else {

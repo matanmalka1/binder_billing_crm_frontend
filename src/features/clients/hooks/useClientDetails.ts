@@ -1,11 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { clientsApi, type UpdateClientPayload, type ClientResponse, type CreateBusinessPayload } from "../api";
-import { bindersApi } from "@/features/binders/api";
-import { chargesApi } from "@/features/charges/api";
+import { clientsApi, clientsQK, type UpdateClientPayload, type ClientResponse, type CreateBusinessPayload } from "../api";
+import { bindersApi, bindersQK } from "@/features/binders/api";
+import { chargesApi, chargesQK } from "@/features/charges/api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
-import { QK } from "../../../lib/queryKeys";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
 
@@ -43,19 +42,19 @@ export const useClientDetails = ({
   const { isAdvisor, can } = useRole();
 
   const clientQuery = useQuery({
-    queryKey: QK.clients.detail(id),
+    queryKey: clientsQK.detail(id),
     queryFn: () => clientsApi.getById(id),
     enabled,
   });
 
   const bindersQuery = useQuery({
-    queryKey: QK.binders.forClientPage(id, BINDERS_PAGE.page, BINDERS_PAGE.page_size),
+    queryKey: bindersQK.forClientPage(id, BINDERS_PAGE.page, BINDERS_PAGE.page_size),
     queryFn: () => bindersApi.listClientBinders(id, BINDERS_PAGE),
     enabled,
   });
 
   const chargesQuery = useQuery({
-    queryKey: QK.charges.forClientPage(id, CHARGES_PAGE.page, CHARGES_PAGE.page_size),
+    queryKey: chargesQK.forClientPage(id, CHARGES_PAGE.page, CHARGES_PAGE.page_size),
     queryFn: () => chargesApi.list({ client_id: id, ...CHARGES_PAGE }),
     enabled: enabled && isAdvisor,
   });
@@ -65,8 +64,8 @@ export const useClientDetails = ({
       clientsApi.update(id, payload),
     onSuccess: async (updated) => {
       toast.success("פרטי הלקוח עודכנו");
-      queryClient.setQueryData(QK.clients.detail(id), updated);
-      await queryClient.invalidateQueries({ queryKey: QK.clients.all });
+      queryClient.setQueryData(clientsQK.detail(id), updated);
+      await queryClient.invalidateQueries({ queryKey: clientsQK.all });
     },
     onError: (err) =>
       showErrorToast(err, "שגיאה בעדכון פרטי לקוח"),
@@ -76,7 +75,7 @@ export const useClientDetails = ({
     mutationFn: () => clientsApi.delete(id),
     onSuccess: async () => {
       toast.success("הלקוח נמחק בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: QK.clients.all });
+      await queryClient.invalidateQueries({ queryKey: clientsQK.all });
       navigate("/clients");
     },
     onError: (err) => showErrorToast(err, "שגיאה במחיקת לקוח"),
@@ -87,7 +86,7 @@ export const useClientDetails = ({
       clientsApi.createBusiness(id, payload),
     onSuccess: () => {
       toast.success("העסק נוצר בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.clients.businesses(id) });
+      queryClient.invalidateQueries({ queryKey: clientsQK.businesses(id) });
     },
     onError: (err) => showErrorToast(err, "שגיאה ביצירת עסק"),
   });

@@ -10,8 +10,7 @@ import {
 } from "recharts";
 import { annualReportFinancialsApi } from "../../api";
 import { annualReportTaxApi } from "../../api";
-import { annualReportsApi } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
+import { annualReportsApi, annualReportsQK } from "../../api";
 import { DrawerSection } from "../../../../components/ui/DetailDrawer";
 
 interface Props {
@@ -49,13 +48,13 @@ const WaterfallRow: React.FC<WaterfallRowProps> = ({ label, value, isSubtract, i
 
 export const AnnualPLSummary: React.FC<Props> = ({ reportId, clientId }) => {
   const financialsQ = useQuery({
-    queryKey: QK.tax.annualReportFinancials(reportId),
+    queryKey: annualReportsQK.financials(reportId),
     queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
     enabled: !!reportId,
   });
 
   const taxQ = useQuery({
-    queryKey: QK.tax.annualReportTaxCalc(reportId),
+    queryKey: annualReportsQK.taxCalc(reportId),
     queryFn: () => annualReportTaxApi.getTaxCalculation(reportId),
     enabled: !!reportId,
   });
@@ -116,7 +115,7 @@ interface MultiYearChartProps {
 
 const MultiYearChart: React.FC<MultiYearChartProps> = ({ clientId, currentReportId }) => {
   const reportsQ = useQuery({
-    queryKey: QK.tax.annualReportsForClient(clientId),
+    queryKey: annualReportsQK.forBusiness(clientId),
     queryFn: () => annualReportsApi.listClientReports(clientId),
   });
 
@@ -132,7 +131,7 @@ const MultiYearChart: React.FC<MultiYearChartProps> = ({ clientId, currentReport
   const finResults = financialsQueries.map((r) =>
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useQuery({
-      queryKey: QK.tax.annualReportFinancials(r.id),
+      queryKey: annualReportsQK.financials(r.id),
       queryFn: () => annualReportFinancialsApi.getFinancials(r.id),
       enabled: sorted.length > 0,
     })
@@ -141,7 +140,7 @@ const MultiYearChart: React.FC<MultiYearChartProps> = ({ clientId, currentReport
   const taxResults = financialsQueries.map((r) =>
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useQuery({
-      queryKey: QK.tax.annualReportTaxCalc(r.id),
+      queryKey: annualReportsQK.taxCalc(r.id),
       queryFn: () => annualReportTaxApi.getTaxCalculation(r.id),
       enabled: sorted.length > 0,
     })

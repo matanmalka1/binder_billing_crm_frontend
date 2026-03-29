@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Banknote, CheckCircle, TrendingUp, AlertCircle } from "lucide-react";
-import { QK } from "../../../lib/queryKeys";
-import { advancePaymentsApi } from "../api";
+import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import { StatsCard } from "../../../components/ui/StatsCard";
 
 interface AdvancePaymentsKPICardsProps {
@@ -14,7 +13,7 @@ export const AdvancePaymentsKPICards: React.FC<AdvancePaymentsKPICardsProps> = (
   year,
 }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.tax.advancePayments.kpi(businessId, year),
+    queryKey: advancedPaymentsQK.kpi(businessId, year),
     queryFn: () => advancePaymentsApi.getAnnualKPIs(businessId, year),
     enabled: businessId > 0 && year > 0,
   });

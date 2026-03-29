@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
-import { annualReportFinancialsApi } from "../../api";
+import { annualReportFinancialsApi, annualReportsQK } from "../../api";
 import type { IncomeLineResponse, ExpenseLineResponse } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
 import { cn } from "../../../../utils/utils";
 import { AddLineForm } from "./IncomeExpensePanelParts";
 import { LineRow, INCOME_LABELS, EXPENSE_LABELS } from "../../report.constants";
@@ -22,7 +21,7 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
   const [editingExpenseId, setEditingExpenseId] = useState<number | null>(null);
 
   const { data, isLoading } = useQuery({
-    queryKey: QK.tax.annualReportFinancials(reportId),
+    queryKey: annualReportsQK.financials(reportId),
     queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
     enabled: !!reportId,
   });

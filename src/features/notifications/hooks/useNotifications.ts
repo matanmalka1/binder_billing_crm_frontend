@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { notificationsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { notificationsApi, notificationsQK } from "../api";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
 
@@ -8,7 +7,7 @@ export const useNotifications = (clientId?: number) => {
   const queryClient = useQueryClient();
 
   const { data: notifications = [], isLoading } = useQuery({
-    queryKey: QK.notifications.list(
+    queryKey: notificationsQK.list(
       clientId != null ? { business_id: clientId } : {},
     ),
     queryFn: () =>
@@ -18,14 +17,14 @@ export const useNotifications = (clientId?: number) => {
   });
 
   const { data: unreadData } = useQuery({
-    queryKey: QK.notifications.unreadCount(clientId),
+    queryKey: notificationsQK.unreadCount(clientId),
     queryFn: () => notificationsApi.getUnreadCount(clientId),
   });
 
   const unreadCount = unreadData?.unread_count ?? 0;
 
   const invalidate = () => {
-    void queryClient.invalidateQueries({ queryKey: QK.notifications.all });
+    void queryClient.invalidateQueries({ queryKey: notificationsQK.all });
   };
 
   const markReadMutation = useMutation({

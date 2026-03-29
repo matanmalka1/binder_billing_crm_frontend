@@ -7,8 +7,7 @@ import { StatusBadge } from "../../../components/ui/StatusBadge";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { useRole } from "../../../hooks/useRole";
 import { useVatWorkItemActions } from "../hooks/useVatWorkItemActions";
-import { bindersApi } from "@/features/binders/api";
-import { QK } from "../../../lib/queryKeys";
+import { bindersApi, bindersQK } from "@/features/binders/api";
 import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { VatProgressBar } from "./VatProgressBar";
 import { VatActionButtons } from "./VatActionButtons";
@@ -27,7 +26,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
   const filed = isFiled(workItem.status);
 
   const { data: binderData } = useQuery({
-    queryKey: QK.binders.list({ client_id: workItem.client_id!, page_size: 1 }),
+    queryKey: bindersQK.list({ client_id: workItem.client_id!, page_size: 1 }),
     queryFn: () => bindersApi.list({ client_id: workItem.client_id!, page_size: 1, status: "in_office" }),
     enabled: !!workItem.client_id,
     staleTime: 60_000,

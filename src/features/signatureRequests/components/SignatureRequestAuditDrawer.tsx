@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { signatureRequestsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { signatureRequestsApi, signatureRequestsQK } from "../api";
 import {
   DetailDrawer,
   DrawerField,
@@ -52,7 +51,7 @@ export const SignatureRequestAuditDrawer: React.FC<Props> = ({
   const open = requestId != null;
 
   const { data, isLoading } = useQuery({
-    queryKey: QK.signatureRequests.detail(requestId ?? 0),
+    queryKey: signatureRequestsQK.detail(requestId ?? 0),
     queryFn: () => signatureRequestsApi.getById(requestId!),
     enabled: open,
   });

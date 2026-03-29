@@ -4,13 +4,13 @@ import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   clientsApi,
+  clientsQK,
   type CreateClientPayload,
   type UpdateClientPayload,
   type ListClientsParams,
 } from "../api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useActionRunner } from "@/features/actions";
-import { QK } from "../../../lib/queryKeys";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
 import axios from "axios";
@@ -50,7 +50,7 @@ export const useClientsPage = () => {
     loading,
     error,
   } = usePaginatedList({
-    queryKey: QK.clients.list(apiParams),
+    queryKey: clientsQK.list(apiParams),
     queryFn: () => clientsApi.list(apiParams),
     errorMessage: "שגיאה בטעינת רשימת לקוחות",
   });
@@ -59,7 +59,7 @@ export const useClientsPage = () => {
     mutationFn: (payload: CreateClientPayload) => clientsApi.create(payload),
     onSuccess: () => {
       toast.success("לקוח נוצר בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.clients.all });
+      queryClient.invalidateQueries({ queryKey: clientsQK.all });
       setDeletedClientInfo(null);
     },
     onError: async (err, payload) => {
@@ -84,7 +84,7 @@ export const useClientsPage = () => {
       clientsApi.update(clientId, payload),
     onSuccess: () => {
       toast.success("הלקוח עודכן בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.clients.all });
+      queryClient.invalidateQueries({ queryKey: clientsQK.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון לקוח"),
   });
@@ -93,7 +93,7 @@ export const useClientsPage = () => {
     mutationFn: (clientId: number) => clientsApi.restore(clientId),
     onSuccess: () => {
       toast.success("הלקוח שוחזר בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.clients.all });
+      queryClient.invalidateQueries({ queryKey: clientsQK.all });
       setDeletedClientInfo(null);
     },
     onError: (err) => showErrorToast(err, "שגיאה בשחזור לקוח"),
@@ -117,7 +117,7 @@ export const useClientsPage = () => {
     pendingAction,
   } = useActionRunner({
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: QK.clients.all }),
+      queryClient.invalidateQueries({ queryKey: clientsQK.all }),
     errorFallback: "שגיאה בביצוע פעולת לקוח",
     canonicalAction: true,
   });

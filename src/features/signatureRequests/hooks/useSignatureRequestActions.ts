@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   signatureRequestsApi,
+  signatureRequestsQK,
   type CreateSignatureRequestPayload,
   type SendSignatureRequestResponse,
 } from "../api";
 import { showErrorToast } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
 /**
@@ -16,10 +16,10 @@ export const useSignatureRequestActions = (clientId?: number) => {
   const queryClient = useQueryClient();
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: QK.signatureRequests.all });
+    queryClient.invalidateQueries({ queryKey: signatureRequestsQK.all });
     if (clientId != null) {
       queryClient.invalidateQueries({
-        queryKey: QK.signatureRequests.forClient(clientId),
+        queryKey: signatureRequestsQK.forBusiness(clientId),
       });
     }
   };

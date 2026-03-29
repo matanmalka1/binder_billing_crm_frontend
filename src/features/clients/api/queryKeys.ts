@@ -1,4 +1,3 @@
-// mirror: frontend/src/lib/queryKeys.ts (QK.clients)
 export const clientsQK = {
   all: ["clients"] as const,
   list: (params: object) => ["clients", "list", params] as const,

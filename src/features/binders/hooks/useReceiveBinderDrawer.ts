@@ -4,11 +4,10 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { bindersApi } from "../api";
-import { clientsApi } from "@/features/clients/api";
-import { taxProfileApi } from "@/features/taxProfile/api";
+import { bindersApi, bindersQK } from "../api";
+import { clientsApi, clientsQK } from "@/features/clients/api";
+import { taxProfileApi, taxProfileQK } from "@/features/taxProfile/api";
 import { vatReportsApi } from "@/features/vatReports/api";
-import { QK } from "../../../lib/queryKeys";
 import { useAuthStore } from "../../../store/auth.store";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
@@ -49,7 +48,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   }, [businessId, form]);
 
   const { data: businessesData } = useQuery({
-    queryKey: QK.clients.businesses(clientId!),
+    queryKey: clientsQK.businesses(clientId!),
     queryFn: () => clientsApi.listBusinessesForClient(clientId!),
     enabled: !!clientId,
     staleTime: 30_000,
@@ -66,7 +65,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   }, [businesses.length, businesses[0]?.id]);
 
   const { data: clientBindersData } = useQuery({
-    queryKey: QK.binders.list({ client_id: clientId, page_size: 10 }),
+    queryKey: bindersQK.list({ client_id: clientId, page_size: 10 }),
     queryFn: () => bindersApi.list({ client_id: clientId, page_size: 10 }),
     enabled: !!clientId,
     staleTime: 30_000,
@@ -79,7 +78,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   );
 
   const { data: taxProfile } = useQuery({
-    queryKey: QK.businesses.taxProfile(businessId!),
+    queryKey: taxProfileQK.forBusiness(businessId!),
     queryFn: () => taxProfileApi.get(businessId!),
     enabled: !!businessId,
     staleTime: 30_000,
@@ -112,7 +111,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     },
     onSuccess: async (result, values) => {
       toast.success(result.is_new_binder ? "קלסר חדש נפתח והחומר נקלט" : "החומר נוסף לקלסר קיים");
-      await queryClient.invalidateQueries({ queryKey: QK.binders.all });
+      await queryClient.invalidateQueries({ queryKey: bindersQK.all });
 
       if (values.binder_type === "vat" && values.business_id && values.reporting_period) {
         const period = values.reporting_period.slice(0, 7);

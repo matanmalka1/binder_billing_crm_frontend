@@ -3,12 +3,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { useRole } from "../../../hooks/useRole";
 import { useForm } from "react-hook-form";
-import { taxDeadlinesApi } from "../api";
+import { taxDeadlinesApi, taxDeadlinesQK } from "../api";
 import type { TaxDeadlineResponse } from "../api";
+import { timelineQK } from "@/features/timeline/api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toOptionalString } from "../../../utils/filters";
 import type { TaxDeadlineFilters, CreateTaxDeadlineForm, EditTaxDeadlineForm } from "../types";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
 
@@ -44,7 +44,7 @@ export const useTaxDeadlines = () => {
   );
 
   const deadlinesQuery = useQuery({
-    queryKey: QK.tax.deadlines.list(apiParams),
+    queryKey: taxDeadlinesQK.list(apiParams),
     queryFn: () => taxDeadlinesApi.listTaxDeadlines(apiParams),
   });
 
@@ -59,8 +59,8 @@ export const useTaxDeadlines = () => {
     }) => taxDeadlinesApi.createTaxDeadline(payload),
     onSuccess: (_data, payload) => {
       toast.success("מועד נוצר בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
-      queryClient.invalidateQueries({ queryKey: QK.timeline.businessRoot(payload.business_id) });
+      queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
+      queryClient.invalidateQueries({ queryKey: timelineQK.businessRoot(payload.business_id) });
       setShowCreateModal(false);
     },
     onError: (error) => showErrorToast(error, "שגיאה ביצירת מועד"),
@@ -73,7 +73,7 @@ export const useTaxDeadlines = () => {
     }) => taxDeadlinesApi.updateTaxDeadline(id, payload),
     onSuccess: () => {
       toast.success("מועד עודכן בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
+      queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
       setEditingDeadline(null);
     },
     onError: (error) => showErrorToast(error, "שגיאה בעדכון מועד"),
@@ -83,7 +83,7 @@ export const useTaxDeadlines = () => {
     mutationFn: (deadlineId: number) => taxDeadlinesApi.deleteTaxDeadline(deadlineId),
     onSuccess: () => {
       toast.success("מועד נמחק בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
+      queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
     },
     onError: (error) => showErrorToast(error, "שגיאה במחיקת מועד"),
     onSettled: () => setDeletingId(null),
@@ -94,8 +94,8 @@ export const useTaxDeadlines = () => {
       taxDeadlinesApi.generateDeadlines(payload),
     onSuccess: (data, payload) => {
       toast.success(`נוצרו ${data.created_count} דדליינים בהצלחה`);
-      queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
-      queryClient.invalidateQueries({ queryKey: QK.timeline.businessRoot(payload.business_id) });
+      queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
+      queryClient.invalidateQueries({ queryKey: timelineQK.businessRoot(payload.business_id) });
     },
     onError: (error) => showErrorToast(error, "שגיאה ביצירת דדליינים"),
   });
@@ -104,7 +104,7 @@ export const useTaxDeadlines = () => {
     mutationFn: (deadlineId: number) => taxDeadlinesApi.completeTaxDeadline(deadlineId),
     onSuccess: () => {
       toast.success("מועד סומן כהושלם");
-      queryClient.invalidateQueries({ queryKey: QK.tax.deadlines.all });
+      queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
     },
     onError: (error) => showErrorToast(error, "שגיאה בסימון מועד"),
     onSettled: () => setCompletingId(null),

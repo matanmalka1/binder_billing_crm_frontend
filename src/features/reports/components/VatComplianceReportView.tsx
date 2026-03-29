@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { QK } from "../../../lib/queryKeys";
-import { reportsApi, type VatComplianceItem, type StalePendingItem } from "../api";
+import { reportsApi, reportsQK, type VatComplianceItem, type StalePendingItem } from "../api";
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { PageStateGuard } from "../../../components/ui/PageStateGuard";
 import { Badge } from "../../../components/ui/Badge";
@@ -88,7 +87,7 @@ export const VatComplianceReportView: React.FC = () => {
   const [year, setYear] = useState(new Date().getFullYear());
 
   const { data, isLoading, error } = useQuery({
-    queryKey: QK.reports.vatCompliance(year),
+    queryKey: reportsQK.vatCompliance(year),
     queryFn: () => reportsApi.getVatComplianceReport(year),
   });
 

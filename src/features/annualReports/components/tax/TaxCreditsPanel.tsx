@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { annualReportsApi } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
+import { annualReportsApi, annualReportsQK } from "../../api";
 
 interface Props {
   reportId: number;
@@ -24,7 +23,7 @@ interface CreditRow {
 
 export const TaxCreditsPanel: React.FC<Props> = ({ reportId, taxYear }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.tax.annualReportDetails(reportId),
+    queryKey: annualReportsQK.details(reportId),
     queryFn: () => annualReportsApi.getReportDetails(reportId),
   });
 

@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { annualReportFinancialsApi } from "../../api";
-import { annualReportTaxApi } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
+import { annualReportTaxApi, annualReportsQK } from "../../api";
 import { cn } from "../../../../utils/utils";
 
 interface Props {
@@ -68,19 +67,19 @@ const MetricCard: React.FC<MetricCardProps> = ({
 
 export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
   const financialsQ = useQuery({
-    queryKey: QK.tax.annualReportFinancials(reportId),
+    queryKey: annualReportsQK.financials(reportId),
     queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
     enabled: !!reportId,
   });
 
   const taxCalcQ = useQuery({
-    queryKey: QK.tax.annualReportTaxCalc(reportId),
+    queryKey: annualReportsQK.taxCalc(reportId),
     queryFn: () => annualReportTaxApi.getTaxCalculation(reportId),
     enabled: !!reportId,
   });
 
   const advancesQ = useQuery({
-    queryKey: QK.tax.annualReportAdvancesSummary(reportId),
+    queryKey: annualReportsQK.advancesSummary(reportId),
     queryFn: () => annualReportTaxApi.getAdvancesSummary(reportId),
     enabled: !!reportId,
   });

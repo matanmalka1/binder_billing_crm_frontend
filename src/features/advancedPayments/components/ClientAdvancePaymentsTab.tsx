@@ -4,8 +4,7 @@ import type { AdvancePaymentStatus } from "../types";
 import { useAdvancePayments } from "../hooks/useAdvancePayments";
 import { useAdvanceRateInsights } from "../hooks/useAdvanceRateInsights";
 import { useRole } from "../../../hooks/useRole";
-import { advancePaymentsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import { ClientAdvancePaymentsHeader } from "./ClientAdvancePaymentsHeader";
@@ -43,7 +42,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
     onSuccess: (data) => {
       const msg = data.created > 0 ? `נוצרו ${data.created} מקדמות` : "הכול קיים";
       toast.success(msg);
-      void queryClient.invalidateQueries({ queryKey: QK.tax.advancePayments.forClientYear(businessId, year) });
+      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.forBusinessYear(businessId, year) });
     },
     onError: (err) => showErrorToast(err, "שגיאה ביצירת לוח מקדמות"),
   });

@@ -1,8 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { bindersApi } from "../api";
+import { bindersApi, bindersQK } from "../api";
 import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { useBinderDetail } from "./useBinderDetail";
 
@@ -38,7 +37,7 @@ export const useBindersPage = () => {
   };
 
   const bindersQuery = useQuery({
-    queryKey: QK.binders.list(listParams),
+    queryKey: bindersQK.list(listParams),
     queryFn: () => bindersApi.list(listParams),
   });
 
@@ -79,7 +78,7 @@ export const useBindersPage = () => {
     onSuccess: () => {
       toast.success("הקלסר נמחק בהצלחה");
       handleCloseDrawer();
-      void queryClient.invalidateQueries({ queryKey: QK.binders.all });
+      void queryClient.invalidateQueries({ queryKey: bindersQK.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה במחיקת קלסר"),
   });
@@ -88,7 +87,7 @@ export const useBindersPage = () => {
     mutationFn: (binderId: number) => bindersApi.ready(binderId),
     onSuccess: () => {
       toast.success("הקלסר סומן כמוכן לאיסוף");
-      void queryClient.invalidateQueries({ queryKey: QK.binders.all });
+      void queryClient.invalidateQueries({ queryKey: bindersQK.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה בסימון קלסר כמוכן"),
   });
@@ -98,7 +97,7 @@ export const useBindersPage = () => {
       bindersApi.returnBinder(binderId, { pickup_person_name: pickupPersonName }),
     onSuccess: () => {
       toast.success("הקלסר הוחזר בהצלחה");
-      void queryClient.invalidateQueries({ queryKey: QK.binders.all });
+      void queryClient.invalidateQueries({ queryKey: bindersQK.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה בהחזרת קלסר"),
   });
@@ -107,7 +106,7 @@ export const useBindersPage = () => {
     mutationFn: (binderId: number) => bindersApi.revertReady(binderId),
     onSuccess: () => {
       toast.success("סטטוס מוכן לאיסוף בוטל");
-      void queryClient.invalidateQueries({ queryKey: QK.binders.all });
+      void queryClient.invalidateQueries({ queryKey: bindersQK.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה בביטול סטטוס מוכן"),
   });

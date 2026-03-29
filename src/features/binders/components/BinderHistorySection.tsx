@@ -5,8 +5,7 @@ import { he } from "date-fns/locale";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { Timeline, TimelineEntry } from "../../../components/ui/Timeline";
-import { QK } from "../../../lib/queryKeys";
-import { bindersApi } from "../api";
+import { bindersApi, bindersQK } from "../api";
 import { getStatusLabel } from "../../../utils/enums";
 import { staggerDelay } from "../../../utils/animation";
 import { BINDER_STATUS_VARIANTS } from "../constants";
@@ -17,7 +16,7 @@ interface BinderHistorySectionProps {
 
 export const BinderHistorySection: React.FC<BinderHistorySectionProps> = ({ binderId }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.binders.history(binderId),
+    queryKey: bindersQK.history(binderId),
     queryFn: () => bindersApi.getHistory(binderId),
   });
 

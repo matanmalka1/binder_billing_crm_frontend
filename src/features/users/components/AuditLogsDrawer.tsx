@@ -3,8 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { DetailDrawer } from "../../../components/ui/DetailDrawer";
 import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
-import { usersApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { usersApi, usersQK } from "../api";
 import { formatDateTime } from "../../../utils/utils";
 
 const auditActionLabel: Record<string, string> = {
@@ -33,7 +32,7 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({
   const params = { page, page_size: PAGE_SIZE };
 
   const { data, isPending, isError } = useQuery({
-    queryKey: QK.users.auditLogs(params),
+    queryKey: usersQK.auditLogs(params),
     queryFn: () => usersApi.listAuditLogs(params),
     enabled: open,
   });

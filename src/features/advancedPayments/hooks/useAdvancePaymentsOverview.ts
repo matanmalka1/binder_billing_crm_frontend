@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { advancePaymentsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "../types";
 
 const PAGE_SIZE = 50;
@@ -31,7 +30,7 @@ export const useAdvancePaymentsOverview = ({
   }, [year, month, statusFilter, page]);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: QK.tax.advancePayments.overview(queryParams),
+    queryKey: advancedPaymentsQK.overview(queryParams),
     queryFn: () => advancePaymentsApi.overview(queryParams),
   });
 

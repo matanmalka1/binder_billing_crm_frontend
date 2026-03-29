@@ -1,17 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { correspondenceApi } from "../api";
+import { correspondenceApi, correspondenceQK } from "../api";
 import type { UpdateCorrespondencePayload } from "../api";
-import { authorityContactsApi } from "@/features/authorityContacts/api";
+import { authorityContactsApi, authorityContactsQK } from "@/features/authorityContacts/api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { CorrespondenceFormValues } from "../schemas";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
 const PAGE_SIZE = 50;
 
 export const useCorrespondence = (clientId: number) => {
   const queryClient = useQueryClient();
-  const queryKey = [...QK.correspondence.forClient(clientId), { page: 1, page_size: PAGE_SIZE }];
+  const queryKey = [...correspondenceQK.forBusiness(clientId), { page: 1, page_size: PAGE_SIZE }];
 
   const listQuery = useQuery({
     enabled: clientId > 0,
@@ -22,7 +21,7 @@ export const useCorrespondence = (clientId: number) => {
 
   const contactsQuery = useQuery({
     enabled: clientId > 0,
-    queryKey: [...QK.authorityContacts.forClient(clientId), { page: 1, page_size: 100 }],
+    queryKey: [...authorityContactsQK.forBusiness(clientId), { page: 1, page_size: 100 }],
     queryFn: () => authorityContactsApi.listAuthorityContacts(clientId, undefined, 1, 100),
     staleTime: 60_000,
   });

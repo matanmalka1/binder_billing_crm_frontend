@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Eye } from "lucide-react";
-import { annualReportsApi, type AnnualReportFull } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
+import { annualReportsApi, annualReportsQK, type AnnualReportFull } from "../../api";
 import { DataTable } from "../../../../components/ui/DataTable";
 import { Badge } from "../../../../components/ui/Badge";
 import { Button } from "../../../../components/ui/Button";
@@ -28,7 +27,7 @@ export const ReportHistoryTable: React.FC<Props> = ({
   onSelect,
 }) => {
   const { data: reports = [], isLoading } = useQuery({
-    queryKey: QK.tax.annualReportsForClient(clientId),
+    queryKey: annualReportsQK.forBusiness(clientId),
     queryFn: () => annualReportsApi.listClientReports(clientId),
     staleTime: 30_000,
     enabled: !!clientId,

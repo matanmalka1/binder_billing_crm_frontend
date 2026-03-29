@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { annualReportFinancialsApi } from "../api";
+import { annualReportFinancialsApi, annualReportsQK } from "../api";
 import type { ExpenseLinePayload, IncomeLinePayload, IncomeSourceType } from "../api";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import type { AddExpensePayload } from "../components/financials/AddExpenseLineForm";
@@ -10,9 +9,9 @@ export const useIncomeExpenseMutations = (reportId: number) => {
   const queryClient = useQueryClient();
 
   const invalidate = () => {
-    void queryClient.invalidateQueries({ queryKey: QK.tax.annualReportFinancials(reportId) });
-    void queryClient.invalidateQueries({ queryKey: QK.tax.annualReportReadiness(reportId) });
-    void queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.detail(reportId) });
+    void queryClient.invalidateQueries({ queryKey: annualReportsQK.financials(reportId) });
+    void queryClient.invalidateQueries({ queryKey: annualReportsQK.readiness(reportId) });
+    void queryClient.invalidateQueries({ queryKey: annualReportsQK.detail(reportId) });
   };
 
   const addIncome = useMutation({

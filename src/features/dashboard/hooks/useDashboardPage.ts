@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Users, FolderOpen, Bell, FileText } from "lucide-react";
-import { dashboardApi } from "../api";
+import { dashboardApi, dashboardQK } from "../api";
 import type {
   DashboardOverviewResponse,
   DashboardSummaryResponse,
@@ -11,7 +11,6 @@ import { getErrorMessage, getHttpStatus } from "../../../utils/utils";
 import type { ActionCommand } from "../../../lib/actions/types";
 import { useRole } from "../../../hooks/useRole";
 import { useActionRunner } from "@/features/actions";
-import { QK } from "../../../lib/queryKeys";
 import type { StatItem } from "../components/DashboardStatsGrid";
 
 type DashboardData =
@@ -123,7 +122,7 @@ export const useDashboardPage = () => {
   const hasRole = Boolean(role);
   const dashboardQuery = useQuery<DashboardOverviewResponse | DashboardSummaryResponse>({
     enabled: hasRole,
-    queryKey: isAdvisor ? QK.dashboard.overview : QK.dashboard.summary,
+    queryKey: isAdvisor ? dashboardQK.overview : dashboardQK.summary,
     queryFn: isAdvisor ? dashboardApi.getOverview : dashboardApi.getSummary,
   });
 
@@ -134,7 +133,7 @@ export const useDashboardPage = () => {
     confirmPendingAction: confirmPendingActionBase,
     cancelPendingAction: cancelPendingActionBase,
   } = useActionRunner({
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: QK.dashboard.all }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: dashboardQK.all }),
     errorFallback: "שגיאה בביצוע פעולה מהירה",
     canonicalAction: true,
     onError: (err) => {

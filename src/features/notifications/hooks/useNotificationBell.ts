@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { notificationsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { notificationsApi, notificationsQK } from "../api";
 
 export const useNotificationBell = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { data } = useQuery({
-    queryKey: QK.notifications.unreadCount(),
+    queryKey: notificationsQK.unreadCount(),
     queryFn: () => notificationsApi.getUnreadCount(),
     refetchInterval: 30_000,
   });

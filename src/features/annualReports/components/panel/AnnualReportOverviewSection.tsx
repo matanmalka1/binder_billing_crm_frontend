@@ -9,8 +9,7 @@ import { ScheduleChecklist } from "../annex/ScheduleChecklist";
 import { AnnualPLSummary } from "../financials/AnnualPLSummary";
 import { ReportHistoryTable } from "./ReportHistoryTable";
 import { StatusHistoryTimeline } from "../statusTransition/StatusHistoryTimeline";
-import { annualReportsApi } from "../../api";
-import { QK } from "../../../../lib/queryKeys";
+import { annualReportsApi, annualReportsQK } from "../../api";
 import type { AnnualReportDetail } from "../../types";
 import type { AnnualReportFull, AnnualReportScheduleKey, ScheduleEntry } from "../../api";
 
@@ -40,7 +39,7 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
   const [plExpanded, setPlExpanded] = useState(false);
 
   const { data: history } = useQuery({
-    queryKey: QK.tax.annualReports.statusHistory(report.id),
+    queryKey: annualReportsQK.statusHistory(report.id),
     queryFn: () => annualReportsApi.getHistory(report.id),
     enabled: !!report.id,
   });

@@ -12,9 +12,8 @@ import {
   type CreateAdvancePaymentFormValues,
 } from "../schemas";
 import { MONTH_OPTIONS } from "../utils";
-import { advancePaymentsApi } from "../api";
+import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import type { CreateAdvancePaymentPayload } from "../types";
-import { QK } from "../../../lib/queryKeys";
 
 interface CreateAdvancePaymentModalProps {
   open: boolean;
@@ -46,7 +45,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
   });
 
   const { data: suggestion } = useQuery({
-    queryKey: QK.tax.advancePayments.suggestion(businessId, year),
+    queryKey: advancedPaymentsQK.suggestion(businessId, year),
     queryFn: () => advancePaymentsApi.getSuggestion(businessId, year),
     enabled: open && businessId > 0 && year > 0,
     staleTime: 60_000,

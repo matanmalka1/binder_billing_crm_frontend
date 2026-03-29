@@ -1,11 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { advancePaymentsApi } from "../api";
+import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import type {
   AdvancePaymentStatus,
   CreateAdvancePaymentPayload,
 } from "../types";
 import { getErrorMessage, getHttpStatus, showErrorToast } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 
 interface UpdatePayload {
@@ -22,7 +21,7 @@ export const useAdvancePayments = (
   page = 1,
 ) => {
   const queryClient = useQueryClient();
-  const qk = QK.tax.advancePayments.forClientYear(businessId, year);
+  const qk = advancedPaymentsQK.forBusinessYear(businessId, year);
   const enabled = businessId > 0;
 
   const listQuery = useQuery({
@@ -47,7 +46,7 @@ export const useAdvancePayments = (
     onSuccess: () => {
       toast.success("מקדמה עודכנה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
-      void queryClient.invalidateQueries({ queryKey: QK.tax.advancePayments.all });
+      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה בעדכון מקדמה"),
   });
@@ -73,7 +72,7 @@ export const useAdvancePayments = (
     onSuccess: () => {
       toast.success("מקדמה נמחקה בהצלחה");
       void queryClient.invalidateQueries({ queryKey: qk });
-      void queryClient.invalidateQueries({ queryKey: QK.tax.advancePayments.all });
+      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all });
     },
     onError: (err) => showErrorToast(err, "שגיאה במחיקת מקדמה"),
   });

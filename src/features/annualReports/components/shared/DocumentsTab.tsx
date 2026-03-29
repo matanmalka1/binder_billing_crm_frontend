@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { FileCheck, FileWarning, FileText } from "lucide-react";
-import { QK } from "../../../../lib/queryKeys";
-import { documentsApi } from "@/features/documents/api";
+import { documentsApi, documentsQK } from "@/features/documents/api";
 import { DocumentCard, MissingDocRow } from "./DocumentParts";
 
 const ALL_REQUIRED_TYPES = ["id_copy", "power_of_attorney", "engagement_agreement"] as const;
@@ -10,19 +9,19 @@ interface DocumentsTabProps { clientId: number; reportId?: number; }
 
 export const DocumentsTab = ({ clientId, reportId }: DocumentsTabProps) => {
   const byClient = useQuery({
-    queryKey: QK.documents.clientList(clientId),
+    queryKey: documentsQK.businessList(clientId),
     queryFn: () => documentsApi.listByClient(clientId),
     enabled: !!clientId && reportId == null,
   });
 
   const byReport = useQuery({
-    queryKey: QK.documents.byAnnualReport(reportId!),
+    queryKey: documentsQK.byAnnualReport(reportId!),
     queryFn: () => documentsApi.listByAnnualReport(reportId!),
     enabled: !!reportId,
   });
 
   const { data: signals } = useQuery({
-    queryKey: QK.documents.clientSignals(clientId),
+    queryKey: documentsQK.businessSignals(clientId),
     queryFn: () => documentsApi.getSignalsByClient(clientId),
     enabled: !!clientId,
   });

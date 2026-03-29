@@ -6,8 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
 import { Timeline, TimelineEntry } from "../../../components/ui/Timeline";
-import { QK } from "../../../lib/queryKeys";
-import { bindersApi } from "../api";
+import { bindersApi, bindersQK } from "../api";
 import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
 import { staggerDelay } from "../../../utils/animation";
 import { getBinderTypeLabel } from "../constants";
@@ -55,7 +54,7 @@ interface BinderIntakesSectionProps {
 
 export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ binderId }) => {
   const { data, isLoading } = useQuery({
-    queryKey: QK.binders.intakes(binderId),
+    queryKey: bindersQK.intakes(binderId),
     queryFn: () => bindersApi.getIntakes(binderId),
   });
 

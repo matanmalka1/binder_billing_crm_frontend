@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { advancePaymentsApi } from "../api";
+import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import { useTaxProfile } from "@/features/taxProfile";
-import { QK } from "../../../lib/queryKeys";
 
 export const useAdvanceRateInsights = (businessId: number, year: number) => {
   const { profile, updateProfile, isUpdating } = useTaxProfile(businessId);
   const { data: suggestion } = useQuery({
-    queryKey: QK.tax.advancePayments.suggestion(businessId, year),
+    queryKey: advancedPaymentsQK.suggestion(businessId, year),
     queryFn: () => advancePaymentsApi.getSuggestion(businessId, year),
     enabled: businessId > 0 && year > 0,
     staleTime: 60_000,

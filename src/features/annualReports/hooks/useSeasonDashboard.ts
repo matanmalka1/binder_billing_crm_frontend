@@ -1,22 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { annualReportSeasonApi } from "../api";
+import { annualReportSeasonApi, annualReportsQK } from "../api";
 import { getErrorMessage } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
 
 export const useSeasonDashboard = (taxYear: number) => {
   const summaryQuery = useQuery({
-    queryKey: QK.tax.annualReports.seasonSummary(taxYear),
+    queryKey: annualReportsQK.seasonSummary(taxYear),
     queryFn: () => annualReportSeasonApi.getSeasonSummary(taxYear),
   });
 
   const reportsQuery = useQuery({
-    queryKey: QK.tax.annualReports.seasonList(taxYear),
+    queryKey: annualReportsQK.seasonList(taxYear),
     queryFn: () =>
       annualReportSeasonApi.listSeasonReports(taxYear, { page: 1, page_size: 200 }),
   });
 
   const overdueQuery = useQuery({
-    queryKey: QK.tax.annualReports.overdue(taxYear),
+    queryKey: annualReportsQK.overdue(taxYear),
     queryFn: () => annualReportSeasonApi.getOverdue(taxYear),
   });
 

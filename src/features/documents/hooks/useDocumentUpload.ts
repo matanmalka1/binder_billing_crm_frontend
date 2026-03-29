@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { documentsApi, type UploadDocumentPayload } from "../api";
+import { documentsApi, documentsQK, type UploadDocumentPayload } from "../api";
 import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
-import { QK } from "../../../lib/queryKeys";
 
 export const useDocumentUpload = (businessId: number) => {
   const queryClient = useQueryClient();
@@ -14,8 +13,8 @@ export const useDocumentUpload = (businessId: number) => {
     onSuccess: async (_, variables) => {
       toast.success("מסמך הועלה בהצלחה");
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: QK.documents.clientList(variables.business_id) }),
-        queryClient.invalidateQueries({ queryKey: QK.documents.clientSignals(variables.business_id) }),
+        queryClient.invalidateQueries({ queryKey: documentsQK.businessList(variables.business_id) }),
+        queryClient.invalidateQueries({ queryKey: documentsQK.businessSignals(variables.business_id) }),
       ]);
     },
   });

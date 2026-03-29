@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { annualReportSeasonApi } from "../api";
+import { annualReportSeasonApi, annualReportsQK } from "../api";
 import { annualReportStatusApi } from "../api";
 import { showErrorToast } from "../../../utils/utils";
-import { QK } from "../../../lib/queryKeys";
+import { timelineQK } from "@/features/timeline/api";
 import { toast } from "../../../utils/toast";
 import { STAGE_ORDER, KANBAN_PAGE_SIZE, type StageKey, type KanbanStage } from "../types";
 
@@ -13,7 +13,7 @@ export const useAnnualReportsKanban = (taxYear: number) => {
   const [page, setPage] = useState(1);
 
   const kanbanQuery = useQuery({
-    queryKey: QK.tax.annualReports.kanban,
+    queryKey: annualReportsQK.kanban,
     queryFn: () => annualReportSeasonApi.getKanbanView(),
   });
 
@@ -21,9 +21,9 @@ export const useAnnualReportsKanban = (taxYear: number) => {
     mutationFn: async ({ reportId, newStage }: { reportId: number; newStage: StageKey }) =>
       annualReportStatusApi.transitionStage(reportId, newStage),
     onMutate: async ({ reportId, newStage }) => {
-      await queryClient.cancelQueries({ queryKey: QK.tax.annualReports.kanban });
-      const previous = queryClient.getQueryData(QK.tax.annualReports.kanban);
-      queryClient.setQueryData<{ stages: KanbanStage[] }>(QK.tax.annualReports.kanban, (prev) => {
+      await queryClient.cancelQueries({ queryKey: annualReportsQK.kanban });
+      const previous = queryClient.getQueryData(annualReportsQK.kanban);
+      queryClient.setQueryData<{ stages: KanbanStage[] }>(annualReportsQK.kanban, (prev) => {
         if (!prev) return prev;
         const report = prev.stages.flatMap((s) => s.reports).find((r) => r.id === reportId);
         if (!report) return prev;
@@ -41,17 +41,17 @@ export const useAnnualReportsKanban = (taxYear: number) => {
     },
     onError: (error, _vars, context) => {
       if (context?.previous) {
-        queryClient.setQueryData(QK.tax.annualReports.kanban, context.previous);
+        queryClient.setQueryData(annualReportsQK.kanban, context.previous);
       }
       showErrorToast(error, "שגיאה בהעברת דוח");
     },
     onSuccess: (_data, { reportId }) => {
       toast.success("דוח הועבר בהצלחה");
-      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.all });
       const allReports = kanbanQuery.data?.stages.flatMap((s) => s.reports) ?? [];
       const report = allReports.find((r) => r.id === reportId);
       if (report) {
-        queryClient.invalidateQueries({ queryKey: QK.timeline.businessRoot(report.business_id) });
+        queryClient.invalidateQueries({ queryKey: timelineQK.businessRoot(report.business_id) });
       }
     },
     onSettled: () => {

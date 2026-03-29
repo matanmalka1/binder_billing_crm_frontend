@@ -1,10 +1,9 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { timelineApi } from "../api";
+import { timelineApi, timelineQK } from "../api";
 import { getErrorMessage, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
 import { useActionRunner } from "@/features/actions";
-import { QK } from "../../../lib/queryKeys";
 
 export const useClientTimelinePage = (businessId: string | undefined) => {
   const queryClient = useQueryClient();
@@ -23,7 +22,7 @@ export const useClientTimelinePage = (businessId: string | undefined) => {
 
   const timelineQuery = useQuery({
     enabled: hasValidClient,
-    queryKey: QK.timeline.clientEvents(businessIdNumber, timelineParams),
+    queryKey: timelineQK.businessEvents(businessIdNumber, timelineParams),
     queryFn: () => timelineApi.getClientTimeline(businessIdNumber, timelineParams),
   });
 
@@ -81,7 +80,7 @@ export const useClientTimelinePage = (businessId: string | undefined) => {
   } = useActionRunner({
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: QK.timeline.clientRoot(businessIdNumber),
+        queryKey: timelineQK.businessRoot(businessIdNumber),
       }),
     errorFallback: "שגיאה בביצוע פעולה",
     canonicalAction: true,

@@ -1,10 +1,9 @@
 import { useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { searchApi } from "../api";
+import { searchApi, searchQK } from "../api";
 import { getErrorMessage, parsePositiveInt } from "../../../utils/utils";
 import type { SearchFilters } from "../types";
-import { QK } from "../../../lib/queryKeys";
 
 export const useSearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,7 +36,7 @@ export const useSearchPage = () => {
   );
 
   const searchQuery = useQuery({
-    queryKey: QK.search.results(filters),
+    queryKey: searchQK.results(filters),
     queryFn: () =>
       searchApi.search({
         query: filters.query || undefined,

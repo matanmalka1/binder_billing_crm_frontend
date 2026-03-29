@@ -4,13 +4,13 @@ import { ShieldCheck } from "lucide-react";
 import { annualReportsApi } from "../../api";
 import {
   getAllowedTransitions,
+  annualReportsQK,
   getStatusLabel,
   getStatusVariant,
 } from "../../api";
 import { Badge } from "../../../../components/ui/Badge";
 import { Button } from "../../../../components/ui/Button";
 import { Card } from "../../../../components/ui/Card";
-import { QK } from "../../../../lib/queryKeys";
 import { toast } from "../../../../utils/toast";
 import { showErrorToast } from "../../../../utils/utils";
 import { EMPTY_FORM } from "../../utils";
@@ -43,9 +43,9 @@ export const StatusTransitionPanel = ({
     mutationFn: (reason: string) => annualReportsApi.amend(report.id, reason),
     onSuccess: () => {
       toast.success("דוח נשלח לתיקון");
-      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.detail(report.id) });
-      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.kanban });
-      queryClient.invalidateQueries({ queryKey: QK.tax.annualReports.all });
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.detail(report.id) });
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.kanban });
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.all });
       closeAmendModal();
     },
     onError: (error) => showErrorToast(error, "שגיאה בשליחת תיקון"),

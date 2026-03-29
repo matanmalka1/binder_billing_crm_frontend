@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { notificationsApi } from "../api";
+import { notificationsApi, notificationsQK } from "../api";
 import type { SendNotificationPayload } from "../api";
-import { QK } from "../../../lib/queryKeys";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
 
@@ -11,7 +10,7 @@ export const useSendNotification = (onSuccess?: () => void) => {
   const mutation = useMutation({
     mutationFn: (payload: SendNotificationPayload) => notificationsApi.send(payload),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: QK.notifications.all });
+      void queryClient.invalidateQueries({ queryKey: notificationsQK.all });
       toast.success("ההודעה נשלחה בהצלחה");
       onSuccess?.();
     },

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { annualReportsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { annualReportsApi, annualReportsQK } from "../api";
 import { getErrorMessage } from "../../../utils/utils";
 import { CURRENT_YEAR } from "../types";
 
@@ -13,7 +12,7 @@ export const useClientAnnualReportsTab = (businessId: number) => {
   const navigate = useNavigate();
 
   const { data, isPending, error } = useQuery({
-    queryKey: QK.tax.annualReportsForClient(businessId),
+    queryKey: annualReportsQK.forBusiness(businessId),
     queryFn: () => annualReportsApi.listClientReports(businessId),
   });
 

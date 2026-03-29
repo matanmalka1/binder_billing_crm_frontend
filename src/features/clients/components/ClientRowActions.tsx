@@ -2,8 +2,7 @@ import { Clock, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
-import { clientsApi } from "../api";
-import { QK } from "../../../lib/queryKeys";
+import { clientsApi, clientsQK } from "../api";
 
 interface ClientRowActionsProps {
   clientId: number;
@@ -14,7 +13,7 @@ export const ClientRowActions: React.FC<ClientRowActionsProps> = ({ clientId, on
   const navigate = useNavigate();
 
   const { data: businesses } = useQuery({
-    queryKey: QK.clients.businesses(clientId),
+    queryKey: clientsQK.businesses(clientId),
     queryFn: () => clientsApi.listBusinessesForClient(clientId),
     staleTime: 60_000,
   });

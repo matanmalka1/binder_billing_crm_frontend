@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { clientsApi } from "@/features/clients/api";
-import { QK } from "@/lib/queryKeys";
+import { clientsApi, clientsQK } from "@/features/clients/api";
 import { getErrorMessage } from "@/utils/utils";
 import { useRole } from "@/hooks/useRole";
 
@@ -16,13 +15,13 @@ export const useBusinessDetails = ({ clientId, businessId }: UseBusinessDetailsP
   const { can } = useRole();
 
   const clientQuery = useQuery({
-    queryKey: QK.clients.detail(clientId!),
+    queryKey: clientsQK.detail(clientId!),
     queryFn: () => clientsApi.getById(clientId!),
     enabled: isValidId,
   });
 
   const businessesQuery = useQuery({
-    queryKey: QK.clients.businesses(clientId!),
+    queryKey: clientsQK.businesses(clientId!),
     queryFn: () => clientsApi.listBusinessesForClient(clientId!),
     enabled: isValidId,
   });
