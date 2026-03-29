@@ -5,14 +5,9 @@ import { TimelineEvent } from "../statusTransition/TimelineEvent";
 import type { TimelineEventStatus } from "../statusTransition/TimelineEvent";
 import { cn } from "../../../../utils/utils";
 import { UpcomingDeadlinesList } from "./UpcomingDeadlinesList";
-import { STATUS_LABELS } from "./annualReports.constants";
+import { STATUS_LABELS, formatAnnualReportDate } from "./annualReports.constants";
 
 interface Props { reports: AnnualReportFull[]; }
-
-const formatDate = (dateStr: string | null | undefined): string => {
-  if (!dateStr) return "—";
-  return new Date(dateStr).toLocaleDateString("he-IL");
-};
 
 interface ProgressBarProps { label: string; count: number; pct: number; color: string; }
 
@@ -46,11 +41,11 @@ export const FilingTimelineTab: React.FC<Props> = ({ reports }) => {
     if (r.submitted_at) {
       const onTime = r.filing_deadline && new Date(r.submitted_at) <= new Date(r.filing_deadline);
       timelineEvents.push({ title: `הוגש — ${name} (${r.tax_year})`,
-        description: `סטטוס: ${STATUS_LABELS[r.status]}`, date: formatDate(r.submitted_at), status: onTime ? "done" : "warning" });
+        description: `סטטוס: ${STATUS_LABELS[r.status]}`, date: formatAnnualReportDate(r.submitted_at), status: onTime ? "done" : "warning" });
     }
     if (r.filing_deadline && !r.submitted_at) {
       timelineEvents.push({ title: `מועד הגשה — ${name} (${r.tax_year})`,
-        description: `סטטוס: ${STATUS_LABELS[r.status]}`, date: formatDate(r.filing_deadline),
+        description: `סטטוס: ${STATUS_LABELS[r.status]}`, date: formatAnnualReportDate(r.filing_deadline),
         status: new Date(r.filing_deadline) < now ? "overdue" : "pending" });
     }
   });

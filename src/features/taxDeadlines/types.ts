@@ -6,17 +6,15 @@ export type TaxDeadlineFilters = PagedFilters<{
   status: string;
 }>;
 
-export interface CreateTaxDeadlineForm {
-  client_id: string;
+export interface TaxDeadlineFormValues {
   deadline_type: string;
   due_date: string;
   payment_amount: string;
   description: string;
 }
 
-export interface EditTaxDeadlineForm {
-  deadline_type: string;
-  due_date: string;
-  payment_amount: string;
-  description: string;
+export interface CreateTaxDeadlineForm extends TaxDeadlineFormValues {
+  client_id: string;
 }
+
+export interface EditTaxDeadlineForm extends TaxDeadlineFormValues {}

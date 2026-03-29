@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
 import type { ExpenseCategoryType } from "../../api";
-import { Button } from "../../../../components/ui/Button";
 import { EXPENSE_LABELS } from "../../report.constants";
+import {
+  ExpenseSupplementaryFields,
+  FinancialAddFormShell,
+  FinancialAmountDescriptionFields,
+  FinancialSelectField,
+  validatePercentage,
+  validatePositiveAmount,
+} from "./FinancialLineFormParts";
 
 export interface AddExpensePayload {
   category: ExpenseCategoryType;
@@ -44,13 +50,13 @@ export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({
       setError("יש לבחור קטגוריה");
       return;
     }
-    const parsed = parseFloat(amount);
-    if (isNaN(parsed) || parsed <= 0) {
+    const parsed = validatePositiveAmount(amount);
+    if (parsed == null) {
       setError("יש להזין סכום חיובי");
       return;
     }
-    const rate = parseFloat(recognitionRate);
-    if (isNaN(rate) || rate < 0 || rate > 100) {
+    const rate = validatePercentage(recognitionRate);
+    if (rate == null) {
       setError("שיעור הכרה חייב להיות בין 0 ל-100");
       return;
     }
@@ -65,86 +71,37 @@ export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({
     setOpen(false);
   };
 
-  if (!open)
-    return (
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => setOpen(true)}
-        className="gap-1 text-xs mt-1"
-      >
-        <Plus className="h-3.5 w-3.5" />
-        הוסף הוצאה
-      </Button>
-    );
-
   return (
-    <form onSubmit={handleSubmit} className="mt-2 flex flex-col gap-2">
-      <select
+    <FinancialAddFormShell
+      open={open}
+      label="הוסף הוצאה"
+      error={error}
+      isSubmitting={isAdding}
+      onOpen={() => setOpen(true)}
+      onSubmit={handleSubmit}
+      onCancel={() => {
+        reset();
+        setOpen(false);
+      }}
+    >
+      <FinancialSelectField
         value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm bg-white"
-      >
-        <option value="" disabled>
-          בחר קטגוריה...
-        </option>
-        {Object.entries(EXPENSE_LABELS).map(([key, lbl]) => (
-          <option key={key} value={key}>
-            {lbl}
-          </option>
-        ))}
-      </select>
-      <input
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        type="number"
-        min="0"
-        step="0.01"
-        placeholder="סכום ₪"
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm"
+        onChange={setCategory}
+        options={EXPENSE_LABELS}
+        placeholder="בחר קטגוריה..."
       />
-      <input
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        type="text"
-        placeholder="תיאור (אופציונלי)"
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm"
+      <FinancialAmountDescriptionFields
+        amount={amount}
+        onAmountChange={setAmount}
+        description={description}
+        onDescriptionChange={setDescription}
       />
-      <input
-        value={recognitionRate}
-        onChange={(e) => setRecognitionRate(e.target.value)}
-        type="number"
-        min="0"
-        max="100"
-        step="1"
-        placeholder="שיעור הכרה (%)"
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm"
+      <ExpenseSupplementaryFields
+        recognitionRate={recognitionRate}
+        onRecognitionRateChange={setRecognitionRate}
+        documentReference={docRef}
+        onDocumentReferenceChange={setDocRef}
       />
-      <input
-        value={docRef}
-        onChange={(e) => setDocRef(e.target.value)}
-        type="text"
-        placeholder="אסמכתא (אופציונלי)"
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm"
-      />
-      {error && <p className="text-xs text-red-500">{error}</p>}
-      <div className="flex gap-2">
-        <Button type="submit" size="sm" isLoading={isAdding} className="flex-1">
-          הוסף
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            reset();
-            setOpen(false);
-          }}
-        >
-          ביטול
-        </Button>
-      </div>
-    </form>
+    </FinancialAddFormShell>
   );
 };

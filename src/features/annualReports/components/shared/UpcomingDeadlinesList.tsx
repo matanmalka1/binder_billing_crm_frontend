@@ -3,14 +3,9 @@ import { CalendarClock, CalendarCheck, AlertCircle, Clock } from "lucide-react";
 import type { AnnualReportFull } from "../../api";
 import type { TimelineEventStatus } from "../statusTransition/TimelineEvent";
 import { cn } from "../../../../utils/utils";
-import { STATUS_LABELS } from "./annualReports.constants";
+import { STATUS_LABELS, formatAnnualReportDate } from "./annualReports.constants";
 
 interface Props { reports: AnnualReportFull[]; }
-
-const formatDate = (dateStr: string | null | undefined): string => {
-  if (!dateStr) return "—";
-  return new Date(dateStr).toLocaleDateString("he-IL");
-};
 
 const deadlineStatus = (report: AnnualReportFull): TimelineEventStatus => {
   if (!report.filing_deadline) return "pending";
@@ -63,7 +58,7 @@ export const UpcomingDeadlinesList: React.FC<Props> = ({ reports }) => {
                     </p>
                     <p className="text-xs text-gray-500">{STATUS_LABELS[r.status]}</p>
                   </div>
-                  <span className="shrink-0 text-xs font-semibold text-gray-600">{formatDate(r.filing_deadline)}</span>
+                  <span className="shrink-0 text-xs font-semibold text-gray-600">{formatAnnualReportDate(r.filing_deadline)}</span>
                 </li>
               );
             })}

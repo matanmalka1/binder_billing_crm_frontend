@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/Modal";
-import { Button } from "../../../components/ui/Button";
 import { UserFormFields } from "./UserFormFields";
+import { UserModalFooter } from "./UserModalFooter";
 import { editUserSchema, type EditUserFormValues } from "../schemas";
 import type { UserResponse, UpdateUserPayload } from "../api";
 
@@ -34,11 +34,19 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
 
   useEffect(() => {
     if (user) {
-      reset({ full_name: user.full_name, email: user.email, phone: user.phone ?? "", role: user.role });
+      reset({
+        full_name: user.full_name,
+        email: user.email,
+        phone: user.phone ?? "",
+        role: user.role,
+      });
     }
   }, [user, reset]);
 
-  const handleClose = () => { reset(); onClose(); };
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
 
   const onFormSubmit = handleSubmit(async (data) => {
     if (!user) return;
@@ -56,10 +64,12 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
       onClose={handleClose}
       title={`עריכת משתמש — ${user?.full_name ?? ""}`}
       footer={
-        <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={handleClose} disabled={isLoading}>ביטול</Button>
-          <Button variant="primary" onClick={onFormSubmit} isLoading={isLoading}>שמור שינויים</Button>
-        </div>
+        <UserModalFooter
+          isLoading={isLoading}
+          submitLabel="שמור שינויים"
+          onCancel={handleClose}
+          onSubmit={onFormSubmit}
+        />
       }
     >
       <form onSubmit={onFormSubmit}>

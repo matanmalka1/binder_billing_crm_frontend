@@ -1,6 +1,11 @@
 import { useState } from "react";
 import type { IncomeLineResponse, IncomeSourceType } from "../../api";
-import { Button } from "../../../../components/ui/Button";
+import {
+  FinancialAmountDescriptionFields,
+  FinancialEditFormShell,
+  FinancialSelectField,
+  validatePositiveAmount,
+} from "./FinancialLineFormParts";
 
 interface EditIncomeLineFormProps {
   line: IncomeLineResponse;
@@ -28,8 +33,8 @@ export const EditIncomeLineForm: React.FC<EditIncomeLineFormProps> = ({
       setError("יש לבחור סוג");
       return;
     }
-    const parsed = parseFloat(amount);
-    if (isNaN(parsed) || parsed <= 0) {
+    const parsed = validatePositiveAmount(amount);
+    if (parsed == null) {
       setError("יש להזין סכום חיובי");
       return;
     }
@@ -37,44 +42,24 @@ export const EditIncomeLineForm: React.FC<EditIncomeLineFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-2 mb-2 rounded-md border border-blue-100 bg-blue-50/30 p-2 space-y-2">
-      <select
+    <FinancialEditFormShell
+      error={error}
+      isSubmitting={isSaving}
+      onSubmit={handleSubmit}
+      onCancel={onCancel}
+    >
+      <FinancialSelectField
         value={typeKey}
-        onChange={(event) => setTypeKey(event.target.value as IncomeSourceType)}
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm bg-white"
-      >
-        {Object.entries(typeOptions).map(([key, label]) => (
-          <option key={key} value={key}>
-            {label}
-          </option>
-        ))}
-      </select>
-      <input
-        value={amount}
-        onChange={(event) => setAmount(event.target.value)}
-        type="number"
-        min="0"
-        step="0.01"
-        placeholder="סכום ₪"
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm"
+        onChange={(value) => setTypeKey(value as IncomeSourceType)}
+        options={typeOptions}
       />
-      <input
-        value={description}
-        onChange={(event) => setDescription(event.target.value)}
-        type="text"
-        placeholder="תיאור (אופציונלי)"
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm"
+      <FinancialAmountDescriptionFields
+        amount={amount}
+        onAmountChange={setAmount}
+        description={description}
+        onDescriptionChange={setDescription}
       />
-      {error ? <p className="text-xs text-red-500">{error}</p> : null}
-      <div className="flex gap-2">
-        <Button type="submit" size="sm" isLoading={isSaving} className="flex-1">
-          שמור
-        </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-          ביטול
-        </Button>
-      </div>
-    </form>
+    </FinancialEditFormShell>
   );
 };
 

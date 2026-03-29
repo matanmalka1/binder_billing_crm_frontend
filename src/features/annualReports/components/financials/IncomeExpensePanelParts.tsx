@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
-import { Button } from "../../../../components/ui/Button";
+import {
+  FinancialAddFormShell,
+  FinancialAmountDescriptionFields,
+  FinancialSelectField,
+  validatePositiveAmount,
+} from "./FinancialLineFormParts";
 
 export interface AddLineFormProps {
   typeOptions: Record<string, string>;
@@ -34,8 +38,8 @@ export const AddLineForm: React.FC<AddLineFormProps> = ({
       setError("יש לבחור סוג");
       return;
     }
-    const parsed = parseFloat(amount);
-    if (isNaN(parsed) || parsed <= 0) {
+    const parsed = validatePositiveAmount(amount);
+    if (parsed == null) {
       setError("יש להזין סכום חיובי");
       return;
     }
@@ -44,69 +48,31 @@ export const AddLineForm: React.FC<AddLineFormProps> = ({
     setOpen(false);
   };
 
-  if (!open)
-    return (
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => setOpen(true)}
-        className="gap-1 text-xs mt-1"
-      >
-        <Plus className="h-3.5 w-3.5" />
-        {label}
-      </Button>
-    );
-
   return (
-    <form onSubmit={handleSubmit} className="mt-2 flex flex-col gap-2">
-      <select
+    <FinancialAddFormShell
+      open={open}
+      label={label}
+      error={error}
+      isSubmitting={isAdding}
+      onOpen={() => setOpen(true)}
+      onSubmit={handleSubmit}
+      onCancel={() => {
+        reset();
+        setOpen(false);
+      }}
+    >
+      <FinancialSelectField
         value={typeKey}
-        onChange={(e) => setTypeKey(e.target.value)}
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm bg-white"
-      >
-        <option value="" disabled>
-          בחר סוג...
-        </option>
-        {Object.entries(typeOptions).map(([key, lbl]) => (
-          <option key={key} value={key}>
-            {lbl}
-          </option>
-        ))}
-      </select>
-      <input
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        type="number"
-        min="0"
-        step="0.01"
-        placeholder="סכום ₪"
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm"
+        onChange={setTypeKey}
+        options={typeOptions}
+        placeholder="בחר סוג..."
       />
-      <input
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        type="text"
-        placeholder="תיאור (אופציונלי)"
-        className="w-full border border-gray-200 rounded px-2 py-1 text-sm"
+      <FinancialAmountDescriptionFields
+        amount={amount}
+        onAmountChange={setAmount}
+        description={description}
+        onDescriptionChange={setDescription}
       />
-      {error && <p className="text-xs text-red-500">{error}</p>}
-      <div className="flex gap-2">
-        <Button type="submit" size="sm" isLoading={isAdding} className="flex-1">
-          הוסף
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            reset();
-            setOpen(false);
-          }}
-        >
-          ביטול
-        </Button>
-      </div>
-    </form>
+    </FinancialAddFormShell>
   );
 };
