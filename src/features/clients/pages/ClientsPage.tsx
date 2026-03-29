@@ -147,12 +147,10 @@ export const Clients: React.FC = () => {
           footer={
             <ModalFormActions
               onCancel={() => setEditingClient(null)}
-              cancelDisabled={updateLoading}
+              isLoading={updateLoading}
               submitLabel="שמור שינויים"
               submitType="submit"
               submitForm={EDIT_FORM_ID}
-              submitLoading={updateLoading}
-              submitDisabled={updateLoading}
             />
           }
         >

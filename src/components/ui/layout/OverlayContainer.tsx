@@ -1,4 +1,5 @@
 import { cn } from "../../../utils/utils";
+import { useEscapeToClose } from "../overlays/useEscapeToClose";
 
 type OverlayVariant = "modal" | "drawer" | "dialog";
 
@@ -33,6 +34,7 @@ export const OverlayContainer: React.FC<OverlayContainerProps> = ({
   className,
 }) => {
   const z = zIndex ?? defaultZIndex[variant];
+  useEscapeToClose({ open: open && variant !== "dialog", onClose });
 
   if (variant === "drawer") {
     return (

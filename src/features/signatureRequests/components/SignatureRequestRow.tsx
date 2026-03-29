@@ -17,7 +17,7 @@ const FieldRow = ({ label, value }: { label: string; value: React.ReactNode }) =
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-interface Props extends SignatureRequestActionProps {}
+type Props = SignatureRequestActionProps;
 
 export const SignatureRequestRow: React.FC<Props> = ({
   request,

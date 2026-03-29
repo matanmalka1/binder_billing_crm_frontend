@@ -1,5 +1,6 @@
 import { Printer } from "lucide-react";
 import { Button } from "../../../../components/ui/primitives/Button";
+import { useEscapeToClose } from "../../../../components/ui/overlays/useEscapeToClose";
 import { useYearComparison, type YearComparisonData } from "../../hooks/useYearComparison";
 import { cn } from "../../../../utils/utils";
 
@@ -64,6 +65,8 @@ const ComparisonRows: React.FC<{ data: YearComparisonData[]; currentTaxYear: num
 export const YearComparisonModal: React.FC<Props> = ({ open, onClose, currentTaxYear }) => {
   const years = [currentTaxYear - 2, currentTaxYear - 1, currentTaxYear];
   const { data, isLoading } = useYearComparison(years);
+
+  useEscapeToClose({ open, onClose });
 
   if (!open) return null;
 

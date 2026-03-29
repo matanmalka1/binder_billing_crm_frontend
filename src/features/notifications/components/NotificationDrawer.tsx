@@ -2,6 +2,7 @@ import { useState } from "react";
 import { cn } from "../../../utils/utils";
 import { useNotifications } from "../hooks/useNotifications";
 import { useRole } from "../../../hooks/useRole";
+import { useEscapeToClose } from "../../../components/ui/overlays/useEscapeToClose";
 import { SeverityBadge } from "./SeverityBadge";
 import { SendNotificationModal } from "./SendNotificationModal";
 import type { NotificationItem } from "../api";
@@ -12,6 +13,8 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
   const { isAdvisor } = useRole();
   const [sendOpen, setSendOpen] = useState(false);
   const limited = notifications.slice(0, 20);
+
+  useEscapeToClose({ open, onClose });
 
   const handleItemClick = (item: NotificationItem) => {
     if (!item.is_read) {

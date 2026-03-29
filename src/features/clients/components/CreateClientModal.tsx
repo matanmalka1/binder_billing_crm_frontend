@@ -67,10 +67,8 @@ export const CreateClientModal: React.FC<Props> = ({
         <ModalFormActions
           onCancel={handleClose}
           onSubmit={onFormSubmit}
-          cancelDisabled={isLoading}
+          isLoading={isLoading}
           submitLabel="יצור לקוח"
-          submitLoading={isLoading}
-          submitDisabled={isLoading}
         />
       }
     >

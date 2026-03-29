@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { OverlayContainer } from "../layout/OverlayContainer";
 import { UnsavedChangesGuard } from "../feedback/UnsavedChangesGuard";
 import { SectionHeader } from "../layout/SectionHeader";
@@ -29,14 +28,6 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
     isDirty,
     onClose,
   });
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && open) handleClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open, handleClose]);
 
   return (
     <>

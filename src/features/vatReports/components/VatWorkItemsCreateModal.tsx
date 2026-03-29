@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { Input } from "../../../components/ui/inputs/Input";
-import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
-import { FormField } from "../../../components/ui/inputs/FormField";
-import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
-import { ClientPickerField } from "@/components/shared/client";
+import {
+  ClientPickerField,
+  useClientPickerState,
+} from "@/components/shared/client";
+import { FormField, Input, SelectDropdown } from "@/components/ui/inputs";
+import { Modal, ModalFormActions } from "@/components/ui/overlays";
 import { useBusinessesForClient } from "@/hooks/useBusinessesForClient";
 import { VatPeriodSelect } from "./VatPeriodSelect";
 import {
@@ -17,7 +17,9 @@ import {
 } from "../schemas/workItem.schema";
 import type { VatWorkItemsCreateModalProps } from "../types";
 
-export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = ({
+export const VatWorkItemsCreateModal: React.FC<
+  VatWorkItemsCreateModalProps
+> = ({
   open,
   createError,
   createLoading,
@@ -38,8 +40,22 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
     resolver: zodResolver(vatWorkItemCreateSchema),
   });
 
-  const [clientQuery, setClientQuery] = useState("");
-  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
+  const resetClientDependentFields = () => {
+    setValue("business_id", "", { shouldDirty: true, shouldValidate: true });
+    setValue("period", "", { shouldDirty: true, shouldValidate: true });
+  };
+
+  const {
+    clientQuery,
+    selectedClient,
+    handleSelectClient,
+    handleClearClient,
+    handleClientQueryChange,
+    resetClientPicker,
+  } = useClientPickerState({
+    onSelect: resetClientDependentFields,
+    onClear: resetClientDependentFields,
+  });
 
   const businessIdValue = watch("business_id");
   const periodValue = watch("period");
@@ -78,24 +94,8 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
 
   const handleClose = () => {
     reset(vatWorkItemCreateDefaultValues);
-    setClientQuery("");
-    setSelectedClient(null);
+    resetClientPicker();
     onClose();
-  };
-
-  const handleSelectClient = (client: { id: number; name: string }) => {
-    setSelectedClient(client);
-    setClientQuery(client.name);
-    setValue("business_id", "", { shouldDirty: true, shouldValidate: true });
-    setValue("period", "", { shouldDirty: true, shouldValidate: true });
-  };
-
-  const handleClientQueryChange = (query: string) => {
-    setClientQuery(query);
-    if (!selectedClient) return;
-    setSelectedClient(null);
-    setValue("business_id", "", { shouldDirty: true, shouldValidate: true });
-    setValue("period", "", { shouldDirty: true, shouldValidate: true });
   };
 
   const submitForm = handleSubmit(async (values) => {
@@ -114,15 +114,19 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
       footer={
         <ModalFormActions
           onCancel={handleClose}
-          onSubmit={() => void submitForm()}
           cancelVariant="secondary"
-          cancelDisabled={createLoading}
+          isLoading={createLoading}
+          submitType="submit"
+          submitForm="vat-work-items-create-form"
           submitLabel="פתיחת תיק"
-          submitLoading={createLoading}
         />
       }
     >
-      <form onSubmit={submitForm} className="space-y-4">
+      <form
+        id="vat-work-items-create-form"
+        onSubmit={submitForm}
+        className="space-y-4"
+      >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {initialClientId === undefined && (
             <>
@@ -132,7 +136,7 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
                   clientQuery={clientQuery}
                   onQueryChange={handleClientQueryChange}
                   onSelect={handleSelectClient}
-                  onClear={() => handleClientQueryChange("")}
+                  onClear={handleClearClient}
                   label="לקוח *"
                 />
               </div>
@@ -167,7 +171,11 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
             year={periodYear}
             value={periodValue}
             onChange={(value) =>
-              setValue("period", value, { shouldDirty: true, shouldValidate: true, shouldTouch: true })
+              setValue("period", value, {
+                shouldDirty: true,
+                shouldValidate: true,
+                shouldTouch: true,
+              })
             }
             error={errors.period?.message}
             className={colSpanClass}
@@ -182,7 +190,9 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
             className="h-4 w-4 rounded border-gray-300 text-primary-600"
             {...register("mark_pending")}
           />
-          <span className="text-sm font-medium text-gray-700">ממתין לחומרים</span>
+          <span className="text-sm font-medium text-gray-700">
+            ממתין לחומרים
+          </span>
         </label>
 
         {watch("mark_pending") && (

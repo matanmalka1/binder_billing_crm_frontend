@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Controller } from "react-hook-form";
-import { Modal } from "../../../../components/ui/overlays/Modal";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { Input } from "../../../../components/ui/inputs/Input";
-import { Select } from "../../../../components/ui/inputs/Select";
-import { Textarea } from "../../../../components/ui/inputs/Textarea";
-import { DatePicker } from "../../../../components/ui/inputs/DatePicker";
-import { ClientPickerField } from "@/components/shared/client";
+import {
+  ClientPickerField,
+  createClientIdPickerHandlers,
+  useClientPickerState,
+} from "@/components/shared/client";
+import { DatePicker, Input, Select, Textarea } from "@/components/ui/inputs";
+import { Modal, ModalFormActions } from "@/components/ui/overlays";
 import { useCreateReport } from "../../hooks/useCreateReport";
 import { FLAG_FIELDS } from "../../utils";
 
@@ -22,46 +22,33 @@ const currencySuffix = <span className="text-sm text-gray-400">₪</span>;
 
 export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onClose }) => {
   const { form, onSubmit, isSubmitting, preview } = useCreateReport(onClose);
-  const { register, control, setValue, formState: { errors } } = form;
-  const [clientQuery, setClientQuery] = useState("");
-  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
+  const {
+    register,
+    control,
+    setValue,
+    formState: { errors },
+  } = form;
+  const {
+    clientQuery,
+    selectedClient,
+    handleSelectClient,
+    handleClearClient,
+    handleClientQueryChange,
+    resetClientPicker,
+  } = useClientPickerState(
+    createClientIdPickerHandlers((value, options) => setValue("client_id", value, options)),
+  );
 
   useEffect(() => {
     if (open) return;
     form.reset();
-    setClientQuery("");
-    setSelectedClient(null);
-  }, [form, open]);
+    resetClientPicker();
+  }, [form, open, resetClientPicker]);
 
   const handleClose = () => {
     form.reset();
-    setClientQuery("");
-    setSelectedClient(null);
+    resetClientPicker();
     onClose();
-  };
-
-  const handleSelectClient = (client: {
-    id: number;
-    name: string;
-    id_number: string;
-    client_status?: string | null;
-  }) => {
-    setSelectedClient(client);
-    setClientQuery(client.name);
-    setValue("client_id", String(client.id), { shouldValidate: true, shouldDirty: true });
-  };
-
-  const handleClearClient = () => {
-    setSelectedClient(null);
-    setClientQuery("");
-    setValue("client_id", "", { shouldValidate: true, shouldDirty: true });
-  };
-
-  const handleClientQueryChange = (query: string) => {
-    setClientQuery(query);
-    if (!selectedClient) return;
-    setSelectedClient(null);
-    setValue("client_id", "", { shouldValidate: true, shouldDirty: true });
   };
 
   return (
@@ -70,14 +57,12 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
       title="דוח שנתי חדש"
       onClose={handleClose}
       footer={
-        <div className="flex items-center justify-end gap-2">
-          <Button type="button" variant="outline" onClick={handleClose}>
-            ביטול
-          </Button>
-          <Button type="button" onClick={onSubmit} isLoading={isSubmitting}>
-            צור דוח
-          </Button>
-        </div>
+        <ModalFormActions
+          onCancel={handleClose}
+          onSubmit={onSubmit}
+          isLoading={isSubmitting}
+          submitLabel="צור דוח"
+        />
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">

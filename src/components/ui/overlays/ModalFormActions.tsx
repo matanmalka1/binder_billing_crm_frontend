@@ -7,6 +7,7 @@ interface ModalFormActionsProps {
   cancelDisabled?: boolean;
   cancelLabel?: ReactNode;
   cancelVariant?: ButtonVariant;
+  isLoading?: boolean;
   onCancel: () => void;
   onSubmit?: () => void;
   submitDisabled?: boolean;
@@ -21,6 +22,7 @@ export const ModalFormActions: React.FC<ModalFormActionsProps> = ({
   cancelDisabled = false,
   cancelLabel = "ביטול",
   cancelVariant = "outline",
+  isLoading = false,
   onCancel,
   onSubmit,
   submitDisabled = false,
@@ -35,14 +37,19 @@ export const ModalFormActions: React.FC<ModalFormActionsProps> = ({
 
   return (
     <div className="flex items-center justify-end gap-2">
-      <Button type="button" variant={cancelVariant} onClick={onCancel} disabled={cancelDisabled}>
+      <Button
+        type="button"
+        variant={cancelVariant}
+        onClick={onCancel}
+        disabled={cancelDisabled || isLoading}
+      >
         {cancelLabel}
       </Button>
       <Button
         type={submitType}
         variant={submitVariant}
-        isLoading={submitLoading}
-        disabled={submitDisabled}
+        isLoading={submitLoading || isLoading}
+        disabled={submitDisabled || isLoading}
         {...submitProps}
       >
         {submitLabel}

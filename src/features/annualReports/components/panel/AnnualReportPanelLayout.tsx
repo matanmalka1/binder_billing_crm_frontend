@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { Download } from "lucide-react";
 import { UnsavedChangesGuard } from "@/components/ui/feedback/UnsavedChangesGuard";
+import { useEscapeToClose } from "@/components/ui/overlays/useEscapeToClose";
 import { useUnsavedChangesGuard } from "@/components/ui/overlays/useUnsavedChangesGuard";
 
 interface AnnualReportPanelLayoutProps {
@@ -35,15 +35,7 @@ export const AnnualReportPanelLayout = ({
     onClose,
   });
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && open) {
-        handleClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open, handleClose]);
+  useEscapeToClose({ open, onClose: handleClose });
 
   if (!open) return null;
 

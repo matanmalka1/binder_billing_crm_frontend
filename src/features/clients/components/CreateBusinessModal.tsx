@@ -83,10 +83,8 @@ export const CreateBusinessModal: React.FC<Props> = ({
         <ModalFormActions
           onCancel={handleClose}
           onSubmit={onFormSubmit}
-          cancelDisabled={isLoading}
+          isLoading={isLoading}
           submitLabel="הוסף עסק"
-          submitLoading={isLoading}
-          submitDisabled={isLoading}
         />
       }
     >

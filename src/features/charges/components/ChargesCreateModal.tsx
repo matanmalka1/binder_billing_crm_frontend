@@ -1,12 +1,13 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { Input } from "../../../components/ui/inputs/Input";
-import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
-import { FormField } from "../../../components/ui/inputs/FormField";
-import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
-import { ClientPickerField } from "@/components/shared/client";
+import {
+  ClientPickerField,
+  createClientIdPickerHandlers,
+  useClientPickerState,
+} from "@/components/shared/client";
+import { FormField, Input, SelectDropdown } from "@/components/ui/inputs";
+import { Modal, ModalFormActions } from "@/components/ui/overlays";
 import type { CreateChargePayload } from "../api";
 import { CHARGE_TYPE_OPTIONS } from "../constants";
 import {
@@ -47,8 +48,18 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
     resolver: zodResolver(chargeCreateSchema),
   });
 
-  const [clientQuery, setClientQuery] = useState("");
-  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
+  const {
+    clientQuery,
+    selectedClient,
+    handleSelectClient,
+    handleClearClient,
+    handleClientQueryChange,
+    resetClientPicker,
+  } = useClientPickerState(
+    createClientIdPickerHandlers((value, options) =>
+      setValue("client_id", value, options),
+    ),
+  );
   const monthsCovered = watch("months_covered") ?? 1;
 
   const periodOptions = useMemo(() => {
@@ -66,30 +77,9 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
     return options;
   }, [monthsCovered]);
 
-  const handleSelectClient = (client: { id: number; name: string }) => {
-    setSelectedClient(client);
-    setClientQuery(client.name);
-    setValue("client_id", String(client.id), { shouldValidate: true, shouldDirty: true });
-  };
-
-  const handleClearClient = () => {
-    setSelectedClient(null);
-    setClientQuery("");
-    setValue("client_id", "", { shouldDirty: true, shouldValidate: true });
-  };
-
-  const handleClientQueryChange = (query: string) => {
-    setClientQuery(query);
-    if (selectedClient) {
-      setSelectedClient(null);
-      setValue("client_id", "", { shouldDirty: true, shouldValidate: true });
-    }
-  };
-
   const handleClose = () => {
     reset(chargeCreateDefaultValues);
-    setClientQuery("");
-    setSelectedClient(null);
+    resetClientPicker();
     onClose();
   };
 
@@ -97,8 +87,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
     const created = await onSubmit(toCreateChargePayload(values));
     if (created) {
       reset(chargeCreateDefaultValues);
-      setClientQuery("");
-      setSelectedClient(null);
+      resetClientPicker();
       onClose();
     }
   });
@@ -112,15 +101,19 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
       footer={
         <ModalFormActions
           onCancel={handleClose}
-          onSubmit={() => void submitForm()}
           cancelVariant="secondary"
-          cancelDisabled={createLoading}
+          isLoading={createLoading}
+          submitType="submit"
+          submitForm="charges-create-form"
           submitLabel="יצירת חיוב"
-          submitLoading={createLoading}
         />
       }
     >
-      <form id="charges-create-form" onSubmit={submitForm} className="space-y-4">
+      <form
+        id="charges-create-form"
+        onSubmit={submitForm}
+        className="space-y-4"
+      >
         <input type="hidden" {...register("client_id")} />
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="col-span-2">
@@ -167,7 +160,9 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
               <FormField label="תדירות" error={errors.months_covered?.message}>
                 <SelectDropdown
                   value={String(field.value ?? 1)}
-                  onChange={(e) => field.onChange(Number(e.target.value) as 1 | 2)}
+                  onChange={(e) =>
+                    field.onChange(Number(e.target.value) as 1 | 2)
+                  }
                   onBlur={field.onBlur}
                   name={field.name}
                   options={[
