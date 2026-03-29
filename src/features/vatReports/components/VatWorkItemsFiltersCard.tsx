@@ -1,10 +1,9 @@
-import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
-import { Search } from "lucide-react";
+import { useMemo, useState } from "react";
 import { SelectDropdown } from "../../../components/ui/SelectDropdown";
-import { Input } from "../../../components/ui/Input";
 import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
 import { ToolbarContainer } from "../../../components/ui/ToolbarContainer";
-import { cn } from "../../../utils/utils";
+import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
+import { cn, MONTH_NAMES } from "../../../utils/utils";
 import { VAT_WORK_ITEMS_STATUS_OPTIONS } from "../constants";
 import type { VatWorkItemsFiltersCardProps } from "../types";
 
@@ -13,13 +12,43 @@ export const VatWorkItemsFiltersCard = ({
   onClear,
   onFilterChange,
 }: VatWorkItemsFiltersCardProps) => {
-  const [clientSearchDraft, setClientSearchDraft] = useSearchDebounce(
-    filters.clientSearch,
-    (v) => onFilterChange("clientSearch", v),
+  const [clientQuery, setClientQuery] = useState(filters.clientSearch);
+  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
+  const periodOptions = useMemo(
+    () => [
+      { value: "", label: "כל התקופות" },
+      ...Array.from({ length: 24 }, (_, i) => {
+        const periodDate = new Date(new Date().getFullYear(), new Date().getMonth() - i, 1);
+        return {
+          value: `${periodDate.getFullYear()}-${String(periodDate.getMonth() + 1).padStart(2, "0")}`,
+          label: `${MONTH_NAMES[periodDate.getMonth()]} ${periodDate.getFullYear()}`,
+        };
+      }),
+    ],
+    [],
   );
 
+  const handleSelectClient = (client: { id: number; name: string }) => {
+    setSelectedClient(client);
+    setClientQuery(client.name);
+    onFilterChange("clientSearch", String(client.id));
+  };
+
+  const handleClientQueryChange = (query: string) => {
+    setClientQuery(query);
+    if (selectedClient) setSelectedClient(null);
+    onFilterChange("clientSearch", query);
+  };
+
+  const handleClearClient = () => {
+    setSelectedClient(null);
+    setClientQuery("");
+    onFilterChange("clientSearch", "");
+  };
+
   const handleReset = () => {
-    setClientSearchDraft("");
+    setClientQuery("");
+    setSelectedClient(null);
     onClear();
   };
 
@@ -27,23 +56,35 @@ export const VatWorkItemsFiltersCard = ({
     <ToolbarContainer>
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <Input
-            label="חיפוש לקוח"
-            placeholder="שם לקוח..."
-            value={clientSearchDraft}
-            onChange={(e) => setClientSearchDraft(e.target.value)}
-            startIcon={<Search className="h-4 w-4" />}
-          />
-          <Input
-            label="תקופה"
-            placeholder="YYYY-MM"
-            value={filters.period}
-            onChange={(e) => onFilterChange("period", e.target.value)}
-            dir="ltr"
-            className={cn(
-              filters.period && "border-primary-400 ring-1 ring-primary-200",
-            )}
-          />
+          {selectedClient ? (
+            <SelectedClientDisplay
+              name={selectedClient.name}
+              id={selectedClient.id}
+              onClear={handleClearClient}
+              label="חיפוש לקוח"
+            />
+          ) : (
+            <ClientSearchInput
+              label="חיפוש לקוח"
+              placeholder='שם / ת"ז / ח.פ / מספר לקוח'
+              value={clientQuery}
+              onChange={handleClientQueryChange}
+              onSelect={handleSelectClient}
+            />
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              תקופה
+            </label>
+            <SelectDropdown
+              value={filters.period}
+              onChange={(e) => onFilterChange("period", e.target.value)}
+              options={periodOptions}
+              className={cn(
+                filters.period && "border-primary-400 ring-1 ring-primary-200",
+              )}
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               סטטוס
@@ -74,17 +115,20 @@ export const VatWorkItemsFiltersCard = ({
             filters.period
               ? {
                   key: "period",
-                  label: `תקופה: ${filters.period}`,
+                  label: `תקופה: ${
+                    periodOptions.find((o) => o.value === filters.period)?.label ?? filters.period
+                  }`,
                   onRemove: () => onFilterChange("period", ""),
                 }
               : null,
             filters.clientSearch
               ? {
                   key: "clientSearch",
-                  label: `חיפוש: ${filters.clientSearch}`,
+                  label: selectedClient
+                    ? `לקוח: ${selectedClient.name}`
+                    : `חיפוש: ${filters.clientSearch}`,
                   onRemove: () => {
-                    setClientSearchDraft("");
-                    onFilterChange("clientSearch", "");
+                    handleClearClient();
                   },
                 }
               : null,

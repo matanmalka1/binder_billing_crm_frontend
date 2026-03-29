@@ -51,6 +51,21 @@ export interface VatWorkItemLookupResponse {
   period: string;
 }
 
+export interface VatPeriodOptionResponse {
+  period: string;
+  label: string;
+  start_month: number;
+  end_month: number;
+  is_opened: boolean;
+}
+
+export interface VatPeriodOptionsResponse {
+  business_id: number;
+  year: number;
+  period_type: "monthly" | "bimonthly" | "exempt";
+  options: VatPeriodOptionResponse[];
+}
+
 export interface CreateVatWorkItemPayload {
   business_id: number;
   period: string;

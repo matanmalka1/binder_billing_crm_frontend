@@ -130,6 +130,8 @@ export const ENDPOINTS = {
   vatWorkItemById: (id: number | string) => `/vat/work-items/${id}`,
   vatWorkItemsByBusiness: (businessId: number | string) =>
     `/vat/businesses/${businessId}/work-items`,
+  vatPeriodOptions: (businessId: number | string) =>
+    `/vat/businesses/${businessId}/period-options`,
   vatWorkItemMaterialsComplete: (id: number | string) =>
     `/vat/work-items/${id}/materials-complete`,
   vatWorkItemInvoices: (id: number | string) => `/vat/work-items/${id}/invoices`,

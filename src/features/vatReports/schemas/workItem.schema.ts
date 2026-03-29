@@ -4,12 +4,12 @@ import type { CreateVatWorkItemPayload } from "../api";
 const periodPattern = /^\d{4}-(0[1-9]|1[0-2])$/;
 
 export const vatWorkItemCreateSchema = z.object({
-  client_id: z
+  business_id: z
     .string()
     .trim()
-    .min(1, "יש להזין מזהה לקוח")
+    .min(1, "יש לבחור עסק")
     .refine((v) => Number.isInteger(Number(v)) && Number(v) > 0, {
-      message: "יש להזין מזהה לקוח חיובי",
+      message: "יש לבחור עסק תקין",
     }),
   period: z
     .string()
@@ -25,7 +25,7 @@ export const vatWorkItemCreateSchema = z.object({
 export type VatWorkItemCreateFormValues = z.infer<typeof vatWorkItemCreateSchema>;
 
 export const vatWorkItemCreateDefaultValues: VatWorkItemCreateFormValues = {
-  client_id: "",
+  business_id: "",
   period: "",
   mark_pending: false,
   pending_materials_note: "",
@@ -34,7 +34,7 @@ export const vatWorkItemCreateDefaultValues: VatWorkItemCreateFormValues = {
 export const toCreateVatWorkItemPayload = (
   values: VatWorkItemCreateFormValues,
 ): CreateVatWorkItemPayload => ({
-  business_id: Number(values.client_id),
+  business_id: Number(values.business_id),
   period: values.period.trim(),
   mark_pending: values.mark_pending,
   pending_materials_note: values.pending_materials_note?.trim() || null,
