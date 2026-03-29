@@ -33,8 +33,10 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
   });
 
   const selectedCategory = watch("expense_category");
+  const selectedDocumentType = watch("document_type");
   const categoryColor = selectedCategory ? CATEGORY_COLORS[selectedCategory] : "";
   const deductionRate = selectedCategory !== undefined ? (DEDUCTION_RATES[selectedCategory] ?? null) : null;
+  const requiresCounterpartyId = invoiceType === "expense" && selectedDocumentType === "tax_invoice";
 
   const onSubmit = async (values: VatInvoiceRowValues) => {
     const ok = await addInvoice(toInvoiceRowPayload(values));
@@ -104,6 +106,12 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
                 />
               )}
             />
+          </FormField>
+        )}
+
+        {requiresCounterpartyId && (
+          <FormField label="מספר עוסק של הספק" error={errors.counterparty_id?.message} className="w-40">
+            <Input {...register("counterparty_id")} placeholder="9 ספרות" dir="ltr" />
           </FormField>
         )}
 

@@ -22,6 +22,15 @@ export const vatInvoiceRowSchema = z.object({
   invoice_number: z.string().trim().optional(),
   invoice_date: z.string().optional(),
   counterparty_name: z.string().trim().optional(),
+  counterparty_id: z.string().trim().optional(),
+}).superRefine((data, ctx) => {
+  if (data.invoice_type === "expense" && data.document_type === "tax_invoice" && !data.counterparty_id) {
+    ctx.addIssue({
+      code: "custom",
+      message: "חובה להזין מספר עוסק של הספק",
+      path: ["counterparty_id"],
+    });
+  }
 });
 
 export type VatInvoiceRowValues = z.infer<typeof vatInvoiceRowSchema>;
@@ -63,4 +72,5 @@ export const toInvoiceRowPayload = (
   invoice_number: values.invoice_number || undefined,
   invoice_date: values.invoice_date || undefined,
   counterparty_name: values.counterparty_name || undefined,
+  counterparty_id: values.counterparty_id || undefined,
 });
