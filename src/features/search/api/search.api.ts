@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { SEARCH_ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "@/api/queryParams";
 import type { SearchParams, SearchResponse } from "./contracts";
 
@@ -16,7 +16,7 @@ export const searchApi = {
       });
     }
 
-    const response = await api.get<SearchResponse>(ENDPOINTS.search, {
+    const response = await api.get<SearchResponse>(SEARCH_ENDPOINTS.search, {
       params: queryParams,
     });
     return response.data;

@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { TIMELINE_ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "@/api/queryParams";
 import type { TimelineResponse, TimelineParams } from "./contracts";
 
@@ -9,7 +9,7 @@ export const timelineApi = {
     params: TimelineParams,
   ): Promise<TimelineResponse> => {
     const response = await api.get<TimelineResponse>(
-      ENDPOINTS.businessTimeline(businessId),
+      TIMELINE_ENDPOINTS.businessTimeline(businessId),
       { params: toQueryParams(params) },
     );
     return response.data;

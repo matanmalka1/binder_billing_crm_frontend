@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { CORRESPONDENCE_ENDPOINTS } from "./endpoints";
 import type {
   CorrespondenceEntry,
   CorrespondenceListResponse,
@@ -13,7 +13,7 @@ export const correspondenceApi = {
     params?: { page?: number; page_size?: number },
   ): Promise<CorrespondenceListResponse> => {
     const response = await api.get<CorrespondenceListResponse>(
-      ENDPOINTS.correspondenceList(clientId),
+      CORRESPONDENCE_ENDPOINTS.correspondenceList(clientId),
       { params },
     );
     return response.data;
@@ -24,7 +24,7 @@ export const correspondenceApi = {
     payload: CreateCorrespondencePayload,
   ): Promise<CorrespondenceEntry> => {
     const response = await api.post<CorrespondenceEntry>(
-      ENDPOINTS.correspondenceList(clientId),
+      CORRESPONDENCE_ENDPOINTS.correspondenceList(clientId),
       payload,
     );
     return response.data;
@@ -36,13 +36,13 @@ export const correspondenceApi = {
     payload: UpdateCorrespondencePayload,
   ): Promise<CorrespondenceEntry> => {
     const response = await api.patch<CorrespondenceEntry>(
-      ENDPOINTS.correspondenceById(clientId, id),
+      CORRESPONDENCE_ENDPOINTS.correspondenceById(clientId, id),
       payload,
     );
     return response.data;
   },
 
   delete: async (clientId: number, id: number): Promise<void> => {
-    await api.delete(ENDPOINTS.correspondenceById(clientId, id));
+    await api.delete(CORRESPONDENCE_ENDPOINTS.correspondenceById(clientId, id));
   },
 };

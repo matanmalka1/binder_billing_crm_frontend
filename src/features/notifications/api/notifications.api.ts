@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { NOTIFICATION_ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "@/api/queryParams";
 import type {
   NotificationItem,
@@ -21,7 +21,7 @@ const normalizeNotifications = (
 export const notificationsApi = {
   list: async (params?: ListNotificationsParams): Promise<NotificationItem[]> => {
     const response = await api.get<NotificationItem[] | NotificationListResponse>(
-      ENDPOINTS.notifications,
+      NOTIFICATION_ENDPOINTS.notifications,
       params ? { params: toQueryParams(params) } : undefined,
     );
     return normalizeNotifications(response.data);
@@ -29,7 +29,7 @@ export const notificationsApi = {
 
   getUnreadCount: async (clientId?: number): Promise<UnreadCountResponse> => {
     const response = await api.get<UnreadCountResponse>(
-      ENDPOINTS.notificationsUnreadCount,
+      NOTIFICATION_ENDPOINTS.notificationsUnreadCount,
       clientId != null ? { params: toQueryParams({ client_id: clientId }) } : undefined,
     );
     return response.data;
@@ -37,7 +37,7 @@ export const notificationsApi = {
 
   markRead: async (notificationIds: number[]): Promise<MarkReadResponse> => {
     const response = await api.post<MarkReadResponse>(
-      ENDPOINTS.notificationsMarkRead,
+      NOTIFICATION_ENDPOINTS.notificationsMarkRead,
       { notification_ids: notificationIds },
     );
     return response.data;
@@ -45,7 +45,7 @@ export const notificationsApi = {
 
   markAllRead: async (clientId?: number): Promise<MarkReadResponse> => {
     const response = await api.post<MarkReadResponse>(
-      ENDPOINTS.notificationsMarkAllRead,
+      NOTIFICATION_ENDPOINTS.notificationsMarkAllRead,
       null,
       clientId != null ? { params: toQueryParams({ client_id: clientId }) } : undefined,
     );
@@ -55,7 +55,7 @@ export const notificationsApi = {
   send: async (payload: SendNotificationPayload): Promise<SendNotificationResponse> => {
     const businessId = payload.business_id ?? payload.client_id;
     const response = await api.post<SendNotificationResponse>(
-      ENDPOINTS.notificationsSend,
+      NOTIFICATION_ENDPOINTS.notificationsSend,
       {
         business_id: businessId,
         channel: payload.channel.toLowerCase() as "whatsapp" | "email",

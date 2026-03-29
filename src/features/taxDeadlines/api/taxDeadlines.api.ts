@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { TAX_DEADLINE_ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "@/api/queryParams";
 import type {
   TaxDeadlineResponse,
@@ -17,7 +17,7 @@ export const taxDeadlinesApi = {
     payment_amount?: string | null;
     description?: string | null;
   }): Promise<TaxDeadlineResponse> => {
-    const response = await api.post<TaxDeadlineResponse>(ENDPOINTS.taxDeadlines, payload);
+    const response = await api.post<TaxDeadlineResponse>(TAX_DEADLINE_ENDPOINTS.taxDeadlines, payload);
     return response.data;
   },
 
@@ -34,19 +34,19 @@ export const taxDeadlinesApi = {
         ? { ...params, business_name: params.client_name }
         : params;
     const response = await api.get<TaxDeadlineListResponse>(
-      ENDPOINTS.taxDeadlines,
+      TAX_DEADLINE_ENDPOINTS.taxDeadlines,
       { params: toQueryParams(normalizedParams) },
     );
     return response.data;
   },
 
   getTaxDeadline: async (deadlineId: number): Promise<TaxDeadlineResponse> => {
-    const response = await api.get<TaxDeadlineResponse>(ENDPOINTS.taxDeadlineById(deadlineId));
+    const response = await api.get<TaxDeadlineResponse>(TAX_DEADLINE_ENDPOINTS.taxDeadlineById(deadlineId));
     return response.data;
   },
 
   completeTaxDeadline: async (deadlineId: number): Promise<TaxDeadlineResponse> => {
-    const response = await api.post<TaxDeadlineResponse>(ENDPOINTS.taxDeadlineComplete(deadlineId));
+    const response = await api.post<TaxDeadlineResponse>(TAX_DEADLINE_ENDPOINTS.taxDeadlineComplete(deadlineId));
     return response.data;
   },
 
@@ -60,12 +60,15 @@ export const taxDeadlinesApi = {
       description?: string | null;
     },
   ): Promise<TaxDeadlineResponse> => {
-    const response = await api.put<TaxDeadlineResponse>(ENDPOINTS.taxDeadlineById(deadlineId), payload);
+    const response = await api.put<TaxDeadlineResponse>(
+      TAX_DEADLINE_ENDPOINTS.taxDeadlineById(deadlineId),
+      payload,
+    );
     return response.data;
   },
 
   deleteTaxDeadline: async (deadlineId: number): Promise<void> => {
-    await api.delete(ENDPOINTS.taxDeadlineById(deadlineId));
+    await api.delete(TAX_DEADLINE_ENDPOINTS.taxDeadlineById(deadlineId));
   },
 
   getDashboardDeadlines: async (): Promise<{
@@ -75,13 +78,13 @@ export const taxDeadlinesApi = {
     const response = await api.get<{
       urgent: DeadlineUrgentItem[];
       upcoming: TaxDeadlineResponse[];
-    }>(ENDPOINTS.taxDeadlinesDashboard);
+    }>(TAX_DEADLINE_ENDPOINTS.taxDeadlinesDashboard);
     return response.data;
   },
 
   getTimeline: async (businessId: number): Promise<TimelineEntry[]> => {
     const response = await api.get<TimelineEntry[]>(
-      ENDPOINTS.taxDeadlinesTimeline,
+      TAX_DEADLINE_ENDPOINTS.taxDeadlinesTimeline,
       { params: toQueryParams({ business_id: businessId }) },
     );
     return response.data;
@@ -92,7 +95,7 @@ export const taxDeadlinesApi = {
     year: number;
   }): Promise<{ created_count: number }> => {
     const response = await api.post<{ created_count: number }>(
-      ENDPOINTS.taxDeadlinesGenerate,
+      TAX_DEADLINE_ENDPOINTS.taxDeadlinesGenerate,
       payload,
     );
     return response.data;

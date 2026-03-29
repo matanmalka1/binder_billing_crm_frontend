@@ -1,6 +1,6 @@
 import axios from "axios";
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { SIGNATURE_REQUEST_ENDPOINTS } from "./endpoints";
 import type {
   SignatureRequestListResponse,
   SignatureRequestWithAudit,
@@ -22,7 +22,7 @@ export const signatureRequestsApi = {
     params?: { page?: number; page_size?: number; status?: string },
   ): Promise<SignatureRequestListResponse> => {
     const response = await api.get<SignatureRequestListResponse>(
-      ENDPOINTS.businessSignatureRequests(clientId),
+      SIGNATURE_REQUEST_ENDPOINTS.businessSignatureRequests(clientId),
       { params },
     );
     return response.data;
@@ -33,7 +33,7 @@ export const signatureRequestsApi = {
     page_size?: number;
   }): Promise<SignatureRequestListResponse> => {
     const response = await api.get<SignatureRequestListResponse>(
-      ENDPOINTS.signatureRequestsPending,
+      SIGNATURE_REQUEST_ENDPOINTS.signatureRequestsPending,
       { params },
     );
     return response.data;
@@ -41,14 +41,14 @@ export const signatureRequestsApi = {
 
   getById: async (id: number): Promise<SignatureRequestWithAudit> => {
     const response = await api.get<SignatureRequestWithAudit>(
-      ENDPOINTS.signatureRequestById(id),
+      SIGNATURE_REQUEST_ENDPOINTS.signatureRequestById(id),
     );
     return response.data;
   },
 
   getAuditTrail: async (id: number): Promise<AuditEvent[]> => {
     const response = await api.get<AuditEvent[]>(
-      ENDPOINTS.signatureRequestAuditTrail(id),
+      SIGNATURE_REQUEST_ENDPOINTS.signatureRequestAuditTrail(id),
     );
     return response.data;
   },
@@ -59,7 +59,7 @@ export const signatureRequestsApi = {
     payload: CreateSignatureRequestPayload,
   ): Promise<SignatureRequestResponse> => {
     const response = await api.post<SignatureRequestResponse>(
-      ENDPOINTS.signatureRequests,
+      SIGNATURE_REQUEST_ENDPOINTS.signatureRequests,
       payload,
     );
     return response.data;
@@ -70,7 +70,7 @@ export const signatureRequestsApi = {
     payload?: SendSignatureRequestPayload,
   ): Promise<SendSignatureRequestResponse> => {
     const response = await api.post<SendSignatureRequestResponse>(
-      ENDPOINTS.signatureRequestSend(id),
+      SIGNATURE_REQUEST_ENDPOINTS.signatureRequestSend(id),
       payload ?? {},
     );
     return response.data;
@@ -81,7 +81,7 @@ export const signatureRequestsApi = {
     payload?: CancelSignatureRequestPayload,
   ): Promise<SignatureRequestResponse> => {
     const response = await api.post<SignatureRequestResponse>(
-      ENDPOINTS.signatureRequestCancel(id),
+      SIGNATURE_REQUEST_ENDPOINTS.signatureRequestCancel(id),
       payload ?? {},
     );
     return response.data;
@@ -99,18 +99,18 @@ const publicApi = axios.create({
 
 export const signerApi = {
   view: async (token: string): Promise<SignerViewResponse> => {
-    const response = await publicApi.get<SignerViewResponse>(ENDPOINTS.signerView(token));
+    const response = await publicApi.get<SignerViewResponse>(SIGNATURE_REQUEST_ENDPOINTS.signerView(token));
     return response.data;
   },
 
   approve: async (token: string): Promise<SignerViewResponse> => {
-    const response = await publicApi.post<SignerViewResponse>(ENDPOINTS.signerApprove(token));
+    const response = await publicApi.post<SignerViewResponse>(SIGNATURE_REQUEST_ENDPOINTS.signerApprove(token));
     return response.data;
   },
 
   decline: async (token: string, payload?: SignerDeclinePayload): Promise<SignerViewResponse> => {
     const response = await publicApi.post<SignerViewResponse>(
-      ENDPOINTS.signerDecline(token),
+      SIGNATURE_REQUEST_ENDPOINTS.signerDecline(token),
       payload ?? {},
     );
     return response.data;

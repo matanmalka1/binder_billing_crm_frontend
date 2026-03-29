@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { DOCUMENT_ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "@/api/queryParams";
 import type {
   PermanentDocumentListResponse,
@@ -20,20 +20,20 @@ export const documentsApi = {
     params?: ListDocumentsByClientParams,
   ): Promise<PermanentDocumentListResponse> => {
     const response = await api.get<PermanentDocumentListResponse>(
-      ENDPOINTS.documentsByBusiness(businessId),
+      DOCUMENT_ENDPOINTS.documentsByBusiness(businessId),
       params ? { params: toQueryParams(params) } : undefined,
     );
     return response.data;
   },
 
   getDownloadUrl: async (id: number): Promise<{ url: string }> => {
-    const response = await api.get<{ url: string }>(ENDPOINTS.documentDownloadUrl(id));
+    const response = await api.get<{ url: string }>(DOCUMENT_ENDPOINTS.documentDownloadUrl(id));
     return response.data;
   },
 
   getSignalsByClient: async (businessId: number): Promise<OperationalSignalsResponse> => {
     const response = await api.get<OperationalSignalsResponse>(
-      ENDPOINTS.documentSignalsByBusiness(businessId),
+      DOCUMENT_ENDPOINTS.documentSignalsByBusiness(businessId),
     );
     return response.data;
   },
@@ -44,7 +44,7 @@ export const documentsApi = {
     taxYear?: number,
   ): Promise<DocumentVersionsResponse> => {
     const response = await api.get<DocumentVersionsResponse>(
-      ENDPOINTS.documentVersionsByBusiness(businessId),
+      DOCUMENT_ENDPOINTS.documentVersionsByBusiness(businessId),
       {
         params: toQueryParams({
           document_type: documentType,
@@ -57,7 +57,7 @@ export const documentsApi = {
 
   listByAnnualReport: async (reportId: number): Promise<DocumentVersionsResponse> => {
     const response = await api.get<DocumentVersionsResponse>(
-      ENDPOINTS.documentsByAnnualReport(reportId),
+      DOCUMENT_ENDPOINTS.documentsByAnnualReport(reportId),
     );
     return response.data;
   },
@@ -79,7 +79,7 @@ export const documentsApi = {
       formData.append("notes", payload.notes);
     }
     const response = await api.post<PermanentDocumentResponse>(
-      ENDPOINTS.documentsUpload,
+      DOCUMENT_ENDPOINTS.documentsUpload,
       formData,
       { headers: { "Content-Type": "multipart/form-data" } },
     );
@@ -87,14 +87,14 @@ export const documentsApi = {
   },
 
   deleteDocument: async (id: number): Promise<void> => {
-    await api.delete(ENDPOINTS.documentById(id));
+    await api.delete(DOCUMENT_ENDPOINTS.documentById(id));
   },
 
   replaceDocument: async (id: number, file: File): Promise<PermanentDocumentResponse> => {
     const formData = new FormData();
     formData.append("file", file);
     const response = await api.put<PermanentDocumentResponse>(
-      ENDPOINTS.documentReplace(id),
+      DOCUMENT_ENDPOINTS.documentReplace(id),
       formData,
       { headers: { "Content-Type": "multipart/form-data" } },
     );
@@ -103,14 +103,14 @@ export const documentsApi = {
 
   approveDocument: async (id: number): Promise<PermanentDocumentResponse> => {
     const response = await api.post<PermanentDocumentResponse>(
-      ENDPOINTS.documentApprove(id),
+      DOCUMENT_ENDPOINTS.documentApprove(id),
     );
     return response.data;
   },
 
   rejectDocument: async (id: number, notes: string): Promise<PermanentDocumentResponse> => {
     const response = await api.post<PermanentDocumentResponse>(
-      ENDPOINTS.documentReject(id),
+      DOCUMENT_ENDPOINTS.documentReject(id),
       { notes } satisfies RejectDocumentRequest,
     );
     return response.data;
@@ -118,7 +118,7 @@ export const documentsApi = {
 
   updateNotes: async (id: number, notes: string): Promise<PermanentDocumentResponse> => {
     const response = await api.patch<PermanentDocumentResponse>(
-      ENDPOINTS.documentNotes(id),
+      DOCUMENT_ENDPOINTS.documentNotes(id),
       { notes } satisfies UpdateNotesRequest,
     );
     return response.data;

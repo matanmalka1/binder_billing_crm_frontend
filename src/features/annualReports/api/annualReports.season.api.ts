@@ -1,30 +1,32 @@
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { ANNUAL_REPORT_ENDPOINTS } from "./endpoints";
 import type { AnnualReportFull, AnnualReportListResponse, KanbanStage, SeasonSummary } from "./contracts";
 
 export const annualReportSeasonApi = {
   getSeasonSummary: async (taxYear: number): Promise<SeasonSummary> => {
-    const res = await api.get<SeasonSummary>(ENDPOINTS.taxYearSummary(taxYear));
-    return res.data;
+    const response = await api.get<SeasonSummary>(ANNUAL_REPORT_ENDPOINTS.taxYearSummary(taxYear));
+    return response.data;
   },
 
   listSeasonReports: async (
     taxYear: number,
     params: { page?: number; page_size?: number },
   ): Promise<AnnualReportListResponse> => {
-    const res = await api.get<AnnualReportListResponse>(ENDPOINTS.taxYearReports(taxYear), { params });
-    return res.data;
+    const response = await api.get<AnnualReportListResponse>(ANNUAL_REPORT_ENDPOINTS.taxYearReports(taxYear), {
+      params,
+    });
+    return response.data;
   },
 
   getKanbanView: async (): Promise<{ stages: KanbanStage[] }> => {
-    const res = await api.get<{ stages: KanbanStage[] }>(ENDPOINTS.annualReportsKanban);
-    return res.data;
+    const response = await api.get<{ stages: KanbanStage[] }>(ANNUAL_REPORT_ENDPOINTS.annualReportsKanban);
+    return response.data;
   },
 
   getOverdue: async (taxYear?: number): Promise<AnnualReportFull[]> => {
-    const res = await api.get<AnnualReportFull[]>(ENDPOINTS.annualReportOverdue, {
+    const response = await api.get<AnnualReportFull[]>(ANNUAL_REPORT_ENDPOINTS.annualReportOverdue, {
       params: taxYear ? { tax_year: taxYear } : undefined,
     });
-    return res.data;
+    return response.data;
   },
 };

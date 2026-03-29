@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { AUTHORITY_CONTACT_ENDPOINTS } from "./endpoints";
 import type {
   AuthorityContactResponse,
   AuthorityContactCreatePayload,
@@ -13,7 +13,7 @@ export const authorityContactsApi = {
     payload: AuthorityContactCreatePayload,
   ): Promise<AuthorityContactResponse> => {
     const response = await api.post<AuthorityContactResponse>(
-      ENDPOINTS.businessAuthorityContacts(clientId),
+      AUTHORITY_CONTACT_ENDPOINTS.businessAuthorityContacts(clientId),
       payload,
     );
     return response.data;
@@ -26,7 +26,7 @@ export const authorityContactsApi = {
     page_size: number = 20,
   ): Promise<{ items: AuthorityContactResponse[]; page: number; page_size: number; total: number }> => {
     const response = await api.get<{ items: AuthorityContactResponse[]; page: number; page_size: number; total: number }>(
-      ENDPOINTS.businessAuthorityContacts(clientId),
+      AUTHORITY_CONTACT_ENDPOINTS.businessAuthorityContacts(clientId),
       { params: { ...(contactType ? { contact_type: contactType } : {}), page, page_size } },
     );
     return response.data;
@@ -34,7 +34,7 @@ export const authorityContactsApi = {
 
   getAuthorityContact: async (contactId: number): Promise<AuthorityContactResponse> => {
     const response = await api.get<AuthorityContactResponse>(
-      ENDPOINTS.authorityContactById(contactId),
+      AUTHORITY_CONTACT_ENDPOINTS.authorityContactById(contactId),
     );
     return response.data;
   },
@@ -44,13 +44,13 @@ export const authorityContactsApi = {
     payload: AuthorityContactUpdatePayload,
   ): Promise<AuthorityContactResponse> => {
     const response = await api.patch<AuthorityContactResponse>(
-      ENDPOINTS.authorityContactById(contactId),
+      AUTHORITY_CONTACT_ENDPOINTS.authorityContactById(contactId),
       payload,
     );
     return response.data;
   },
 
   deleteAuthorityContact: async (contactId: number): Promise<void> => {
-    await api.delete(ENDPOINTS.authorityContactById(contactId));
+    await api.delete(AUTHORITY_CONTACT_ENDPOINTS.authorityContactById(contactId));
   },
 };

@@ -1,7 +1,7 @@
 // INFRASTRUCTURE LAYER: Pure HTTP execution. No React, no hooks.
 // Consumer: features/actions/hooks only. Do not import from here outside of features/actions.
 import { api } from "../../api/client";
-import { ACTION_ENDPOINT_PATTERNS } from "../../api/endpoints";
+import { ACTION_ENDPOINT_PATTERNS } from "../../api/action-endpoint-patterns";
 import type { ActionCommand } from "./types";
 
 const isAllowedActionEndpoint = (endpoint: string): boolean =>

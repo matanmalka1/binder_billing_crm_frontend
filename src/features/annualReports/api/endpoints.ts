@@ -1,0 +1,39 @@
+export const ANNUAL_REPORT_ENDPOINTS = {
+  annualReports: "/annual-reports",
+  annualReportById: (id: number | string) => `/annual-reports/${id}`,
+  annualReportTransition: (id: number | string) => `/annual-reports/${id}/transition`,
+  annualReportSubmit: (id: number | string) => `/annual-reports/${id}/submit`,
+  annualReportTransitionStatus: (id: number | string) => `/annual-reports/${id}/status`,
+  annualReportDeadline: (id: number | string) => `/annual-reports/${id}/deadline`,
+  annualReportSchedules: (id: number | string) => `/annual-reports/${id}/schedules`,
+  annualReportSchedulesComplete: (id: number | string) =>
+    `/annual-reports/${id}/schedules/complete`,
+  annualReportHistory: (id: number | string) => `/annual-reports/${id}/history`,
+  annualReportDetails: (id: number | string) => `/annual-reports/${id}/details`,
+  annualReportAmend: (id: number | string) => `/annual-reports/${id}/amend`,
+  annualReportExportPdf: (id: number | string) => `/annual-reports/${id}/export/pdf`,
+  annualReportFinancials: (id: number | string) => `/annual-reports/${id}/financials`,
+  annualReportReadiness: (id: number | string) => `/annual-reports/${id}/readiness`,
+  annualReportTaxCalculation: (id: number | string) => `/annual-reports/${id}/tax-calculation`,
+  annualReportAdvancesSummary: (id: number | string) =>
+    `/annual-reports/${id}/advances-summary`,
+  annualReportIncome: (id: number | string) => `/annual-reports/${id}/income`,
+  annualReportIncomeById: (id: number | string, lineId: number | string) =>
+    `/annual-reports/${id}/income/${lineId}`,
+  annualReportExpenses: (id: number | string) => `/annual-reports/${id}/expenses`,
+  annualReportExpenseById: (id: number | string, lineId: number | string) =>
+    `/annual-reports/${id}/expenses/${lineId}`,
+  annualReportAnnex: (id: number | string, schedule: string) =>
+    `/annual-reports/${id}/annex/${schedule}`,
+  annualReportAnnexLine: (
+    id: number | string,
+    schedule: string,
+    lineId: number | string,
+  ) => `/annual-reports/${id}/annex/${schedule}/${lineId}`,
+  annualReportsKanban: "/annual-reports/kanban/view",
+  annualReportOverdue: "/annual-reports/overdue",
+  businessAnnualReports: (businessId: number | string) => `/businesses/${businessId}/annual-reports`,
+  clientAnnualReports: (businessId: number | string) => `/businesses/${businessId}/annual-reports`,
+  taxYearSummary: (taxYear: number | string) => `/tax-year/${taxYear}/summary`,
+  taxYearReports: (taxYear: number | string) => `/tax-year/${taxYear}/reports`,
+} as const;

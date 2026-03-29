@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { REPORT_ENDPOINTS } from "./endpoints";
 import type {
   AgingReportResponse,
   AdvancePaymentReportResponse,
@@ -14,7 +14,7 @@ export const reportsApi = {
 
   getAgingReport: async (asOfDate?: string): Promise<AgingReportResponse> => {
     const params = asOfDate ? { as_of_date: asOfDate } : undefined;
-    const response = await api.get<AgingReportResponse>(ENDPOINTS.reportsAging, { params });
+    const response = await api.get<AgingReportResponse>(REPORT_ENDPOINTS.reportsAging, { params });
     return response.data;
   },
 
@@ -25,7 +25,7 @@ export const reportsApi = {
     const params: Record<string, unknown> = { year };
     if (month !== undefined) params.month = month;
     const response = await api.get<AdvancePaymentReportResponse>(
-      ENDPOINTS.reportsAdvancePayments,
+      REPORT_ENDPOINTS.reportsAdvancePayments,
       { params },
     );
     return response.data;
@@ -35,7 +35,7 @@ export const reportsApi = {
     taxYear: number,
   ): Promise<AnnualReportStatusReportResponse> => {
     const response = await api.get<AnnualReportStatusReportResponse>(
-      ENDPOINTS.reportsAnnualReportStatus,
+      REPORT_ENDPOINTS.reportsAnnualReportStatus,
       { params: { tax_year: taxYear } },
     );
     return response.data;
@@ -43,7 +43,7 @@ export const reportsApi = {
 
   getVatComplianceReport: async (year: number): Promise<VatComplianceReportResponse> => {
     const response = await api.get<VatComplianceReportResponse>(
-      ENDPOINTS.reportsVatCompliance,
+      REPORT_ENDPOINTS.reportsVatCompliance,
       { params: { year } },
     );
     return response.data;
@@ -55,7 +55,7 @@ export const reportsApi = {
     format: ExportFormat,
     asOfDate?: string,
   ): Promise<ReportExportResult> => {
-    const response = await api.get<Blob>(ENDPOINTS.reportsAgingExport, {
+    const response = await api.get<Blob>(REPORT_ENDPOINTS.reportsAgingExport, {
       params: { format, ...(asOfDate ? { as_of_date: asOfDate } : {}) },
       responseType: "blob",
     });

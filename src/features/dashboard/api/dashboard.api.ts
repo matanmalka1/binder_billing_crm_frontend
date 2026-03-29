@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { ENDPOINTS } from "@/api/endpoints";
+import { DASHBOARD_ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "@/api/queryParams";
 import type {
   DashboardOverviewResponse,
@@ -12,28 +12,28 @@ import type {
 export const dashboardApi = {
   getOverview: async (): Promise<DashboardOverviewResponse> => {
     const response = await api.get<DashboardOverviewResponse>(
-      ENDPOINTS.dashboardOverview,
+      DASHBOARD_ENDPOINTS.dashboardOverview,
     );
     return response.data;
   },
 
   getSummary: async (): Promise<DashboardSummaryResponse> => {
     const response = await api.get<DashboardSummaryResponse>(
-      ENDPOINTS.dashboardSummary,
+      DASHBOARD_ENDPOINTS.dashboardSummary,
     );
     return response.data;
   },
 
   getAttention: async (): Promise<AttentionResponse> => {
     const response = await api.get<AttentionResponse>(
-      ENDPOINTS.dashboardAttention,
+      DASHBOARD_ENDPOINTS.dashboardAttention,
     );
     return response.data;
   },
 
   getWorkQueue: async (params: ListDashboardParams): Promise<WorkQueueResponse> => {
     const response = await api.get<WorkQueueResponse>(
-      ENDPOINTS.dashboardWorkQueue,
+      DASHBOARD_ENDPOINTS.dashboardWorkQueue,
       { params: toQueryParams(params) },
     );
     return response.data;
