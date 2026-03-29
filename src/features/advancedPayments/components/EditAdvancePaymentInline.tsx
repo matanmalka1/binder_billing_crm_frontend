@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, X, Pencil, Loader2 } from "lucide-react";
+import { Check, X, Loader2 } from "lucide-react";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { ADVANCE_PAYMENT_STATUS_OPTIONS } from "../constants";
 
@@ -16,17 +16,11 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
   onSave,
   onCancel: onCancelProp,
 }) => {
-  const [editing, setEditing] = useState(false);
-  const [paidAmount, setPaidAmount] = useState<string>("");
-  const [expectedAmount, setExpectedAmount] = useState<string>("");
+  const [paidAmount, setPaidAmount] = useState<string>(row.paid_amount != null ? String(row.paid_amount) : "");
+  const [expectedAmount, setExpectedAmount] = useState<string>(
+    row.expected_amount != null ? String(row.expected_amount) : "",
+  );
   const [status, setStatus] = useState<AdvancePaymentStatus>(row.status);
-
-  const handleOpen = () => {
-    setPaidAmount(row.paid_amount != null ? String(row.paid_amount) : "");
-    setExpectedAmount(row.expected_amount != null ? String(row.expected_amount) : "");
-    setStatus(row.status);
-    setEditing(true);
-  };
 
   const handleSave = () => {
     onSave(
@@ -34,11 +28,9 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
       status,
       expectedAmount === "" ? null : expectedAmount,
     );
-    setEditing(false);
   };
 
   const handleCancel = () => {
-    setEditing(false);
     onCancelProp?.();
   };
 
@@ -49,19 +41,6 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
     }
     if (e.key === "Escape") handleCancel();
   };
-
-  if (!editing) {
-    return (
-      <button
-        type="button"
-        onClick={handleOpen}
-        className="flex items-center gap-1 rounded px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors"
-      >
-        <Pencil size={12} />
-        עריכה
-      </button>
-    );
-  }
 
   return (
     <div
