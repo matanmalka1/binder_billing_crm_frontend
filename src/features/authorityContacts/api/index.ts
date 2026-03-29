@@ -7,3 +7,8 @@ export type {
   AuthorityContactCreatePayload,
   AuthorityContactUpdatePayload,
 } from "./contracts";
+export {
+  AUTHORITY_CONTACT_TYPE_VALUES,
+  AUTHORITY_CONTACT_TYPE_LABELS,
+  AUTHORITY_CONTACT_TYPE_OPTIONS,
+} from "./contracts";

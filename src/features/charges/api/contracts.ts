@@ -1,4 +1,4 @@
-import type { PaginatedResponse } from "@/types/common";
+import type { PaginatedResponse } from "@/types";
 
 export interface ChargeResponse {
   id: number;

@@ -1,8 +1,23 @@
-export type ContactType =
-  | "assessing_officer"
-  | "vat_branch"
-  | "national_insurance"
-  | "other";
+export const AUTHORITY_CONTACT_TYPE_VALUES = [
+  "assessing_officer",
+  "vat_branch",
+  "national_insurance",
+  "other",
+] as const;
+
+export type ContactType = (typeof AUTHORITY_CONTACT_TYPE_VALUES)[number];
+
+export const AUTHORITY_CONTACT_TYPE_LABELS: Record<ContactType, string> = {
+  assessing_officer: "פקיד שומה",
+  vat_branch: "סניף מע״מ",
+  national_insurance: "ביטוח לאומי",
+  other: "אחר",
+};
+
+export const AUTHORITY_CONTACT_TYPE_OPTIONS = AUTHORITY_CONTACT_TYPE_VALUES.map((value) => ({
+  value,
+  label: AUTHORITY_CONTACT_TYPE_LABELS[value],
+}));
 
 export interface AuthorityContactResponse {
   id: number;

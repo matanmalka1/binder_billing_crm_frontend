@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { AUTHORITY_CONTACT_TYPE_VALUES } from "./api";
 
 export const authorityContactSchema = z.object({
-  contact_type: z.enum(["assessing_officer", "vat_branch", "national_insurance", "other"]),
+  contact_type: z.enum(AUTHORITY_CONTACT_TYPE_VALUES),
   name: z.string().trim().min(1, "יש להזין שם"),
   office: z.string().trim().optional().or(z.literal("")),
   phone: z.string().trim().optional().or(z.literal("")),
@@ -12,7 +13,7 @@ export const authorityContactSchema = z.object({
 export type AuthorityContactFormValues = z.infer<typeof authorityContactSchema>;
 
 export const authorityContactDefaults: AuthorityContactFormValues = {
-  contact_type: "assessing_officer",
+  contact_type: AUTHORITY_CONTACT_TYPE_VALUES[0],
   name: "",
   office: "",
   phone: "",

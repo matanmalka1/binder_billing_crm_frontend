@@ -1,7 +1,7 @@
 import { api } from "@/api/client";
 import { ADVANCE_PAYMENT_ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "@/api/queryParams";
-import type { PaginatedResponse } from "@/types/common";
+import type { PaginatedResponse } from "@/types";
 import type {
   AdvancePaymentRow,
   ListAdvancePaymentsParams,

@@ -10,3 +10,14 @@ export interface PagedQueryParams {
   page: number;
   page_size: number;
 }
+
+export type PagedFilters<T extends Record<string, unknown> = Record<string, unknown>> =
+  PagedQueryParams & T;
+
+export type UserRole = "advisor" | "secretary";
+
+export interface AuthUser {
+  id: number;
+  full_name: string;
+  role: UserRole;
+}

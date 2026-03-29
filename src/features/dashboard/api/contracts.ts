@@ -1,5 +1,5 @@
 import type { BackendAction } from "@/lib/actions/types";
-import type { PaginatedResponse } from "@/types/common";
+import type { PaginatedResponse } from "@/types";
 
 export interface AttentionItem {
   item_type: string;

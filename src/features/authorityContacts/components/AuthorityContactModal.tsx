@@ -3,7 +3,10 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Select } from "../../../components/ui/Select";
 import { Textarea } from "../../../components/ui/Textarea";
-import type { AuthorityContactResponse } from "../api";
+import {
+  AUTHORITY_CONTACT_TYPE_OPTIONS,
+  type AuthorityContactResponse,
+} from "../api";
 import { useAuthorityContactForm } from "../hooks/useAuthorityContactForm";
 
 interface AuthorityContactModalProps {
@@ -44,10 +47,11 @@ export const AuthorityContactModal: React.FC<AuthorityContactModalProps> = ({
           error={errors.contact_type?.message}
           {...register("contact_type")}
         >
-          <option value="assessing_officer">פקיד שומה</option>
-          <option value="vat_branch">סניף מע״מ</option>
-          <option value="national_insurance">ביטוח לאומי</option>
-          <option value="other">אחר</option>
+          {AUTHORITY_CONTACT_TYPE_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </Select>
         <Input label="שם *" error={errors.name?.message} {...register("name")} />
         <Input label="משרד / סניף" error={errors.office?.message} {...register("office")} />

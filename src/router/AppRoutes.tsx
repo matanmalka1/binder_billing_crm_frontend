@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AUTH_EXPIRED_EVENT } from "../api/client";
 import { useAuthStore } from "../store/auth.store";
 import { selectIsAuthenticated } from "../store/auth.selectors";
-import type { UserRole } from "../types/store";
+import type { UserRole } from "@/types";
 import { Login } from "../features/auth";
 import { AnnualReportDetail, AnnualReportsKanban } from "../features/annualReports";
 import { AdvancePayments } from "../features/advancedPayments";

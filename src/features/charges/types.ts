@@ -1,4 +1,4 @@
-import type { PagedFilters } from "../../types/filters";
+import type { PagedFilters } from "@/types";
 
 export type ChargesFilters = PagedFilters<{
   client_id: string;

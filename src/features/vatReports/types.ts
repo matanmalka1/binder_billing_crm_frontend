@@ -1,4 +1,4 @@
-import type { PagedFilters } from "../../types/filters";
+import type { PagedFilters } from "@/types";
 import type {
   CreateVatInvoicePayload,
   CreateVatWorkItemPayload,

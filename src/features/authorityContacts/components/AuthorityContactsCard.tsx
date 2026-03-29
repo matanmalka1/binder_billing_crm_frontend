@@ -1,14 +1,9 @@
-import { useState } from "react";
-import { Plus, Users, ChevronRight, ChevronLeft } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
-import { Alert } from "../../../components/ui/Alert";
-import { StateCard } from "../../../components/ui/StateCard";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
-import type { AuthorityContactResponse } from "../api";
+import { PaginationCard } from "../../../components/ui/PaginationCard";
 import { useAuthorityContacts } from "../hooks/useAuthorityContacts";
-import { AuthorityContactRow } from "./AuthorityContactRow";
+import { useAuthorityContactsCardState } from "../hooks/useAuthorityContactsCardState";
 import { AuthorityContactModal } from "./AuthorityContactModal";
+import { AuthorityContactsListCard } from "./AuthorityContactsListCard";
 
 interface AuthorityContactsCardProps {
   clientId: number;
@@ -26,98 +21,45 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
     deleteContact,
     deletingId,
   } = useAuthorityContacts(clientId);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editing, setEditing] = useState<AuthorityContactResponse | null>(null);
-  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
-
-  const handleEdit = (contact: AuthorityContactResponse) => {
-    setEditing(contact);
-    setModalOpen(true);
-  };
-
-  const handleClose = () => {
-    setModalOpen(false);
-    setEditing(null);
-  };
+  const {
+    editing,
+    isModalOpen,
+    confirmDeleteId,
+    openCreate,
+    openEdit,
+    closeModal,
+    requestDelete,
+    clearDeleteRequest,
+  } = useAuthorityContactsCardState();
 
   return (
-    <Card
-      title="אנשי קשר ברשויות"
-      subtitle={total > 0 ? `${total} אנשי קשר` : "גורמי קשר ממשלתיים ורגולטוריים"}
-      actions={
-        <Button
-          type="button"
-          variant="primary"
-          size="sm"
-          className="gap-2"
-          onClick={() => setModalOpen(true)}
-        >
-          <Plus className="h-4 w-4" />
-          הוסף
-        </Button>
-      }
-    >
-      {error && <Alert variant="error" message={error} />}
+    <div className="space-y-4">
+      <AuthorityContactsListCard
+        contacts={contacts}
+        total={total}
+        isLoading={isLoading}
+        error={error}
+        deletingId={deletingId}
+        onCreate={openCreate}
+        onEdit={openEdit}
+        onDelete={requestDelete}
+      />
 
-      {isLoading && (
-        <p className="text-sm text-gray-500 text-center py-4">טוען אנשי קשר...</p>
-      )}
-
-      {!isLoading && !error && contacts.length === 0 && (
-        <StateCard
-          icon={Users}
-          message="לא נוספו עדיין אנשי קשר ברשויות"
-          variant="minimal"
+      {totalPages > 1 && (
+        <PaginationCard
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          label="אנשי קשר"
+          onPageChange={setPage}
         />
       )}
 
-      {contacts.length > 0 && (
-        <div className="space-y-3">
-          {contacts.map((contact) => (
-            <AuthorityContactRow
-              key={contact.id}
-              contact={contact}
-              isDeleting={deletingId === contact.id}
-              onEdit={handleEdit}
-              onDelete={(id) => setConfirmDeleteId(id)}
-            />
-          ))}
-        </div>
-      )}
-
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            disabled={page <= 1}
-            onClick={() => setPage(page - 1)}
-          >
-            <ChevronRight className="h-4 w-4" />
-            הקודם
-          </Button>
-          <span className="text-xs text-gray-500">
-            עמוד {page} מתוך {totalPages}
-          </span>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            disabled={page >= totalPages}
-            onClick={() => setPage(page + 1)}
-          >
-            הבא
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
-
       <AuthorityContactModal
-        open={modalOpen}
+        open={isModalOpen}
         clientId={clientId}
         existing={editing}
-        onClose={handleClose}
+        onClose={closeModal}
       />
 
       <ConfirmDialog
@@ -127,9 +69,14 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
         confirmLabel="מחק"
         cancelLabel="ביטול"
         isLoading={deletingId === confirmDeleteId}
-        onConfirm={() => { if (confirmDeleteId !== null) deleteContact(confirmDeleteId); setConfirmDeleteId(null); }}
-        onCancel={() => setConfirmDeleteId(null)}
+        onConfirm={() => {
+          if (confirmDeleteId !== null) {
+            deleteContact(confirmDeleteId);
+          }
+          clearDeleteRequest();
+        }}
+        onCancel={clearDeleteRequest}
       />
-    </Card>
+    </div>
   );
 };

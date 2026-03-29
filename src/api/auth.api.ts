@@ -1,5 +1,5 @@
 import { CORE_ENDPOINTS } from "./core-endpoints";
-import type { AuthUser } from "../types/store";
+import type { AuthUser } from "@/types";
 import { api, SKIP_AUTH_INTERCEPT_HEADER } from "./client";
 
 export interface LoginRequest {
