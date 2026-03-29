@@ -2,8 +2,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import type { AdvancePaymentOverviewRow, AdvancePaymentStatus } from "../types";
-
-const PAGE_SIZE = 50;
+import { PAGE_SIZE } from "../constants";
 
 interface UseAdvancePaymentsOverviewParams {
   year: number;

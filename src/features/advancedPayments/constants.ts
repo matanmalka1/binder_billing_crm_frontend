@@ -30,3 +30,5 @@ export const ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS = [
   { value: "", label: "כל החודשים" },
   ...MONTH_OPTIONS,
 ];
+
+export const PAGE_SIZE = 50;
