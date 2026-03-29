@@ -1,10 +1,9 @@
-import { Plus, Users } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { Alert } from "../../../components/ui/Alert";
-import { StateCard } from "../../../components/ui/StateCard";
 import type { AuthorityContactResponse } from "../api";
-import { AuthorityContactRow } from "./AuthorityContactRow";
+import { AuthorityContactsListContent } from "./AuthorityContactsListContent";
 
 interface AuthorityContactsListCardProps {
   contacts: AuthorityContactResponse[];
@@ -44,31 +43,13 @@ export const AuthorityContactsListCard: React.FC<AuthorityContactsListCardProps>
     }
   >
     {error && <Alert variant="error" message={error} />}
-
-    {isLoading && (
-      <p className="py-4 text-center text-sm text-gray-500">טוען אנשי קשר...</p>
-    )}
-
-    {!isLoading && !error && contacts.length === 0 && (
-      <StateCard
-        icon={Users}
-        message="לא נוספו עדיין אנשי קשר ברשויות"
-        variant="minimal"
-      />
-    )}
-
-    {!isLoading && contacts.length > 0 && (
-      <div className="space-y-3">
-        {contacts.map((contact) => (
-          <AuthorityContactRow
-            key={contact.id}
-            contact={contact}
-            isDeleting={deletingId === contact.id}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
-        ))}
-      </div>
-    )}
+    <AuthorityContactsListContent
+      contacts={contacts}
+      deletingId={deletingId}
+      error={error}
+      isLoading={isLoading}
+      onEdit={onEdit}
+      onDelete={onDelete}
+    />
   </Card>
 );

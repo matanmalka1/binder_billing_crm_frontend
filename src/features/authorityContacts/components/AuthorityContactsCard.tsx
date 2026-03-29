@@ -1,7 +1,7 @@
-import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 import { PaginationCard } from "../../../components/ui/PaginationCard";
 import { useAuthorityContacts } from "../hooks/useAuthorityContacts";
 import { useAuthorityContactsCardState } from "../hooks/useAuthorityContactsCardState";
+import { AuthorityContactDeleteDialog } from "./AuthorityContactDeleteDialog";
 import { AuthorityContactModal } from "./AuthorityContactModal";
 import { AuthorityContactsListCard } from "./AuthorityContactsListCard";
 
@@ -62,19 +62,10 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
         onClose={closeModal}
       />
 
-      <ConfirmDialog
-        open={confirmDeleteId !== null}
-        title="מחיקת איש קשר"
-        message="האם למחוק את איש הקשר? פעולה זו אינה הפיכה."
-        confirmLabel="מחק"
-        cancelLabel="ביטול"
-        isLoading={deletingId === confirmDeleteId}
-        onConfirm={() => {
-          if (confirmDeleteId !== null) {
-            deleteContact(confirmDeleteId);
-          }
-          clearDeleteRequest();
-        }}
+      <AuthorityContactDeleteDialog
+        confirmDeleteId={confirmDeleteId}
+        deletingId={deletingId}
+        onConfirm={deleteContact}
         onCancel={clearDeleteRequest}
       />
     </div>

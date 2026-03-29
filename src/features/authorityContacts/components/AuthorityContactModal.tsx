@@ -1,13 +1,8 @@
 import { Modal } from "../../../components/ui/Modal";
-import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
-import { Textarea } from "../../../components/ui/Textarea";
-import {
-  AUTHORITY_CONTACT_TYPE_OPTIONS,
-  type AuthorityContactResponse,
-} from "../api";
+import { type AuthorityContactResponse } from "../api";
 import { useAuthorityContactForm } from "../hooks/useAuthorityContactForm";
+import { AuthorityContactFormFields } from "./AuthorityContactFormFields";
+import { AuthorityContactModalFooter } from "./AuthorityContactModalFooter";
 
 interface AuthorityContactModalProps {
   open: boolean;
@@ -23,7 +18,6 @@ export const AuthorityContactModal: React.FC<AuthorityContactModalProps> = ({
   onClose,
 }) => {
   const { form, onSubmit, isSaving } = useAuthorityContactForm(clientId, onClose, existing);
-  const { register, formState: { errors } } = form;
 
   return (
     <Modal
@@ -31,33 +25,16 @@ export const AuthorityContactModal: React.FC<AuthorityContactModalProps> = ({
       title={existing ? "עריכת איש קשר" : "הוספת איש קשר"}
       onClose={onClose}
       footer={
-        <div className="flex items-center justify-end gap-2">
-          <Button type="button" variant="outline" disabled={isSaving} onClick={onClose}>
-            ביטול
-          </Button>
-          <Button type="button" isLoading={isSaving} onClick={onSubmit}>
-            {existing ? "עדכן" : "הוסף"}
-          </Button>
-        </div>
+        <AuthorityContactModalFooter
+          isEditing={Boolean(existing)}
+          isSaving={isSaving}
+          onClose={onClose}
+          onSubmit={onSubmit}
+        />
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">
-        <Select
-          label="סוג גורם *"
-          error={errors.contact_type?.message}
-          {...register("contact_type")}
-        >
-          {AUTHORITY_CONTACT_TYPE_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </Select>
-        <Input label="שם *" error={errors.name?.message} {...register("name")} />
-        <Input label="משרד / סניף" error={errors.office?.message} {...register("office")} />
-        <Input label="טלפון" type="tel" error={errors.phone?.message} {...register("phone")} />
-        <Input label="אימייל" type="email" error={errors.email?.message} {...register("email")} />
-        <Textarea label="הערות" rows={3} error={errors.notes?.message} {...register("notes")} />
+        <AuthorityContactFormFields form={form} />
       </form>
     </Modal>
   );
