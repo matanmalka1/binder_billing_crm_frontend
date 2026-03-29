@@ -13,7 +13,10 @@
     "arch:check:strict": "node scripts/arch-check.mjs --strict",
     "smoke:api": "bash ./scripts/smoke-api.sh",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "jscpd": "jscpd --config .jscpd.json src",
+    "jscpd:strict": "jscpd --config .jscpd.json --threshold 0 src",
+    "jscpd:report": "jscpd --config .jscpd.json --reporters console,json --output ./reports/jscpd src"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -46,6 +49,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "jscpd": "^4.0.8",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.1"
