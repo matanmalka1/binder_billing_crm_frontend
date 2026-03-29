@@ -56,7 +56,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
           setClientContact({ phone: data.phone, email: data.email });
         }).catch(() => setClientContact(null));
         clientsApi.listBusinessesForClient(clientId).then((data) => {
-          const active = data.items.find((b) => b.status === "ACTIVE") ?? data.items[0];
+          const active = data.items.find((b) => b.status === "active") ?? data.items[0];
           setSelectedBusinessId(active?.id ?? null);
         }).catch(() => setSelectedBusinessId(null));
       }
@@ -135,7 +135,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
                     clientsApi.listBusinessesForClient(c.id),
                   ]);
                   setClientContact({ phone: clientData.phone, email: clientData.email });
-                  const active = bizData.items.find((b) => b.status === "ACTIVE") ?? bizData.items[0];
+                  const active = bizData.items.find((b) => b.status === "active") ?? bizData.items[0];
                   setSelectedBusinessId(active?.id ?? null);
                 } catch {
                   setClientContact(null);

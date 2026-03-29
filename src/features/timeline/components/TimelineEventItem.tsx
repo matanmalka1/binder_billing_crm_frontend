@@ -37,15 +37,15 @@ const formatChannel = (channel: string): string => CHANNEL_HE[channel] || channe
 const formatTrigger = (trigger: string): string => TRIGGER_HE[trigger] || trigger;
 
 interface TimelineEventItemProps {
-  event: TimelineEvent;
+  timelineEvent: TimelineEvent;
   index: number;
 }
 
 export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
-  event,
+  timelineEvent: ev,
   index,
 }) => {
-  const colors = getEventColor(event.event_type);
+  const colors = getEventColor(ev.event_type);
 
   return (
     <li
@@ -85,37 +85,37 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
                 colors.badgeText,
               )}
             >
-              <span className={colors.iconColor}>{getEventIcon(event.event_type)}</span>
-              {getEventTypeLabel(event.event_type)}
+              <span className={colors.iconColor}>{getEventIcon(ev.event_type)}</span>
+              {getEventTypeLabel(ev.event_type)}
             </span>
 
             <time
-              dateTime={event.timestamp}
+              dateTime={ev.timestamp}
               className="text-xs text-gray-400 font-mono tabular-nums flex-shrink-0"
             >
-              {formatTimestamp(event.timestamp)}
+              {formatTimestamp(ev.timestamp)}
             </time>
           </div>
 
           {/* Description */}
-          {event.description && (
-            <p className="text-sm leading-relaxed text-gray-700">{event.description}</p>
+          {!!ev.description && (
+            <p className="text-sm leading-relaxed text-gray-700">{ev.description}</p>
           )}
 
           {/* Related IDs */}
-          {(event.binder_id || event.charge_id) && (
+          {!!(ev.binder_id || ev.charge_id) && (
             <div className="flex flex-wrap gap-2">
-              {event.binder_id && (
+              {!!ev.binder_id && (
                 <IconLabel
                   icon={<FileText className="h-3 w-3" />}
-                  label={`קלסר #${event.binder_id}`}
+                  label={`קלסר #${ev.binder_id}`}
                   className="bg-slate-50 text-slate-600 border-slate-200"
                 />
               )}
-              {event.charge_id && (
+              {!!ev.charge_id && (
                 <IconLabel
                   icon={<CreditCard className="h-3 w-3" />}
-                  label={`חיוב #${event.charge_id}`}
+                  label={`חיוב #${ev.charge_id}`}
                   className="bg-amber-50 text-amber-700 border-amber-200"
                 />
               )}
@@ -123,38 +123,38 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
           )}
 
           {/* Status transitions */}
-          {event.metadata?.old_status && event.metadata?.new_status && (
+          {!!(ev.metadata?.old_status && ev.metadata?.new_status) && (
             <div className="flex items-center gap-2 text-xs bg-blue-50 border border-blue-100 rounded px-3 py-2">
               <span className="inline-block px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-medium text-[11px]">
-                {formatStatus(event.metadata.old_status as string)}
+                {formatStatus(ev.metadata.old_status as string)}
               </span>
               <span className="text-blue-400">←</span>
               <span className="inline-block px-2 py-0.5 rounded bg-green-100 text-green-700 font-medium text-[11px]">
-                {formatStatus(event.metadata.new_status as string)}
+                {formatStatus(ev.metadata.new_status as string)}
               </span>
             </div>
           )}
 
           {/* Amount display */}
-          {event.metadata?.amount && (
+          {!!(ev.metadata?.amount) && (
             <div className="text-xs text-gray-600 bg-emerald-50 border border-emerald-100 rounded px-3 py-2">
-              <span className="font-medium">סכום:</span> ₪{Number(event.metadata.amount).toFixed(2)}
+              <span className="font-medium">סכום:</span> ₪{Number(ev.metadata.amount).toFixed(2)}
             </div>
           )}
 
           {/* Notification channel info */}
-          {event.metadata?.trigger && event.metadata?.channel && (
+          {!!(ev.metadata?.trigger && ev.metadata?.channel) && (
             <div className="text-xs text-gray-600 bg-purple-50 border border-purple-100 rounded px-3 py-2">
-              <div><span className="font-medium">ערוץ:</span> {formatChannel(event.metadata.channel as string)}</div>
-              <div><span className="font-medium">סוג:</span> {formatTrigger(event.metadata.trigger as string)}</div>
+              <div><span className="font-medium">ערוץ:</span> {formatChannel(ev.metadata.channel as string)}</div>
+              <div><span className="font-medium">סוג:</span> {formatTrigger(ev.metadata.trigger as string)}</div>
             </div>
           )}
 
           {/* Invoice info */}
-          {event.metadata?.external_invoice_id && (
+          {!!(ev.metadata?.external_invoice_id) && (
             <div className="text-xs text-gray-600 bg-orange-50 border border-orange-100 rounded px-3 py-2">
-              <div><span className="font-medium">ספק:</span> {String(event.metadata.provider || 'לא ידוע')}</div>
-              <div><span className="font-medium">ID חשבונית:</span> {event.metadata.external_invoice_id}</div>
+              <div><span className="font-medium">ספק:</span> {String(ev.metadata.provider || 'לא ידוע')}</div>
+              <div><span className="font-medium">ID חשבונית:</span> {String(ev.metadata.external_invoice_id)}</div>
             </div>
           )}
 

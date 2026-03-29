@@ -1,41 +1,79 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { MoreHorizontal } from "lucide-react";
 import { cn } from "../../utils/utils";
+
+const VIEWPORT_PAD = 8;
+
+interface DropdownPos { top: number; left: number; maxHeight?: number }
+
+export function computeDropdownPosition(
+  trigger: { top: number; bottom: number; right: number },
+  menu: { width: number; height: number },
+  viewport: { width: number; height: number },
+): DropdownPos {
+  const spaceBelow = viewport.height - trigger.bottom - VIEWPORT_PAD;
+  const spaceAbove = trigger.top - VIEWPORT_PAD;
+
+  let top: number;
+  let maxHeight: number | undefined;
+
+  if (menu.height <= spaceBelow) {
+    top = trigger.bottom;
+  } else if (menu.height <= spaceAbove) {
+    top = trigger.top - menu.height;
+  } else if (spaceBelow >= spaceAbove) {
+    top = trigger.bottom;
+    maxHeight = spaceBelow;
+  } else {
+    top = VIEWPORT_PAD;
+    maxHeight = spaceAbove;
+  }
+
+  // RTL-friendly: align right edge of menu to right edge of trigger, clamp left
+  let left = trigger.right - menu.width;
+  if (left < VIEWPORT_PAD) left = VIEWPORT_PAD;
+  if (left + menu.width > viewport.width - VIEWPORT_PAD) {
+    left = viewport.width - VIEWPORT_PAD - menu.width;
+  }
+
+  return maxHeight ? { top, left, maxHeight } : { top, left };
+}
 
 interface DropdownMenuProps {
   ariaLabel?: string;
   children: React.ReactNode;
 }
 
-/**
- * A `...` button that renders its dropdown via a portal so it is never
- * clipped by an ancestor with overflow:hidden/auto/scroll.
- * Uses position:fixed with viewport coords — unaffected by scroll or overflow.
- */
-export const DropdownMenu: React.FC<DropdownMenuProps> = ({ ariaLabel, children }) => {
+export const DropdownMenu = ({ ariaLabel, children }: DropdownMenuProps) => {
   const [open, setOpen] = useState(false);
-  const [coords, setCoords] = useState<{ top: number; bottom: number; left: number } | null>(null);
-  const [openAbove, setOpenAbove] = useState(false);
+  const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null);
+  const [pos, setPos] = useState<DropdownPos | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-
-  const MENU_WIDTH = 160;
+  const portalRef = useRef<HTMLDivElement>(null);
 
   const toggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (open) { setOpen(false); return; }
     const rect = triggerRef.current?.getBoundingClientRect();
     if (!rect) return;
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const above = spaceBelow < 200;
-    // Align right edge of menu to right edge of button, clamped so menu stays in viewport
-    const left = Math.max(MENU_WIDTH + 8, rect.right);
-    setOpenAbove(above);
-    setCoords({ top: rect.bottom, bottom: window.innerHeight - rect.top, left });
+    setTriggerRect(rect);
+    setPos(null); // will measure in layout effect
     setOpen(true);
   };
 
-  const portalRef = useRef<HTMLDivElement>(null);
+  // Measure menu after first render, then compute position
+  useLayoutEffect(() => {
+    if (!open || !triggerRect || pos) return;
+    const el = portalRef.current;
+    if (!el) return;
+    const menuRect = el.getBoundingClientRect();
+    setPos(computeDropdownPosition(
+      triggerRect,
+      { width: menuRect.width, height: menuRect.height },
+      { width: window.innerWidth, height: window.innerHeight },
+    ));
+  }, [open, triggerRect, pos]);
 
   useEffect(() => {
     if (!open) return;
@@ -48,12 +86,15 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ ariaLabel, children 
     return () => document.removeEventListener("mousedown", close);
   }, [open]);
 
-  // Close on scroll so the menu doesn't float away
   useEffect(() => {
     if (!open) return;
     const close = () => setOpen(false);
     window.addEventListener("scroll", close, true);
-    return () => window.removeEventListener("scroll", close, true);
+    window.addEventListener("resize", close);
+    return () => {
+      window.removeEventListener("scroll", close, true);
+      window.removeEventListener("resize", close);
+    };
   }, [open]);
 
   return (
@@ -68,16 +109,21 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ ariaLabel, children 
         <MoreHorizontal className="h-4 w-4" />
       </button>
 
-      {open && coords && createPortal(
+      {open && createPortal(
         <div
           ref={portalRef}
-          style={{
+          style={pos ? {
             position: "fixed",
-            top: openAbove ? undefined : coords.top,
-            bottom: openAbove ? coords.bottom : undefined,
-            left: coords.left,
-            minWidth: MENU_WIDTH,
-            transform: "translateX(-100%)",
+            top: pos.top,
+            left: pos.left,
+            maxHeight: pos.maxHeight,
+            overflowY: pos.maxHeight ? "auto" : undefined,
+            zIndex: 9999,
+          } : {
+            position: "fixed",
+            visibility: "hidden" as const,
+            top: -9999,
+            left: -9999,
             zIndex: 9999,
           }}
           className="rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
@@ -91,18 +137,13 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ ariaLabel, children 
   );
 };
 
+DropdownMenu.displayName = "DropdownMenu";
+
 export const DropdownMenuItem = ({
-  label,
-  onClick,
-  icon,
-  danger = false,
-  disabled = false,
+  label, onClick, icon, danger = false, disabled = false,
 }: {
-  label: string;
-  onClick: () => void;
-  icon: React.ReactNode;
-  danger?: boolean;
-  disabled?: boolean;
+  label: string; onClick: () => void; icon: React.ReactNode;
+  danger?: boolean; disabled?: boolean;
 }) => (
   <button
     type="button"
@@ -120,5 +161,4 @@ export const DropdownMenuItem = ({
   </button>
 );
 
-DropdownMenu.displayName = "DropdownMenu";
 DropdownMenuItem.displayName = "DropdownMenuItem";

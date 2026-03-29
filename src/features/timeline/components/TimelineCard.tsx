@@ -59,7 +59,7 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({
               {group.items.map((event, index) => (
                 <TimelineEventItem
                   key={`${event.timestamp}-${event.event_type}-${index}`}
-                  event={event}
+                  timelineEvent={event}
                   index={index + groupIndex * 1000}
                 />
               ))}
