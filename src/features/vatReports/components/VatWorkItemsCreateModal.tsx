@@ -6,7 +6,7 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import { FormField } from "../../../components/ui/inputs/FormField";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
-import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
+import { ClientPickerField } from "@/components/shared/client";
 import { useBusinessesForClient } from "@/hooks/useBusinessesForClient";
 import { VatPeriodSelect } from "./VatPeriodSelect";
 import {
@@ -127,22 +127,14 @@ export const VatWorkItemsCreateModal: React.FC<VatWorkItemsCreateModalProps> = (
           {initialClientId === undefined && (
             <>
               <div className="col-span-2">
-                {selectedClient ? (
-                  <SelectedClientDisplay
-                    name={selectedClient.name}
-                    id={selectedClient.id}
-                    onClear={() => handleClientQueryChange("")}
-                    label="לקוח *"
-                  />
-                ) : (
-                  <ClientSearchInput
-                    label="לקוח *"
-                    placeholder='חפש לפי שם, ת"ז / ח.פ...'
-                    value={clientQuery}
-                    onChange={handleClientQueryChange}
-                    onSelect={handleSelectClient}
-                  />
-                )}
+                <ClientPickerField
+                  selectedClient={selectedClient}
+                  clientQuery={clientQuery}
+                  onQueryChange={handleClientQueryChange}
+                  onSelect={handleSelectClient}
+                  onClear={() => handleClientQueryChange("")}
+                  label="לקוח *"
+                />
               </div>
               <FormField label="עסק *" error={errors.business_id?.message}>
                 <SelectDropdown

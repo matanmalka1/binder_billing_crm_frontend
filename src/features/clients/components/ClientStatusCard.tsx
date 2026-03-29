@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck } from "lucide-react";
 import { clientsApi, clientsQK } from "../api";
 import { Card } from "../../../components/ui/primitives/Card";
+import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
 interface Props {
   clientId: number;
 }
@@ -39,13 +40,7 @@ const YEAR_OPTIONS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2];
 export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
   const navigate = useNavigate();
   const [selectedYear, setSelectedYear] = useState<number>(CURRENT_YEAR);
-
-  const { data: businesses } = useQuery({
-    queryKey: clientsQK.businesses(clientId),
-    queryFn: () => clientsApi.listBusinessesForClient(clientId),
-    staleTime: 60_000,
-  });
-  const firstBusinessId = businesses?.items?.[0]?.id ?? null;
+  const firstBusinessId = useFirstBusinessId(clientId);
 
   const { data, isLoading } = useQuery({
     queryKey: clientsQK.statusCard(clientId, selectedYear),

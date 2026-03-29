@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Link2 } from "lucide-react";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
-import type { SignatureRequestResponse } from "../api";
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "../../../utils/enums";
 import { formatDate, formatDateTime } from "../../../utils/utils";
 import { signatureRequestStatusVariants } from "../utils";
-import { SignatureRequestRowActions } from "./SignatureRequestRowActions";
+import { SignatureRequestRowActions, type SignatureRequestActionProps } from "./SignatureRequestRowActions";
 
 // ── Shared field row for expanded details ─────────────────────────────────────
 
@@ -18,16 +17,7 @@ const FieldRow = ({ label, value }: { label: string; value: React.ReactNode }) =
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-interface Props {
-  request: SignatureRequestResponse;
-  signingUrl?: string;
-  isSending: boolean;
-  isCanceling: boolean;
-  canManage: boolean;
-  onSend: (id: number) => Promise<unknown>;
-  onCancel: (id: number) => Promise<unknown>;
-  onAudit: (id: number) => void;
-}
+interface Props extends SignatureRequestActionProps {}
 
 export const SignatureRequestRow: React.FC<Props> = ({
   request,

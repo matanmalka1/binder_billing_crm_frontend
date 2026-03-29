@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { OverlayContainer } from "../layout/OverlayContainer";
 import { UnsavedChangesGuard } from "../feedback/UnsavedChangesGuard";
 import { SectionHeader } from "../layout/SectionHeader";
+import { useUnsavedChangesGuard } from "./useUnsavedChangesGuard";
 
 interface DetailDrawerProps {
   open: boolean;
@@ -24,15 +25,10 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   footer,
   isDirty = false,
 }) => {
-  const [showGuard, setShowGuard] = useState(false);
-
-  const handleClose = useCallback(() => {
-    if (isDirty) {
-      setShowGuard(true);
-    } else {
-      onClose();
-    }
-  }, [isDirty, onClose]);
+  const { showGuard, handleClose, handleContinue, handleDiscard } = useUnsavedChangesGuard({
+    isDirty,
+    onClose,
+  });
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -57,8 +53,8 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
 
       {showGuard && (
         <UnsavedChangesGuard
-          onContinue={() => setShowGuard(false)}
-          onDiscard={() => { setShowGuard(false); onClose(); }}
+          onContinue={handleContinue}
+          onDiscard={handleDiscard}
         />
       )}
     </>

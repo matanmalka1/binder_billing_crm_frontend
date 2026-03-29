@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { OverlayContainer } from "../layout/OverlayContainer";
 import { UnsavedChangesGuard } from "../feedback/UnsavedChangesGuard";
+import { useUnsavedChangesGuard } from "./useUnsavedChangesGuard";
 
 interface ModalProps {
   open: boolean;
@@ -20,15 +20,10 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   isDirty = false,
 }) => {
-  const [showGuard, setShowGuard] = useState(false);
-
-  const handleClose = () => {
-    if (isDirty) {
-      setShowGuard(true);
-    } else {
-      onClose();
-    }
-  };
+  const { showGuard, handleClose, handleContinue, handleDiscard } = useUnsavedChangesGuard({
+    isDirty,
+    onClose,
+  });
 
   return (
     <>
@@ -44,8 +39,8 @@ export const Modal: React.FC<ModalProps> = ({
 
       {showGuard && (
         <UnsavedChangesGuard
-          onContinue={() => setShowGuard(false)}
-          onDiscard={() => { setShowGuard(false); onClose(); }}
+          onContinue={handleContinue}
+          onDiscard={handleDiscard}
         />
       )}
     </>

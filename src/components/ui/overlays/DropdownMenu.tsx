@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState, useLayoutEffect } from "react";
+import { useRef, useState, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { MoreHorizontal } from "lucide-react";
 import { cn } from "../../../utils/utils";
 import { computeDropdownPosition } from "../../../utils/dropdownMenuUtils";
-
+import { useDismissibleLayer } from "./useDismissibleLayer";
 
 interface DropdownPos { top: number; left: number; maxHeight?: number }
 
@@ -18,6 +18,15 @@ export const DropdownMenu = ({ ariaLabel, children }: DropdownMenuProps) => {
   const [pos, setPos] = useState<DropdownPos | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const portalRef = useRef<HTMLDivElement>(null);
+
+  useDismissibleLayer({
+    open,
+    triggerRef,
+    layerRef: portalRef,
+    onDismiss: () => setOpen(false),
+    closeOnScroll: true,
+    closeOnResize: true,
+  });
 
   const toggle = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -41,28 +50,6 @@ export const DropdownMenu = ({ ariaLabel, children }: DropdownMenuProps) => {
       { width: window.innerWidth, height: window.innerHeight },
     ));
   }, [open, triggerRect, pos]);
-
-  useEffect(() => {
-    if (!open) return;
-    const close = (e: MouseEvent) => {
-      if (triggerRef.current?.contains(e.target as Node)) return;
-      if (portalRef.current?.contains(e.target as Node)) return;
-      setOpen(false);
-    };
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const close = () => setOpen(false);
-    window.addEventListener("scroll", close, true);
-    window.addEventListener("resize", close);
-    return () => {
-      window.removeEventListener("scroll", close, true);
-      window.removeEventListener("resize", close);
-    };
-  }, [open]);
 
   return (
     <>

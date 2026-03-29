@@ -6,7 +6,7 @@ import { toast } from "../../../utils/toast";
 import type { SignatureRequestResponse } from "../api";
 import { SIGNATURE_REQUEST_TERMINAL_STATUSES } from "../utils";
 
-interface SignatureRequestRowActionsProps {
+export interface SignatureRequestActionProps {
   request: SignatureRequestResponse;
   signingUrl?: string;
   isSending: boolean;
@@ -15,6 +15,9 @@ interface SignatureRequestRowActionsProps {
   onSend: (id: number) => Promise<unknown>;
   onCancel: (id: number) => Promise<unknown>;
   onAudit: (id: number) => void;
+}
+
+interface SignatureRequestRowActionsProps extends SignatureRequestActionProps {
   showOpenLink?: boolean;
   separateHistory?: boolean;
   copySuccessMessage?: string | null;

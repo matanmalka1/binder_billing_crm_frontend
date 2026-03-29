@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Download } from "lucide-react";
+import { UnsavedChangesGuard } from "@/components/ui/feedback/UnsavedChangesGuard";
+import { useUnsavedChangesGuard } from "@/components/ui/overlays/useUnsavedChangesGuard";
 
 interface AnnualReportPanelLayoutProps {
   open: boolean;
@@ -28,15 +30,10 @@ export const AnnualReportPanelLayout = ({
   onExportPdf,
   isExportingPdf = false,
 }: AnnualReportPanelLayoutProps) => {
-  const [showGuard, setShowGuard] = useState(false);
-
-  const handleClose = useCallback(() => {
-    if (isDirty) {
-      setShowGuard(true);
-    } else {
-      onClose();
-    }
-  }, [isDirty, onClose]);
+  const { showGuard, handleClose, handleContinue, handleDiscard } = useUnsavedChangesGuard({
+    isDirty,
+    onClose,
+  });
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -110,35 +107,7 @@ export const AnnualReportPanelLayout = ({
 
       {/* Unsaved changes guard */}
       {showGuard && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl">
-            <h3 className="mb-2 text-base font-semibold text-gray-900">
-              לבטל שינויים?
-            </h3>
-            <p className="mb-4 text-sm text-gray-600">
-              יש שינויים שלא נשמרו. האם לסגור בכל זאת?
-            </p>
-            <div className="flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setShowGuard(false)}
-                className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                המשך עריכה
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowGuard(false);
-                  onClose();
-                }}
-                className="rounded-md bg-red-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-red-700"
-              >
-                סגור בלי לשמור
-              </button>
-            </div>
-          </div>
-        </div>
+        <UnsavedChangesGuard onContinue={handleContinue} onDiscard={handleDiscard} />
       )}
     </>
   );

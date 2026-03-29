@@ -35,6 +35,59 @@ const StatPill: FC<StatPillProps> = ({ icon: Icon, iconColor, count, label, href
   return href ? <Link to={href} className="block">{inner}</Link> : inner;
 };
 
+interface RelatedItemsSectionProps<T> {
+  title: string;
+  total: number;
+  allHref: string;
+  items: T[];
+  className?: string;
+  getKey: (item: T) => number;
+  getTitle: (item: T) => React.ReactNode;
+  getSubtitle: (item: T) => React.ReactNode;
+  getItemHref: (item: T) => string;
+}
+
+const RelatedItemsSection = <T,>({
+  title,
+  total,
+  allHref,
+  items,
+  className,
+  getKey,
+  getTitle,
+  getSubtitle,
+  getItemHref,
+}: RelatedItemsSectionProps<T>) => (
+  <div className={className}>
+    <div className="mb-2 flex items-center justify-between">
+      <span className="text-sm font-semibold text-gray-700">{title}</span>
+      {total > 5 && (
+        <Link to={allHref} className="text-xs text-primary-600 hover:underline">
+          הכל ({total})
+        </Link>
+      )}
+    </div>
+    <div className="space-y-2">
+      {items.slice(0, 5).map((item) => (
+        <div
+          key={getKey(item)}
+          className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 transition-colors hover:bg-gray-100"
+        >
+          <div>
+            <div className="text-sm font-medium text-gray-900">{getTitle(item)}</div>
+            <div className="text-xs text-gray-500">{getSubtitle(item)}</div>
+          </div>
+          <Link to={getItemHref(item)}>
+            <Button variant="ghost" size="sm">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 // ── Main component ──────────────────────────────────────────────────────────
 
 type ClientRelatedDataProps = {
@@ -79,68 +132,32 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
 
       {/* Recent binders */}
       {hasBinderList && (
-        <div className="mt-6">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-semibold text-gray-700">קלסרים אחרונים</span>
-            {bindersTotal > 5 && (
-              <Link to={`/binders?client_id=${clientId}`} className="text-xs text-primary-600 hover:underline">
-                הכל ({bindersTotal})
-              </Link>
-            )}
-          </div>
-          <div className="space-y-2">
-            {binders.slice(0, 5).map((b) => (
-              <div
-                key={b.id}
-                className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 hover:bg-gray-100 transition-colors"
-              >
-                <div>
-                  <div className="text-sm font-medium text-gray-900">{b.binder_number}</div>
-                  <div className="text-xs text-gray-500">נקלט: {formatDate(b.received_at)}</div>
-                </div>
-                <Link to={`/binders/${b.id}`}>
-                  <Button variant="ghost" size="sm">
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
+        <RelatedItemsSection
+          title="קלסרים אחרונים"
+          total={bindersTotal}
+          allHref={`/binders?client_id=${clientId}`}
+          items={binders}
+          className="mt-6"
+          getKey={(binder) => binder.id}
+          getTitle={(binder) => binder.binder_number}
+          getSubtitle={(binder) => `נקלט: ${formatDate(binder.received_at)}`}
+          getItemHref={(binder) => `/binders/${binder.id}`}
+        />
       )}
 
       {/* Recent charges */}
       {hasChargeList && (
-        <div className="mt-4">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-semibold text-gray-700">חיובים אחרונים</span>
-            {chargesTotal > 5 && (
-              <Link to={`/charges?client_id=${clientId}`} className="text-xs text-primary-600 hover:underline">
-                הכל ({chargesTotal})
-              </Link>
-            )}
-          </div>
-          <div className="space-y-2">
-            {charges.slice(0, 5).map((c) => (
-              <div
-                key={c.id}
-                className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 hover:bg-gray-100 transition-colors"
-              >
-                <div>
-                  <div className="text-sm font-medium text-gray-900">חיוב #{c.id}</div>
-                  <div className="text-xs text-gray-500">
-                    {getChargeTypeLabel(c.charge_type)} • {getChargeStatusLabel(c.status)}
-                  </div>
-                </div>
-                <Link to={`/charges/${c.id}`}>
-                  <Button variant="ghost" size="sm">
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
+        <RelatedItemsSection
+          title="חיובים אחרונים"
+          total={chargesTotal}
+          allHref={`/charges?client_id=${clientId}`}
+          items={charges}
+          className="mt-4"
+          getKey={(charge) => charge.id}
+          getTitle={(charge) => `חיוב #${charge.id}`}
+          getSubtitle={(charge) => `${getChargeTypeLabel(charge.charge_type)} • ${getChargeStatusLabel(charge.status)}`}
+          getItemHref={(charge) => `/charges/${charge.id}`}
+        />
       )}
     </Card>
   );

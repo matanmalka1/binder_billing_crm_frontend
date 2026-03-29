@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown } from "lucide-react";
 import { cn } from "../../../utils/utils";
+import { useDismissibleLayer } from "../overlays/useDismissibleLayer";
 
 interface SelectOption {
   value: string;
@@ -41,6 +42,14 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
   const isControlled = value !== undefined;
   const currentValue = isControlled ? String(value ?? "") : internalValue;
 
+  useDismissibleLayer({
+    open,
+    triggerRef,
+    layerRef: portalRef,
+    onDismiss: () => setOpen(false),
+    closeOnEscape: true,
+  });
+
   const selectedLabel = options.find((o) => String(o.value) === currentValue)?.label ?? "בחר...";
 
   const toggle = () => {
@@ -73,22 +82,6 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
       onBlur(blurEvent);
     }
   };
-
-  useEffect(() => {
-    if (!open) return;
-    const close = (e: MouseEvent) => {
-      if (triggerRef.current?.contains(e.target as Node)) return;
-      if (portalRef.current?.contains(e.target as Node)) return;
-      setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
-    document.addEventListener("mousedown", close);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", close);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
 
   const triggerClass = cn(
     "flex w-full items-center justify-between gap-2 px-3 py-2.5 bg-white border rounded-lg text-sm text-right transition-colors",

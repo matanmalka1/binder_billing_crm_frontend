@@ -6,7 +6,7 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import { FormField } from "../../../components/ui/inputs/FormField";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
-import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
+import { ClientPickerField } from "@/components/shared/client";
 import { MONTH_NAMES } from "../../../utils/utils";
 import type { CreateChargePayload } from "../api";
 import { CHARGE_TYPE_OPTIONS } from "../constants";
@@ -119,23 +119,15 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
         <input type="hidden" {...register("client_id")} />
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="col-span-2">
-            {selectedClient ? (
-              <SelectedClientDisplay
-                name={selectedClient.name}
-                id={selectedClient.id}
-                onClear={handleClearClient}
-                label="לקוח *"
-              />
-            ) : (
-              <ClientSearchInput
-                label="לקוח *"
-                placeholder='חפש לפי שם, ת"ז / ח.פ...'
-                value={clientQuery}
-                onChange={handleClientQueryChange}
-                onSelect={handleSelectClient}
-                error={errors.client_id?.message}
-              />
-            )}
+            <ClientPickerField
+              selectedClient={selectedClient}
+              clientQuery={clientQuery}
+              onQueryChange={handleClientQueryChange}
+              onSelect={handleSelectClient}
+              onClear={handleClearClient}
+              error={errors.client_id?.message}
+              label="לקוח *"
+            />
           </div>
           <Input
             label="סכום *"
