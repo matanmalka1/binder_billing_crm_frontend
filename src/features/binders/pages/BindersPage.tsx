@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
-import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
+import { Button } from "@/components/ui/primitives/Button";
+import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
+import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
+import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 import { PageHeader } from "@/components/layout/PageHeader";
 import {
   BinderDrawer,

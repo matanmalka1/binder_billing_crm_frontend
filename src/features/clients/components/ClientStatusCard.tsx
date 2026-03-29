@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck } from "lucide-react";
 import { clientsApi, clientsQK } from "../api";
-import { Card } from "../../../components/ui/Card";
+import { Card } from "../../../components/ui/primitives/Card";
 interface Props {
   clientId: number;
 }

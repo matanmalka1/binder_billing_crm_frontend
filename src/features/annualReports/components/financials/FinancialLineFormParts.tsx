@@ -1,6 +1,6 @@
 import type { FormEvent, ReactNode } from "react";
 import { Plus } from "lucide-react";
-import { Button } from "../../../../components/ui/Button";
+import { Button } from "../../../../components/ui/primitives/Button";
 
 export const FINANCIAL_FIELD_CLASS = "w-full rounded border border-gray-200 px-2 py-1 text-sm";
 export const INLINE_ADD_FORM_CLASS = "mt-2 flex flex-col gap-2";

@@ -1,5 +1,5 @@
 import { Mail, MapPin, Phone } from "lucide-react";
-import { Badge } from "../../../components/ui/Badge";
+import { Badge } from "../../../components/ui/primitives/Badge";
 import { getContactTypeLabel, type AuthorityContactResponse } from "../api";
 
 interface AuthorityContactDetailsProps {

@@ -1,5 +1,5 @@
-import { Badge } from "../../../components/ui/Badge";
-import { DataTable, type Column } from "../../../components/ui/DataTable";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import type { AnnualReportClientEntry, AnnualReportStatusGroup } from "../api";
 import {
   getStatusLabel,

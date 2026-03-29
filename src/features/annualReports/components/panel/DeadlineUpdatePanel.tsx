@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { annualReportStatusApi, annualReportsQK } from "../../api";
 import type { DeadlineType } from "../../api";
-import { Button } from "../../../../components/ui/Button";
+import { Button } from "../../../../components/ui/primitives/Button";
 import { toast } from "../../../../utils/toast";
 import { formatDate } from "../../../../utils/utils";
 import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Alert } from "../../../components/ui/Alert";
-import { TableSkeleton } from "../../../components/ui/TableSkeleton";
+import { Alert } from "../../../components/ui/overlays/Alert";
+import { TableSkeleton } from "../../../components/ui/table/TableSkeleton";
 import { DocumentsDataCards } from "./DocumentsDataCards";
 import { useClientDocumentsTab } from "../hooks/useClientDocumentsTab";
 

@@ -2,8 +2,8 @@ import {
   DetailDrawer,
   DrawerField,
   DrawerSection,
-} from "../../../components/ui/DetailDrawer";
-import { Badge } from "../../../components/ui/Badge";
+} from "../../../components/ui/overlays/DetailDrawer";
+import { Badge } from "../../../components/ui/primitives/Badge";
 import type { Reminder } from "../api";
 import { reminderTypeLabels, statusLabels } from "../types";
 import { formatDate, formatDateTime } from "../../../utils/utils";

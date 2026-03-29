@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ChevronLeft, Clock, FolderOpen, Info, AlertTriangle, User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { formatDate } from "../../../utils/utils";
-import { StatusBadge } from "../../../components/ui/StatusBadge";
+import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { useRole } from "../../../hooks/useRole";
 import { useVatWorkItemActions } from "../hooks/useVatWorkItemActions";

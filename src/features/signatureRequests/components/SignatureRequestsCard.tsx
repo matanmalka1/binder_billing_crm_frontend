@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { FileSignature, Plus } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
-import { StateCard } from "../../../components/ui/StateCard";
-import { Alert } from "../../../components/ui/Alert";
-import { SkeletonBlock } from "../../../components/ui/SkeletonBlock";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Button } from "../../../components/ui/primitives/Button";
+import { StateCard } from "../../../components/ui/feedback/StateCard";
+import { Alert } from "../../../components/ui/overlays/Alert";
+import { SkeletonBlock } from "../../../components/ui/primitives/SkeletonBlock";
 import { SignatureRequestRow } from "./SignatureRequestRow";
 import { SignatureRequestAuditDrawer } from "./SignatureRequestAuditDrawer";
 import { CreateSignatureRequestModal } from "./CreateSignatureRequestModal";

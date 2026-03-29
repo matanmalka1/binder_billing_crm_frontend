@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import { SelectDropdown } from "../../../components/ui/SelectDropdown";
-import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
-import { ToolbarContainer } from "../../../components/ui/ToolbarContainer";
+import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
+import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
+import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
 import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
 import { cn, MONTH_NAMES } from "../../../utils/utils";
 import { VAT_WORK_ITEMS_STATUS_OPTIONS } from "../constants";

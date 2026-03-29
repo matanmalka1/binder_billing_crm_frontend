@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
-import { Alert } from "@/components/ui/Alert";
-import { Button } from "@/components/ui/Button";
-import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
+import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { Button } from "@/components/ui/primitives/Button";
+import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
+import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
 import { useAuthStore } from "@/store/auth.store";
 import {
   AuditLogsDrawer,

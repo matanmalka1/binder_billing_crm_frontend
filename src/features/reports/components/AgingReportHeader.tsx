@@ -1,5 +1,5 @@
 import { AlertTriangle, DollarSign } from "lucide-react";
-import { StatsCard } from "../../../components/ui/StatsCard";
+import { StatsCard } from "../../../components/ui/layout/StatsCard";
 import type { AgingReportResponse } from "../api";
 
 interface AgingReportHeaderProps {

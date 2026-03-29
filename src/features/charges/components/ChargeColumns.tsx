@@ -1,6 +1,6 @@
-import { StatusBadge } from "../../../components/ui/StatusBadge";
-import type { Column } from "../../../components/ui/DataTable";
-import { buildSelectionColumn } from "../../../components/ui/tableSelection";
+import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
+import type { Column } from "../../../components/ui/table/DataTable";
+import { buildSelectionColumn } from "../../../components/ui/table/tableSelection";
 import type { ChargeResponse } from "../api";
 import { getChargeAmountText, getChargeTypeLabel } from "../utils";
 import { formatDate } from "../../../utils/utils";

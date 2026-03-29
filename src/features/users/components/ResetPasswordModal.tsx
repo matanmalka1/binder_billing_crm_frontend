@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "../../../components/ui/Modal";
-import { Input } from "../../../components/ui/Input";
-import { Button } from "../../../components/ui/Button";
+import { Modal } from "../../../components/ui/overlays/Modal";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Button } from "../../../components/ui/primitives/Button";
 import { resetPasswordSchema, type ResetPasswordFormValues } from "../schemas";
 import type { UserResponse } from "../api";
 

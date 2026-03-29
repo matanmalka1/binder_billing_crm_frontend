@@ -1,5 +1,5 @@
 import { AlertTriangle, CheckCircle, Info, XCircle, Send } from "lucide-react";
-import { Button } from "../../../../components/ui/Button";
+import { Button } from "../../../../components/ui/primitives/Button";
 import { cn } from "../../../../utils/utils";
 import type { AnnualReportDetail } from "../../types";
 

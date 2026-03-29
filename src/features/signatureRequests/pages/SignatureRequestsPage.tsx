@@ -2,11 +2,11 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FileSignature, ClipboardCheck, Clock, AlertCircle, Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { PageStateGuard } from "@/components/ui/PageStateGuard";
-import { DataTable } from "@/components/ui/DataTable";
-import { StatsCard } from "@/components/ui/StatsCard";
-import { Button } from "@/components/ui/Button";
-import { StatusBadge } from "@/components/ui/StatusBadge";
+import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
+import { DataTable } from "@/components/ui/table/DataTable";
+import { StatsCard } from "@/components/ui/layout/StatsCard";
+import { Button } from "@/components/ui/primitives/Button";
+import { StatusBadge } from "@/components/ui/primitives/StatusBadge";
 import {
   CreateSignatureRequestModal,
   SIGNATURE_REQUEST_TERMINAL_STATUSES,

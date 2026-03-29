@@ -1,8 +1,8 @@
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
 import { RefreshCw, Search, X, ChevronDown, Filter } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
-import { Select } from "../../../components/ui/Select";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Select } from "../../../components/ui/inputs/Select";
 import { getEventColor } from "../constants";
 import { getEventTypeLabel } from "../utils";
 import { cn } from "../../../utils/utils";

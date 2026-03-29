@@ -10,10 +10,10 @@ import {
 } from "@/features/vatReports";
 import { VatComplianceReportView } from "@/features/reports";
 import { cn } from "@/utils/utils";
-import { Alert } from "@/components/ui/Alert";
-import { Button } from "@/components/ui/Button";
-import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
-import { StatsCard } from "@/components/ui/StatsCard";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { Button } from "@/components/ui/primitives/Button";
+import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
+import { StatsCard } from "@/components/ui/layout/StatsCard";
 
 type ActiveTab = "list" | "compliance";
 

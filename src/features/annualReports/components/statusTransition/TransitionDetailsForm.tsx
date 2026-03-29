@@ -1,6 +1,6 @@
 import { getStatusLabel } from "../../api";
-import { Button } from "../../../../components/ui/Button";
-import { Input } from "../../../../components/ui/Input";
+import { Button } from "../../../../components/ui/primitives/Button";
+import { Input } from "../../../../components/ui/inputs/Input";
 import type { TransitionDetailsFormProps } from "../../types";
 
 export const TransitionDetailsForm = ({

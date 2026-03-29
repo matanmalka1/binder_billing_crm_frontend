@@ -1,5 +1,5 @@
 import { X, CheckCheck, Eye } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
 import type { Reminder } from "../types";
 
 interface ReminderRowActionsProps {

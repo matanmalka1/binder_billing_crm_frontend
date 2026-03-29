@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { reportsApi, reportsQK, type VatComplianceItem, type StalePendingItem } from "../api";
 import { PageHeader } from "../../../components/layout/PageHeader";
-import { PageStateGuard } from "../../../components/ui/PageStateGuard";
-import { Badge } from "../../../components/ui/Badge";
+import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
+import { Badge } from "../../../components/ui/primitives/Badge";
 
 const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
 

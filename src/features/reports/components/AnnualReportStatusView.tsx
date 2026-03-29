@@ -1,5 +1,5 @@
 import { PageHeader } from "../../../components/layout/PageHeader";
-import { PageStateGuard } from "../../../components/ui/PageStateGuard";
+import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
 import { AnnualReportStatusTable } from "./AnnualReportStatusTable";
 import { useAnnualReportStatusReport } from "../hooks/useAnnualReportStatusReport";
 

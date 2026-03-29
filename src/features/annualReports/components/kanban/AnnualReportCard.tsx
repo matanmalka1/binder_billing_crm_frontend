@@ -1,5 +1,5 @@
 import { ArrowRight, ArrowLeft, Clock, AlertTriangle } from "lucide-react";
-import { TruncateText } from "../../../../components/ui/TruncateText";
+import { TruncateText } from "../../../../components/ui/primitives/TruncateText";
 import { staggerDelay } from "../../../../utils/animation";
 import { cn } from "../../../../utils/utils";
 import type { StageKey } from "../../types";

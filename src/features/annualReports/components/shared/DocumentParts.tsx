@@ -6,7 +6,7 @@ import { documentsApi, documentsQK } from "@/features/documents/api";
 import type { PermanentDocumentResponse } from "@/features/documents/api";
 import { cn, getErrorMessage } from "../../../../utils/utils";
 import { toast } from "../../../../utils/toast";
-import { Badge } from "../../../../components/ui/Badge";
+import { Badge } from "../../../../components/ui/primitives/Badge";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "@/features/documents";
 
 const DOC_TYPE_ICONS: Record<string, ComponentType<{ className?: string }>> = {

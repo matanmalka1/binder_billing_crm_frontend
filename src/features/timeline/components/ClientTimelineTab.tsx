@@ -1,9 +1,9 @@
 import { useClientTimelinePage } from "../hooks/useClientTimelinePage";
 import { TimelineCommandBar } from "./TimelineCommandBar";
 import { TimelineCard } from "./TimelineCard";
-import { PaginationCard } from "../../../components/ui/PaginationCard";
-import { PageLoading } from "../../../components/ui/PageLoading";
-import { Alert } from "../../../components/ui/Alert";
+import { PaginationCard } from "../../../components/ui/table/PaginationCard";
+import { PageLoading } from "../../../components/ui/layout/PageLoading";
+import { Alert } from "../../../components/ui/overlays/Alert";
 
 interface ClientTimelineTabProps {
   businessId: string | undefined;

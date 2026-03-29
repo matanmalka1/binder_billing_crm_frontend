@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { AnnualReportScheduleKey, ScheduleEntry } from "../../api";
 import { getScheduleLabel } from "../../api";
-import { Button } from "../../../../components/ui/Button";
+import { Button } from "../../../../components/ui/primitives/Button";
 import { ALL_SCHEDULES } from "../../annex.constants";
 
 interface ScheduleAddFormProps {

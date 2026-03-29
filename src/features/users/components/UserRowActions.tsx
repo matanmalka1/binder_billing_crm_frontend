@@ -1,5 +1,5 @@
 import { Pencil, KeyRound, UserX, UserCheck } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
 import type { UserResponse } from "../api";
 
 interface UserRowActionsProps {

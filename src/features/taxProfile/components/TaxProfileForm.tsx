@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Select } from "../../../components/ui/inputs/Select";
 import type { TaxProfileData } from "../hooks/useTaxProfile";
 import { taxProfileSchema, taxProfileDefaults, type TaxProfileFormValues } from "../schemas";
 

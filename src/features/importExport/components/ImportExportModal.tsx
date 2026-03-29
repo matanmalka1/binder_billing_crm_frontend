@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { Download, Upload, FileSpreadsheet, AlertCircle } from "lucide-react";
-import { Modal } from "../../../components/ui/Modal";
-import { Button } from "../../../components/ui/Button";
-import { Card } from "../../../components/ui/Card";
+import { Modal } from "../../../components/ui/overlays/Modal";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Card } from "../../../components/ui/primitives/Card";
 import { useImportExport } from "../hooks/useImportExport";
 
 // ── Shared info box ────────────────────────────────────────────────────────────

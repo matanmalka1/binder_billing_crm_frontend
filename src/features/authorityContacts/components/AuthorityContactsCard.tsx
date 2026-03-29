@@ -1,4 +1,4 @@
-import { PaginationCard } from "../../../components/ui/PaginationCard";
+import { PaginationCard } from "../../../components/ui/table/PaginationCard";
 import { useAuthorityContacts } from "../hooks/useAuthorityContacts";
 import { useAuthorityContactsCardState } from "../hooks/useAuthorityContactsCardState";
 import { AuthorityContactDeleteDialog } from "./AuthorityContactDeleteDialog";

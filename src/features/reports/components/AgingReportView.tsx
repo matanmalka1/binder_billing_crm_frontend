@@ -1,6 +1,6 @@
 import { FileDown, FileSpreadsheet } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
-import { PageStateGuard } from "../../../components/ui/PageStateGuard";
+import { Button } from "../../../components/ui/primitives/Button";
+import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { AgingReportFilters } from "./AgingReportFilters";
 import { AgingReportHeader } from "./AgingReportHeader";

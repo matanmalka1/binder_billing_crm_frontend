@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/Button";
-import { PageStateGuard } from "@/components/ui/PageStateGuard";
+import { Button } from "@/components/ui/primitives/Button";
+import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
 import {
   CreateReminderModal,
   ReminderDrawer,

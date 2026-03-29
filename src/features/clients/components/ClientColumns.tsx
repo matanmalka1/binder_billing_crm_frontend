@@ -1,5 +1,5 @@
-import type { Column } from "../../../components/ui/DataTable";
-import { buildSelectionColumn } from "../../../components/ui/tableSelection";
+import type { Column } from "../../../components/ui/table/DataTable";
+import { buildSelectionColumn } from "../../../components/ui/table/tableSelection";
 import type { ClientResponse } from "../api";
 import { formatDate } from "../../../utils/utils";
 import { ClientRowActions } from "./ClientRowActions";

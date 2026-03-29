@@ -1,6 +1,6 @@
-import { Button } from "../../../../components/ui/Button";
-import { Modal } from "../../../../components/ui/Modal";
-import { Textarea } from "../../../../components/ui/Textarea";
+import { Button } from "../../../../components/ui/primitives/Button";
+import { Modal } from "../../../../components/ui/overlays/Modal";
+import { Textarea } from "../../../../components/ui/inputs/Textarea";
 import type { AmendReportModalProps } from "../../types";
 
 export const AmendReportModal = ({

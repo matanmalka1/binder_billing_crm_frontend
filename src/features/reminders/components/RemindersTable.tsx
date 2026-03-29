@@ -1,7 +1,7 @@
 import { Calendar } from "lucide-react";
-import { DataTable, type Column } from "../../../components/ui/DataTable";
-import { Badge } from "../../../components/ui/Badge";
-import { TruncateText } from "../../../components/ui/TruncateText";
+import { DataTable, type Column } from "../../../components/ui/table/DataTable";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { TruncateText } from "../../../components/ui/primitives/TruncateText";
 import { formatDate } from "../../../utils/utils";
 import type { Reminder } from "../types";
 import { reminderTypeLabels, statusLabels } from "../types";

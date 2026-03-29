@@ -1,8 +1,8 @@
 import { Calendar, CheckCircle2, Inbox } from "lucide-react";
-import { IconLabel } from "../../../components/ui/IconLabel";
-import { Card } from "../../../components/ui/Card";
-import { Badge } from "../../../components/ui/Badge";
-import { StateCard } from "../../../components/ui/StateCard";
+import { IconLabel } from "../../../components/ui/primitives/IconLabel";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { StateCard } from "../../../components/ui/feedback/StateCard";
 import { TaxDeadlineRowActions } from "./TaxDeadlineRowActions";
 import type { TaxDeadlineResponse } from "../api";
 import {

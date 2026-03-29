@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
-import { Textarea } from "../../../components/ui/Textarea";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type { ClientResponse, UpdateClientPayload } from "../api";
 import { clientEditSchema, type ClientEditFormValues } from "../schemas";
 

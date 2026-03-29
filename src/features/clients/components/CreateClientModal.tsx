@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "../../../components/ui/Modal";
-import { Input } from "../../../components/ui/Input";
-import { ModalFormActions } from "../../../components/ui/ModalFormActions";
-import { Select } from "../../../components/ui/Select";
+import { Modal } from "../../../components/ui/overlays/Modal";
+import { Input } from "../../../components/ui/inputs/Input";
+import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
+import { Select } from "../../../components/ui/inputs/Select";
 import type { CreateClientPayload } from "../api";
 import { createClientSchema, type CreateClientFormValues } from "../schemas";
 

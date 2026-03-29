@@ -1,4 +1,4 @@
-import { Badge } from "../../../components/ui/Badge";
+import { Badge } from "../../../components/ui/primitives/Badge";
 import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
 import type { AdvancePaymentStatus } from "../types";
 import { STATUS_VARIANT } from "../utils";

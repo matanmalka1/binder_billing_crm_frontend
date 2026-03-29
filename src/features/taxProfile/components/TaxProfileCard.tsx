@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Edit2 } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
-import { DefinitionList } from "../../../components/ui/DefinitionList";
-import { Alert } from "../../../components/ui/Alert";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Button } from "../../../components/ui/primitives/Button";
+import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
+import { Alert } from "../../../components/ui/overlays/Alert";
 import { useTaxProfile } from "../hooks/useTaxProfile";
 import { TaxProfileForm } from "./TaxProfileForm";
 

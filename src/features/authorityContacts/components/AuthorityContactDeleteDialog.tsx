@@ -1,4 +1,4 @@
-import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
+import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 
 interface AuthorityContactDeleteDialogProps {
   confirmDeleteId: number | null;

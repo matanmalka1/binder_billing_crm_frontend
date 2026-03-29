@@ -1,4 +1,4 @@
-import { Modal } from "../../../components/ui/Modal";
+import { Modal } from "../../../components/ui/overlays/Modal";
 import { TaxProfileForm } from "../../taxProfile/components/TaxProfileForm";
 import { useTaxProfile } from "@/features/taxProfile";
 

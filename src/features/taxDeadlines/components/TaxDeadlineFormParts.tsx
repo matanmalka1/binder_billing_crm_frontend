@@ -1,9 +1,9 @@
 import { Controller } from "react-hook-form";
-import { Button } from "../../../components/ui/Button";
-import { DatePicker } from "../../../components/ui/DatePicker";
-import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
-import { Textarea } from "../../../components/ui/Textarea";
+import { Button } from "../../../components/ui/primitives/Button";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Select } from "../../../components/ui/inputs/Select";
+import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type {
   Control,
   FieldErrors,

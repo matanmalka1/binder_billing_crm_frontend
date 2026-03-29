@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { getYear } from "date-fns";
-import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
-import { Badge } from "../../../components/ui/Badge";
-import { Button } from "../../../components/ui/Button";
+import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/overlays/DetailDrawer";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { Button } from "../../../components/ui/primitives/Button";
 import { CheckCircle2 } from "lucide-react";
 import type { TaxDeadlineResponse } from "../api";
 import {

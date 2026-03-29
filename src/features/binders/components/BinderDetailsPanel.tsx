@@ -1,7 +1,7 @@
-import { DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
-import { Badge } from "../../../components/ui/Badge";
-import { StatusBadge } from "../../../components/ui/StatusBadge";
-import { MonoValue } from "../../../components/ui/MonoValue";
+import { DrawerField, DrawerSection } from "../../../components/ui/overlays/DetailDrawer";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
+import { MonoValue } from "../../../components/ui/primitives/MonoValue";
 import type { BinderResponse } from "../types";
 import {
   getStatusLabel,

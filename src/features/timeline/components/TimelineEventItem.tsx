@@ -1,4 +1,4 @@
-import { IconLabel } from "../../../components/ui/IconLabel";
+import { IconLabel } from "../../../components/ui/primitives/IconLabel";
 import { FileText, CreditCard } from "lucide-react";
 import type { TimelineEvent } from "../api";
 import { cn } from "../../../utils/utils";

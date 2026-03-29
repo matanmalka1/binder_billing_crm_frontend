@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from "react";
-import { DetailDrawer } from "../../../components/ui/DetailDrawer";
-import { Modal } from "../../../components/ui/Modal";
-import { Button } from "../../../components/ui/Button";
+import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
+import { Modal } from "../../../components/ui/overlays/Modal";
+import { Button } from "../../../components/ui/primitives/Button";
 import { AuthorityContactsCard } from "../../authorityContacts/components/AuthorityContactsCard";
 import { CorrespondenceCard } from "../../correspondence/components/CorrespondenceCard";
 import { SignatureRequestsCard } from "../../signatureRequests/components/SignatureRequestsCard";

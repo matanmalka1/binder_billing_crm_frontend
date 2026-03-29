@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
-import { StateCard } from "../../../components/ui/StateCard";
+import { StateCard } from "../../../components/ui/feedback/StateCard";
 import { Inbox } from "lucide-react";
 import type { AgingReportItem } from "../api";
 

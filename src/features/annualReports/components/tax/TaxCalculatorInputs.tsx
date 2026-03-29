@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pencil, X, Check, Info } from "lucide-react";
-import { Input } from "../../../../components/ui/Input";
+import { Input } from "../../../../components/ui/inputs/Input";
 
 interface TaxCalculatorInputsProps {
   creditPoints: string;

@@ -1,6 +1,6 @@
 import React from "react";
 import { AlertTriangle } from "lucide-react";
-import { StateCard } from "../ui/StateCard";
+import { StateCard } from "../ui/feedback/StateCard";
 
 interface AppErrorBoundaryProps {
   children: React.ReactNode;

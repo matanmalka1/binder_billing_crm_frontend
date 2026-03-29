@@ -1,5 +1,5 @@
 import { Users } from "lucide-react";
-import { StateCard } from "../../../components/ui/StateCard";
+import { StateCard } from "../../../components/ui/feedback/StateCard";
 import type { AuthorityContactResponse } from "../api";
 import { AuthorityContactRow } from "./AuthorityContactRow";
 

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
-import { Alert } from "@/components/ui/Alert";
-import { Button } from "@/components/ui/Button";
-import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { DetailDrawer } from "@/components/ui/DetailDrawer";
-import { ModalFormActions } from "@/components/ui/ModalFormActions";
-import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
+import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { Button } from "@/components/ui/primitives/Button";
+import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
+import { DetailDrawer } from "@/components/ui/overlays/DetailDrawer";
+import { ModalFormActions } from "@/components/ui/overlays/ModalFormActions";
+import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
 import {
   buildClientColumns,
   ClientEditForm,

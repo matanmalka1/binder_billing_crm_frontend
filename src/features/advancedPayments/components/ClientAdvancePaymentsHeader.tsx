@@ -1,7 +1,7 @@
 import { TrendingDown, Edit2 } from "lucide-react";
 import type { AdvancePaymentStatus } from "../types";
-import { Button } from "../../../components/ui/Button";
-import { Select } from "../../../components/ui/Select";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Select } from "../../../components/ui/inputs/Select";
 import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
 import { YEAR_OPTIONS } from "../utils";
 import { ADVANCE_PAYMENT_STATUS_FILTERS } from "../constants";

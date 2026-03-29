@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
 import { Search as SearchIcon, FileSearch } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
-import { Input } from "@/components/ui/Input";
-import { DataTable } from "@/components/ui/DataTable";
-import { Alert } from "@/components/ui/Alert";
-import { PaginationCard } from "@/components/ui/PaginationCard";
-import { StateCard } from "@/components/ui/StateCard";
+import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
+import { Input } from "@/components/ui/inputs/Input";
+import { DataTable } from "@/components/ui/table/DataTable";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { PaginationCard } from "@/components/ui/table/PaginationCard";
+import { StateCard } from "@/components/ui/feedback/StateCard";
 import {
   DocumentResultsSection,
   searchColumns,

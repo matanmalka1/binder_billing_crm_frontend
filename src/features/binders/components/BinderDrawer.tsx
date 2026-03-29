@@ -1,6 +1,6 @@
 import type { UseFormReturn } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { DetailDrawer } from "../../../components/ui/DetailDrawer";
+import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
 import type { ReceiveBinderFormValues } from "../schemas";
 import type { BinderResponse } from "../types";
 import { BinderActionsPanel } from "./BinderActionsPanel";

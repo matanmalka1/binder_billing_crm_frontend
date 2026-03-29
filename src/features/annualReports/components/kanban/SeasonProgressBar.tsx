@@ -1,4 +1,4 @@
-import { Card } from "../../../../components/ui/Card";
+import { Card } from "../../../../components/ui/primitives/Card";
 import type { SeasonSummary } from "../../api";
 import { SEASON_PROGRESS_STAGES } from "../../api";
 import { cn } from "../../../../utils/utils";

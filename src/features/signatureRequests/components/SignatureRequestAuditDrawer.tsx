@@ -4,8 +4,8 @@ import {
   DetailDrawer,
   DrawerField,
   DrawerSection,
-} from "../../../components/ui/DetailDrawer";
-import { StatusBadge } from "../../../components/ui/StatusBadge";
+} from "../../../components/ui/overlays/DetailDrawer";
+import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { formatDate, formatDateTime } from "../../../utils/utils";
 import {
   getSignatureRequestTypeLabel,

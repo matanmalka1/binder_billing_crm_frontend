@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { MessageSquare, Plus } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
-import { Alert } from "../../../components/ui/Alert";
-import { StateCard } from "../../../components/ui/StateCard";
-import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Alert } from "../../../components/ui/overlays/Alert";
+import { StateCard } from "../../../components/ui/feedback/StateCard";
+import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import { CorrespondenceEntryItem } from "./CorrespondenceEntry";
 import { CorrespondenceModal } from "./CorrespondenceModal";
 import { useCorrespondence } from "../hooks/useCorrespondence";

@@ -1,8 +1,8 @@
 import { Clock, ArrowLeft } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
-import { Card } from "../../../../components/ui/Card";
-import { Badge } from "../../../../components/ui/Badge";
+import { Card } from "../../../../components/ui/primitives/Card";
+import { Badge } from "../../../../components/ui/primitives/Badge";
 import type { StatusHistoryEntry } from "../../api";
 import { getStatusLabel, getStatusVariant } from "../../api";
 import { staggerDelay } from "../../../../utils/animation";

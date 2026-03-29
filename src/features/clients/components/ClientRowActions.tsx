@@ -1,7 +1,7 @@
 import { Clock, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
 import { clientsApi, clientsQK } from "../api";
 
 interface ClientRowActionsProps {

@@ -1,7 +1,7 @@
 import { RotateCcw, SlidersHorizontal, ChevronDown, ChevronUp } from "lucide-react";
-import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
-import { Button } from "../../../components/ui/Button";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Select } from "../../../components/ui/inputs/Select";
+import { Button } from "../../../components/ui/primitives/Button";
 import type { SearchFiltersBarProps } from "../types";
 import { getSignalLabel } from "../../../utils/enums";
 import { cn } from "../../../utils/utils";

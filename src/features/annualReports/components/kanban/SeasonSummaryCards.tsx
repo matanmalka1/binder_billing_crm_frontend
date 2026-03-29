@@ -1,5 +1,5 @@
 import { CheckCircle2, AlertTriangle, Users } from "lucide-react";
-import { StatsCard } from "../../../../components/ui/StatsCard";
+import { StatsCard } from "../../../../components/ui/layout/StatsCard";
 import type { SeasonSummary } from "../../api";
 
 interface SeasonSummaryCardsProps {

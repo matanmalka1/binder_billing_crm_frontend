@@ -1,4 +1,4 @@
-import { DataTable, type Column } from "../../../components/ui/DataTable";
+import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import type { AdvancePaymentReportItem, AdvancePaymentReportResponse } from "../api";
 
 interface Props {

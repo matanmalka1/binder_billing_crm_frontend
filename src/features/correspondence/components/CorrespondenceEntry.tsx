@@ -1,6 +1,6 @@
 import { Phone, Mail, FileText, Users, Edit2, Trash2 } from "lucide-react";
-import { Badge } from "../../../components/ui/Badge";
-import { Button } from "../../../components/ui/Button";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { Button } from "../../../components/ui/primitives/Button";
 import type { CorrespondenceEntry as CorrespondenceEntryType } from "../api";
 import { formatDate } from "../../../utils/utils";
 

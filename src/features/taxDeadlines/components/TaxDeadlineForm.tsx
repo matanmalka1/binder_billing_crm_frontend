@@ -1,5 +1,5 @@
-import { Input } from "../../../components/ui/Input";
-import { Modal } from "../../../components/ui/Modal";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Modal } from "../../../components/ui/overlays/Modal";
 import type { UseFormReturn } from "react-hook-form";
 import {
   TaxDeadlineCommonFields,

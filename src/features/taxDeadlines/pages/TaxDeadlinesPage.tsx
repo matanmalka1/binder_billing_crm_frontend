@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Plus, Wand2 } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { PaginationCard } from "@/components/ui/PaginationCard";
-import { PageLoading } from "@/components/ui/PageLoading";
-import { Alert } from "@/components/ui/Alert";
-import { Button } from "@/components/ui/Button";
+import { PaginationCard } from "@/components/ui/table/PaginationCard";
+import { PageLoading } from "@/components/ui/layout/PageLoading";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { Button } from "@/components/ui/primitives/Button";
 import {
   EditTaxDeadlineFormModal,
   TaxDeadlineDrawer,
@@ -15,7 +15,7 @@ import {
   type TaxDeadlineResponse,
 } from "@/features/taxDeadlines";
 import { TaxSubmissionStats, useTaxDashboard } from "@/features/taxDashboard";
-import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
+import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 
 export const TaxDeadlines: React.FC = () => {
   const {

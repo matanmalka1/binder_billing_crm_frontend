@@ -1,4 +1,4 @@
-import { BulkSelectionActionButton, BulkSelectionToolbar } from "@/components/ui/BulkSelectionToolbar";
+import { BulkSelectionActionButton, BulkSelectionToolbar } from "@/components/ui/table/BulkSelectionToolbar";
 
 interface ClientBulkToolbarProps {
   selectedCount: number;

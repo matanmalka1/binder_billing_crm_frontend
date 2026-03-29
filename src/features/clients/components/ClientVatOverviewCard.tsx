@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { clientsApi, clientsQK } from "../api";
 import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
 import type { VatClientSummaryResponse } from "@/features/vatReports/api";
-import { Card } from "../../../components/ui/Card";
-import { Badge } from "../../../components/ui/Badge";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Badge } from "../../../components/ui/primitives/Badge";
 
 const fmt = (n: string | number | null | undefined) =>
   n != null ? `₪${Number(n).toLocaleString("he-IL", { maximumFractionDigits: 0 })}` : "—";

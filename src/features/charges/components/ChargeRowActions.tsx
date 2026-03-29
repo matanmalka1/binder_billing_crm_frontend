@@ -1,5 +1,5 @@
 import { CheckCircle2, Eye, FileText, Trash2 } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
 import { canCancel, canIssue, canMarkPaid } from "../utils";
 
 interface ChargeRowActionsProps {

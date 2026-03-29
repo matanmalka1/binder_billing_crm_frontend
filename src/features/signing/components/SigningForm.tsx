@@ -1,7 +1,7 @@
 import { CheckCircle2, Clock, ShieldCheck, XCircle } from "lucide-react";
 import type { SignerViewResponse } from "@/features/signatureRequests/api";
-import { Button } from "../../../components/ui/Button";
-import { Textarea } from "../../../components/ui/Textarea";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { getSignatureRequestTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
 import type { SigningPageState } from "../types";

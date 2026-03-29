@@ -1,6 +1,6 @@
-import type { Column } from "../../../components/ui/DataTable";
+import type { Column } from "../../../components/ui/table/DataTable";
 import type { PermanentDocumentResponse } from "../api";
-import { Badge } from "../../../components/ui/Badge";
+import { Badge } from "../../../components/ui/primitives/Badge";
 import { formatDate } from "../../../utils/utils";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "../documents.constants";
 import { DocumentRowActions, type DocumentRowActionsProps } from "./DocumentRowActions";

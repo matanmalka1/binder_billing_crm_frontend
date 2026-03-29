@@ -1,11 +1,11 @@
 import type { UseFormReturn } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import { Alert } from "../../../components/ui/Alert";
-import { Button } from "../../../components/ui/Button";
+import { Alert } from "../../../components/ui/overlays/Alert";
+import { Button } from "../../../components/ui/primitives/Button";
 import { ClientSearchInput } from "@/components/shared/client";
-import { DatePicker } from "../../../components/ui/DatePicker";
-import { Select } from "../../../components/ui/Select";
-import { Textarea } from "../../../components/ui/Textarea";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
+import { Select } from "../../../components/ui/inputs/Select";
+import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { isClientLockedForCreate } from "../../../utils/clientStatus";
 import { BINDER_TYPE_OPTIONS } from "../constants";
 import type { ReceiveBinderFormValues } from "../schemas";

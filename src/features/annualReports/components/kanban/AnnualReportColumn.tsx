@@ -1,5 +1,5 @@
 import { Inbox } from "lucide-react";
-import { Badge } from "../../../../components/ui/Badge";
+import { Badge } from "../../../../components/ui/primitives/Badge";
 import { getReportStageLabel, getStageColor } from "../../api";
 import { staggerDelay } from "../../../../utils/animation";
 import type { KanbanStage, StageKey } from "../../types";

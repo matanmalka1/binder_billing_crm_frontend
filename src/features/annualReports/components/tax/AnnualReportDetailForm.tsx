@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../../../../components/ui/Button";
-import { Input } from "../../../../components/ui/Input";
-import { DatePicker } from "../../../../components/ui/DatePicker";
-import { Textarea } from "../../../../components/ui/Textarea";
+import { Button } from "../../../../components/ui/primitives/Button";
+import { Input } from "../../../../components/ui/inputs/Input";
+import { DatePicker } from "../../../../components/ui/inputs/DatePicker";
+import { Textarea } from "../../../../components/ui/inputs/Textarea";
 import type { AnnualReportDetail } from "../../types";
 import {
   annualReportDetailSchema,

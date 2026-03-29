@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Send, Link2, Copy, Check, X, History } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
-import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import { toast } from "../../../utils/toast";
 import type { SignatureRequestResponse } from "../api";
 import { SIGNATURE_REQUEST_TERMINAL_STATUSES } from "../utils";

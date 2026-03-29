@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { DetailDrawer } from "../../../components/ui/DetailDrawer";
-import { Badge } from "../../../components/ui/Badge";
-import { Button } from "../../../components/ui/Button";
+import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { Button } from "../../../components/ui/primitives/Button";
 import { usersApi, usersQK } from "../api";
 import { formatDateTime } from "../../../utils/utils";
 

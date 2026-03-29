@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FileSpreadsheet, FileText } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
+import { Button } from "../../../components/ui/primitives/Button";
 import { vatReportsApi } from "../api";
 import { toast } from "../../../utils/toast";
 import type { VatExportButtonsProps } from "../types";

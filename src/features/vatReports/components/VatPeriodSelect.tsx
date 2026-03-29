@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FormField } from "../../../components/ui/FormField";
-import { SelectDropdown } from "../../../components/ui/SelectDropdown";
+import { FormField } from "../../../components/ui/inputs/FormField";
+import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
 import { vatReportsApi } from "../api";
 import { vatReportsQK } from "../api/queryKeys";
 

@@ -1,7 +1,7 @@
 import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
-import { Select } from "../../../components/ui/Select";
-import { Input } from "../../../components/ui/Input";
-import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
+import { Select } from "../../../components/ui/inputs/Select";
+import { Input } from "../../../components/ui/inputs/Input";
+import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { Search } from "lucide-react";
 import { BINDER_STATUS_OPTIONS } from "../constants";
 import type { BindersFiltersBarProps } from "../types";

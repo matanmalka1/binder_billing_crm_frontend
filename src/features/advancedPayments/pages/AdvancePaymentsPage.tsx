@@ -11,10 +11,10 @@ import {
 } from "@/features/advancedPayments";
 import { AdvancePaymentReportView } from "@/features/reports";
 import { cn } from "@/utils/utils";
-import { Alert } from "@/components/ui/Alert";
-import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
-import { DataTable, type Column } from "@/components/ui/DataTable";
-import { PaginationCard } from "@/components/ui/PaginationCard";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
+import { DataTable, type Column } from "@/components/ui/table/DataTable";
+import { PaginationCard } from "@/components/ui/table/PaginationCard";
 import { formatDate, parsePositiveInt } from "@/utils/utils";
 import { AdvancePaymentStatusBadge } from "../components/AdvancePaymentStatusBadge";
 import { getAdvancePaymentMonthLabel } from "../utils";

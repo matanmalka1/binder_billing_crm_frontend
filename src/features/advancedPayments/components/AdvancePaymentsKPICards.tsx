@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Banknote, CheckCircle, TrendingUp, AlertCircle } from "lucide-react";
 import { advancePaymentsApi, advancedPaymentsQK } from "../api";
-import { StatsCard } from "../../../components/ui/StatsCard";
+import { StatsCard } from "../../../components/ui/layout/StatsCard";
 
 interface AdvancePaymentsKPICardsProps {
   businessId: number;

@@ -1,6 +1,6 @@
 import type { UseFormRegister, FieldErrors } from "react-hook-form";
-import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Select } from "../../../components/ui/inputs/Select";
 import type { CreateUserFormValues } from "../schemas";
 import type { EditUserFormValues } from "../schemas";
 

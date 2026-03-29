@@ -9,10 +9,10 @@ import type {
   VatPeriodRow,
 } from "../api";
 import { vatReportsQK } from "../api/queryKeys";
-import { Card } from "../../../components/ui/Card";
-import { Badge } from "../../../components/ui/Badge";
-import { Button } from "../../../components/ui/Button";
-import { DataTable, type Column } from "../../../components/ui/DataTable";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { Button } from "../../../components/ui/primitives/Button";
+import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import { useAuthStore } from "../../../store/auth.store";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
 import { toast } from "sonner";

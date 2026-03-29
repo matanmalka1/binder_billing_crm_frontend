@@ -1,7 +1,7 @@
 import { MessageSquare } from "lucide-react";
-import type { Column } from "../../../components/ui/DataTable";
+import type { Column } from "../../../components/ui/table/DataTable";
 import type { AdvancePaymentRow } from "../types";
-import { MonoValue } from "../../../components/ui/MonoValue";
+import { MonoValue } from "../../../components/ui/primitives/MonoValue";
 import { formatDate } from "../../../utils/utils";
 import { fmtCurrency, getAdvancePaymentMonthLabel } from "../utils";
 import {

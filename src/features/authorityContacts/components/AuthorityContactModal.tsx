@@ -1,4 +1,4 @@
-import { Modal } from "../../../components/ui/Modal";
+import { Modal } from "../../../components/ui/overlays/Modal";
 import { type AuthorityContactResponse } from "../api";
 import { useAuthorityContactForm } from "../hooks/useAuthorityContactForm";
 import { AuthorityContactFormFields } from "./AuthorityContactFormFields";

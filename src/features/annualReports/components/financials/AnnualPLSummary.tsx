@@ -11,7 +11,7 @@ import {
 import { annualReportFinancialsApi } from "../../api";
 import { annualReportTaxApi } from "../../api";
 import { annualReportsApi, annualReportsQK } from "../../api";
-import { DrawerSection } from "../../../../components/ui/DetailDrawer";
+import { DrawerSection } from "../../../../components/ui/overlays/DetailDrawer";
 
 interface Props {
   reportId: number;

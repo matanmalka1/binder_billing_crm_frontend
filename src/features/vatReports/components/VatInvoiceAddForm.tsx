@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, ChevronDown, ChevronUp } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
-import { FormField } from "../../../components/ui/FormField";
-import { Input } from "../../../components/ui/Input";
-import { SelectDropdown } from "../../../components/ui/SelectDropdown";
+import { Button } from "../../../components/ui/primitives/Button";
+import { FormField } from "../../../components/ui/inputs/FormField";
+import { Input } from "../../../components/ui/inputs/Input";
+import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
 import {
   vatInvoiceRowSchema,
   toInvoiceRowPayload,

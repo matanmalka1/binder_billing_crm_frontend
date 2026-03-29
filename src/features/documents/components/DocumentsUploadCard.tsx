@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 import { CloudUpload, X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button } from "../../../components/ui/Button";
-import { Select } from "../../../components/ui/Select";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Select } from "../../../components/ui/inputs/Select";
 import type { UploadDocumentPayload } from "../api";
 import {
   documentsUploadDefaultValues,

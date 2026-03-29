@@ -1,8 +1,8 @@
 import { useSearchParams, useParams, Navigate } from "react-router-dom";
 import { LayoutDashboard, ClipboardList, ArrowUpCircle, Clock } from "lucide-react";
-import { Alert } from "@/components/ui/Alert";
-import { Badge } from "@/components/ui/Badge";
-import { TableSkeleton } from "@/components/ui/TableSkeleton";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { Badge } from "@/components/ui/primitives/Badge";
+import { TableSkeleton } from "@/components/ui/table/TableSkeleton";
 import { cn } from "@/utils/utils";
 import {
   isFiled,

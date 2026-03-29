@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Link2 } from "lucide-react";
-import { StatusBadge } from "../../../components/ui/StatusBadge";
+import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import type { SignatureRequestResponse } from "../api";
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "../../../utils/enums";
 import { formatDate, formatDateTime } from "../../../utils/utils";

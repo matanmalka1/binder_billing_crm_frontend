@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CheckCircle2, Edit2, Trash2 } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
-import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import type { TaxDeadlineResponse } from "../api";
 
 interface TaxDeadlineRowActionsProps {

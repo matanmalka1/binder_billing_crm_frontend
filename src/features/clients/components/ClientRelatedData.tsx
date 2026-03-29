@@ -1,8 +1,8 @@
 import { type FC } from "react";
 import { ChevronRight, FolderOpen, Receipt } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Button } from "../../../components/ui/primitives/Button";
 import type { LucideIcon } from "lucide-react";
 import type { ClientBinderSummary, ClientChargeSummary } from "../types";
 import { formatDate } from "../../../utils/utils";

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Button } from "../../../components/ui/primitives/Button";
 import { RemindersTable } from "./RemindersTable";
 import { ReminderDrawer } from "./ReminderDrawer";
 import { CreateReminderModal } from "./CreateReminderModal";

@@ -1,9 +1,9 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
-import { Input } from "../../../components/ui/Input";
-import { SelectDropdown } from "../../../components/ui/SelectDropdown";
-import { DatePicker } from "../../../components/ui/DatePicker";
+import { Input } from "../../../components/ui/inputs/Input";
+import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import {
   vatInvoiceEditSchema,
   toInvoiceEditPayload,

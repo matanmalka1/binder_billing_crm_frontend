@@ -1,5 +1,5 @@
 import { PageHeader } from "../../../components/layout/PageHeader";
-import { PageStateGuard } from "../../../components/ui/PageStateGuard";
+import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
 import { AdvancePaymentReportTable } from "./AdvancePaymentReportTable";
 import { useAdvancePaymentReport } from "../hooks/useAdvancePaymentReport";
 import { MONTH_OPTIONS as BASE_MONTH_OPTIONS } from "../../../utils/utils";

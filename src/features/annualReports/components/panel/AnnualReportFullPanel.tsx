@@ -7,7 +7,7 @@ import type { SectionKey } from "../../types";
 import { AnnualReportSidebarStatus } from "./AnnualReportSidebarStatus";
 import { AnnualReportSectionContent } from "./AnnualReportSectionContent";
 import { PageHeader } from "../../../../components/layout/PageHeader";
-import { Button } from "../../../../components/ui/Button";
+import { Button } from "../../../../components/ui/primitives/Button";
 
 interface AnnualReportFullPanelProps {
   reportId: number;

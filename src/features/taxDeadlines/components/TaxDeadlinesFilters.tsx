@@ -1,8 +1,8 @@
 import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
 import { Search } from "lucide-react";
-import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
-import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Select } from "../../../components/ui/inputs/Select";
+import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { cn } from "../../../utils/utils";
 import {
   TAX_DEADLINE_FILTER_TYPE_OPTIONS,

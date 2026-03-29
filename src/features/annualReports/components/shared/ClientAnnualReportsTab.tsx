@@ -1,7 +1,7 @@
 import { useClientAnnualReportsTab } from "../../hooks/useClientAnnualReportsTab";
 import { SeasonReportsTable } from "../kanban/SeasonReportsTable";
-import { PageLoading } from "../../../../components/ui/PageLoading";
-import { Alert } from "../../../../components/ui/Alert";
+import { PageLoading } from "../../../../components/ui/layout/PageLoading";
+import { Alert } from "../../../../components/ui/overlays/Alert";
 import { cn } from "../../../../utils/utils";
 
 interface ClientAnnualReportsTabProps {

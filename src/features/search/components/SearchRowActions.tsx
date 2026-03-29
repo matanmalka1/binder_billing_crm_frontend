@@ -1,6 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
 import type { SearchResult } from "../api";
 import { toQueryParams } from "../../../api/queryParams";
 

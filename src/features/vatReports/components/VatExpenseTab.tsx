@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Card } from "../../../components/ui/Card";
-import { Badge } from "../../../components/ui/Badge";
-import { SelectDropdown } from "../../../components/ui/SelectDropdown";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
 import { canAddInvoice } from "../utils";
 import { isClientClosed } from "../../../utils/clientStatus";
 import { useAddInvoice } from "../hooks/useVatInvoiceMutations";

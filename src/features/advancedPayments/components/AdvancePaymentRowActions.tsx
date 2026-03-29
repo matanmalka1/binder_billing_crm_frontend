@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
-import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { EditAdvancePaymentInline } from "./EditAdvancePaymentInline";
 

@@ -1,11 +1,11 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { Modal } from "../../../components/ui/Modal";
-import { Input } from "../../../components/ui/Input";
-import { Button } from "../../../components/ui/Button";
-import { Select } from "../../../components/ui/Select";
-import { DatePicker } from "../../../components/ui/DatePicker";
+import { Modal } from "../../../components/ui/overlays/Modal";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Select } from "../../../components/ui/inputs/Select";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import {
   createAdvancePaymentSchema,
   CREATE_ADVANCE_PAYMENT_DEFAULTS,

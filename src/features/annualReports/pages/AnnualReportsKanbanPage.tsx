@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Plus, ChevronLeft, ChevronRight, BarChart2, FileDown } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { PageLoading } from "@/components/ui/PageLoading";
-import { Alert } from "@/components/ui/Alert";
-import { PaginationCard } from "@/components/ui/PaginationCard";
-import { Button } from "@/components/ui/Button";
+import { PageLoading } from "@/components/ui/layout/PageLoading";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { PaginationCard } from "@/components/ui/table/PaginationCard";
+import { Button } from "@/components/ui/primitives/Button";
 import {
   AnnualReportColumn,
   CreateReportModal,

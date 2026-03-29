@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Modal } from "../../../components/ui/Modal";
-import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
-import { SelectDropdown } from "../../../components/ui/SelectDropdown";
+import { Modal } from "../../../components/ui/overlays/Modal";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Input } from "../../../components/ui/inputs/Input";
+import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
 import { vatReportsApi } from "../api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";

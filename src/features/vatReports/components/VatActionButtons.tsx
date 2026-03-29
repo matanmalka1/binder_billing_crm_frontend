@@ -1,5 +1,5 @@
 import { Send, RotateCcw } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
+import { Button } from "../../../components/ui/primitives/Button";
 import { canMarkReadyForReview, canFile, canSendBack } from "../utils";
 import { isClientClosed } from "../../../utils/clientStatus";
 import type { VatActionButtonsProps } from "../types";

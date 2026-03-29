@@ -8,9 +8,9 @@ import {
   getStatusLabel,
   getStatusVariant,
 } from "../../api";
-import { Badge } from "../../../../components/ui/Badge";
-import { Button } from "../../../../components/ui/Button";
-import { Card } from "../../../../components/ui/Card";
+import { Badge } from "../../../../components/ui/primitives/Badge";
+import { Button } from "../../../../components/ui/primitives/Button";
+import { Card } from "../../../../components/ui/primitives/Card";
 import { toast } from "../../../../utils/toast";
 import { showErrorToast } from "../../../../utils/utils";
 import { EMPTY_FORM } from "../../utils";

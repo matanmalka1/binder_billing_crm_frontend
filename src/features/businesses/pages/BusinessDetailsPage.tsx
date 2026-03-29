@@ -1,8 +1,8 @@
 import { useState, type FC } from "react";
 import { useParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Alert } from "@/components/ui/Alert";
-import { PageStateGuard } from "@/components/ui/PageStateGuard";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
 import { cn } from "@/utils/utils";
 import { ClientDocumentsTab } from "@/features/documents";
 import { ClientTimelineTab } from "@/features/timeline";

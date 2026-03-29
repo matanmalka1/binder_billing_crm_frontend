@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { X } from "lucide-react";
-import { Input } from "@/components/ui/Input";
+import { Input } from "@/components/ui/inputs/Input";
 import { searchApi } from "@/features/search/api";
 import type { SearchResult } from "@/features/search/api";
 

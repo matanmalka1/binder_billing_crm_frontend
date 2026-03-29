@@ -1,4 +1,4 @@
-import { Alert } from "@/components/ui/Alert";
+import { Alert } from "@/components/ui/overlays/Alert";
 import type { ClientStatus } from "@/utils/clientStatus";
 
 interface ClientStatusBannerProps {

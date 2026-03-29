@@ -1,5 +1,5 @@
-import { Select } from "../../../components/ui/Select";
-import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
+import { Select } from "../../../components/ui/inputs/Select";
+import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { cn } from "../../../utils/utils";
 import { YEAR_OPTIONS } from "../utils";
 import { ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL, ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS } from "../constants";

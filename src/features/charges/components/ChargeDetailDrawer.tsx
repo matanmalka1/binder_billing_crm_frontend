@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
-import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/DetailDrawer";
-import { Alert } from "../../../components/ui/Alert";
-import { Button } from "../../../components/ui/Button";
-import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
-import { StatusBadge } from "../../../components/ui/StatusBadge";
+import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/overlays/DetailDrawer";
+import { Alert } from "../../../components/ui/overlays/Alert";
+import { Button } from "../../../components/ui/primitives/Button";
+import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
+import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import {
   getChargeAmountText,
   getChargeTypeLabel,

@@ -1,6 +1,6 @@
 import { AlertTriangle } from "lucide-react";
-import { Modal } from "../../../components/ui/Modal";
-import { Button } from "../../../components/ui/Button";
+import { Modal } from "../../../components/ui/overlays/Modal";
+import { Button } from "../../../components/ui/primitives/Button";
 import { formatDate } from "../../../utils/utils";
 import type { DeletedClientSummary } from "../api";
 

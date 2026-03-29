@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import type { Column } from "../../../components/ui/DataTable";
-import { StatusBadge } from "../../../components/ui/StatusBadge";
-import { Badge } from "../../../components/ui/Badge";
-import { MonoValue } from "../../../components/ui/MonoValue";
-import { SortableHeader } from "../../../components/ui/SortableHeader";
+import type { Column } from "../../../components/ui/table/DataTable";
+import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { MonoValue } from "../../../components/ui/primitives/MonoValue";
+import { SortableHeader } from "../../../components/ui/table/SortableHeader";
 import type { BinderResponse } from "../types";
 import {
   getStatusLabel,

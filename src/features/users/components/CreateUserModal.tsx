@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "../../../components/ui/Modal";
+import { Modal } from "../../../components/ui/overlays/Modal";
 import { UserFormFields } from "./UserFormFields";
 import { UserModalFooter } from "./UserModalFooter";
 import { createUserSchema, type CreateUserFormValues } from "../schemas";

@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useController, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "../../../components/ui/Modal";
-import { Input } from "../../../components/ui/Input";
-import { ModalFormActions } from "../../../components/ui/ModalFormActions";
-import { Select } from "../../../components/ui/Select";
-import { Textarea } from "../../../components/ui/Textarea";
-import { DatePicker } from "../../../components/ui/DatePicker";
+import { Modal } from "../../../components/ui/overlays/Modal";
+import { Input } from "../../../components/ui/inputs/Input";
+import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
+import { Select } from "../../../components/ui/inputs/Select";
+import { Textarea } from "../../../components/ui/inputs/Textarea";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import type { CreateBusinessPayload, ISODateString } from "../api";
 import { createBusinessSchema, type CreateBusinessFormValues } from "../schemas";
 

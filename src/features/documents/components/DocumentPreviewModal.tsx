@@ -1,6 +1,6 @@
 import { Download } from "lucide-react";
-import { OverlayContainer } from "../../../components/ui/OverlayContainer";
-import { Button } from "../../../components/ui/Button";
+import { OverlayContainer } from "../../../components/ui/layout/OverlayContainer";
+import { Button } from "../../../components/ui/primitives/Button";
 
 interface DocumentPreviewModalProps {
   open: boolean;

@@ -7,7 +7,7 @@ import { Toaster } from "sonner";
 import { AppRoutes } from "./router/AppRoutes";
 import { queryClient } from "./lib/queryClient";
 import { AppErrorBoundary } from "./components/errors/AppErrorBoundary";
-import { PageLoading } from "./components/ui/PageLoading";
+import { PageLoading } from "./components/ui/layout/PageLoading";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {

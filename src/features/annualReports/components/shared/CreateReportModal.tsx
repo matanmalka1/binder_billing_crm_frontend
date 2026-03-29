@@ -1,10 +1,10 @@
 import { Controller } from "react-hook-form";
-import { Modal } from "../../../../components/ui/Modal";
-import { Button } from "../../../../components/ui/Button";
-import { Input } from "../../../../components/ui/Input";
-import { Select } from "../../../../components/ui/Select";
-import { Textarea } from "../../../../components/ui/Textarea";
-import { DatePicker } from "../../../../components/ui/DatePicker";
+import { Modal } from "../../../../components/ui/overlays/Modal";
+import { Button } from "../../../../components/ui/primitives/Button";
+import { Input } from "../../../../components/ui/inputs/Input";
+import { Select } from "../../../../components/ui/inputs/Select";
+import { Textarea } from "../../../../components/ui/inputs/Textarea";
+import { DatePicker } from "../../../../components/ui/inputs/DatePicker";
 import { useCreateReport } from "../../hooks/useCreateReport";
 import { FLAG_FIELDS } from "../../utils";
 

@@ -1,11 +1,11 @@
 import { Controller } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
-import { Modal } from "../../../components/ui/Modal";
-import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
-import { DatePicker } from "../../../components/ui/DatePicker";
-import { Select } from "../../../components/ui/Select";
-import { Textarea } from "../../../components/ui/Textarea";
+import { Modal } from "../../../components/ui/overlays/Modal";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Input } from "../../../components/ui/inputs/Input";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
+import { Select } from "../../../components/ui/inputs/Select";
+import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type { CreateReminderFormValues } from "../types";
 import type { BinderResponse } from "@/features/binders";
 import { getBinderTypeLabel } from "@/features/binders";

@@ -1,7 +1,7 @@
 import type { UseFormReturn } from "react-hook-form";
-import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
-import { Textarea } from "../../../components/ui/Textarea";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Select } from "../../../components/ui/inputs/Select";
+import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { AUTHORITY_CONTACT_TYPE_OPTIONS } from "../api";
 import type { AuthorityContactFormValues } from "../schemas";
 

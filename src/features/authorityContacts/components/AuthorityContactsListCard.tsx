@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
-import { Alert } from "../../../components/ui/Alert";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Alert } from "../../../components/ui/overlays/Alert";
 import type { AuthorityContactResponse } from "../api";
 import { AuthorityContactsListContent } from "./AuthorityContactsListContent";
 

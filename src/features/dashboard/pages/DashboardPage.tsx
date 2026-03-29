@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Alert } from "@/components/ui/Alert";
-import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
 import {
   AdvisorTodayCard,
   AttentionPanel,

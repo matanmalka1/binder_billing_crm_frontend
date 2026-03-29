@@ -1,5 +1,5 @@
 import { PackageCheck, SendHorizontal } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
 import { canMarkMaterialsComplete, canMarkReadyForReview, isFiled } from "../utils";
 import type { VatWorkItemRowActionsProps } from "../types";
 

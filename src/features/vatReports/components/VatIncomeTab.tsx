@@ -1,5 +1,5 @@
-import { Card } from "../../../components/ui/Card";
-import { Badge } from "../../../components/ui/Badge";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Badge } from "../../../components/ui/primitives/Badge";
 import { canAddInvoice } from "../utils";
 import { isClientClosed } from "../../../utils/clientStatus";
 import { useAddInvoice } from "../hooks/useVatInvoiceMutations";

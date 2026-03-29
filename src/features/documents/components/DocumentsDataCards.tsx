@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
 import { FileText } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
-import { DataTable } from "../../../components/ui/DataTable";
-import { Alert } from "../../../components/ui/Alert";
+import { Card } from "../../../components/ui/primitives/Card";
+import { DataTable } from "../../../components/ui/table/DataTable";
+import { Alert } from "../../../components/ui/overlays/Alert";
 import { DocumentsUploadCard } from "./DocumentsUploadCard";
 import { DocumentVersionsPanel } from "./DocumentVersionsPanel";
 import { DocumentPreviewModal } from "./DocumentPreviewModal";
-import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
+import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import { buildDocumentColumns } from "./DocumentsColumns";
 import { documentsApi } from "../api";
 import type {

@@ -1,8 +1,8 @@
 import { type FC } from "react";
 import { Edit2, Trash2 } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
-import { DefinitionList } from "../../../components/ui/DefinitionList";
+import { Card } from "../../../components/ui/primitives/Card";
+import { Button } from "../../../components/ui/primitives/Button";
+import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
 import { formatDate } from "../../../utils/utils";
 import type { ClientResponse } from "../api";
 

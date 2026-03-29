@@ -14,7 +14,7 @@ import { AdvancePaymentsChart } from "./AdvancePaymentsChart";
 import { CreateAdvancePaymentModal } from "./CreateAdvancePaymentModal";
 import { EditAdvanceRateModal } from "./EditAdvanceRateModal";
 import { AdvanceReductionModal } from "./AdvanceReductionModal";
-import { PaginationCard } from "../../../components/ui/PaginationCard";
+import { PaginationCard } from "../../../components/ui/table/PaginationCard";
 
 interface ClientAdvancePaymentsTabProps {
   businessId: number;

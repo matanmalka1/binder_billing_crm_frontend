@@ -1,7 +1,7 @@
 import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
 import { Search } from "lucide-react";
-import { Input } from "../../../components/ui/Input";
-import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
+import { Input } from "../../../components/ui/inputs/Input";
+import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import type { ClientsFiltersBarProps } from "../types";
 
 export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({

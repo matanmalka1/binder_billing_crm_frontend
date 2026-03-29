@@ -1,5 +1,5 @@
 import { TrendingUp, Banknote, CheckCircle } from "lucide-react";
-import { StatsCard } from "../../../components/ui/StatsCard";
+import { StatsCard } from "../../../components/ui/layout/StatsCard";
 import { fmtCurrency } from "../utils";
 
 interface OverviewKPICardsProps {

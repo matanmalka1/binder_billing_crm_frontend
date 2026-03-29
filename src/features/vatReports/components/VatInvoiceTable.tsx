@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Trash2, Receipt, Pencil } from "lucide-react";
-import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
+import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import { formatVatAmount } from "../utils";
 import { CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
 import { useDeleteInvoice, useUpdateInvoice } from "../hooks/useVatInvoiceMutations";

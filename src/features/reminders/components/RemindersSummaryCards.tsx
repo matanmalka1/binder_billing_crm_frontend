@@ -1,6 +1,6 @@
 import { Bell, Calendar, AlertTriangle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Card } from "../../../components/ui/Card";
+import { Card } from "../../../components/ui/primitives/Card";
 import { cn } from "../../../utils/utils";
 import type { Reminder } from "../types";
 

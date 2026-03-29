@@ -1,5 +1,5 @@
 import { ArrowLeft, CheckCircle2, Eye, RotateCcw, Trash2 } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/DropdownMenu";
+import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
 import { canMarkReady, canReturn, canRevertReady } from "../utils";
 
 interface BinderRowActionsProps {

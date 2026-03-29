@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Select } from "../../../components/ui/Select";
-import { ActiveFilterBadges } from "../../../components/ui/ActiveFilterBadges";
+import { Select } from "../../../components/ui/inputs/Select";
+import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
 import { cn } from "../../../utils/utils";
 import { CHARGE_STATUS_OPTIONS, CHARGE_TYPE_OPTIONS_WITH_ALL } from "../constants";

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
-import { Modal } from "../../../components/ui/Modal";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Modal } from "../../../components/ui/overlays/Modal";
 
 interface AdvanceReductionModalProps {
   isOpen: boolean;

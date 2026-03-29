@@ -1,4 +1,4 @@
-import { Modal } from "../../../components/ui/Modal";
+import { Modal } from "../../../components/ui/overlays/Modal";
 import { VatInvoiceAddForm } from "./VatInvoiceAddForm";
 import type { VatInvoiceAddModalProps } from "../types";
 

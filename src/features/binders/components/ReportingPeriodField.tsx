@@ -1,5 +1,5 @@
 import type { ChangeEvent } from "react";
-import { Select } from "../../../components/ui/Select";
+import { Select } from "../../../components/ui/inputs/Select";
 import {
   buildBimonthlyPeriodOptions,
   buildMonthlyPeriodOptions,

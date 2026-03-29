@@ -2,9 +2,9 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Plus, ArrowUpDown } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Alert } from "@/components/ui/Alert";
-import { Button } from "@/components/ui/Button";
-import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { Button } from "@/components/ui/primitives/Button";
+import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
 import {
   ChargeBulkToolbar,
   buildChargeColumns,
@@ -15,7 +15,7 @@ import {
   useChargesPage,
 } from "@/features/charges";
 import { ImportExportModal } from "@/features/importExport";
-import { ToolbarContainer } from "@/components/ui/ToolbarContainer";
+import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 
 export const Charges: React.FC = () => {
   const [, setSearchParams] = useSearchParams();
