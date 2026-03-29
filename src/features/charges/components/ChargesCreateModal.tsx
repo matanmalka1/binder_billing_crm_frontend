@@ -7,7 +7,6 @@ import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActio
 import { FormField } from "../../../components/ui/inputs/FormField";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
 import { ClientPickerField } from "@/components/shared/client";
-import { MONTH_NAMES } from "../../../utils/utils";
 import type { CreateChargePayload } from "../api";
 import { CHARGE_TYPE_OPTIONS } from "../constants";
 import {
@@ -16,6 +15,7 @@ import {
   toCreateChargePayload,
   type ChargeCreateFormValues,
 } from "../schemas";
+import { getChargePeriodLabel } from "../utils";
 
 interface ChargesCreateModalProps {
   open: boolean;
@@ -39,6 +39,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
     register,
     reset,
     setValue,
+    watch,
   } = useForm<ChargeCreateFormValues>({
     defaultValues: chargeCreateDefaultValues,
     resolver: zodResolver(chargeCreateSchema),
@@ -46,20 +47,22 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
 
   const [clientQuery, setClientQuery] = useState("");
   const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
+  const monthsCovered = watch("months_covered") ?? 1;
 
   const periodOptions = useMemo(() => {
     const currentYear = new Date().getFullYear();
     const options = [{ value: "", label: "ללא תקופה" }];
     for (const year of [currentYear - 1, currentYear, currentYear + 1]) {
       for (let month = 0; month < 12; month += 1) {
+        const value = `${year}-${String(month + 1).padStart(2, "0")}`;
         options.push({
-          value: `${year}-${String(month + 1).padStart(2, "0")}`,
-          label: `${MONTH_NAMES[month]} ${year}`,
+          value,
+          label: getChargePeriodLabel(value, monthsCovered),
         });
       }
     }
     return options;
-  }, []);
+  }, [monthsCovered]);
 
   const handleSelectClient = (client: { id: number; name: string }) => {
     setSelectedClient(client);
@@ -156,9 +159,27 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
           />
           <Controller
             control={control}
+            name="months_covered"
+            render={({ field }) => (
+              <FormField label="תדירות" error={errors.months_covered?.message}>
+                <SelectDropdown
+                  value={String(field.value ?? 1)}
+                  onChange={(e) => field.onChange(Number(e.target.value) as 1 | 2)}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  options={[
+                    { value: "1", label: "חודשי" },
+                    { value: "2", label: "דו-חודשי" },
+                  ]}
+                />
+              </FormField>
+            )}
+          />
+          <Controller
+            control={control}
             name="period"
             render={({ field }) => (
-              <FormField label="תקופה" error={errors.period?.message} className="col-span-2">
+              <FormField label="תקופה" error={errors.period?.message}>
                 <SelectDropdown
                   value={field.value ?? ""}
                   onChange={(e) => field.onChange(e.target.value)}

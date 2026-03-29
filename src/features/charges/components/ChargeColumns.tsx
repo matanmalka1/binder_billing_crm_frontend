@@ -2,7 +2,7 @@ import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import type { Column } from "../../../components/ui/table/DataTable";
 import { buildSelectionColumn } from "../../../components/ui/table/tableSelection";
 import type { ChargeResponse } from "../api";
-import { getChargeAmountText, getChargeTypeLabel } from "../utils";
+import { getChargeAmountText, getChargePeriodLabel, getChargeTypeLabel } from "../utils";
 import { formatDate } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { ChargeRowActions } from "./ChargeRowActions";
@@ -64,10 +64,12 @@ export const buildChargeColumns = ({
     {
       key: "period",
       header: "תקופה",
-      headerClassName: "w-24",
-      className: "w-24",
+      headerClassName: "w-40",
+      className: "w-40",
       render: (charge) => (
-        <span className="font-mono text-sm text-gray-500 tabular-nums">{charge.period ?? "—"}</span>
+        <span className="text-sm text-gray-500">
+          {getChargePeriodLabel(charge.period, charge.months_covered)}
+        </span>
       ),
     },
     {

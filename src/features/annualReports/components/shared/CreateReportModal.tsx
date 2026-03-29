@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import { Modal } from "../../../../components/ui/overlays/Modal";
 import { Button } from "../../../../components/ui/primitives/Button";
@@ -5,6 +6,7 @@ import { Input } from "../../../../components/ui/inputs/Input";
 import { Select } from "../../../../components/ui/inputs/Select";
 import { Textarea } from "../../../../components/ui/inputs/Textarea";
 import { DatePicker } from "../../../../components/ui/inputs/DatePicker";
+import { ClientPickerField } from "@/components/shared/client";
 import { useCreateReport } from "../../hooks/useCreateReport";
 import { FLAG_FIELDS } from "../../utils";
 
@@ -16,13 +18,50 @@ interface CreateReportModalProps {
 const fmt = (n: number) =>
   n.toLocaleString("he-IL", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
+const currencySuffix = <span className="text-sm text-gray-400">₪</span>;
+
 export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onClose }) => {
   const { form, onSubmit, isSubmitting, preview } = useCreateReport(onClose);
-  const { register, control, formState: { errors } } = form;
+  const { register, control, setValue, formState: { errors } } = form;
+  const [clientQuery, setClientQuery] = useState("");
+  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
+
+  useEffect(() => {
+    if (open) return;
+    form.reset();
+    setClientQuery("");
+    setSelectedClient(null);
+  }, [form, open]);
 
   const handleClose = () => {
     form.reset();
+    setClientQuery("");
+    setSelectedClient(null);
     onClose();
+  };
+
+  const handleSelectClient = (client: {
+    id: number;
+    name: string;
+    id_number: string;
+    client_status?: string | null;
+  }) => {
+    setSelectedClient(client);
+    setClientQuery(client.name);
+    setValue("client_id", String(client.id), { shouldValidate: true, shouldDirty: true });
+  };
+
+  const handleClearClient = () => {
+    setSelectedClient(null);
+    setClientQuery("");
+    setValue("client_id", "", { shouldValidate: true, shouldDirty: true });
+  };
+
+  const handleClientQueryChange = (query: string) => {
+    setClientQuery(query);
+    if (!selectedClient) return;
+    setSelectedClient(null);
+    setValue("client_id", "", { shouldValidate: true, shouldDirty: true });
   };
 
   return (
@@ -42,13 +81,19 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">
+        <input type="hidden" {...register("client_id")} />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Input
-            label="מזהה לקוח *"
-            type="number"
-            error={errors.client_id?.message}
-            {...register("client_id")}
-          />
+          <div className="sm:col-span-2">
+            <ClientPickerField
+              selectedClient={selectedClient}
+              clientQuery={clientQuery}
+              onQueryChange={handleClientQueryChange}
+              onSelect={handleSelectClient}
+              onClear={handleClearClient}
+              error={errors.client_id?.message}
+              label="לקוח *"
+            />
+          </div>
           <Input
             label="שנת מס *"
             type="number"
@@ -98,21 +143,24 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
           <p className="mb-2 text-sm font-medium text-gray-700">נתוני הכנסות ראשוניים (לתצוגה בלבד)</p>
           <div className="grid grid-cols-2 gap-3">
             <Input
-              label="הכנסה ברוטו (₪)"
+              label="הכנסה ברוטו"
               type="number"
               min={0}
+              endElement={currencySuffix}
               {...register("gross_income")}
             />
             <Input
-              label="הוצאות (₪)"
+              label="הוצאות"
               type="number"
               min={0}
+              endElement={currencySuffix}
               {...register("expenses")}
             />
             <Input
-              label="מקדמות ששולמו (₪)"
+              label="מקדמות ששולמו"
               type="number"
               min={0}
+              endElement={currencySuffix}
               {...register("advances_paid")}
             />
             <div>

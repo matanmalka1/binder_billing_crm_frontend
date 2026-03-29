@@ -27,6 +27,7 @@ export const chargeCreateSchema = z.object({
       message: "יש להזין סכום חיובי",
     }),
   charge_type: z.enum(chargeTypeValues),
+  months_covered: z.union([z.literal(1), z.literal(2)]),
   period: z
     .string()
     .trim()
@@ -42,6 +43,7 @@ export const chargeCreateDefaultValues: ChargeCreateFormValues = {
   client_id: "",
   amount: "",
   charge_type: "monthly_retainer",
+  months_covered: 1,
   period: "",
 };
 
@@ -51,5 +53,6 @@ export const toCreateChargePayload = (
   business_id: Number(values.client_id),
   amount: values.amount,
   charge_type: values.charge_type,
+  months_covered: values.months_covered,
   period: values.period?.trim() ? values.period.trim() : null,
 });

@@ -8,6 +8,7 @@ import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import {
   getChargeAmountText,
+  getChargePeriodLabel,
   getChargeTypeLabel,
 } from "../utils";
 import { formatDateTime } from "../../../utils/utils";
@@ -149,7 +150,7 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
                 value={<span className="font-semibold text-gray-900">{getChargeAmountText(charge)}</span>}
               />
             )}
-            <DrawerField label="תקופה" value={charge.period ?? "—"} />
+            <DrawerField label="תקופה" value={getChargePeriodLabel(charge.period, charge.months_covered)} />
             <DrawerField label="נוצר" value={formatDateTime(charge.created_at)} />
             <DrawerField label="הונפק" value={formatDateTime(charge.issued_at)} />
             <DrawerField label="שולם" value={formatDateTime(charge.paid_at)} />
