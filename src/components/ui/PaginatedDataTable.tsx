@@ -1,12 +1,10 @@
 import type { ReactNode } from "react";
 import { Alert } from "./Alert";
 import { DataTable, type DataTableProps } from "./DataTable";
+import { getTotalPages } from "../../utils/paginationUtils";
 import { PaginationCard } from "./PaginationCard";
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [20, 50, 100];
-
-export const getTotalPages = (total: number, pageSize: number) =>
-  Math.max(1, Math.ceil(Math.max(total, 1) / pageSize));
 
 type BasePaginatedDataTableProps<T> = Pick<
   DataTableProps<T>,

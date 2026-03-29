@@ -58,7 +58,7 @@ export const VatWorkItems: React.FC = () => {
       urlParams.delete("create");
       setUrlParams(urlParams, { replace: true });
     }
-  }, []);
+  }, [urlParams, setUrlParams]);
 
   const columns = useMemo(
     () =>

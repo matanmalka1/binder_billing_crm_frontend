@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { MoreHorizontal } from "lucide-react";
 import { cn } from "../../utils/utils";
-import { computeDropdownPosition } from "./dropdownMenuUtils";
+import { computeDropdownPosition } from "../../utils/dropdownMenuUtils";
 
 
 interface DropdownPos { top: number; left: number; maxHeight?: number }

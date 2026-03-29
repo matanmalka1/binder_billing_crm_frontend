@@ -10,12 +10,12 @@ import { ModalFormActions } from "@/components/ui/ModalFormActions";
 import { PaginatedDataTable } from "@/components/ui/PaginatedDataTable";
 import {
   buildClientColumns,
+  ClientEditForm,
   ClientsFiltersBar,
   CreateClientModal,
   DeletedClientDialog,
   useClientsPage,
 } from "@/features/clients";
-import { ClientEditForm } from "@/features/clients/components/ClientEditForm";
 import type { ClientResponse } from "@/features/clients/api";
 import { ImportExportModal } from "@/features/importExport";
 
