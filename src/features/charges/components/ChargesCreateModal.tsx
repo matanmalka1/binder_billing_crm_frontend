@@ -32,6 +32,8 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
   onClose,
   onSubmit,
 }) => {
+  const currencySuffix = <span className="text-sm text-gray-400">₪</span>;
+
   const {
     formState: { errors, isDirty },
     handleSubmit,
@@ -139,6 +141,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
             step="0.01"
             placeholder="0.00"
             error={errors.amount?.message}
+            endElement={currencySuffix}
             {...register("amount")}
           />
           <Controller
