@@ -26,16 +26,3 @@ export const MONTH_SHORT_NAMES = [
 ] as const;
 
 export const YEAR_OPTIONS = buildYearOptions();
-
-export const getAdvancePaymentBalanceMeta = (
-  totalExpected: string | number,
-  totalPaid: string | number,
-) => {
-  const balance = Number(totalExpected) - Number(totalPaid);
-  return {
-    balance,
-    absBalance: Math.abs(balance),
-    variant: balance > 0 ? "orange" : balance < 0 ? "blue" : "green",
-    description: balance > 0 ? "נותר לתשלום" : balance < 0 ? "שולם ביתר" : "הכל שולם",
-  };
-};
