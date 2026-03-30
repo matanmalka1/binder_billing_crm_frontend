@@ -34,7 +34,7 @@ export const useTaxDeadlines = () => {
 
   const apiParams = useMemo(
     () => ({
-      business_name: toOptionalString(filters.client_name),
+      client_name: toOptionalString(filters.client_name),
       deadline_type: toOptionalString(filters.deadline_type),
       status: toOptionalString(filters.status),
       page: filters.page,

@@ -40,6 +40,27 @@ const buildPayload = (
       tax_deadline_id: Number(values.tax_deadline_id),
     };
   }
+  if (values.reminder_type === "vat_filing") {
+    return {
+      ...base,
+      reminder_type: "vat_filing",
+      tax_deadline_id: Number(values.tax_deadline_id),
+    };
+  }
+  if (values.reminder_type === "annual_report_deadline") {
+    return {
+      ...base,
+      reminder_type: "annual_report_deadline",
+      annual_report_id: Number(values.annual_report_id),
+    };
+  }
+  if (values.reminder_type === "advance_payment_due") {
+    return {
+      ...base,
+      reminder_type: "advance_payment_due",
+      advance_payment_id: Number(values.advance_payment_id),
+    };
+  }
   if (values.reminder_type === "binder_idle") {
     return {
       ...base,
@@ -52,6 +73,12 @@ const buildPayload = (
       ...base,
       reminder_type: "unpaid_charge",
       charge_id: Number(values.charge_id),
+    };
+  }
+  if (values.reminder_type === "document_missing") {
+    return {
+      ...base,
+      reminder_type: "document_missing",
     };
   }
   // custom — schema guarantees message is non-empty

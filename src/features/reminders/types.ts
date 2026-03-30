@@ -1,4 +1,9 @@
 // Re-export backend-aligned types from the API client to avoid divergence
+export {
+  reminderStatusLabels as statusLabels,
+  reminderTypeLabels,
+  reminderTypeOptions,
+} from "./api";
 export type {
   Reminder,
   ReminderType,
@@ -7,18 +12,4 @@ export type {
   RemindersListResponse,
 } from "./api";
 
-// Form value type is derived from the Zod schema — single source of truth
 export type { CreateReminderFormValues } from "./schemas";
-
-export const reminderTypeLabels: Record<string, string> = {
-  tax_deadline_approaching: "מועד מס מתקרב",
-  binder_idle: "תיק לא פעיל",
-  unpaid_charge: "חשבונית שלא שולמה",
-  custom: "התאמה אישית",
-};
-
-export const statusLabels: Record<string, string> = {
-  pending: "ממתין",
-  sent: "נשלח",
-  canceled: "בוטל",
-};

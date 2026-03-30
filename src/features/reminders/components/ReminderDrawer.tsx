@@ -14,9 +14,10 @@ interface ReminderDrawerProps {
 }
 
 const statusVariants: Record<string, "success" | "error" | "warning"> = {
-  sent: "success",
-  canceled: "error",
-  pending: "warning",
+    sent: "success",
+    canceled: "error",
+    pending: "warning",
+    processing: "warning",
 };
 
 export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
@@ -85,7 +86,9 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
 
         {(reminder.binder_id ??
           reminder.charge_id ??
-          reminder.tax_deadline_id) && (
+          reminder.tax_deadline_id ??
+          reminder.annual_report_id ??
+          reminder.advance_payment_id) && (
           <DrawerSection title="קישור לרשומה">
             {reminder.binder_id && (
               <DrawerField label="קלסר" value={`#${reminder.binder_id}`} />
@@ -98,6 +101,12 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
                 label="מועד מס"
                 value={`#${reminder.tax_deadline_id}`}
               />
+            )}
+            {reminder.annual_report_id && (
+              <DrawerField label='דוח שנתי' value={`#${reminder.annual_report_id}`} />
+            )}
+            {reminder.advance_payment_id && (
+              <DrawerField label="מקדמה" value={`#${reminder.advance_payment_id}`} />
             )}
           </DrawerSection>
         )}

@@ -22,20 +22,15 @@ export const taxDeadlinesApi = {
   },
 
   listTaxDeadlines: async (params: {
-    business_name?: string;
     client_name?: string;
     deadline_type?: string;
     status?: string;
     page?: number;
     page_size?: number;
   }): Promise<TaxDeadlineListResponse> => {
-    const normalizedParams =
-      params.business_name == null && params.client_name != null
-        ? { ...params, business_name: params.client_name }
-        : params;
     const response = await api.get<TaxDeadlineListResponse>(
       TAX_DEADLINE_ENDPOINTS.taxDeadlines,
-      { params: toQueryParams(normalizedParams) },
+      { params: toQueryParams(params) },
     );
     return response.data;
   },

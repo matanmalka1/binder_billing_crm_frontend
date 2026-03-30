@@ -22,6 +22,7 @@ const STATUS_VARIANTS: Record<string, "success" | "error" | "warning"> = {
   sent: "success",
   canceled: "error",
   pending: "warning",
+  processing: "warning",
 };
 
 export const RemindersTable: React.FC<RemindersTableProps> = ({
