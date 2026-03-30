@@ -1,23 +1,11 @@
 # TODO.md — Comprehensive Code Review Fixes
 
 > Full-stack code review of the Israeli Tax Consultant CRM.
-> **36 issues found** across frontend and backend. Organized by priority.
+> **35 issues found** across frontend and backend. Organized by priority.
 
 ---
 
 ## 🔴 P0 — CRITICAL (Fix Immediately)
-
----
-
-### TODO 6: F4 — AdvancePaymentsPage navigates to wrong client (BROKEN NAV)
-- **File:** `frontend/src/features/advancedPayments/pages/AdvancePaymentsPage.tsx:175`
-- **Bug:** `navigate(\`/clients/${row.business_id}?tab=advance-payments\`)` — uses `business_id` for client route.
-- **Fix:** Same approach as TODO 5 — backend returns `client_id` in advance payment overview response.
-  ```diff
-  - navigate(`/clients/${row.business_id}?tab=advance-payments`)
-  + navigate(`/clients/${row.client_id}?tab=advance-payments`)
-  ```
-- **Test:** Click advance payment row → verify correct client page opens.
 
 ---
 
@@ -64,7 +52,7 @@
 ## 🟠 P1 — HIGH (Fix Soon)
 
 ### TODO 10: F7 — SignatureRequestsPage fallback navigation (BROKEN NAV)
-- **File:** `frontend/src/features/signatureRequests/pages/SignatureRequestsPage.tsx:73`
+- **File:** `frontend/src/features/signatureRequests/pages/SignatureRequestsPage.tsx:56`
 - **Bug:** `businessLookup[req.business_id]?.clientId ?? req.business_id` — fallback uses `business_id` as `client_id`.
 - **Fix:** Remove the fallback entirely. If lookup fails, disable the link or show business name only:
   ```typescript
@@ -103,14 +91,6 @@
 - **File:** `frontend/src/features/notifications/api/notifications.api.ts:55-67`
 - **Bug:** `business_id ?? payload.client_id` fallback.
 - **Fix:** Standardize to `business_id` only after systemic fix.
-- **Depends on:** TODO 8
-
----
-
-### TODO 14: F11 — VAT workItem.schema.ts client_id→business_id (CLEANUP)
-- **File:** `frontend/src/features/vatReports/schemas/workItem.schema.ts:37`
-- **Bug:** `business_id: Number(values.client_id)` mapping.
-- **Fix:** Rename schema field to `business_id`.
 - **Depends on:** TODO 8
 
 ---
@@ -212,7 +192,7 @@
 ---
 
 ### TODO 23: F15 — useVatWorkItemDetail returns boolean error (POOR UX)
-- **File:** `frontend/src/features/vatReports/hooks/useVatWorkItemDetail.ts:65`
+- **File:** `frontend/src/features/vatReports/hooks/useVatWorkItemDetail.ts:66`
 - **Bug:** Returns `error: invoicesQuery.isError` (boolean). Calling components can't display a meaningful error message.
 - **Fix:**
   ```diff
@@ -247,7 +227,7 @@
 ---
 
 ### TODO 27: F19 — Magic number `days_before: 7`
-- **File:** `frontend/src/features/reminders/schemas.ts:67`
+- **File:** `frontend/src/features/reminders/schemas.ts:62`
 - **Bug:** Hardcoded default `days_before: 7` with no named constant.
 - **Fix:** Extract to `const DEFAULT_REMINDER_DAYS_BEFORE = 7`.
 
@@ -330,10 +310,10 @@
 | Priority | Count | Description |
 |----------|-------|-------------|
 | 🔴 P0 Critical | 9 | Data loss, wrong calculations, broken navigation |
-| 🟠 P1 High | 14 | Security, performance, UX bugs, workaround cleanup |
+| 🟠 P1 High | 13 | Security, performance, UX bugs, workaround cleanup |
 | 🟡 P2 Medium | 8 | Race conditions, stale data, tech debt |
 | 🔵 P3 Low | 5 | Cosmetic, code quality, monitoring |
-| **Total** | **36** | |
+| **Total** | **35** | |
 
 **Estimated completeness: ~82%**
 
@@ -341,7 +321,6 @@
 ```
 TODO 8 (F6 form rename) ──┬──→ TODO 12 (F9 charges.api cleanup)
                           ├──→ TODO 13 (F10 notifications cleanup)
-                          ├──→ TODO 14 (F11 VAT schema cleanup)
                           ├──→ TODO 15 (F12 annual reports cleanup)
                           └──→ TODO 16 (F13 tax deadlines cleanup)
 

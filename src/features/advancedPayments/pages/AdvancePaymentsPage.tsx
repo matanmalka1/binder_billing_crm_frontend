@@ -166,7 +166,7 @@ export const AdvancePayments: React.FC = () => {
             data={rows}
             getRowKey={(row) => row.id}
             isLoading={isLoading}
-            onRowClick={(row) => navigate(`/clients/${row.business_id}?tab=advance-payments`)}
+            onRowClick={(row) => navigate(`/clients/${row.client_id}?tab=advance-payments`)}
             emptyMessage="אין מקדמות לפי הסינון הנבחר"
           />
 

@@ -11,13 +11,27 @@ import {
   toInvoiceRowPayload,
   type VatInvoiceRowValues,
 } from "../schemas/invoice.schema";
-import { EXPENSE_CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS, DEDUCTION_RATES } from "../constants";
+import {
+  EXPENSE_CATEGORIES,
+  CATEGORY_LABELS,
+  CATEGORY_COLORS,
+  DEDUCTION_RATES,
+} from "../constants";
 import { getVatInvoiceDefaultValues } from "../utils";
-import { getVatRateTypeLabel, getDocumentTypeLabel } from "../../../utils/enums";
+import {
+  getVatRateTypeLabel,
+  getDocumentTypeLabel,
+} from "../../../utils/enums";
 import type { VatInvoiceAddFormProps } from "../types";
 
 const VAT_RATE_TYPES = ["standard", "exempt", "zero_rate"] as const;
-const DOCUMENT_TYPES = ["tax_invoice", "transaction_invoice", "receipt", "consolidated", "self_invoice"] as const;
+const DOCUMENT_TYPES = [
+  "tax_invoice",
+  "transaction_invoice",
+  "receipt",
+  "consolidated",
+  "self_invoice",
+] as const;
 
 export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
   invoiceType,
@@ -27,20 +41,41 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 }) => {
   const [showOptional, setShowOptional] = useState(false);
 
-  const { register, handleSubmit, reset, watch, control, formState: { errors } } = useForm<VatInvoiceRowValues>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm<VatInvoiceRowValues>({
     resolver: zodResolver(vatInvoiceRowSchema),
-    defaultValues: { ...getVatInvoiceDefaultValues(invoiceType), rate_type: "standard" },
+    defaultValues: {
+      ...getVatInvoiceDefaultValues(invoiceType),
+      rate_type: "standard",
+    },
   });
 
   const selectedCategory = watch("expense_category");
   const selectedDocumentType = watch("document_type");
-  const categoryColor = selectedCategory ? CATEGORY_COLORS[selectedCategory] : "";
-  const deductionRate = selectedCategory !== undefined ? (DEDUCTION_RATES[selectedCategory] ?? null) : null;
-  const requiresCounterpartyId = invoiceType === "expense" && selectedDocumentType === "tax_invoice";
+  const categoryColor = selectedCategory
+    ? CATEGORY_COLORS[selectedCategory]
+    : "";
+  const deductionRate =
+    selectedCategory !== undefined
+      ? (DEDUCTION_RATES[selectedCategory] ?? null)
+      : null;
+  const requiresCounterpartyId =
+    invoiceType === "expense" && selectedDocumentType === "tax_invoice";
 
   const onSubmit = async (values: VatInvoiceRowValues) => {
     const ok = await addInvoice(toInvoiceRowPayload(values));
-    if (ok) { reset({ ...getVatInvoiceDefaultValues(invoiceType), rate_type: "standard" }); }
+    if (ok) {
+      reset({
+        ...getVatInvoiceDefaultValues(invoiceType),
+        rate_type: "standard",
+      });
+    }
   };
 
   return (
@@ -51,9 +86,15 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
     >
       <div className="flex flex-wrap items-end gap-3">
         {invoiceType === "expense" && (
-          <FormField label="קטגוריה" error={errors.expense_category?.message} className="min-w-[180px]">
+          <FormField
+            label="קטגוריה"
+            error={errors.expense_category?.message}
+            className="min-w-[180px]"
+          >
             <div className="relative flex items-center gap-2">
-              <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${categoryColor || "bg-gray-300"}`} />
+              <span
+                className={`h-2.5 w-2.5 shrink-0 rounded-full ${categoryColor || "bg-gray-300"}`}
+              />
               <Controller
                 control={control}
                 name="expense_category"
@@ -64,7 +105,10 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
                     onChange={field.onChange}
                     onBlur={field.onBlur}
                     className="flex-1"
-                    options={EXPENSE_CATEGORIES.map((cat) => ({ value: cat, label: CATEGORY_LABELS[cat] }))}
+                    options={EXPENSE_CATEGORIES.map((cat) => ({
+                      value: cat,
+                      label: CATEGORY_LABELS[cat],
+                    }))}
                   />
                 )}
               />
@@ -82,14 +126,21 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
                 value={field.value}
                 onChange={field.onChange}
                 onBlur={field.onBlur}
-                options={VAT_RATE_TYPES.map((rt) => ({ value: rt, label: getVatRateTypeLabel(rt) }))}
+                options={VAT_RATE_TYPES.map((rt) => ({
+                  value: rt,
+                  label: getVatRateTypeLabel(rt),
+                }))}
               />
             )}
           />
         </FormField>
 
         {invoiceType === "expense" && (
-          <FormField label="סוג מסמך" error={errors.document_type?.message} className="min-w-[160px]">
+          <FormField
+            label="סוג מסמך"
+            error={errors.document_type?.message}
+            className="min-w-[160px]"
+          >
             <Controller
               control={control}
               name="document_type"
@@ -101,7 +152,10 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
                   onBlur={field.onBlur}
                   options={[
                     { value: "", label: "— בחר —" },
-                    ...DOCUMENT_TYPES.map((dt) => ({ value: dt, label: getDocumentTypeLabel(dt) })),
+                    ...DOCUMENT_TYPES.map((dt) => ({
+                      value: dt,
+                      label: getDocumentTypeLabel(dt),
+                    })),
                   ]}
                 />
               )}
@@ -110,30 +164,69 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
         )}
 
         {requiresCounterpartyId && (
-          <FormField label="מספר עוסק של הספק" error={errors.counterparty_id?.message} className="w-40">
+          <FormField
+            label="מספר עוסק של הספק"
+            error={errors.counterparty_id?.message}
+            className="w-40"
+          >
             <Input
               {...register("counterparty_id")}
               placeholder="9 ספרות"
               dir="rtl"
               inputMode="numeric"
-              onKeyDown={(e) => { if (!/[\d\b]/.test(e.key) && !["ArrowLeft","ArrowRight","Delete","Tab"].includes(e.key)) e.preventDefault(); }}
+              onKeyDown={(e) => {
+                if (
+                  !/[\d]/.test(e.key) &&
+                  ![
+                    "ArrowLeft",
+                    "ArrowRight",
+                    "Delete",
+                    "Backspace",
+                    "Enter",
+                    "Tab",
+                  ].includes(e.key)
+                )
+                  e.preventDefault();
+              }}
             />
           </FormField>
         )}
 
-        <FormField label="סכום נטו ₪" error={errors.net_amount?.message} className="w-36">
+        <FormField
+          label="סכום נטו ₪"
+          error={errors.net_amount?.message}
+          className="w-36"
+        >
           <Input
             {...register("net_amount")}
             placeholder="0.00"
             dir="rtl"
             inputMode="decimal"
             autoFocus={invoiceType === "income"}
-            onKeyDown={(e) => { if (!/[\d.\b]/.test(e.key) && !["ArrowLeft","ArrowRight","Delete","Tab"].includes(e.key)) e.preventDefault(); }}
+            onKeyDown={(e) => {
+              if (
+                !/[\d.]/.test(e.key) &&
+                ![
+                  "ArrowLeft",
+                  "ArrowRight",
+                  "Delete",
+                  "Backspace",
+                  "Enter",
+                  "Tab",
+                ].includes(e.key)
+              )
+                e.preventDefault();
+            }}
           />
         </FormField>
 
         <div className="flex items-end gap-2 pb-0.5">
-          <Button type="submit" variant="primary" size="sm" isLoading={isAdding}>
+          <Button
+            type="submit"
+            variant="primary"
+            size="sm"
+            isLoading={isAdding}
+          >
             <Plus className="h-3.5 w-3.5" />
             הוסף
           </Button>
@@ -147,7 +240,11 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
             className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
             onClick={() => setShowOptional((v) => !v)}
           >
-            {showOptional ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+            {showOptional ? (
+              <ChevronUp className="h-3 w-3" />
+            ) : (
+              <ChevronDown className="h-3 w-3" />
+            )}
             {showOptional ? "הסתר פרטים" : "פרטים נוספים"}
           </button>
         </div>
@@ -155,7 +252,9 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 
       {/* Deduction rate info for expense */}
       {invoiceType === "expense" && deductionRate !== null && (
-        <div className={`text-xs font-medium ${deductionRate === 0 ? "text-red-600" : "text-gray-500"}`}>
+        <div
+          className={`text-xs font-medium ${deductionRate === 0 ? "text-red-600" : "text-gray-500"}`}
+        >
           {deductionRate === 0
             ? "⚠️ ניכוי אסור"
             : deductionRate < 1

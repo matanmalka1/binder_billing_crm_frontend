@@ -9,7 +9,11 @@ import {
   toInvoiceEditPayload,
   type VatInvoiceEditValues,
 } from "../schemas/invoice.schema";
-import { EXPENSE_CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
+import {
+  EXPENSE_CATEGORIES,
+  CATEGORY_LABELS,
+  CATEGORY_COLORS,
+} from "../constants";
 import { toDateInputValue } from "../utils";
 import type { VatInvoiceEditRowProps } from "../types";
 
@@ -41,9 +45,15 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
   const catColor = selectedCategory ? CATEGORY_COLORS[selectedCategory] : "";
 
   return (
-    <tr className="bg-blue-50/40" onKeyDown={(e) => e.key === "Escape" && onCancel()}>
+    <tr
+      className="bg-blue-50/40"
+      onKeyDown={(e) => e.key === "Escape" && onCancel()}
+    >
       <td className={`border-r-2 ${accentBorder} px-2 py-1.5`}>
-        <Input {...register("invoice_number")} className="h-7 w-28 text-xs px-1 font-mono" />
+        <Input
+          {...register("invoice_number")}
+          className="h-7 w-28 text-xs px-1 font-mono"
+        />
       </td>
       <td className="px-2 py-1.5 w-32">
         <Controller
@@ -62,12 +72,17 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
         />
       </td>
       <td className="px-2 py-1.5">
-        <Input {...register("counterparty_name")} className="h-7 w-36 text-xs px-1" />
+        <Input
+          {...register("counterparty_name")}
+          className="h-7 w-36 text-xs px-1"
+        />
       </td>
       {sectionType === "expense" && (
         <td className="px-2 py-1.5">
           <div className="flex items-center gap-1.5">
-            <span className={`h-2 w-2 shrink-0 rounded-full ${catColor || "bg-gray-300"}`} />
+            <span
+              className={`h-2 w-2 shrink-0 rounded-full ${catColor || "bg-gray-300"}`}
+            />
             <Controller
               control={control}
               name="expense_category"
@@ -78,7 +93,10 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
                   onChange={field.onChange}
                   onBlur={field.onBlur}
                   className="h-7 text-xs flex-1"
-                  options={EXPENSE_CATEGORIES.map((cat) => ({ value: cat, label: CATEGORY_LABELS[cat] }))}
+                  options={EXPENSE_CATEGORIES.map((cat) => ({
+                    value: cat,
+                    label: CATEGORY_LABELS[cat],
+                  }))}
                 />
               )}
             />
@@ -86,10 +104,30 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
         </td>
       )}
       <td className="px-2 py-1.5">
-        <Input {...register("net_amount")} dir="ltr" className="h-7 w-24 text-xs px-1 font-mono" inputMode="decimal" onKeyDown={(e) => { if (!/[\d.\b]/.test(e.key) && !["ArrowLeft","ArrowRight","Delete","Tab"].includes(e.key)) e.preventDefault(); }} />
+        <Input
+          {...register("net_amount")}
+          dir="ltr"
+          className="h-7 w-24 text-xs px-1 font-mono"
+          inputMode="decimal"
+          onKeyDown={(e) => {
+            if (
+              !/[\d.]/.test(e.key) &&
+              ![
+                "ArrowLeft",
+                "ArrowRight",
+                "Delete",
+                "Backspace",
+                "Tab",
+              ].includes(e.key)
+            )
+              e.preventDefault();
+          }}
+        />
       </td>
       <td className="px-2 py-1.5 text-xs text-gray-400">—</td>
-      <td className="px-2 py-1.5 text-xs text-gray-400 font-mono">#{invoice.created_by}</td>
+      <td className="px-2 py-1.5 text-xs text-gray-400 font-mono">
+        #{invoice.created_by}
+      </td>
       <td className="px-2 py-1.5" />
       <td className="px-2 py-1.5">
         <div className="flex gap-1">
