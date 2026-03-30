@@ -1,6 +1,12 @@
 import { api } from "@/api/client";
 import { ANNUAL_REPORT_ENDPOINTS } from "./endpoints";
-import type { AdvancesSummary, ReadinessCheckResponse, TaxCalculationResult } from "./contracts";
+import type {
+  AdvancesSummary,
+  ReadinessCheckResponse,
+  TaxCalculationResult,
+  TaxCalculationSaveRequest,
+  TaxCalculationSaveResponse,
+} from "./contracts";
 
 export const annualReportTaxApi = {
   getTaxCalculation: async (reportId: number): Promise<TaxCalculationResult> => {
@@ -20,6 +26,17 @@ export const annualReportTaxApi = {
   getReadiness: async (reportId: number): Promise<ReadinessCheckResponse> => {
     const response = await api.get<ReadinessCheckResponse>(
       ANNUAL_REPORT_ENDPOINTS.annualReportReadiness(reportId),
+    );
+    return response.data;
+  },
+
+  saveTaxCalculation: async (
+    reportId: number,
+    payload: TaxCalculationSaveRequest,
+  ): Promise<TaxCalculationSaveResponse> => {
+    const response = await api.post<TaxCalculationSaveResponse>(
+      ANNUAL_REPORT_ENDPOINTS.annualReportTaxSave(reportId),
+      payload,
     );
     return response.data;
   },

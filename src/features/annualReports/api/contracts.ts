@@ -22,11 +22,15 @@ export type ClientTypeForReport =
 export type DeadlineType = "standard" | "extended" | "custom";
 
 export type AnnualReportScheduleKey =
+  | "schedule_a"
   | "schedule_b"
   | "schedule_bet"
   | "schedule_gimmel"
   | "schedule_dalet"
-  | "schedule_heh";
+  | "schedule_heh"
+  | "schedule_vav"
+  | "annex_15"
+  | "annex_867";
 
 export type StageKey =
   | "material_collection"
@@ -115,6 +119,7 @@ export interface ReportDetailResponse {
   donation_amount: string | null;
   other_credits: string | null;
   credit_points?: number | null;
+  pension_credit_points?: number | null;
   life_insurance_credit_points?: number | null;
   tuition_credit_points?: number | null;
   tax_refund_amount?: number | null;
@@ -318,4 +323,41 @@ export interface ExpenseLinePayload {
   recognition_rate?: string | null;
   supporting_document_ref?: string | null;
   supporting_document_id?: number | null;
+}
+
+export interface TaxCalculationSaveRequest {
+  tax_due?: string | null;
+  refund_due?: string | null;
+}
+
+export interface TaxCalculationSaveResponse {
+  annual_report_id: number;
+  tax_due: string | null;
+  refund_due: string | null;
+  saved_at: string;
+}
+
+export interface VatAutoPopulateResponse {
+  annual_report_id: number;
+  income_lines_created: number;
+  expense_lines_created: number;
+  income_total: string;
+  expense_total: string;
+  lines_deleted: number;
+}
+
+export interface ChargeItem {
+  id: number;
+  business_id: number;
+  amount: string;
+  status: string;
+  description: string | null;
+  created_at: string;
+}
+
+export interface ChargesListResponse {
+  items: ChargeItem[];
+  page: number;
+  page_size: number;
+  total: number;
 }

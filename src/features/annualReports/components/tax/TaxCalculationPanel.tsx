@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { annualReportTaxApi } from "../../api";
 import { annualReportsApi, annualReportsQK } from "../../api";
 import { cn } from "../../../../utils/utils";
+import { toast } from "../../../../utils/toast";
+import { useRole } from "../../../../hooks/useRole";
 import { TaxBracketsTable } from "./TaxBracketsTable";
 import { TaxCalculatorInputs } from "./TaxCalculatorInputs";
 
@@ -31,6 +33,7 @@ const SectionCard: React.FC<{ title: string; children: React.ReactNode }> = ({ t
 
 export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
   const queryClient = useQueryClient();
+  const { isAdvisor } = useRole();
   const [creditPoints, setCreditPoints] = useState("");
   const [pension, setPension] = useState("");
   const [otherCredits, setOtherCredits] = useState("");
@@ -56,6 +59,21 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
     },
   });
 
+  const saveTaxMutation = useMutation({
+    mutationFn: (payload: { tax_due?: string | null; refund_due?: string | null }) =>
+      annualReportTaxApi.saveTaxCalculation(reportId, payload),
+    onSuccess: () => {
+      toast.success("חישוב המס נשמר בהצלחה");
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.readiness(reportId) });
+    },
+    onError: (err: unknown) => {
+      const msg =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ??
+        "שגיאה בשמירת חישוב המס";
+      toast.error(msg);
+    },
+  });
+
   const handleEditInit = () => {
     const d = detailQ.data;
     if (d) {
@@ -71,6 +89,16 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
       pension_contribution: pension !== "" ? pension : undefined,
       other_credits: otherCredits !== "" ? otherCredits : undefined,
     });
+  };
+
+  const handleSaveTaxResult = () => {
+    if (!data?.total_liability) return;
+    const liability = Number(data.total_liability);
+    saveTaxMutation.mutate(
+      liability > 0
+        ? { tax_due: String(liability), refund_due: null }
+        : { tax_due: null, refund_due: String(Math.abs(liability)) },
+    );
   };
 
   if (isLoading || detailQ.isLoading)
@@ -133,6 +161,19 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
           )}
         </dl>
       </div>
+
+      {isAdvisor && data.total_liability != null && (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={handleSaveTaxResult}
+            disabled={saveTaxMutation.isPending}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          >
+            {saveTaxMutation.isPending ? "שומר..." : "שמור חישוב מס"}
+          </button>
+        </div>
+      )}
 
       <TaxBracketsTable brackets={data.brackets} />
     </div>

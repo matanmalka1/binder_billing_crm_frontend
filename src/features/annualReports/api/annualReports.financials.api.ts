@@ -6,6 +6,7 @@ import type {
   FinancialSummaryResponse,
   IncomeLinePayload,
   IncomeLineResponse,
+  VatAutoPopulateResponse,
 } from "./contracts";
 
 export const annualReportFinancialsApi = {
@@ -62,5 +63,12 @@ export const annualReportFinancialsApi = {
 
   deleteExpenseLine: async (reportId: number, lineId: number): Promise<void> => {
     await api.delete(ANNUAL_REPORT_ENDPOINTS.annualReportExpenseById(reportId, lineId));
+  },
+
+  autoPopulate: async (reportId: number, force = false): Promise<VatAutoPopulateResponse> => {
+    const response = await api.post<VatAutoPopulateResponse>(
+      `${ANNUAL_REPORT_ENDPOINTS.annualReportAutoPopulate(reportId)}?force=${force}`,
+    );
+    return response.data;
   },
 };

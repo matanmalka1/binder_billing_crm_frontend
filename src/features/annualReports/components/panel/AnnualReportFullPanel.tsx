@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import { cn } from "../../../../utils/utils";
-import { Download, LayoutDashboard, TrendingUp, Scale, Scissors, FileText, CalendarClock, Trash2, Save } from "lucide-react";
+import { Download, LayoutDashboard, TrendingUp, Scale, Scissors, FileText, CalendarClock, Trash2, Save, CreditCard } from "lucide-react";
 import { useAnnualReportDetailPage } from "../../hooks/useAnnualReportDetailPage";
 import { DeleteReportConfirmDialog } from "./DeleteReportConfirmDialog";
 import type { SectionKey } from "../../types";
@@ -21,6 +21,7 @@ const NAV_ITEMS: { key: SectionKey; icon: ComponentType<{ size?: number; classNa
   { key: "deductions", icon: Scissors,        label: "ניכויים" },
   { key: "documents",  icon: FileText,        label: "מסמכים" },
   { key: "timeline",   icon: CalendarClock,   label: "ציר זמן" },
+  { key: "charges",    icon: CreditCard,      label: "חיובים" },
 ];
 
 const tabVariants: Record<"active" | "inactive", string> = {

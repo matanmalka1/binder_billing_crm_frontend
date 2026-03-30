@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 import { annualReportFinancialsApi, annualReportsQK } from "../../api";
 import type { IncomeLineResponse, ExpenseLineResponse } from "../../api";
 import { cn } from "../../../../utils/utils";
+import { toast } from "../../../../utils/toast";
+import { useRole } from "../../../../hooks/useRole";
 import { AddLineForm } from "./IncomeExpensePanelParts";
 import { LineRow, INCOME_LABELS, EXPENSE_LABELS } from "../../report.constants";
 import { AddExpenseLineForm } from "./AddExpenseLineForm";
@@ -19,6 +21,31 @@ const fmt = (n: string | number) =>
 export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId }) => {
   const [editingIncomeId, setEditingIncomeId] = useState<number | null>(null);
   const [editingExpenseId, setEditingExpenseId] = useState<number | null>(null);
+  const [showForceConfirm, setShowForceConfirm] = useState(false);
+  const { isAdvisor } = useRole();
+  const queryClient = useQueryClient();
+
+  const autoPopulateMutation = useMutation({
+    mutationFn: (force: boolean) => annualReportFinancialsApi.autoPopulate(reportId, force),
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.financials(reportId) });
+      setShowForceConfirm(false);
+      toast.success(
+        `נוצרו ${result.income_lines_created} שורות הכנסה ו-${result.expense_lines_created} שורות הוצאה מנתוני מע"מ`,
+      );
+    },
+    onError: (err: unknown) => {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status === 409) {
+        setShowForceConfirm(true);
+      } else {
+        const msg =
+          (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ??
+          "שגיאה במילוי אוטומטי מנתוני מע\"מ";
+        toast.error(msg);
+      }
+    },
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: annualReportsQK.financials(reportId),
@@ -39,6 +66,28 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
 
   return (
     <div className="space-y-5">
+      {isAdvisor && (
+        <div className="flex justify-end gap-2">
+          {showForceConfirm ? (
+            <>
+              <span className="self-center text-sm text-amber-700">קיימות שורות — למחוק ולמלא מחדש?</span>
+              <button type="button" onClick={() => setShowForceConfirm(false)}
+                className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50">ביטול</button>
+              <button type="button" onClick={() => autoPopulateMutation.mutate(true)}
+                disabled={autoPopulateMutation.isPending}
+                className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50">
+                {autoPopulateMutation.isPending ? "מעדכן..." : "מחק ומלא מחדש"}
+              </button>
+            </>
+          ) : (
+            <button type="button" onClick={() => autoPopulateMutation.mutate(false)}
+              disabled={autoPopulateMutation.isPending}
+              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50">
+              {autoPopulateMutation.isPending ? "טוען..." : 'מלא מנתוני מע"מ'}
+            </button>
+          )}
+        </div>
+      )}
       {/* Summary */}
       {(incomeLines.length > 0 || expenseLines.length > 0) && (
         <div className="grid grid-cols-3 gap-3">

@@ -73,11 +73,15 @@ export const getClientTypeLabel = (type: string): string =>
 // ── Schedule labels ────────────────────────────────────────────────────────
 
 const scheduleLabels: Record<AnnualReportScheduleKey, string> = {
+  schedule_a: "נספח א — הכנסה מעסק",
   schedule_b: "נספח ב — שכירות",
   schedule_bet: "נספח בית — רווחי הון",
   schedule_gimmel: 'נספח ג — הכנסות מחו"ל',
   schedule_dalet: "נספח ד — פחת",
   schedule_heh: "נספח ה — שכר דירה פטור",
+  schedule_vav: "נספח ו — ניירות ערך",
+  annex_15: 'נספח 15 — הכנסות מחו"ל מפורט',
+  annex_867: "נספח 867 — נתונים בנקאיים",
 };
 
 export const getScheduleLabel = (key: string): string =>
