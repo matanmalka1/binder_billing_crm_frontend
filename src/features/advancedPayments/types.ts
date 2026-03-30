@@ -54,6 +54,7 @@ export interface AdvancePaymentOverviewRow {
   period: string;
   expected_amount: string | null;
   paid_amount: string | null;
+  delta: string | null;
   status: AdvancePaymentStatus;
   due_date: string;
 }

@@ -61,6 +61,16 @@ const columns: Column<AdvancePaymentOverviewRow>[] = [
     ),
   },
   {
+    key: "delta",
+    header: "יתרה",
+    render: (row) => {
+      if (row.delta == null) return <span className="text-gray-400 text-sm tabular-nums">—</span>;
+      const n = Number(row.delta);
+      const color = n < 0 ? "text-red-600" : "text-gray-700";
+      return <span className={`font-mono text-sm tabular-nums ${color}`}>{fmtCurrency(row.delta)}</span>;
+    },
+  },
+  {
     key: "status",
     header: "סטטוס",
     render: (row) => <AdvancePaymentStatusBadge status={row.status} />,

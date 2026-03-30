@@ -67,6 +67,7 @@ export interface VatExpenseTabProps {
   status: string;
   invoices: VatInvoiceResponse[];
   clientStatus?: string | null;
+  isFilingPending?: boolean;
 }
 
 export interface VatIncomeTabProps {
@@ -74,6 +75,7 @@ export interface VatIncomeTabProps {
   status: string;
   invoices: VatInvoiceResponse[];
   clientStatus?: string | null;
+  isFilingPending?: boolean;
 }
 
 export interface VatActionButtonsProps {
@@ -158,6 +160,7 @@ export interface VatWorkItemsFiltersCardProps {
 
 export interface VatWorkItemSummaryBarProps {
   workItem: VatWorkItemResponse;
+  onFilingPendingChange?: (isPending: boolean) => void;
 }
 
 export interface ColumnOpts {

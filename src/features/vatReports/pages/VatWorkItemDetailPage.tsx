@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSearchParams, useParams, Navigate } from "react-router-dom";
 import { LayoutDashboard, ClipboardList, ArrowUpCircle, Clock } from "lucide-react";
 import { Alert } from "@/components/ui/overlays/Alert";
@@ -19,6 +20,7 @@ type TabKey = "summary" | "income" | "expense" | "history";
 
 const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isFilingPending, setIsFilingPending] = useState(false);
   const activeTab = (searchParams.get("tab") as TabKey) ?? "summary";
   const { workItem, invoices, isLoading, isError } = useVatWorkItemPage(workItemId);
 
@@ -46,7 +48,7 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
 
   return (
     <div className="space-y-4">
-      <VatWorkItemSummaryBar workItem={workItem} />
+      <VatWorkItemSummaryBar workItem={workItem} onFilingPendingChange={setIsFilingPending} />
 
       {isFiled(workItem.status) && workItem.filed_at && (
         <VatFiledBanner
@@ -94,10 +96,10 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
       <div>
         {activeTab === "summary" && <VatSummaryTab workItem={workItem} invoices={invoices} />}
         {activeTab === "income" && (
-          <VatIncomeTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.business_status} />
+          <VatIncomeTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.business_status} isFilingPending={isFilingPending} />
         )}
         {activeTab === "expense" && (
-          <VatExpenseTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.business_status} />
+          <VatExpenseTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.business_status} isFilingPending={isFilingPending} />
         )}
         {activeTab === "history" && <VatHistoryTab workItemId={workItem.id} />}
       </div>

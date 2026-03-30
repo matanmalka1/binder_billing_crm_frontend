@@ -168,3 +168,13 @@ export const VAT_FILING_METHOD_LABELS: Record<string, string> = {
 
 export const ISRAEL_VAT_RATE = 0.18;
 export const ISRAEL_VAT_RATE_PERCENT = 18;
+
+// Any field backed by a backend enum MUST use a Zod enum in the frontend schema.
+export const VAT_RATE_TYPES = ["standard", "exempt", "zero_rate"] as const;
+export const DOCUMENT_TYPES = [
+  "tax_invoice",
+  "transaction_invoice",
+  "receipt",
+  "consolidated",
+  "self_invoice",
+] as const;

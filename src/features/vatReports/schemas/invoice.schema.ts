@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { CreateVatInvoicePayload, UpdateVatInvoicePayload } from "../api";
-import { ISRAEL_VAT_RATE } from "../constants";
+import { ISRAEL_VAT_RATE, VAT_RATE_TYPES, DOCUMENT_TYPES } from "../constants";
 
 const netAmountSchema = z
   .string()
@@ -13,8 +13,8 @@ const netAmountSchema = z
 const invoiceCommonFields = {
   net_amount: netAmountSchema,
   expense_category: z.string().optional(),
-  rate_type: z.string().optional(),
-  document_type: z.string().optional(),
+  rate_type: z.enum(VAT_RATE_TYPES).optional(),
+  document_type: z.enum(DOCUMENT_TYPES).optional(),
   invoice_number: z.string().trim().optional(),
   invoice_date: z.string().optional(),
   counterparty_name: z.string().trim().optional(),

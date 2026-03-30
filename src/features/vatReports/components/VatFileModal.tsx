@@ -14,11 +14,13 @@ interface VatFileModalProps {
   open: boolean;
   workItemId: number;
   onClose: () => void;
+  onFilingStart?: () => void;
+  onFilingEnd?: () => void;
 }
 
 const FILING_METHODS = ["online", "manual"] as const;
 
-export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, onClose }) => {
+export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, onClose, onFilingStart, onFilingEnd }) => {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [filingMethod, setFilingMethod] = useState<"online" | "manual">("online");
@@ -43,6 +45,7 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
       return;
     }
     setIsLoading(true);
+    onFilingStart?.();
     try {
       await vatReportsApi.fileVatReturn(workItemId, {
         submission_method: filingMethod,
@@ -51,6 +54,11 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
         amends_item_id: isAmendment && amendsItemId ? Number(amendsItemId) : null,
       });
       toast.success("התיק הוגש בהצלחה");
+      // Optimistic cache update — set status to "filed" before background refetch
+      queryClient.setQueryData(vatReportsQK.detail(workItemId), (prev: unknown) => {
+        if (!prev || typeof prev !== "object") return prev;
+        return { ...(prev as object), status: "filed" };
+      });
       await queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) });
       await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
       handleClose();
@@ -58,6 +66,7 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
       showErrorToast(err, "שגיאה בהגשה");
     } finally {
       setIsLoading(false);
+      onFilingEnd?.();
     }
   };
 

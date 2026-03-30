@@ -16,6 +16,8 @@ export const getDeadlineUrgency = (
     return { urgency: "green", daysRemaining, daysLabel: "—" };
   }
 
+  // MUST MATCH BACKEND URGENCY_RED_DAYS (2) and URGENCY_YELLOW_DAYS (7)
+  // See app/tax_deadline/services/constants.py
   const urgency: DeadlineUrgency =
     daysRemaining < 0 ? "overdue"
     : daysRemaining <= 2 ? "red"

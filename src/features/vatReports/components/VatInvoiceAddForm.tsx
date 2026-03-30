@@ -16,6 +16,8 @@ import {
   CATEGORY_LABELS,
   CATEGORY_COLORS,
   DEDUCTION_RATES,
+  VAT_RATE_TYPES,
+  DOCUMENT_TYPES,
 } from "../constants";
 import { getVatInvoiceDefaultValues } from "../utils";
 import {
@@ -24,14 +26,6 @@ import {
 } from "../../../utils/enums";
 import type { VatInvoiceAddFormProps } from "../types";
 
-const VAT_RATE_TYPES = ["standard", "exempt", "zero_rate"] as const;
-const DOCUMENT_TYPES = [
-  "tax_invoice",
-  "transaction_invoice",
-  "receipt",
-  "consolidated",
-  "self_invoice",
-] as const;
 
 export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
   invoiceType,

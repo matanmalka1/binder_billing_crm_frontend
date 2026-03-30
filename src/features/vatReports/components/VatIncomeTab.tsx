@@ -7,8 +7,8 @@ import { VatInvoiceTable } from "./VatInvoiceTable";
 import { VatInvoiceAddForm } from "./VatInvoiceAddForm";
 import type { VatIncomeTabProps } from "../types";
 
-export const VatIncomeTab: React.FC<VatIncomeTabProps> = ({ workItemId, status, invoices, clientStatus }) => {
-  const canEdit = canAddInvoice(status) && !isClientClosed(clientStatus);
+export const VatIncomeTab: React.FC<VatIncomeTabProps> = ({ workItemId, status, invoices, clientStatus, isFilingPending }) => {
+  const canEdit = canAddInvoice(status) && !isClientClosed(clientStatus) && !isFilingPending;
   const { addInvoice, isAdding } = useAddInvoice(workItemId);
 
   const incomeInvoices = invoices.filter((i) => i.invoice_type === "income");

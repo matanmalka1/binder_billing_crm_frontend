@@ -17,7 +17,7 @@ import { VatFileModal } from "./VatFileModal";
 import { isFiled } from "../utils";
 import type { VatWorkItemSummaryBarProps } from "../types";
 
-export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem }) => {
+export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem, onFilingPendingChange }) => {
   const { isAdvisor } = useRole();
   const { handleReadyForReview, handleSendBack, isLoading } =
     useVatWorkItemActions(workItem.id);
@@ -163,6 +163,8 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
         open={showFileModal}
         workItemId={workItem.id}
         onClose={() => setShowFileModal(false)}
+        onFilingStart={() => onFilingPendingChange?.(true)}
+        onFilingEnd={() => onFilingPendingChange?.(false)}
       />
     </div>
   );
