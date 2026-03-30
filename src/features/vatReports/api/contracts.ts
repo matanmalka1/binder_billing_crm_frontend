@@ -42,7 +42,7 @@ export interface VatWorkItemsListParams {
   page?: number;
   page_size?: number;
   period?: string;
-  client_name?: string;
+  business_name?: string;
 }
 
 export interface VatWorkItemLookupResponse {

@@ -32,12 +32,12 @@ export const useVatWorkItemsPage = () => {
     page: filters.page,
     page_size: filters.page_size,
     period: toOptionalString(filters.period),
-    client_name: toOptionalString(filters.clientSearch),
+    business_name: toOptionalString(filters.clientSearch),
   };
 
   const statsBase = {
     period: apiParams.period,
-    client_name: apiParams.client_name,
+    business_name: apiParams.business_name,
     page: 1,
     page_size: 1,
   };

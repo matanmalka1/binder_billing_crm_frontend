@@ -53,7 +53,6 @@ export const useTaxDeadlines = () => {
       business_id: number;
       deadline_type: string;
       due_date: string;
-      period?: string | null;
       payment_amount?: string | null;
       description?: string | null;
     }) => taxDeadlinesApi.createTaxDeadline(payload),
@@ -69,7 +68,7 @@ export const useTaxDeadlines = () => {
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: {
       id: number;
-      payload: { deadline_type?: string; due_date?: string; period?: string | null; payment_amount?: string | null; description?: string | null };
+      payload: { deadline_type?: string; due_date?: string; payment_amount?: string | null; description?: string | null };
     }) => taxDeadlinesApi.updateTaxDeadline(id, payload),
     onSuccess: () => {
       toast.success("מועד עודכן בהצלחה");
