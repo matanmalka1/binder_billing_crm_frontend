@@ -14,12 +14,8 @@ import type {
 
 export const chargesApi = {
   list: async (params: ChargesListParams): Promise<ChargesListResponse> => {
-    const normalizedParams =
-      params.business_id == null && params.client_id != null
-        ? { ...params, business_id: params.client_id }
-        : params;
     const response = await api.get<ChargesListResponse>(CHARGE_ENDPOINTS.charges, {
-      params: toQueryParams(normalizedParams),
+      params: toQueryParams(params),
     });
     return response.data;
   },

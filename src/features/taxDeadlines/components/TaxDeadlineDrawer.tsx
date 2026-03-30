@@ -40,7 +40,7 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
               size="sm"
               onClick={() => {
                 const year = getYear(new Date(deadline.due_date));
-                navigate(`/tax/advance-payments?client_id=${deadline.business_id}&year=${year}`);
+                navigate(`/tax/advance-payments?client_id=${deadline.client_id}&year=${year}`);
                 onClose();
               }}
             >

@@ -3,7 +3,7 @@ import { z } from "zod";
 // ── Create Report ──────────────────────────────────────────────────────────
 
 export const createReportSchema = z.object({
-  client_id: z.string().min(1, "שדה חובה"),
+  business_id: z.string().min(1, "שדה חובה"),
   tax_year: z.string().min(4, "שנה לא תקינה"),
   client_type: z.enum(["individual", "self_employed", "corporation", "partnership"]),
   deadline_type: z.enum(["standard", "extended", "custom"]).default("standard"),

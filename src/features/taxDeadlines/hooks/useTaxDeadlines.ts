@@ -116,7 +116,7 @@ export const useTaxDeadlines = () => {
 
   const form = useForm<CreateTaxDeadlineForm>({
     defaultValues: {
-      client_id: "",
+      business_id: "",
       deadline_type: "vat",
       due_date: "",
       payment_amount: "",
@@ -126,7 +126,7 @@ export const useTaxDeadlines = () => {
 
   const onSubmit = form.handleSubmit(async (values) => {
     await createMutation.mutateAsync({
-      business_id: Number(values.client_id),
+      business_id: Number(values.business_id),
       deadline_type: values.deadline_type,
       due_date: values.due_date,
       payment_amount: values.payment_amount ? values.payment_amount : null,

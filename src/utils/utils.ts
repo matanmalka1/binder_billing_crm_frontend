@@ -6,7 +6,9 @@ import { he } from "date-fns/locale";
 // STRING & TYPE UTILITIES
 // ============================================================================
 
-export const cn = (...classes: (string | boolean | undefined | null)[]): string => {
+export const cn = (
+  ...classes: (string | boolean | undefined | null)[]
+): string => {
   return classes.filter(Boolean).join(" ");
 };
 
@@ -14,20 +16,23 @@ export const cn = (...classes: (string | boolean | undefined | null)[]): string 
 // NUMBER UTILITIES
 // ============================================================================
 
-export const parsePositiveInt = (value: string | null, fallback: number): number => {
+export const parsePositiveInt = (
+  value: string | null,
+  fallback: number,
+): number => {
   const parsed = Number(value);
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 };
 
-export const isPositiveInt = (value: number | null | undefined): value is number => {
+export const isPositiveInt = (
+  value: number | null | undefined,
+): value is number => {
   return value != null && value > 0;
 };
 
-
-
 export const formatDate = (value: string | null): string => {
   if (!value) return "—";
-  return format(parseISO(value), "d.M.yyyy", { locale: he });
+  return format(parseISO(value), "dd/MM/yyyy", { locale: he });
 };
 
 export const formatMonthYear = (value: string | null): string => {
@@ -39,7 +44,6 @@ export const formatDateTime = (value: string | null): string => {
   if (!value) return "—";
   return format(parseISO(value), "d.M.yyyy HH:mm", { locale: he });
 };
-
 
 /**
  * Build a year options array from `from` up to current year + 1, newest first.
