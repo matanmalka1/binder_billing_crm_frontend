@@ -11,6 +11,7 @@ export const useDocumentUpload = (businessId: number) => {
   const uploadMutation = useMutation({
     mutationFn: (payload: UploadDocumentPayload) => documentsApi.upload(payload),
     onSuccess: async (_, variables) => {
+      setUploadError(null);
       toast.success("מסמך הועלה בהצלחה");
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: documentsQK.businessList(variables.business_id) }),
@@ -27,7 +28,6 @@ export const useDocumentUpload = (businessId: number) => {
       return false;
     }
     try {
-      setUploadError(null);
       await uploadMutation.mutateAsync({ business_id: businessId, ...payload });
       return true;
     } catch (err: unknown) {

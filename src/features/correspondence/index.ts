@@ -6,3 +6,14 @@ export type {
   CreateCorrespondencePayload,
   UpdateCorrespondencePayload,
 } from "./api";
+export type {
+  CorrespondenceCardProps,
+  CorrespondenceCreatePayload,
+  CorrespondenceEntryItemProps,
+  CorrespondenceHookResult,
+  CorrespondenceListParams,
+  CorrespondenceModalProps,
+  CorrespondenceQueryParams,
+  CorrespondenceResponse,
+  CorrespondenceUpdatePayload,
+} from "./types";

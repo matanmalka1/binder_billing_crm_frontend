@@ -45,7 +45,6 @@ export interface ListNotificationsParams {
 
 export interface SendNotificationPayload {
   business_id?: number;
-  client_id?: number;
   channel: "WHATSAPP" | "EMAIL";
   message: string;
   severity?: string;

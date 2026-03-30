@@ -51,15 +51,25 @@ export const SignatureRequestsPage: React.FC = () => {
       {
         key: "client",
         header: "לקוח",
-        render: (req: SignatureRequestResponse) => (
-          <Link
-            to={`/clients/${businessLookup[req.business_id]?.clientId ?? req.business_id}`}
-            onClick={(e) => e.stopPropagation()}
-            className="text-sm text-gray-700 hover:text-primary-600 hover:underline"
-          >
-            {businessLookup[req.business_id]?.name ?? `עסק #${req.business_id}`}
-          </Link>
-        ),
+        render: (req: SignatureRequestResponse) => {
+          if (businessLookup[req.business_id]?.clientId == null) {
+            return (
+              <span className="text-sm text-gray-700">
+                {businessLookup[req.business_id]?.name ?? `עסק #${req.business_id}`}
+              </span>
+            );
+          }
+
+          return (
+            <Link
+              to={`/clients/${businessLookup[req.business_id]?.clientId}`}
+              onClick={(e) => e.stopPropagation()}
+              className="text-sm text-gray-700 hover:text-primary-600 hover:underline"
+            >
+              {businessLookup[req.business_id]?.name ?? `עסק #${req.business_id}`}
+            </Link>
+          );
+        },
       },
       {
         key: "type",

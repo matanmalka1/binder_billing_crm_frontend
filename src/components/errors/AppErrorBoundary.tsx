@@ -2,6 +2,10 @@ import React from "react";
 import { AlertTriangle } from "lucide-react";
 import { StateCard } from "../ui/feedback/StateCard";
 
+interface AppLogger {
+  error: (event: string, context?: Record<string, unknown>) => void;
+}
+
 interface AppErrorBoundaryProps {
   children: React.ReactNode;
 }
@@ -10,6 +14,12 @@ interface AppErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
   errorInfo: React.ErrorInfo | null;
+}
+
+declare global {
+  interface Window {
+    __APP_LOGGER__?: AppLogger;
+  }
 }
 
 export class AppErrorBoundary extends React.Component<
@@ -26,7 +36,19 @@ export class AppErrorBoundary extends React.Component<
   }
 
   public componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.error("App crashed in error boundary", { error, errorInfo, stack: error.stack, componentStack: errorInfo.componentStack });
+    const context = {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      componentStack: errorInfo.componentStack,
+    };
+
+    if (typeof window !== "undefined" && window.__APP_LOGGER__) {
+      window.__APP_LOGGER__.error("app_error_boundary", context);
+    } else {
+      console.error("app_error_boundary", context);
+    }
+
     this.setState({ error, errorInfo });
   }
 

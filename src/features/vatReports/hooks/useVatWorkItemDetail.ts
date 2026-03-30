@@ -63,6 +63,8 @@ export const useVatWorkItemDetail = (workItemId: number | null) => {
   return {
     summary,
     loading: invoicesQuery.isPending && workItemId !== null,
-    error: invoicesQuery.isError,
+    error: invoicesQuery.isError
+      ? (invoicesQuery.error?.message ?? "שגיאה בטעינת חשבוניות")
+      : null,
   };
 };

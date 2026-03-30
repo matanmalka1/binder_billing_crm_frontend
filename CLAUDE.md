@@ -10,18 +10,19 @@
 - No prompt repetition
 - No unsolicited explanations
 - Output final result only; reason internally
-- Verify against existing patterns before changing structure
+- Verify against existing code patterns before changing structure
+- Prefer the current repo shape over historical assumptions
 
 ---
 
 ## Project Overview
 
-Internal staff CRM: clients, binders, billing, tax, annual reports, VAT, notifications.
-UI: Hebrew only. RTL default.
-Roles: `ADVISOR` (full access), `SECRETARY` (operational, read-oriented).
+Internal staff CRM: clients,binders, billing, tax businesses, charges, VAT, annual reports, reminders, notifications, signing, correspondence, and tax workflows.
+UI is Hebrew-first with RTL defaults.
+Roles are lowercase string values: `advisor`, `secretary`.
 
-Backend: `../backend/` — FastAPI + SQLAlchemy. API base: `http://localhost:8000`.
-Migrations: Alembic (`../backend/alembic/`). Run migration after every model change.
+Backend: `../backend/` — FastAPI + SQLAlchemy.
+Frontend API base defaults to `http://localhost:8000/api/v1` unless `VITE_API_BASE_URL` overrides it.
 
 ---
 
@@ -29,8 +30,9 @@ Migrations: Alembic (`../backend/alembic/`). Run migration after every model cha
 
 ```bash
 npm run dev
-npm run typecheck   # strict, zero errors required
-npm run lint        # zero warnings required
+npm run build
+npm run typecheck
+npm run lint
 npm run arch:check
 npm run arch:check:strict
 npm run test
@@ -40,35 +42,49 @@ npm run test
 
 ## Stack
 
-- React 19, TypeScript 5 (strict), Vite 7, TailwindCSS v4
-- React Query v5 · Zustand v5 (auth/session only)
-- react-hook-form + Zod · Axios · react-router-dom v7
-- Toasts: `src/utils/toast.ts` wrapper only — no direct `sonner` imports
+- React 19, TypeScript 5, Vite 7, TailwindCSS v4
+- React Query v5 for server state
+- Zustand v5 for auth/session state only
+- react-hook-form + Zod for forms
+- Axios for HTTP
+- react-router-dom v7
+- sonner for toasts
 
 ---
 
 ## Architecture
 
 ```
-Routes    → feature entrypoints from `src/features/*`
-Pages     → composition shells inside each feature
-Hooks     → state, filtering, mutations, data fetching
-API       → feature-local typed API modules using shared Axios client
-Components→ feature UI or shared UI/layout primitives
+main.tsx      -> app bootstrap, QueryClientProvider, BrowserRouter, AppErrorBoundary, Toaster
+router/       -> route wiring, auth-expiry redirect handling, authenticated layout
+features/*    -> primary domain modules with local api/hooks/components/pages
+components/*  -> shared UI, layout, and cross-feature widgets
+api/          -> thin shared transport/auth layer, auth API, query param helpers
+store/        -> persisted auth/session state only
+lib/actions/  -> action runtime and shared action helpers
 ```
+
+### Core Shape
 
 | Layer | Location | Responsibility |
 |---|---|---|
-| Router | `src/router/AppRoutes.tsx` | Route wiring and app shell composition |
-| Feature entrypoints | `src/features/<name>/index.ts` | Public surface for cross-feature imports |
-| Pages | `src/features/<name>/pages/` | Route-level composition only |
-| Feature hooks | `src/features/<name>/hooks/` | Data-fetching, mutations, filters, page state |
-| Feature API | `src/features/<name>/api/` | Typed backend calls, contracts, local query keys |
-| Shared API | `src/api/` | Axios client, endpoints, query param helpers |
-| Shared UI | `src/components/ui/` | Pure reusable UI only |
-| Shared layout | `src/components/layout/` | Navbar, sidebar, page shell |
-| Shared cross-feature UI | `src/components/shared/` | Shared domain widgets used across features |
-| Global query keys | `src/lib/queryKeys.ts` | Cross-domain invalidation source of truth |
+| App bootstrap | `src/main.tsx` | Root render, providers, suspense, global toaster |
+| Router | `src/router/AppRoutes.tsx` | Route tree, guarded layout, auth expiry navigation |
+| Shared API core | `src/api/` | Axios client, auth API, shared contracts, query param helpers, core endpoints |
+| Feature modules | `src/features/<name>/` | Domain-specific UI, hooks, endpoints, contracts, query keys |
+| Shared UI | `src/components/ui/` | Reusable presentational primitives and generic interaction components |
+| Shared layout | `src/components/layout/` | Navbar, sidebar, page shell, page headers |
+| Shared domain widgets | `src/components/shared/` | Cross-feature widgets reused in multiple domains |
+| Shared hooks | `src/hooks/` | Generic hooks such as filters, debounce, role helpers |
+| Store | `src/store/` | Auth/session persistence and selectors |
+
+### Important Architectural Reality
+
+- `src/api/` is a thin shared layer, not a centralized domain API registry
+- Backend endpoint constants are usually feature-local under `src/features/<feature>/api/endpoints.ts`
+- Query keys are feature-local under `src/features/<feature>/api/queryKeys.ts`
+- There is no global `src/lib/queryKeys.ts`
+- The `businesses` feature acts as an integration shell that composes tabs from multiple other features
 
 ---
 
@@ -77,36 +93,69 @@ Components→ feature UI or shared UI/layout primitives
 ```
 src/
 ├── api/
-│   ├── client.ts          # Axios instance — auth expiry handled here
-│   ├── endpoints.ts       # ALL backend paths
-│   └── queryParams.ts     # toQueryParams() — use for all query params
+│   ├── auth.api.ts
+│   ├── client.ts
+│   ├── contracts.ts
+│   ├── core-endpoints.ts
+│   └── queryParams.ts
 ├── components/
 │   ├── errors/
 │   ├── layout/
 │   ├── shared/
 │   └── ui/
+├── constants/
 ├── features/<name>/
-│   ├── api/               # <feature>.api.ts, contracts.ts, queryKeys.ts, index.ts
+│   ├── api/
 │   ├── components/
 │   ├── hooks/
 │   ├── pages/
-│   ├── constants.ts       # optional
-│   ├── schemas.ts         # optional
-│   ├── types.ts           # optional
-│   └── index.ts           # public feature barrel
-├── hooks/                 # shared hooks
+│   ├── constants.ts or *.constants.ts
+│   ├── schemas.ts
+│   ├── types.ts
+│   └── index.ts
+├── hooks/
 ├── lib/
 │   ├── actions/
-│   ├── queryClient.ts
-│   └── queryKeys.ts
+│   └── queryClient.ts
 ├── router/
-├── store/                 # Zustand auth/session only
+├── store/
 ├── types/
-├── utils/
-└── constants/
+└── utils/
 ```
 
-Large features may use scoped subfolders inside `components/` such as `kanban/`, `panel/`, `financials/`, `shared/`.
+Large features may have nested component folders such as `kanban/`, `panel/`, `financials/`, `statusTransition/`, or `shared/`.
+
+---
+
+## Current Feature Surface
+
+Active top-level feature folders currently include:
+
+- `actions`
+- `advancedPayments`
+- `annualReports`
+- `auth`
+- `authorityContacts`
+- `binders`
+- `businesses`
+- `charges`
+- `clients`
+- `correspondence`
+- `dashboard`
+- `documents`
+- `importExport`
+- `notifications`
+- `reminders`
+- `reports`
+- `search`
+- `signatureRequests`
+- `signing`
+- `taxDashboard`
+- `taxDeadlines`
+- `taxProfile`
+- `timeline`
+- `users`
+- `vatReports`
 
 ---
 
@@ -114,82 +163,79 @@ Large features may use scoped subfolders inside `components/` such as `kanban/`,
 
 ### Files & Structure
 
-- Max **150 lines** per `.ts` / `.tsx` — split proactively when practical
+- Prefer small files, but do not assume a hard 150-line limit; follow existing local patterns when splitting
 - Arrow functions only — no `function` declarations
-- All components are functional; `displayName` set when helpful for wrapped/forwarded components
-- Props interface in same file as component, named `<ComponentName>Props`
-- No class components except `AppErrorBoundary`
-- Cross-feature imports must go through `src/features/<feature>/index.ts`
-- Exception: cross-feature component imports are allowed for composition, but prefer the feature barrel when possible
-- Feature-internal API, hooks, contracts, and query keys stay co-located under that feature
+- Components are functional; `AppErrorBoundary` is the class-component exception
+- Feature-internal API, contracts, and query keys stay co-located under that feature
+- External imports into a feature should prefer that feature's `index.ts` barrel
 
 ### Routing & Pages
 
-- Route components live in `src/features/<feature>/pages/`
-- Pages are composition shells only: assemble hooks and components, do not hide business logic in JSX
-- `src/router/AppRoutes.tsx` imports feature entrypoints, not feature internals
+- Route components live in `src/features/<feature>/pages/` when the feature exposes a route
+- Pages should stay composition-focused and delegate fetching/mutations/state to hooks where practical
+- `src/router/AppRoutes.tsx` should import feature entrypoints rather than deep feature internals
+- Route-level layout and auth guards stay in the router layer
 
 ### API & Data
 
-- All HTTP goes through `src/api/client.ts` — no raw `fetch()`
-- All backend paths belong in `src/api/endpoints.ts`
-- All query params go through `toQueryParams()`
-- Each feature owns its local `api/queryKeys.ts`
-- `src/lib/queryKeys.ts` is the global registry for cross-domain invalidation
-- When adding a new query key, update both the feature-local `queryKeys.ts` and `src/lib/queryKeys.ts`
-- Query key shape stays stable and serializable: arrays only, include params objects for list keys
+- All HTTP goes through the shared Axios client in `src/api/client.ts`
+- Prefer feature-local endpoint maps under `src/features/<feature>/api/endpoints.ts`
+- Use `toQueryParams()` for query-string construction
+- Keep query key factories in feature-local `api/queryKeys.ts`
+- Query keys should stay serializable and stable
+- Avoid raw `fetch()` unless there is a strong reason and an established pattern
 
 ### Shared UI Boundaries
 
-- `src/components/ui/` must stay pure
-- Files in `src/components/ui/` must not import from `api/`, `@/api/`, or `@tanstack/react-query`
+- `src/components/ui/` must stay free of feature-specific business logic
+- `src/components/ui/` must not import from feature API modules or React Query
 - Shared layout belongs in `src/components/layout/`
-- Shared domain widgets used across features belong in `src/components/shared/`
+- Shared cross-feature widgets belong in `src/components/shared/`
 
 ### State
 
-- No business logic in router or page shells
-- No `localStorage` / `sessionStorage` outside `src/store/`
-- No server data duplicated in Zustand
-- Zustand is for auth/session state, not remote entity caches
+- Zustand is for auth/session state, not server entity caches
+- Server data belongs in React Query
+- `localStorage` and `sessionStorage` access is primarily concentrated in `src/store/` and auth expiry cleanup in `src/api/client.ts`
 
 ### Authorization
 
-- Role logic lives in hooks and dedicated auth helpers, not in API modules
-- Frontend enforces UX; backend enforces authorization
-- Missing-permission UI should be explicit, not silently hidden when a state needs explanation
+- Role helpers live in hooks and auth-related modules
+- Frontend authorization is a UX layer; backend remains the source of truth
+- Use explicit permission-aware UI where denial needs explanation
 
 ### TypeScript
 
-- `strict: true` — no `any`; use `unknown` and narrow explicitly
-- `import type` for type-only imports
-- Global/shared API infrastructure types belong in `src/types/` or `src/api/`
-- Feature-specific contracts belong in `src/features/<feature>/api/contracts.ts`
-- Feature-local view types belong in `src/features/<feature>/types.ts`
+- Keep strict typing; avoid `any`
+- Use `import type` for type-only imports
+- Shared transport/infrastructure types belong in `src/api/` or `src/types/`
+- Feature-specific request/response contracts belong in `src/features/<feature>/api/contracts.ts`
+- Feature-local UI/view types belong in `src/features/<feature>/types.ts`
 
 ### Forms
 
-- react-hook-form + Zod resolver — no manual validation flows
-- Schemas stay next to the feature in `schemas.ts` unless they are API contracts
-- Default values always provided to `useForm`
-- Error messages in Hebrew
+- Prefer react-hook-form + Zod
+- Keep schemas close to the owning feature
+- Provide explicit default values to `useForm`
+- Validation and error text should be Hebrew-facing
 
 ### Styling
 
-- Tailwind only — no inline `style={{}}` unless unavoidable for third-party integration
-- RTL defaults matter: prefer logical/right-aligned spacing and text alignment
-- Conditional classes via `cn()` only
-- Reuse shared UI primitives before creating one-off wrappers
+- Tailwind is the default styling system
+- Inline `style={{}}` is allowed for dynamic layout values, animation delays, sizing, z-index, or third-party integration when class names are insufficient
+- Preserve RTL-aware spacing, alignment, and interaction patterns
+- Reuse shared primitives before creating one-off wrappers
 
 ### Language
 
-- All user-facing text in Hebrew — labels, toasts, placeholders, validation, empty states
+- User-facing copy should be Hebrew by default
 
-### Error Handling
+### Toasts & Errors
 
-- `toast.error(getErrorMessage(error, fallback))` for API failures
+- Prefer the `src/utils/toast.ts` wrapper for feature code
+- `src/main.tsx` mounts `Toaster` directly from `sonner`
+- Existing direct `sonner` imports should be treated as debt unless there is a clear reason
 - 401 handling stays centralized in `src/api/client.ts`
-- Do not duplicate auth-expiry handling in feature code
 
 ---
 
@@ -198,17 +244,16 @@ Large features may use scoped subfolders inside `components/` such as `kanban/`,
 | What | Convention | Example |
 |---|---|---|
 | Feature folders | camelCase | `annualReports` |
-| Components | PascalCase | `ClientsFiltersBar.tsx` |
-| Hooks | `use` + camelCase | `useClientsPage.ts` |
-| Pages | `*Page.tsx` | `ClientsPage.tsx` |
-| Feature API files | `<feature>.api.ts` | `clients.api.ts` |
+| Components | PascalCase | `TaxDeadlineDrawer.tsx` |
+| Hooks | `use` + camelCase | `useTaxProfile.ts` |
+| Pages | `*Page.tsx` | `DashboardPage.tsx` |
+| Feature API files | `<feature>.api.ts` or scoped API files | `taxDeadlines.api.ts` |
 | Feature contracts | `contracts.ts` | `api/contracts.ts` |
 | Feature query keys | `queryKeys.ts` | `api/queryKeys.ts` |
-| Feature barrel | `index.ts` | `features/clients/index.ts` |
+| Feature barrel | `index.ts` | `features/taxProfile/index.ts` |
 | Constants | `constants.ts` or scoped `*.constants.ts` | `history.constants.ts` |
-| Request types | `*Payload` / `*Params` | `CreateClientPayload` |
-| Response types | `*Response` | `ClientListResponse` |
-| Form types | `*FormValues` | `CreateClientFormValues` |
+| Request types | `*Payload` / `*Params` | `CreateCorrespondencePayload` |
+| Response types | `*Response` | `TaxDeadlineResponse` |
 
 ---
 
@@ -216,6 +261,7 @@ Large features may use scoped subfolders inside `components/` such as `kanban/`,
 
 - Run `npm run arch:check` after structural changes
 - Run `npm run arch:check:strict` when touching cross-feature imports or barrels
-- Do not bypass a feature barrel for hooks, API modules, contracts, or query keys
-- Do not introduce a new top-level `src/pages/` or centralized domain API layer under `src/api/`
-- Preserve existing alias usage such as `@/api/client`
+- `arch-check` is the enforceable source of truth for architectural boundaries
+- Do not bypass a feature barrel for cross-feature hooks, API modules, contracts, or query keys
+- Cross-feature component imports are allowed for composition patterns
+- Preserve alias usage such as `@/api/client` and `@/features/<feature>`

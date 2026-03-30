@@ -53,11 +53,10 @@ export const notificationsApi = {
   },
 
   send: async (payload: SendNotificationPayload): Promise<SendNotificationResponse> => {
-    const businessId = payload.business_id ?? payload.client_id;
     const response = await api.post<SendNotificationResponse>(
       NOTIFICATION_ENDPOINTS.notificationsSend,
       {
-        business_id: businessId,
+        business_id: payload.business_id,
         channel: payload.channel.toLowerCase() as "whatsapp" | "email",
         message: payload.message,
         severity: payload.severity,

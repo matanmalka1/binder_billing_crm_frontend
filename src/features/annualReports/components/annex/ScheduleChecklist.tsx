@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { CheckCircle2, Circle, ChevronDown, ChevronUp } from "lucide-react";
-import { format, parseISO } from "date-fns";
-import { he } from "date-fns/locale";
 import { Card } from "../../../../components/ui/primitives/Card";
 import { Button } from "../../../../components/ui/primitives/Button";
 import type { ScheduleEntry, AnnualReportScheduleKey } from "../../api";
 import { getScheduleLabel } from "../../api";
-import { cn } from "../../../../utils/utils";
+import { cn, formatDate } from "../../../../utils/utils";
 import { AnnexDataPanel } from "./AnnexDataPanel";
 import { ScheduleAddForm } from "./ScheduleAddForm";
 
@@ -87,8 +85,7 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
                     {entry.notes && <p className="text-xs text-gray-500">{entry.notes}</p>}
                     {entry.completed_at && (
                       <p className="text-xs text-green-600">
-                        הושלם:{" "}
-                        {format(parseISO(entry.completed_at), "d.M.yyyy", { locale: he })}
+                        הושלם: {formatDate(entry.completed_at)}
                       </p>
                     )}
                   </div>

@@ -81,7 +81,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
           />
           <Input
             label="טלפון"
-            placeholder="05X-XXXXXXX"
+            placeholder="050-1234567"
             error={errors.phone?.message}
             disabled={isLoading}
             {...register("phone")}

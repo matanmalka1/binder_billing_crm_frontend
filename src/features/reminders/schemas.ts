@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const DEFAULT_REMINDER_DAYS_BEFORE = 7;
+
 // Reusable: numeric string that must parse to a positive integer
 const positiveIdString = (fieldLabel: string) =>
   z
@@ -59,7 +61,7 @@ export const createReminderDefaultValues = {
   reminder_type: "custom" as const,
   client_id: "",
   target_date: "",
-  days_before: 7,
+  days_before: DEFAULT_REMINDER_DAYS_BEFORE,
   message: "",
   tax_deadline_id: "",
   binder_id: "",

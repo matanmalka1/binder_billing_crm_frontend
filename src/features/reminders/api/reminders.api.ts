@@ -1,6 +1,12 @@
 import { api } from "@/api/client";
 import { REMINDER_ENDPOINTS } from "./endpoints";
-import type { Reminder, CreateReminderRequest, RemindersListResponse, ReminderStatus } from "./contracts";
+import {
+  createReminderRequestSchema,
+  type Reminder,
+  type CreateReminderRequest,
+  type RemindersListResponse,
+  type ReminderStatus,
+} from "./contracts";
 
 export const remindersApi = {
   list: async (params?: {
@@ -19,7 +25,10 @@ export const remindersApi = {
   },
 
   create: async (data: CreateReminderRequest): Promise<Reminder> => {
-    const response = await api.post<Reminder>(REMINDER_ENDPOINTS.reminders, data);
+    const response = await api.post<Reminder>(
+      REMINDER_ENDPOINTS.reminders,
+      createReminderRequestSchema.parse(data),
+    );
     return response.data;
   },
 

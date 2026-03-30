@@ -42,7 +42,7 @@ export const formatMonthYear = (value: string | null): string => {
 
 export const formatDateTime = (value: string | null): string => {
   if (!value) return "—";
-  return format(parseISO(value), "d.M.yyyy HH:mm", { locale: he });
+  return format(parseISO(value), "dd/MM/yyyy HH:mm", { locale: he });
 };
 
 /**

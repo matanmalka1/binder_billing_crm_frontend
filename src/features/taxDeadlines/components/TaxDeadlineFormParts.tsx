@@ -19,6 +19,8 @@ import type {
 
 type SharedTaxDeadlineForm = UseFormReturn<CreateTaxDeadlineForm> | UseFormReturn<EditTaxDeadlineForm>;
 
+const currencySuffix = <span className="text-sm text-gray-400">₪</span>;
+
 interface TaxDeadlineCommonFieldsProps {
   form: SharedTaxDeadlineForm;
 }
@@ -59,6 +61,7 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
         step="0.01"
         min="0"
         placeholder="0.00"
+        endElement={currencySuffix}
         {...register("payment_amount")}
         error={errors.payment_amount?.message}
       />

@@ -1,5 +1,9 @@
+import { z } from "zod";
+
 export type ReminderType =
   | "tax_deadline_approaching"
+  | "annual_report_deadline"
+  | "advance_payment_due"
   | "binder_idle"
   | "unpaid_charge"
   | "custom";
@@ -28,43 +32,64 @@ export interface Reminder {
   canceled_by: number | null;
 }
 
-type BaseCreateReminderRequest = {
-  business_id: number;
-  target_date: string;
-  days_before: number;
-  annual_report_id?: number | null;
-  advance_payment_id?: number | null;
-};
+const positiveIdSchema = z.number().int().positive();
 
-export type CreateReminderRequest =
-  | (BaseCreateReminderRequest & {
-      reminder_type: "tax_deadline_approaching";
-      tax_deadline_id: number;
-      message?: string;
-      binder_id?: never;
-      charge_id?: never;
-    })
-  | (BaseCreateReminderRequest & {
-      reminder_type: "binder_idle";
-      binder_id: number;
-      message?: string;
-      tax_deadline_id?: never;
-      charge_id?: never;
-    })
-  | (BaseCreateReminderRequest & {
-      reminder_type: "unpaid_charge";
-      charge_id: number;
-      message?: string;
-      binder_id?: never;
-      tax_deadline_id?: never;
-    })
-  | (BaseCreateReminderRequest & {
-      reminder_type: "custom";
-      message: string;
-      binder_id?: never;
-      charge_id?: never;
-      tax_deadline_id?: never;
-    });
+const baseCreateReminderRequestSchema = z.object({
+  business_id: positiveIdSchema,
+  target_date: z.string().min(1),
+  days_before: z.number().int().min(0),
+  annual_report_id: positiveIdSchema.nullable().optional(),
+  advance_payment_id: positiveIdSchema.nullable().optional(),
+});
+
+export const createReminderRequestSchema = z.discriminatedUnion("reminder_type", [
+  baseCreateReminderRequestSchema.extend({
+    reminder_type: z.literal("tax_deadline_approaching"),
+    tax_deadline_id: positiveIdSchema,
+    message: z.string().optional(),
+    binder_id: z.never().optional(),
+    charge_id: z.never().optional(),
+  }),
+  baseCreateReminderRequestSchema.extend({
+    reminder_type: z.literal("annual_report_deadline"),
+    annual_report_id: positiveIdSchema,
+    message: z.string().optional(),
+    binder_id: z.never().optional(),
+    charge_id: z.never().optional(),
+    tax_deadline_id: z.never().optional(),
+  }),
+  baseCreateReminderRequestSchema.extend({
+    reminder_type: z.literal("advance_payment_due"),
+    advance_payment_id: positiveIdSchema,
+    message: z.string().optional(),
+    binder_id: z.never().optional(),
+    charge_id: z.never().optional(),
+    tax_deadline_id: z.never().optional(),
+  }),
+  baseCreateReminderRequestSchema.extend({
+    reminder_type: z.literal("binder_idle"),
+    binder_id: positiveIdSchema,
+    message: z.string().optional(),
+    tax_deadline_id: z.never().optional(),
+    charge_id: z.never().optional(),
+  }),
+  baseCreateReminderRequestSchema.extend({
+    reminder_type: z.literal("unpaid_charge"),
+    charge_id: positiveIdSchema,
+    message: z.string().optional(),
+    binder_id: z.never().optional(),
+    tax_deadline_id: z.never().optional(),
+  }),
+  baseCreateReminderRequestSchema.extend({
+    reminder_type: z.literal("custom"),
+    message: z.string().min(1),
+    binder_id: z.never().optional(),
+    charge_id: z.never().optional(),
+    tax_deadline_id: z.never().optional(),
+  }),
+]);
+
+export type CreateReminderRequest = z.infer<typeof createReminderRequestSchema>;
 
 export interface RemindersListResponse {
   items: Reminder[];
