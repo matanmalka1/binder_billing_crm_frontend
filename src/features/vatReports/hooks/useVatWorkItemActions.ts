@@ -27,6 +27,13 @@ export const useVatWorkItemActions = (workItemId: number) => {
     }
   };
 
+  const handleMaterialsComplete = () =>
+    run(
+      () => vatReportsApi.markMaterialsComplete(workItemId),
+      "קבלת החומרים אושרה",
+      "שגיאה בשינוי סטטוס",
+    );
+
   const handleReadyForReview = () =>
     run(
       () => vatReportsApi.markReadyForReview(workItemId),
@@ -41,5 +48,5 @@ export const useVatWorkItemActions = (workItemId: number) => {
       "שגיאה בהחזרה לתיקון",
     );
 
-  return { handleReadyForReview, handleSendBack, isLoading: loading };
+  return { handleMaterialsComplete, handleReadyForReview, handleSendBack, isLoading: loading };
 };

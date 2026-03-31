@@ -19,7 +19,7 @@ import type { VatWorkItemSummaryBarProps } from "../types";
 
 export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem, onFilingPendingChange }) => {
   const { isAdvisor } = useRole();
-  const { handleReadyForReview, handleSendBack, isLoading } =
+  const { handleMaterialsComplete, handleReadyForReview, handleSendBack, isLoading } =
     useVatWorkItemActions(workItem.id);
   const [showSendBack, setShowSendBack] = useState(false);
   const [showFileModal, setShowFileModal] = useState(false);
@@ -141,6 +141,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
                 isAdvisor={isAdvisor}
                 isLoading={isLoading}
                 clientStatus={workItem.business_status}
+                onMaterialsComplete={handleMaterialsComplete}
                 onReadyForReview={handleReadyForReview}
                 onFile={() => setShowFileModal(true)}
                 onSendBack={() => setShowSendBack(true)}

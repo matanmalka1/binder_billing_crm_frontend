@@ -46,9 +46,14 @@ export const vatInvoiceEditSchema = z.object(invoiceCommonFields);
 
 export type VatInvoiceEditValues = z.infer<typeof vatInvoiceEditSchema>;
 
+const calcVatAmount = (netAmount: string, rateType?: string): string => {
+  if (rateType === "exempt" || rateType === "zero_rate") return "0.00";
+  return (Number(netAmount) * ISRAEL_VAT_RATE).toFixed(2);
+};
+
 const buildInvoicePayloadBase = (values: VatInvoiceEditValues) => ({
   net_amount: values.net_amount,
-  vat_amount: (Number(values.net_amount) * ISRAEL_VAT_RATE).toFixed(2),
+  vat_amount: calcVatAmount(values.net_amount, values.rate_type),
   expense_category: values.expense_category || null,
   rate_type: values.rate_type || undefined,
   document_type: values.document_type || null,

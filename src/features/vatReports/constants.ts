@@ -166,6 +166,20 @@ export const VAT_FILING_METHOD_LABELS: Record<string, string> = {
   online: "אונליין",
 };
 
+export const VAT_RATE_TYPE_LABELS: Record<string, string> = {
+  standard: "רגיל",
+  exempt: "פטור",
+  zero_rate: "אפס",
+};
+
+export const DOCUMENT_TYPE_LABELS: Record<string, string> = {
+  tax_invoice: "חשבונית מס",
+  transaction_invoice: "חשבונית עסקה",
+  receipt: "קבלה",
+  consolidated: "חשבונית מרוכזת",
+  self_invoice: "חשבונית עצמית",
+};
+
 export const ISRAEL_VAT_RATE = 0.18;
 export const ISRAEL_VAT_RATE_PERCENT = 18;
 

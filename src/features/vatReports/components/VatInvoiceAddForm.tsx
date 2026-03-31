@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, ChevronDown, ChevronUp } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "../../../components/ui/primitives/Button";
 import { FormField } from "../../../components/ui/inputs/FormField";
 import { Input } from "../../../components/ui/inputs/Input";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import {
   vatInvoiceRowSchema,
   toInvoiceRowPayload,
@@ -14,7 +14,6 @@ import {
 import {
   EXPENSE_CATEGORIES,
   CATEGORY_LABELS,
-  CATEGORY_COLORS,
   DEDUCTION_RATES,
   VAT_RATE_TYPES,
   DOCUMENT_TYPES,
@@ -26,15 +25,12 @@ import {
 } from "../../../utils/enums";
 import type { VatInvoiceAddFormProps } from "../types";
 
-
 export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
   invoiceType,
   addInvoice,
   isAdding,
   onCancel,
 }) => {
-  const [showOptional, setShowOptional] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -52,9 +48,6 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 
   const selectedCategory = watch("expense_category");
   const selectedDocumentType = watch("document_type");
-  const categoryColor = selectedCategory
-    ? CATEGORY_COLORS[selectedCategory]
-    : "";
   const deductionRate =
     selectedCategory !== undefined
       ? (DEDUCTION_RATES[selectedCategory] ?? null)
@@ -86,9 +79,6 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
             className="min-w-[180px]"
           >
             <div className="relative flex items-center gap-2">
-              <span
-                className={`h-2.5 w-2.5 shrink-0 rounded-full ${categoryColor || "bg-gray-300"}`}
-              />
               <Controller
                 control={control}
                 name="expense_category"
@@ -214,6 +204,33 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
           />
         </FormField>
 
+        <FormField
+          label="תאריך חשבונית"
+          error={errors.invoice_date?.message}
+          className="w-40"
+        >
+          <Controller
+            control={control}
+            name="invoice_date"
+            render={({ field }) => (
+              <DatePicker
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                noWrapper
+              />
+            )}
+          />
+        </FormField>
+
+        <FormField label="מספר חשבונית" className="w-40">
+          <Input {...register("invoice_number")} placeholder="לא חובה" />
+        </FormField>
+
+        <FormField label="שם ספק / לקוח" className="w-48">
+          <Input {...register("counterparty_name")} placeholder="לא חובה" />
+        </FormField>
+
         <div className="flex items-end gap-2 pb-0.5">
           <Button
             type="submit"
@@ -229,18 +246,6 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
               ביטול
             </Button>
           )}
-          <button
-            type="button"
-            className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
-            onClick={() => setShowOptional((v) => !v)}
-          >
-            {showOptional ? (
-              <ChevronUp className="h-3 w-3" />
-            ) : (
-              <ChevronDown className="h-3 w-3" />
-            )}
-            {showOptional ? "הסתר פרטים" : "פרטים נוספים"}
-          </button>
         </div>
       </div>
 
@@ -256,22 +261,6 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
               : null}
         </div>
       )}
-
-      <div
-        className={`overflow-hidden transition-all duration-200 ${showOptional ? "max-h-40 opacity-100" : "max-h-0 opacity-0"}`}
-      >
-        <div className="flex flex-wrap gap-3 pt-1">
-          <FormField label="מספר חשבונית" className="w-40">
-            <Input {...register("invoice_number")} placeholder="לא חובה" />
-          </FormField>
-          <FormField label="שם ספק / לקוח" className="w-48">
-            <Input {...register("counterparty_name")} placeholder="לא חובה" />
-          </FormField>
-          <FormField label="תאריך חשבונית" className="w-40">
-            <Input {...register("invoice_date")} type="date" />
-          </FormField>
-        </div>
-      </div>
     </form>
   );
 };

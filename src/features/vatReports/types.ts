@@ -83,6 +83,7 @@ export interface VatActionButtonsProps {
   isAdvisor: boolean;
   isLoading: boolean;
   clientStatus?: string | null;
+  onMaterialsComplete: () => void;
   onReadyForReview: () => void;
   onFile: () => void;
   onSendBack: () => void;

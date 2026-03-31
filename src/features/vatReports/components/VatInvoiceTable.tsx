@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Trash2, Receipt, Pencil } from "lucide-react";
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import { formatVatAmount } from "../utils";
-import { CATEGORY_LABELS, CATEGORY_COLORS } from "../constants";
+import { CATEGORY_LABELS, CATEGORY_COLORS, DOCUMENT_TYPE_LABELS, VAT_RATE_TYPE_LABELS } from "../constants";
 import { useDeleteInvoice, useUpdateInvoice } from "../hooks/useVatInvoiceMutations";
 import { VatInvoiceEditRow } from "./VatInvoiceEditRow";
-import { formatDateTime } from "../../../utils/utils";
+import { formatDate, formatDateTime } from "../../../utils/utils";
 import type { VatInvoiceTableProps } from "../types";
 
 export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
@@ -24,8 +24,8 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
   const totalVat = invoices.reduce((s, i) => s + Number(i.vat_amount ?? 0), 0);
   const accentBorder = sectionType === "income" ? "border-emerald-300" : "border-orange-300";
 
-  // extra cols: category(expense), created_by, created_at, delete(canEdit)
-  const extraCols = (sectionType === "expense" ? 1 : 0) + 2 + (canEdit ? 1 : 0);
+  // extra cols: category(expense), document_type, rate_type, counterparty_id, created_by, created_at, delete(canEdit)
+  const extraCols = (sectionType === "expense" ? 1 : 0) + 3 + 2 + (canEdit ? 1 : 0);
   const baseDataCols = 3; // number, date, counterparty
   const totalCols = baseDataCols + extraCols;
 
@@ -48,6 +48,9 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
               <th className="px-4 py-2.5 text-right">מספר</th>
               <th className="px-4 py-2.5 text-right">תאריך</th>
               <th className="px-4 py-2.5 text-right">ספק / לקוח</th>
+              <th className="px-4 py-2.5 text-right">ספק</th>
+              <th className="px-4 py-2.5 text-right">סוג מסמך</th>
+              <th className="px-4 py-2.5 text-right">סוג עסקה</th>
               {sectionType === "expense" && <th className="px-4 py-2.5 text-right">קטגוריה</th>}
               <th className="px-4 py-2.5 text-right">נטו ₪</th>
               <th className="px-4 py-2.5 text-right">מע&quot;מ ₪</th>
@@ -86,8 +89,27 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-2.5 text-gray-500">{formatDateTime(inv.invoice_date)}</td>
+                  <td className="px-4 py-2.5 text-gray-500">{formatDate(inv.invoice_date)}</td>
                   <td className="px-4 py-2.5 font-medium text-gray-700">{inv.counterparty_name}</td>
+                  <td className="px-4 py-2.5 text-xs text-gray-500 whitespace-nowrap">
+                    {inv.counterparty_id ? (
+                      <span className="font-mono">{inv.counterparty_id}</span>
+                    ) : "—"}
+                  </td>
+                  <td className="px-4 py-2.5">
+                    {inv.document_type ? (
+                      <span className="inline-block rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">
+                        {DOCUMENT_TYPE_LABELS[inv.document_type] ?? inv.document_type}
+                      </span>
+                    ) : "—"}
+                  </td>
+                  <td className="px-4 py-2.5">
+                    {inv.rate_type && inv.rate_type !== "standard" ? (
+                      <span className="inline-block rounded bg-blue-50 px-1.5 py-0.5 text-xs text-blue-700">
+                        {VAT_RATE_TYPE_LABELS[inv.rate_type] ?? inv.rate_type}
+                      </span>
+                    ) : "—"}
+                  </td>
                   {sectionType === "expense" && (
                     <td className="px-4 py-2.5">
                       <span className="inline-flex items-center gap-1.5">

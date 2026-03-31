@@ -1,4 +1,4 @@
-import { Send, RotateCcw } from "lucide-react";
+import { Send, RotateCcw, PackageCheck } from "lucide-react";
 import { Button } from "../../../components/ui/primitives/Button";
 import { canMarkReadyForReview, canFile, canSendBack } from "../utils";
 import { isClientClosed } from "../../../utils/clientStatus";
@@ -9,19 +9,27 @@ export const VatActionButtons: React.FC<VatActionButtonsProps> = ({
   isAdvisor,
   isLoading,
   clientStatus,
+  onMaterialsComplete,
   onReadyForReview,
   onFile,
   onSendBack,
 }) => {
   const closed = isClientClosed(clientStatus);
+  const showMaterialsComplete = status === "pending_materials";
   const showReadyForReview = canMarkReadyForReview(status);
   const showFile = isAdvisor && canFile(status);
   const showSendBack = isAdvisor && canSendBack(status);
 
-  if (!showReadyForReview && !showFile && !showSendBack) return null;
+  if (!showMaterialsComplete && !showReadyForReview && !showFile && !showSendBack) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-2" dir="rtl">
+      {showMaterialsComplete && (
+        <Button variant="primary" size="sm" isLoading={isLoading} disabled={closed} onClick={onMaterialsComplete}>
+          <PackageCheck className="h-4 w-4" />
+          אישור קבלת חומרים
+        </Button>
+      )}
       {showReadyForReview && (
         <Button variant="primary" size="sm" isLoading={isLoading} disabled={closed} onClick={onReadyForReview}>
           <Send className="h-4 w-4" />
