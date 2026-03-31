@@ -58,7 +58,6 @@ export interface BinderHistoryResponse {
 export interface ListBindersParams {
   status?: string;
   client_id?: number;
-  work_state?: string;
   query?: string;
   client_name?: string;
   binder_number?: string;

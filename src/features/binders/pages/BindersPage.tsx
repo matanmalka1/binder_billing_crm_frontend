@@ -87,6 +87,14 @@ export const Binders: React.FC = () => {
     [actionLoadingId, markReady, revertReady, handleSelectBinder, handleSort, filters.sort_by, filters.sort_dir],
   );
 
+  const getBinderNumberLabel = (binderId: number | null) => {
+    if (binderId == null) return null;
+    const fromList = binders.find((binder) => binder.id === binderId);
+    if (fromList?.binder_number) return fromList.binder_number;
+    if (selectedBinder?.id === binderId) return selectedBinder.binder_number;
+    return `#${binderId}`;
+  };
+
   const drawerOpen = drawerMode !== null || deepLinkBinderId !== undefined;
   const effectiveMode: "detail" | "receive" = drawerMode === "receive" ? "receive" : "detail";
 
@@ -94,7 +102,7 @@ export const Binders: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="קלסרים"
-        description="רשימת כל הקלסרים במערכת — סינון לפי סטטוס ומצב עבודה"
+        description="רשימת הקלסרים במשרד — סינון לפי סטטוס ותקופה"
         actions={
           <Button variant="primary" size="sm" onClick={handleOpenReceive}>
             קליטת חומר
@@ -131,7 +139,7 @@ export const Binders: React.FC = () => {
         title="החזרת קלסר"
         message={
           confirmReturnForId !== null
-            ? `האם להחזיר את קלסר #${confirmReturnForId}?`
+            ? `האם להחזיר את קלסר ${getBinderNumberLabel(confirmReturnForId)}?`
             : "האם להחזיר את הקלסר?"
         }
         confirmLabel="החזר קלסר"
@@ -155,7 +163,7 @@ export const Binders: React.FC = () => {
       <ConfirmDialog
         open={confirmDeleteForId !== null}
         title="מחיקת קלסר"
-        message={`האם למחוק את קלסר #${confirmDeleteForId}? פעולה זו אינה ניתנת לביטול.`}
+        message={`האם למחוק את קלסר ${getBinderNumberLabel(confirmDeleteForId)}? פעולה זו אינה ניתנת לביטול.`}
         confirmLabel="מחק קלסר"
         cancelLabel="ביטול"
         isLoading={isDeleting}

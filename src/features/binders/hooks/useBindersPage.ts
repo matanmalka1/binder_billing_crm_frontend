@@ -11,7 +11,6 @@ export const useBindersPage = () => {
 
   const filters = {
     status: searchParams.get("status") ?? "",
-    work_state: searchParams.get("work_state") ?? "",
     client_id: parsePositiveInt(searchParams.get("client_id"), 0) || undefined,
     query: searchParams.get("query") ?? "",
     year: searchParams.get("year") ?? "",
@@ -27,7 +26,6 @@ export const useBindersPage = () => {
   const listParams = {
     status: filters.status || undefined,
     client_id: filters.client_id || undefined,
-    work_state: filters.work_state || undefined,
     query: filters.query || undefined,
     year: filters.year ? Number(filters.year) : undefined,
     page: filters.page,
