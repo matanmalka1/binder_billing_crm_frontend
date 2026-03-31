@@ -3,7 +3,11 @@ import { format } from "date-fns";
 
 export const receiveBinderSchema = z.object({
   client_id: z.number({ error: "נא לבחור לקוח" }).positive("נא לבחור לקוח"),
-  business_id: z.number({ error: "נא לבחור עסק" }).positive("נא לבחור עסק"),
+  business_id: z
+    .number({ error: "נא לבחור עסק" })
+    .positive("נא לבחור עסק")
+    .nullable()
+    .refine((value) => value !== undefined, "נא לבחור עסק"),
   binder_type: z.string().min(1, "נא לבחור סוג חומר"),
   reporting_period: z.string().nullable().optional(),
   received_at: z

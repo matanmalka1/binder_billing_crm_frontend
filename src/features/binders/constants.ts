@@ -9,12 +9,6 @@ export const SIGNAL_DOT_COLORS: Record<string, string> = {
   idle_binder: "bg-gray-400",
 };
 
-export const BINDER_WORK_STATE_VARIANTS: Record<string, "neutral" | "info" | "success"> = {
-  waiting_for_work: "neutral",
-  in_progress: "info",
-  completed: "success",
-};
-
 export const BINDER_SIGNAL_VARIANTS: Record<string, "error" | "warning" | "info" | "neutral"> = {
   ready_for_pickup: "info",
   idle_binder: "neutral",

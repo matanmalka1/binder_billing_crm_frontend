@@ -38,12 +38,6 @@ export const getRoleLabel = makeLabelGetter({
   secretary: "מזכירה",
 });
 
-export const getWorkStateLabel = makeLabelGetter({
-  waiting_for_work: "ממתין לטיפול",
-  in_progress: "בטיפול",
-  completed: "הושלם",
-});
-
 export const getSignalLabel = makeLabelGetter({
   ready_for_pickup: "מוכן לאיסוף",
   idle_binder: "קלסר לא פעיל",

@@ -5,7 +5,7 @@ import { Button } from "../../../components/ui/primitives/Button";
 import type { SearchFiltersBarProps } from "../types";
 import { getSignalLabel } from "../../../utils/enums";
 import { cn } from "../../../utils/utils";
-import { WORK_STATE_OPTIONS, SIGNAL_TYPE_OPTIONS } from "../../../constants/filterOptions.constants";
+import { SIGNAL_TYPE_OPTIONS } from "../../../constants/filterOptions.constants";
 
 const SIGNAL_CHIP_STYLES: Record<string, string> = {
   missing_permanent_documents: "border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100",
@@ -40,7 +40,7 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarExtendedProps> = ({
   onToggle,
 }) => {
   const advancedCount =
-    [filters.client_name, filters.id_number, filters.binder_number, filters.work_state, filters.has_signals]
+    [filters.client_name, filters.id_number, filters.binder_number, filters.has_signals]
       .filter(Boolean).length + filters.signal_type.length;
 
   const toggleSignal = (value: string) => {
@@ -101,12 +101,6 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarExtendedProps> = ({
 
           {/* Status filters */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <Select
-              label="מצב עבודה"
-              value={filters.work_state}
-              onChange={(e) => onFilterChange("work_state", e.target.value)}
-              options={WORK_STATE_OPTIONS}
-            />
             <Select
               label="יש אותות"
               value={filters.has_signals}

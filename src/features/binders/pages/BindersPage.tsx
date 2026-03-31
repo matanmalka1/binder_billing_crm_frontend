@@ -183,7 +183,8 @@ export const Binders: React.FC = () => {
         onClose={handleCloseDrawerAll}
         onMarkReady={selectedBinder ? () => void markReady(selectedBinder.id) : undefined}
         onRevertReady={selectedBinder ? () => void revertReady(selectedBinder.id) : undefined}
-        actionLoading={isMarkingReady}
+        onReturn={selectedBinder ? () => setConfirmReturnForId(selectedBinder.id) : undefined}
+        actionLoading={selectedBinder ? actionLoadingId === selectedBinder.id : false}
         receiveForm={receive.form}
         clientQuery={receive.clientQuery}
         selectedClient={receive.selectedClient}

@@ -48,7 +48,8 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
   const clientLocked = isClientLockedForCreate(selectedClient?.client_status);
 
   const businessOptions = [
-    { value: "", label: "בחר עסק...", disabled: businesses.length > 0 ? true : false },
+    { value: "", label: "בחר עסק...", disabled: true },
+    ...(businesses.length > 1 ? [{ value: "all", label: "כל העסקים" }] : []),
     ...businesses.map((b) => ({ value: String(b.id), label: b.business_name ?? `עסק #${b.id}` })),
   ];
 
@@ -98,10 +99,24 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
               error={errors.business_id?.message}
               disabled={businesses.length === 0}
               options={businessOptions}
-              value={field.value !== undefined ? String(field.value) : ""}
+              value={
+                field.value === null
+                  ? "all"
+                  : field.value !== undefined
+                    ? String(field.value)
+                    : ""
+              }
               onChange={(e) => {
                 const v = e.target.value;
-                field.onChange(v === "" ? undefined : Number(v));
+                if (v === "") {
+                  field.onChange(undefined);
+                  return;
+                }
+                if (v === "all") {
+                  field.onChange(null);
+                  return;
+                }
+                field.onChange(Number(v));
               }}
               onBlur={field.onBlur}
               name={field.name}

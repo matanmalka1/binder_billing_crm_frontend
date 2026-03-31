@@ -5,7 +5,6 @@ export interface SearchFilters extends Omit<SearchParams, "has_signals" | "signa
   client_name: string;
   id_number: string;
   binder_number: string;
-  work_state: string;
   signal_type: string[];
   has_signals: string;
   page: number;

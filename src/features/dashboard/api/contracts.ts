@@ -36,7 +36,6 @@ export interface WorkQueueItem {
   client_id: number;
   client_name: string;
   binder_number: string;
-  work_state: string;
   signals: string[];
   days_since_received: number;
 }

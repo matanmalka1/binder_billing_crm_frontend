@@ -6,7 +6,6 @@ export interface SearchResult {
   client_status?: string | null;
   binder_id: number | null;
   binder_number: string | null;
-  work_state?: string | null;
   signals?: string[] | null;
 }
 
@@ -34,7 +33,6 @@ export interface SearchParams {
   client_name?: string;
   id_number?: string;
   binder_number?: string;
-  work_state?: string;
   signal_type?: string[];
   has_signals?: boolean;
   page?: number;

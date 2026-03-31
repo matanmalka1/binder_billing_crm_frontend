@@ -1,8 +1,7 @@
 import { Badge } from "../../../components/ui/primitives/Badge";
 import type { Column } from "../../../components/ui/table/DataTable";
 import type { SearchResult } from "../api";
-import { cn } from "../../../utils/utils";
-import { getSignalLabel, getWorkStateLabel } from "../../../utils/enums";
+import { getSignalLabel } from "../../../utils/enums";
 import { getResultColor, getResultIcon, getResultLabel } from "./SearchResultMeta";
 import { SearchRowActions } from "./SearchRowActions";
 
@@ -13,12 +12,6 @@ const SIGNAL_VARIANTS: Record<string, BadgeVariant> = {
   unpaid_charges: "warning",
   ready_for_pickup: "info",
   idle_binder: "neutral",
-};
-
-const WORK_STATE_STYLES: Record<string, string> = {
-  waiting_for_work: "text-gray-500",
-  in_progress: "text-primary-700",
-  completed: "text-green-700",
 };
 
 export const searchColumns: Column<SearchResult>[] = [
@@ -64,15 +57,6 @@ export const searchColumns: Column<SearchResult>[] = [
       ) : (
         <span className="text-sm text-gray-300">—</span>
       ),
-  },
-  {
-    key: "work_state",
-    header: "מצב עבודה",
-    render: (result) => (
-      <span className={cn("text-sm", WORK_STATE_STYLES[result.work_state ?? ""] ?? "text-gray-500")}>
-        {getWorkStateLabel(result.work_state ?? "")}
-      </span>
-    ),
   },
   {
     key: "signals",

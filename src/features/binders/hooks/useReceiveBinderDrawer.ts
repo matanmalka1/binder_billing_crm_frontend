@@ -15,7 +15,7 @@ import { receiveBinderSchema, type ReceiveBinderFormValues } from "../schemas";
 
 const getDefaultValues = (): ReceiveBinderFormValues => ({
   client_id: undefined as unknown as number,
-  business_id: undefined as unknown as number,
+  business_id: undefined as unknown as number | null,
   binder_type: "",
   open_new_binder: false,
   reporting_period: null,
@@ -37,7 +37,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
 
   const clientId: number | undefined = form.watch("client_id");
   const binderType: string = form.watch("binder_type") ?? "";
-  const businessId: number | undefined = form.watch("business_id");
+  const businessId = form.watch("business_id");
 
   useEffect(() => {
     form.setValue("reporting_period", null);
@@ -80,7 +80,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   const { data: taxProfile } = useQuery({
     queryKey: taxProfileQK.forBusiness(businessId!),
     queryFn: () => taxProfileApi.get(businessId!),
-    enabled: !!businessId,
+    enabled: typeof businessId === "number" && businessId > 0,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
@@ -147,7 +147,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     setClientQuery(client.name);
     form.setValue("client_id", client.id, { shouldValidate: true });
     form.setValue("reporting_period", null);
-    form.setValue("business_id", undefined as unknown as number);
+    form.setValue("business_id", undefined as unknown as number | null);
   };
 
   const handleClientQueryChange = (query: string) => {
@@ -156,7 +156,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
       setSelectedClient(null);
       form.setValue("client_id", undefined as unknown as number);
       form.setValue("reporting_period", null);
-      form.setValue("business_id", undefined as unknown as number);
+      form.setValue("business_id", undefined as unknown as number | null);
     }
   };
 

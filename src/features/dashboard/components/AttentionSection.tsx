@@ -16,7 +16,7 @@ interface AttentionSectionProps {
 const itemHrefMap: Record<string, (item: AttentionItem) => string> = {
   overdue:           (item) => item.client_id ? `/clients/${item.client_id}` : "/binders",
   overdue_binder:    (item) => item.client_id ? `/clients/${item.client_id}` : "/binders",
-  idle_binder:       (item) => item.client_id ? `/clients/${item.client_id}` : "/binders?work_state=waiting_for_work",
+  idle_binder:       (item) => item.client_id ? `/clients/${item.client_id}` : "/binders",
   unpaid_charge:     (item) => item.client_id ? `/clients/${item.client_id}` : "/charges?status=issued",
   unpaid_charges:    (item) => item.client_id ? `/clients/${item.client_id}` : "/charges?status=issued",
   ready_for_pickup:  (item) => item.client_id ? `/clients/${item.client_id}` : "/binders?status=ready_for_pickup",
@@ -37,7 +37,6 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
       className="flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-elevation-1 animate-fade-in"
       style={{ animationDelay: `${sectionIndex * 80}ms` }}
     >
-      {/* ── Gradient header ─────────────────────────────────────────────── */}
       <div className={cn("flex items-center justify-between bg-gradient-to-l px-5 py-3.5", cfg.headerGradient)}>
         <div className="flex items-center gap-2.5">
           <div className="rounded-lg bg-white/20 p-1.5">

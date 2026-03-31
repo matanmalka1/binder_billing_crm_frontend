@@ -13,7 +13,6 @@ export interface BinderDetailResponse {
   notes: string | null;
   created_at: string;
   days_in_office: number | null;
-  work_state: string | null;
   signals: string[];
   available_actions?: BackendAction[];
 }

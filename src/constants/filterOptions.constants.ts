@@ -1,6 +1,5 @@
 import {
   getSignalLabel,
-  getWorkStateLabel,
 } from "../utils/enums";
 
 type Option = {
@@ -8,13 +7,6 @@ type Option = {
   label: string;
   disabled?: boolean;
 };
-
-export const WORK_STATE_OPTIONS: Option[] = [
-  { value: "", label: "הכל" },
-  { value: "waiting_for_work", label: getWorkStateLabel("waiting_for_work") },
-  { value: "in_progress", label: getWorkStateLabel("in_progress") },
-  { value: "completed", label: getWorkStateLabel("completed") },
-];
 
 export const SIGNAL_TYPE_OPTIONS: Option[] = [
   { value: "missing_permanent_documents", label: getSignalLabel("missing_permanent_documents") },

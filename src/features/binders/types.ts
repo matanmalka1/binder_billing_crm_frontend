@@ -14,7 +14,6 @@ export interface BinderResponse {
   returned_at: string | null;
   pickup_person_name?: string | null;
   days_in_office?: number | null;
-  work_state?: string | null;
   signals?: string[] | null;
   is_full: boolean;
   available_actions?: BackendAction[] | null;
@@ -35,7 +34,6 @@ export interface BinderExtended {
   received_at: string;
   returned_at: string | null;
   pickup_person_name?: string | null;
-  work_state?: string | null;
   signals?: string[] | null;
 }
 

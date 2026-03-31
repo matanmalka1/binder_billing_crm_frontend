@@ -21,7 +21,7 @@ export const Search: React.FC = () => {
 
   const hasAdvancedFilter = Boolean(
     filters.client_name || filters.id_number || filters.binder_number ||
-    filters.work_state || filters.signal_type.length || filters.has_signals,
+    filters.signal_type.length || filters.has_signals,
   );
 
   const [filtersOpen, setFiltersOpen] = useState(hasAdvancedFilter);
