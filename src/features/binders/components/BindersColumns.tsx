@@ -1,25 +1,18 @@
 import { Link } from "react-router-dom";
 import type { Column } from "../../../components/ui/table/DataTable";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
-import { Badge } from "../../../components/ui/primitives/Badge";
 import { MonoValue } from "../../../components/ui/primitives/MonoValue";
 import { SortableHeader } from "../../../components/ui/table/SortableHeader";
 import type { BinderResponse } from "../types";
-import {
-  getStatusLabel,
-  getSignalLabel,
-} from "../../../utils/enums";
+import { getStatusLabel } from "../../../utils/enums";
 import { formatMonthYear } from "../../../utils/utils";
-import { BINDER_SIGNAL_VARIANTS, BINDER_STATUS_VARIANTS, SIGNAL_DOT_COLORS } from "../constants";
+import { BINDER_STATUS_VARIANTS } from "../constants";
 import { BinderRowActions } from "./BinderRowActions";
 
-/* ─── Client + signals cell ──────────────────────────────────── */
+/* ─── Client cell ────────────────────────────────────────────── */
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
-  const signals = (Array.isArray(binder.signals) ? binder.signals : []).filter(
-    (s) => s !== "ready_for_pickup" && s !== "idle_binder"
-  );
   return (
     <div className="flex flex-col gap-0.5">
       <Link
@@ -29,19 +22,6 @@ const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
       >
         {binder.client_name ?? `#${binder.client_id}`}
       </Link>
-      {signals.length > 0 && (
-        <div className="flex flex-wrap gap-1 mt-0.5">
-          {signals.map((signal) => (
-            <Badge
-              key={signal}
-              variant={BINDER_SIGNAL_VARIANTS[signal] as "warning" | "info" | "neutral" | undefined ?? "neutral"}
-              dot={SIGNAL_DOT_COLORS[signal]}
-            >
-              {getSignalLabel(signal)}
-            </Badge>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

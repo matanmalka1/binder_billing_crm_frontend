@@ -37,7 +37,6 @@ export const Binders: React.FC = () => {
     deleteBinder,
     isDeleting,
     markReady,
-    isMarkingReady,
     revertReady,
     returnBinder,
     isReturning,
@@ -154,7 +153,7 @@ export const Binders: React.FC = () => {
         <input
           type="text"
           className="mt-3 w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-          placeholder="שם האיש המאסף *"
+          placeholder="שם האיש המאסף (אופציונלי)"
           value={pickupPersonName}
           onChange={(e) => setPickupPersonName(e.target.value)}
         />
@@ -184,6 +183,7 @@ export const Binders: React.FC = () => {
         onMarkReady={selectedBinder ? () => void markReady(selectedBinder.id) : undefined}
         onRevertReady={selectedBinder ? () => void revertReady(selectedBinder.id) : undefined}
         onReturn={selectedBinder ? () => setConfirmReturnForId(selectedBinder.id) : undefined}
+        onDelete={selectedBinder ? () => setConfirmDeleteForId(selectedBinder.id) : undefined}
         actionLoading={selectedBinder ? actionLoadingId === selectedBinder.id : false}
         receiveForm={receive.form}
         clientQuery={receive.clientQuery}

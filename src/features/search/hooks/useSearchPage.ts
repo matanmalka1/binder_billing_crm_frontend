@@ -14,8 +14,6 @@ export const useSearchPage = () => {
       client_name: searchParams.get("client_name") ?? "",
       id_number: searchParams.get("id_number") ?? "",
       binder_number: searchParams.get("binder_number") ?? "",
-      signal_type: searchParams.getAll("signal_type"),
-      has_signals: searchParams.get("has_signals") ?? "",
       page: parsePositiveInt(searchParams.get("page"), 1),
       page_size: parsePositiveInt(searchParams.get("page_size"), 20),
     }),
@@ -27,9 +25,7 @@ export const useSearchPage = () => {
       Boolean(filters.query) ||
       Boolean(filters.client_name) ||
       Boolean(filters.id_number) ||
-      Boolean(filters.binder_number) ||
-      filters.signal_type.length > 0 ||
-      Boolean(filters.has_signals),
+      Boolean(filters.binder_number),
     [filters],
   );
 
@@ -41,13 +37,6 @@ export const useSearchPage = () => {
         client_name: filters.client_name || undefined,
         id_number: filters.id_number || undefined,
         binder_number: filters.binder_number || undefined,
-        signal_type: filters.signal_type.length ? filters.signal_type : undefined,
-        has_signals:
-          filters.has_signals === "true"
-            ? true
-            : filters.has_signals === "false"
-              ? false
-              : undefined,
         page: filters.page,
         page_size: filters.page_size,
       }),
@@ -55,14 +44,10 @@ export const useSearchPage = () => {
   });
 
   const handleFilterChange = useCallback(
-    (name: keyof SearchFilters, value: string | string[]) => {
+    (name: keyof SearchFilters, value: string) => {
       const next = new URLSearchParams(searchParams);
       if (name === "page") {
         next.set("page", String(value));
-      } else if (name === "signal_type") {
-        next.delete("signal_type");
-        if (Array.isArray(value)) value.forEach((s) => s && next.append("signal_type", s));
-        next.set("page", "1");
       } else {
         if (String(value)) next.set(name, String(value));
         else next.delete(name);

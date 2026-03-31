@@ -6,7 +6,6 @@ export interface SearchResult {
   client_status?: string | null;
   binder_id: number | null;
   binder_number: string | null;
-  signals?: string[] | null;
 }
 
 export interface DocumentSearchResult {
@@ -33,8 +32,6 @@ export interface SearchParams {
   client_name?: string;
   id_number?: string;
   binder_number?: string;
-  signal_type?: string[];
-  has_signals?: boolean;
   page?: number;
   page_size?: number;
 }

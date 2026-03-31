@@ -4,15 +4,6 @@ export const BINDER_STATUS_VARIANTS: Record<string, "success" | "warning" | "err
   returned: "neutral",
 };
 
-export const SIGNAL_DOT_COLORS: Record<string, string> = {
-  ready_for_pickup: "bg-blue-400",
-  idle_binder: "bg-gray-400",
-};
-
-export const BINDER_SIGNAL_VARIANTS: Record<string, "error" | "warning" | "info" | "neutral"> = {
-  ready_for_pickup: "info",
-  idle_binder: "neutral",
-};
 
 export const BINDER_TYPE_OPTIONS = [
   { value: "", label: "בחר סוג חומר...", disabled: true },

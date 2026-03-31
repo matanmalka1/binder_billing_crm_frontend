@@ -5,17 +5,7 @@ import type { SearchParams, SearchResponse } from "./contracts";
 
 export const searchApi = {
   search: async (params: SearchParams): Promise<SearchResponse> => {
-    const { signal_type, ...rest } = params;
-    const queryParams = toQueryParams(rest);
-
-    if (Array.isArray(signal_type)) {
-      signal_type.forEach((signal) => {
-        if (signal && signal.trim().length > 0) {
-          queryParams.append("signal_type", signal);
-        }
-      });
-    }
-
+    const queryParams = toQueryParams(params);
     const response = await api.get<SearchResponse>(SEARCH_ENDPOINTS.search, {
       params: queryParams,
     });

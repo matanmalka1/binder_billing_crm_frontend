@@ -38,12 +38,6 @@ export const getRoleLabel = makeLabelGetter({
   secretary: "מזכירה",
 });
 
-export const getSignalLabel = makeLabelGetter({
-  ready_for_pickup: "מוכן לאיסוף",
-  idle_binder: "קלסר לא פעיל",
-  missing_permanent_documents: "חסרים מסמכים קבועים",
-  unpaid_charges: "חיובים שלא שולמו",
-});
 
 export const getBinderTypeLabel = makeLabelGetter({
   vat: 'מע"מ',

@@ -1,6 +1,8 @@
 import type { UseFormReturn } from "react-hook-form";
+import { Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
+import { Button } from "../../../components/ui/primitives/Button";
 import type { ReceiveBinderFormValues } from "../schemas";
 import type { BinderResponse } from "../types";
 import { BinderActionsPanel } from "./BinderActionsPanel";
@@ -19,6 +21,7 @@ interface BinderDrawerProps {
   onMarkReady?: () => void;
   onRevertReady?: () => void;
   onReturn?: () => void;
+  onDelete?: () => void;
   actionLoading?: boolean;
   receiveForm?: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery?: string;
@@ -40,6 +43,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   onMarkReady,
   onRevertReady,
   onReturn,
+  onDelete,
   actionLoading = false,
   receiveForm,
   clientQuery = "",
@@ -72,6 +76,16 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
       subtitle={subtitle}
       onClose={onClose}
       isDirty={mode === "receive" && (receiveForm?.formState.isDirty ?? false)}
+      footer={
+        mode === "detail" && binder && onDelete ? (
+          <div className="flex justify-end">
+            <Button variant="danger" size="sm" onClick={onDelete}>
+              <Trash2 className="h-4 w-4 ml-1" />
+              מחק קלסר
+            </Button>
+          </div>
+        ) : undefined
+      }
     >
       {mode === "receive" && receiveForm && (
         <BinderReceivePanel

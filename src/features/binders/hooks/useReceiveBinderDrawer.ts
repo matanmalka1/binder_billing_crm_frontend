@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -86,7 +86,32 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     refetchOnWindowFocus: false,
   });
 
-  const vatType = taxProfile?.vat_type ?? null;
+  // When "all businesses" is selected (businessId === null), fetch all profiles
+  // and derive a consensus vatType: bimonthly only if every business is bimonthly.
+  const allBusinessProfiles = useQueries({
+    queries: businessId === null
+      ? businesses.map((b) => ({
+          queryKey: taxProfileQK.forBusiness(b.id),
+          queryFn: () => taxProfileApi.get(b.id),
+          staleTime: 30_000,
+          retry: 1,
+          refetchOnWindowFocus: false,
+        }))
+      : [],
+  });
+
+  const vatType: "monthly" | "bimonthly" | "exempt" | null = (() => {
+    if (typeof businessId === "number" && businessId > 0) {
+      return taxProfile?.vat_type ?? null;
+    }
+    if (businessId === null && allBusinessProfiles.length > 0) {
+      const loaded = allBusinessProfiles.filter((q) => q.data != null);
+      if (loaded.length === 0) return null;
+      const allBimonthly = loaded.every((q) => q.data?.vat_type === "bimonthly");
+      return allBimonthly ? "bimonthly" : "monthly";
+    }
+    return null;
+  })();
 
   const resetState = () => {
     form.reset(getDefaultValues());

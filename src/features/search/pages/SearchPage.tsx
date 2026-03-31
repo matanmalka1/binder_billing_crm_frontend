@@ -20,8 +20,7 @@ export const Search: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const hasAdvancedFilter = Boolean(
-    filters.client_name || filters.id_number || filters.binder_number ||
-    filters.signal_type.length || filters.has_signals,
+    filters.client_name || filters.id_number || filters.binder_number,
   );
 
   const [filtersOpen, setFiltersOpen] = useState(hasAdvancedFilter);
@@ -39,7 +38,7 @@ export const Search: React.FC = () => {
     <div className="space-y-5">
       <PageHeader
         title="חיפוש"
-        description="חיפוש גלובלי על פני לקוחות, קלסרים ואותות"
+        description="חיפוש גלובלי על פני לקוחות וקלסרים"
       />
 
       {/* Hero search bar */}

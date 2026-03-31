@@ -1,18 +1,8 @@
-import { Badge } from "../../../components/ui/primitives/Badge";
 import type { Column } from "../../../components/ui/table/DataTable";
 import type { SearchResult } from "../api";
-import { getSignalLabel } from "../../../utils/enums";
 import { getResultColor, getResultIcon, getResultLabel } from "./SearchResultMeta";
 import { SearchRowActions } from "./SearchRowActions";
-
-type BadgeVariant = "error" | "warning" | "info" | "neutral";
-
-const SIGNAL_VARIANTS: Record<string, BadgeVariant> = {
-  missing_permanent_documents: "warning",
-  unpaid_charges: "warning",
-  ready_for_pickup: "info",
-  idle_binder: "neutral",
-};
+import { cn } from "@/utils/utils";
 
 export const searchColumns: Column<SearchResult>[] = [
   {
@@ -54,22 +44,6 @@ export const searchColumns: Column<SearchResult>[] = [
     render: (result) =>
       result.binder_number ? (
         <span className="font-mono text-sm font-semibold text-gray-800">{result.binder_number}</span>
-      ) : (
-        <span className="text-sm text-gray-300">—</span>
-      ),
-  },
-  {
-    key: "signals",
-    header: "אותות",
-    render: (result) =>
-      Array.isArray(result.signals) && result.signals.length > 0 ? (
-        <div className="flex flex-wrap gap-1">
-          {result.signals.map((signal) => (
-            <Badge key={signal} variant={SIGNAL_VARIANTS[signal] ?? "neutral"} className="text-xs">
-              {getSignalLabel(signal)}
-            </Badge>
-          ))}
-        </div>
       ) : (
         <span className="text-sm text-gray-300">—</span>
       ),
