@@ -13,18 +13,28 @@ interface AttentionSectionProps {
 
 /* ── Href resolver ──────────────────────────────────────────────────────── */
 
+const getBusinessHref = (item: AttentionItem, fallback: string): string => {
+  if (item.client_id && item.business_id) {
+    return `/clients/${item.client_id}/businesses/${item.business_id}`;
+  }
+  if (item.client_id) {
+    return `/clients/${item.client_id}`;
+  }
+  return fallback;
+};
+
 const itemHrefMap: Record<string, (item: AttentionItem) => string> = {
-  overdue:           (item) => item.client_id ? `/clients/${item.client_id}` : "/binders",
-  overdue_binder:    (item) => item.client_id ? `/clients/${item.client_id}` : "/binders",
-  idle_binder:       (item) => item.client_id ? `/clients/${item.client_id}` : "/binders",
-  unpaid_charge:     (item) => item.client_id ? `/clients/${item.client_id}` : "/charges?status=issued",
-  unpaid_charges:    (item) => item.client_id ? `/clients/${item.client_id}` : "/charges?status=issued",
-  ready_for_pickup:  (item) => item.client_id ? `/clients/${item.client_id}` : "/binders?status=ready_for_pickup",
+  overdue: (item) => getBusinessHref(item, "/binders"),
+  overdue_binder: (item) => getBusinessHref(item, "/binders"),
+  idle_binder: (item) => getBusinessHref(item, "/binders"),
+  unpaid_charge: (item) => getBusinessHref(item, "/charges?status=issued"),
+  unpaid_charges: (item) => getBusinessHref(item, "/charges?status=issued"),
+  ready_for_pickup: (item) => getBusinessHref(item, "/binders?status=ready_for_pickup"),
 };
 
 const getItemHref = (item: AttentionItem): string => {
   const fn = itemHrefMap[item.item_type];
-  return fn ? fn(item) : (item.client_id ? `/clients/${item.client_id}` : "/binders");
+  return fn ? fn(item) : getBusinessHref(item, "/binders");
 };
 
 export const AttentionSection = ({ section, items, sectionIndex }: AttentionSectionProps) => {
@@ -58,7 +68,7 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
         {hasItems ? (
           items.map((item, i) => (
             <Link
-              key={`${item.item_type}-${item.binder_id ?? i}-${item.client_id ?? i}`}
+              key={`${item.item_type}-${item.binder_id ?? i}-${item.business_id ?? item.client_id ?? i}`}
               to={getItemHref(item)}
               className={cn(
                 "group flex items-start gap-3 px-5 py-3 transition-colors duration-150",

@@ -88,10 +88,10 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
       )}
 
       {/* Submission deadline banners */}
-      {workItem.is_overdue && workItem.submission_deadline && (
+      {workItem.is_overdue && (workItem.extended_deadline ?? workItem.submission_deadline) && (
         <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-          <span>⚠️ תאריך הגשה חלף — {formatDate(workItem.submission_deadline)}</span>
+          <span>⚠️ תאריך הגשה חלף — {formatDate(workItem.extended_deadline ?? workItem.submission_deadline)}</span>
         </div>
       )}
       {!workItem.is_overdue && workItem.days_until_deadline != null && workItem.days_until_deadline <= 3 && (

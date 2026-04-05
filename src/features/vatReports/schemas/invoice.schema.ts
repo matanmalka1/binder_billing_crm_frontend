@@ -18,13 +18,28 @@ const invoiceCommonFields = {
   invoice_number: z.string().trim().optional(),
   invoice_date: z.string().optional(),
   counterparty_name: z.string().trim().optional(),
+  counterparty_id: z.string().trim().optional(),
+  counterparty_id_type: z
+    .enum(["il_business", "il_personal", "foreign", "anonymous"])
+    .optional(),
 };
+
+export type CounterpartyIdType = z.infer<
+  NonNullable<typeof invoiceCommonFields.counterparty_id_type>
+>;
+
+export const isCounterpartyIdType = (
+  value: string | null | undefined,
+): value is CounterpartyIdType =>
+  value === "il_business" ||
+  value === "il_personal" ||
+  value === "foreign" ||
+  value === "anonymous";
 
 export const vatInvoiceRowSchema = z
   .object({
     invoice_type: z.enum(["income", "expense"]),
     ...invoiceCommonFields,
-    counterparty_id: z.string().trim().optional(),
   })
   .superRefine((data, ctx) => {
     if (
@@ -46,6 +61,12 @@ export const vatInvoiceEditSchema = z.object(invoiceCommonFields);
 
 export type VatInvoiceEditValues = z.infer<typeof vatInvoiceEditSchema>;
 
+const inferCounterpartyIdType = (
+  counterpartyId?: string,
+): "il_business" | undefined => {
+  return counterpartyId ? "il_business" : undefined;
+};
+
 const calcVatAmount = (netAmount: string, rateType?: string): string => {
   if (rateType === "exempt" || rateType === "zero_rate") return "0.00";
   return (Number(netAmount) * ISRAEL_VAT_RATE).toFixed(2);
@@ -60,6 +81,9 @@ const buildInvoicePayloadBase = (values: VatInvoiceEditValues) => ({
   invoice_number: values.invoice_number || undefined,
   invoice_date: values.invoice_date || undefined,
   counterparty_name: values.counterparty_name || undefined,
+  counterparty_id: values.counterparty_id || undefined,
+  counterparty_id_type:
+    values.counterparty_id_type || inferCounterpartyIdType(values.counterparty_id),
 });
 
 export const toInvoiceEditPayload = (
@@ -71,5 +95,4 @@ export const toInvoiceRowPayload = (
 ): CreateVatInvoicePayload => ({
   invoice_type: values.invoice_type,
   ...buildInvoicePayloadBase(values),
-  counterparty_id: values.counterparty_id || undefined,
 });

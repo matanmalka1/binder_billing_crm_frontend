@@ -31,6 +31,8 @@ export interface VatWorkItemResponse {
   is_amendment: boolean;
   amends_item_id: number | null;
   submission_deadline: string | null;
+  statutory_deadline: string | null;
+  extended_deadline: string | null;
   days_until_deadline: number | null;
   is_overdue: boolean | null;
 }

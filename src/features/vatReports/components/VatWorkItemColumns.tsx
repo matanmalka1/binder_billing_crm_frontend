@@ -68,7 +68,8 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     key: "submission_deadline",
     header: "מועד הגשה",
     render: (item) => {
-      if (!item.submission_deadline) return <span className="text-gray-400 text-sm">—</span>;
+      const displayDeadline = item.extended_deadline ?? item.submission_deadline;
+      if (!displayDeadline) return <span className="text-gray-400 text-sm">—</span>;
       const cls = item.is_overdue
         ? "text-red-600 font-semibold"
         : item.days_until_deadline != null && item.days_until_deadline <= 3
@@ -77,7 +78,7 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
       return (
         <span className={`font-mono text-sm tabular-nums inline-flex items-center gap-1 ${cls}`}>
           {item.is_overdue && <AlertTriangle className="h-3.5 w-3.5" />}
-          {formatDate(item.submission_deadline)}
+          {formatDate(displayDeadline)}
         </span>
       );
     },

@@ -5,6 +5,7 @@ export interface AttentionItem {
   item_type: string;
   binder_id: number | null;
   client_id: number | null;
+  business_id: number | null;
   client_name: string | null;
   description: string;
 }
@@ -34,6 +35,7 @@ export interface DashboardSummaryResponse {
 export interface WorkQueueItem {
   binder_id: number;
   client_id: number;
+  business_id: number;
   client_name: string;
   binder_number: string;
   days_since_received: number;
