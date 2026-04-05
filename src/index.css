@@ -2,8 +2,8 @@
 
 :root {
   --font-display: 'Heebo', sans-serif;
-  --font-body: 'IBM Plex Sans', 'Heebo', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-body: 'Heebo', sans-serif;
+  --font-mono: 'Heebo', sans-serif;
 }
 
 input[type="number"] {
@@ -50,9 +50,9 @@ body {
 .stagger-children > *:nth-child(6) { animation-delay: 250ms; }
 
 @theme {
-  --font-family-sans: "IBM Plex Sans", "Heebo", system-ui, sans-serif;
+  --font-family-sans: "Heebo", system-ui, sans-serif;
   --font-family-display: "Heebo", sans-serif;
-  --font-family-mono: "IBM Plex Mono", monospace;
+  --font-family-mono: "Heebo", sans-serif;
 
   --color-primary-50: #eef2ff;
   --color-primary-100: #e0e7ff;

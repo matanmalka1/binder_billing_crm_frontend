@@ -4,6 +4,8 @@ export type TaxDeadlineFilters = PagedFilters<{
   business_name: string;
   deadline_type: string;
   status: string;
+  due_from: string;
+  due_to: string;
 }>;
 
 export interface TaxDeadlineFormValues {

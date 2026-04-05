@@ -26,6 +26,7 @@ export const TaxDeadlines: React.FC = () => {
     isUpdating,
     handleFilterChange,
     handleComplete,
+    handleReopen,
     handleEdit,
     handleDelete,
     showCreateModal,
@@ -33,6 +34,7 @@ export const TaxDeadlines: React.FC = () => {
     setEditingDeadline,
     editingDeadline,
     completingId,
+    reopeningId,
     deletingId,
     form,
     onSubmit,
@@ -95,7 +97,9 @@ export const TaxDeadlines: React.FC = () => {
       <TaxDeadlinesTable
         deadlines={deadlines}
         onComplete={isAdvisor ? handleComplete : undefined}
+        onReopen={isAdvisor ? handleReopen : undefined}
         completingId={completingId}
+        reopeningId={reopeningId}
         onRowClick={setSelectedDeadline}
         onEdit={isAdvisor ? handleEdit : undefined}
         onDelete={isAdvisor ? handleDelete : undefined}

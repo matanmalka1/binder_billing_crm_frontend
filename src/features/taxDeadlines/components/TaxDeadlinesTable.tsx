@@ -17,7 +17,9 @@ import { formatDate, cn } from "../../../utils/utils";
 interface TaxDeadlinesTableProps {
   deadlines: TaxDeadlineResponse[];
   onComplete?: (id: number) => void;
+  onReopen?: (id: number) => void;
   completingId: number | null;
+  reopeningId?: number | null;
   onRowClick?: (deadline: TaxDeadlineResponse) => void;
   onEdit?: (deadline: TaxDeadlineResponse) => void;
   onDelete?: (id: number) => void;
@@ -35,7 +37,9 @@ const TABLE_HEADERS = ["עסק", "סוג", "מועד", "זמן נותר", "סכ�
 export const TaxDeadlinesTable = ({
   deadlines,
   onComplete,
+  onReopen,
   completingId,
+  reopeningId,
   onRowClick,
   onEdit,
   onDelete,
@@ -127,8 +131,10 @@ export const TaxDeadlinesTable = ({
                     <TaxDeadlineRowActions
                       deadline={deadline}
                       completingId={completingId}
+                      reopeningId={reopeningId}
                       deletingId={deletingId}
                       onComplete={onComplete}
+                      onReopen={onReopen}
                       onEdit={onEdit}
                       onDelete={onDelete}
                     />

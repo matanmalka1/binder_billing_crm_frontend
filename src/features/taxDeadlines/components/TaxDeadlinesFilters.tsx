@@ -2,6 +2,7 @@ import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
 import { Search } from "lucide-react";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { cn } from "../../../utils/utils";
 import {
@@ -28,6 +29,8 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
     onChange("business_name", "");
     onChange("deadline_type", "");
     onChange("status", "");
+    onChange("due_from", "");
+    onChange("due_to", "");
   };
 
   return (
@@ -55,6 +58,16 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
           options={TAX_DEADLINE_STATUS_OPTIONS}
           className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
         />
+        <DatePicker
+          label="מתאריך"
+          value={filters.due_from}
+          onChange={(v) => onChange("due_from", v)}
+        />
+        <DatePicker
+          label="עד תאריך"
+          value={filters.due_to}
+          onChange={(v) => onChange("due_to", v)}
+        />
       </div>
 
       <ActiveFilterBadges
@@ -67,6 +80,12 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
             : null,
           filters.status
             ? { key: "status", label: getTaxDeadlineStatusLabel(filters.status), onRemove: () => onChange("status", "") }
+            : null,
+          filters.due_from
+            ? { key: "due_from", label: `מתאריך: ${filters.due_from}`, onRemove: () => onChange("due_from", "") }
+            : null,
+          filters.due_to
+            ? { key: "due_to", label: `עד: ${filters.due_to}`, onRemove: () => onChange("due_to", "") }
             : null,
         ].filter((b): b is NonNullable<typeof b> => b !== null)}
         onReset={handleReset}

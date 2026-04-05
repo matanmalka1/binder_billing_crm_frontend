@@ -25,6 +25,8 @@ export const taxDeadlinesApi = {
     business_name?: string;
     deadline_type?: string;
     status?: string;
+    due_from?: string;
+    due_to?: string;
     page?: number;
     page_size?: number;
   }): Promise<TaxDeadlineListResponse> => {
@@ -42,6 +44,11 @@ export const taxDeadlinesApi = {
 
   completeTaxDeadline: async (deadlineId: number): Promise<TaxDeadlineResponse> => {
     const response = await api.post<TaxDeadlineResponse>(TAX_DEADLINE_ENDPOINTS.taxDeadlineComplete(deadlineId));
+    return response.data;
+  },
+
+  reopenTaxDeadline: async (deadlineId: number): Promise<TaxDeadlineResponse> => {
+    const response = await api.post<TaxDeadlineResponse>(TAX_DEADLINE_ENDPOINTS.taxDeadlineReopen(deadlineId));
     return response.data;
   },
 

@@ -18,6 +18,7 @@ export const useTaxDeadlines = () => {
   const { searchParams, setFilter } = useSearchParamFilters();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [completingId, setCompletingId] = useState<number | null>(null);
+  const [reopeningId, setReopeningId] = useState<number | null>(null);
   const [editingDeadline, setEditingDeadline] = useState<TaxDeadlineResponse | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
@@ -26,6 +27,8 @@ export const useTaxDeadlines = () => {
       business_name: searchParams.get("business_name") || "",
       deadline_type: searchParams.get("deadline_type") || "",
       status: searchParams.get("status") || "",
+      due_from: searchParams.get("due_from") || "",
+      due_to: searchParams.get("due_to") || "",
       page: parsePositiveInt(searchParams.get("page"), 1),
       page_size: parsePositiveInt(searchParams.get("page_size"), 20),
     }),
@@ -37,6 +40,8 @@ export const useTaxDeadlines = () => {
       business_name: toOptionalString(filters.business_name),
       deadline_type: toOptionalString(filters.deadline_type),
       status: toOptionalString(filters.status),
+      due_from: toOptionalString(filters.due_from),
+      due_to: toOptionalString(filters.due_to),
       page: filters.page,
       page_size: filters.page_size,
     }),
@@ -105,6 +110,16 @@ export const useTaxDeadlines = () => {
     onSettled: () => setCompletingId(null),
   });
 
+  const reopenMutation = useMutation({
+    mutationFn: (deadlineId: number) => taxDeadlinesApi.reopenTaxDeadline(deadlineId),
+    onSuccess: () => {
+      toast.success("מועד הוחזר לממתין");
+      queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
+    },
+    onError: (error) => showErrorToast(error, "שגיאה בהחזרת המועד"),
+    onSettled: () => setReopeningId(null),
+  });
+
   const editForm = useForm<EditTaxDeadlineForm>({
     defaultValues: { deadline_type: "", due_date: "", period: "", payment_amount: "", description: "" },
   });
@@ -154,6 +169,11 @@ export const useTaxDeadlines = () => {
     await completeMutation.mutateAsync(deadlineId);
   };
 
+  const handleReopen = async (deadlineId: number) => {
+    setReopeningId(deadlineId);
+    await reopenMutation.mutateAsync(deadlineId);
+  };
+
   const handleEdit = (deadline: TaxDeadlineResponse) => {
     setEditingDeadline(deadline);
     editForm.reset({
@@ -188,6 +208,7 @@ export const useTaxDeadlines = () => {
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     completingId,
+    reopeningId,
     deletingId,
     showCreateModal,
     editingDeadline,
@@ -196,6 +217,7 @@ export const useTaxDeadlines = () => {
     setEditingDeadline,
     handleFilterChange,
     handleComplete,
+    handleReopen,
     handleEdit,
     handleDelete,
     // Forms

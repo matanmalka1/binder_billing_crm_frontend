@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle2, Edit2, Trash2 } from "lucide-react";
+import { CheckCircle2, Edit2, RotateCcw, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import type { TaxDeadlineResponse } from "../api";
@@ -7,8 +7,10 @@ import type { TaxDeadlineResponse } from "../api";
 interface TaxDeadlineRowActionsProps {
   deadline: TaxDeadlineResponse;
   completingId: number | null;
+  reopeningId?: number | null;
   deletingId?: number | null;
   onComplete?: (id: number) => void;
+  onReopen?: (id: number) => void;
   onEdit?: (deadline: TaxDeadlineResponse) => void;
   onDelete?: (id: number) => void;
 }
@@ -16,17 +18,20 @@ interface TaxDeadlineRowActionsProps {
 export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
   deadline,
   completingId,
+  reopeningId,
   deletingId,
   onComplete,
+  onReopen,
   onEdit,
   onDelete,
 }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const actionKeys = new Set((deadline.available_actions ?? []).map((action) => action.key));
   const canComplete = Boolean(onComplete) && actionKeys.has("complete");
+  const canReopen = Boolean(onReopen) && actionKeys.has("reopen");
   const canEdit = Boolean(onEdit) && actionKeys.has("edit");
   const canDelete = Boolean(onDelete) && actionKeys.has("delete");
-  const hasMenu = canComplete || canEdit || canDelete;
+  const hasMenu = canComplete || canReopen || canEdit || canDelete;
   if (!hasMenu) return null;
 
   return (
@@ -40,12 +45,20 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
             disabled={completingId !== null}
           />
         )}
+        {canReopen && (
+          <DropdownMenuItem
+            label="החזר לממתין"
+            onClick={() => onReopen?.(deadline.id)}
+            icon={<RotateCcw className="h-4 w-4 text-amber-600" />}
+            disabled={reopeningId !== null}
+          />
+        )}
         {canEdit && (
           <DropdownMenuItem label="עריכה" onClick={() => onEdit(deadline)} icon={<Edit2 className="h-4 w-4" />} />
         )}
         {canDelete && (
           <>
-            {(canComplete || canEdit) && <div className="my-1 border-t border-gray-100" />}
+            {(canComplete || canReopen || canEdit) && <div className="my-1 border-t border-gray-100" />}
             <DropdownMenuItem
               label="מחק"
               onClick={() => setConfirmDelete(true)}

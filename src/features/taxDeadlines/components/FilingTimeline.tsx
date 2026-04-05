@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle, Clock, AlertTriangle } from "lucide-react";
+import { CheckCircle, Clock } from "lucide-react";
 import { taxDeadlinesApi, taxDeadlinesQK } from "../api";
 import type { TimelineEntry } from "../api";
 import { cn } from "../../../utils/utils";
@@ -10,19 +10,16 @@ interface FilingTimelineProps {
 
 const STATUS_LABELS: Record<string, string> = {
   completed: "הושלם",
-  overdue: "באיחור",
   pending: "ממתין",
 };
 
 const statusVariants: Record<string, string> = {
   completed: "bg-green-50 text-green-700 border-green-200",
-  overdue: "bg-red-50 text-red-700 border-red-200",
   pending: "bg-gray-50 text-gray-600 border-gray-200",
 };
 
 const StatusIcon = ({ status }: { status: string }) => {
   if (status === "completed") return <CheckCircle className="h-4 w-4 text-green-500" />;
-  if (status === "overdue") return <AlertTriangle className="h-4 w-4 text-red-500" />;
   return <Clock className="h-4 w-4 text-gray-400" />;
 };
 
@@ -77,7 +74,6 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ businessId }) =>
               key={entry.id}
               className={cn(
                 "transition-colors",
-                entry.status === "overdue" && "bg-red-50/40",
                 entry.status === "completed" && "bg-green-50/30",
               )}
             >
