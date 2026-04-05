@@ -1,8 +1,12 @@
 import type { BackendAction } from "@/lib/actions/types";
-import type { PaginatedResponse } from "@/types";
+
+export type AttentionItemType =
+  | "unpaid_charge"
+  | "unpaid_charges"
+  | "ready_for_pickup";
 
 export interface AttentionItem {
-  item_type: string;
+  item_type: AttentionItemType;
   binder_id: number | null;
   client_id: number | null;
   business_id: number | null;
@@ -30,20 +34,4 @@ export interface DashboardSummaryResponse {
   open_reminders: number;
   vat_due_this_month: number;
   attention: AttentionResponse;
-}
-
-export interface WorkQueueItem {
-  binder_id: number;
-  client_id: number;
-  business_id: number;
-  client_name: string;
-  binder_number: string;
-  days_since_received: number;
-}
-
-export type WorkQueueResponse = PaginatedResponse<WorkQueueItem>;
-
-export interface ListDashboardParams {
-  page?: number;
-  page_size?: number;
 }

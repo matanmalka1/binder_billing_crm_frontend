@@ -1,7 +1,7 @@
 import { CheckCircle2, ShieldAlert } from "lucide-react";
 import type { AttentionItem } from "../api";
 import { AttentionSection } from "./AttentionSection";
-import { SECTIONS } from "../utils";
+import { SECTIONS, isKnownAttentionItem } from "../utils";
 import { cn } from "../../../utils/utils";
 
 interface AttentionPanelProps {
@@ -9,11 +9,8 @@ interface AttentionPanelProps {
 }
 
 export const AttentionPanel = ({ items }: AttentionPanelProps) => {
-  const sectionCounts = SECTIONS.map((s) => ({
-    ...s,
-    count: items.filter((i) => s.types.includes(i.item_type)).length,
-  }));
-  const totalItems = items.length;
+  const visibleItems = items.filter(isKnownAttentionItem);
+  const totalItems = visibleItems.length;
   const allClear = totalItems === 0;
 
   return (
@@ -32,19 +29,14 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            {sectionCounts.map((s) => (
-              <div
-                key={s.key}
-                className={cn(
-                  "flex h-6 min-w-[1.5rem] items-center justify-center rounded-full px-2 text-[11px] font-bold tabular-nums",
-                  s.count > 0 ? "bg-gray-100 text-gray-600" : "bg-gray-50 text-gray-300"
-                )}
-                title={s.title}
-              >
-                {s.count}
-              </div>
-            ))}
+          <div
+            className={cn(
+              "flex h-6 min-w-[1.5rem] items-center justify-center rounded-full px-2 text-[11px] font-bold tabular-nums",
+              totalItems > 0 ? "bg-gray-100 text-gray-600" : "bg-gray-50 text-gray-300",
+            )}
+            title="סך כל הפריטים"
+          >
+            {totalItems}
           </div>
       </div>
 
@@ -60,9 +52,9 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 bg-gray-50/50 p-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 bg-gray-50/50 p-4 xl:grid-cols-2">
           {SECTIONS.map((section, sectionIndex) => {
-            const sectionItems = items.filter((item) => section.types.includes(item.item_type));
+            const sectionItems = visibleItems.filter((item) => section.types.includes(item.item_type));
             return (
               <AttentionSection
                 key={section.key}

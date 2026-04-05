@@ -1,12 +1,9 @@
 import { api } from "@/api/client";
 import { DASHBOARD_ENDPOINTS } from "./endpoints";
-import { toQueryParams } from "@/api/queryParams";
 import type {
   DashboardOverviewResponse,
   DashboardSummaryResponse,
   AttentionResponse,
-  WorkQueueResponse,
-  ListDashboardParams,
 } from "./contracts";
 
 export const dashboardApi = {
@@ -27,14 +24,6 @@ export const dashboardApi = {
   getAttention: async (): Promise<AttentionResponse> => {
     const response = await api.get<AttentionResponse>(
       DASHBOARD_ENDPOINTS.dashboardAttention,
-    );
-    return response.data;
-  },
-
-  getWorkQueue: async (params: ListDashboardParams): Promise<WorkQueueResponse> => {
-    const response = await api.get<WorkQueueResponse>(
-      DASHBOARD_ENDPOINTS.dashboardWorkQueue,
-      { params: toQueryParams(params) },
     );
     return response.data;
   },

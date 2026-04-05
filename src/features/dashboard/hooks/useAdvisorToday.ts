@@ -1,10 +1,9 @@
 import { useMemo } from "react";
-import { format, addDays, subDays } from "date-fns";
+import { differenceInCalendarDays, format, addDays, subDays, parseISO } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { taxDeadlinesApi } from "@/features/taxDeadlines/api";
 import { annualReportsApi, getStatusLabel } from "@/features/annualReports/api";
 import { remindersApi } from "@/features/reminders/api";
-import { chargesApi, chargesQK } from "@/features/charges/api";
 import { dashboardQK } from "../api";
 import { useRole } from "../../../hooks/useRole";
 import { formatDate } from "../../../utils/utils";
@@ -18,18 +17,20 @@ const getDateAnchors = () => {
     today: format(now, "yyyy-MM-dd"),
     weekEnd: format(addDays(now, 7), "yyyy-MM-dd"),
     sevenDaysAgo: subDays(now, 7).toISOString(),
-    fourteenDaysAgo: subDays(now, 14).toISOString(),
-    sixtyDaysAgo: subDays(now, 60).toISOString(),
   };
 };
 
 const DONE_STATUSES = ["submitted", "accepted", "assessment_issued", "closed"];
+const STUCK_REPORT_DAYS = 14;
+
+const getReportAnchorDate = (createdAt: string, updatedAt: string) =>
+  updatedAt ? parseISO(updatedAt) : parseISO(createdAt);
 
 export const useAdvisorToday = () => {
   const { isAdvisor } = useRole();
 
   // Stable date anchors — only recomputed if the component remounts on a new day
-  const { today, weekEnd, sevenDaysAgo, fourteenDaysAgo, sixtyDaysAgo } =
+  const { today, weekEnd, sevenDaysAgo } =
     useMemo(getDateAnchors, []);
 
   const deadlinesQuery = useQuery({
@@ -59,23 +60,6 @@ export const useAdvisorToday = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  const chargesQuery = useQuery({
-    enabled: isAdvisor,
-    queryKey: chargesQK.list({
-      status: "issued",
-      issued_before: sixtyDaysAgo,
-      page_size: 20,
-    }),
-    queryFn: () =>
-      chargesApi.list({
-        status: "issued",
-        issued_before: sixtyDaysAgo,
-        page: 1,
-        page_size: 20,
-      }),
-    staleTime: 5 * 60 * 1000,
-  });
-
   const deadlineItems = useMemo<SectionItem[]>(
     () =>
       (deadlinesQuery.data?.items ?? [])
@@ -92,14 +76,22 @@ export const useAdvisorToday = () => {
   const stuckReportItems = useMemo<SectionItem[]>(
     () =>
       (reportsQuery.data?.items ?? [])
-        .filter((r) => r.created_at <= fourteenDaysAgo && !DONE_STATUSES.includes(r.status))
-        .map((r) => ({
-          id: r.id,
-          label: r.business_name ?? `עסק #${r.business_id}`,
-          sublabel: `${r.tax_year} — ${getStatusLabel(r.status)}`,
-          href: `/tax/reports/${r.id}`,
+        .map((report) => {
+          const anchorDate = getReportAnchorDate(report.created_at, report.updated_at);
+          const staleDays = differenceInCalendarDays(new Date(), anchorDate);
+          return { report, staleDays };
+        })
+        .filter(({ report, staleDays }) =>
+          staleDays >= STUCK_REPORT_DAYS && !DONE_STATUSES.includes(report.status)
+        )
+        .sort((a, b) => b.staleDays - a.staleDays)
+        .map(({ report, staleDays }) => ({
+          id: report.id,
+          label: report.business_name ?? `עסק #${report.business_id}`,
+          sublabel: `${report.tax_year} · ${getStatusLabel(report.status)} · ללא התקדמות ${staleDays} ימים`,
+          href: `/tax/reports/${report.id}`,
         })),
-    [reportsQuery.data, fourteenDaysAgo],
+    [reportsQuery.data],
   );
 
   const reminderItems = useMemo<SectionItem[]>(
@@ -115,31 +107,16 @@ export const useAdvisorToday = () => {
     [remindersQuery.data, sevenDaysAgo],
   );
 
-  const chargeItems = useMemo<SectionItem[]>(
-    () =>
-      (chargesQuery.data?.items ?? [])
-        .filter((c) => c.issued_at !== null && c.issued_at! <= sixtyDaysAgo)
-        .map((c) => ({
-          id: c.id,
-          label: c.business_name ?? `עסק #${c.business_id}`,
-          sublabel: `חיוב #${c.id}${c.issued_at ? ` — ${formatDate(c.issued_at)}` : ""}`,
-          href: `/charges/${c.id}`,
-        })),
-    [chargesQuery.data, sixtyDaysAgo],
-  );
-
   const isLoading =
     isAdvisor &&
     (deadlinesQuery.isPending ||
       reportsQuery.isPending ||
-      remindersQuery.isPending ||
-      chargesQuery.isPending);
+      remindersQuery.isPending);
 
   return {
     isLoading,
     deadlineItems,
     stuckReportItems,
     reminderItems,
-    chargeItems,
   };
 };

@@ -24,9 +24,6 @@ const getBusinessHref = (item: AttentionItem, fallback: string): string => {
 };
 
 const itemHrefMap: Record<string, (item: AttentionItem) => string> = {
-  overdue: (item) => getBusinessHref(item, "/binders"),
-  overdue_binder: (item) => getBusinessHref(item, "/binders"),
-  idle_binder: (item) => getBusinessHref(item, "/binders"),
   unpaid_charge: (item) => getBusinessHref(item, "/charges?status=issued"),
   unpaid_charges: (item) => getBusinessHref(item, "/charges?status=issued"),
   ready_for_pickup: (item) => getBusinessHref(item, "/binders?status=ready_for_pickup"),
@@ -64,14 +61,14 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
       </div>
 
       {/* ── Items list ──────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto divide-y divide-gray-50" style={{ maxHeight: "180px" }}>
+      <div className="flex-1 overflow-y-auto divide-y divide-gray-50" style={{ maxHeight: "240px" }}>
         {hasItems ? (
           items.map((item, i) => (
             <Link
               key={`${item.item_type}-${item.binder_id ?? i}-${item.business_id ?? item.client_id ?? i}`}
               to={getItemHref(item)}
               className={cn(
-                "group flex items-start gap-3 px-5 py-3 transition-colors duration-150",
+                "group flex min-h-[56px] items-start gap-3 px-5 py-3 transition-colors duration-150",
                 cfg.itemHover
               )}
             >
@@ -83,11 +80,11 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
               {/* Text */}
               <div className="min-w-0 flex-1">
                 {item.client_name && (
-                  <p className="truncate text-xs font-semibold text-gray-800 leading-snug">
+                  <p className="text-xs font-semibold text-gray-800 leading-snug">
                     {item.client_name}
                   </p>
                 )}
-                <p className="truncate text-xs text-gray-500 leading-snug mt-0.5">
+                <p className="mt-0.5 text-xs text-gray-500 leading-snug">
                   {item.description}
                 </p>
               </div>

@@ -1,5 +1,6 @@
-import { AlertTriangle, DollarSign, Package } from "lucide-react";
+import { DollarSign, Package } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import type { AttentionItem, AttentionItemType } from "./api";
 
 // ── Section variant configs ─────────────────────────────────────────────────
 
@@ -10,7 +11,7 @@ export interface SectionConfig {
   title: string;
   icon: LucideIcon;
   severity: AttentionSeverity;
-  types?: readonly string[];
+  types?: readonly AttentionItemType[];
   viewAllHref?: string;
 }
 
@@ -57,17 +58,9 @@ export const attentionSeverityCfg = {
 // ── Attention sections config ───────────────────────────────────────────────
 
 export const SECTIONS: Array<SectionConfig & {
-  types: readonly string[];
+  types: readonly AttentionItemType[];
   viewAllHref: string;
 }> = [
-  {
-    key: "overdue",
-    title: "קלסרים באיחור",
-    icon: AlertTriangle,
-    types: ["overdue", "overdue_binder", "idle_binder"],
-    severity: "critical",
-    viewAllHref: "/binders",
-  },
   {
     key: "unpaid",
     title: "חיובים שלא שולמו",
@@ -87,6 +80,13 @@ export const SECTIONS: Array<SectionConfig & {
 ] as const;
 
 export type SectionKey = (typeof SECTIONS)[number]["key"];
+
+const KNOWN_ATTENTION_TYPES = new Set<AttentionItemType>(
+  SECTIONS.flatMap((section) => section.types),
+);
+
+export const isKnownAttentionItem = (item: AttentionItem): boolean =>
+  KNOWN_ATTENTION_TYPES.has(item.item_type);
 
 // ── Advisor today section items ─────────────────────────────────────────────
 

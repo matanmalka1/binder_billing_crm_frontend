@@ -13,6 +13,4 @@ export type {
   DashboardSummaryResponse,
   AttentionItem,
   AttentionResponse,
-  WorkQueueItem,
-  WorkQueueResponse,
 } from "./api";

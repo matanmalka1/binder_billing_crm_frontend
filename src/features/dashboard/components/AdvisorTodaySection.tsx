@@ -42,7 +42,7 @@ export const AdvisorTodaySection = ({
         </span>
       </div>
 
-      <div className="flex-1 divide-y divide-gray-50 overflow-y-auto" style={{ maxHeight: "180px" }}>
+      <div className="flex-1 divide-y divide-gray-50 overflow-y-auto" style={{ maxHeight: "280px" }}>
         {hasItems ? (
           items.map((item, index) => {
             const content = (

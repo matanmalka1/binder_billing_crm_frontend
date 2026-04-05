@@ -1,4 +1,4 @@
-import { CalendarClock, Clock, Bell, Receipt, Sparkles } from "lucide-react";
+import { CalendarClock, Clock, Bell, Sparkles } from "lucide-react";
 import { AdvisorTodaySection } from "./AdvisorTodaySection";
 import { useAdvisorToday } from "../hooks/useAdvisorToday";
 import { cn } from "../../../utils/utils";
@@ -9,14 +9,12 @@ export const AdvisorTodayCard = () => {
     deadlineItems,
     stuckReportItems,
     reminderItems,
-    chargeItems,
   } = useAdvisorToday();
 
   const totalTasks =
     deadlineItems.length +
     stuckReportItems.length +
-    reminderItems.length +
-    chargeItems.length;
+    reminderItems.length;
 
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -55,7 +53,7 @@ export const AdvisorTodayCard = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 bg-gray-50/50 p-4">
+        <div className="grid grid-cols-1 gap-3 bg-gray-50/50 p-4 lg:grid-cols-3">
           <AdvisorTodaySection
             icon={CalendarClock}
             title="מועדי מס השבוע"
@@ -66,7 +64,7 @@ export const AdvisorTodayCard = () => {
           />
           <AdvisorTodaySection
             icon={Clock}
-            title="לקוחות תקועים"
+            title="דוחות תקועים"
             emptyLabel="אין דוחות תקועים"
 
             sectionIndex={1}
@@ -74,19 +72,11 @@ export const AdvisorTodayCard = () => {
           />
           <AdvisorTodaySection
             icon={Bell}
-            title="ממתינים למסמכים"
+            title="תזכורות פתוחות"
             emptyLabel="אין תזכורות תלויות"
 
             sectionIndex={2}
             items={reminderItems}
-          />
-          <AdvisorTodaySection
-            icon={Receipt}
-            title="חיובים פתוחים"
-            emptyLabel="אין חיובים ישנים"
-
-            sectionIndex={3}
-            items={chargeItems}
           />
         </div>
       )}
