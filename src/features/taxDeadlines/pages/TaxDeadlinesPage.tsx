@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Wand2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { PaginationCard } from "@/components/ui/table/PaginationCard";
 import { PageLoading } from "@/components/ui/layout/PageLoading";
@@ -41,14 +41,11 @@ export const TaxDeadlines: React.FC = () => {
     deadlines,
     total,
     totalPages,
-    handleGenerate,
-    isGenerating,
     isAdvisor,
   } = useTaxDeadlines();
 
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
   const { currentYear, submissions } = useTaxDashboard();
-  const clientIdForGenerate = null;
 
   const header = (
     <PageHeader
@@ -56,17 +53,6 @@ export const TaxDeadlines: React.FC = () => {
       description={`ניהול מועדי מס ומעקב הגשה לשנת ${currentYear}`}
       actions={
         <div className="flex gap-2">
-          {isAdvisor && clientIdForGenerate && (
-            <Button
-              variant="secondary"
-              onClick={() => handleGenerate(clientIdForGenerate, currentYear)}
-              disabled={isGenerating}
-              className="gap-2"
-            >
-              <Wand2 className="h-4 w-4" />
-              {isGenerating ? "יוצר..." : "צור דדליינים לשנה"}
-            </Button>
-          )}
           {isAdvisor && (
             <Button variant="primary" onClick={() => setShowCreateModal(true)} className="gap-2">
               <Plus className="h-4 w-4" />

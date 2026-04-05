@@ -22,10 +22,11 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
   onDelete,
 }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
-
-  const isCompleted = deadline.status === "completed";
-  const canComplete = Boolean(onComplete) && !isCompleted;
-  const hasMenu = canComplete || onEdit || onDelete;
+  const actionKeys = new Set((deadline.available_actions ?? []).map((action) => action.key));
+  const canComplete = Boolean(onComplete) && actionKeys.has("complete");
+  const canEdit = Boolean(onEdit) && actionKeys.has("edit");
+  const canDelete = Boolean(onDelete) && actionKeys.has("delete");
+  const hasMenu = canComplete || canEdit || canDelete;
   if (!hasMenu) return null;
 
   return (
@@ -39,12 +40,12 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
             disabled={completingId !== null}
           />
         )}
-        {onEdit && (
+        {canEdit && (
           <DropdownMenuItem label="עריכה" onClick={() => onEdit(deadline)} icon={<Edit2 className="h-4 w-4" />} />
         )}
-        {onDelete && (
+        {canDelete && (
           <>
-            {(canComplete || onEdit) && <div className="my-1 border-t border-gray-100" />}
+            {(canComplete || canEdit) && <div className="my-1 border-t border-gray-100" />}
             <DropdownMenuItem
               label="מחק"
               onClick={() => setConfirmDelete(true)}

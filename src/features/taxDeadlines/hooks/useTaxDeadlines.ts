@@ -95,17 +95,6 @@ export const useTaxDeadlines = () => {
     onSettled: () => setDeletingId(null),
   });
 
-  const generateMutation = useMutation({
-    mutationFn: (payload: { business_id: number; year: number }) =>
-      taxDeadlinesApi.generateDeadlines(payload),
-    onSuccess: (data, payload) => {
-      toast.success(`נוצרו ${data.created_count} דדליינים בהצלחה`);
-      queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
-      queryClient.invalidateQueries({ queryKey: timelineQK.businessRoot(payload.business_id) });
-    },
-    onError: (error) => showErrorToast(error, "שגיאה ביצירת דדליינים"),
-  });
-
   const completeMutation = useMutation({
     mutationFn: (deadlineId: number) => taxDeadlinesApi.completeTaxDeadline(deadlineId),
     onSuccess: () => {
@@ -209,10 +198,6 @@ export const useTaxDeadlines = () => {
     handleComplete,
     handleEdit,
     handleDelete,
-    // Generate
-    handleGenerate: (businessId: number, year: number) =>
-      generateMutation.mutate({ business_id: businessId, year }),
-    isGenerating: generateMutation.isPending,
     // Forms
     form,
     onSubmit,
