@@ -44,7 +44,7 @@ export const AdvancePaymentReportView: React.FC = () => {
   );
 
   const description = data
-    ? `${data.items.length} לקוחות · אחוז גבייה: ${data.collection_rate.toFixed(1)}%`
+    ? `${data.items.length} עסקים · אחוז גבייה: ${data.collection_rate.toFixed(1)}%`
     : "";
 
   const header = (

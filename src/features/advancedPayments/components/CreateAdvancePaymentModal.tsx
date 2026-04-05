@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -6,11 +7,13 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Select } from "../../../components/ui/inputs/Select";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
+import { BIMONTHLY_START_MONTH_VALUES } from "@/constants/periodOptions.constants";
 import {
   createAdvancePaymentSchema,
   CREATE_ADVANCE_PAYMENT_DEFAULTS,
   type CreateAdvancePaymentFormValues,
 } from "../schemas";
+import { ADVANCE_PAYMENT_FREQUENCY_OPTIONS } from "../constants";
 import { MONTH_OPTIONS } from "../utils";
 import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import type { CreateAdvancePaymentPayload } from "../types";
@@ -38,15 +41,28 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
     reset,
     control,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<CreateAdvancePaymentFormValues>({
     resolver: zodResolver(createAdvancePaymentSchema),
     defaultValues: CREATE_ADVANCE_PAYMENT_DEFAULTS,
   });
+  const periodMonthsCount = watch("period_months_count");
+  const month = watch("month");
+  const monthOptions =
+    periodMonthsCount === 2
+      ? MONTH_OPTIONS.filter((option) => BIMONTHLY_START_MONTH_VALUES.has(option.value))
+      : MONTH_OPTIONS;
+
+  useEffect(() => {
+    if (periodMonthsCount !== 2) return;
+    if (BIMONTHLY_START_MONTH_VALUES.has(String(month))) return;
+    setValue("month", 1, { shouldValidate: true });
+  }, [month, periodMonthsCount, setValue]);
 
   const { data: suggestion } = useQuery({
-    queryKey: advancedPaymentsQK.suggestion(businessId, year),
-    queryFn: () => advancePaymentsApi.getSuggestion(businessId, year),
+    queryKey: advancedPaymentsQK.suggestion(businessId, year, periodMonthsCount),
+    queryFn: () => advancePaymentsApi.getSuggestion(businessId, year, periodMonthsCount),
     enabled: open && businessId > 0 && year > 0,
     staleTime: 60_000,
   });
@@ -101,7 +117,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
               label="חודש"
               value={String(field.value)}
               onChange={(e) => field.onChange(Number(e.target.value))}
-              options={MONTH_OPTIONS}
+              options={monthOptions}
               error={errors.month?.message}
             />
           )}
@@ -114,10 +130,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
               label="תדירות"
               value={String(field.value)}
               onChange={(e) => field.onChange(Number(e.target.value) as 1 | 2)}
-              options={[
-                { value: "1", label: "חודשי" },
-                { value: "2", label: "דו-חודשי" },
-              ]}
+              options={ADVANCE_PAYMENT_FREQUENCY_OPTIONS}
             />
           )}
         />

@@ -7,10 +7,15 @@ interface Props {
 
 const columns: Column<AdvancePaymentReportItem>[] = [
   {
-    key: "client_name",
-    header: "לקוח",
+    key: "business_name",
+    header: "עסק",
     render: (r) => (
-      <span className="text-sm font-medium text-gray-900">{r.client_name}</span>
+      <div className="min-w-0">
+        <div className="text-sm font-medium text-gray-900">
+          {r.business_name || r.client_name}
+        </div>
+        <div className="text-xs text-gray-500">{r.client_name}</div>
+      </div>
     ),
   },
   {
@@ -52,7 +57,7 @@ export const AdvancePaymentReportTable: React.FC<Props> = ({ data }) => (
     <DataTable
       data={data.items}
       columns={columns}
-      getRowKey={(r) => r.client_id}
+      getRowKey={(r) => r.business_id}
       emptyMessage="אין נתונים לתצוגה"
     />
     {data.items.length > 0 && (

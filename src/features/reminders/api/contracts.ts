@@ -77,78 +77,102 @@ const baseCreateReminderRequestSchema = z.object({
   days_before: z.number().int().min(0),
 });
 
+const optionalMessageSchema = {
+  message: z.string().optional(),
+};
+
+const noBinderSchema = {
+  binder_id: z.never().optional(),
+};
+
+const noChargeSchema = {
+  charge_id: z.never().optional(),
+};
+
+const noTaxDeadlineSchema = {
+  tax_deadline_id: z.never().optional(),
+};
+
+const noAnnualReportSchema = {
+  annual_report_id: z.never().optional(),
+};
+
+const noAdvancePaymentSchema = {
+  advance_payment_id: z.never().optional(),
+};
+
 export const createReminderRequestSchema = z.discriminatedUnion("reminder_type", [
   baseCreateReminderRequestSchema.extend({
     reminder_type: z.literal("tax_deadline_approaching"),
     tax_deadline_id: positiveIdSchema,
-    message: z.string().optional(),
-    binder_id: z.never().optional(),
-    charge_id: z.never().optional(),
-    annual_report_id: z.never().optional(),
-    advance_payment_id: z.never().optional(),
+    ...optionalMessageSchema,
+    ...noBinderSchema,
+    ...noChargeSchema,
+    ...noAnnualReportSchema,
+    ...noAdvancePaymentSchema,
   }),
   baseCreateReminderRequestSchema.extend({
     reminder_type: z.literal("vat_filing"),
     tax_deadline_id: positiveIdSchema,
-    message: z.string().optional(),
-    binder_id: z.never().optional(),
-    charge_id: z.never().optional(),
-    annual_report_id: z.never().optional(),
-    advance_payment_id: z.never().optional(),
+    ...optionalMessageSchema,
+    ...noBinderSchema,
+    ...noChargeSchema,
+    ...noAnnualReportSchema,
+    ...noAdvancePaymentSchema,
   }),
   baseCreateReminderRequestSchema.extend({
     reminder_type: z.literal("annual_report_deadline"),
     annual_report_id: positiveIdSchema,
-    message: z.string().optional(),
-    binder_id: z.never().optional(),
-    charge_id: z.never().optional(),
-    tax_deadline_id: z.never().optional(),
-    advance_payment_id: z.never().optional(),
+    ...optionalMessageSchema,
+    ...noBinderSchema,
+    ...noChargeSchema,
+    ...noTaxDeadlineSchema,
+    ...noAdvancePaymentSchema,
   }),
   baseCreateReminderRequestSchema.extend({
     reminder_type: z.literal("advance_payment_due"),
     advance_payment_id: positiveIdSchema,
-    message: z.string().optional(),
-    binder_id: z.never().optional(),
-    charge_id: z.never().optional(),
-    tax_deadline_id: z.never().optional(),
-    annual_report_id: z.never().optional(),
+    ...optionalMessageSchema,
+    ...noBinderSchema,
+    ...noChargeSchema,
+    ...noTaxDeadlineSchema,
+    ...noAnnualReportSchema,
   }),
   baseCreateReminderRequestSchema.extend({
     reminder_type: z.literal("binder_idle"),
     binder_id: positiveIdSchema,
-    message: z.string().optional(),
-    tax_deadline_id: z.never().optional(),
-    charge_id: z.never().optional(),
-    annual_report_id: z.never().optional(),
-    advance_payment_id: z.never().optional(),
+    ...optionalMessageSchema,
+    ...noTaxDeadlineSchema,
+    ...noChargeSchema,
+    ...noAnnualReportSchema,
+    ...noAdvancePaymentSchema,
   }),
   baseCreateReminderRequestSchema.extend({
     reminder_type: z.literal("unpaid_charge"),
     charge_id: positiveIdSchema,
-    message: z.string().optional(),
-    binder_id: z.never().optional(),
-    tax_deadline_id: z.never().optional(),
-    annual_report_id: z.never().optional(),
-    advance_payment_id: z.never().optional(),
+    ...optionalMessageSchema,
+    ...noBinderSchema,
+    ...noTaxDeadlineSchema,
+    ...noAnnualReportSchema,
+    ...noAdvancePaymentSchema,
   }),
   baseCreateReminderRequestSchema.extend({
     reminder_type: z.literal("document_missing"),
-    message: z.string().optional(),
-    binder_id: z.never().optional(),
-    charge_id: z.never().optional(),
-    tax_deadline_id: z.never().optional(),
-    annual_report_id: z.never().optional(),
-    advance_payment_id: z.never().optional(),
+    ...optionalMessageSchema,
+    ...noBinderSchema,
+    ...noChargeSchema,
+    ...noTaxDeadlineSchema,
+    ...noAnnualReportSchema,
+    ...noAdvancePaymentSchema,
   }),
   baseCreateReminderRequestSchema.extend({
     reminder_type: z.literal("custom"),
     message: z.string().min(1),
-    binder_id: z.never().optional(),
-    charge_id: z.never().optional(),
-    tax_deadline_id: z.never().optional(),
-    annual_report_id: z.never().optional(),
-    advance_payment_id: z.never().optional(),
+    ...noBinderSchema,
+    ...noChargeSchema,
+    ...noTaxDeadlineSchema,
+    ...noAnnualReportSchema,
+    ...noAdvancePaymentSchema,
   }),
 ]);
 

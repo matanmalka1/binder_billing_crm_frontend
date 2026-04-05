@@ -6,6 +6,7 @@ import {
   createClientIdPickerHandlers,
   useClientPickerState,
 } from "@/components/shared/client";
+import { MONTHS_COVERED_OPTIONS } from "@/constants/periodOptions.constants";
 import { FormField, Input, SelectDropdown } from "@/components/ui/inputs";
 import { Modal, ModalFormActions } from "@/components/ui/overlays";
 import type { CreateChargePayload } from "../api";
@@ -165,10 +166,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
                   }
                   onBlur={field.onBlur}
                   name={field.name}
-                  options={[
-                    { value: "1", label: "חודשי" },
-                    { value: "2", label: "דו-חודשי" },
-                  ]}
+                  options={MONTHS_COVERED_OPTIONS}
                 />
               </FormField>
             )}

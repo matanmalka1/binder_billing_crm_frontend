@@ -29,7 +29,7 @@ export const AdvancePaymentsChart: React.FC<AdvancePaymentsChartProps> = ({
   if (isLoading || !data) return null;
 
   const chartData = data.months.map((row) => ({
-    name: getAdvancePaymentShortMonthLabel(row.period),
+    name: getAdvancePaymentShortMonthLabel(row.period, row.period_months_count),
     צפוי: row.expected_amount,
     שולם: row.paid_amount,
     פיגור: row.overdue_amount,

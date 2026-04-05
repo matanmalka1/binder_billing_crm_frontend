@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AdvancePaymentStatus } from "../types";
 import { useAdvancePayments } from "../hooks/useAdvancePayments";
@@ -30,15 +30,21 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const [modalOpen, setModalOpen] = useState(false);
   const [editRateOpen, setEditRateOpen] = useState(false);
   const [reductionOpen, setReductionOpen] = useState(false);
+  const [generationFrequency, setGenerationFrequency] = useState<1 | 2>(1);
   const { isAdvisor } = useRole();
 
   const queryClient = useQueryClient();
   const { rows, isLoading, total, create, isCreating, updateRow, updatingId, deleteRow, isDeletingId } =
     useAdvancePayments(businessId, year, statusFilter, page);
-  const { advanceRate, updateAdvanceRate, isUpdatingRate } = useAdvanceRateInsights(businessId);
+  const { advanceRate, vatType, updateAdvanceRate, isUpdatingRate } = useAdvanceRateInsights(businessId);
+
+  useEffect(() => {
+    if (vatType === "bimonthly") setGenerationFrequency(2);
+    else if (vatType === "monthly") setGenerationFrequency(1);
+  }, [vatType]);
 
   const generateMutation = useMutation({
-    mutationFn: () => advancePaymentsApi.generateSchedule(businessId, year, 1),
+    mutationFn: () => advancePaymentsApi.generateSchedule(businessId, year, generationFrequency),
     onSuccess: (data) => {
       const msg = data.created > 0 ? `נוצרו ${data.created} מקדמות` : "הכול קיים";
       toast.success(msg);
@@ -103,6 +109,8 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         onOpenReduction={() => setReductionOpen(true)}
         onOpenEditRate={() => setEditRateOpen(true)}
         onGenerateSchedule={() => generateMutation.mutate()}
+        generationFrequency={generationFrequency}
+        onGenerationFrequencyChange={setGenerationFrequency}
         isGenerating={generateMutation.isPending}
       />
       <AdvancePaymentsKPICards businessId={businessId} year={year} />

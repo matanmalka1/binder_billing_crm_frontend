@@ -4,11 +4,12 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import type { TaxProfileData } from "../hooks/useTaxProfile";
+import type { TaxProfileUpdatePayload } from "../types";
 import { taxProfileSchema, taxProfileDefaults, type TaxProfileFormValues } from "../schemas";
 
 interface Props {
   profile: TaxProfileData | null;
-  onSave: (data: Partial<TaxProfileData>) => void;
+  onSave: (data: TaxProfileUpdatePayload) => void;
   onCancel: () => void;
   isSaving: boolean;
 }
@@ -22,7 +23,7 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
           business_type: profile.business_type ?? "",
           tax_year_start: profile.tax_year_start ? String(profile.tax_year_start) : "",
           accountant_name: profile.accountant_name ?? "",
-          advance_rate: profile.advance_rate ?? null,
+          advance_rate: profile.advance_rate != null ? Number(profile.advance_rate) : null,
         }
       : taxProfileDefaults,
   });

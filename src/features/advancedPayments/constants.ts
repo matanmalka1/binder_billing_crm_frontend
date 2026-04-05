@@ -1,4 +1,5 @@
 import { getAdvancePaymentStatusLabel } from "../../utils/enums";
+import { MONTHS_COVERED_OPTIONS } from "@/constants/periodOptions.constants";
 import type { AdvancePaymentStatus } from "./types";
 import { MONTH_OPTIONS } from "./utils";
 
@@ -32,3 +33,5 @@ export const ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS = [
 ];
 
 export const PAGE_SIZE = 50;
+
+export const ADVANCE_PAYMENT_FREQUENCY_OPTIONS = MONTHS_COVERED_OPTIONS;

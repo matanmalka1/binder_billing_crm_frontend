@@ -1,4 +1,11 @@
 export type AdvancePaymentStatus = "pending" | "paid" | "partial" | "overdue";
+export type AdvancePaymentMethod =
+  | "bank_transfer"
+  | "credit_card"
+  | "check"
+  | "direct_debit"
+  | "cash"
+  | "other";
 
 export interface AdvancePaymentRow {
   id: number;
@@ -10,7 +17,7 @@ export interface AdvancePaymentRow {
   status: AdvancePaymentStatus;
   due_date: string;
   paid_at: string | null;
-  payment_method: string | null;
+  payment_method: AdvancePaymentMethod | null;
   annual_report_id: number | null;
   notes: string | null;
   delta: string | null;
@@ -33,7 +40,8 @@ export interface CreateAdvancePaymentPayload {
   due_date: string;
   expected_amount?: string | null;
   paid_amount?: string | null;
-  payment_method?: string | null;
+  payment_method?: AdvancePaymentMethod | null;
+  annual_report_id?: number | null;
   notes?: string | null;
 }
 
@@ -42,7 +50,7 @@ export interface UpdateAdvancePaymentPayload {
   expected_amount?: string | null;
   status?: AdvancePaymentStatus;
   paid_at?: string | null;
-  payment_method?: string | null;
+  payment_method?: AdvancePaymentMethod | null;
   notes?: string | null;
 }
 
@@ -52,6 +60,7 @@ export interface AdvancePaymentOverviewRow {
   business_id: number;
   business_name: string;
   period: string;
+  period_months_count: 1 | 2;
   expected_amount: string | null;
   paid_amount: string | null;
   delta: string | null;
@@ -96,6 +105,7 @@ export interface AnnualKPIResponse {
 
 export interface MonthlyChartRow {
   period: string;
+  period_months_count: 1 | 2;
   expected_amount: string;
   paid_amount: string;
   overdue_amount: string;

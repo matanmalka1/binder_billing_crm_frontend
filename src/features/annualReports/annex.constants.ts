@@ -6,6 +6,22 @@ export type FieldDef = {
   type: "text" | "number" | "date";
 };
 
+const SALE_GAIN_FIELDS: FieldDef[] = [
+  { key: "purchase_date", label: "תאריך רכישה", type: "date" },
+  { key: "sale_date", label: "תאריך מכירה", type: "date" },
+  { key: "purchase_price", label: "מחיר רכישה", type: "number" },
+  { key: "sale_price", label: "מחיר מכירה", type: "number" },
+  { key: "taxable_gain", label: "רווח חייב", type: "number" },
+];
+
+const FOREIGN_INCOME_FIELDS: FieldDef[] = [
+  { key: "country", label: "מדינה", type: "text" },
+  { key: "income_type", label: "סוג הכנסה", type: "text" },
+  { key: "gross_amount", label: "סכום ברוטו", type: "number" },
+  { key: "foreign_tax_paid", label: "מס זר ששולם", type: "number" },
+  { key: "credit_claimed", label: "זיכוי נדרש", type: "number" },
+];
+
 export const SCHEDULE_FIELDS: Record<AnnualReportScheduleKey, FieldDef[]> = {
   schedule_a: [
     { key: "business_income", label: "הכנסה מעסק", type: "number" },
@@ -18,20 +34,11 @@ export const SCHEDULE_FIELDS: Record<AnnualReportScheduleKey, FieldDef[]> = {
   ],
   schedule_bet: [
     { key: "asset_description", label: "תיאור הנכס", type: "text" },
-    { key: "purchase_date", label: "תאריך רכישה", type: "date" },
-    { key: "sale_date", label: "תאריך מכירה", type: "date" },
-    { key: "purchase_price", label: "מחיר רכישה", type: "number" },
-    { key: "sale_price", label: "מחיר מכירה", type: "number" },
+    ...SALE_GAIN_FIELDS.slice(0, 4),
     { key: "exempt_amount", label: "סכום פטור", type: "number" },
-    { key: "taxable_gain", label: "רווח חייב", type: "number" },
+    SALE_GAIN_FIELDS[4],
   ],
-  schedule_gimmel: [
-    { key: "country", label: "מדינה", type: "text" },
-    { key: "income_type", label: "סוג הכנסה", type: "text" },
-    { key: "gross_amount", label: "סכום ברוטו", type: "number" },
-    { key: "foreign_tax_paid", label: "מס זר ששולם", type: "number" },
-    { key: "credit_claimed", label: "זיכוי נדרש", type: "number" },
-  ],
+  schedule_gimmel: FOREIGN_INCOME_FIELDS,
   schedule_dalet: [
     { key: "asset_name", label: "שם הנכס", type: "text" },
     { key: "purchase_date", label: "תאריך רכישה", type: "date" },
@@ -49,19 +56,9 @@ export const SCHEDULE_FIELDS: Record<AnnualReportScheduleKey, FieldDef[]> = {
   ],
   schedule_vav: [
     { key: "security_name", label: "שם הנייר", type: "text" },
-    { key: "purchase_date", label: "תאריך רכישה", type: "date" },
-    { key: "sale_date", label: "תאריך מכירה", type: "date" },
-    { key: "purchase_price", label: "מחיר רכישה", type: "number" },
-    { key: "sale_price", label: "מחיר מכירה", type: "number" },
-    { key: "taxable_gain", label: "רווח חייב", type: "number" },
+    ...SALE_GAIN_FIELDS,
   ],
-  annex_15: [
-    { key: "country", label: "מדינה", type: "text" },
-    { key: "income_type", label: "סוג הכנסה", type: "text" },
-    { key: "gross_amount", label: "סכום ברוטו", type: "number" },
-    { key: "foreign_tax_paid", label: "מס זר ששולם", type: "number" },
-    { key: "credit_claimed", label: "זיכוי נדרש", type: "number" },
-  ], // same fields as schedule_gimmel — both report foreign income; annex_15 is for the tax credit claim
+  annex_15: FOREIGN_INCOME_FIELDS, // same fields as schedule_gimmel — both report foreign income; annex_15 is for the tax credit claim
   annex_867: [
     { key: "bank_name", label: "שם הבנק", type: "text" },
     { key: "account_number", label: "מספר חשבון", type: "text" },

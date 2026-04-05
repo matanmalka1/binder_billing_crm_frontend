@@ -33,12 +33,25 @@ const getAdvancePaymentMonthIndex = (period: string) => {
   return Number.isInteger(month) && month >= 1 && month <= 12 ? month - 1 : null;
 };
 
-export const getAdvancePaymentMonthLabel = (period: string) => {
+const getAdvancePaymentEndMonthIndex = (startMonthIndex: number, periodMonthsCount: 1 | 2) =>
+  startMonthIndex + periodMonthsCount - 1;
+
+export const getAdvancePaymentMonthLabel = (period: string, periodMonthsCount: 1 | 2 = 1) => {
   const monthIndex = getAdvancePaymentMonthIndex(period);
-  return monthIndex === null ? period : MONTH_NAMES[monthIndex];
+  if (monthIndex === null) return period;
+  if (periodMonthsCount === 1) return MONTH_NAMES[monthIndex];
+
+  const endMonthIndex = getAdvancePaymentEndMonthIndex(monthIndex, periodMonthsCount);
+  if (endMonthIndex >= MONTH_NAMES.length) return period;
+  return `${MONTH_NAMES[monthIndex]}-${MONTH_NAMES[endMonthIndex]}`;
 };
 
-export const getAdvancePaymentShortMonthLabel = (period: string) => {
+export const getAdvancePaymentShortMonthLabel = (period: string, periodMonthsCount: 1 | 2 = 1) => {
   const monthIndex = getAdvancePaymentMonthIndex(period);
-  return monthIndex === null ? period : MONTH_SHORT_NAMES[monthIndex];
+  if (monthIndex === null) return period;
+  if (periodMonthsCount === 1) return MONTH_SHORT_NAMES[monthIndex];
+
+  const endMonthIndex = getAdvancePaymentEndMonthIndex(monthIndex, periodMonthsCount);
+  if (endMonthIndex >= MONTH_SHORT_NAMES.length) return period;
+  return `${MONTH_SHORT_NAMES[monthIndex]}-${MONTH_SHORT_NAMES[endMonthIndex]}`;
 };

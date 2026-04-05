@@ -4,8 +4,8 @@ export const advancedPaymentsQK = {
     ["tax", "advance-payments", businessId, year] as const,
   forClientYear: (businessId: number, year: number) =>
     ["tax", "advance-payments", businessId, year] as const,
-  suggestion: (businessId: number, year: number) =>
-    ["tax", "advance-payments", businessId, year, "suggest"] as const,
+  suggestion: (businessId: number, year: number, periodMonthsCount: 1 | 2) =>
+    ["tax", "advance-payments", businessId, year, periodMonthsCount, "suggest"] as const,
   overview: (params: object) =>
     ["tax", "advance-payments", "overview", params] as const,
   kpi: (businessId: number, year: number) =>

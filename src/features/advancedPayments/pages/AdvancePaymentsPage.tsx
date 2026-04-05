@@ -32,7 +32,9 @@ const columns: Column<AdvancePaymentOverviewRow>[] = [
     key: "period",
     header: "חודש",
     render: (row) => (
-      <span className="text-sm text-gray-700">{getAdvancePaymentMonthLabel(row.period)}</span>
+      <span className="text-sm text-gray-700">
+        {getAdvancePaymentMonthLabel(row.period, row.period_months_count)}
+      </span>
     ),
   },
   {

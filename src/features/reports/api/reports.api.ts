@@ -1,5 +1,6 @@
 import { api } from "@/api/client";
 import { toQueryParams } from "@/api/queryParams";
+import { downloadBlob } from "@/utils/download";
 import { REPORT_ENDPOINTS } from "./endpoints";
 import type {
   AgingReportResponse,
@@ -68,21 +69,14 @@ export const reportsApi = {
       filenameMatch?.[1] ||
       `aging_report.${format === "excel" ? "xlsx" : "pdf"}`;
 
-    const blob = new Blob([response.data], {
-      type:
-        response.headers["content-type"] ||
+    downloadBlob(
+      response.data,
+      filename,
+      response.headers["content-type"] ||
         (format === "excel"
           ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           : "application/pdf"),
-    });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    );
 
     return { filename };
   },

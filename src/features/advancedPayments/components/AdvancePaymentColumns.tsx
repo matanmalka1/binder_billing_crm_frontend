@@ -23,7 +23,7 @@ export const buildAdvancePaymentColumns = (
       header: "תקופה",
       render: (row) => (
         <span className="text-sm font-semibold text-gray-900">
-          {getAdvancePaymentMonthLabel(row.period)}
+          {getAdvancePaymentMonthLabel(row.period, row.period_months_count)}
         </span>
       ),
     },

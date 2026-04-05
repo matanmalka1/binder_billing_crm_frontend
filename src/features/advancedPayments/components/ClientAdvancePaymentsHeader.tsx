@@ -4,7 +4,10 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { Select } from "../../../components/ui/inputs/Select";
 import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
 import { YEAR_OPTIONS } from "../utils";
-import { ADVANCE_PAYMENT_STATUS_FILTERS } from "../constants";
+import {
+  ADVANCE_PAYMENT_FREQUENCY_OPTIONS,
+  ADVANCE_PAYMENT_STATUS_FILTERS,
+} from "../constants";
 
 interface ClientAdvancePaymentsHeaderProps {
   isAdvisor: boolean;
@@ -16,6 +19,8 @@ interface ClientAdvancePaymentsHeaderProps {
   onOpenReduction: () => void;
   onOpenEditRate: () => void;
   onGenerateSchedule: () => void;
+  generationFrequency: 1 | 2;
+  onGenerationFrequencyChange: (frequency: 1 | 2) => void;
   isGenerating?: boolean;
 }
 
@@ -29,6 +34,8 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
   onOpenReduction,
   onOpenEditRate,
   onGenerateSchedule,
+  generationFrequency,
+  onGenerationFrequencyChange,
   isGenerating,
 }) => (
   <div className="flex items-center justify-between">
@@ -43,6 +50,13 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
           <Edit2 size={14} className="mr-1" />
           עריכת שיעור
         </Button>
+        <div className="w-32">
+          <Select
+            value={String(generationFrequency)}
+            onChange={(e) => onGenerationFrequencyChange(Number(e.target.value) as 1 | 2)}
+            options={ADVANCE_PAYMENT_FREQUENCY_OPTIONS}
+          />
+        </div>
         <Button variant="outline" size="sm" onClick={onGenerateSchedule} disabled={isGenerating}>
           {isGenerating ? "יוצר..." : "צור לוח מקדמות לשנה"}
         </Button>

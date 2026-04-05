@@ -1,5 +1,6 @@
 import { api } from "@/api/client";
 import { toQueryParams } from "@/api/queryParams";
+import { downloadBlob } from "@/utils/download";
 import { VAT_ENDPOINTS } from "./endpoints";
 import type {
   VatWorkItemResponse,
@@ -125,14 +126,6 @@ export const vatReportsApi = {
       format === "excel"
         ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         : "application/pdf";
-    const blob = new Blob([response.data], { type: response.headers["content-type"] || mimeType });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    downloadBlob(response.data, filename, response.headers["content-type"] || mimeType);
   },
 };
