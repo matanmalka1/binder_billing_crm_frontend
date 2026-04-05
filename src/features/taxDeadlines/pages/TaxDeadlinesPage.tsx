@@ -67,10 +67,12 @@ export const TaxDeadlines: React.FC = () => {
               {isGenerating ? "יוצר..." : "צור דדליינים לשנה"}
             </Button>
           )}
-          <Button variant="primary" onClick={() => setShowCreateModal(true)} className="gap-2">
-            <Plus className="h-4 w-4" />
-            מועד חדש
-          </Button>
+          {isAdvisor && (
+            <Button variant="primary" onClick={() => setShowCreateModal(true)} className="gap-2">
+              <Plus className="h-4 w-4" />
+              מועד חדש
+            </Button>
+          )}
         </div>
       }
     />
@@ -106,11 +108,11 @@ export const TaxDeadlines: React.FC = () => {
 
       <TaxDeadlinesTable
         deadlines={deadlines}
-        onComplete={handleComplete}
+        onComplete={isAdvisor ? handleComplete : undefined}
         completingId={completingId}
         onRowClick={setSelectedDeadline}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
+        onEdit={isAdvisor ? handleEdit : undefined}
+        onDelete={isAdvisor ? handleDelete : undefined}
         deletingId={deletingId}
       />
 
@@ -124,21 +126,25 @@ export const TaxDeadlines: React.FC = () => {
         />
       )}
 
-      <TaxDeadlineForm
-        open={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onSubmit={onSubmit}
-        form={form}
-        isSubmitting={isCreating}
-      />
+      {isAdvisor && (
+        <TaxDeadlineForm
+          open={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onSubmit={onSubmit}
+          form={form}
+          isSubmitting={isCreating}
+        />
+      )}
 
-      <EditTaxDeadlineFormModal
-        open={editingDeadline !== null}
-        onClose={() => setEditingDeadline(null)}
-        onSubmit={onEditSubmit}
-        form={editForm}
-        isSubmitting={isUpdating}
-      />
+      {isAdvisor && (
+        <EditTaxDeadlineFormModal
+          open={editingDeadline !== null}
+          onClose={() => setEditingDeadline(null)}
+          onSubmit={onEditSubmit}
+          form={editForm}
+          isSubmitting={isUpdating}
+        />
+      )}
 
       <TaxDeadlineDrawer
         deadline={selectedDeadline}

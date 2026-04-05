@@ -16,7 +16,7 @@ import { formatDate, cn } from "../../../utils/utils";
 
 interface TaxDeadlinesTableProps {
   deadlines: TaxDeadlineResponse[];
-  onComplete: (id: number) => void;
+  onComplete?: (id: number) => void;
   completingId: number | null;
   onRowClick?: (deadline: TaxDeadlineResponse) => void;
   onEdit?: (deadline: TaxDeadlineResponse) => void;

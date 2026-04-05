@@ -2,6 +2,7 @@ import { Controller } from "react-hook-form";
 import { Button } from "../../../components/ui/primitives/Button";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { Input } from "../../../components/ui/inputs/Input";
+import { ReportingPeriodField } from "../../../components/ui/inputs/ReportingPeriodField";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type {
@@ -28,9 +29,13 @@ interface TaxDeadlineCommonFieldsProps {
 export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = ({
   form,
 }) => {
-  const register = form.register as UseFormRegister<TaxDeadlineFormValues>;
-  const control = form.control as Control<TaxDeadlineFormValues>;
-  const errors = form.formState.errors as FieldErrors<TaxDeadlineFormValues>;
+  const typedForm = form as unknown as UseFormReturn<TaxDeadlineFormValues>;
+  const register = typedForm.register as UseFormRegister<TaxDeadlineFormValues>;
+  const control = typedForm.control as Control<TaxDeadlineFormValues>;
+  const errors = typedForm.formState.errors as FieldErrors<TaxDeadlineFormValues>;
+  const deadlineType = typedForm.watch("deadline_type");
+
+  const periodMaterialType = deadlineType === "vat" ? "vat" : "other";
 
   return (
     <>
@@ -53,6 +58,14 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
             onBlur={field.onBlur}
           />
         )}
+      />
+
+      <ReportingPeriodField
+        materialType={periodMaterialType}
+        vatType={null}
+        value={typedForm.watch("period")}
+        onChange={(value) => typedForm.setValue("period", value, { shouldDirty: true, shouldValidate: true })}
+        error={errors.period?.message}
       />
 
       <Input

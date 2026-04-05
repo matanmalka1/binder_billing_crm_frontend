@@ -34,11 +34,11 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
     <div className="space-y-3">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Input
-          label="חיפוש לקוח"
+          label="חיפוש עסק"
           type="text"
           value={searchDraft}
           onChange={(e) => setSearchDraft(e.target.value)}
-          placeholder="שם לקוח..."
+          placeholder="שם עסק..."
           startIcon={<Search className="h-4 w-4" />}
         />
         <Select
@@ -60,7 +60,7 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
       <ActiveFilterBadges
         badges={[
           filters.client_name
-            ? { key: "client_name", label: `חיפוש: ${filters.client_name}`, onRemove: () => { setSearchDraft(""); onChange("client_name", ""); } }
+            ? { key: "client_name", label: `עסק: ${filters.client_name}`, onRemove: () => { setSearchDraft(""); onChange("client_name", ""); } }
             : null,
           filters.deadline_type
             ? { key: "deadline_type", label: getTaxDeadlineTypeLabel(filters.deadline_type), onRemove: () => onChange("deadline_type", "") }

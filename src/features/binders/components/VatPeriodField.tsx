@@ -3,7 +3,7 @@ import { Select } from "../../../components/ui/inputs/Select";
 import {
   buildBimonthlyPeriodOptions,
   buildMonthlyPeriodOptions,
-} from "./periodOptions";
+} from "../../../components/ui/inputs/periodOptions";
 
 interface VatPeriodFieldProps {
   vatType: "monthly" | "bimonthly";

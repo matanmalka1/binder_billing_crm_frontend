@@ -4,13 +4,13 @@ import { Alert } from "../../../components/ui/overlays/Alert";
 import { Button } from "../../../components/ui/primitives/Button";
 import { ClientSearchInput } from "@/components/shared/client";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
+import { ReportingPeriodField } from "../../../components/ui/inputs/ReportingPeriodField";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { isClientLockedForCreate } from "../../../utils/clientStatus";
 import { getReportStatusLabel, type AnnualReportFull } from "@/features/annualReports";
 import { BINDER_TYPE_OPTIONS } from "../constants";
 import type { ReceiveBinderFormValues } from "../schemas";
-import { ReportingPeriodField } from "./ReportingPeriodField";
 
 interface BinderReceivePanelProps {
   form: UseFormReturn<ReceiveBinderFormValues>;

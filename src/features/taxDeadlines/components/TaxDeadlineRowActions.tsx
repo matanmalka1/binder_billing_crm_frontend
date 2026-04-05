@@ -8,7 +8,7 @@ interface TaxDeadlineRowActionsProps {
   deadline: TaxDeadlineResponse;
   completingId: number | null;
   deletingId?: number | null;
-  onComplete: (id: number) => void;
+  onComplete?: (id: number) => void;
   onEdit?: (deadline: TaxDeadlineResponse) => void;
   onDelete?: (id: number) => void;
 }
@@ -24,16 +24,17 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const isCompleted = deadline.status === "completed";
-  const hasMenu = !isCompleted || onEdit || onDelete;
+  const canComplete = Boolean(onComplete) && !isCompleted;
+  const hasMenu = canComplete || onEdit || onDelete;
   if (!hasMenu) return null;
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <DropdownMenu ariaLabel={`פעולות למועד ${deadline.id}`}>
-        {!isCompleted && (
+        {canComplete && (
           <DropdownMenuItem
             label="סמן הושלם"
-            onClick={() => onComplete(deadline.id)}
+            onClick={() => onComplete?.(deadline.id)}
             icon={<CheckCircle2 className="h-4 w-4 text-green-600" />}
             disabled={completingId !== null}
           />
@@ -43,7 +44,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
         )}
         {onDelete && (
           <>
-            {(!isCompleted || onEdit) && <div className="my-1 border-t border-gray-100" />}
+            {(canComplete || onEdit) && <div className="my-1 border-t border-gray-100" />}
             <DropdownMenuItem
               label="מחק"
               onClick={() => setConfirmDelete(true)}

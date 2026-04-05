@@ -53,6 +53,7 @@ export const useTaxDeadlines = () => {
       business_id: number;
       deadline_type: string;
       due_date: string;
+      period?: string | null;
       payment_amount?: string | null;
       description?: string | null;
     }) => taxDeadlinesApi.createTaxDeadline(payload),
@@ -68,7 +69,13 @@ export const useTaxDeadlines = () => {
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: {
       id: number;
-      payload: { deadline_type?: string; due_date?: string; payment_amount?: string | null; description?: string | null };
+      payload: {
+        deadline_type?: string;
+        due_date?: string;
+        period?: string | null;
+        payment_amount?: string | null;
+        description?: string | null;
+      };
     }) => taxDeadlinesApi.updateTaxDeadline(id, payload),
     onSuccess: () => {
       toast.success("מועד עודכן בהצלחה");
@@ -110,7 +117,7 @@ export const useTaxDeadlines = () => {
   });
 
   const editForm = useForm<EditTaxDeadlineForm>({
-    defaultValues: { deadline_type: "", due_date: "", payment_amount: "", description: "" },
+    defaultValues: { deadline_type: "", due_date: "", period: "", payment_amount: "", description: "" },
   });
 
   const form = useForm<CreateTaxDeadlineForm>({
@@ -118,6 +125,7 @@ export const useTaxDeadlines = () => {
       business_id: "",
       deadline_type: "vat",
       due_date: "",
+      period: "",
       payment_amount: "",
       description: "",
     },
@@ -128,6 +136,7 @@ export const useTaxDeadlines = () => {
       business_id: Number(values.business_id),
       deadline_type: values.deadline_type,
       due_date: values.due_date,
+      period: values.period || null,
       payment_amount: values.payment_amount ? values.payment_amount : null,
       description: values.description || null,
     });
@@ -141,6 +150,7 @@ export const useTaxDeadlines = () => {
       payload: {
         deadline_type: values.deadline_type || undefined,
         due_date: values.due_date || undefined,
+        period: values.period || null,
         payment_amount: values.payment_amount ? values.payment_amount : null,
         description: values.description || null,
       },
@@ -160,6 +170,7 @@ export const useTaxDeadlines = () => {
     editForm.reset({
       deadline_type: deadline.deadline_type,
       due_date: deadline.due_date,
+      period: deadline.period ?? "",
       payment_amount: deadline.payment_amount != null ? String(deadline.payment_amount) : "",
       description: deadline.description ?? "",
     });

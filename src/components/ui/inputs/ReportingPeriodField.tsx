@@ -1,5 +1,5 @@
 import type { ChangeEvent } from "react";
-import { Select } from "../../../components/ui/inputs/Select";
+import { Select } from "./Select";
 import {
   buildBimonthlyPeriodOptions,
   buildMonthlyPeriodOptions,
@@ -39,7 +39,6 @@ export const ReportingPeriodField: React.FC<ReportingPeriodFieldProps> = ({
 
   const selectOptions = [{ value: "", label: "בחר תקופה..." }, ...options];
 
-  // For annual types: auto-select current year as default if no value set
   const effectiveValue = ANNUAL_TYPES.includes(materialType) && !value
     ? String(new Date().getFullYear())
     : value;

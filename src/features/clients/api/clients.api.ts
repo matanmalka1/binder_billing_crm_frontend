@@ -16,8 +16,6 @@ import type {
   UpdateClientPayload,
   CreateBusinessPayload,
   UpdateBusinessPayload,
-  BulkBusinessActionPayload,
-  BulkBusinessActionResult,
 } from "./contracts";
 
 export const clientsApi = {
@@ -108,11 +106,6 @@ export const clientsApi = {
 
   restoreBusiness: async (businessId: number): Promise<BusinessResponse> => {
     const response = await api.post<BusinessResponse>(BUSINESS_ENDPOINTS.businessRestore(businessId));
-    return response.data;
-  },
-
-  bulkBusinessAction: async (payload: BulkBusinessActionPayload): Promise<BulkBusinessActionResult> => {
-    const response = await api.post<BulkBusinessActionResult>(BUSINESS_ENDPOINTS.businessesBulkAction, payload);
     return response.data;
   },
 };

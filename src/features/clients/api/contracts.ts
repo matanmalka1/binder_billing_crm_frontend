@@ -131,21 +131,6 @@ export interface UpdateBusinessPayload {
   closed_at?: string | null;
 }
 
-export interface BulkBusinessActionPayload {
-  business_ids: number[];
-  action: "freeze" | "close" | "activate";
-}
-
-export interface BulkBusinessFailedItem {
-  id: number;
-  error: string;
-}
-
-export interface BulkBusinessActionResult {
-  succeeded: number[];
-  failed: BulkBusinessFailedItem[];
-}
-
 export interface VatSummaryCard {
   net_vat_total: string;
   periods_filed: number;
