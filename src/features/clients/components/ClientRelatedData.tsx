@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
 import type { LucideIcon } from "lucide-react";
-import type { ClientBinderSummary, ClientChargeSummary } from "../types";
-import { formatDate } from "../../../utils/utils";
+import type { ClientChargeSummary } from "../types";
+import type { BinderDetailResponse } from "@/features/binders/api";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { getChargeTypeLabel } from "@/features/charges";
 
@@ -92,7 +92,7 @@ const RelatedItemsSection = <T,>({
 
 type ClientRelatedDataProps = {
   clientId: number;
-  binders: ClientBinderSummary[];
+  binders: BinderDetailResponse[];
   bindersTotal: number;
   charges: ClientChargeSummary[];
   chargesTotal: number;
@@ -140,7 +140,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           className="mt-6"
           getKey={(binder) => binder.id}
           getTitle={(binder) => binder.binder_number}
-          getSubtitle={(binder) => `נקלט: ${formatDate(binder.received_at)}`}
+          getSubtitle={(binder) => binder.status}
           getItemHref={(binder) => `/binders/${binder.id}`}
         />
       )}

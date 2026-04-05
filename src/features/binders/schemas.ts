@@ -9,6 +9,7 @@ export const receiveBinderSchema = z.object({
     .nullable()
     .refine((value) => value !== undefined, "נא לבחור עסק"),
   binder_type: z.string().min(1, "נא לבחור סוג חומר"),
+  annual_report_id: z.number().positive("נא לבחור דוח שנתי").nullable().optional(),
   reporting_period: z.string().nullable().optional(),
   received_at: z
     .string()

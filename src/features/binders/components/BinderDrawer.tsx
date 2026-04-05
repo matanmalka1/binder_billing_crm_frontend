@@ -5,6 +5,7 @@ import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
 import { Button } from "../../../components/ui/primitives/Button";
 import type { ReceiveBinderFormValues } from "../schemas";
 import type { BinderResponse } from "../types";
+import type { AnnualReportFull } from "@/features/annualReports";
 import { BinderActionsPanel } from "./BinderActionsPanel";
 import { BinderDetailsPanel } from "./BinderDetailsPanel";
 import { BinderHistorySection } from "./BinderHistorySection";
@@ -27,6 +28,7 @@ interface BinderDrawerProps {
   clientQuery?: string;
   selectedClient?: { id: number; name: string; client_status?: string | null } | null;
   businesses?: { id: number; business_name: string | null; business_type: string }[];
+  annualReports?: AnnualReportFull[];
   hasActiveBinder?: boolean;
   vatType?: "monthly" | "bimonthly" | "exempt" | null;
   onClientSelect?: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
@@ -49,6 +51,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   clientQuery = "",
   selectedClient = null,
   businesses = [],
+  annualReports = [],
   hasActiveBinder = false,
   vatType = null,
   onClientSelect,
@@ -93,6 +96,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
           clientQuery={clientQuery}
           selectedClient={selectedClient}
           businesses={businesses}
+          annualReports={annualReports}
           hasActiveBinder={hasActiveBinder}
           vatType={vatType}
           onClientSelect={onClientSelect!}

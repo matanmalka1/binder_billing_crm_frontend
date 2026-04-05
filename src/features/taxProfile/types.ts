@@ -1,6 +1,8 @@
 import type { TaxProfileData, TaxProfileUpdatePayload } from "./api";
 import type { TaxProfileFormValues } from "./schemas";
 
+export type { TaxProfileUpdatePayload };
+
 export interface TaxProfileQueryParams {
   businessId: number;
 }

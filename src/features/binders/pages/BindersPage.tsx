@@ -185,6 +185,7 @@ export const Binders: React.FC = () => {
         clientQuery={receive.clientQuery}
         selectedClient={receive.selectedClient}
         businesses={receive.businesses}
+        annualReports={receive.annualReports}
         hasActiveBinder={receive.hasActiveBinder}
         vatType={receive.vatType}
         onClientSelect={receive.handleClientSelect}

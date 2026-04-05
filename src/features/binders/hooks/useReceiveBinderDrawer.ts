@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { bindersApi, bindersQK } from "../api";
+import { annualReportsApi, annualReportsQK, type AnnualReportFull } from "@/features/annualReports/api";
 import { clientsApi, clientsQK } from "@/features/clients/api";
 import { taxProfileApi, taxProfileQK } from "@/features/taxProfile/api";
 import { vatReportsApi } from "@/features/vatReports/api";
@@ -17,6 +18,7 @@ const getDefaultValues = (): ReceiveBinderFormValues => ({
   client_id: undefined as unknown as number,
   business_id: undefined as unknown as number | null,
   binder_type: "",
+  annual_report_id: null,
   open_new_binder: false,
   reporting_period: null,
   received_at: format(new Date(), "yyyy-MM-dd"),
@@ -41,10 +43,12 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
 
   useEffect(() => {
     form.setValue("reporting_period", null);
+    form.setValue("annual_report_id", null);
   }, [binderType, form]);
 
   useEffect(() => {
     form.setValue("reporting_period", null);
+    form.setValue("annual_report_id", null);
   }, [businessId, form]);
 
   const { data: businessesData } = useQuery({
@@ -86,6 +90,15 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     refetchOnWindowFocus: false,
   });
 
+  const { data: annualReportsData } = useQuery({
+    queryKey: annualReportsQK.forBusiness(typeof businessId === "number" ? businessId : 0),
+    queryFn: () => annualReportsApi.listClientReports(businessId as number),
+    enabled: binderType === "annual_report" && typeof businessId === "number" && businessId > 0,
+    staleTime: 30_000,
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
   // When "all businesses" is selected (businessId === null), fetch all profiles
   // and derive a consensus vatType: bimonthly only if every business is bimonthly.
   const allBusinessProfiles = useQueries({
@@ -113,6 +126,8 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     return null;
   })();
 
+  const annualReports: AnnualReportFull[] = annualReportsData ?? [];
+
   const resetState = () => {
     form.reset(getDefaultValues());
     setClientQuery("");
@@ -130,6 +145,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
         materials: [{
           material_type: values.binder_type,
           business_id: values.business_id ?? null,
+          annual_report_id: values.annual_report_id ?? null,
           description: values.reporting_period ?? null,
         }],
       });
@@ -171,6 +187,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     setSelectedClient({ id: client.id, name: client.name, client_status: client.client_status });
     setClientQuery(client.name);
     form.setValue("client_id", client.id, { shouldValidate: true });
+    form.setValue("annual_report_id", null);
     form.setValue("reporting_period", null);
     form.setValue("business_id", undefined as unknown as number | null);
   };
@@ -180,6 +197,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     if (selectedClient) {
       setSelectedClient(null);
       form.setValue("client_id", undefined as unknown as number);
+      form.setValue("annual_report_id", null);
       form.setValue("reporting_period", null);
       form.setValue("business_id", undefined as unknown as number | null);
     }
@@ -193,6 +211,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
     clientQuery,
     selectedClient,
     businesses,
+    annualReports,
     hasActiveBinder,
     vatType,
     isSubmitting: mutation.isPending,

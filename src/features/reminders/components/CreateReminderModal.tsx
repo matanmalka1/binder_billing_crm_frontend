@@ -14,7 +14,6 @@ import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type { CreateReminderFormValues } from "../types";
 import type { BinderResponse } from "@/features/binders";
-import { getBinderTypeLabel } from "@/features/binders";
 import type { ChargeResponse } from "@/features/charges/api";
 import { getChargeTypeLabel } from "@/features/charges";
 import { getChargeStatusLabel } from "../../../utils/enums";
@@ -139,9 +138,9 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             <Select label="תיק" error={e.binder_id?.message} {...register("binder_id")}>
               <option value="">בחר תיק...</option>
               {clientBinders.map((b) => (
-                <option key={b.id} value={String(b.id)}>
-                  {b.binder_number} — {getBinderTypeLabel(b.binder_type)}
-                </option>
+              <option key={b.id} value={String(b.id)}>
+                {b.binder_number}
+              </option>
               ))}
             </Select>
           ) : (

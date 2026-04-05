@@ -14,6 +14,9 @@ export const BINDER_TYPE_OPTIONS = [
   { value: "annual_report", label: "דוח שנתי" },
   { value: "salary", label: "שכר" },
   { value: "bookkeeping", label: "הנהלת חשבונות" },
+  { value: "pension_and_insurance", label: "פנסיה וביטוח" },
+  { value: "corporate_docs", label: "מסמכי תאגיד" },
+  { value: "tax_assessment", label: "שומות מס" },
   { value: "other", label: "אחר" },
 ] as const;
 

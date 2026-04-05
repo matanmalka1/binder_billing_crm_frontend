@@ -5,7 +5,7 @@ import { MonoValue } from "../../../components/ui/primitives/MonoValue";
 import type { BinderResponse } from "../types";
 import { getStatusLabel } from "../../../utils/enums";
 import { formatDate, formatMonthYear } from "../../../utils/utils";
-import { BINDER_STATUS_VARIANTS, getBinderTypeLabel } from "../constants";
+import { BINDER_STATUS_VARIANTS } from "../constants";
 
 const formatPeriod = (start: string | null, end: string | null): string => {
   if (!start) return "—";
@@ -21,11 +21,9 @@ export const BinderDetailsPanel: React.FC<BinderDetailsPanelProps> = ({ binder }
     <>
       <DrawerSection title="פרטי קלסר">
         <DrawerField label="מספר קלסר" value={binder.binder_number} />
-        <DrawerField label="סוג חומר" value={getBinderTypeLabel(binder.binder_type)} />
         {(binder.period_start != null || binder.period_end != null) && (
           <DrawerField label="תקופה" value={formatPeriod(binder.period_start, binder.period_end)} />
         )}
-        <DrawerField label="קבלה ראשונה" value={formatDate(binder.received_at)} />
         <DrawerField
           label="מצב מילוי"
           value={

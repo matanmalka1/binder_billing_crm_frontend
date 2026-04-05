@@ -8,5 +8,5 @@ export const BINDER_ENDPOINTS = {
   binderHistory: (binderId: number | string) => `/binders/${binderId}/history`,
   binderIntakes: (binderId: number | string) => `/binders/${binderId}/intakes`,
   bindersOpen: "/binders/open",
-  businessBinders: (businessId: number | string) => `/businesses/${businessId}/binders`,
+  clientBinders: (clientId: number | string) => `/clients/${clientId}/binders`,
 } as const;

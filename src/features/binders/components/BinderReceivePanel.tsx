@@ -7,6 +7,7 @@ import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { isClientLockedForCreate } from "../../../utils/clientStatus";
+import { getReportStatusLabel, type AnnualReportFull } from "@/features/annualReports";
 import { BINDER_TYPE_OPTIONS } from "../constants";
 import type { ReceiveBinderFormValues } from "../schemas";
 import { ReportingPeriodField } from "./ReportingPeriodField";
@@ -16,6 +17,7 @@ interface BinderReceivePanelProps {
   clientQuery: string;
   selectedClient: { id: number; name: string; client_status?: string | null } | null;
   businesses: { id: number; business_name: string | null; business_type: string }[];
+  annualReports: AnnualReportFull[];
   hasActiveBinder: boolean;
   vatType: "monthly" | "bimonthly" | "exempt" | null;
   onClientSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
@@ -30,6 +32,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
   clientQuery,
   selectedClient,
   businesses,
+  annualReports,
   hasActiveBinder,
   vatType,
   onClientSelect,
@@ -51,6 +54,14 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
     { value: "", label: "בחר עסק...", disabled: true },
     ...(businesses.length > 1 ? [{ value: "all", label: "כל העסקים" }] : []),
     ...businesses.map((b) => ({ value: String(b.id), label: b.business_name ?? `עסק #${b.id}` })),
+  ];
+
+  const annualReportOptions = [
+    { value: "", label: annualReports.length > 0 ? "ללא קישור לדוח שנתי" : "אין דוחות שנתיים לעסק זה" },
+    ...annualReports.map((report) => ({
+      value: String(report.id),
+      label: `${report.tax_year} — ${getReportStatusLabel(report.status)}`,
+    })),
   ];
 
   return (
@@ -136,6 +147,26 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
               value={field.value ?? ""}
               onChange={field.onChange}
               error={errors.reporting_period?.message}
+            />
+          )}
+        />
+      )}
+
+      {selectedClient && binderType === "annual_report" && typeof form.watch("business_id") === "number" && (
+        <Controller
+          name="annual_report_id"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="דוח שנתי"
+              error={errors.annual_report_id?.message}
+              options={annualReportOptions}
+              value={field.value != null ? String(field.value) : ""}
+              onChange={(e) => {
+                field.onChange(e.target.value ? Number(e.target.value) : null);
+              }}
+              onBlur={field.onBlur}
+              name={field.name}
             />
           )}
         />

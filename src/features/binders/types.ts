@@ -1,5 +1,4 @@
 import type { BackendAction } from "../../lib/actions/types";
-import type { PaginatedResponse } from "@/types";
 
 export interface BinderResponse {
   id: number;
@@ -8,9 +7,7 @@ export interface BinderResponse {
   binder_number: string;
   period_start: string | null;
   period_end: string | null;
-  binder_type: string;
   status: string;
-  received_at: string;
   returned_at: string | null;
   pickup_person_name?: string | null;
   days_in_office?: number | null;
@@ -24,18 +21,6 @@ export interface BinderListResponse {
   page_size: number;
   total: number;
 }
-
-export interface BinderExtended {
-  id: number;
-  client_id: number;
-  binder_number: string;
-  status: string;
-  received_at: string;
-  returned_at: string | null;
-  pickup_person_name?: string | null;
-}
-
-export type BinderExtendedListResponse = PaginatedResponse<BinderExtended>;
 
 export interface BinderHistoryEntry {
   old_status: string;
@@ -75,7 +60,12 @@ export interface ReceiveBinderPayload {
   received_by: number;
   open_new_binder?: boolean;
   notes?: string | null;
-  materials?: { material_type: string; business_id?: number | null; description?: string | null }[];
+  materials?: {
+    material_type: string;
+    business_id?: number | null;
+    annual_report_id?: number | null;
+    description?: string | null;
+  }[];
 }
 
 export interface ReturnBinderPayload {

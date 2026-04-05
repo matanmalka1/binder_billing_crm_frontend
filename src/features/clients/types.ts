@@ -9,12 +9,6 @@ export interface ClientsFiltersBarProps {
   onFilterChange: (name: "page_size" | "search", value: string) => void;
 }
 
-export interface ClientBinderSummary {
-  id: number;
-  binder_number: string;
-  received_at: string;
-}
-
 export interface ClientChargeSummary {
   id: number;
   charge_type: string;

@@ -16,7 +16,7 @@ export const useBindersPage = () => {
     year: searchParams.get("year") ?? "",
     page: parsePositiveInt(searchParams.get("page"), 1),
     page_size: parsePositiveInt(searchParams.get("page_size"), 20),
-    sort_by: searchParams.get("sort_by") ?? "received_at",
+    sort_by: searchParams.get("sort_by") ?? "period_start",
     sort_dir: searchParams.get("sort_dir") ?? "desc",
   };
 

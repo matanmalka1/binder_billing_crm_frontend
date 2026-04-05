@@ -10,8 +10,6 @@ export interface BinderDetailResponse {
   status: string;
   returned_at: string | null;
   pickup_person_name: string | null;
-  notes: string | null;
-  created_at: string;
   days_in_office: number | null;
   available_actions?: BackendAction[];
 }

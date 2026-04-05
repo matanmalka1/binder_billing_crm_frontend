@@ -2,7 +2,6 @@ import { api } from "@/api/client";
 import { BINDER_ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "@/api/queryParams";
 import type {
-  BinderExtendedListResponse,
   BinderHistoryResponse,
   BinderIntakeListResponse,
   BinderListResponse,
@@ -54,10 +53,10 @@ export const bindersApi = {
   },
 
   listClientBinders: async (
-    businessId: number,
+    clientId: number,
     params: ListOperationalBindersParams,
-  ): Promise<BinderExtendedListResponse> => {
-    const response = await api.get<BinderExtendedListResponse>(BINDER_ENDPOINTS.businessBinders(businessId), {
+  ): Promise<BinderListResponseExtended> => {
+    const response = await api.get<BinderListResponseExtended>(BINDER_ENDPOINTS.clientBinders(clientId), {
       params: toQueryParams(params),
     });
     return response.data;

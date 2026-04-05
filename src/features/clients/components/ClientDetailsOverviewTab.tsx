@@ -15,7 +15,8 @@ import { ClientBusinessesCard } from "./ClientBusinessesCard";
 import { ClientVatOverviewCard } from "./ClientVatOverviewCard";
 import { CreateBusinessModal } from "./CreateBusinessModal";
 import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from "../api";
-import type { ClientBinderSummary, ClientChargeSummary } from "../types";
+import type { ClientChargeSummary } from "../types";
+import type { BinderDetailResponse } from "@/features/binders/api";
 
 const EDIT_FORM_ID = "client-edit-form";
 
@@ -24,7 +25,7 @@ export type ClientDetailsOverviewTabProps = {
   clientId: number;
   canEditClients: boolean;
   canViewCharges: boolean;
-  binders: ClientBinderSummary[];
+  binders: BinderDetailResponse[];
   bindersTotal: number;
   charges: ClientChargeSummary[];
   chargesTotal: number;

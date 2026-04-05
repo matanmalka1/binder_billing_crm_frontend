@@ -2,9 +2,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { clientsApi, clientsQK, type UpdateClientPayload, type ClientResponse, type CreateBusinessPayload } from "../api";
 import { bindersApi, bindersQK } from "@/features/binders/api";
+import type { BinderDetailResponse } from "@/features/binders/api";
 import { chargesApi, chargesQK } from "@/features/charges/api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
-import type { ClientBinderSummary, ClientChargeSummary } from "../types";
+import type { ClientChargeSummary } from "../types";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
 
@@ -15,7 +16,7 @@ type UseClientDetailsResult = {
   isValidId: boolean;
   isLoading: boolean;
   error: string | null;
-  binders: ClientBinderSummary[];
+  binders: BinderDetailResponse[];
   bindersTotal: number;
   charges: ClientChargeSummary[];
   chargesTotal: number;
