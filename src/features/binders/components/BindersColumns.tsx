@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import type { Column } from "../../../components/ui/table/DataTable";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { MonoValue } from "../../../components/ui/primitives/MonoValue";
-import { SortableHeader } from "../../../components/ui/table/SortableHeader";
 import type { BinderResponse } from "../types";
 import { getStatusLabel } from "../../../utils/enums";
 import { formatMonthYear } from "../../../utils/utils";
@@ -36,9 +35,6 @@ interface BuildBindersColumnsParams {
   onReturn: (binderId: number) => void;
   onOpenDetail: (binderId: number) => void;
   onDelete: (binderId: number) => void;
-  sortBy: string;
-  sortDir: string;
-  onSort: (key: string) => void;
 }
 
 export const buildBindersColumns = ({
@@ -48,16 +44,10 @@ export const buildBindersColumns = ({
   onReturn,
   onOpenDetail,
   onDelete,
-  sortBy,
-  sortDir,
-  onSort,
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
   {
     key: "client_name",
     header: "לקוח",
-    headerRender: () => (
-      <SortableHeader label="לקוח" columnKey="client_name" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
-    ),
     render: (binder) => <ClientCell binder={binder} />,
   },
   {
@@ -85,9 +75,6 @@ export const buildBindersColumns = ({
   {
     key: "status",
     header: "סטטוס",
-    headerRender: () => (
-      <SortableHeader label="סטטוס" columnKey="status" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
-    ),
     render: (binder) => (
       <StatusBadge
         status={binder.status}
@@ -99,9 +86,6 @@ export const buildBindersColumns = ({
   {
     key: "days_in_office",
     header: "ימים במשרד",
-    headerRender: () => (
-      <SortableHeader label="ימים במשרד" columnKey="days_in_office" sortBy={sortBy} sortDir={sortDir} onSort={onSort} />
-    ),
     render: (binder) => <MonoValue value={binder.days_in_office} format="days" returned={binder.status === "returned"} />,
   },
   {

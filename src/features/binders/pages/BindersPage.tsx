@@ -29,7 +29,6 @@ export const Binders: React.FC = () => {
     deepLinkBinderId,
     selectedBinder,
     handleFilterChange,
-    handleSort,
     setPage,
     handleSelectBinder,
     handleCloseDrawer,
@@ -79,11 +78,8 @@ export const Binders: React.FC = () => {
           setDrawerMode("detail");
         },
         onDelete: (id) => setConfirmDeleteForId(id),
-        sortBy: filters.sort_by,
-        sortDir: filters.sort_dir,
-        onSort: handleSort,
       }),
-    [actionLoadingId, markReady, revertReady, handleSelectBinder, handleSort, filters.sort_by, filters.sort_dir],
+    [actionLoadingId, markReady, revertReady, handleSelectBinder],
   );
 
   const getBinderNumberLabel = (binderId: number | null) => {

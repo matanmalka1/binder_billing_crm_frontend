@@ -4,5 +4,6 @@ export type {
   DashboardOverviewResponse,
   DashboardSummaryResponse,
   AttentionItem,
+  AttentionItemType,
   AttentionResponse,
 } from "./contracts";
