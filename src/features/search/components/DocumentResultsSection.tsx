@@ -5,9 +5,17 @@ import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "@/features
 import type { DocumentSearchResult } from "../api";
 import { cn } from "../../../utils/utils";
 
+const DOCUMENT_SEARCH_LIMIT = 50;
+
 interface DocumentResultsSectionProps {
   documents: DocumentSearchResult[];
 }
+
+const getDocumentTypeLabel = (documentType: string) =>
+  DOC_TYPE_LABELS[documentType] ?? "סוג מסמך לא ידוע";
+
+const getDocumentStatusLabel = (status: string) =>
+  STATUS_LABELS[status] ?? "סטטוס לא ידוע";
 
 export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ documents }) => {
   if (documents.length === 0) return null;
@@ -20,6 +28,9 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
         <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-100 px-1.5 text-xs font-semibold text-purple-700">
           {documents.length}
         </span>
+        {documents.length >= DOCUMENT_SEARCH_LIMIT && (
+          <span className="text-xs text-gray-400">מוצגים {DOCUMENT_SEARCH_LIMIT} ראשונים</span>
+        )}
       </div>
 
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -38,7 +49,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
             {documents.map((doc) => (
               <tr key={doc.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3 font-medium text-gray-800">
-                  {DOC_TYPE_LABELS[doc.document_type] ?? doc.document_type}
+                  {getDocumentTypeLabel(doc.document_type)}
                 </td>
                 <td className="px-4 py-3 font-mono text-xs text-gray-600 max-w-xs truncate">
                   {doc.original_filename ?? <span className="text-gray-300">—</span>}
@@ -48,7 +59,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
                 </td>
                 <td className="px-4 py-3">
                   <Badge variant={STATUS_BADGE_VARIANT[doc.status] ?? "neutral"} className="text-xs">
-                    {STATUS_LABELS[doc.status] ?? doc.status}
+                    {getDocumentStatusLabel(doc.status)}
                   </Badge>
                 </td>
                 <td className="px-4 py-3 text-gray-700">{doc.client_name}</td>

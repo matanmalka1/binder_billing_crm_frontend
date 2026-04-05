@@ -63,7 +63,7 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarExtendedProps> = ({
               type="text"
               value={filters.binder_number}
               onChange={(e) => onFilterChange("binder_number", e.target.value)}
-              placeholder="BND-..."
+              placeholder="לדוגמה: 12345"
             />
           </div>
 

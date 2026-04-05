@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useSearchDebounce } from "@/hooks/useSearchDebounce";
 import { Search as SearchIcon, FileSearch } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
@@ -18,6 +19,7 @@ import {
 export const Search: React.FC = () => {
   const { error, filters, handleFilterChange, handleReset, loading, results, documents, total } = useSearchPage();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [queryDraft, setQueryDraft] = useSearchDebounce(filters.query, (v) => handleFilterChange("query", v));
 
   const hasAdvancedFilter = Boolean(
     filters.client_name || filters.id_number || filters.binder_number,
@@ -38,7 +40,7 @@ export const Search: React.FC = () => {
     <div className="space-y-5">
       <PageHeader
         title="חיפוש"
-        description="חיפוש גלובלי על פני לקוחות וקלסרים"
+        description="חיפוש גלובלי על פני לקוחות, קלסרים ומסמכים"
       />
 
       {/* Hero search bar */}
@@ -46,8 +48,8 @@ export const Search: React.FC = () => {
         <Input
           ref={inputRef}
           type="text"
-          value={filters.query}
-          onChange={(e) => handleFilterChange("query", e.target.value)}
+          value={queryDraft}
+          onChange={(e) => setQueryDraft(e.target.value)}
           placeholder="חיפוש חופשי — שם לקוח, מספר קלסר..."
           startIcon={<SearchIcon className="h-4 w-4" />}
           autoFocus
@@ -94,7 +96,7 @@ export const Search: React.FC = () => {
           {!loading && (
             <p className="px-1 text-sm text-gray-500">
               נמצאו{" "}
-              <strong className="text-gray-900">{total.toLocaleString("he-IL")}</strong>{" "}
+              <strong className="text-gray-900">{(total + documents.length).toLocaleString("he-IL")}</strong>{" "}
               תוצאות
             </p>
           )}
