@@ -88,6 +88,8 @@ export const useClientDetails = ({
     onSuccess: () => {
       toast.success("העסק נוצר בהצלחה");
       queryClient.invalidateQueries({ queryKey: clientsQK.businesses(id) });
+      queryClient.invalidateQueries({ queryKey: clientsQK.businessesAll(id) });
+      queryClient.invalidateQueries({ queryKey: clientsQK.firstBusiness(id) });
     },
     onError: (err) => showErrorToast(err, "שגיאה ביצירת עסק"),
   });

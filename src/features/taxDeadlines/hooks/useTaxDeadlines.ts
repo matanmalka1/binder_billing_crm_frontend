@@ -23,7 +23,7 @@ export const useTaxDeadlines = () => {
 
   const filters: TaxDeadlineFilters = useMemo(
     () => ({
-      client_name: searchParams.get("client_name") || "",
+      business_name: searchParams.get("business_name") || "",
       deadline_type: searchParams.get("deadline_type") || "",
       status: searchParams.get("status") || "",
       page: parsePositiveInt(searchParams.get("page"), 1),
@@ -34,7 +34,7 @@ export const useTaxDeadlines = () => {
 
   const apiParams = useMemo(
     () => ({
-      client_name: toOptionalString(filters.client_name),
+      business_name: toOptionalString(filters.business_name),
       deadline_type: toOptionalString(filters.deadline_type),
       status: toOptionalString(filters.status),
       page: filters.page,

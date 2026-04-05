@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { getYear } from "date-fns";
 import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/overlays/DetailDrawer";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Button } from "../../../components/ui/primitives/Button";
@@ -21,6 +20,7 @@ interface TaxDeadlineDrawerProps {
 export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, onClose }) => {
   const navigate = useNavigate();
   const isCompleted = deadline?.status === "completed";
+  const canViewAdvancePayments = deadline?.deadline_type === "advance_payment" && deadline.client_id != null;
   const { urgency, daysLabel } = deadline
     ? getDeadlineUrgency(deadline.due_date, isCompleted ?? false)
     : { urgency: "green" as const, daysLabel: "—" };
@@ -34,19 +34,20 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
     >
       {deadline && (
         <>
-          <DrawerSection title="פעולות">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const year = getYear(new Date(deadline.due_date));
-                navigate(`/tax/advance-payments?client_id=${deadline.client_id}&year=${year}`);
-                onClose();
-              }}
-            >
-              ראה תשלומי מקדמה
-            </Button>
-          </DrawerSection>
+          {canViewAdvancePayments && (
+            <DrawerSection title="פעולות">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  navigate(`/clients/${deadline.client_id}/businesses/${deadline.business_id}/advance-payments`);
+                  onClose();
+                }}
+              >
+                ראה תשלומי מקדמה
+              </Button>
+            </DrawerSection>
+          )}
 
           <DrawerSection title="פרטי מועד">
             <DrawerField label="עסק" value={deadline.business_name ?? `#${deadline.business_id}`} />

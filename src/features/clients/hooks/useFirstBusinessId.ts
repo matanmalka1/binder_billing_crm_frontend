@@ -3,8 +3,8 @@ import { clientsApi, clientsQK } from "../api";
 
 export const useFirstBusinessId = (clientId: number) => {
   const { data } = useQuery({
-    queryKey: clientsQK.businesses(clientId),
-    queryFn: () => clientsApi.listBusinessesForClient(clientId),
+    queryKey: clientsQK.firstBusiness(clientId),
+    queryFn: () => clientsApi.listBusinessesForClient(clientId, { page: 1, page_size: 1 }),
     staleTime: 60_000,
   });
 

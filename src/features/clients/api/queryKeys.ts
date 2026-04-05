@@ -6,4 +6,6 @@ export const clientsQK = {
   statusCard: (id: number, year?: number) =>
     ["clients", "status-card", id, year ?? "current"] as const,
   businesses: (clientId: number) => ["clients", "businesses", clientId] as const,
+  businessesAll: (clientId: number) => ["clients", "businesses", "all", clientId] as const,
+  firstBusiness: (clientId: number) => ["clients", "businesses", "first", clientId] as const,
 } as const;

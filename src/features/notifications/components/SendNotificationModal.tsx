@@ -55,7 +55,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
         clientsApi.getById(clientId).then((data) => {
           setClientContact({ phone: data.phone, email: data.email });
         }).catch(() => setClientContact(null));
-        clientsApi.listBusinessesForClient(clientId).then((data) => {
+        clientsApi.listAllBusinessesForClient(clientId).then((data) => {
           const active = data.items.find((b) => b.status === "active") ?? data.items[0];
           setSelectedBusinessId(active?.id ?? null);
         }).catch(() => setSelectedBusinessId(null));
@@ -132,7 +132,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
                 try {
                   const [clientData, bizData] = await Promise.all([
                     clientsApi.getById(c.id),
-                    clientsApi.listBusinessesForClient(c.id),
+                    clientsApi.listAllBusinessesForClient(c.id),
                   ]);
                   setClientContact({ phone: clientData.phone, email: clientData.email });
                   const active = bizData.items.find((b) => b.status === "active") ?? bizData.items[0];

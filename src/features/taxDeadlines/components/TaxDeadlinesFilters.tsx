@@ -19,13 +19,13 @@ interface TaxDeadlinesFiltersProps {
 
 export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersProps) => {
   const [searchDraft, setSearchDraft] = useSearchDebounce(
-    filters.client_name ?? "",
-    (v) => onChange("client_name", v),
+    filters.business_name ?? "",
+    (v) => onChange("business_name", v),
   );
 
   const handleReset = () => {
     setSearchDraft("");
-    onChange("client_name", "");
+    onChange("business_name", "");
     onChange("deadline_type", "");
     onChange("status", "");
   };
@@ -59,8 +59,8 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
 
       <ActiveFilterBadges
         badges={[
-          filters.client_name
-            ? { key: "client_name", label: `עסק: ${filters.client_name}`, onRemove: () => { setSearchDraft(""); onChange("client_name", ""); } }
+          filters.business_name
+            ? { key: "business_name", label: `עסק: ${filters.business_name}`, onRemove: () => { setSearchDraft(""); onChange("business_name", ""); } }
             : null,
           filters.deadline_type
             ? { key: "deadline_type", label: getTaxDeadlineTypeLabel(filters.deadline_type), onRemove: () => onChange("deadline_type", "") }

@@ -43,8 +43,9 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
   const firstBusinessId = useFirstBusinessId(clientId);
 
   const { data, isLoading } = useQuery({
-    queryKey: clientsQK.statusCard(clientId, selectedYear),
-    queryFn: () => clientsApi.getStatusCard(clientId, selectedYear),
+    queryKey: clientsQK.statusCard(firstBusinessId ?? clientId, selectedYear),
+    queryFn: () => clientsApi.getStatusCard(firstBusinessId!, selectedYear),
+    enabled: firstBusinessId != null,
     staleTime: 30_000,
     retry: 1,
   });
@@ -57,6 +58,14 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
             <div key={i} className="h-24 animate-pulse rounded-lg bg-gray-100" />
           ))}
         </div>
+      </Card>
+    );
+  }
+
+  if (firstBusinessId == null) {
+    return (
+      <Card title="סטטוס לקוח">
+        <p className="text-sm text-gray-500">אין לעסקי הלקוח נתוני סטטוס להצגה.</p>
       </Card>
     );
   }

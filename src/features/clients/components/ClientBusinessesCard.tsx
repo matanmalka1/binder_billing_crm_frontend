@@ -26,8 +26,8 @@ interface Props {
 
 export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAddBusiness }) => {
   const { data, isLoading } = useQuery({
-    queryKey: clientsQK.businesses(clientId),
-    queryFn: () => clientsApi.listBusinessesForClient(clientId),
+    queryKey: clientsQK.businessesAll(clientId),
+    queryFn: () => clientsApi.listAllBusinessesForClient(clientId),
   });
 
   const businesses = data?.items ?? [];

@@ -20,20 +20,22 @@ export const useBusinessDetails = ({ clientId, businessId }: UseBusinessDetailsP
     enabled: isValidId,
   });
 
-  const businessesQuery = useQuery({
-    queryKey: clientsQK.businesses(clientId!),
-    queryFn: () => clientsApi.listBusinessesForClient(clientId!),
+  const businessQuery = useQuery({
+    queryKey: ["businesses", "detail", businessId ?? "none"],
+    queryFn: () => clientsApi.getBusinessById(businessId!),
     enabled: isValidId,
   });
 
   const business =
-    businessesQuery.data?.items.find((b) => b.id === businessId) ?? null;
+    businessQuery.data?.client_id === clientId ? businessQuery.data : null;
 
-  const isLoading = clientQuery.isLoading || businessesQuery.isLoading;
+  const isLoading = clientQuery.isLoading || businessQuery.isLoading;
   const error = clientQuery.error
     ? getErrorMessage(clientQuery.error, "שגיאה בטעינת פרטי לקוח")
-    : businessesQuery.error
-    ? getErrorMessage(businessesQuery.error, "שגיאה בטעינת פרטי עסק")
+    : businessQuery.error
+    ? getErrorMessage(businessQuery.error, "שגיאה בטעינת פרטי עסק")
+    : businessQuery.data && businessQuery.data.client_id !== clientId
+    ? "העסק אינו שייך ללקוח שנבחר"
     : null;
 
   return {

@@ -52,8 +52,8 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   }, [businessId, form]);
 
   const { data: businessesData } = useQuery({
-    queryKey: clientsQK.businesses(clientId!),
-    queryFn: () => clientsApi.listBusinessesForClient(clientId!),
+    queryKey: clientsQK.businessesAll(clientId!),
+    queryFn: () => clientsApi.listAllBusinessesForClient(clientId!),
     enabled: !!clientId,
     staleTime: 30_000,
     retry: 1,

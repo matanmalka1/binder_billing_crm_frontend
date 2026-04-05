@@ -18,6 +18,8 @@ import type {
   UpdateBusinessPayload,
 } from "./contracts";
 
+const CLIENT_BUSINESSES_PAGE_SIZE = 100;
+
 export const clientsApi = {
   // ── Queries ──────────────────────────────────────────────────────────────
 
@@ -59,6 +61,36 @@ export const clientsApi = {
       params ? { params: toQueryParams(params) } : undefined,
     );
     return response.data;
+  },
+
+  listAllBusinessesForClient: async (clientId: number): Promise<ClientBusinessesResponse> => {
+    let page = 1;
+    let total = 0;
+    let client_id = clientId;
+    const items: BusinessResponse[] = [];
+
+    while (true) {
+      const response = await clientsApi.listBusinessesForClient(clientId, {
+        page,
+        page_size: CLIENT_BUSINESSES_PAGE_SIZE,
+      });
+      client_id = response.client_id;
+      total = response.total;
+      items.push(...response.items);
+
+      if (items.length >= total || response.items.length < CLIENT_BUSINESSES_PAGE_SIZE) {
+        break;
+      }
+      page += 1;
+    }
+
+    return {
+      client_id,
+      items,
+      page: 1,
+      page_size: items.length,
+      total,
+    };
   },
 
   getStatusCard: async (businessId: number, year?: number): Promise<BusinessStatusCardResponse> => {
