@@ -30,7 +30,6 @@ export const EXPENSE_CATEGORIES = [
   "postage_and_shipping",
   "bank_fees",
   "mixed_expense",
-  "other",
 ] as const;
 
 export type ExpenseCategoryKey = (typeof EXPENSE_CATEGORIES)[number];
@@ -60,7 +59,6 @@ export const CATEGORY_LABELS: Record<string, string> = {
   postage_and_shipping: "משלוחים ודואר",
   bank_fees: "עמלות בנק",
   mixed_expense: "הוצאה מעורבת",
-  other: "אחר",
 };
 
 export const CATEGORY_COLORS: Record<string, string> = {
@@ -87,7 +85,6 @@ export const CATEGORY_COLORS: Record<string, string> = {
   postage_and_shipping: "bg-emerald-500",
   bank_fees: "bg-violet-500",
   mixed_expense: "bg-orange-500",
-  other: "bg-slate-400",
 };
 
 /** VAT deduction rates per expense category (frontend display only) */
@@ -115,7 +112,6 @@ export const DEDUCTION_RATES: Record<string, number> = {
   postage_and_shipping: 1.0,
   bank_fees: 1.0,
   mixed_expense: 2 / 3,
-  other: 0.0,
 };
 
 /** Like CATEGORY_LABELS but travel → "נסיעות/רכב" for the breakdown table */
