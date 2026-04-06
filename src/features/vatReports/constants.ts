@@ -160,6 +160,7 @@ export const VAT_EXPENSE_CATEGORY_FILTER_OPTIONS = [
 export const VAT_FILING_METHOD_LABELS: Record<string, string> = {
   manual: "ידנית",
   online: "אונליין",
+  representative: "דרך מערכת המייצגים",
 };
 
 export const VAT_RATE_TYPE_LABELS: Record<string, string> = {
@@ -174,6 +175,7 @@ export const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   receipt: "קבלה",
   consolidated: "חשבונית מרוכזת",
   self_invoice: "חשבונית עצמית",
+  credit_note: "הודעת זיכוי",
 };
 
 export const ISRAEL_VAT_RATE = 0.18;
@@ -187,4 +189,5 @@ export const DOCUMENT_TYPES = [
   "receipt",
   "consolidated",
   "self_invoice",
+  "credit_note",
 ] as const;

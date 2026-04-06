@@ -172,7 +172,7 @@ export interface VatClientSummaryResponse {
 }
 
 export interface FileVatReturnPayload {
-  submission_method: "manual" | "online";
+  submission_method: "manual" | "online" | "representative";
   override_amount?: number | null;
   override_justification?: string | null;
   submission_reference?: string;

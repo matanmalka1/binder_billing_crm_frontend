@@ -18,12 +18,12 @@ interface VatFileModalProps {
   onFilingEnd?: () => void;
 }
 
-const FILING_METHODS = ["online", "manual"] as const;
+const FILING_METHODS = ["online", "manual", "representative"] as const;
 
 export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, onClose, onFilingStart, onFilingEnd }) => {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
-  const [filingMethod, setFilingMethod] = useState<"online" | "manual">("online");
+  const [filingMethod, setFilingMethod] = useState<"online" | "manual" | "representative">("online");
   const [submissionReference, setSubmissionReference] = useState("");
   const [isAmendment, setIsAmendment] = useState(false);
   const [amendsItemId, setAmendsItemId] = useState("");
@@ -91,7 +91,7 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
           <label className="block text-sm font-medium text-gray-700 mb-1">אופן הגשה</label>
           <SelectDropdown
             value={filingMethod}
-            onChange={(e) => setFilingMethod(e.target.value as "online" | "manual")}
+            onChange={(e) => setFilingMethod(e.target.value as "online" | "manual" | "representative")}
             options={FILING_METHODS.map((m) => ({ value: m, label: VAT_FILING_METHOD_LABELS[m] }))}
           />
         </div>
