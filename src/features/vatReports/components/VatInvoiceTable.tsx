@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Trash2, Receipt, Pencil } from "lucide-react";
+import { Button } from "../../../components/ui/primitives/Button";
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import {
   formatVatAmount,
@@ -156,22 +157,28 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                   {canEdit && (
                     <td className="px-2 py-2">
                       <div className="flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-                        <button
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
                           onClick={() => setEditingId(inv.id)}
                           disabled={editingId !== null}
-                          className="rounded p-1 text-gray-300 hover:bg-info-50 hover:text-info-500 disabled:cursor-not-allowed disabled:opacity-30"
+                          className="p-1 text-gray-300 hover:bg-info-50 hover:text-info-500"
                           aria-label="ערוך חשבונית"
                         >
                           <Pencil className="h-3.5 w-3.5" />
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
                           onClick={() => setConfirmId(inv.id)}
                           disabled={editingId !== null}
-                          className="rounded p-1 text-gray-300 hover:bg-negative-50 hover:text-negative-500 disabled:cursor-not-allowed disabled:opacity-30"
+                          className="p-1 text-gray-300 hover:bg-negative-50 hover:text-negative-500"
                           aria-label="מחק חשבונית"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
-                        </button>
+                        </Button>
                       </div>
                     </td>
                   )}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Link2 } from "lucide-react";
+import { Button } from "../../../components/ui/primitives/Button";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "../../../utils/enums";
 import { formatDate, formatDateTime } from "../../../utils/utils";
@@ -57,13 +58,15 @@ export const SignatureRequestRow: React.FC<Props> = ({
             onCancel={onCancel}
             onAudit={onAudit}
           />
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => setExpanded((v) => !v)}
-            className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            className="p-1.5 text-gray-400 hover:text-gray-600"
           >
             {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-          </button>
+          </Button>
         </div>
       </div>
 

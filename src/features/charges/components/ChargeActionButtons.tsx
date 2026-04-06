@@ -1,5 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
-import { cn } from "../../../utils/utils";
+import { Button } from "../../../components/ui/primitives/Button";
 import { canCancel, canIssue, canMarkPaid } from "../utils";
 
 interface ChargeActionButtonsProps {
@@ -10,9 +10,6 @@ interface ChargeActionButtonsProps {
   onCancel: React.MouseEventHandler<HTMLButtonElement>;
   size?: "sm" | "inline";
 }
-
-const btn =
-  "inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50";
 
 export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
   status,
@@ -27,35 +24,41 @@ export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
   return (
     <div className={gap}>
       {canIssue(status) && (
-        <button
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           disabled={disabled}
           onClick={onIssue}
-          className={cn(btn, "border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50")}
+          className="border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 text-xs px-2.5 py-1"
         >
           הנפקה
-        </button>
+        </Button>
       )}
       {canMarkPaid(status) && (
-        <button
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           disabled={disabled}
           onClick={onMarkPaid}
-          className={cn(btn, "gap-1.5 border-positive-200 bg-positive-50 text-positive-700 hover:bg-positive-100")}
+          className="border-positive-200 bg-positive-50 text-positive-700 hover:bg-positive-100 text-xs px-2.5 py-1"
         >
           <CheckCircle2 className="h-3.5 w-3.5" />
           סימון שולם
-        </button>
+        </Button>
       )}
       {canCancel(status) && (
-        <button
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           disabled={disabled}
           onClick={onCancel}
-          className={cn(btn, "border-negative-200 bg-negative-50 text-negative-700 hover:bg-negative-100")}
+          className="border-negative-200 bg-negative-50 text-negative-700 hover:bg-negative-100 text-xs px-2.5 py-1"
         >
           ביטול
-        </button>
+        </Button>
       )}
     </div>
   );

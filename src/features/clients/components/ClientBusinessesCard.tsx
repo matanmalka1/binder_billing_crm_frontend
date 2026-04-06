@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "../../../components/ui/primitives/Button";
 import { clientsApi, clientsQK } from "../api";
 import { formatDate } from "../../../utils/utils";
 import type { BusinessStatus } from "../api/contracts";
@@ -37,14 +38,16 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-800">עסקים</h3>
         {canEdit && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={onAddBusiness}
-            className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-primary-600 hover:bg-primary-50 transition-colors"
+            className="text-xs text-primary-600 hover:bg-primary-50 px-2 py-1"
           >
             <Plus className="h-3.5 w-3.5" />
             הוסף עסק
-          </button>
+          </Button>
         )}
       </div>
 

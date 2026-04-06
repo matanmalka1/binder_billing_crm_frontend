@@ -22,13 +22,12 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarExtendedProps> = ({
   return (
     <div>
       {/* Toggle row */}
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="sm"
         onClick={onToggle}
-        className={cn(
-          "flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
-          "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
-        )}
+        className="text-gray-600 hover:text-gray-900"
       >
         <SlidersHorizontal className="h-4 w-4" />
         פילטרים מתקדמים
@@ -38,7 +37,7 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarExtendedProps> = ({
           </span>
         )}
         {isOpen ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-      </button>
+      </Button>
 
       {/* Collapsible panel */}
       {isOpen && (

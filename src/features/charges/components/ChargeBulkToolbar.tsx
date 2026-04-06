@@ -46,16 +46,18 @@ export const ChargeBulkToolbar: React.FC<ChargeBulkToolbarProps> = ({
               variant="danger"
               onClick={() => void handleCancel()}
             />
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 setShowCancelInput(false);
                 setCancelReason("");
               }}
-              className="text-xs text-gray-500 hover:text-gray-700"
+              className="text-xs text-gray-500 hover:text-gray-700 px-2"
             >
               חזור
-            </button>
+            </Button>
           </div>
         ) : null
       }

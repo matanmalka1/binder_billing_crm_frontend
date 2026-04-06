@@ -2,6 +2,7 @@ import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
 import { RefreshCw, Search, X, ChevronDown, Filter } from "lucide-react";
 import { Button } from "../../../components/ui/primitives/Button";
+import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { getEventColor } from "../constants";
 import { getEventTypeLabel } from "../utils";
@@ -59,20 +60,23 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
       <div className="flex flex-col gap-3 px-4 py-3 md:flex-row md:items-center border-b border-gray-100">
         {/* Search */}
         <div className="flex-1 relative">
-          <Search className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <input
+          <Input
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="חיפוש לפי תיאור, מספר קלסר או חיוב..."
-            className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 pr-10 text-sm placeholder:text-gray-400 focus:border-primary-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-100 transition-all"
+            startIcon={<Search className="h-4 w-4" />}
+            className="py-2 text-sm bg-gray-50 focus:bg-white"
           />
           {searchTerm && (
-            <button
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => onSearchChange("")}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute left-3 top-1/2 -translate-y-1/2 p-0.5 text-gray-400 hover:text-gray-600 hover:bg-transparent"
             >
               <X className="h-3.5 w-3.5" />
-            </button>
+            </Button>
           )}
         </div>
 
@@ -158,13 +162,16 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
         })}
 
         {hasActiveFilters && (
-          <button
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
             onClick={onClearFilters}
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs text-negative-600 hover:bg-negative-50 border border-transparent hover:border-negative-200 transition-all"
+            className="text-xs text-negative-600 hover:bg-negative-50 hover:text-negative-600 px-2.5 py-1 rounded-full border border-transparent hover:border-negative-200"
           >
             <X className="h-3 w-3" />
             נקה
-          </button>
+          </Button>
         )}
       </div>
     </div>

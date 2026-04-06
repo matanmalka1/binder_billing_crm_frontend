@@ -161,8 +161,10 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
             <>
               <div className="flex items-center gap-2 text-sm font-semibold text-gray-800">
                 <span className="max-w-sm truncate">{selectedFile.name}</span>
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     setValue("file", null, { shouldValidate: false });
@@ -173,7 +175,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
                   aria-label="הסר קובץ"
                 >
                   <X className="h-4 w-4" />
-                </button>
+                </Button>
               </div>
               <span className="text-xs text-gray-400">{formatFileSize(selectedFile.size)}</span>
             </>

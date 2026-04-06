@@ -163,13 +163,15 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
                 error={errors.expected_amount?.message}
               />
               {suggestion?.has_data && suggestion.suggested_amount != null && (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={applySuggestion}
-                  className="text-sm text-primary-600 hover:underline text-right w-full"
+                  className="text-sm text-primary-600 hover:underline text-right w-full px-0 hover:bg-transparent justify-end"
                 >
                   הצעה לפי מחזור שנה קודמת: ₪{Number(suggestion.suggested_amount).toLocaleString("he-IL")} — לחץ למילוי
-                </button>
+                </Button>
               )}
             </div>
           )}

@@ -1,4 +1,5 @@
 import { ChevronLeft } from "lucide-react";
+import { Button } from "../../../components/ui/primitives/Button";
 import { cn } from "../../../utils/utils";
 import { formatVatAmount } from "../utils";
 import { ISRAEL_VAT_RATE_PERCENT } from "../constants";
@@ -13,9 +14,9 @@ export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }
         מע&quot;מ עסקאות – מכירות
       </p>
       {onNavigate && (
-        <button onClick={onNavigate} className="cursor-pointer flex items-center text-positive-600 hover:text-positive-800">
+        <Button type="button" variant="ghost" size="sm" onClick={onNavigate} className="p-0.5 text-positive-600 hover:text-positive-800 hover:bg-transparent">
           <ChevronLeft className="h-4 w-4" />
-        </button>
+        </Button>
       )}
     </div>
     <div className="space-y-2 text-sm">
@@ -48,9 +49,9 @@ export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) 
         מע&quot;מ תשומות – הוצאות
       </p>
       {onNavigate && (
-        <button onClick={onNavigate} className="cursor-pointer flex items-center text-warning-600 hover:text-warning-800">
+        <Button type="button" variant="ghost" size="sm" onClick={onNavigate} className="p-0.5 text-warning-600 hover:text-warning-800 hover:bg-transparent">
           <ChevronLeft className="h-4 w-4" />
-        </button>
+        </Button>
       )}
     </div>
     <div className="space-y-1.5 text-sm">

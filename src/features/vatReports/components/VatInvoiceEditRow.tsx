@@ -1,6 +1,7 @@
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
+import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
@@ -177,24 +178,29 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
       <td className="px-2 py-1.5 text-xs text-gray-400">—</td>
       <td className="px-2 py-1.5">
         <div className="flex gap-1">
-          <button
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
             onClick={handleSubmit(onSubmit)}
             onKeyDown={handleEscapeKeyDown}
             disabled={isSaving}
-            className="rounded p-1 text-positive-600 hover:bg-positive-50 disabled:opacity-50"
+            className="p-1 text-positive-600 hover:bg-positive-50 hover:text-positive-600"
             aria-label="שמור"
           >
             <Check className="h-3.5 w-3.5" />
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={onCancel}
             onKeyDown={handleEscapeKeyDown}
-            className="rounded p-1 text-gray-400 hover:bg-gray-100"
+            className="p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
             aria-label="ביטול"
           >
             <X className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         </div>
       </td>
     </tr>

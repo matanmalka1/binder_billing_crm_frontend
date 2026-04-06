@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { X } from "lucide-react";
 import { cn } from "../../../utils/utils";
+import { Button } from "../../../components/ui/primitives/Button";
 import { useNotifications } from "../hooks/useNotifications";
 import { useRole } from "../../../hooks/useRole";
 import { useEscapeToClose } from "../../../components/ui/overlays/useEscapeToClose";
@@ -56,30 +58,36 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
           <h3 className="text-base font-semibold text-gray-900">התראות</h3>
           <div className="flex items-center gap-3">
             {isAdvisor && (
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => setSendOpen(true)}
-                className="text-xs text-positive-700 hover:text-positive-700 font-medium"
+                className="text-xs text-positive-700 hover:text-positive-700 font-medium px-0 hover:bg-transparent"
               >
                 שלח הודעה
-              </button>
+              </Button>
             )}
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={handleMarkAllRead}
               disabled={unreadCount === 0}
-              className="text-xs text-primary-600 hover:text-primary-700 disabled:text-gray-400 disabled:cursor-not-allowed font-medium"
+              className="text-xs text-primary-600 hover:text-primary-700 font-medium px-0 hover:bg-transparent"
             >
               סמן הכל כנקרא
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={onClose}
-              className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
               aria-label="סגירה"
+              className="p-1"
             >
-              ✕
-            </button>
+              <X className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
@@ -89,12 +97,13 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
             <p className="px-5 py-8 text-center text-sm text-gray-400">אין התראות</p>
           )}
           {limited.map((item) => (
-            <button
+            <Button
               key={item.id}
               type="button"
+              variant="ghost"
               onClick={() => handleItemClick(item)}
               className={cn(
-                "w-full text-right px-5 py-4 flex flex-col gap-1 hover:bg-gray-50 transition-colors",
+                "w-full text-right px-5 py-4 flex flex-col gap-1 hover:bg-gray-50 rounded-none",
                 !item.is_read && "bg-info-50 hover:bg-info-100",
               )}
             >
@@ -114,7 +123,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
               <span className="text-xs text-gray-400">
                 {new Date(item.created_at).toLocaleDateString("he-IL", { hour: "2-digit", minute: "2-digit" })}
               </span>
-            </button>
+            </Button>
           ))}
         </div>
       </div>

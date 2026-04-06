@@ -67,16 +67,18 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
         {ADVANCE_PAYMENT_STATUS_FILTERS.map((status) => {
           const active = statusFilter.includes(status);
           return (
-            <button
+            <Button
               key={status}
               type="button"
+              variant="outline"
+              size="sm"
               onClick={() => onToggleStatus(status)}
               className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                active ? "bg-primary-600 text-white border-primary-600" : "bg-white text-gray-600 border-gray-300 hover:border-primary-400"
+                active ? "bg-primary-600 text-white border-primary-600 hover:bg-primary-700" : "bg-white text-gray-600 border-gray-300 hover:border-primary-400"
               }`}
             >
               {getAdvancePaymentStatusLabel(status)}
-            </button>
+            </Button>
           );
         })}
       </div>

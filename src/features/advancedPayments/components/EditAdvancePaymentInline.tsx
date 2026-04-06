@@ -51,34 +51,28 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
       onClick={(e) => e.stopPropagation()}
       onKeyDown={handleKeyDown}
     >
-      <input
+      <Input
         type="number"
         min={0}
         value={paidAmount}
         onChange={(e) => setPaidAmount(e.target.value)}
         placeholder="שולם"
-        className="w-20 rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 text-left"
+        className="w-20 py-1 text-xs text-left"
         autoFocus
       />
-      <input
+      <Input
         type="number"
         min={0}
         value={expectedAmount}
         onChange={(e) => setExpectedAmount(e.target.value)}
         placeholder="צפוי"
-        className="w-20 rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 text-left"
+        className="w-20 py-1 text-xs text-left"
       />
-      <select
+      <Select
         value={status}
         onChange={(e) => setStatus(e.target.value as AdvancePaymentStatus)}
-        className="rounded border border-gray-300 px-1 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
-      >
-        {ADVANCE_PAYMENT_STATUS_OPTIONS.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+        options={ADVANCE_PAYMENT_STATUS_OPTIONS}
+      />
       {isUpdating ? (
         <Loader2 size={14} className="animate-spin text-primary-500" />
       ) : (

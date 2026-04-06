@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/primitives/Button";
+import { Input } from "@/components/ui/inputs/Input";
 import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
 import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
 import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
@@ -146,12 +147,12 @@ export const Binders: React.FC = () => {
           setPickupPersonName("");
         }}
       >
-        <input
+        <Input
           type="text"
-          className="mt-3 w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
           placeholder="שם האיש המאסף (אופציונלי)"
           value={pickupPersonName}
           onChange={(e) => setPickupPersonName(e.target.value)}
+          className="mt-3"
         />
       </ConfirmDialog>
 

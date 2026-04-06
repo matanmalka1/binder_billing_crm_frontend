@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "../../../components/ui/primitives/Button";
 import { vatReportsApi } from "../api";
 import { vatReportsQK } from "../api/queryKeys";
 import { formatDateTime } from "../../../utils/utils";
@@ -70,23 +71,27 @@ export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-gray-500" dir="rtl">
-          <button
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
-            className="rounded px-3 py-1 hover:bg-gray-100 disabled:opacity-40"
           >
             הקודם
-          </button>
+          </Button>
           <span>
             עמוד {page + 1} מתוך {totalPages}
           </span>
-          <button
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => setPage((p) => Math.min(maxPageIndex, Math.max(0, p + 1)))}
             disabled={page >= maxPageIndex}
-            className="rounded px-3 py-1 hover:bg-gray-100 disabled:opacity-40"
           >
             הבא
-          </button>
+          </Button>
         </div>
       )}
     </div>
