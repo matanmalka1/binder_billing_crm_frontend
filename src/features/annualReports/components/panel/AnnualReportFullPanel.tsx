@@ -25,7 +25,7 @@ const NAV_ITEMS: { key: SectionKey; icon: ComponentType<{ size?: number; classNa
 ];
 
 const tabVariants: Record<"active" | "inactive", string> = {
-  active:   "border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/40",
+  active:   "border-b-2 border-info-600 text-info-700 font-semibold bg-info-50/40",
   inactive: "text-gray-500 hover:text-gray-800 hover:bg-gray-50",
 };
 
@@ -48,7 +48,7 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
   }
 
   if (error || !report) {
-    return <div className="flex flex-1 items-center justify-center py-24 text-sm text-red-500">{error ?? "שגיאה בטעינת הדוח"}</div>;
+    return <div className="flex flex-1 items-center justify-center py-24 text-sm text-negative-500">{error ?? "שגיאה בטעינת הדוח"}</div>;
   }
 
   const clientLabel = report.client_name
@@ -76,7 +76,7 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
               <Button
                 variant="secondary"
                 onClick={() => setShowDeleteConfirm(true)}
-                className="gap-1.5 text-red-600 border-red-300 hover:bg-red-50"
+                className="gap-1.5 border-negative-300 text-negative-600 hover:bg-negative-50"
               >
                 <Trash2 size={14} />
                 מחק דוח

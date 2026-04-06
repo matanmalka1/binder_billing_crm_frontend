@@ -53,7 +53,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
               ערוך פרטים
             </Button>
             {onDeleteStart && (
-              <Button variant="outline" size="sm" onClick={onDeleteStart} className="gap-2 text-red-600 border-red-200 hover:bg-red-50">
+              <Button variant="outline" size="sm" onClick={onDeleteStart} className="gap-2 text-negative-600 border-negative-200 hover:bg-negative-50">
                 <Trash2 className="h-4 w-4" />
                 מחק לקוח
               </Button>

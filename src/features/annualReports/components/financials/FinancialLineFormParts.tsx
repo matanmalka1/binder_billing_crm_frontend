@@ -4,7 +4,7 @@ import { Button } from "../../../../components/ui/primitives/Button";
 
 export const FINANCIAL_FIELD_CLASS = "w-full rounded border border-gray-200 px-2 py-1 text-sm";
 export const INLINE_ADD_FORM_CLASS = "mt-2 flex flex-col gap-2";
-export const INLINE_EDIT_FORM_CLASS = "mt-2 mb-2 space-y-2 rounded-md border border-blue-100 bg-blue-50/30 p-2";
+export const INLINE_EDIT_FORM_CLASS = "mt-2 mb-2 space-y-2 rounded-md border border-info-100 bg-info-50/30 p-2";
 
 interface AddLineTriggerButtonProps {
   label: string;
@@ -176,7 +176,7 @@ interface FinancialFormErrorProps {
 }
 
 export const FinancialFormError: React.FC<FinancialFormErrorProps> = ({ error }) =>
-  error ? <p className="text-xs text-red-500">{error}</p> : null;
+  error ? <p className="text-xs text-negative-500">{error}</p> : null;
 
 interface FinancialFormLayoutProps {
   className: string;
@@ -257,4 +257,3 @@ export const FinancialEditFormShell: React.FC<FinancialEditFormShellProps> = ({
     </FinancialFormLayout>
   </form>
 );
-

@@ -60,12 +60,12 @@ export const DocumentRowActions: React.FC<DocumentRowActionsProps> = ({
           <DropdownMenuItem
             label="אשר"
             onClick={() => handleApprove(doc.id)}
-            icon={<CheckCircle className="h-4 w-4 text-green-600" />}
+            icon={<CheckCircle className="h-4 w-4 text-positive-700" />}
           />
           <DropdownMenuItem
             label="דחה"
             onClick={() => handleReject(doc.id)}
-            icon={<XCircle className="h-4 w-4 text-red-500" />}
+            icon={<XCircle className="h-4 w-4 text-negative-500" />}
             danger
             disabled={rejectingId === doc.id}
           />

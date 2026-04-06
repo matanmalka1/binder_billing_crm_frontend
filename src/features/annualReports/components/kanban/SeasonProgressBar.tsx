@@ -59,7 +59,7 @@ export const SeasonProgressBar: React.FC<SeasonProgressBarProps> = ({ summary })
           )}
           {summary.objection_filed > 0 && (
             <span>
-              השגות: <strong className="text-red-600">{summary.objection_filed}</strong>
+              השגות: <strong className="text-negative-600">{summary.objection_filed}</strong>
             </span>
           )}
         </div>

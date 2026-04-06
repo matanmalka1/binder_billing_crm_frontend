@@ -153,7 +153,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
             isDragging
               ? "border-primary-400 bg-primary-50"
               : selectedFile
-              ? "border-green-300 bg-green-50"
+              ? "border-positive-400 bg-positive-50"
               : "border-gray-200 bg-gray-50 hover:border-primary-300 hover:bg-gray-100",
           ].join(" ")}
         >
@@ -199,7 +199,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
           }}
         />
         {(fileError || errors.file?.message) && (
-          <p className="text-xs text-red-600">{fileError ?? errors.file?.message}</p>
+          <p className="text-xs text-negative-600">{fileError ?? errors.file?.message}</p>
         )}
       </div>
 
@@ -207,7 +207,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         <Button type="submit" isLoading={uploading} className="gap-2 shrink-0">
           העלאה
         </Button>
-        {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
+        {uploadError && <p className="text-sm text-negative-600">{uploadError}</p>}
       </div>
     </form>
   );

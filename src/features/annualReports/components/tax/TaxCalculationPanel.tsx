@@ -104,28 +104,28 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
   if (isLoading || detailQ.isLoading)
     return <p className="py-8 text-center text-sm text-gray-400">מחשב מס...</p>;
   if (isError || !data)
-    return <p className="py-8 text-center text-sm text-red-500">שגיאה בטעינת חישוב מס</p>;
+    return <p className="py-8 text-center text-sm text-negative-500">שגיאה בטעינת חישוב מס</p>;
 
   const totalLiability = data.total_liability == null ? null : Number(data.total_liability);
   const liabilityColor = totalLiability == null ? ""
-    : totalLiability > 0 ? "text-red-600" : "text-green-600";
+    : totalLiability > 0 ? "text-negative-600" : "text-positive-600";
   const totalCredits =
     Number(data.credit_points_value) + Number(data.donation_credit) + Number(data.other_credits ?? 0);
 
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-center">
+        <div className="rounded-xl border border-negative-100 bg-negative-50 p-4 text-center">
           <p className="text-xs text-gray-500 mb-1">מס לפני זיכויים</p>
-          <p className="text-xl font-bold text-red-700">{fmt(data.tax_before_credits)}</p>
+          <p className="text-xl font-bold text-negative-700">{fmt(data.tax_before_credits)}</p>
         </div>
-        <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-center">
+        <div className="rounded-xl border border-info-100 bg-info-50 p-4 text-center">
           <p className="text-xs text-gray-500 mb-1">זיכויי מס</p>
-          <p className="text-xl font-bold text-blue-700">{fmt(totalCredits)}</p>
+          <p className="text-xl font-bold text-info-700">{fmt(totalCredits)}</p>
         </div>
-        <div className="rounded-xl border border-green-100 bg-green-50 p-4 text-center">
+        <div className="rounded-xl border border-positive-100 bg-positive-50 p-4 text-center">
           <p className="text-xs text-gray-500 mb-1">מס סופי לתשלום</p>
-          <p className="text-xl font-bold text-green-700">{fmt(data.tax_after_credits)}</p>
+          <p className="text-xl font-bold text-positive-700">{fmt(data.tax_after_credits)}</p>
         </div>
       </div>
 
@@ -143,7 +143,7 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
           <Row label="שווי נקודות זיכוי" value={fmt(data.credit_points_value)} muted />
           {Number(data.donation_credit) > 0 && <Row label="זיכוי תרומות (סע׳ 46)" value={fmt(data.donation_credit)} muted />}
           <Row label="שיעור אפקטיבי" value={`${(data.effective_rate * 100).toFixed(2)}%`} muted />
-          <Row label="מס לתשלום" value={fmt(data.tax_after_credits)} className="text-green-700 font-semibold" />
+          <Row label="מס לתשלום" value={fmt(data.tax_after_credits)} className="text-positive-700 font-semibold" />
         </SectionCard>
         <SectionCard title="ביטוח לאומי">
           <Row label="הכנסה מבוטחת" value={fmt(data.net_profit)} />
@@ -168,7 +168,7 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
             type="button"
             onClick={handleSaveTaxResult}
             disabled={saveTaxMutation.isPending}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            className="rounded-lg bg-info-600 px-4 py-2 text-sm font-medium text-white hover:bg-info-700 disabled:opacity-50"
           >
             {saveTaxMutation.isPending ? "שומר..." : "שמור חישוב מס"}
           </button>

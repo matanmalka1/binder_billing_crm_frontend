@@ -9,6 +9,7 @@ import {
   getStatusVariant,
 } from "../../api";
 import { formatDate } from "../../../../utils/utils";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface Props {
   clientId: number;
@@ -70,7 +71,7 @@ export const ReportHistoryTable: React.FC<Props> = ({
           key: "profit",
           header: "רווח נקי",
           render: (r) => (
-            <span className={r.profit != null && Number(r.profit) >= 0 ? "text-green-600" : "text-red-600"}>
+            <span className={r.profit != null && Number(r.profit) >= 0 ? semanticMonoToneClasses.positive : semanticMonoToneClasses.negative}>
               {fmt(r.profit)}
             </span>
           ),
@@ -79,7 +80,7 @@ export const ReportHistoryTable: React.FC<Props> = ({
           key: "tax_due",
           header: "חבות מס",
           render: (r) => (
-            <span className="text-red-600">{fmt(r.tax_due)}</span>
+            <span className={semanticMonoToneClasses.negative}>{fmt(r.tax_due)}</span>
           ),
         },
         {
@@ -88,7 +89,7 @@ export const ReportHistoryTable: React.FC<Props> = ({
           render: (r) => {
             if (r.final_balance == null) return <span className="text-gray-400">—</span>;
             return (
-              <span className={Number(r.final_balance) > 0 ? "text-red-600" : "text-green-600"}>
+              <span className={Number(r.final_balance) > 0 ? semanticMonoToneClasses.negative : semanticMonoToneClasses.positive}>
                 {Number(r.final_balance) > 0 ? `${fmt(r.final_balance)} לתשלום` : `${fmt(Math.abs(Number(r.final_balance)))} החזר`}
               </span>
             );

@@ -34,12 +34,12 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ clientId }) 
           {limited.map((item) => (
             <li
               key={item.id}
-              className={`px-4 py-3 flex flex-col gap-1 ${!item.is_read ? "bg-blue-50" : "bg-white"}`}
+              className={`px-4 py-3 flex flex-col gap-1 ${!item.is_read ? "bg-info-50" : "bg-white"}`}
             >
               <div className="flex items-center gap-2">
                 <SeverityBadge severity={item.severity} />
                 {!item.is_read && (
-                  <span className="h-2 w-2 rounded-full bg-blue-500 shrink-0" aria-label="לא נקרא" />
+                  <span className="h-2 w-2 rounded-full bg-info-500 shrink-0" aria-label="לא נקרא" />
                 )}
               </div>
               <p className="text-sm text-gray-800">{item.content_snapshot}</p>

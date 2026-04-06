@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Inbox } from "lucide-react";
 import type { AttentionItem } from "../api";
 import { cn } from "../../../utils/utils";
+import { staggerAnimationDelayVars } from "../../../utils/animation";
 import type { SectionConfig } from "../utils";
 import { attentionSeverityCfg } from "../utils";
 
@@ -41,8 +42,8 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
 
   return (
     <div
-      className="flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-elevation-1 animate-fade-in"
-      style={{ animationDelay: `${sectionIndex * 80}ms` }}
+      className="flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-elevation-1 animate-fade-in [animation-delay:var(--enter-delay)]"
+      style={staggerAnimationDelayVars(sectionIndex, 80)}
     >
       <div className={cn("flex items-center justify-between bg-gradient-to-l px-5 py-3.5", cfg.headerGradient)}>
         <div className="flex items-center gap-2.5">
@@ -61,7 +62,7 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
       </div>
 
       {/* ── Items list ──────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto divide-y divide-gray-50" style={{ maxHeight: "240px" }}>
+      <div className="max-h-[240px] flex-1 divide-y divide-gray-50 overflow-y-auto">
         {hasItems ? (
           items.map((item, i) => (
             <Link

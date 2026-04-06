@@ -62,7 +62,7 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({
       )}
 
       {isError && (
-        <p className="text-sm text-red-600">שגיאה בטעינת לוג הביקורת</p>
+        <p className="text-sm text-negative-600">שגיאה בטעינת לוג הביקורת</p>
       )}
 
       {!isPending && !isError && logs.length === 0 && (

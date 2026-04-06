@@ -22,6 +22,7 @@ import {
   toDateInputValue,
 } from "../utils";
 import type { VatInvoiceEditRowProps } from "../types";
+import { semanticMonoToneClasses } from "../../../utils/semanticColors";
 
 export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
   invoice,
@@ -63,7 +64,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
   };
 
   return (
-    <tr className="bg-blue-50/40">
+    <tr className="bg-info-50/40">
       <td className={`border-r-2 ${accentBorder} px-2 py-1.5`}>
         <Input
           {...register("invoice_number")}
@@ -166,7 +167,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
       </td>
       <td className="px-2 py-1.5 text-xs text-gray-400">—</td>
       {sectionType === "expense" && (
-        <td className="px-2 py-1.5 font-mono text-xs text-emerald-700">
+        <td className={`px-2 py-1.5 font-mono text-xs ${semanticMonoToneClasses.positive}`}>
           {formatVatAmount(Number(invoice.vat_amount) * Number(invoice.deduction_rate))}
         </td>
       )}
@@ -180,7 +181,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
             onClick={handleSubmit(onSubmit)}
             onKeyDown={handleEscapeKeyDown}
             disabled={isSaving}
-            className="rounded p-1 text-emerald-600 hover:bg-emerald-50 disabled:opacity-50"
+            className="rounded p-1 text-positive-600 hover:bg-positive-50 disabled:opacity-50"
             aria-label="שמור"
           >
             <Check className="h-3.5 w-3.5" />

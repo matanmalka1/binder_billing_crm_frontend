@@ -13,6 +13,7 @@ import { AdvancePaymentReportView } from "@/features/reports";
 import { cn } from "@/utils/utils";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
+import { Button } from "@/components/ui/primitives/Button";
 import { DataTable, type Column } from "@/components/ui/table/DataTable";
 import { PaginationCard } from "@/components/ui/table/PaginationCard";
 import { formatDate, parsePositiveInt } from "@/utils/utils";
@@ -57,7 +58,7 @@ const columns: Column<AdvancePaymentOverviewRow>[] = [
     key: "paid_amount",
     header: "שולם",
     render: (row) => (
-      <span className="font-mono text-sm font-semibold text-green-700 tabular-nums">
+      <span className="font-mono text-sm font-semibold text-positive-700 tabular-nums">
         {fmtCurrency(row.paid_amount)}
       </span>
     ),
@@ -68,7 +69,7 @@ const columns: Column<AdvancePaymentOverviewRow>[] = [
     render: (row) => {
       if (row.delta == null) return <span className="text-gray-400 text-sm tabular-nums">—</span>;
       const n = Number(row.delta);
-      const color = n < 0 ? "text-red-600" : "text-gray-700";
+      const color = n < 0 ? "text-negative-600" : "text-gray-700";
       return <span className={`font-mono text-sm tabular-nums ${color}`}>{fmtCurrency(row.delta)}</span>;
     },
   },
@@ -118,21 +119,23 @@ export const AdvancePayments: React.FC = () => {
       className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 w-fit"
     >
       {(["overview", "report"] as const).map((tab) => (
-        <button
+        <Button
           key={tab}
           type="button"
           role="tab"
           aria-selected={activeTab === tab}
           onClick={() => setTab(tab)}
+          variant={activeTab === tab ? "secondary" : "ghost"}
+          size="sm"
           className={cn(
-            "rounded-md px-4 py-1.5 text-sm font-medium transition-all",
+            "shadow-none",
             activeTab === tab
-              ? "bg-white text-gray-900 shadow-sm"
+              ? "bg-white text-gray-900"
               : "text-gray-500 hover:text-gray-700",
           )}
         >
           {tab === "overview" ? "סקירה" : "דוח גבייה"}
-        </button>
+        </Button>
       ))}
     </div>
   );

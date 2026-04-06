@@ -12,6 +12,7 @@ import { annualReportFinancialsApi } from "../../api";
 import { annualReportTaxApi } from "../../api";
 import { annualReportsApi, annualReportsQK } from "../../api";
 import { DrawerSection } from "../../../../components/ui/overlays/DetailDrawer";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface Props {
   reportId: number;
@@ -35,14 +36,14 @@ const WaterfallRow: React.FC<WaterfallRowProps> = ({ label, value, isSubtract, i
   <div
     className={`flex items-center justify-between px-3 py-2 text-sm ${
       highlight
-        ? "rounded-md bg-amber-50 font-bold text-amber-900"
+        ? "rounded-md bg-warning-50 font-bold text-warning-900"
         : isResult
           ? "rounded-md bg-gray-100 font-semibold text-gray-900"
           : "border-b border-gray-100 text-gray-700"
     }`}
   >
-    <span className={isSubtract ? "text-red-600" : ""}>{label}</span>
-    <span className={isSubtract ? "text-red-600" : highlight ? "text-amber-700" : ""}>{fmt(value)}</span>
+    <span className={isSubtract ? semanticMonoToneClasses.negative : ""}>{label}</span>
+    <span className={isSubtract ? semanticMonoToneClasses.negative : highlight ? "text-warning-700" : ""}>{fmt(value)}</span>
   </div>
 );
 
@@ -93,7 +94,7 @@ export const AnnualPLSummary: React.FC<Props> = ({ reportId, clientId }) => {
           </div>
           <div className="h-2 w-full rounded-full bg-gray-200">
             <div
-              className="h-2 rounded-full bg-amber-500 transition-all"
+              className="h-2 rounded-full bg-warning-500 transition-all"
               style={{ width: `${Math.min(Math.max(grossMargin * 100, 0), 100)}%` }}
             />
           </div>

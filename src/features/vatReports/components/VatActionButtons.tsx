@@ -49,7 +49,7 @@ export const VatActionButtons: React.FC<VatActionButtonsProps> = ({
           isLoading={isLoading}
           disabled={closed}
           onClick={onSendBack}
-          className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100"
+          className="border-warning-200 bg-warning-50 text-warning-700 hover:bg-warning-100"
         >
           <RotateCcw className="h-4 w-4" />
           החזר לתיקון

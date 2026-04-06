@@ -69,7 +69,7 @@ export const AnnualReportPanelLayout = ({
               <button
                 type="button"
                 onClick={onDelete}
-                className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
+                className="rounded-md border border-negative-300 px-3 py-1.5 text-sm font-medium text-negative-600 hover:bg-negative-50"
               >
                 מחק דוח
               </button>
@@ -77,7 +77,7 @@ export const AnnualReportPanelLayout = ({
                 type="button"
                 onClick={onSave}
                 disabled={!isDirty || isSaving}
-                className="rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="rounded-md bg-info-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-info-700 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {isSaving ? "שומר..." : "שמור"}
               </button>

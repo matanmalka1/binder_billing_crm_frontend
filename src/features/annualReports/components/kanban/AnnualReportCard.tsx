@@ -3,6 +3,7 @@ import { TruncateText } from "../../../../components/ui/primitives/TruncateText"
 import { staggerDelay } from "../../../../utils/animation";
 import { cn } from "../../../../utils/utils";
 import type { StageKey } from "../../types";
+import { semanticSignalBadgeClasses } from "@/utils/semanticColors";
 
 interface AnnualReportCardProps {
   report: {
@@ -16,7 +17,11 @@ interface AnnualReportCardProps {
   isTransitioning: boolean;
   canMoveBack: boolean;
   canMoveForward: boolean;
-  onTransition: (reportId: number, stageKey: StageKey, dir: "forward" | "back") => void;
+  onTransition: (
+    reportId: number,
+    stageKey: StageKey,
+    dir: "forward" | "back",
+  ) => void;
   onOpenDetail: (reportId: number) => void;
   animationIndex: number;
 }
@@ -26,7 +31,12 @@ const DeadlinePill: React.FC<{ days: number | null }> = ({ days }) => {
 
   if (days < 0) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-600">
+      <span
+        className={cn(
+          "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold",
+          semanticSignalBadgeClasses.negative,
+        )}
+      >
         <AlertTriangle className="h-3 w-3" />
         באיחור {Math.abs(days)} ימים
       </span>
@@ -34,7 +44,12 @@ const DeadlinePill: React.FC<{ days: number | null }> = ({ days }) => {
   }
   if (days <= 7) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2 py-0.5 text-xs font-semibold text-orange-600">
+      <span
+        className={cn(
+          "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold",
+          semanticSignalBadgeClasses.warning,
+        )}
+      >
         <Clock className="h-3 w-3" />
         {days} ימים נותרו
       </span>

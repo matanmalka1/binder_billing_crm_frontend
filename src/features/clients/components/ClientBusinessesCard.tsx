@@ -13,8 +13,8 @@ const BUSINESS_TYPE_LABELS: Record<string, string> = {
 };
 
 const STATUS_BADGE: Record<BusinessStatus, { label: string; className: string }> = {
-  active: { label: "פעיל", className: "bg-green-100 text-green-800" },
-  frozen: { label: "מוקפא", className: "bg-yellow-100 text-yellow-800" },
+  active: { label: "פעיל", className: "bg-positive-100 text-positive-800" },
+  frozen: { label: "מוקפא", className: "bg-warning-100 text-warning-800" },
   closed: { label: "סגור", className: "bg-gray-100 text-gray-600" },
 };
 

@@ -17,6 +17,7 @@ import { useDeleteInvoice, useUpdateInvoice } from "../hooks/useVatInvoiceMutati
 import { VatInvoiceEditRow } from "./VatInvoiceEditRow";
 import { formatDate, formatDateTime } from "../../../utils/utils";
 import type { VatInvoiceTableProps } from "../types";
+import { semanticMonoToneClasses } from "../../../utils/semanticColors";
 
 export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
   invoices,
@@ -36,7 +37,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
     (sum, invoice) => sum + Number(invoice.vat_amount ?? 0) * Number(invoice.deduction_rate ?? 0),
     0,
   );
-  const accentBorder = sectionType === "income" ? "border-emerald-300" : "border-orange-300";
+  const accentBorder = sectionType === "income" ? "border-positive-300" : "border-warning-300";
 
   // extra cols: counterparty_id, document_type, rate_type, deduction_rate, deductible_vat(expense), category(expense), created_by, created_at, delete(canEdit)
   const extraCols = (sectionType === "expense" ? 2 : 0) + 4 + 2 + (canEdit ? 1 : 0);
@@ -99,7 +100,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                     {inv.is_exceptional && (
                       <span
                         title={VAT_EXCEPTIONAL_INVOICE_TOOLTIP}
-                        className="mr-1.5 rounded px-1 py-0.5 text-xs font-medium bg-orange-100 text-orange-700"
+                        className="mr-1.5 rounded bg-warning-100 px-1 py-0.5 text-xs font-medium text-warning-700"
                       >
                         חריגה
                       </span>
@@ -121,7 +122,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                   </td>
                   <td className="px-4 py-2.5">
                     {inv.rate_type && inv.rate_type !== "standard" ? (
-                      <span className="inline-block rounded bg-blue-50 px-1.5 py-0.5 text-xs text-blue-700">
+                      <span className="inline-block rounded bg-info-50 px-1.5 py-0.5 text-xs text-info-700">
                         {VAT_RATE_TYPE_LABELS[inv.rate_type] ?? inv.rate_type}
                       </span>
                     ) : "—"}
@@ -144,7 +145,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                   <td className="px-4 py-2.5 font-mono tabular-nums font-medium">{formatVatAmount(inv.net_amount)}</td>
                   <td className="px-4 py-2.5 font-mono tabular-nums text-gray-500">{formatVatAmount(inv.vat_amount)}</td>
                   {sectionType === "expense" && (
-                    <td className="px-4 py-2.5 font-mono tabular-nums font-semibold text-emerald-700">
+                    <td className={`px-4 py-2.5 font-mono tabular-nums font-semibold ${semanticMonoToneClasses.positive}`}>
                       {formatVatAmount(Number(inv.vat_amount) * Number(inv.deduction_rate))}
                     </td>
                   )}
@@ -158,7 +159,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                         <button
                           onClick={() => setEditingId(inv.id)}
                           disabled={editingId !== null}
-                          className="rounded p-1 text-gray-300 hover:bg-blue-50 hover:text-blue-500 disabled:cursor-not-allowed disabled:opacity-30"
+                          className="rounded p-1 text-gray-300 hover:bg-info-50 hover:text-info-500 disabled:cursor-not-allowed disabled:opacity-30"
                           aria-label="ערוך חשבונית"
                         >
                           <Pencil className="h-3.5 w-3.5" />
@@ -166,7 +167,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                         <button
                           onClick={() => setConfirmId(inv.id)}
                           disabled={editingId !== null}
-                          className="rounded p-1 text-gray-300 hover:bg-red-50 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-30"
+                          className="rounded p-1 text-gray-300 hover:bg-negative-50 hover:text-negative-500 disabled:cursor-not-allowed disabled:opacity-30"
                           aria-label="מחק חשבונית"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -189,7 +190,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
               <td className="px-4 py-2.5 font-mono tabular-nums font-bold text-gray-800">{formatVatAmount(totalNet)}</td>
               <td className="px-4 py-2.5 font-mono tabular-nums font-semibold text-gray-600">{formatVatAmount(totalVat)}</td>
               {sectionType === "expense" && (
-                <td className="px-4 py-2.5 font-mono tabular-nums font-bold text-emerald-700">
+                <td className={`px-4 py-2.5 font-mono tabular-nums font-bold ${semanticMonoToneClasses.positive}`}>
                   {formatVatAmount(totalDeductibleVat)}
                 </td>
               )}

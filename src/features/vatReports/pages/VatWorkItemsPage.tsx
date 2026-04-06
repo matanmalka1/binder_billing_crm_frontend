@@ -9,6 +9,7 @@ import {
   VatWorkItemsFiltersCard,
 } from "@/features/vatReports";
 import { Alert } from "@/components/ui/overlays/Alert";
+import { Badge } from "@/components/ui/primitives/Badge";
 import { Button } from "@/components/ui/primitives/Button";
 import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
 import { StatsCard } from "@/components/ui/layout/StatsCard";
@@ -100,16 +101,16 @@ export const VatWorkItems: React.FC = () => {
         return overdueCount > 0 || urgentCount > 0 ? (
           <div className="flex flex-wrap gap-2" dir="rtl">
             {overdueCount > 0 && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+              <Badge variant="error" className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium">
                 <AlertTriangle className="h-3.5 w-3.5" />
                 {overdueCount} תיקים בחריגת מועד
-              </span>
+              </Badge>
             )}
             {urgentCount > 0 && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 text-sm font-medium text-orange-700">
+              <Badge variant="warning" className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium">
                 <Clock className="h-3.5 w-3.5" />
                 {urgentCount} תיקים — נותרו עד 3 ימים
-              </span>
+              </Badge>
             )}
           </div>
         ) : null;

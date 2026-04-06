@@ -4,10 +4,10 @@ import type { StageKey, TransitionForm } from "./types";
 export const STAGE_ACCENT: Record<StageKey, string> = {
   material_collection: "from-gray-400 to-gray-500",
   in_progress: "from-primary-400 to-primary-500",
-  final_review: "from-purple-400 to-purple-500",
-  client_signature: "from-orange-400 to-orange-500",
-  transmitted: "from-green-400 to-green-500",
-  post_submission: "from-yellow-400 to-yellow-500",
+  final_review: "from-info-400 to-info-500",
+  client_signature: "from-warning-400 to-warning-500",
+  transmitted: "from-positive-400 to-positive-500",
+  post_submission: "from-warning-400 to-warning-500",
 };
 
 export const TERMINAL_STATUSES = new Set(["submitted", "accepted", "closed"]);

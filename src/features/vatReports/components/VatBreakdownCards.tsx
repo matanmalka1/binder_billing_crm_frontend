@@ -7,13 +7,13 @@ import type { VatInputCardProps, VatNetBannerProps, VatOutputCardProps } from ".
 // ── Output (income) card ──────────────────────────────────────────────────────
 
 export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }) => (
-  <div className="rounded-xl border border-gray-100 border-r-4 border-r-emerald-400 bg-white p-4 shadow-sm" dir="rtl">
+  <div className="rounded-xl border border-gray-100 border-r-4 border-r-positive-400 bg-white p-4 shadow-sm" dir="rtl">
     <div className="mb-3 flex items-center justify-between">
-      <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+      <p className="text-xs font-semibold uppercase tracking-wide text-positive-700">
         מע&quot;מ עסקאות – מכירות
       </p>
       {onNavigate && (
-        <button onClick={onNavigate} className="flex items-center text-emerald-600 hover:text-emerald-800 cursor-pointer">
+        <button onClick={onNavigate} className="cursor-pointer flex items-center text-positive-600 hover:text-positive-800">
           <ChevronLeft className="h-4 w-4" />
         </button>
       )}
@@ -30,7 +30,7 @@ export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }
     </div>
     <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
       <span className="text-sm font-semibold text-gray-700">מע&quot;מ עסקאות</span>
-      <span className="font-mono text-2xl font-bold text-emerald-700 tabular-nums">
+      <span className="font-mono text-2xl font-bold text-positive-700 tabular-nums">
         {formatVatAmount(data.totalOutputVat)}
       </span>
     </div>
@@ -42,13 +42,13 @@ VatOutputCard.displayName = "VatOutputCard";
 // ── Input (expense) card ──────────────────────────────────────────────────────
 
 export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) => (
-  <div className="rounded-xl border border-gray-100 border-r-4 border-r-orange-400 bg-white p-4 shadow-sm" dir="rtl">
+  <div className="rounded-xl border border-gray-100 border-r-4 border-r-warning-400 bg-white p-4 shadow-sm" dir="rtl">
     <div className="mb-3 flex items-center justify-between">
-      <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">
+      <p className="text-xs font-semibold uppercase tracking-wide text-warning-700">
         מע&quot;מ תשומות – הוצאות
       </p>
       {onNavigate && (
-        <button onClick={onNavigate} className="flex items-center text-orange-600 hover:text-orange-800 cursor-pointer">
+        <button onClick={onNavigate} className="cursor-pointer flex items-center text-warning-600 hover:text-warning-800">
           <ChevronLeft className="h-4 w-4" />
         </button>
       )}
@@ -64,7 +64,7 @@ export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) 
               </span>
             )}
           </span>
-          <span className="font-mono tabular-nums text-orange-700">
+          <span className="font-mono tabular-nums text-warning-700">
             {formatVatAmount(row.deductibleVat)}
           </span>
         </div>
@@ -82,7 +82,7 @@ export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) 
     </div>
     <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
       <span className="text-sm font-semibold text-gray-700">מע&quot;מ תשומות לניכוי</span>
-      <span className="font-mono text-2xl font-bold text-orange-700 tabular-nums">
+      <span className="font-mono text-2xl font-bold text-warning-700 tabular-nums">
         {formatVatAmount(data.totalInputVat)}
       </span>
     </div>
@@ -97,7 +97,7 @@ export const VatNetBanner: React.FC<VatNetBannerProps> = ({ outputVat, inputVat,
   const isPositive = netVat > 0;
   const isNegative = netVat < 0;
   const label = isPositive ? "יתרת מע\"מ לתשלום" : isNegative ? "זיכוי מע\"מ" : "מאוזן";
-  const amountClass = isPositive ? "text-accent-400" : isNegative ? "text-emerald-400" : "text-gray-300";
+  const amountClass = isPositive ? "text-warning-400" : isNegative ? "text-positive-400" : "text-gray-300";
 
   return (
     <div className={cn("rounded-xl px-6 py-5 text-white", "bg-primary-900")} dir="rtl">

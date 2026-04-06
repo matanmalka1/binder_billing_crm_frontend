@@ -12,18 +12,24 @@ import { vatReportsQK } from "../api/queryKeys";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Button } from "../../../components/ui/primitives/Button";
+import { Select } from "../../../components/ui/inputs/Select";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import { useAuthStore } from "../../../store/auth.store";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
-import { toast } from "sonner";
 import {
   VAT_CLIENT_SUMMARY_STATUS_VARIANTS,
 } from "../constants";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatVatAmountLtrSafe } from "../utils";
 import type { VatClientSummaryPanelProps } from "../types";
+import { semanticMonoToneClasses } from "../../../utils/semanticColors";
+import { toast } from "../../../utils/toast";
 
 const fmt = formatVatAmountLtrSafe;
+const getNetVatTone = (value: string | number | null | undefined) =>
+  Number(value) >= 0
+    ? semanticMonoToneClasses.negative
+    : semanticMonoToneClasses.positive;
 
 // ── Columns ──────────────────────────────────────────────────────────────────
 
@@ -68,7 +74,7 @@ const buildColumns = (): Column<VatPeriodRow>[] => [
     render: (r) => (
       <span
         dir="ltr"
-        className={`tabular-nums font-semibold ${Number(r.net_vat) >= 0 ? "text-red-600" : "text-green-600"}`}
+        className={`tabular-nums font-semibold ${getNetVatTone(r.net_vat)}`}
       >
         {fmt(r.net_vat)}
       </span>
@@ -91,6 +97,7 @@ const buildColumns = (): Column<VatPeriodRow>[] => [
 
 const AnnualCard = ({ row }: { row: VatAnnualSummary }) => {
   const allFiled = row.filed_count === row.periods_count && row.periods_count > 0;
+  const yearNetVatTone = getNetVatTone(row.net_vat);
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
@@ -116,7 +123,7 @@ const AnnualCard = ({ row }: { row: VatAnnualSummary }) => {
           <div className="text-xs font-medium text-gray-500 mb-1">נטו לתשלום</div>
           <div
             dir="ltr"
-            className={`text-sm font-bold tabular-nums ${Number(row.net_vat) >= 0 ? "text-red-600" : "text-green-600"}`}
+            className={`text-sm font-bold tabular-nums ${yearNetVatTone}`}
           >
             {fmt(row.net_vat)}
           </div>
@@ -147,30 +154,39 @@ const ExportControls = ({ businessId }: { businessId: number }) => {
   };
 
   const years = buildYearOptions().map((o) => Number(o.value));
+  const yearOptions = years.map((entryYear) => ({
+    value: String(entryYear),
+    label: String(entryYear),
+  }));
 
   return (
     <div className="flex items-center gap-2">
-      <select
-        value={year}
-        onChange={(e) => setYear(Number(e.target.value))}
-        className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        {years.map((y) => <option key={y} value={y}>{y}</option>)}
-      </select>
-      <button
+      <div className="w-28">
+        <Select
+          value={String(year)}
+          onChange={(e) => setYear(Number(e.target.value))}
+          options={yearOptions}
+          className="py-1.5"
+        />
+      </div>
+      <Button
+        type="button"
+        size="sm"
         onClick={() => handleExport("excel")}
-        disabled={loadingExcel}
-        className="inline-flex items-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+        isLoading={loadingExcel}
+        className="bg-positive-600 text-white hover:bg-positive-700 active:bg-positive-800"
       >
         {loadingExcel ? "מייצא..." : "Excel"}
-      </button>
-      <button
+      </Button>
+      <Button
+        type="button"
+        size="sm"
         onClick={() => handleExport("pdf")}
-        disabled={loadingPdf}
-        className="inline-flex items-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+        isLoading={loadingPdf}
+        className="bg-negative-600 text-white hover:bg-negative-700 active:bg-negative-800"
       >
         {loadingPdf ? "מייצא..." : "PDF"}
-      </button>
+      </Button>
     </div>
   );
 };
@@ -215,7 +231,7 @@ export const VatClientSummaryPanel = ({ businessId }: VatClientSummaryPanelProps
   if (error) {
     return (
       <Card>
-        <p className="text-sm text-red-600">שגיאה בטעינת נתוני מע״מ</p>
+        <p className="text-sm text-negative-600">שגיאה בטעינת נתוני מע״מ</p>
       </Card>
     );
   }

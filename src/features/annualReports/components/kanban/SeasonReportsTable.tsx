@@ -11,6 +11,7 @@ import { formatDate } from "../../../../utils/utils";
 import { AlertTriangle, Clock } from "lucide-react";
 import { cn } from "../../../../utils/utils";
 import { TERMINAL_STATUSES, daysUntil } from "../../utils";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface SeasonReportsTableProps {
   reports: AnnualReportFull[];
@@ -25,14 +26,14 @@ const DeadlineCell: React.FC<{ report: AnnualReportFull }> = ({ report }) => {
 
   return (
     <div className="flex flex-col gap-0.5">
-      <span className={cn("text-sm", overdue && "font-semibold text-red-600")}>
+      <span className={cn("text-sm", overdue && semanticMonoToneClasses.negative)}>
         {formatDate(report.filing_deadline)}
       </span>
       {days !== null && !isTerminal && (
         <span
           className={cn(
             "inline-flex items-center gap-1 text-xs",
-            days < 0 ? "text-red-500" : days <= 14 ? "text-orange-500" : "text-gray-400",
+            days < 0 ? "text-negative-500" : days <= 14 ? "text-warning-500" : "text-gray-400",
           )}
         >
           {days < 0 ? (
@@ -113,7 +114,7 @@ export const SeasonReportsTable: React.FC<SeasonReportsTableProps> = ({
     rowClassName={(r) => {
       const days = daysUntil(r.filing_deadline);
       const overdue = days !== null && days < 0 && !TERMINAL_STATUSES.has(r.status);
-      return cn(overdue && "bg-red-50/40");
+      return cn(overdue && "bg-negative-50/40");
     }}
   />
 );

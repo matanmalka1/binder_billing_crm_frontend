@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { annualReportTaxApi, annualReportsQK } from "../../api";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface Props {
   reportId: number;
@@ -9,8 +10,8 @@ const fmt = (n: string | number) =>
   Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 const BALANCE_STYLES = {
-  due: { label: "עוד לתשלום", className: "text-red-600 font-semibold" },
-  refund: { label: "החזר מס", className: "text-green-600 font-semibold" },
+  due: { label: "עוד לתשלום", className: `${semanticMonoToneClasses.negative} font-semibold` },
+  refund: { label: "החזר מס", className: `${semanticMonoToneClasses.positive} font-semibold` },
   zero: { label: "מאוזן", className: "text-gray-500 font-semibold" },
 };
 
@@ -31,7 +32,7 @@ export const FinalBalancePanel: React.FC<Props> = ({ reportId }) => {
     return <p className="text-sm text-gray-400">טוען נתונים...</p>;
 
   if (taxQuery.isError || advancesQuery.isError || !taxQuery.data || !advancesQuery.data)
-    return <p className="text-sm text-red-500">שגיאה בטעינת יתרה סופית</p>;
+    return <p className="text-sm text-negative-500">שגיאה בטעינת יתרה סופית</p>;
 
   const tax = taxQuery.data;
   const adv = advancesQuery.data;

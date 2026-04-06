@@ -8,6 +8,8 @@ import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { formatVatAmount } from "../utils";
 import { VatWorkItemRowActions } from "./VatWorkItemRowActions";
 import type { ColumnOpts } from "../types";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { semanticMonoToneClasses } from "../../../utils/semanticColors";
 
 export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemResponse>[] => [
   {
@@ -53,12 +55,18 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
           ? item.final_vat_amount
           : item.net_vat;
       return (
-        <span className={`inline-flex items-center gap-1 font-mono text-sm font-semibold tabular-nums ${Number(amount) >= 0 ? "text-red-600" : "text-green-600"}`}>
+        <span
+          className={`inline-flex items-center gap-1 font-mono text-sm font-semibold tabular-nums ${
+            Number(amount) >= 0
+              ? semanticMonoToneClasses.negative
+              : semanticMonoToneClasses.positive
+          }`}
+        >
           {formatVatAmount(amount)}
           {item.is_overridden && (
-            <span className="rounded bg-amber-100 px-1 py-0.5 text-xs font-medium text-amber-700">
+            <Badge variant="warning" className="px-1 py-0.5 text-xs font-medium">
               עוקף
-            </span>
+            </Badge>
           )}
         </span>
       );
@@ -71,9 +79,9 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
       const displayDeadline = item.extended_deadline ?? item.submission_deadline;
       if (!displayDeadline) return <span className="text-gray-400 text-sm">—</span>;
       const cls = item.is_overdue
-        ? "text-red-600 font-semibold"
+        ? `${semanticMonoToneClasses.negative} font-semibold`
         : item.days_until_deadline != null && item.days_until_deadline <= 3
-          ? "text-orange-600 font-medium"
+          ? `${semanticMonoToneClasses.warning} font-medium`
           : "text-gray-600";
       return (
         <span className={`font-mono text-sm tabular-nums inline-flex items-center gap-1 ${cls}`}>

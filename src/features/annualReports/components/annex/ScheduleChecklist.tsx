@@ -7,6 +7,7 @@ import { getScheduleLabel } from "../../api";
 import { cn, formatDate } from "../../../../utils/utils";
 import { AnnexDataPanel } from "./AnnexDataPanel";
 import { ScheduleAddForm } from "./ScheduleAddForm";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface ScheduleChecklistProps {
   reportId: number;
@@ -62,14 +63,14 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
               className={cn(
                 "rounded-lg border transition-colors",
                 entry.is_complete
-                  ? "border-green-200 bg-green-50"
+                  ? "border-positive-200 bg-positive-50"
                   : "border-gray-200 bg-white hover:bg-gray-50",
               )}
             >
               <div className="flex items-center justify-between p-3">
                 <div className="flex items-center gap-3">
                   {entry.is_complete ? (
-                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-600" />
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-positive-600" />
                   ) : (
                     <Circle className="h-5 w-5 flex-shrink-0 text-gray-400" />
                   )}
@@ -77,14 +78,14 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
                     <p
                       className={cn(
                         "text-sm font-medium",
-                        entry.is_complete ? "text-green-800" : "text-gray-800",
+                        entry.is_complete ? "text-positive-800" : "text-gray-800",
                       )}
                     >
                       {scheduleLabel}
                     </p>
                     {entry.notes && <p className="text-xs text-gray-500">{entry.notes}</p>}
                     {entry.completed_at && (
-                      <p className="text-xs text-green-600">
+                      <p className={cn("text-xs", semanticMonoToneClasses.positive)}>
                         הושלם: {formatDate(entry.completed_at)}
                       </p>
                     )}

@@ -3,6 +3,7 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { annualReportFinancialsApi } from "../../api";
 import { annualReportTaxApi, annualReportsQK } from "../../api";
 import { cn } from "../../../../utils/utils";
+import { semanticMonoToneClasses } from "../../../../utils/semanticColors";
 
 interface Props {
   reportId: number;
@@ -44,16 +45,20 @@ const MetricCard: React.FC<MetricCardProps> = ({
       {hasTrend && (
         <div className="flex items-center gap-1 mt-0.5">
           {isPositive ? (
-            <TrendingUp className="h-3 w-3 text-green-500 shrink-0" />
+            <TrendingUp className="h-3 w-3 shrink-0 text-positive-500" />
           ) : isNegative ? (
-            <TrendingDown className="h-3 w-3 text-red-500 shrink-0" />
+            <TrendingDown className="h-3 w-3 shrink-0 text-negative-500" />
           ) : (
             <Minus className="h-3 w-3 text-gray-400 shrink-0" />
           )}
           <span
             className={cn(
               "text-xs font-medium",
-              isPositive ? "text-green-600" : isNegative ? "text-red-500" : "text-gray-400",
+              isPositive
+                ? semanticMonoToneClasses.positive
+                : isNegative
+                  ? "text-negative-500"
+                  : "text-gray-400",
             )}
           >
             {trendLabel ?? `${Math.abs(trend!).toFixed(1)}%`}
@@ -139,16 +144,16 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
         label="מקדמות ששולמו"
         value={fmt(totalAdvancesPaid)}
         sub={balanceSub}
-        subClass={balanceIsDue ? "text-red-500" : balanceIsRefund ? "text-green-600" : "text-gray-400"}
-        colorClass="border-blue-100"
+        subClass={balanceIsDue ? "text-negative-500" : balanceIsRefund ? semanticMonoToneClasses.positive : "text-gray-400"}
+        colorClass="border-info-100"
         extra={
           <span
             className={cn(
               "mt-0.5 inline-block rounded-full px-2 py-0.5 text-xs font-semibold",
               balanceIsDue
-                ? "bg-red-50 text-red-600"
+                ? "bg-negative-50 text-negative-600"
                 : balanceIsRefund
-                  ? "bg-green-50 text-green-700"
+                  ? "bg-positive-50 text-positive-700"
                   : "bg-gray-100 text-gray-500",
             )}
           >
@@ -162,7 +167,7 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
         label="חבות מס שנתית"
         value={fmt(taxAfterCredits)}
         sub={`שיעור אפקטיבי`}
-        colorClass="border-red-100"
+        colorClass="border-negative-100"
         trend={-(tax.effective_rate * 100)}
         trendLabel={`${(tax.effective_rate * 100).toFixed(2)}% שיעור אפקטיבי`}
       />
@@ -171,7 +176,7 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
       <MetricCard
         label="רווח נקי"
         value={fmt(netProfit)}
-        colorClass="border-green-100"
+        colorClass="border-positive-100"
         trend={profitMargin}
         trendLabel={`${profitMargin.toFixed(1)}% שיעור רווח`}
       />

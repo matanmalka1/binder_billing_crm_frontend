@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { annualReportTaxApi, annualReportsQK } from "../../api";
 import { cn } from "../../../../utils/utils";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface ReadinessCheckPanelProps {
   reportId: number;
@@ -24,7 +25,7 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
       <div
         className={cn(
           "flex items-center gap-2 text-sm font-medium",
-          data.is_ready ? "text-green-700" : "text-red-600"
+          data.is_ready ? semanticMonoToneClasses.positive : semanticMonoToneClasses.negative
         )}
       >
         {data.is_ready ? (
@@ -49,7 +50,7 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
           <div
             className={cn(
               "h-2 rounded-full transition-all",
-              data.is_ready ? "bg-green-500" : "bg-amber-500"
+              data.is_ready ? "bg-positive-500" : "bg-warning-500"
             )}
             style={{ width: `${completion}%` }}
           />
@@ -59,8 +60,8 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
       {data.issues.length > 0 && (
         <ul className="space-y-1">
           {data.issues.map((issue, idx) => (
-            <li key={idx} className="flex items-start gap-1.5 text-sm text-red-700">
-              <XCircle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-red-400" />
+            <li key={idx} className="flex items-start gap-1.5 text-sm text-negative-700">
+              <XCircle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-negative-400" />
               <span>{issue}</span>
             </li>
           ))}

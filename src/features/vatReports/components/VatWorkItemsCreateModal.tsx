@@ -204,7 +204,7 @@ export const VatWorkItemsCreateModal: React.FC<
           />
         )}
 
-        {createError && <p className="text-sm text-red-600">{createError}</p>}
+        {createError && <p className="text-sm text-negative-600">{createError}</p>}
       </form>
     </Modal>
   );

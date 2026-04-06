@@ -253,7 +253,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
       {/* Deduction rate info for expense */}
       {invoiceType === "expense" && deductionRate !== null && (
         <div
-          className={`text-xs font-medium ${deductionRate === 0 ? "text-red-600" : "text-gray-500"}`}
+          className={`text-xs font-medium ${deductionRate === 0 ? "text-negative-600" : "text-gray-500"}`}
         >
           {deductionRate === 0
             ? "⚠️ ניכוי אסור"

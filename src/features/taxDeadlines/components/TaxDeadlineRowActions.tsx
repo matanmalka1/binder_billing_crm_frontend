@@ -41,7 +41,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
           <DropdownMenuItem
             label="סמן הושלם"
             onClick={() => onComplete?.(deadline.id)}
-            icon={<CheckCircle2 className="h-4 w-4 text-green-600" />}
+            icon={<CheckCircle2 className="h-4 w-4 text-positive-600" />}
             disabled={completingId !== null}
           />
         )}
@@ -49,7 +49,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
           <DropdownMenuItem
             label="החזר לממתין"
             onClick={() => onReopen?.(deadline.id)}
-            icon={<RotateCcw className="h-4 w-4 text-amber-600" />}
+            icon={<RotateCcw className="h-4 w-4 text-warning-600" />}
             disabled={reopeningId !== null}
           />
         )}

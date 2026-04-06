@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 import { ArrowLeft, Inbox } from "lucide-react";
 import { cn } from "../../../utils/utils";
-import { staggerDelay } from "../../../utils/animation";
+import { staggerAnimationDelayVars } from "../../../utils/animation";
 import type { SectionItem } from "../utils";
 
 interface AdvisorTodaySectionProps {
@@ -26,8 +26,8 @@ export const AdvisorTodaySection = ({
 
   return (
     <div
-      className="flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-elevation-1 animate-fade-in"
-      style={{ animationDelay: `${sectionIndex * 70}ms` }}
+      className="flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-elevation-1 animate-fade-in [animation-delay:var(--enter-delay)]"
+      style={staggerAnimationDelayVars(sectionIndex, 70)}
     >
       <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-4 py-2.5">
         <div className="flex items-center gap-2">
@@ -42,7 +42,7 @@ export const AdvisorTodaySection = ({
         </span>
       </div>
 
-      <div className="flex-1 divide-y divide-gray-50 overflow-y-auto" style={{ maxHeight: "280px" }}>
+      <div className="max-h-[280px] flex-1 divide-y divide-gray-50 overflow-y-auto">
         {hasItems ? (
           items.map((item, index) => {
             const content = (
@@ -68,10 +68,10 @@ export const AdvisorTodaySection = ({
                   key={item.id}
                   to={item.href}
                   className={cn(
-                    "group flex items-start gap-3 px-5 py-3 transition-colors duration-150",
+                    "group flex items-start gap-3 px-5 py-3 transition-colors duration-150 animate-fade-in [animation-delay:var(--enter-delay)]",
                     "hover:bg-gray-50"
                   )}
-                  style={{ animationDelay: staggerDelay(index, 35) }}
+                  style={staggerAnimationDelayVars(index, 35)}
                 >
                   {content}
                 </Link>
@@ -81,8 +81,8 @@ export const AdvisorTodaySection = ({
             return (
               <div
                 key={item.id}
-                className="flex items-start gap-3 px-5 py-3"
-                style={{ animationDelay: staggerDelay(index, 35) }}
+                className="flex items-start gap-3 px-5 py-3 animate-fade-in [animation-delay:var(--enter-delay)]"
+                style={staggerAnimationDelayVars(index, 35)}
               >
                 {content}
               </div>

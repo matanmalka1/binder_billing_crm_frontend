@@ -41,7 +41,7 @@ export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
           type="button"
           disabled={disabled}
           onClick={onMarkPaid}
-          className={cn(btn, "gap-1.5 border-green-200 bg-green-50 text-green-700 hover:bg-green-100")}
+          className={cn(btn, "gap-1.5 border-positive-200 bg-positive-50 text-positive-700 hover:bg-positive-100")}
         >
           <CheckCircle2 className="h-3.5 w-3.5" />
           סימון שולם
@@ -52,7 +52,7 @@ export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
           type="button"
           disabled={disabled}
           onClick={onCancel}
-          className={cn(btn, "border-red-200 bg-red-50 text-red-700 hover:bg-red-100")}
+          className={cn(btn, "border-negative-200 bg-negative-50 text-negative-700 hover:bg-negative-100")}
         >
           ביטול
         </button>

@@ -68,7 +68,7 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                         type="button"
                         onClick={() => onSaveEdit(line.id)}
                         disabled={isUpdating}
-                        className="text-green-500 hover:text-green-700"
+                        className="text-positive-500 hover:text-positive-700"
                       >
                         <Check className="h-3.5 w-3.5" />
                       </button>
@@ -85,7 +85,7 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                       type="button"
                       aria-label="עריכת שורה"
                       onClick={() => onStartEdit(line)}
-                      className="text-blue-400 hover:text-blue-600"
+                      className="text-info-400 hover:text-info-600"
                     >
                       <Pencil className="h-3.5 w-3.5" />
                     </button>
@@ -94,7 +94,7 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                     type="button"
                     onClick={() => onDelete(line.id)}
                     disabled={isDeleting}
-                    className="text-red-400 hover:text-red-600"
+                    className="text-negative-400 hover:text-negative-600"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>

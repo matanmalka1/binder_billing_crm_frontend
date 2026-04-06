@@ -62,9 +62,9 @@ export const FilingTimelineTab: React.FC<Props> = ({ reports }) => {
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <h3 className="mb-4 text-sm font-semibold text-gray-700">סטטוס הגשות</h3>
           <div className="space-y-4">
-            <ProgressBar label="הוגשו בזמן" count={submittedOnTime} pct={pct(submittedOnTime)} color="bg-green-500" />
-            <ProgressBar label="ממתין להגשה" count={pending} pct={pct(pending)} color="bg-blue-400" />
-            <ProgressBar label="עם תיקונים" count={amended} pct={pct(amended)} color="bg-yellow-400" />
+            <ProgressBar label="הוגשו בזמן" count={submittedOnTime} pct={pct(submittedOnTime)} color="bg-positive-500" />
+            <ProgressBar label="ממתין להגשה" count={pending} pct={pct(pending)} color="bg-info-400" />
+            <ProgressBar label="עם תיקונים" count={amended} pct={pct(amended)} color="bg-warning-400" />
           </div>
         </div>
       </div>

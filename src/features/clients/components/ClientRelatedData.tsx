@@ -123,7 +123,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
         {canViewCharges && (
           <StatPill
             icon={Receipt}
-            iconColor="bg-green-100 text-green-600"
+            iconColor="bg-positive-100 text-positive-700"
             count={chargesTotal}
             label="חיובים"
           />

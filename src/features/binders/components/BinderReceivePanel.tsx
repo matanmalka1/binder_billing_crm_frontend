@@ -77,7 +77,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
       />
 
       {selectedClient && (
-        <p className="text-xs text-green-700 font-medium -mt-2">
+        <p className="text-xs text-positive-700 font-medium -mt-2">
           ✓ נבחר: {selectedClient.name} (#{selectedClient.id})
         </p>
       )}

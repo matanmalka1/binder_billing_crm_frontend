@@ -91,11 +91,11 @@ export const getScheduleLabel = (key: string): string =>
 
 export const SEASON_PROGRESS_STAGES = [
   { key: "not_started" as AnnualReportStatus, label: "טרם התחיל", color: "bg-gray-400" },
-  { key: "collecting_docs" as AnnualReportStatus, label: "איסוף מסמכים", color: "bg-primary-400" },
-  { key: "in_preparation" as AnnualReportStatus, label: "בהכנה", color: "bg-purple-400" },
-  { key: "pending_client" as AnnualReportStatus, label: "ממתין ללקוח", color: "bg-amber-400" },
-  { key: "submitted" as AnnualReportStatus, label: "הוגש", color: "bg-green-400" },
-  { key: "closed" as AnnualReportStatus, label: "סגור", color: "bg-emerald-600" },
+  { key: "collecting_docs" as AnnualReportStatus, label: "איסוף מסמכים", color: "bg-info-400" },
+  { key: "in_preparation" as AnnualReportStatus, label: "בהכנה", color: "bg-info-500" },
+  { key: "pending_client" as AnnualReportStatus, label: "ממתין ללקוח", color: "bg-warning-400" },
+  { key: "submitted" as AnnualReportStatus, label: "הוגש", color: "bg-positive-400" },
+  { key: "closed" as AnnualReportStatus, label: "סגור", color: "bg-positive-700" },
 ];
 
 // ── Stage labels (from annualReport.utils.ts) ─────────────────────────────
@@ -118,11 +118,11 @@ const reportStatusLabels = {
 
 const stageColors = {
   material_collection: "bg-gray-100 text-gray-700",
-  in_progress: "bg-primary-100 text-primary-700",
-  final_review: "bg-purple-100 text-purple-700",
-  client_signature: "bg-orange-100 text-orange-700",
-  transmitted: "bg-green-100 text-green-700",
-  post_submission: "bg-yellow-100 text-yellow-800",
+  in_progress: "bg-info-100 text-info-700",
+  final_review: "bg-info-100 text-info-700",
+  client_signature: "bg-warning-100 text-warning-700",
+  transmitted: "bg-positive-100 text-positive-700",
+  post_submission: "bg-warning-100 text-warning-800",
 };
 
 export const getReportStageLabel = makeLabelGetter(stageLabels);

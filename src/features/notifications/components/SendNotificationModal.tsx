@@ -171,7 +171,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
             placeholder="הכנס את תוכן ההודעה..."
           />
           {errors.message && (
-            <p className="mt-1 text-xs text-red-600">{errors.message.message}</p>
+            <p className="mt-1 text-xs text-negative-600">{errors.message.message}</p>
           )}
         </div>
       </form>

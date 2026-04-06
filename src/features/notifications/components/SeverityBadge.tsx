@@ -10,10 +10,10 @@ const SEVERITY_LABELS: Record<NotificationSeverity, string> = {
 };
 
 const SEVERITY_STYLES: Record<NotificationSeverity, string> = {
-  info: "bg-blue-100 text-blue-800",
-  warning: "bg-yellow-100 text-yellow-800",
+  info: "bg-info-100 text-info-800",
+  warning: "bg-warning-100 text-warning-800",
   urgent: "bg-orange-100 text-orange-800",
-  critical: "bg-red-100 text-red-800",
+  critical: "bg-negative-100 text-negative-800",
 };
 
 export const SeverityBadge: React.FC<SeverityBadgeProps> = ({ severity }) => (

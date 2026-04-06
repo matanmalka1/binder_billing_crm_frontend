@@ -32,13 +32,13 @@ export const LineRow: React.FC<LineRowProps> = ({
         <span className="font-medium text-gray-800">{label}</span>
         {description && <span className="text-gray-500 mr-1">— {description}</span>}
         {recognitionRate != null && Number(recognitionRate) < 100 && (
-          <span className="inline-flex items-center rounded bg-yellow-100 px-1.5 py-0.5 text-xs font-medium text-yellow-800">
+          <span className="inline-flex items-center rounded bg-warning-100 px-1.5 py-0.5 text-xs font-medium text-warning-800">
             {Number(recognitionRate)}%
           </span>
         )}
         {supportingDocumentId ? (
           <button type="button" onClick={handleDownload}
-            className="text-blue-500 hover:text-blue-700 flex items-center gap-0.5"
+            className="text-primary-500 hover:text-primary-700 flex items-center gap-0.5"
             title={supportingDocumentFilename ?? "מסמך מצורף"}>
             <Paperclip className="h-3 w-3" />
             <span className="text-xs">{supportingDocumentFilename ?? "מסמך"}</span>
@@ -55,14 +55,14 @@ export const LineRow: React.FC<LineRowProps> = ({
           <button
             type="button"
             onClick={onEdit}
-            className="text-blue-400 hover:text-blue-600 p-0.5"
+            className="text-primary-400 hover:text-primary-600 p-0.5"
             aria-label="עריכת שורה"
           >
             <Pencil className="h-3.5 w-3.5" />
           </button>
         ) : null}
         <button type="button" onClick={onDelete} disabled={isDeleting}
-          className="text-red-400 hover:text-red-600 disabled:opacity-40 p-0.5" aria-label="מחק">
+          className="text-negative-400 hover:text-negative-600 disabled:opacity-40 p-0.5" aria-label="מחק">
           <Trash2 className="h-3.5 w-3.5" />
         </button>
       </div>

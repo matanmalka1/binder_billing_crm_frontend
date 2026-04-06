@@ -1,6 +1,7 @@
 import { cn } from "../../../utils/utils";
 import { formatVatAmount, getVatDeductionRateClass, getVatDeductionRateLabel } from "../utils";
 import type { VatCategoryTableProps } from "../types";
+import { VAT_DEDUCTIBLE_ACCENT } from "../../../utils/chartColors";
 
 export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
   rows,
@@ -39,7 +40,7 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
                 <td className="px-4 py-2.5 font-mono tabular-nums text-gray-600">
                   {formatVatAmount(row.grossVat)}
                 </td>
-                <td className="px-4 py-2.5 font-mono tabular-nums font-semibold text-orange-700">
+                <td className={`px-4 py-2.5 font-mono tabular-nums font-semibold ${VAT_DEDUCTIBLE_ACCENT}`}>
                   {formatVatAmount(row.deductibleVat)}
                 </td>
               </tr>
@@ -53,7 +54,7 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
                 {formatVatAmount(totalExpenseNet + totalGrossVat)}
               </td>
               <td className="px-4 py-2.5 font-mono tabular-nums">{formatVatAmount(totalGrossVat)}</td>
-              <td className="px-4 py-2.5 font-mono tabular-nums text-orange-700">
+              <td className={`px-4 py-2.5 font-mono tabular-nums ${VAT_DEDUCTIBLE_ACCENT}`}>
                 {formatVatAmount(totalInputVat)}
               </td>
             </tr>

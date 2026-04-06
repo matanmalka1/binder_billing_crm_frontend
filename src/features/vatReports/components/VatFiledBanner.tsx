@@ -17,23 +17,23 @@ export const VatFiledBanner: React.FC<VatFiledBannerProps> = ({
 
   return (
     <div
-      className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-3"
+      className="flex items-center gap-3 rounded-xl border border-positive-200 bg-positive-50 px-5 py-3"
       dir="rtl"
     >
-      <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
-      <p className="text-sm font-medium text-emerald-800">
+      <CheckCircle2 className="h-5 w-5 shrink-0 text-positive-600" />
+      <p className="text-sm font-medium text-positive-800">
         הדוח הוגש ב‑{formatDateTime(filedAt)}
         {byLabel && (
-          <span className="font-normal text-emerald-700"> על ידי {byLabel}</span>
+          <span className="font-normal text-positive-700"> על ידי {byLabel}</span>
         )}
         {methodLabel && (
-          <span className="font-normal text-emerald-600"> · {methodLabel}</span>
+          <span className="font-normal text-positive-600"> · {methodLabel}</span>
         )}
         {submissionReference && (
-          <span className="font-normal text-emerald-600"> · אסמכתא: {submissionReference}</span>
+          <span className="font-normal text-positive-600"> · אסמכתא: {submissionReference}</span>
         )}
         {isAmendment && amendsItemId && (
-          <span className="font-normal text-emerald-600"> · תיקון לפריט #{amendsItemId}</span>
+          <span className="font-normal text-positive-600"> · תיקון לפריט #{amendsItemId}</span>
         )}
       </p>
     </div>

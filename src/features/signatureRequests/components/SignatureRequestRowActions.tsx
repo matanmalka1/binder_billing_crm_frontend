@@ -88,7 +88,7 @@ export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProp
             <DropdownMenuItem
               label={copied ? "הועתק!" : "העתק קישור"}
               onClick={() => void handleCopy()}
-              icon={copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+              icon={copied ? <Check className="h-4 w-4 text-positive-700" /> : <Copy className="h-4 w-4" />}
             />
           </>
         )}

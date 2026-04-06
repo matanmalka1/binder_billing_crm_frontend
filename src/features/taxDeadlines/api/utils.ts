@@ -10,10 +10,10 @@ const deadlineTypeLabels = {
 };
 
 const urgencyColors = {
-  green: "bg-green-100 text-green-800 border-green-200",
-  yellow: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  red: "bg-red-100 text-red-800 border-red-200",
-  overdue: "bg-red-600 text-white border-red-700",
+  green: "bg-positive-100 text-positive-800 border-positive-200",
+  yellow: "bg-warning-100 text-warning-800 border-warning-200",
+  red: "bg-negative-100 text-negative-800 border-negative-200",
+  overdue: "bg-negative-600 text-white border-negative-700",
 };
 
 export const getDeadlineTypeLabel = makeLabelGetter(deadlineTypeLabels, "אחר");

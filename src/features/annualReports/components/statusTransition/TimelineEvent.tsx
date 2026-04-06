@@ -1,4 +1,5 @@
 import { cn } from "../../../../utils/utils";
+import { semanticDotClasses, semanticMonoToneClasses } from "@/utils/semanticColors";
 
 export type TimelineEventStatus = "done" | "warning" | "pending" | "overdue";
 
@@ -11,10 +12,10 @@ interface Props {
 }
 
 const STATUS_DOT: Record<TimelineEventStatus, string> = {
-  done: "bg-green-500",
-  warning: "bg-yellow-400",
+  done: semanticDotClasses.positive,
+  warning: semanticDotClasses.warning,
   pending: "bg-gray-300",
-  overdue: "bg-red-500",
+  overdue: semanticDotClasses.negative,
 };
 
 const STATUS_ICON: Record<TimelineEventStatus, string> = {
@@ -50,7 +51,11 @@ export const TimelineEvent: React.FC<Props> = ({
           {amount && (
             <p className={cn(
               "text-xs font-semibold mt-0.5",
-              status === "overdue" || status === "warning" ? "text-red-600" : "text-gray-700"
+              status === "overdue"
+                ? semanticMonoToneClasses.negative
+                : status === "warning"
+                  ? semanticMonoToneClasses.warning
+                  : "text-gray-700"
             )}>
               {amount}
             </p>

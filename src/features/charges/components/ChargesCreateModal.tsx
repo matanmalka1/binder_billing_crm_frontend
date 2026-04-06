@@ -149,7 +149,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
                   onBlur={field.onBlur}
                   name={field.name}
                   options={CHARGE_TYPE_OPTIONS}
-                  className={errors.charge_type ? "border-red-500" : undefined}
+                  className={errors.charge_type ? "border-negative-500" : undefined}
                 />
               </FormField>
             )}
@@ -188,7 +188,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
           />
         </div>
 
-        {createError && <p className="text-sm text-red-600">{createError}</p>}
+        {createError && <p className="text-sm text-negative-600">{createError}</p>}
       </form>
     </Modal>
   );

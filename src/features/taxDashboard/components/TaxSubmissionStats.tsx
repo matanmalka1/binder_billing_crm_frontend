@@ -30,7 +30,7 @@ export const TaxSubmissionStats = ({ data }: TaxSubmissionStatsProps) => {
         <Stat value={formatCurrency(data.total_tax_due)} label="תשלומי מס" />
       )}
       <div className="mr-auto flex items-center gap-1.5 pr-4">
-        <span className="text-sm font-semibold text-green-700">{data.submission_percentage}%</span>
+        <span className="text-sm font-semibold text-positive-700">{data.submission_percentage}%</span>
         <span className="text-xs text-gray-400">אחוז השלמה</span>
       </div>
     </div>

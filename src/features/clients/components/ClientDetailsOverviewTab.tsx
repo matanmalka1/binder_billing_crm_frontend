@@ -124,7 +124,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
                 await deleteClient();
                 setIsConfirmingDelete(false);
               }}
-              className="bg-red-600 hover:bg-red-700 focus:ring-red-500"
+              className="bg-negative-600 hover:bg-negative-700 focus:ring-negative-500"
             >
               מחק לקוח
             </Button>

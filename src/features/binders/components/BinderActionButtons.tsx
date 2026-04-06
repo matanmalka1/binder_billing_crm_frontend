@@ -30,7 +30,7 @@ export const BinderActionButtons: React.FC<BinderActionButtonsProps> = ({
           type="button"
           disabled={disabled}
           onClick={onMarkReady}
-          className={cn(btn, "border-green-200 bg-green-50 text-green-700 hover:bg-green-100")}
+          className={cn(btn, "border-positive-200 bg-positive-50 text-positive-700 hover:bg-positive-100")}
         >
           מוכן לאיסוף
         </button>

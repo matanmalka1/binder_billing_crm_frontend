@@ -160,7 +160,7 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
         {hasActiveFilters && (
           <button
             onClick={onClearFilters}
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all"
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs text-negative-600 hover:bg-negative-50 border border-transparent hover:border-negative-200 transition-all"
           >
             <X className="h-3 w-3" />
             נקה

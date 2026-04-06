@@ -22,7 +22,7 @@ const Tile: React.FC<TileProps> = ({ icon, title, primary, secondary, onClick })
     className={`flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4 ${onClick ? "cursor-pointer hover:bg-gray-100 transition-colors" : ""}`}
     onClick={onClick}
   >
-    <div className="mt-0.5 shrink-0 text-blue-600">{icon}</div>
+    <div className="mt-0.5 shrink-0 text-primary-600">{icon}</div>
     <div className="min-w-0">
       <p className="text-xs font-medium text-gray-500">{title}</p>
       <p className="mt-0.5 text-lg font-semibold text-gray-900 leading-tight">{primary}</p>

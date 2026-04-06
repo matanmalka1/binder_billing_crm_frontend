@@ -3,6 +3,7 @@
  * Imported by schemas.ts, useVatWorkItemDetail.ts, and enums.ts helpers.
  */
 import { getVatWorkItemStatusLabel } from "../../utils/enums";
+import { CATEGORY_COLOR_TOKENS } from "../../utils/chartColors";
 
 export const INCOME_KEY = "income";
 
@@ -61,31 +62,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
   mixed_expense: "הוצאה מעורבת",
 };
 
-export const CATEGORY_COLORS: Record<string, string> = {
-  office: "bg-blue-400",
-  travel: "bg-orange-400",
-  professional_services: "bg-purple-400",
-  equipment: "bg-gray-400",
-  rent: "bg-amber-400",
-  salary: "bg-rose-400",
-  marketing: "bg-pink-400",
-  vehicle: "bg-red-300",
-  fuel: "bg-red-500",
-  vehicle_maintenance: "bg-red-400",
-  vehicle_insurance: "bg-slate-500",
-  vehicle_leasing: "bg-rose-500",
-  tolls_and_parking: "bg-amber-500",
-  entertainment: "bg-yellow-400",
-  gifts: "bg-lime-400",
-  communication: "bg-cyan-500",
-  insurance: "bg-indigo-400",
-  maintenance: "bg-teal-500",
-  municipal_tax: "bg-zinc-500",
-  utilities: "bg-sky-500",
-  postage_and_shipping: "bg-emerald-500",
-  bank_fees: "bg-violet-500",
-  mixed_expense: "bg-orange-500",
-};
+export const CATEGORY_COLORS: Record<string, string> = CATEGORY_COLOR_TOKENS;
 
 /** VAT deduction rates per expense category (frontend display only) */
 export const DEDUCTION_RATES: Record<string, number> = {

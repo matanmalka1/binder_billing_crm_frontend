@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FileCheck, FileWarning, FileText } from "lucide-react";
 import { documentsApi, documentsQK } from "@/features/documents/api";
 import { DocumentCard, MissingDocRow } from "./DocumentParts";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 const ALL_REQUIRED_TYPES = ["id_copy", "power_of_attorney", "engagement_agreement"] as const;
 
@@ -61,8 +62,8 @@ export const DocumentsTab = ({ clientId, reportId }: DocumentsTabProps) => {
       {missingTypes.length > 0 && (
         <section>
           <div className="mb-4 flex items-center gap-2">
-            <FileWarning className="h-4 w-4 text-amber-500" />
-            <h3 className="text-sm font-semibold text-amber-700">מסמכים חסרים ({missingTypes.length})</h3>
+            <FileWarning className="h-4 w-4 text-warning-500" />
+            <h3 className={`text-sm font-semibold ${semanticMonoToneClasses.warning}`}>מסמכים חסרים ({missingTypes.length})</h3>
           </div>
           <div className="space-y-2">
             {missingTypes.map((type) => (

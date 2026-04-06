@@ -16,17 +16,17 @@ interface BannerItem {
 }
 
 const VARIANT_STYLES = {
-  error: "bg-red-50 border-red-200 text-red-800",
-  warning: "bg-yellow-50 border-yellow-200 text-yellow-800",
-  info: "bg-blue-50 border-blue-200 text-blue-800",
-  success: "bg-green-50 border-green-200 text-green-800",
+  error: "bg-negative-50 border-negative-200 text-negative-800",
+  warning: "bg-warning-50 border-warning-200 text-warning-800",
+  info: "bg-info-50 border-info-200 text-info-800",
+  success: "bg-positive-50 border-positive-200 text-positive-800",
 };
 
 const ICON_STYLES = {
-  error: "text-red-500",
-  warning: "text-yellow-500",
-  info: "text-blue-500",
-  success: "text-green-500",
+  error: "text-negative-500",
+  warning: "text-warning-500",
+  info: "text-info-500",
+  success: "text-positive-500",
 };
 
 const Banner: React.FC<BannerItem> = ({ variant, icon, message, cta }) => (

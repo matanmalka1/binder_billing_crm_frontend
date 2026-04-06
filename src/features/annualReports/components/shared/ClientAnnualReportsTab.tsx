@@ -3,6 +3,7 @@ import { SeasonReportsTable } from "../kanban/SeasonReportsTable";
 import { PageLoading } from "../../../../components/ui/layout/PageLoading";
 import { Alert } from "../../../../components/ui/overlays/Alert";
 import { cn } from "../../../../utils/utils";
+import { semanticSignalBadgeClasses } from "@/utils/semanticColors";
 
 interface ClientAnnualReportsTabProps {
   businessId: number;
@@ -26,12 +27,12 @@ export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ 
             className={cn(
               "rounded-lg px-3 py-2 text-sm font-medium text-right transition-all",
               selectedYear === year
-                ? "bg-amber-100 text-amber-800 border border-amber-300"
+                ? `border ${semanticSignalBadgeClasses.warning}`
                 : "text-gray-600 hover:bg-gray-100",
             )}
           >
             {year}
-            {yearHasReports(year) && <span className="mr-1 text-xs text-green-600">✓</span>}
+            {yearHasReports(year) && <span className="mr-1 text-xs text-positive-600">✓</span>}
           </button>
         ))}
       </div>

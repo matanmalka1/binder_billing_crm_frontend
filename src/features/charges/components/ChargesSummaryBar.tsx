@@ -1,4 +1,5 @@
 import { Clock, CheckCircle2, FileText, XCircle } from "lucide-react";
+import { semanticStatToneClasses } from "@/utils/semanticColors";
 import type { ChargeResponse } from "../api";
 import { formatILS } from "../utils";
 
@@ -12,23 +13,25 @@ interface StatCardProps {
   label: string;
   value: string;
   icon: React.ReactNode;
-  accent: string;
-  iconBg: string;
-  valueColor: string;
+  tone: keyof typeof semanticStatToneClasses;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ label, value, icon, accent, iconBg, valueColor }) => (
-  <div className={`relative flex items-center gap-4 rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm overflow-hidden`}>
-    <div className={`absolute right-0 top-0 bottom-0 w-1 rounded-r-xl ${accent}`} />
-    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${iconBg}`}>
+const StatCard: React.FC<StatCardProps> = ({ label, value, icon, tone }) => {
+  const styles = semanticStatToneClasses[tone];
+
+  return (
+    <div className="relative flex items-center gap-4 overflow-hidden rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm">
+      <div className={`absolute bottom-0 right-0 top-0 w-1 rounded-r-xl ${styles.accent}`} />
+      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${styles.iconBg}`}>
       {icon}
+      </div>
+      <div className="min-w-0">
+        <p className="mb-0.5 text-xs text-gray-500">{label}</p>
+        <p className={`text-lg font-bold leading-tight tabular-nums ${styles.value}`}>{value}</p>
+      </div>
     </div>
-    <div className="min-w-0">
-      <p className="text-xs text-gray-500 mb-0.5">{label}</p>
-      <p className={`text-lg font-bold tabular-nums leading-tight ${valueColor}`}>{value}</p>
-    </div>
-  </div>
-);
+  );
+};
 
 export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, isAdvisor }) => {
   if (charges.length === 0) return null;
@@ -49,34 +52,26 @@ export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, i
       <StatCard
         label="ממתין לגביה"
         value={amountOrCount("issued")}
-        icon={<Clock className="h-5 w-5 text-primary-600" />}
-        accent="bg-primary-500"
-        iconBg="bg-primary-50"
-        valueColor="text-primary-700"
+        icon={<Clock className="h-5 w-5" />}
+        tone="info"
       />
       <StatCard
         label="שולם"
         value={amountOrCount("paid")}
-        icon={<CheckCircle2 className="h-5 w-5 text-emerald-600" />}
-        accent="bg-emerald-500"
-        iconBg="bg-emerald-50"
-        valueColor="text-emerald-700"
+        icon={<CheckCircle2 className="h-5 w-5" />}
+        tone="positive"
       />
       <StatCard
         label="טיוטה"
         value={amountOrCount("draft")}
-        icon={<FileText className="h-5 w-5 text-gray-500" />}
-        accent="bg-gray-400"
-        iconBg="bg-gray-50"
-        valueColor="text-gray-700"
+        icon={<FileText className="h-5 w-5" />}
+        tone="neutral"
       />
       <StatCard
         label="בוטל"
         value={amountOrCount("canceled")}
-        icon={<XCircle className="h-5 w-5 text-red-500" />}
-        accent="bg-red-400"
-        iconBg="bg-red-50"
-        valueColor="text-red-600"
+        icon={<XCircle className="h-5 w-5" />}
+        tone="negative"
       />
     </div>
   );

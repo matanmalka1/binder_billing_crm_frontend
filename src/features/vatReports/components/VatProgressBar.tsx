@@ -15,7 +15,7 @@ export const VatProgressBar: React.FC<VatProgressBarProps> = ({ currentStatus })
         <div
           className={cn(
             "absolute inset-y-0 right-0 rounded-full transition-all duration-500",
-            isFiled ? "bg-emerald-500" : "bg-primary-500",
+            isFiled ? "bg-positive-500" : "bg-primary-500",
           )}
           style={{ width: `${percent}%` }}
         />

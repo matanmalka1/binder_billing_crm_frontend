@@ -4,6 +4,7 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { vatReportsApi } from "../api";
 import { showErrorToast } from "../../../utils/utils";
 import type { VatExportButtonsProps } from "../types";
+import { FILE_FORMAT_COLORS } from "../../../utils/chartColors";
 
 export const VatExportButtons: React.FC<VatExportButtonsProps> = ({ clientId, period }) => {
   const [loadingExcel, setLoadingExcel] = useState(false);
@@ -25,11 +26,11 @@ export const VatExportButtons: React.FC<VatExportButtonsProps> = ({ clientId, pe
   return (
     <div className="flex items-center gap-2" dir="rtl">
       <Button variant="ghost" size="sm" isLoading={loadingExcel} onClick={() => handleExport("excel")}>
-        <FileSpreadsheet className="h-4 w-4 text-green-600" />
+        <FileSpreadsheet className={`h-4 w-4 ${FILE_FORMAT_COLORS.excel}`} />
         Excel
       </Button>
       <Button variant="ghost" size="sm" isLoading={loadingPdf} onClick={() => handleExport("pdf")}>
-        <FileText className="h-4 w-4 text-red-500" />
+        <FileText className={`h-4 w-4 ${FILE_FORMAT_COLORS.pdf}`} />
         PDF
       </Button>
     </div>

@@ -17,12 +17,12 @@ export const VatSummaryTab: React.FC<VatSummaryTabProps> = ({ workItem, invoices
   return (
     <div className="space-y-4" dir="rtl">
       {workItem.is_overridden && workItem.final_vat_amount != null && (
-        <div className="flex items-center justify-between rounded-xl border border-amber-300 bg-amber-50 px-5 py-4">
+        <div className="flex items-center justify-between rounded-xl border border-warning-300 bg-warning-50 px-5 py-4">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 shrink-0 text-amber-500" />
-            <span className="text-sm font-semibold text-amber-800">סכום מע&quot;מ סופי (עוקף)</span>
+            <AlertTriangle className="h-5 w-5 shrink-0 text-warning-500" />
+            <span className="text-sm font-semibold text-warning-800">סכום מע&quot;מ סופי (עוקף)</span>
           </div>
-          <span className="font-mono text-3xl font-bold tabular-nums text-amber-700">
+          <span className="font-mono text-3xl font-bold tabular-nums text-warning-700">
             {formatVatAmount(workItem.final_vat_amount)}
           </span>
         </div>

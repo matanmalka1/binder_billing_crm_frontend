@@ -3,6 +3,7 @@ import { useSearchParams, useParams, Navigate } from "react-router-dom";
 import { LayoutDashboard, ClipboardList, ArrowUpCircle, Clock } from "lucide-react";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { Badge } from "@/components/ui/primitives/Badge";
+import { Button } from "@/components/ui/primitives/Button";
 import { TableSkeleton } from "@/components/ui/table/TableSkeleton";
 import { cn } from "@/utils/utils";
 import {
@@ -69,16 +70,19 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
         dir="rtl"
       >
         {tabs.map(({ key, label, icon: Icon, badge }) => (
-          <button
+          <Button
             key={key}
+            type="button"
             role="tab"
             aria-selected={activeTab === key}
             onClick={() => setTab(key)}
+            variant="ghost"
+            size="sm"
             className={cn(
-              "flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors",
+              "rounded-none border-b-2 px-5 py-3 focus:ring-0 focus:ring-offset-0",
               activeTab === key
-                ? "border-b-2 border-primary-600 text-primary-700 bg-primary-50/40"
-                : "text-gray-500 hover:text-gray-800 hover:bg-gray-50",
+                ? "border-primary-600 bg-primary-50/40 text-primary-700"
+                : "border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-800",
             )}
           >
             <Icon className="h-4 w-4" />
@@ -88,7 +92,7 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
                 {badge}
               </Badge>
             )}
-          </button>
+          </Button>
         ))}
       </div>
 

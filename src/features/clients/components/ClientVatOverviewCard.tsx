@@ -66,7 +66,7 @@ export const ClientVatOverviewCard: React.FC<Props> = ({ clientId }) => {
                   <span
                     dir="ltr"
                     className={`text-sm font-semibold tabular-nums ${
-                      Number(yearData.net_vat) >= 0 ? "text-red-600" : "text-green-600"
+                      Number(yearData.net_vat) >= 0 ? "text-negative-600" : "text-positive-700"
                     }`}
                   >
                     {fmt(yearData.net_vat)}

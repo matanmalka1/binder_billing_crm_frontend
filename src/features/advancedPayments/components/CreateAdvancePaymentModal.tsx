@@ -166,7 +166,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
                 <button
                   type="button"
                   onClick={applySuggestion}
-                  className="text-sm text-blue-600 hover:underline text-right w-full"
+                  className="text-sm text-primary-600 hover:underline text-right w-full"
                 >
                   הצעה לפי מחזור שנה קודמת: ₪{Number(suggestion.suggested_amount).toLocaleString("he-IL")} — לחץ למילוי
                 </button>

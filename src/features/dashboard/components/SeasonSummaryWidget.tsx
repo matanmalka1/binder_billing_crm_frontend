@@ -4,6 +4,7 @@ import { TrendingUp, AlertTriangle, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { annualReportSeasonApi, annualReportsQK } from "@/features/annualReports/api";
 import { cn } from "../../../utils/utils";
+import { semanticMonoToneClasses, semanticSignalBadgeClasses } from "@/utils/semanticColors";
 
 const currentYear = getYear(new Date());
 
@@ -26,9 +27,9 @@ export const SeasonSummaryWidget: React.FC = () => {
   const done = data.submitted + data.accepted + data.closed;
 
   const progressColor =
-    completionPct >= 75 ? "bg-green-500" :
-    completionPct >= 40 ? "bg-blue-500" :
-    "bg-amber-500";
+    completionPct >= 75 ? "bg-positive-500" :
+    completionPct >= 40 ? "bg-info-500" :
+    "bg-warning-500";
 
   return (
     <Link
@@ -50,17 +51,17 @@ export const SeasonSummaryWidget: React.FC = () => {
 
         <div className="flex items-center gap-3">
           {data.overdue_count > 0 && (
-            <div className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1">
-              <AlertTriangle className="h-3.5 w-3.5 text-red-500" />
-              <span className="text-xs font-semibold text-red-600">
+            <div className={cn("flex items-center gap-1.5 rounded-lg px-2.5 py-1", semanticSignalBadgeClasses.negative)}>
+              <AlertTriangle className="h-3.5 w-3.5 text-negative-500" />
+              <span className="text-xs font-semibold text-negative-600">
                 {data.overdue_count} באיחור
               </span>
             </div>
           )}
           {data.overdue_count === 0 && done > 0 && (
-            <div className="flex items-center gap-1.5 rounded-lg border border-green-200 bg-green-50 px-2.5 py-1">
-              <CheckCircle className="h-3.5 w-3.5 text-green-500" />
-              <span className="text-xs font-semibold text-green-600">ללא איחורים</span>
+            <div className={cn("flex items-center gap-1.5 rounded-lg px-2.5 py-1", semanticSignalBadgeClasses.positive)}>
+              <CheckCircle className="h-3.5 w-3.5 text-positive-500" />
+              <span className="text-xs font-semibold text-positive-700">ללא איחורים</span>
             </div>
           )}
           <div className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1">
@@ -87,12 +88,12 @@ export const SeasonSummaryWidget: React.FC = () => {
         )}
         {inProgress > 0 && (
           <span>
-            <span className="font-semibold text-blue-600">{inProgress}</span> בעבודה
+            <span className={cn("font-semibold", semanticMonoToneClasses.info)}>{inProgress}</span> בעבודה
           </span>
         )}
         {data.submitted > 0 && (
           <span>
-            <span className="font-semibold text-green-600">{data.submitted}</span> הוגשו
+            <span className={cn("font-semibold", semanticMonoToneClasses.positive)}>{data.submitted}</span> הוגשו
           </span>
         )}
         {data.closed > 0 && (

@@ -43,8 +43,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
       ) : isPdf ? (
         <iframe
           src={url}
-          className="w-full rounded border border-gray-100"
-          style={{ height: "70vh" }}
+          className="h-[70vh] w-full rounded border border-gray-100"
           title={filename ?? "document"}
         />
       ) : isImage ? (

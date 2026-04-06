@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "../../../utils/utils";
-import { staggerDelay } from "../../../utils/animation";
+import { staggerAnimationDelayVars } from "../../../utils/animation";
+import { semanticStatToneClasses } from "@/utils/semanticColors";
 
 export interface StatItem {
   key: string;
@@ -25,11 +26,11 @@ const variantStyles: Record<
   StatItem["variant"],
   { border: string; value: string; iconBg: string; strip: string }
 > = {
-  blue:   { border: "border-r-4 border-r-primary-500",   value: "text-primary-600",    iconBg: "bg-primary-50 text-primary-500",     strip: "from-primary-500/10 to-transparent"   },
-  green:  { border: "border-r-4 border-r-emerald-500", value: "text-emerald-600", iconBg: "bg-emerald-50 text-emerald-500", strip: "from-emerald-500/10 to-transparent" },
-  red:    { border: "border-r-4 border-r-red-500",     value: "text-red-600",     iconBg: "bg-red-50 text-red-500",       strip: "from-red-500/10 to-transparent"    },
-  amber:  { border: "border-r-4 border-r-amber-500",   value: "text-amber-600",   iconBg: "bg-amber-50 text-amber-500",   strip: "from-amber-500/10 to-transparent"  },
-  purple: { border: "border-r-4 border-r-violet-500",  value: "text-violet-600",  iconBg: "bg-violet-50 text-violet-500", strip: "from-violet-500/10 to-transparent" },
+  blue: semanticStatToneClasses.info,
+  green: semanticStatToneClasses.positive,
+  red: semanticStatToneClasses.negative,
+  amber: semanticStatToneClasses.warning,
+  purple: semanticStatToneClasses.info,
 };
 
 /* ── Animated counter ───────────────────────────────────────────────────── */
@@ -80,7 +81,7 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
     "transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-gray-200/60",
     "animate-fade-in",
     styles.border,
-    stat.urgent && "ring-2 ring-red-200 ring-offset-1",
+    stat.urgent && "ring-2 ring-negative-200 ring-offset-1",
     stat.href && "cursor-pointer",
   );
 
@@ -108,8 +109,8 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
 
       {stat.urgent && (
         <span className="relative flex h-2.5 w-2.5 shrink-0">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
-          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-negative-400 opacity-75" />
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-negative-500" />
         </span>
       )}
     </div>
@@ -119,8 +120,8 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
     return (
       <Link
         to={stat.href}
-        className={cardClass}
-        style={{ animationDelay: staggerDelay(index, 60) }}
+        className={`${cardClass} [animation-delay:var(--enter-delay)]`}
+        style={staggerAnimationDelayVars(index, 60)}
       >
         {inner}
       </Link>
@@ -129,8 +130,8 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
 
   return (
     <div
-      className={cardClass}
-      style={{ animationDelay: staggerDelay(index, 60) }}
+      className={`${cardClass} [animation-delay:var(--enter-delay)]`}
+      style={staggerAnimationDelayVars(index, 60)}
     >
       {inner}
     </div>

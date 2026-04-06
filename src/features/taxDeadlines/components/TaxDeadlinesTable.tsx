@@ -27,9 +27,9 @@ interface TaxDeadlinesTableProps {
 }
 
 const urgencyRowMap: Record<string, string> = {
-  overdue: "bg-red-50/40",
-  red: "bg-orange-50/30",
-  yellow: "bg-yellow-50/30",
+  overdue: "bg-negative-50/40",
+  red: "bg-negative-50/30",
+  yellow: "bg-warning-50/30",
 };
 
 const TABLE_HEADERS = ["עסק", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", ""];
@@ -119,7 +119,7 @@ export const TaxDeadlinesTable = ({
                   </td>
                   <td className="py-3.5 pr-4">
                     {isCompleted ? (
-                      <div className="flex items-center gap-1 text-green-700">
+                      <div className="flex items-center gap-1 text-positive-700">
                         <CheckCircle2 className="h-4 w-4" />
                         <span className="text-xs font-medium">הושלם</span>
                       </div>

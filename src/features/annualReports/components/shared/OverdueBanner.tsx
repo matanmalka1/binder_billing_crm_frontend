@@ -26,30 +26,30 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
 
   return (
     <div
-      className="rounded-xl border border-red-200 bg-gradient-to-r from-red-50 to-rose-50 shadow-sm"
+      className="rounded-xl border border-negative-200 bg-gradient-to-r from-negative-50 to-negative-100 shadow-sm"
       role="alert"
       aria-live="polite"
       aria-atomic="true"
     >
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3">
-        <div className="rounded-lg bg-red-100 p-2 shrink-0">
-          <AlertTriangle className="h-5 w-5 text-red-600" />
+        <div className="rounded-lg bg-negative-100 p-2 shrink-0">
+          <AlertTriangle className="h-5 w-5 text-negative-600" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-red-900">
+          <p className="text-sm font-semibold text-negative-800">
             {overdue.length === 1
               ? "דוח אחד חרג ממועד ההגשה"
               : `${overdue.length} דוחות חרגו ממועד ההגשה`}
           </p>
-          <p className="text-xs text-red-700 mt-0.5">
+          <p className="mt-0.5 text-xs text-negative-700">
             לחץ על שם הלקוח לפתיחת פרטי הדוח
           </p>
         </div>
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="shrink-0 rounded-lg p-1.5 text-red-700 hover:bg-red-100 transition-colors"
+          className="shrink-0 rounded-lg p-1.5 text-negative-700 transition-colors hover:bg-negative-100"
           aria-label={expanded ? "כווץ רשימה" : "הרחב רשימה"}
           aria-expanded={expanded}
         >
@@ -62,7 +62,7 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
       </div>
 
       {/* Report list */}
-      <div className="border-t border-red-200/60 px-4 pb-3 pt-2 space-y-1.5">
+      <div className="border-t border-negative-200/60 px-4 pb-3 pt-2 space-y-1.5">
         {visible.map((report) => {
           const days = daysOverdue(report.filing_deadline);
           return (
@@ -83,7 +83,7 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
               <div className="flex items-center gap-3 shrink-0 text-xs text-gray-500">
                 <span className="tabular-nums">{formatDate(report.filing_deadline)}</span>
                 {days !== null && (
-                  <span className="font-semibold text-red-600 tabular-nums">
+                  <span className="font-semibold text-negative-600 tabular-nums">
                     {days} ימים
                   </span>
                 )}
@@ -96,7 +96,7 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className="w-full pt-1 text-xs font-medium text-red-700 hover:text-red-900 transition-colors text-center"
+            className="w-full pt-1 text-center text-xs font-medium text-negative-700 transition-colors hover:text-negative-900"
             aria-expanded={expanded}
             aria-label={expanded ? "הצג פחות דוחות" : `הצג ${overdue.length - 3} דוחות נוספים שחרגו ממועד ההגשה`}
           >

@@ -3,6 +3,7 @@ import { CheckCircle, Clock } from "lucide-react";
 import { taxDeadlinesApi, taxDeadlinesQK } from "../api";
 import type { TimelineEntry } from "../api";
 import { cn } from "../../../utils/utils";
+import { semanticMonoToneClasses, semanticSignalBadgeClasses } from "@/utils/semanticColors";
 
 interface FilingTimelineProps {
   businessId: number;
@@ -14,12 +15,12 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const statusVariants: Record<string, string> = {
-  completed: "bg-green-50 text-green-700 border-green-200",
+  completed: semanticSignalBadgeClasses.positive,
   pending: "bg-gray-50 text-gray-600 border-gray-200",
 };
 
 const StatusIcon = ({ status }: { status: string }) => {
-  if (status === "completed") return <CheckCircle className="h-4 w-4 text-green-500" />;
+  if (status === "completed") return <CheckCircle className="h-4 w-4 text-positive-500" />;
   return <Clock className="h-4 w-4 text-gray-400" />;
 };
 
@@ -31,9 +32,9 @@ const daysLabel = (entry: TimelineEntry): string => {
 };
 
 const daysLabelClass = (entry: TimelineEntry): string => {
-  if (entry.status === "completed") return "text-green-600";
-  if (entry.days_remaining < 0) return "text-red-600 font-semibold";
-  if (entry.days_remaining <= 7) return "text-amber-600 font-semibold";
+  if (entry.status === "completed") return semanticMonoToneClasses.positive;
+  if (entry.days_remaining < 0) return semanticMonoToneClasses.negative;
+  if (entry.days_remaining <= 7) return semanticMonoToneClasses.warning;
   return "text-gray-500";
 };
 
@@ -74,7 +75,7 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ businessId }) =>
               key={entry.id}
               className={cn(
                 "transition-colors",
-                entry.status === "completed" && "bg-green-50/30",
+                entry.status === "completed" && "bg-positive-50/30",
               )}
             >
               <td className="px-4 py-3">

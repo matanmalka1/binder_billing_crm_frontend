@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Check, X, Loader2 } from "lucide-react";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Input } from "../../../components/ui/inputs/Input";
+import { Select } from "../../../components/ui/inputs/Select";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { ADVANCE_PAYMENT_STATUS_OPTIONS } from "../constants";
 
@@ -77,25 +80,31 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
         ))}
       </select>
       {isUpdating ? (
-        <Loader2 size={14} className="animate-spin text-blue-500" />
+        <Loader2 size={14} className="animate-spin text-primary-500" />
       ) : (
         <>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={handleSave}
-            className="rounded p-1 text-green-600 hover:bg-green-50 transition-colors"
+            className="px-1 py-1 text-positive-700 hover:bg-positive-50"
             title="שמור"
+            aria-label="שמור"
           >
             <Check size={14} />
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={handleCancel}
-            className="rounded p-1 text-gray-400 hover:bg-gray-100 transition-colors"
+            className="px-1 py-1 text-gray-400 hover:bg-gray-100"
             title="ביטול"
+            aria-label="ביטול"
           >
             <X size={14} />
-          </button>
+          </Button>
         </>
       )}
     </div>

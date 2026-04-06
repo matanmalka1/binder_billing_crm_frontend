@@ -30,7 +30,7 @@ export const DeleteReportConfirmDialog = ({
             type="button"
             onClick={onConfirm}
             disabled={isDeleting}
-            className="rounded-md bg-red-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-40"
+            className="rounded-md bg-negative-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-negative-700 disabled:opacity-40"
           >
             {isDeleting ? "מוחק..." : "מחק"}
           </button>

@@ -18,17 +18,17 @@ const deadlineStatus = (report: AnnualReportFull): TimelineEventStatus => {
 };
 
 const STATUS_COLORS: Record<TimelineEventStatus, string> = {
-  done:    "border-green-200 bg-green-50",
-  warning: "border-yellow-200 bg-yellow-50",
+  done:    "border-positive-200 bg-positive-50",
+  warning: "border-warning-200 bg-warning-50",
   pending: "border-gray-200 bg-white",
-  overdue: "border-red-200 bg-red-50",
+  overdue: "border-negative-200 bg-negative-50",
 };
 
 const STATUS_ICONS: Record<TimelineEventStatus, React.ReactNode> = {
-  done:    <CalendarCheck className="h-4 w-4 text-green-600" />,
-  warning: <AlertCircle className="h-4 w-4 text-yellow-500" />,
+  done:    <CalendarCheck className="h-4 w-4 text-positive-600" />,
+  warning: <AlertCircle className="h-4 w-4 text-warning-500" />,
   pending: <Clock className="h-4 w-4 text-gray-400" />,
-  overdue: <AlertCircle className="h-4 w-4 text-red-500" />,
+  overdue: <AlertCircle className="h-4 w-4 text-negative-500" />,
 };
 
 export const UpcomingDeadlinesList: React.FC<Props> = ({ reports }) => {

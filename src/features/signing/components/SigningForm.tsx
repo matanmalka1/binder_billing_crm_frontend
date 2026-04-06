@@ -39,8 +39,8 @@ export const SigningForm: React.FC<SigningFormProps> = ({
     return (
       <div className="space-y-5">
         <div className="flex flex-col items-center gap-2 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
-            <CheckCircle2 className="h-7 w-7 text-green-600" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-positive-100">
+            <CheckCircle2 className="h-7 w-7 text-positive-700" />
           </div>
           <h2 className="text-lg font-semibold text-gray-900">אישור חתימה</h2>
           <p className="text-sm text-gray-500">
@@ -75,8 +75,8 @@ export const SigningForm: React.FC<SigningFormProps> = ({
     return (
       <div className="space-y-4">
         <div className="flex flex-col items-center gap-2 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
-            <XCircle className="h-7 w-7 text-red-500" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-negative-100">
+            <XCircle className="h-7 w-7 text-negative-500" />
           </div>
           <h2 className="text-lg font-semibold text-gray-900">דחיית בקשה</h2>
           <p className="text-sm text-gray-500">
@@ -105,7 +105,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
             size="md"
             isLoading={isDeclining}
             onClick={onConfirmDecline}
-            className="flex-[2] border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
+            className="flex-[2] border-negative-200 bg-negative-50 text-negative-700 hover:bg-negative-100"
           >
             דחיית הבקשה
           </Button>
@@ -134,7 +134,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
         {data.expires_at && (
           <div className="flex justify-between text-sm">
             <dt className="text-gray-500">תוקף הקישור</dt>
-            <dd className={`font-medium ${isExpired ? "text-red-600" : "text-gray-900"}`}>
+            <dd className={`font-medium ${isExpired ? "text-negative-600" : "text-gray-900"}`}>
               {isExpired ? "פג תוקף" : formatDate(data.expires_at)}
             </dd>
           </div>
@@ -142,9 +142,9 @@ export const SigningForm: React.FC<SigningFormProps> = ({
       </dl>
 
       {isExpired && (
-        <div className="flex gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3">
-          <Clock className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-          <p className="text-sm text-red-700">
+        <div className="flex gap-2.5 rounded-xl border border-negative-200 bg-negative-50 p-3">
+          <Clock className="mt-0.5 h-4 w-4 shrink-0 text-negative-500" />
+          <p className="text-sm text-negative-700">
             קישור זה פג תוקפו. לא ניתן לחתום. פנה למשרד לחידוש הבקשה.
           </p>
         </div>
@@ -164,7 +164,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
               variant="outline"
               size="sm"
               onClick={onStartDecline}
-              className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
+              className="flex-1 border-negative-200 text-negative-600 hover:bg-negative-50"
             >
               <XCircle className="h-4 w-4" />
               דחייה

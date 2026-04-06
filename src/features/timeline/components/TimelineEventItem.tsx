@@ -103,12 +103,12 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
 
           {/* Status transitions */}
           {!!(ev.metadata?.old_status && ev.metadata?.new_status) && (
-            <div className="flex items-center gap-2 text-xs bg-blue-50 border border-blue-100 rounded px-3 py-2">
-              <span className="inline-block px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-medium text-[11px]">
+            <div className="flex items-center gap-2 text-xs bg-info-50 border border-info-100 rounded px-3 py-2">
+              <span className="inline-block px-2 py-0.5 rounded bg-info-100 text-info-700 font-medium text-[11px]">
                 {getTimelineStatusLabel(ev.metadata.old_status)}
               </span>
-              <span className="text-blue-400">←</span>
-              <span className="inline-block px-2 py-0.5 rounded bg-green-100 text-green-700 font-medium text-[11px]">
+              <span className="text-info-400">←</span>
+              <span className="inline-block px-2 py-0.5 rounded bg-positive-100 text-positive-700 font-medium text-[11px]">
                 {getTimelineStatusLabel(ev.metadata.new_status)}
               </span>
             </div>

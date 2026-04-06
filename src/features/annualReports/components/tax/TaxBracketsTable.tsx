@@ -36,7 +36,7 @@ export const TaxBracketsTable: React.FC<Props> = ({ brackets }) => {
             {brackets.map((b, i) => (
               <tr
                 key={i}
-                className={i === lastIndex ? "bg-amber-50 font-semibold" : "bg-white"}
+                className={i === lastIndex ? "bg-warning-50 font-semibold" : "bg-white"}
               >
                 <td className="px-2 py-1.5 text-gray-900">{fmtRate(b.rate)}</td>
                 <td className="px-2 py-1.5 text-gray-600 tabular-nums" dir="ltr">

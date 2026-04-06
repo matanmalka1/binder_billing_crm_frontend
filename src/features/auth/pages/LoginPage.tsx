@@ -94,13 +94,13 @@ export const Login: React.FC = () => {
                     "shadow-sm ring-0 transition-all placeholder:text-slate-300",
                     "focus:outline-none focus:ring-2 focus:ring-slate-900/20 focus:border-slate-400",
                     "disabled:cursor-not-allowed disabled:bg-slate-50 disabled:opacity-60",
-                    errors.email ? "border-red-400 bg-red-50/40" : "border-slate-200",
+                    errors.email ? "border-negative-400 bg-negative-50/40" : "border-slate-200",
                   ].join(" ")}
                   {...register("email")}
                 />
               </div>
               {errors.email && (
-                <p className="text-xs font-medium text-red-500">{errors.email.message}</p>
+                <p className="text-xs font-medium text-negative-500">{errors.email.message}</p>
               )}
             </div>
 
@@ -121,7 +121,7 @@ export const Login: React.FC = () => {
                     "shadow-sm ring-0 transition-all placeholder:text-slate-300",
                     "focus:outline-none focus:ring-2 focus:ring-slate-900/20 focus:border-slate-400",
                     "disabled:cursor-not-allowed disabled:bg-slate-50 disabled:opacity-60",
-                    errors.password ? "border-red-400 bg-red-50/40" : "border-slate-200",
+                    errors.password ? "border-negative-400 bg-negative-50/40" : "border-slate-200",
                   ].join(" ")}
                   {...register("password")}
                 />
@@ -136,14 +136,14 @@ export const Login: React.FC = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-xs font-medium text-red-500">{errors.password.message}</p>
+                <p className="text-xs font-medium text-negative-500">{errors.password.message}</p>
               )}
             </div>
 
             {/* Server error */}
             {error && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3">
-                <p className="text-sm font-medium text-red-600">{error}</p>
+              <div className="rounded-xl border border-negative-200 bg-negative-50 px-4 py-3">
+                <p className="text-sm font-medium text-negative-600">{error}</p>
               </div>
             )}
 

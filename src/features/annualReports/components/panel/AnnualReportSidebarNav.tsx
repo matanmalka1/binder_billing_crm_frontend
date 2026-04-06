@@ -16,7 +16,7 @@ const NAV_ITEMS: { key: SectionKey; icon: string; label: string }[] = [
 ];
 
 const navItemVariants: Record<"active" | "inactive", string> = {
-  active: "bg-blue-50 text-blue-700 font-semibold border-r-2 border-blue-600",
+  active: "bg-info-50 text-info-700 font-semibold border-r-2 border-info-600",
   inactive: "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
 };
 

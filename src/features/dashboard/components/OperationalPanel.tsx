@@ -2,7 +2,7 @@ import { CheckCircle, Info, Zap, ArrowLeft } from "lucide-react";
 import { mapActions } from "../../../lib/actions/mapActions";
 import type { BackendAction, ActionCommand } from "../../../lib/actions/types";
 import { cn } from "../../../utils/utils";
-import { staggerDelay } from "../../../utils/animation";
+import { staggerAnimationDelayVars } from "../../../utils/animation";
 
 interface OperationalPanelProps {
   quickActions: BackendAction[];
@@ -45,7 +45,7 @@ const ActionButton = ({ action, isLoading, isDisabled, index, onQuickAction }: A
       <div className="min-w-0 flex-1">
         <p className={cn(
           "truncate text-sm font-semibold transition-colors",
-          isLoading ? "text-violet-700" : "text-gray-800 group-hover:text-violet-700"
+          isLoading ? "text-info-700" : "text-gray-800 group-hover:text-info-700"
         )}>
           {action.label || "—"}
         </p>
@@ -56,38 +56,38 @@ const ActionButton = ({ action, isLoading, isDisabled, index, onQuickAction }: A
           </p>
         )}
         {action.dueLabel && (
-          <p className="mt-0.5 truncate text-xs text-amber-600 font-medium">
+          <p className="mt-0.5 truncate text-xs text-warning-600 font-medium">
             {action.dueLabel}
           </p>
         )}
         {!action.dueLabel && action.confirm && (
-          <p className="mt-0.5 text-xs text-amber-600 font-medium">דורש אישור</p>
+          <p className="mt-0.5 text-xs text-warning-600 font-medium">דורש אישור</p>
         )}
       </div>
       <div className={cn(
         "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all",
-        isLoading ? "bg-violet-200" : "bg-gray-100 group-hover:bg-violet-100"
+        isLoading ? "bg-info-200" : "bg-gray-100 group-hover:bg-info-100"
       )}>
         {isLoading ? (
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-violet-600 border-t-transparent" />
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-info-600 border-t-transparent" />
         ) : (
-          <ArrowLeft className={cn("h-4 w-4 transition-colors", "text-gray-400 group-hover:text-violet-600")} />
+          <ArrowLeft className={cn("h-4 w-4 transition-colors", "text-gray-400 group-hover:text-info-600")} />
         )}
       </div>
-      <div className="absolute bottom-0 right-0 h-0.5 w-0 rounded-full bg-gradient-to-l from-violet-500 to-primary-500 transition-all duration-300 group-hover:w-full" />
+      <div className="absolute bottom-0 right-0 h-0.5 w-0 rounded-full bg-gradient-to-l from-info-500 to-primary-500 transition-all duration-300 group-hover:w-full" />
     </>
   );
 
   const baseClass = cn(
     "group relative flex items-center justify-between gap-3 rounded-xl border-2 p-4 text-right",
     "transition-all duration-200 focus:outline-none",
-    "focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2",
+    "focus-visible:ring-2 focus-visible:ring-info-500 focus-visible:ring-offset-2",
     "animate-fade-in",
     isLoading
-      ? "border-violet-400 bg-violet-50 shadow-inner"
+      ? "border-info-400 bg-info-50 shadow-inner"
       : isDisabled
       ? "cursor-not-allowed border-gray-100 bg-gray-50 opacity-40"
-      : "border-gray-200 bg-white hover:-translate-y-0.5 hover:border-violet-300 hover:shadow-lg hover:shadow-violet-50"
+      : "border-gray-200 bg-white hover:-translate-y-0.5 hover:border-info-300 hover:shadow-lg hover:shadow-info-50"
   );
 
   return (
@@ -96,8 +96,8 @@ const ActionButton = ({ action, isLoading, isDisabled, index, onQuickAction }: A
       type="button"
       onClick={() => onQuickAction(action)}
       disabled={isDisabled}
-      className={baseClass}
-      style={{ animationDelay: staggerDelay(index, 50) }}
+      className={`${baseClass} [animation-delay:var(--enter-delay)]`}
+      style={staggerAnimationDelayVars(index, 50)}
     >
       {content}
     </button>
@@ -116,8 +116,8 @@ export const OperationalPanel = ({
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-gray-100 bg-gradient-to-l from-violet-50/60 to-transparent px-6 py-4">
-        <div className="rounded-xl bg-violet-100 p-2 text-violet-600">
+      <div className="flex items-center gap-3 border-b border-gray-100 bg-gradient-to-l from-info-50/60 to-transparent px-6 py-4">
+        <div className="rounded-xl bg-info-100 p-2 text-info-600">
           <Zap className="h-5 w-5" />
         </div>
         <div>
@@ -131,7 +131,7 @@ export const OperationalPanel = ({
       {totalCount === 0 ? (
         /* Empty state */
         <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
-          <CheckCircle className="h-10 w-10 text-green-400" />
+          <CheckCircle className="h-10 w-10 text-positive-400" />
           <p className="text-sm font-semibold text-gray-700">הכל מטופל!</p>
           <p className="text-xs text-gray-400">אין פעולות ממתינות כרגע</p>
         </div>
@@ -146,7 +146,7 @@ export const OperationalPanel = ({
                   <span className="text-xs font-bold uppercase tracking-wide text-gray-400">
                     {CATEGORY_LABELS[category] ?? category}
                   </span>
-                  <span className="rounded-full bg-violet-100 px-1.5 py-0.5 text-[10px] font-semibold text-violet-600">
+                  <span className="rounded-full bg-info-100 px-1.5 py-0.5 text-[10px] font-semibold text-info-600">
                     {catActions.length}
                   </span>
                 </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { annualReportChargesApi } from "../../api";
+import { annualReportChargesApi, annualReportsQK } from "../../api";
 
 interface Props { reportId: number; }
 
@@ -19,7 +19,7 @@ export const ReportChargesPanel: React.FC<Props> = ({ reportId }) => {
   const PAGE_SIZE = 20;
 
   const { data, isLoading } = useQuery({
-    queryKey: ["annual-reports", "charges", reportId, page],
+    queryKey: annualReportsQK.reportCharges(reportId, page, PAGE_SIZE),
     queryFn: () => annualReportChargesApi.listCharges(reportId, page, PAGE_SIZE),
     enabled: !!reportId,
   });

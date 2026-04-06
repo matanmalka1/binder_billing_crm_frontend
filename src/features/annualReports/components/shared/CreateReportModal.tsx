@@ -9,6 +9,7 @@ import { DatePicker, Input, Select, Textarea } from "@/components/ui/inputs";
 import { Modal, ModalFormActions } from "@/components/ui/overlays";
 import { useCreateReport } from "../../hooks/useCreateReport";
 import { FLAG_FIELDS } from "../../utils";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface CreateReportModalProps {
   open: boolean;
@@ -161,20 +162,20 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
           </div>
         </div>
 
-        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm">
-          <p className="mb-1.5 font-medium text-blue-800">תצוגה מקדימה (אומדן)</p>
-          <div className="grid grid-cols-3 gap-2 text-blue-700">
+        <div className="rounded-lg border border-info-200 bg-info-50 p-3 text-sm">
+          <p className="mb-1.5 font-medium text-info-800">תצוגה מקדימה (אומדן)</p>
+          <div className="grid grid-cols-3 gap-2 text-info-700">
             <div>
-              <span className="block text-xs text-blue-500">רווח נקי</span>
+              <span className="block text-xs text-info-500">רווח נקי</span>
               <span className="font-mono">₪{fmt(preview.netProfit)}</span>
             </div>
             <div>
-              <span className="block text-xs text-blue-500">מס משוער</span>
+              <span className="block text-xs text-info-500">מס משוער</span>
               <span className="font-mono">₪{fmt(preview.estimatedTax)}</span>
             </div>
             <div>
-              <span className="block text-xs text-blue-500">יתרה לתשלום</span>
-              <span className={`font-mono ${preview.balance < 0 ? "text-green-600" : "text-red-600"}`}>
+              <span className="block text-xs text-info-500">יתרה לתשלום</span>
+              <span className={`font-mono ${preview.balance < 0 ? semanticMonoToneClasses.positive : semanticMonoToneClasses.negative}`}>
                 ₪{fmt(Math.abs(preview.balance))}{preview.balance < 0 ? " (החזר)" : ""}
               </span>
             </div>

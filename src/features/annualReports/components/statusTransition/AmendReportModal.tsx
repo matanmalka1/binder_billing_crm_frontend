@@ -43,7 +43,7 @@ export const AmendReportModal = ({
         onChange={(e) => onReasonChange(e.target.value)}
         placeholder="תאר את סיבת התיקון (לפחות 10 תווים)..."
       />
-      {showValidation && <p className="mt-1 text-xs text-red-500">נדרשים לפחות 10 תווים</p>}
+      {showValidation && <p className="mt-1 text-xs text-negative-500">נדרשים לפחות 10 תווים</p>}
     </Modal>
   );
 };

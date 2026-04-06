@@ -50,7 +50,7 @@ const ComparisonRows: React.FC<{ data: YearComparisonData[]; currentTaxYear: num
             className={cn(
               "py-2 text-center",
               d.year === currentTaxYear
-                ? "font-semibold text-amber-700 bg-amber-50/40"
+                ? "font-semibold text-warning-700 bg-warning-50/40"
                 : "text-gray-800",
             )}
           >
@@ -104,12 +104,12 @@ export const YearComparisonModal: React.FC<Props> = ({ open, onClose, currentTax
                       key={year}
                       className={cn(
                         "py-2 text-center font-semibold",
-                        year === currentTaxYear ? "text-amber-600" : "text-gray-700",
+                        year === currentTaxYear ? "text-warning-600" : "text-gray-700",
                       )}
                     >
                       {year}
                       {year === currentTaxYear && (
-                        <span className="mr-1 text-xs text-amber-500">(נוכחי)</span>
+                        <span className="mr-1 text-xs text-warning-500">(נוכחי)</span>
                       )}
                     </th>
                   ))}

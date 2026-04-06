@@ -4,6 +4,8 @@ import { annualReportFinancialsApi, annualReportsQK } from "../../api";
 import { TaxCreditsPanel } from "./TaxCreditsPanel";
 import { EXPENSE_LABELS } from "../../report.constants";
 import type { ComponentType } from "react";
+import { cn } from "../../../../utils/utils";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface Props { reportId: number; taxYear: number; }
 
@@ -44,11 +46,11 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
           <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-5 py-3">
             <div className="flex items-center gap-2">
-              <Scissors className="h-4 w-4 text-red-500" />
+              <Scissors className="h-4 w-4 text-negative-500" />
               <h3 className="text-sm font-semibold text-gray-800">ניכויים מוכרים</h3>
             </div>
             {expenses.length > 0 && (
-              <span className="text-sm font-bold text-red-600">{fmt(totalRecognized)}</span>
+              <span className={cn("text-sm font-bold", semanticMonoToneClasses.negative)}>{fmt(totalRecognized)}</span>
             )}
           </div>
           <div className="divide-y divide-gray-50">
@@ -68,11 +70,11 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
                         {EXPENSE_LABELS[e.category] ?? e.category}
                       </p>
                       {Number(e.recognition_rate) < 100 && (
-                        <p className="text-xs text-amber-600">{Number(e.recognition_rate)}% מוכר</p>
+                        <p className={cn("text-xs", semanticMonoToneClasses.warning)}>{Number(e.recognition_rate)}% מוכר</p>
                       )}
                     </div>
                   </div>
-                  <span className="text-sm font-semibold text-red-600">{fmt(e.recognized_amount)}</span>
+                  <span className={cn("text-sm font-semibold", semanticMonoToneClasses.negative)}>{fmt(e.recognized_amount)}</span>
                 </div>
               );
             })}

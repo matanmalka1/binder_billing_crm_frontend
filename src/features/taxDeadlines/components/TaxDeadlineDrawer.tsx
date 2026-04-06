@@ -11,6 +11,7 @@ import {
 } from "../api";
 import { getDeadlineUrgency } from "../utils";
 import { formatDate, cn } from "../../../utils/utils";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface TaxDeadlineDrawerProps {
   deadline: TaxDeadlineResponse | null;
@@ -71,7 +72,7 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
               label="מצב"
               value={
                 isCompleted ? (
-                  <span className="flex items-center gap-1 text-green-700 font-medium">
+                  <span className={cn("flex items-center gap-1 font-medium", semanticMonoToneClasses.positive)}>
                     <CheckCircle2 className="h-4 w-4" />
                     הושלם
                   </span>

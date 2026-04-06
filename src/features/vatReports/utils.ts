@@ -1,6 +1,7 @@
 import { CATEGORY_LABELS } from "./constants";
 import { EXPENSE_CATEGORIES } from "./constants";
 import type { VatInvoiceRowValues } from "./schemas/invoice.schema";
+import { semanticMonoToneClasses } from "../../utils/semanticColors";
 
 export const canMarkMaterialsComplete = (status: string): boolean =>
   status === "pending_materials";
@@ -43,9 +44,9 @@ export const getVatDeductionRateLabel = (rate: string | number): string => {
 
 export const getVatDeductionRateClass = (rate: string | number): string => {
   const numeric = Number(rate);
-  if (numeric === 1) return "text-emerald-600 font-semibold";
+  if (numeric === 1) return `${semanticMonoToneClasses.positive} font-semibold`;
   if (numeric === 0) return "text-gray-400";
-  return "text-accent-600 font-semibold";
+  return `${semanticMonoToneClasses.warning} font-semibold`;
 };
 
 export const toDateInputValue = (dateStr: string): string => {
