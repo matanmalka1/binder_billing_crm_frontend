@@ -1,6 +1,8 @@
 export const annualReportsQK = {
   all: ["tax", "annual-reports"] as const,
   detail: (id: number) => ["tax", "annual-reports", "detail", id] as const,
+  reportCharges: (reportId: number, page: number, pageSize: number) =>
+    ["tax", "annual-reports", "charges", reportId, { page, page_size: pageSize }] as const,
   kanban: ["tax", "annual-reports", "kanban"] as const,
   statusHistory: (id: number | string) =>
     ["tax", "annual-reports", "status-history", id] as const,

@@ -1,5 +1,8 @@
 export const signatureRequestsQK = {
   all: ["signature-requests"] as const,
+  signer: (token: string | undefined) => ["signer", token] as const,
+  businessNamesBatch: (businessIds: number[]) =>
+    ["business-names-batch", businessIds] as const,
   forBusiness: (businessId: number) => ["signature-requests", "business", businessId] as const,
   forBusinessPage: (businessId: number, params: object) =>
     ["signature-requests", "business", businessId, params] as const,

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { clientsApi, clientsQK } from "@/features/clients/api";
-import { getErrorMessage } from "@/utils/utils";
+import { getErrorMessage, isPositiveInt } from "@/utils/utils";
 import { useRole } from "@/hooks/useRole";
 
 type UseBusinessDetailsParams = {
@@ -9,8 +9,8 @@ type UseBusinessDetailsParams = {
 };
 
 export const useBusinessDetails = ({ clientId, businessId }: UseBusinessDetailsParams) => {
-  const clientIdValid = clientId != null && Number.isFinite(clientId) && clientId > 0;
-  const businessIdValid = businessId != null && Number.isFinite(businessId) && businessId > 0;
+  const clientIdValid = isPositiveInt(clientId);
+  const businessIdValid = isPositiveInt(businessId);
   const isValidId = clientIdValid && businessIdValid;
   const { can } = useRole();
 
@@ -21,7 +21,7 @@ export const useBusinessDetails = ({ clientId, businessId }: UseBusinessDetailsP
   });
 
   const businessQuery = useQuery({
-    queryKey: ["businesses", "detail", businessId ?? "none"],
+    queryKey: clientsQK.businessDetail(businessId ?? "none"),
     queryFn: () => clientsApi.getBusinessById(businessId!),
     enabled: isValidId,
   });

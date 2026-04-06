@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { signerApi } from "@/features/signatureRequests/api";
+import { signerApi, signatureRequestsQK } from "@/features/signatureRequests/api";
 import type { SignerViewResponse, SignatureRequestStatus } from "@/features/signatureRequests/api";
 import type { SigningPageState } from "../types";
 
@@ -28,7 +28,7 @@ export const useSigningPageState = (
   const [declineReason, setDeclineReason] = useState("");
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["signer", token],
+    queryKey: signatureRequestsQK.signer(token),
     queryFn: () => signerApi.view(token!),
     enabled: !!token,
     retry: false,

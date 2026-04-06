@@ -15,7 +15,7 @@ export const useBusinessesForClient = ({
   onAutoSelect,
 }: UseBusinessesForClientOptions) => {
   const { data, isLoading } = useQuery({
-    queryKey: clientId ? clientsQK.businessesAll(clientId) : ["clients", "businesses", "all", "none"],
+    queryKey: clientId ? clientsQK.businessesAll(clientId) : clientsQK.businessesAllFallback(),
     queryFn: () => clientsApi.listAllBusinessesForClient(clientId!),
     enabled: enabled && !!clientId,
     staleTime: 30_000,

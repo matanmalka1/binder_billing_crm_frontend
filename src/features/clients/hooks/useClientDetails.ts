@@ -4,7 +4,11 @@ import { clientsApi, clientsQK, type UpdateClientPayload, type ClientResponse, t
 import { bindersApi, bindersQK } from "@/features/binders/api";
 import type { BinderDetailResponse } from "@/features/binders/api";
 import { chargesApi, chargesQK } from "@/features/charges/api";
-import { getErrorMessage, showErrorToast } from "../../../utils/utils";
+import {
+  getErrorMessage,
+  isPositiveInt,
+  showErrorToast,
+} from "../../../utils/utils";
 import type { ClientChargeSummary } from "../types";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
@@ -36,8 +40,7 @@ export const useClientDetails = ({
   clientId,
 }: UseClientDetailsParams): UseClientDetailsResult => {
   const id = Number(clientId);
-  const isValidId = Number.isFinite(id) && id > 0;
-  const enabled = isValidId;
+  const isValidId = isPositiveInt(id);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { isAdvisor, can } = useRole();
@@ -45,19 +48,19 @@ export const useClientDetails = ({
   const clientQuery = useQuery({
     queryKey: clientsQK.detail(id),
     queryFn: () => clientsApi.getById(id),
-    enabled,
+    enabled: isValidId,
   });
 
   const bindersQuery = useQuery({
     queryKey: bindersQK.forClientPage(id, BINDERS_PAGE.page, BINDERS_PAGE.page_size),
     queryFn: () => bindersApi.listClientBinders(id, BINDERS_PAGE),
-    enabled,
+    enabled: isValidId,
   });
 
   const chargesQuery = useQuery({
     queryKey: chargesQK.forClientPage(id, CHARGES_PAGE.page, CHARGES_PAGE.page_size),
     queryFn: () => chargesApi.list({ client_id: id, ...CHARGES_PAGE }),
-    enabled: enabled && isAdvisor,
+    enabled: isValidId && isAdvisor,
   });
 
   const updateMutation = useMutation({
