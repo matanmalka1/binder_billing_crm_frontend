@@ -103,26 +103,31 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
               variant="ghost"
               onClick={() => handleItemClick(item)}
               className={cn(
-                "w-full text-right px-5 py-4 flex flex-col gap-1 hover:bg-gray-50 rounded-none",
+                "w-full text-right px-5 py-4 flex flex-row gap-3 hover:bg-gray-50 rounded-none items-start",
                 !item.is_read && "bg-info-50 hover:bg-info-100",
               )}
             >
-              <div className="flex items-center gap-2">
+              {/* Badge column (right side in RTL) */}
+              <div className="flex flex-col items-center gap-1.5 pt-0.5 shrink-0">
                 <SeverityBadge severity={item.severity} />
                 {!item.is_read && (
                   <span className="h-2 w-2 rounded-full bg-info-500 shrink-0" aria-label="לא נקרא" />
                 )}
               </div>
-              {item.business_name && (
-                <span className="text-xs font-medium text-gray-600">{item.business_name}</span>
-              )}
-              <p className="text-sm text-gray-800 leading-snug">{item.content_snapshot}</p>
-              {item.recipient && (
-                <span className="text-xs text-gray-500">נשלח ל: {item.recipient}</span>
-              )}
-              <span className="text-xs text-gray-400">
-                {new Date(item.created_at).toLocaleDateString("he-IL", { hour: "2-digit", minute: "2-digit" })}
-              </span>
+              {/* Content column */}
+              <div className="flex flex-col gap-1 min-w-0 flex-1">
+                {item.business_name && (
+                  <span className="text-xs font-semibold text-gray-700">{item.business_name}</span>
+                )}
+                <p className="text-sm text-gray-800 leading-relaxed whitespace-normal break-words">{item.content_snapshot}</p>
+                {item.recipient && (
+                  <span className="text-xs text-gray-500">נשלח ל: {item.recipient}</span>
+                )}
+                <span className="text-xs text-gray-400">
+                  {new Date(item.created_at).toLocaleDateString("he-IL")}{" "}
+                  {new Date(item.created_at).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" })}
+                </span>
+              </div>
             </Button>
           ))}
         </div>

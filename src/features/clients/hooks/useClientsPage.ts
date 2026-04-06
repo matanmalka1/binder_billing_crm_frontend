@@ -13,11 +13,11 @@ import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useActionRunner } from "@/features/actions";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
-import axios from "axios";
+import { isAxiosError } from "axios";
 
 /** Extract the application-level error code from an Axios error response. */
 const extractErrorCode = (err: unknown): string | null => {
-  if (axios.isAxiosError(err)) {
+  if (isAxiosError(err)) {
     return err.response?.data?.error ?? err.response?.data?.code ?? null;
   }
   return null;

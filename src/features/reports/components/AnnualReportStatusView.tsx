@@ -2,25 +2,20 @@ import { PageHeader } from "../../../components/layout/PageHeader";
 import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
 import { AnnualReportStatusTable } from "./AnnualReportStatusTable";
 import { useAnnualReportStatusReport } from "../hooks/useAnnualReportStatusReport";
-
-const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
+import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
+import { YEAR_OPTIONS } from "../../../utils/utils";
 
 export const AnnualReportStatusView: React.FC = () => {
   const { taxYear, setTaxYear, data, isLoading, error } =
     useAnnualReportStatusReport();
 
   const actions = (
-    <select
-      value={taxYear}
+    <SelectDropdown
+      value={String(taxYear)}
       onChange={(e) => setTaxYear(Number(e.target.value))}
-      className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none"
-    >
-      {YEAR_OPTIONS.map((y) => (
-        <option key={y} value={y}>
-          {y}
-        </option>
-      ))}
-    </select>
+      options={YEAR_OPTIONS}
+      className="w-28"
+    />
   );
 
   const header = (

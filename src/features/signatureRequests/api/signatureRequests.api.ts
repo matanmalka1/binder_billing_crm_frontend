@@ -1,3 +1,7 @@
+// axios is imported directly here to construct publicApi — an unauthenticated
+// client that hits the root base URL (not /api/v1) for public signing routes.
+// The shared `api` client from @/api/client cannot be reused for these routes
+// because it carries auth cookies and the wrong base URL.
 import axios from "axios";
 import { api } from "@/api/client";
 import { SIGNATURE_REQUEST_ENDPOINTS } from "./endpoints";

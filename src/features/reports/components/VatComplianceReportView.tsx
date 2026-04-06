@@ -4,11 +4,8 @@ import { reportsApi, reportsQK, type VatComplianceItem, type StalePendingItem } 
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
 import { Badge } from "../../../components/ui/primitives/Badge";
-
-const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
-
-const selectCls =
-  "rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none";
+import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
+import { YEAR_OPTIONS } from "../../../utils/utils";
 
 const complianceBadgeVariant = (rate: number) => {
   if (rate >= 80) return "success" as const;
@@ -98,15 +95,12 @@ export const VatComplianceReportView: React.FC = () => {
       title='דוח ציות מע"מ'
       description={description}
       actions={
-        <select
-          value={year}
+        <SelectDropdown
+          value={String(year)}
           onChange={(e) => setYear(Number(e.target.value))}
-          className={selectCls}
-        >
-          {YEAR_OPTIONS.map((y) => (
-            <option key={y} value={y}>{y}</option>
-          ))}
-        </select>
+          options={YEAR_OPTIONS}
+          className="w-28"
+        />
       }
     />
   );

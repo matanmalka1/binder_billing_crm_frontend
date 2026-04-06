@@ -1,4 +1,4 @@
-import axios from "axios";
+import { isAxiosError } from "axios";
 import { toast } from "./toast";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
@@ -44,6 +44,12 @@ export const formatDateTime = (value: string | null): string => {
   if (!value) return "—";
   return format(parseISO(value), "dd/MM/yyyy HH:mm", { locale: he });
 };
+
+/** Last 5 years descending, for year-filter dropdowns. */
+export const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => ({
+  value: String(new Date().getFullYear() - i),
+  label: String(new Date().getFullYear() - i),
+}));
 
 /**
  * Build a year options array from `from` up to current year + 1, newest first.
@@ -99,7 +105,7 @@ export const formatFileSize = (bytes: number | null | undefined): string => {
 };
 
 export const getHttpStatus = (error: unknown): number | null => {
-  if (!axios.isAxiosError(error)) return null;
+  if (!isAxiosError(error)) return null;
   const status = error.response?.status;
   return typeof status === "number" ? status : null;
 };
@@ -119,7 +125,7 @@ const resolveErrorMessage = (
     if (status === 500) return "שגיאת שרת פנימית. נסה שוב בעוד מספר רגעים";
   }
 
-  if (axios.isAxiosError(error)) {
+  if (isAxiosError(error)) {
     if (error.code === "ECONNABORTED" || /timeout/i.test(error.message ?? "")) {
       return "הבקשה נמשכה יותר מדי זמן. נסה שוב.";
     }

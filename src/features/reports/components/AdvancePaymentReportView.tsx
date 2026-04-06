@@ -2,13 +2,10 @@ import { PageHeader } from "../../../components/layout/PageHeader";
 import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
 import { AdvancePaymentReportTable } from "./AdvancePaymentReportTable";
 import { useAdvancePaymentReport } from "../hooks/useAdvancePaymentReport";
-import { MONTH_OPTIONS as BASE_MONTH_OPTIONS } from "../../../utils/utils";
+import { MONTH_OPTIONS as BASE_MONTH_OPTIONS, YEAR_OPTIONS } from "../../../utils/utils";
+import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
 
-const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
 const MONTH_OPTIONS = [{ value: "", label: "כל החודשים" }, ...BASE_MONTH_OPTIONS];
-
-const selectCls =
-  "rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none";
 
 export const AdvancePaymentReportView: React.FC = () => {
   const { year, setYear, month, setMonth, data, isLoading, error } =
@@ -16,30 +13,20 @@ export const AdvancePaymentReportView: React.FC = () => {
 
   const actions = (
     <div className="flex items-center gap-2">
-      <select
-        value={year}
+      <SelectDropdown
+        value={String(year)}
         onChange={(e) => setYear(Number(e.target.value))}
-        className={selectCls}
-      >
-        {YEAR_OPTIONS.map((y) => (
-          <option key={y} value={y}>
-            {y}
-          </option>
-        ))}
-      </select>
-      <select
-        value={month ?? ""}
+        options={YEAR_OPTIONS}
+        className="w-28"
+      />
+      <SelectDropdown
+        value={month != null ? String(month) : ""}
         onChange={(e) =>
           setMonth(e.target.value ? Number(e.target.value) : undefined)
         }
-        className={selectCls}
-      >
-        {MONTH_OPTIONS.map((m) => (
-          <option key={m.value} value={m.value}>
-            {m.label}
-          </option>
-        ))}
-      </select>
+        options={MONTH_OPTIONS}
+        className="w-36"
+      />
     </div>
   );
 
