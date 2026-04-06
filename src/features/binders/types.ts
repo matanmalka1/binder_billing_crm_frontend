@@ -80,6 +80,7 @@ export type BindersFilters = Omit<ListBindersParams, "client_name" | "binder_num
 export interface BindersFiltersBarProps {
   filters: BindersFilters;
   onFilterChange: (name: string, value: string) => void;
+  onReset: () => void;
 }
 
 export interface BinderIntakeMaterialResponse {

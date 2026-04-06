@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Select } from "../../../components/ui/inputs/Select";
+import { Input } from "../../../components/ui/inputs/Input";
 import type { UploadDocumentPayload } from "../api";
 import {
   documentsUploadDefaultValues,
@@ -123,17 +124,14 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         </div>
 
         {showAnnualReportField && (
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-700">מזהה דו"ח שנתי</label>
-            <input
-              type="number"
-              value={annualReportIdValue ?? ""}
-              onChange={(e) =>
-                setValue("annual_report_id", e.target.value ? Number(e.target.value) : null)
-              }
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 focus:border-primary-500 focus:ring-2 focus:ring-primary-500 focus:outline-none"
-            />
-          </div>
+          <Input
+            label='מזהה דו"ח שנתי'
+            type="number"
+            value={annualReportIdValue ?? ""}
+            onChange={(e) =>
+              setValue("annual_report_id", e.target.value ? Number(e.target.value) : null)
+            }
+          />
         )}
       </div>
 

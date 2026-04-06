@@ -15,6 +15,7 @@ const YEAR_OPTIONS = [
 export const BindersFiltersBar = ({
   filters,
   onFilterChange,
+  onReset,
 }: BindersFiltersBarProps) => {
   const [searchDraft, setSearchDraft] = useSearchDebounce(
     filters.query ?? "",
@@ -23,9 +24,7 @@ export const BindersFiltersBar = ({
 
   const handleReset = () => {
     setSearchDraft("");
-    onFilterChange("status", "");
-    onFilterChange("query", "");
-    onFilterChange("year", "");
+    onReset();
   };
 
   return (

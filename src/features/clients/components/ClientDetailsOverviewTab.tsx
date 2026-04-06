@@ -17,6 +17,7 @@ import { CreateBusinessModal } from "./CreateBusinessModal";
 import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from "../api";
 import type { ClientChargeSummary } from "../types";
 import type { BinderDetailResponse } from "@/features/binders/api";
+import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
 
 const EDIT_FORM_ID = "client-edit-form";
 
@@ -39,7 +40,6 @@ export type ClientDetailsOverviewTabProps = {
 
 export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   client,
-  clientId,
   canEditClients,
   canViewCharges,
   binders,
@@ -53,6 +53,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   createBusiness,
   isCreatingBusiness,
 }) => {
+  const { id: firstBusinessId } = useFirstBusinessId(client.id);
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [showBusinessModal, setShowBusinessModal] = useState(false);
@@ -81,9 +82,9 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
             onAddBusiness={() => setShowBusinessModal(true)}
           />
           <ClientVatOverviewCard clientId={client.id} />
-          <AuthorityContactsCard clientId={client.id} />
-          <CorrespondenceCard clientId={client.id} />
-          <SignatureRequestsCard client={client} canManage={canEditClients} />
+          <AuthorityContactsCard businessId={firstBusinessId ?? 0} />
+          <CorrespondenceCard businessId={firstBusinessId ?? 0} />
+          <SignatureRequestsCard client={client} businessId={firstBusinessId} canManage={canEditClients} />
         </div>
 
         <div className="space-y-6">
@@ -98,8 +99,8 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
         </div>
       </div>
 
-      <ClientRemindersCard clientId={client.id} clientName={client.full_name} />
-      <NotificationsTab clientId={clientId} />
+      <ClientRemindersCard clientId={client.id} businessId={firstBusinessId ?? 0} clientName={client.full_name} />
+      <NotificationsTab businessId={firstBusinessId ?? 0} />
 
       <Modal
         open={isConfirmingDelete}

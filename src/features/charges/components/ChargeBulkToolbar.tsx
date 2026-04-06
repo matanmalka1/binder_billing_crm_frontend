@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BulkSelectionActionButton, BulkSelectionToolbar } from "@/components/ui/table/BulkSelectionToolbar";
+import { Button } from "@/components/ui/primitives/Button";
 import type { BulkChargeActionPayload } from "../api";
 
 interface ChargeBulkToolbarProps {

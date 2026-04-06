@@ -8,4 +8,4 @@ export { useReceiveBinderDrawer } from "./hooks/useReceiveBinderDrawer";
 export { Binders } from "./pages/BindersPage";
 export type { BinderDetailResponse } from "./api";
 export type { BinderResponse } from "./types";
-export { getBinderTypeLabel } from "./constants";
+export { getBinderTypeLabel, BINDER_STATUS_OPTIONS } from "./constants";

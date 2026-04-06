@@ -6,7 +6,7 @@ export interface NotificationDrawerProps {
 }
 
 export interface NotificationsTabProps {
-  clientId: number;
+  businessId: number;
 }
 
 export interface SeverityBadgeProps {

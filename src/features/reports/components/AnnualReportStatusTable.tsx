@@ -44,9 +44,9 @@ const clientColumns: Column<AnnualReportClientEntry>[] = [
       const d = r.days_until_deadline;
       const cls =
         d < 0
-          ? "text-red-600 font-semibold"
+          ? "text-negative-600 font-semibold"
           : d <= 14
-            ? "text-amber-600 font-semibold"
+            ? "text-warning-600 font-semibold"
             : "text-gray-600";
       return (
         <span className={`text-sm ${cls}`}>

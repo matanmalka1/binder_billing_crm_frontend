@@ -15,15 +15,16 @@ import type { ClientResponse } from "@/features/clients/api";
 
 interface Props {
   client: ClientResponse;
+  businessId: number | null;
   canManage: boolean;
 }
 
-export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) => {
+export const SignatureRequestsCard: React.FC<Props> = ({ client, businessId, canManage }) => {
   const [showCreate, setShowCreate] = useState(false);
   const [auditRequestId, setAuditRequestId] = useState<number | null>(null);
 
-  const { items, total, isLoading, error } = useClientSignatureRequests({ clientId: client.id });
-  const { create, isCreating, send, isSending, cancel, isCanceling } = useSignatureRequestActions(client.id);
+  const { items, total, isLoading, error } = useClientSignatureRequests({ clientId: businessId });
+  const { create, isCreating, send, isSending, cancel, isCanceling } = useSignatureRequestActions(businessId ?? undefined);
   const { signingUrls, handleSend } = useSignatureRequestSigningUrls(send);
 
   return (
@@ -85,7 +86,7 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, canManage }) =>
 
       <CreateSignatureRequestModal
         open={showCreate}
-        clientId={client.id}
+        clientId={businessId ?? undefined}
         signerName={client.full_name}
         signerEmail={client.email ?? undefined}
         signerPhone={client.phone ?? undefined}

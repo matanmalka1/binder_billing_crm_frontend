@@ -2,7 +2,6 @@ import { RotateCcw, SlidersHorizontal, ChevronDown, ChevronUp } from "lucide-rea
 import { Input } from "../../../components/ui/inputs/Input";
 import { Button } from "../../../components/ui/primitives/Button";
 import type { SearchFiltersBarProps } from "../types";
-import { cn } from "../../../utils/utils";
 
 interface SearchFiltersBarExtendedProps extends SearchFiltersBarProps {
   isOpen: boolean;

@@ -54,7 +54,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
           />
         )}
         {canEdit && (
-          <DropdownMenuItem label="עריכה" onClick={() => onEdit(deadline)} icon={<Edit2 className="h-4 w-4" />} />
+          <DropdownMenuItem label="עריכה" onClick={() => onEdit?.(deadline)} icon={<Edit2 className="h-4 w-4" />} />
         )}
         {canDelete && (
           <>

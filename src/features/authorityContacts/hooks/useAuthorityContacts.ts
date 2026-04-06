@@ -6,22 +6,22 @@ import { toast } from "../../../utils/toast";
 
 const PAGE_SIZE = 20;
 
-export const useAuthorityContacts = (clientId: number) => {
+export const useAuthorityContacts = (businessId: number) => {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
-  const qk = [...authorityContactsQK.forBusiness(clientId), { page, page_size: PAGE_SIZE }];
+  const qk = [...authorityContactsQK.forBusiness(businessId), { page, page_size: PAGE_SIZE }];
 
   const listQuery = useQuery({
-    enabled: clientId > 0,
+    enabled: businessId > 0,
     queryKey: qk,
-    queryFn: () => authorityContactsApi.listAuthorityContacts(clientId, undefined, page, PAGE_SIZE),
+    queryFn: () => authorityContactsApi.listAuthorityContacts(businessId, undefined, page, PAGE_SIZE),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (contactId: number) => authorityContactsApi.deleteAuthorityContact(contactId),
     onSuccess: () => {
       toast.success("איש קשר נמחק בהצלחה");
-      queryClient.invalidateQueries({ queryKey: authorityContactsQK.forBusiness(clientId) });
+      queryClient.invalidateQueries({ queryKey: authorityContactsQK.forBusiness(businessId) });
     },
     onError: (err) => showErrorToast(err, "שגיאה במחיקת איש קשר"),
   });
@@ -35,7 +35,7 @@ export const useAuthorityContacts = (clientId: number) => {
     page,
     setPage,
     totalPages,
-    isLoading: listQuery.isPending,
+    isLoading: listQuery.isLoading,
     error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת אנשי קשר") : null,
     deleteContact: (id: number) => deleteMutation.mutate(id),
     deletingId: deleteMutation.isPending ? (deleteMutation.variables ?? null) : null,

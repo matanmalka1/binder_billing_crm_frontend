@@ -3,11 +3,11 @@ import { SeverityBadge } from "./SeverityBadge";
 import { Button } from "../../../components/ui/primitives/Button";
 import type { NotificationsTabProps } from "../types";
 
-export const NotificationsTab: React.FC<NotificationsTabProps> = ({ clientId }) => {
-  const { notifications, unreadCount, markAllRead, isLoading } = useNotifications(clientId);
+export const NotificationsTab: React.FC<NotificationsTabProps> = ({ businessId }) => {
+  const { notifications, unreadCount, markAllRead, isLoading } = useNotifications(businessId);
   const limited = notifications.slice(0, 50);
 
-  const handleMarkAllRead = () => markAllRead(clientId);
+  const handleMarkAllRead = () => markAllRead(businessId);
 
   if (isLoading) {
     return <p className="text-sm text-gray-400 py-8 text-center">טוען התראות...</p>;

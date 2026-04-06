@@ -49,6 +49,15 @@ export const useBindersPage = () => {
     setFilter(name, value);
   };
 
+  const handleReset = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete("status");
+    next.delete("query");
+    next.delete("year");
+    next.set("page", "1");
+    setSearchParams(next);
+  };
+
   const handleSort = (sortBy: string) => {
     const currentDir = filters.sort_by === sortBy ? filters.sort_dir : "desc";
     const nextDir = currentDir === "desc" ? "asc" : "desc";
@@ -129,6 +138,7 @@ export const useBindersPage = () => {
       : null,
     filters,
     handleFilterChange,
+    handleReset,
     handleSort,
     setPage,
     handleSelectBinder,

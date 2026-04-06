@@ -40,15 +40,36 @@ const YEAR_OPTIONS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2];
 export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
   const navigate = useNavigate();
   const [selectedYear, setSelectedYear] = useState<number>(CURRENT_YEAR);
-  const firstBusinessId = useFirstBusinessId(clientId);
+  const { id: firstBusinessId, isLoading: isBusinessLoading } = useFirstBusinessId(clientId);
 
-  const { data, isLoading } = useQuery({
-    queryKey: clientsQK.statusCard(firstBusinessId ?? clientId, selectedYear),
+  const { data, isLoading: isStatusLoading } = useQuery({
+    queryKey: clientsQK.statusCard(firstBusinessId ?? 0, selectedYear),
     queryFn: () => clientsApi.getStatusCard(firstBusinessId!, selectedYear),
     enabled: firstBusinessId != null,
     staleTime: 30_000,
     retry: 1,
   });
+
+  const isLoading = isBusinessLoading || isStatusLoading;
+
+  const yearSelector = (
+    <div className="flex gap-1">
+      {YEAR_OPTIONS.map((y) => (
+        <button
+          key={y}
+          type="button"
+          onClick={() => setSelectedYear(y)}
+          className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${
+            selectedYear === y
+              ? "bg-primary-100 text-primary-700"
+              : "text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          {y}
+        </button>
+      ))}
+    </div>
+  );
 
   if (isLoading) {
     return (
@@ -62,15 +83,20 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
     );
   }
 
-  if (firstBusinessId == null) {
+  if (!isLoading && (firstBusinessId == null || !data)) {
     return (
-      <Card title="סטטוס לקוח">
-        <p className="text-sm text-gray-500">אין לעסקי הלקוח נתוני סטטוס להצגה.</p>
+      <Card title={`סטטוס לקוח — ${selectedYear}`} actions={yearSelector}>
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+          <Tile icon={<Receipt size={18} />} title='מע"מ' primary="—" secondary="אין דיווחים" />
+          <Tile icon={<FileText size={18} />} title="דוח שנתי" primary="—" secondary="אין דוח" />
+          <Tile icon={<CreditCard size={18} />} title="חיובים פתוחים" primary="—" secondary="0 חיובים" />
+          <Tile icon={<TrendingUp size={18} />} title="מקדמות" primary="—" secondary="0 תשלומים" />
+          <Tile icon={<FolderOpen size={18} />} title="קלסרים" primary="0 פעילים" secondary="0 במשרד" />
+          <Tile icon={<FileCheck size={18} />} title="מסמכים" primary="0/0" secondary="מסמכים קיימים" />
+        </div>
       </Card>
     );
   }
-
-  if (!data) return null;
 
   const { vat, annual_report, charges, advance_payments, binders, documents, year } = data;
 
@@ -92,25 +118,6 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
       : annual_report.tax_due != null
         ? `תשלום: ${fmt(annual_report.tax_due)}`
         : "—";
-
-  const yearSelector = (
-    <div className="flex gap-1">
-      {YEAR_OPTIONS.map((y) => (
-        <button
-          key={y}
-          type="button"
-          onClick={() => setSelectedYear(y)}
-          className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${
-            selectedYear === y
-              ? "bg-primary-100 text-primary-700"
-              : "text-gray-500 hover:text-gray-700"
-          }`}
-        >
-          {y}
-        </button>
-      ))}
-    </div>
-  );
 
   return (
     <Card title={`סטטוס לקוח — ${year}`} actions={yearSelector}>

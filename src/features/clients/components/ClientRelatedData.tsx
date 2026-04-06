@@ -8,6 +8,10 @@ import type { ClientChargeSummary } from "../types";
 import type { BinderDetailResponse } from "@/features/binders/api";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { getChargeTypeLabel } from "@/features/charges";
+import { BINDER_STATUS_OPTIONS } from "@/features/binders";
+
+const getBinderStatusLabel = (status: string): string =>
+  BINDER_STATUS_OPTIONS.find((o) => o.value === status)?.label ?? status;
 
 // ── Stat pill ───────────────────────────────────────────────────────────────
 
@@ -140,7 +144,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           className="mt-6"
           getKey={(binder) => binder.id}
           getTitle={(binder) => binder.binder_number}
-          getSubtitle={(binder) => binder.status}
+          getSubtitle={(binder) => getBinderStatusLabel(binder.status)}
           getItemHref={(binder) => `/binders/${binder.id}`}
         />
       )}

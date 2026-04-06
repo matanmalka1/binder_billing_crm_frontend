@@ -10,7 +10,7 @@ interface ClientRowActionsProps {
 
 export const ClientRowActions: React.FC<ClientRowActionsProps> = ({ clientId, onEditClient }) => {
   const navigate = useNavigate();
-  const firstBusinessId = useFirstBusinessId(clientId);
+  const { id: firstBusinessId } = useFirstBusinessId(clientId);
 
   return (
     <div onClick={(e) => e.stopPropagation()}>

@@ -13,12 +13,12 @@ export interface CorrespondenceListParams {
 }
 
 export interface CorrespondenceQueryParams {
-  clientId: number;
+  businessId: number;
   params?: CorrespondenceListParams;
 }
 
 export interface CorrespondenceCardProps {
-  clientId: number;
+  businessId: number;
 }
 
 export interface CorrespondenceModalProps {

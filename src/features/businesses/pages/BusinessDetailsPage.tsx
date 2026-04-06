@@ -106,8 +106,8 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
               <div className="space-y-6">
                 <TaxProfileCard businessId={businessIdNum} readOnly={!can.editClients} />
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                  {client && clientIdNum != null && <CorrespondenceCard clientId={clientIdNum} />}
-                  {client && <SignatureRequestsCard client={client} canManage={can.editClients} />}
+                  {client && businessIdNum != null && <CorrespondenceCard businessId={businessIdNum} />}
+                  {client && businessIdNum != null && <SignatureRequestsCard client={client} businessId={businessIdNum} canManage={can.editClients} />}
                 </div>
               </div>
             )}

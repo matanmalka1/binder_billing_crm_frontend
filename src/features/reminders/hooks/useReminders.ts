@@ -106,6 +106,7 @@ export const useReminders = (opts?: { clientId?: number }) => {
     queryKey: remindersQK.list(clientId),
     queryFn: () =>
       remindersApi.list(clientId ? { business_id: clientId } : undefined),
+    enabled: clientId !== 0,
   });
 
   const createMutation = useMutation({
@@ -157,7 +158,7 @@ export const useReminders = (opts?: { clientId?: number }) => {
 
   return {
     reminders: remindersQuery.data?.items ?? [],
-    isLoading: remindersQuery.isPending,
+    isLoading: remindersQuery.isLoading,
     error: remindersQuery.error
       ? getErrorMessage(remindersQuery.error, "שגיאה בטעינת תזכורות")
       : null,

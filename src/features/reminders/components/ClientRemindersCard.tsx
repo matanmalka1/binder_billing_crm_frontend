@@ -12,11 +12,13 @@ import { taxDeadlinesApi, taxDeadlinesQK } from "@/features/taxDeadlines/api";
 
 interface ClientRemindersCardProps {
   clientId: number;
+  businessId: number;
   clientName?: string;
 }
 
 export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
   clientId,
+  businessId,
   clientName,
 }) => {
   const {
@@ -34,7 +36,7 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
     handleMarkSent,
     selectedReminder,
     setSelectedReminder,
-  } = useReminders({ clientId });
+  } = useReminders({ clientId: businessId });
 
   const { data: bindersData } = useQuery({
     queryKey: bindersQK.forClient(clientId),
@@ -49,8 +51,8 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
   });
 
   const { data: taxDeadlinesData } = useQuery({
-    queryKey: taxDeadlinesQK.list({ client_name: clientName, page_size: 100 }),
-    queryFn: () => taxDeadlinesApi.listTaxDeadlines({ client_name: clientName, page_size: 100 }),
+    queryKey: taxDeadlinesQK.list({ business_name: clientName, page_size: 100 }),
+    queryFn: () => taxDeadlinesApi.listTaxDeadlines({ business_name: clientName, page_size: 100 }),
     enabled: showCreateModal,
   });
 

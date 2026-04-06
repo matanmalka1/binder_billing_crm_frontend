@@ -51,21 +51,21 @@ const StalePendingTable = ({ items }: { items: StalePendingItem[] }) => {
   if (items.length === 0) return null;
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-red-700">
+      <h3 className="text-sm font-semibold text-negative-700">
         ממתין לחומרים מעל 30 יום ({items.length})
       </h3>
-      <div className="overflow-x-auto rounded-lg border border-red-200">
-        <table className="min-w-full divide-y divide-red-100 text-sm">
-          <thead className="bg-red-50 text-right">
+      <div className="overflow-x-auto rounded-lg border border-negative-200">
+        <table className="min-w-full divide-y divide-negative-100 text-sm">
+          <thead className="bg-negative-50 text-right">
             <tr>
               {["לקוח", "תקופה", "ימים ממתין"].map((h) => (
-                <th key={h} className="px-4 py-3 font-medium text-red-600 whitespace-nowrap">{h}</th>
+                <th key={h} className="px-4 py-3 font-medium text-negative-600 whitespace-nowrap">{h}</th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-red-50 bg-white">
+          <tbody className="divide-y divide-negative-50 bg-white">
             {items.map((item) => (
-              <tr key={`${item.client_id}-${item.period}`} className="hover:bg-red-50">
+              <tr key={`${item.client_id}-${item.period}`} className="hover:bg-negative-50">
                 <td className="px-4 py-3 font-semibold text-gray-900 whitespace-nowrap">{item.client_name}</td>
                 <td className="px-4 py-3 text-gray-700 tabular-nums">{item.period}</td>
                 <td className="px-4 py-3">

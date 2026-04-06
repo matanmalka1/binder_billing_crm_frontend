@@ -8,12 +8,12 @@ import { authorityContactSchema, authorityContactDefaults, type AuthorityContact
 import { toast } from "../../../utils/toast";
 
 export const useAuthorityContactForm = (
-  clientId: number,
+  businessId: number,
   onSuccess: () => void,
   existing?: AuthorityContactResponse | null,
 ) => {
   const queryClient = useQueryClient();
-  const qk = authorityContactsQK.forBusiness(clientId);
+  const qk = authorityContactsQK.forBusiness(businessId);
 
   const form = useForm<AuthorityContactFormValues>({
     resolver: zodResolver(authorityContactSchema),
@@ -47,7 +47,7 @@ export const useAuthorityContactForm = (
       };
       return existing
         ? authorityContactsApi.updateAuthorityContact(existing.id, payload)
-        : authorityContactsApi.createAuthorityContact(clientId, payload);
+        : authorityContactsApi.createAuthorityContact(businessId, payload);
     },
     onSuccess: () => {
       toast.success(existing ? "איש קשר עודכן בהצלחה" : "איש קשר נוצר בהצלחה");

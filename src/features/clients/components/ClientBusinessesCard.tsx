@@ -29,6 +29,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
   const { data, isLoading } = useQuery({
     queryKey: clientsQK.businessesAll(clientId),
     queryFn: () => clientsApi.listAllBusinessesForClient(clientId),
+    enabled: clientId > 0,
   });
 
   const businesses = data?.items ?? [];

@@ -3,6 +3,7 @@ import { StateCard } from "../../../components/ui/feedback/StateCard";
 import { Inbox } from "lucide-react";
 import type { AgingReportItem } from "../api";
 import { formatDate } from "../../../utils/utils";
+import { Badge } from "../../../components/ui/primitives/Badge";
 
 interface AgingReportTableProps {
   items: AgingReportItem[];
@@ -32,9 +33,7 @@ export const AgingReportTable: React.FC<AgingReportTableProps> = ({ items }) => 
               <p className="text-xs text-gray-500">לקוח #{item.client_id}</p>
             </div>
             {item.days_90_plus > 0 && (
-              <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
-                דורש טיפול
-              </span>
+              <Badge variant="error">דורש טיפול</Badge>
             )}
           </div>
 

@@ -19,6 +19,7 @@ export const ClientVatOverviewCard: React.FC<Props> = ({ clientId }) => {
   const { data: businessesData, isLoading: loadingBiz } = useQuery({
     queryKey: clientsQK.businessesAll(clientId),
     queryFn: () => clientsApi.listAllBusinessesForClient(clientId),
+    enabled: clientId > 0,
     staleTime: 60_000,
   });
 

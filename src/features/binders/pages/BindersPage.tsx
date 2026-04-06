@@ -30,6 +30,7 @@ export const Binders: React.FC = () => {
     deepLinkBinderId,
     selectedBinder,
     handleFilterChange,
+    handleReset,
     setPage,
     handleSelectBinder,
     handleCloseDrawer,
@@ -107,7 +108,7 @@ export const Binders: React.FC = () => {
       />
 
       <ToolbarContainer>
-        <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
+        <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} onReset={handleReset} />
       </ToolbarContainer>
 
       <PaginatedDataTable
