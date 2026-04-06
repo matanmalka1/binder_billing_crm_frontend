@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FileSpreadsheet, FileText } from "lucide-react";
 import { Button } from "../../../components/ui/primitives/Button";
 import { vatReportsApi } from "../api";
-import { toast } from "../../../utils/toast";
+import { showErrorToast } from "../../../utils/utils";
 import type { VatExportButtonsProps } from "../types";
 
 export const VatExportButtons: React.FC<VatExportButtonsProps> = ({ clientId, period }) => {
@@ -15,8 +15,8 @@ export const VatExportButtons: React.FC<VatExportButtonsProps> = ({ clientId, pe
     setLoad(true);
     try {
       await vatReportsApi.exportBusinessVat(clientId, format, year);
-    } catch {
-      toast.error("ייצוא נכשל, נסה שוב");
+    } catch (err) {
+      showErrorToast(err, "ייצוא נכשל, נסה שוב");
     } finally {
       setLoad(false);
     }

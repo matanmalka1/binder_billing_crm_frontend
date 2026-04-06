@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { Modal } from "../../../components/ui/overlays/Modal";
 import { Button } from "../../../components/ui/primitives/Button";
@@ -14,6 +16,12 @@ import {
   VAT_FILING_METHOD_LABELS,
   VAT_FILING_METHODS,
 } from "../constants";
+import {
+  toFileVatReturnPayload,
+  vatFileModalDefaultValues,
+  vatFileModalSchema,
+  type VatFileModalFormValues,
+} from "../schemas/fileVatReturn.schema";
 
 interface VatFileModalProps {
   open: boolean;
@@ -26,36 +34,39 @@ interface VatFileModalProps {
 export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, onClose, onFilingStart, onFilingEnd }) => {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
-  const [filingMethod, setFilingMethod] = useState<"online" | "manual" | "representative">(DEFAULT_VAT_FILING_METHOD);
-  const [submissionReference, setSubmissionReference] = useState("");
-  const [isAmendment, setIsAmendment] = useState(false);
-  const [amendsItemId, setAmendsItemId] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const {
+    formState: { errors, isDirty },
+    handleSubmit,
+    register,
+    reset,
+    setValue,
+    watch,
+  } = useForm<VatFileModalFormValues>({
+    defaultValues: vatFileModalDefaultValues,
+    resolver: zodResolver(vatFileModalSchema),
+  });
+
+  const filingMethod = watch("submission_method") || DEFAULT_VAT_FILING_METHOD;
+  const submissionReference = watch("submission_reference") ?? "";
+  const isAmendment = watch("is_amendment");
+  const amendsItemId = watch("amends_item_id") ?? "";
 
   const handleClose = () => {
-    setFilingMethod(DEFAULT_VAT_FILING_METHOD);
-    setSubmissionReference("");
-    setIsAmendment(false);
-    setAmendsItemId("");
-    setError(null);
+    reset(vatFileModalDefaultValues);
     onClose();
   };
 
-  const handleSubmit = async () => {
-    setError(null);
-    if (isAmendment && amendsItemId && isNaN(Number(amendsItemId))) {
-      setError(VAT_FILE_MODAL_MESSAGES.invalidAmendmentId);
-      return;
+  useEffect(() => {
+    if (open) {
+      reset(vatFileModalDefaultValues);
     }
+  }, [open, reset]);
+
+  const submitForm = handleSubmit(async (values) => {
     setIsLoading(true);
     onFilingStart?.();
     try {
-      await vatReportsApi.fileVatReturn(workItemId, {
-        submission_method: filingMethod,
-        submission_reference: submissionReference.trim() || undefined,
-        is_amendment: isAmendment,
-        amends_item_id: isAmendment && amendsItemId ? Number(amendsItemId) : null,
-      });
+      await vatReportsApi.fileVatReturn(workItemId, toFileVatReturnPayload(values));
       toast.success(VAT_FILE_MODAL_MESSAGES.filingSuccess);
       // Optimistic cache update — set status to "filed" before background refetch
       queryClient.setQueryData(vatReportsQK.detail(workItemId), (prev: unknown) => {
@@ -71,19 +82,20 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
       setIsLoading(false);
       onFilingEnd?.();
     }
-  };
+  });
 
   return (
     <Modal
       open={open}
       title='הגשת דוח מע"מ'
+      isDirty={isDirty}
       onClose={handleClose}
       footer={
         <div className="flex items-center justify-end gap-2">
           <Button type="button" variant="secondary" onClick={handleClose} disabled={isLoading}>
             ביטול
           </Button>
-          <Button type="button" isLoading={isLoading} onClick={() => void handleSubmit()}>
+          <Button type="button" isLoading={isLoading} onClick={() => void submitForm()}>
             הגש
           </Button>
         </div>
@@ -94,16 +106,23 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
           <label className="block text-sm font-medium text-gray-700 mb-1">אופן הגשה</label>
           <SelectDropdown
             value={filingMethod}
-            onChange={(e) => setFilingMethod(e.target.value as "online" | "manual" | "representative")}
+            onChange={(e) =>
+              setValue("submission_method", e.target.value as VatFileModalFormValues["submission_method"], {
+                shouldDirty: true,
+                shouldValidate: true,
+                shouldTouch: true,
+              })
+            }
             options={VAT_FILING_METHODS.map((m) => ({ value: m, label: VAT_FILING_METHOD_LABELS[m] }))}
           />
+          <input type="hidden" {...register("submission_method")} />
         </div>
 
         <Input
           label="מספר אסמכתא (לא חובה)"
           placeholder="מספר אסמכתא מרשות המסים"
           value={submissionReference}
-          onChange={(e) => setSubmissionReference(e.target.value)}
+          {...register("submission_reference")}
         />
 
         <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -111,7 +130,7 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
             type="checkbox"
             className="h-4 w-4 rounded border-gray-300 text-primary-600"
             checked={isAmendment}
-            onChange={(e) => setIsAmendment(e.target.checked)}
+            {...register("is_amendment")}
           />
           <span className="text-sm font-medium text-gray-700">תיקון להגשה קודמת</span>
         </label>
@@ -122,12 +141,11 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
             type="number"
             min={1}
             placeholder="מזהה תיק מע״מ מקורי"
+            error={errors.amends_item_id?.message}
             value={amendsItemId}
-            onChange={(e) => setAmendsItemId(e.target.value)}
+            {...register("amends_item_id")}
           />
         )}
-
-        {error && <p className="text-sm text-red-600">{error}</p>}
       </div>
     </Modal>
   );

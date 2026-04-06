@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { buildYearOptions } from "../../../utils/utils";
+import { buildYearOptions, showErrorToast } from "../../../utils/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { vatReportsApi } from "../api";
 import type {
@@ -139,8 +139,8 @@ const ExportControls = ({ businessId }: { businessId: number }) => {
     setLoading(true);
     try {
       await vatReportsApi.exportBusinessVat(businessId, format, year);
-    } catch {
-      toast.error("ייצוא נכשל, נסה שוב");
+    } catch (err) {
+      showErrorToast(err, "ייצוא נכשל, נסה שוב");
     } finally {
       setLoading(false);
     }
@@ -206,8 +206,8 @@ export const VatClientSummaryPanel = ({ businessId }: VatClientSummaryPanelProps
     try {
       await createMutation.mutateAsync(payload);
       return true;
-    } catch {
-      setCreateError("שגיאה ביצירת תיק המע״מ");
+    } catch (err) {
+      setCreateError(showErrorToast(err, "שגיאה ביצירת תיק המע״מ"));
       return false;
     }
   };
