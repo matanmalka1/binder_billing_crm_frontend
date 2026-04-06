@@ -23,7 +23,7 @@ export const UnsavedChangesGuard: React.FC<UnsavedChangesGuardProps> = ({
       <button
         type="button"
         onClick={onDiscard}
-        className="rounded-md bg-red-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-red-700"
+        className="rounded-md bg-negative-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-negative-700"
       >
         סגור בלי לשמור
       </button>

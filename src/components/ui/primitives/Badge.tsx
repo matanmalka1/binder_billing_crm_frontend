@@ -1,12 +1,16 @@
 import React from "react";
 import { cn } from "../../../utils/utils";
+import {
+  semanticBadgeClasses,
+  semanticSignalBadgeClasses,
+} from "@/utils/semanticColors";
 
 export type BadgeVariant = "success" | "warning" | "error" | "info" | "neutral";
 
 interface BadgeProps {
   children: React.ReactNode;
   variant?: BadgeVariant;
-  /** Dot color class for signal-style badges (e.g. "bg-red-400") */
+  /** Dot color class for signal-style badges (e.g. "bg-negative-500") */
   dot?: string;
   /** Adds ring-1 for signal-style appearance */
   ring?: boolean;
@@ -18,19 +22,19 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  success: "bg-green-100 text-green-800",
-  warning: "bg-yellow-100 text-yellow-800",
-  error: "bg-red-100 text-red-800",
-  info: "bg-primary-100 text-primary-800",
-  neutral: "bg-gray-100 text-gray-800",
+  success: semanticBadgeClasses.positive,
+  warning: semanticBadgeClasses.warning,
+  error: semanticBadgeClasses.negative,
+  info: semanticBadgeClasses.info,
+  neutral: semanticBadgeClasses.neutral,
 };
 
 const signalVariantClasses: Record<BadgeVariant, string> = {
-  warning: "bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200",
-  info: "bg-blue-50 text-blue-700 ring-1 ring-blue-200",
-  neutral: "bg-gray-50 text-gray-600 ring-1 ring-gray-200",
-  success: "bg-green-50 text-green-700 ring-1 ring-green-200",
-  error: "bg-red-50 text-red-700 ring-1 ring-red-200",
+  warning: semanticSignalBadgeClasses.warning,
+  info: semanticSignalBadgeClasses.info,
+  neutral: semanticSignalBadgeClasses.neutral,
+  success: semanticSignalBadgeClasses.positive,
+  error: semanticSignalBadgeClasses.negative,
 };
 
 export const Badge: React.FC<BadgeProps> = ({

@@ -142,6 +142,13 @@ export const getErrorMessage = (
   options?: ErrorOptions,
 ): string => resolveErrorMessage(error, fallbackMessage, options);
 
+/**
+ * Convenience companion to `toast.error(message)`.
+ * This is the intentional entry point when the caller has an unknown error
+ * object and wants message extraction plus toast display in one step.
+ *
+ * It returns the resolved message so callers can also surface it inline.
+ */
 export const showErrorToast = (
   error: unknown,
   fallbackMessage: string,

@@ -105,7 +105,7 @@ export const DropdownMenuItem = ({
     onClick={(e) => { e.stopPropagation(); onClick(); }}
     className={cn(
       "w-full px-3 py-2 text-right text-sm transition-colors hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed",
-      danger ? "text-red-600 hover:bg-red-50" : "text-gray-700",
+      danger ? "text-negative-600 hover:bg-negative-50" : "text-gray-700",
     )}
   >
     <span className="grid w-full grid-cols-[minmax(0,1fr)_1rem] items-center gap-2">

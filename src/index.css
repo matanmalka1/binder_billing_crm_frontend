@@ -76,6 +76,40 @@ body {
   --color-accent-800: #92400e;
   --color-accent-900: #78350f;
 
+  --color-info-50: #eef2ff;
+  --color-info-100: #e0e7ff;
+  --color-info-200: #c7d2fe;
+  --color-info-400: #818cf8;
+  --color-info-500: #6366f1;
+  --color-info-700: #4338ca;
+  --color-info-800: #312e81;
+
+  --color-positive-50: #ecfdf5;
+  --color-positive-100: #d1fae5;
+  --color-positive-200: #a7f3d0;
+  --color-positive-400: #34d399;
+  --color-positive-500: #10b981;
+  --color-positive-700: #047857;
+  --color-positive-800: #065f46;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+
+  --color-negative-50: #fef2f2;
+  --color-negative-100: #fee2e2;
+  --color-negative-200: #fecaca;
+  --color-negative-400: #f87171;
+  --color-negative-500: #ef4444;
+  --color-negative-600: #dc2626;
+  --color-negative-700: #b91c1c;
+  --color-negative-800: #991b1b;
+
   --shadow-elevation-1: 0 2px 8px rgba(99, 102, 241, 0.08);
   --shadow-elevation-2: 0 4px 16px rgba(99, 102, 241, 0.12);
   --shadow-elevation-3: 0 8px 24px rgba(99, 102, 241, 0.16);

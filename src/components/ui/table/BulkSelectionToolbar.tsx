@@ -60,7 +60,7 @@ export const BulkSelectionActionButton: React.FC<BulkSelectionActionButtonProps>
     className={cn(
       "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50",
       variant === "danger"
-        ? "border border-red-200 bg-white text-red-600 hover:bg-red-50"
+        ? "border border-negative-200 bg-white text-negative-600 hover:bg-negative-50"
         : "border border-primary-300 bg-white text-primary-700 hover:bg-primary-100",
     )}
   >

@@ -8,6 +8,14 @@ interface ToastOptions {
   action?: { label: string; onClick: () => void };
 }
 
+/**
+ * App-level toast wrapper around Sonner.
+ * Import this module from feature code instead of importing `sonner` directly.
+ *
+ * Use `toast.error(message)` when the caller already has a display-ready message.
+ * Use `showErrorToast(error, fallback)` from `utils.ts` when starting from an
+ * unknown error object and a fallback message.
+ */
 const notify = (
   type: "success" | "error" | "info" | "warning",
   message: string,

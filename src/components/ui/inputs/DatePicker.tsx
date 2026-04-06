@@ -107,7 +107,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         className={cn(
           "w-full flex items-center justify-between rounded-lg border shadow-sm text-sm transition-all bg-white text-right",
           compact ? "px-2 py-1 h-7 text-xs" : "px-3 py-3",
-          error ? "border-red-500" : "border-gray-300",
+          error ? "border-negative-500" : "border-gray-300",
           open && "border-primary-500 ring-2 ring-primary-500",
           disabled && "bg-gray-50 cursor-not-allowed text-gray-400",
           !disabled && "hover:border-gray-400",

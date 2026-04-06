@@ -27,17 +27,17 @@ const config = {
     Icon: Info,
   },
   error: {
-    container: "bg-gradient-to-r from-red-50 to-rose-50 border-red-200/80",
-    icon: "text-red-600",
-    text: "text-red-900",
-    iconBg: "bg-red-100",
+    container: "bg-gradient-to-r from-negative-50 to-rose-50 border-negative-200/80",
+    icon: "text-negative-600",
+    text: "text-negative-800",
+    iconBg: "bg-negative-100",
     Icon: AlertCircle,
   },
   success: {
-    container: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200/80",
-    icon: "text-green-600",
-    text: "text-green-900",
-    iconBg: "bg-green-100",
+    container: "bg-gradient-to-r from-positive-50 to-emerald-50 border-positive-200/80",
+    icon: "text-positive-700",
+    text: "text-positive-800",
+    iconBg: "bg-positive-100",
     Icon: CheckCircle,
   },
 };
@@ -75,7 +75,7 @@ export const Alert: React.FC<AlertProps> = ({
         <button
           type="button"
           onClick={onRetry}
-          className="flex shrink-0 items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
+          className="flex shrink-0 items-center gap-1.5 rounded-md border border-negative-200 bg-white px-3 py-1.5 text-xs font-medium text-negative-600 transition-colors hover:bg-negative-50"
         >
           <RotateCcw className="h-3.5 w-3.5" />
           נסה שנית

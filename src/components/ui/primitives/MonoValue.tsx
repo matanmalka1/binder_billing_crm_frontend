@@ -1,4 +1,5 @@
 import { cn } from "../../../utils/utils";
+import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface MonoValueProps {
   value: string | number | null | undefined;
@@ -11,11 +12,11 @@ interface MonoValueProps {
 }
 
 const toneClass: Record<NonNullable<MonoValueProps["tone"]>, string> = {
-  neutral: "text-gray-700",
-  positive: "text-green-700",
-  negative: "text-red-600",
-  warning: "text-orange-500 font-semibold",
-  critical: "text-red-600 font-bold",
+  neutral: semanticMonoToneClasses.neutral,
+  positive: semanticMonoToneClasses.positive,
+  negative: semanticMonoToneClasses.negative,
+  warning: semanticMonoToneClasses.warning,
+  critical: `${semanticMonoToneClasses.negative} font-bold`,
 };
 
 const daysTone = (

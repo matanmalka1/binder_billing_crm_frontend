@@ -11,7 +11,7 @@ export const FormField: React.FC<FormFieldProps> = ({ label, error, children, cl
   <div className={cn("w-full space-y-1", className)}>
     {label && <label className="block text-sm font-medium text-gray-700">{label}</label>}
     {children}
-    {error && <p className="text-xs text-red-600">{error}</p>}
+    {error && <p className="text-xs text-negative-600">{error}</p>}
   </div>
 );
 

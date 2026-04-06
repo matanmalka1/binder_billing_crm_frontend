@@ -81,7 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
             </div>
             <button
               onClick={handleLogout}
-              className="shrink-0 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-white/5 hover:text-red-400"
+              className="shrink-0 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-white/5 hover:text-negative-400"
               aria-label="התנתקות"
             >
               <LogOut className="h-4 w-4" />
@@ -94,7 +94,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
             </div>
             <button
               onClick={handleLogout}
-              className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-white/5 hover:text-red-400"
+              className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-white/5 hover:text-negative-400"
               aria-label="התנתקות"
             >
               <LogOut className="h-4 w-4" />

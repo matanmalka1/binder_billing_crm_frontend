@@ -42,7 +42,7 @@ export const StateCard: React.FC<StateCardProps> = ({
             className={cn(
               "relative rounded-2xl p-5 transition-transform duration-300 hover:scale-110",
               isError
-                ? "rounded-full bg-red-100 p-4"
+                ? "rounded-full bg-negative-100 p-4"
                 : isIllustration
                   ? "bg-gradient-to-br from-primary-100 to-accent-100 shadow-lg"
                   : "bg-gray-100",
@@ -51,7 +51,7 @@ export const StateCard: React.FC<StateCardProps> = ({
             <Icon
               className={cn(
                 "transition-colors duration-300",
-                isError ? "h-12 w-12 text-red-600" : isIllustration ? "h-12 w-12 text-primary-600" : "h-10 w-10 text-gray-400",
+                isError ? "h-12 w-12 text-negative-600" : isIllustration ? "h-12 w-12 text-primary-600" : "h-10 w-10 text-gray-400",
               )}
             />
           </div>
@@ -65,7 +65,7 @@ export const StateCard: React.FC<StateCardProps> = ({
 
         {details && (
           <div className="text-start bg-gray-50 rounded-lg p-4 border border-gray-200 mb-4 w-full">
-            <div className="text-xs font-mono text-red-600 whitespace-pre-wrap break-all">{details}</div>
+            <div className="text-xs font-mono text-negative-600 whitespace-pre-wrap break-all">{details}</div>
           </div>
         )}
 
