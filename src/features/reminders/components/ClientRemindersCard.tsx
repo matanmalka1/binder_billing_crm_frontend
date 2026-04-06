@@ -6,9 +6,9 @@ import { RemindersTable } from "./RemindersTable";
 import { ReminderDrawer } from "./ReminderDrawer";
 import { CreateReminderModal } from "./CreateReminderModal";
 import { useReminders } from "../hooks/useReminders";
-import { bindersApi } from "@/features/binders/api";
-import { chargesApi } from "@/features/charges/api";
-import { taxDeadlinesApi } from "@/features/taxDeadlines/api";
+import { bindersApi, bindersQK } from "@/features/binders/api";
+import { chargesApi, chargesQK } from "@/features/charges/api";
+import { taxDeadlinesApi, taxDeadlinesQK } from "@/features/taxDeadlines/api";
 
 interface ClientRemindersCardProps {
   clientId: number;
@@ -37,19 +37,19 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
   } = useReminders({ clientId });
 
   const { data: bindersData } = useQuery({
-    queryKey: ["binders", "client", clientId],
+    queryKey: bindersQK.forClient(clientId),
     queryFn: () => bindersApi.list({ client_id: clientId, page_size: 100 }),
     enabled: showCreateModal,
   });
 
   const { data: chargesData } = useQuery({
-    queryKey: ["charges", "client", clientId],
+    queryKey: chargesQK.forClient(clientId),
     queryFn: () => chargesApi.list({ client_id: clientId, page_size: 100 }),
     enabled: showCreateModal,
   });
 
   const { data: taxDeadlinesData } = useQuery({
-    queryKey: ["tax_deadlines", "client", clientId],
+    queryKey: taxDeadlinesQK.forClient(clientId),
     queryFn: () => taxDeadlinesApi.listTaxDeadlines({ client_name: clientName, page_size: 100 }),
     enabled: showCreateModal,
   });

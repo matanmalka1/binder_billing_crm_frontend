@@ -15,7 +15,7 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import { useAuthStore } from "../../../store/auth.store";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
-import { toast } from "sonner";
+import { toast } from "../../../utils/toast";
 import {
   VAT_CLIENT_SUMMARY_STATUS_VARIANTS,
 } from "../constants";

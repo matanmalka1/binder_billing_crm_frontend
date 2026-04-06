@@ -24,7 +24,7 @@ export const usePendingSignatureRequests = ({ page = 1, pageSize = 50 }: Params 
   const uniqueBusinessIds = [...new Set(items.map((r) => r.business_id))];
 
   const businessQueries = useQuery({
-    queryKey: ["business-names-batch", uniqueBusinessIds],
+    queryKey: signatureRequestsQK.businessNamesBatch(uniqueBusinessIds),
     queryFn: async () => {
       const results = await Promise.all(uniqueBusinessIds.map((id) => clientsApi.getBusinessById(id)));
       return Object.fromEntries(

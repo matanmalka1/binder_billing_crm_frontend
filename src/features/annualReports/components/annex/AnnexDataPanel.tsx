@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, Plus, X } from "lucide-react";
 import { annualReportsApi, annualReportsQK, type AnnualReportScheduleKey } from "../../api";
+import { showErrorToast } from "../../../../utils/utils";
 import { Button } from "../../../../components/ui/primitives/Button";
 import {
   SCHEDULE_FIELDS,
@@ -38,6 +39,7 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
   const addMutation = useMutation({
     mutationFn: () => annualReportsApi.addAnnexLine(reportId, schedule, { data: buildAnnexPayload(schedule, formData) }),
     onSuccess: () => { invalidate(); setShowForm(false); setFormData(buildEmptyForm(schedule)); },
+    onError: (err) => showErrorToast(err, "שגיאה בהוספת שורה"),
   });
 
   const updateMutation = useMutation({
@@ -48,11 +50,13 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
       setEditingLineId(null);
       setFormData(buildEmptyForm(schedule));
     },
+    onError: (err) => showErrorToast(err, "שגיאה בעדכון שורה"),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (lineId: number) => annualReportsApi.deleteAnnexLine(reportId, schedule, lineId),
     onSuccess: invalidate,
+    onError: (err) => showErrorToast(err, "שגיאה במחיקת שורה"),
   });
 
   const fields = SCHEDULE_FIELDS[schedule];

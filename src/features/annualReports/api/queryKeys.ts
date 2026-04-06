@@ -24,4 +24,6 @@ export const annualReportsQK = {
     ["tax", "annual-reports", id, "advances-summary"] as const,
   annex: (id: number, schedule: string) =>
     ["tax", "annual-reports", id, "annex", schedule] as const,
+  charges: (id: number, page: number) =>
+    ["tax", "annual-reports", id, "charges", page] as const,
 } as const;

@@ -4,7 +4,7 @@ import { clientsApi, clientsQK, type UpdateClientPayload, type ClientResponse, t
 import { bindersApi, bindersQK } from "@/features/binders/api";
 import type { BinderDetailResponse } from "@/features/binders/api";
 import { chargesApi, chargesQK } from "@/features/charges/api";
-import { getErrorMessage, showErrorToast } from "../../../utils/utils";
+import { getErrorMessage, isPositiveInt, showErrorToast } from "../../../utils/utils";
 import type { ClientChargeSummary } from "../types";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
@@ -36,7 +36,7 @@ export const useClientDetails = ({
   clientId,
 }: UseClientDetailsParams): UseClientDetailsResult => {
   const id = Number(clientId);
-  const isValidId = Number.isFinite(id) && id > 0;
+  const isValidId = isPositiveInt(id);
   const enabled = isValidId;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
