@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "../../../../components/ui/primitives/Button";
 import type { AnnualReportFull } from "../../api";
 import { formatDate, cn } from "../../../../utils/utils";
 
@@ -46,10 +47,12 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
             לחץ על שם הלקוח לפתיחת פרטי הדוח
           </p>
         </div>
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => setExpanded((v) => !v)}
-          className="shrink-0 rounded-lg p-1.5 text-negative-700 transition-colors hover:bg-negative-100"
+          className="shrink-0 p-1.5 text-negative-700 hover:bg-negative-100 hover:text-negative-700"
           aria-label={expanded ? "כווץ רשימה" : "הרחב רשימה"}
           aria-expanded={expanded}
         >
@@ -58,7 +61,7 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
           ) : (
             <ChevronDown className="h-4 w-4" />
           )}
-        </button>
+        </Button>
       </div>
 
       {/* Report list */}
@@ -93,17 +96,17 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
         })}
 
         {hasMore && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => setExpanded((v) => !v)}
-            className="w-full pt-1 text-center text-xs font-medium text-negative-700 transition-colors hover:text-negative-900"
+            className="w-full pt-1 text-xs font-medium text-negative-700 hover:text-negative-900 hover:bg-transparent"
             aria-expanded={expanded}
             aria-label={expanded ? "הצג פחות דוחות" : `הצג ${overdue.length - 3} דוחות נוספים שחרגו ממועד ההגשה`}
           >
-            {expanded
-              ? "הצג פחות"
-              : `+ עוד ${overdue.length - 3} דוחות`}
-          </button>
+            {expanded ? "הצג פחות" : `+ עוד ${overdue.length - 3} דוחות`}
+          </Button>
         )}
       </div>
     </div>

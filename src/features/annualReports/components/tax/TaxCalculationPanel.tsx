@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "../../../../components/ui/primitives/Button";
 import { annualReportTaxApi } from "../../api";
 import { annualReportsApi, annualReportsQK } from "../../api";
 import { cn } from "../../../../utils/utils";
@@ -164,14 +165,16 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
 
       {isAdvisor && data.total_liability != null && (
         <div className="flex justify-end">
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="sm"
             onClick={handleSaveTaxResult}
-            disabled={saveTaxMutation.isPending}
-            className="rounded-lg bg-info-600 px-4 py-2 text-sm font-medium text-white hover:bg-info-700 disabled:opacity-50"
+            isLoading={saveTaxMutation.isPending}
+            className="bg-info-600 hover:bg-info-700"
           >
-            {saveTaxMutation.isPending ? "שומר..." : "שמור חישוב מס"}
-          </button>
+            שמור חישוב מס
+          </Button>
         </div>
       )}
 

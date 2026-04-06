@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "../../../../components/ui/primitives/Button";
 import { annualReportChargesApi, annualReportsQK } from "../../api";
 
 interface Props { reportId: number; }
@@ -62,11 +63,9 @@ export const ReportChargesPanel: React.FC<Props> = ({ reportId }) => {
       </div>
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 text-sm">
-          <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}
-            className="rounded px-3 py-1 border border-gray-300 disabled:opacity-40 hover:bg-gray-50">הקודם</button>
+          <Button type="button" variant="outline" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>הקודם</Button>
           <span className="text-gray-500">{page} / {totalPages}</span>
-          <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-            className="rounded px-3 py-1 border border-gray-300 disabled:opacity-40 hover:bg-gray-50">הבא</button>
+          <Button type="button" variant="outline" size="sm" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>הבא</Button>
         </div>
       )}
     </div>

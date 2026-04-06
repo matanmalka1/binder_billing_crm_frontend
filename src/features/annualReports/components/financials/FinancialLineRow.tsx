@@ -1,4 +1,5 @@
 import { Paperclip, Pencil, Trash2 } from "lucide-react";
+import { Button } from "../../../../components/ui/primitives/Button";
 import { documentsApi } from "@/features/documents/api";
 
 export interface LineRowProps {
@@ -37,12 +38,13 @@ export const LineRow: React.FC<LineRowProps> = ({
           </span>
         )}
         {supportingDocumentId ? (
-          <button type="button" onClick={handleDownload}
-            className="text-primary-500 hover:text-primary-700 flex items-center gap-0.5"
+          <Button type="button" variant="ghost" size="sm"
+            onClick={handleDownload}
+            className="p-0 text-primary-500 hover:text-primary-700 hover:bg-transparent gap-0.5"
             title={supportingDocumentFilename ?? "מסמך מצורף"}>
             <Paperclip className="h-3 w-3" />
             <span className="text-xs">{supportingDocumentFilename ?? "מסמך"}</span>
-          </button>
+          </Button>
         ) : supportingDocumentRef ? (
           <span className="flex items-center gap-0.5 text-xs text-gray-500" title={supportingDocumentRef}>
             <Paperclip className="h-3 w-3" />{supportingDocumentRef}
@@ -52,19 +54,21 @@ export const LineRow: React.FC<LineRowProps> = ({
       <div className="flex items-center gap-2 mr-2">
         <span className="text-gray-700 font-mono">₪{Number(amount).toLocaleString("he-IL")}</span>
         {onEdit ? (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={onEdit}
-            className="text-primary-400 hover:text-primary-600 p-0.5"
+            className="p-0.5 text-primary-400 hover:text-primary-600 hover:bg-transparent"
             aria-label="עריכת שורה"
           >
             <Pencil className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         ) : null}
-        <button type="button" onClick={onDelete} disabled={isDeleting}
-          className="text-negative-400 hover:text-negative-600 disabled:opacity-40 p-0.5" aria-label="מחק">
+        <Button type="button" variant="ghost" size="sm" onClick={onDelete} disabled={isDeleting}
+          className="p-0.5 text-negative-400 hover:text-negative-600 hover:bg-transparent" aria-label="מחק">
           <Trash2 className="h-3.5 w-3.5" />
-        </button>
+        </Button>
       </div>
     </div>
   );

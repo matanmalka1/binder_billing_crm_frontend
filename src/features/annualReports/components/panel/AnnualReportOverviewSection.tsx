@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp, BarChart3 } from "lucide-react";
+import { Button } from "../../../../components/ui/primitives/Button";
 import { ReportAlertBanners } from "./ReportAlertBanners";
 import { ReportSummaryCards } from "./ReportSummaryCards";
 import { ReportMetaGrid } from "./ReportMetaGrid";
@@ -80,10 +81,11 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
 
       {/* P&L collapsible */}
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-        <button
+        <Button
           type="button"
-          className="flex w-full items-center justify-between px-5 py-4 text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors"
+          variant="ghost"
           onClick={() => setPlExpanded((prev) => !prev)}
+          className="flex w-full items-center justify-between px-5 py-4 text-sm font-semibold text-gray-800 hover:bg-gray-50 rounded-none"
         >
           <div className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4 text-gray-400" />
@@ -92,7 +94,7 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
           {plExpanded
             ? <ChevronUp className="h-4 w-4 text-gray-400" />
             : <ChevronDown className="h-4 w-4 text-gray-400" />}
-        </button>
+        </Button>
         {plExpanded && (
           <div className="border-t border-gray-100 px-5 pb-5 pt-4">
             <AnnualPLSummary reportId={report.id} clientId={clientId} />

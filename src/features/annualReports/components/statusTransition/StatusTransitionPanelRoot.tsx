@@ -108,14 +108,16 @@ export const StatusTransitionPanel = ({
       <Card
         title="מעבר סטטוס"
         actions={
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => setReadinessOpen((p) => !p)}
-            className="flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-xs text-gray-500 hover:text-gray-700 px-1.5"
           >
             <ShieldCheck className="h-3.5 w-3.5" />
             בדיקת מוכנות להגשה
-          </button>
+          </Button>
         }
       >
         <div className="space-y-4">

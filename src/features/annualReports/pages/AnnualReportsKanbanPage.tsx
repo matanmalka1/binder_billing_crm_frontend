@@ -132,26 +132,30 @@ export const AnnualReportsKanban: React.FC = () => {
 
         {/* Year picker — always visible, affects both tabs */}
         <div className="flex items-center gap-1 rounded-lg border border-gray-300 bg-white px-2 py-1">
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={decrementYear}
-            className="rounded p-1 hover:bg-gray-100"
             aria-label="שנה קודמת"
+            className="p-1"
           >
             <ChevronRight className="h-4 w-4" />
-          </button>
+          </Button>
           <span className="w-16 text-center text-sm font-bold text-gray-900">
             {taxYear}
           </span>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={incrementYear}
             disabled={!canIncrementYear}
-            className="rounded p-1 hover:bg-gray-100 disabled:opacity-40"
             aria-label="שנה הבאה"
+            className="p-1"
           >
             <ChevronLeft className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       </div>
 

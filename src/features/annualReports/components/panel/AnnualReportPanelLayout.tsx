@@ -1,4 +1,5 @@
-import { Download } from "lucide-react";
+import { Download, X } from "lucide-react";
+import { Button } from "../../../../components/ui/primitives/Button";
 import { UnsavedChangesGuard } from "@/components/ui/feedback/UnsavedChangesGuard";
 import { useEscapeToClose } from "@/components/ui/overlays/useEscapeToClose";
 import { useUnsavedChangesGuard } from "@/components/ui/overlays/useUnsavedChangesGuard";
@@ -56,39 +57,46 @@ export const AnnualReportPanelLayout = ({
             </div>
             <div className="flex items-center gap-2">
               {onExportPdf && (
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={onExportPdf}
                   disabled={isExportingPdf}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Download size={14} />
                   {isExportingPdf ? "מפיק..." : "הורד טיוטה"}
-                </button>
+                </Button>
               )}
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="sm"
                 onClick={onDelete}
-                className="rounded-md border border-negative-300 px-3 py-1.5 text-sm font-medium text-negative-600 hover:bg-negative-50"
+                className="border-negative-300 text-negative-600 hover:bg-negative-50"
               >
                 מחק דוח
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="primary"
+                size="sm"
                 onClick={onSave}
                 disabled={!isDirty || isSaving}
-                className="rounded-md bg-info-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-info-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="bg-info-600 hover:bg-info-700"
               >
                 {isSaving ? "שומר..." : "שמור"}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={handleClose}
-                className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
                 aria-label="סגירה"
+                className="p-1"
               >
-                ✕
-              </button>
+                <X className="h-4 w-4" />
+              </Button>
             </div>
           </div>
 

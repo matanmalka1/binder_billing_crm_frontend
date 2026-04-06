@@ -1,4 +1,6 @@
 import { Check, Pencil, Trash2, X } from "lucide-react";
+import { Input } from "../../../../components/ui/inputs/Input";
+import { Button } from "../../../../components/ui/primitives/Button";
 import type { AnnexDataLine } from "../../api";
 import type { FieldDef } from "../../annex.constants";
 
@@ -49,11 +51,11 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
               {fields.map((field) => (
                 <td key={field.key} className="py-1 px-2 text-gray-700">
                   {isEditing ? (
-                    <input
+                    <Input
                       type={field.type === "date" ? "date" : field.type === "number" ? "number" : "text"}
                       value={formData[field.key] ?? ""}
                       onChange={(event) => onFormChange(field.key, event.target.value)}
-                      className="w-full border border-gray-300 rounded px-2 py-1 text-xs"
+                      className="py-1 text-xs"
                     />
                   ) : (
                     String((line.data as Record<string, unknown>)[field.key] ?? "")
@@ -64,40 +66,48 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                 <div className="flex items-center gap-1">
                   {isEditing ? (
                     <>
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="sm"
                         onClick={() => onSaveEdit(line.id)}
                         disabled={isUpdating}
-                        className="text-positive-500 hover:text-positive-700"
+                        className="p-0.5 text-positive-500 hover:text-positive-700 hover:bg-transparent"
                       >
                         <Check className="h-3.5 w-3.5" />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="sm"
                         onClick={onCancelEdit}
-                        className="text-gray-500 hover:text-gray-700"
+                        className="p-0.5 text-gray-500 hover:text-gray-700 hover:bg-transparent"
                       >
                         <X className="h-3.5 w-3.5" />
-                      </button>
+                      </Button>
                     </>
                   ) : (
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="sm"
                       aria-label="עריכת שורה"
                       onClick={() => onStartEdit(line)}
-                      className="text-info-400 hover:text-info-600"
+                      className="p-0.5 text-info-400 hover:text-info-600 hover:bg-transparent"
                     >
                       <Pencil className="h-3.5 w-3.5" />
-                    </button>
+                    </Button>
                   )}
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={() => onDelete(line.id)}
                     disabled={isDeleting}
-                    className="text-negative-400 hover:text-negative-600"
+                    className="p-0.5 text-negative-400 hover:text-negative-600 hover:bg-transparent"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
-                  </button>
+                  </Button>
                 </div>
               </td>
             </tr>

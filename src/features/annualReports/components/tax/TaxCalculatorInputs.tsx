@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Pencil, X, Check, Info } from "lucide-react";
 import { Input } from "../../../../components/ui/inputs/Input";
+import { Button } from "../../../../components/ui/primitives/Button";
 
 interface TaxCalculatorInputsProps {
   creditPoints: string;
@@ -33,20 +34,20 @@ export const TaxCalculatorInputs = ({
           <p className="text-xs text-info-700">המחשבון מציג שיעורי מס עפ"י מדרגות מס לעסק יחיד/שותפות.</p>
         </div>
         {!editMode ? (
-          <button type="button" onClick={handleEdit}
-            className="flex items-center gap-1 rounded-md border border-info-300 bg-white px-2.5 py-1 text-xs font-medium text-info-700 hover:bg-info-50 shrink-0">
+          <Button type="button" variant="outline" size="sm" onClick={handleEdit}
+            className="border-info-300 text-info-700 hover:bg-info-50 shrink-0 text-xs px-2.5 py-1">
             <Pencil className="h-3 w-3" /> עריכה
-          </button>
+          </Button>
         ) : (
           <div className="flex gap-1 shrink-0">
-            <button type="button" onClick={handleSave} disabled={isSaving}
-              className="flex items-center gap-1 rounded-md bg-info-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-info-700 disabled:opacity-50">
+            <Button type="button" variant="primary" size="sm" onClick={handleSave} disabled={isSaving}
+              className="bg-info-600 hover:bg-info-700 text-xs px-2.5 py-1">
               <Check className="h-3 w-3" /> שמור
-            </button>
-            <button type="button" onClick={handleCancel}
-              className="flex items-center gap-1 rounded-md border border-info-300 bg-white px-2.5 py-1 text-xs font-medium text-info-700">
+            </Button>
+            <Button type="button" variant="outline" size="sm" onClick={handleCancel}
+              className="border-info-300 text-info-700 text-xs px-2.5 py-1">
               <X className="h-3 w-3" /> ביטול
-            </button>
+            </Button>
           </div>
         )}
       </div>

@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import type { AnnualReportScheduleKey, ScheduleEntry } from "../../api";
 import { getScheduleLabel } from "../../api";
 import { Button } from "../../../../components/ui/primitives/Button";
+import { Input } from "../../../../components/ui/inputs/Input";
+import { Select } from "../../../../components/ui/inputs/Select";
 import { ALL_SCHEDULES } from "../../annex.constants";
 
 interface ScheduleAddFormProps {
@@ -53,24 +55,19 @@ export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onA
   return (
     <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 space-y-2">
       <p className="text-xs font-medium text-gray-600">הוספת נספח ידנית</p>
-      <select
+      <Select
         value={selected}
         onChange={(event) => setSelected(event.target.value as AnnualReportScheduleKey | "")}
-        className="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm"
-      >
-        <option value="">בחר נספח...</option>
-        {available.map((key) => (
-          <option key={key} value={key}>
-            {getScheduleLabel(key)}
-          </option>
-        ))}
-      </select>
-      <input
+        options={[
+          { value: "", label: "בחר נספח...", disabled: true },
+          ...available.map((key) => ({ value: key, label: getScheduleLabel(key) })),
+        ]}
+      />
+      <Input
         value={notes}
         onChange={(event) => setNotes(event.target.value)}
         type="text"
         placeholder="הערות (אופציונלי)"
-        className="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm"
       />
       <div className="flex items-center justify-end gap-2">
         <Button type="button" variant="ghost" size="sm" onClick={handleCancel}>

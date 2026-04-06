@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { annualReportStatusApi, annualReportsQK } from "../../api";
 import type { DeadlineType } from "../../api";
 import { Button } from "../../../../components/ui/primitives/Button";
+import { Input } from "../../../../components/ui/inputs/Input";
 import { toast } from "../../../../utils/toast";
 import { formatDate } from "../../../../utils/utils";
 import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
@@ -70,12 +71,11 @@ export const DeadlineUpdatePanel: React.FC<Props> = ({
       </fieldset>
 
       {selected === "custom" && (
-        <input
+        <Input
           type="text"
           value={customNote}
           onChange={(e) => setCustomNote(e.target.value)}
           placeholder="הערת מועד מותאם אישית"
-          className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           dir="rtl"
         />
       )}

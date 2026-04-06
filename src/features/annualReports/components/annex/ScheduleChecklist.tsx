@@ -93,10 +93,12 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={() => toggle(entry.schedule)}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="p-0.5 text-gray-400 hover:text-gray-600 hover:bg-transparent"
                     title={isExpanded ? "סגור" : "פרוס נתונים"}
                   >
                     {isExpanded ? (
@@ -104,7 +106,7 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
                     ) : (
                       <ChevronDown className="h-4 w-4" />
                     )}
-                  </button>
+                  </Button>
 
                   {!entry.is_complete && (
                     <Button

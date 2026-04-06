@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
+import { Button } from "../../../../components/ui/primitives/Button";
 import { annualReportFinancialsApi, annualReportsQK } from "../../api";
 import type { IncomeLineResponse, ExpenseLineResponse } from "../../api";
 import { cn } from "../../../../utils/utils";
@@ -71,20 +72,30 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
           {showForceConfirm ? (
             <>
               <span className="self-center text-sm text-warning-700">קיימות שורות — למחוק ולמלא מחדש?</span>
-              <button type="button" onClick={() => setShowForceConfirm(false)}
-                className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50">ביטול</button>
-              <button type="button" onClick={() => autoPopulateMutation.mutate(true)}
-                disabled={autoPopulateMutation.isPending}
-                className="rounded-lg bg-negative-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-negative-700 disabled:opacity-50">
-                {autoPopulateMutation.isPending ? "מעדכן..." : "מחק ומלא מחדש"}
-              </button>
+              <Button type="button" variant="outline" size="sm" onClick={() => setShowForceConfirm(false)}>
+                ביטול
+              </Button>
+              <Button
+                type="button"
+                variant="danger"
+                size="sm"
+                onClick={() => autoPopulateMutation.mutate(true)}
+                isLoading={autoPopulateMutation.isPending}
+              >
+                מחק ומלא מחדש
+              </Button>
             </>
           ) : (
-            <button type="button" onClick={() => autoPopulateMutation.mutate(false)}
-              disabled={autoPopulateMutation.isPending}
-              className="rounded-lg bg-info-600 px-4 py-2 text-sm font-medium text-white hover:bg-info-700 disabled:opacity-50">
-              {autoPopulateMutation.isPending ? "טוען..." : 'מלא מנתוני מע"מ'}
-            </button>
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={() => autoPopulateMutation.mutate(false)}
+              isLoading={autoPopulateMutation.isPending}
+              className="bg-info-600 hover:bg-info-700"
+            >
+              {`מלא מנתוני מע"מ`}
+            </Button>
           )}
         </div>
       )}

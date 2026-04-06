@@ -1,3 +1,4 @@
+import { Button } from "../../../../components/ui/primitives/Button";
 import { useEscapeToClose } from "@/components/ui/overlays/useEscapeToClose";
 
 interface DeleteReportConfirmDialogProps {
@@ -19,21 +20,19 @@ export const DeleteReportConfirmDialog = ({
         <h3 className="mb-2 text-base font-semibold text-gray-900">מחיקת דוח</h3>
         <p className="mb-4 text-sm text-gray-600">האם למחוק את הדוח? פעולה זו אינה הפיכה.</p>
         <div className="flex items-center justify-end gap-2">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
+          <Button type="button" variant="outline" size="sm" onClick={onCancel}>
             ביטול
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="danger"
+            size="sm"
             onClick={onConfirm}
             disabled={isDeleting}
-            className="rounded-md bg-negative-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-negative-700 disabled:opacity-40"
+            isLoading={isDeleting}
           >
-            {isDeleting ? "מוחק..." : "מחק"}
-          </button>
+            מחק
+          </Button>
         </div>
       </div>
     </div>

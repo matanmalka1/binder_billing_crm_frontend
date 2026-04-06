@@ -1,6 +1,8 @@
 import type { FormEvent, ReactNode } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "../../../../components/ui/primitives/Button";
+import { Input } from "../../../../components/ui/inputs/Input";
+import { Select } from "../../../../components/ui/inputs/Select";
 
 export const FINANCIAL_FIELD_CLASS = "w-full rounded border border-gray-200 px-2 py-1 text-sm";
 export const INLINE_ADD_FORM_CLASS = "mt-2 flex flex-col gap-2";
@@ -40,22 +42,14 @@ export const FinancialSelectField: React.FC<FinancialSelectFieldProps> = ({
   options,
   placeholder,
 }) => (
-  <select
+  <Select
     value={value}
     onChange={(event) => onChange(event.target.value)}
-    className={`${FINANCIAL_FIELD_CLASS} bg-white`}
-  >
-    {placeholder ? (
-      <option value="" disabled>
-        {placeholder}
-      </option>
-    ) : null}
-    {Object.entries(options).map(([key, label]) => (
-      <option key={key} value={key}>
-        {label}
-      </option>
-    ))}
-  </select>
+    options={[
+      ...(placeholder ? [{ value: "", label: placeholder, disabled: true }] : []),
+      ...Object.entries(options).map(([key, label]) => ({ value: key, label })),
+    ]}
+  />
 );
 
 interface FinancialInputFieldProps {
@@ -77,7 +71,7 @@ export const FinancialInputField: React.FC<FinancialInputFieldProps> = ({
   max,
   step,
 }) => (
-  <input
+  <Input
     value={value}
     onChange={(event) => onChange(event.target.value)}
     type={type}
@@ -85,7 +79,7 @@ export const FinancialInputField: React.FC<FinancialInputFieldProps> = ({
     max={max}
     step={step}
     placeholder={placeholder}
-    className={FINANCIAL_FIELD_CLASS}
+    className="py-1 text-sm"
   />
 );
 

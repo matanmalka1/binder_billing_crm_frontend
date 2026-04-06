@@ -1,5 +1,6 @@
 import { ArrowRight, ArrowLeft, Clock, AlertTriangle } from "lucide-react";
 import { TruncateText } from "../../../../components/ui/primitives/TruncateText";
+import { Button } from "../../../../components/ui/primitives/Button";
 import { staggerDelay } from "../../../../utils/animation";
 import { cn } from "../../../../utils/utils";
 import type { StageKey } from "../../types";
@@ -83,10 +84,11 @@ export const AnnualReportCard: React.FC<AnnualReportCardProps> = ({
       style={{ animationDelay: staggerDelay(animationIndex) }}
     >
       {/* Clickable main area */}
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={() => onOpenDetail(report.id)}
-        className="w-full text-right px-4 pt-4 pb-3 block"
+        className="w-full text-right px-4 pt-4 pb-3 block rounded-none hover:bg-transparent active:bg-transparent focus:ring-0 focus:ring-offset-0"
         aria-label={`${report.business_name}, שנת ${report.tax_year}${report.days_until_due !== null && report.days_until_due < 0 ? `, באיחור ${Math.abs(report.days_until_due)} ימים` : report.days_until_due !== null ? `, ${report.days_until_due} ימים נותרו` : ""}`}
       >
         <div className="flex items-start justify-between gap-1.5">
@@ -103,20 +105,22 @@ export const AnnualReportCard: React.FC<AnnualReportCardProps> = ({
             <DeadlinePill days={report.days_until_due} />
           </div>
         )}
-      </button>
+      </Button>
 
       {/* Arrow row */}
       <div className="flex items-center justify-between border-t border-gray-100 px-2 py-2">
         {canMoveBack ? (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => onTransition(report.id, stageKey, "back")}
             disabled={isTransitioning}
             aria-label="שלב קודם"
-            className="rounded-lg p-1.5 transition-colors text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+            className="p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
           >
             <ArrowRight className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         ) : (
           <span className="w-[26px]" aria-hidden="true" />
         )}
@@ -124,18 +128,20 @@ export const AnnualReportCard: React.FC<AnnualReportCardProps> = ({
         <span className="text-xs text-gray-400 select-none">העבר שלב</span>
 
         {canMoveForward ? (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => onTransition(report.id, stageKey, "forward")}
             disabled={isTransitioning}
             aria-label="שלב הבא"
             className={cn(
-              "rounded-lg p-1.5 transition-colors text-primary-500 hover:bg-primary-50 hover:text-primary-700",
+              "p-1.5 text-primary-500 hover:bg-primary-50 hover:text-primary-700",
               isTransitioning && "animate-pulse",
             )}
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         ) : (
           <span className="w-[26px]" aria-hidden="true" />
         )}

@@ -80,14 +80,16 @@ export const YearComparisonModal: React.FC<Props> = ({ open, onClose, currentTax
               <Printer className="h-4 w-4" />
               הדפסה
             </Button>
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={onClose}
-              className="rounded px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
               aria-label="סגירה"
+              className="px-2 py-1 text-gray-500"
             >
               ×
-            </button>
+            </Button>
           </div>
         </div>
 

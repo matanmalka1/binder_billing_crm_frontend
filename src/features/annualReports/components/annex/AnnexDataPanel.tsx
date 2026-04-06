@@ -4,6 +4,7 @@ import { Check, Plus, X } from "lucide-react";
 import { annualReportsApi, annualReportsQK, type AnnualReportScheduleKey } from "../../api";
 import { showErrorToast } from "../../../../utils/utils";
 import { Button } from "../../../../components/ui/primitives/Button";
+import { Input } from "../../../../components/ui/inputs/Input";
 import {
   SCHEDULE_FIELDS,
   buildAnnexPayload,
@@ -95,11 +96,11 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
             {fields.map((f) => (
               <div key={f.key}>
                 <label className="text-xs text-gray-500 block mb-0.5">{f.label}</label>
-                <input
+                <Input
                   type={f.type === "date" ? "date" : f.type === "number" ? "number" : "text"}
                   value={formData[f.key]}
                   onChange={(e) => setFormData((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                  className="w-full border border-gray-300 rounded px-2 py-1 text-xs"
+                  className="py-1 text-xs"
                 />
               </div>
             ))}

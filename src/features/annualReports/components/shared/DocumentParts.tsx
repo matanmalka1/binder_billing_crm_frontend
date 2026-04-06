@@ -1,10 +1,11 @@
 import { useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Upload, CreditCard, ScrollText, FileSignature, FileText } from "lucide-react";
+import { Button } from "../../../../components/ui/primitives/Button";
 import type { ComponentType } from "react";
 import { documentsApi, documentsQK } from "@/features/documents/api";
 import type { PermanentDocumentResponse } from "@/features/documents/api";
-import { cn, getErrorMessage } from "../../../../utils/utils";
+import { getErrorMessage } from "../../../../utils/utils";
 import { toast } from "../../../../utils/toast";
 import { Badge } from "../../../../components/ui/primitives/Badge";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "@/features/documents";
@@ -86,11 +87,17 @@ export const MissingDocRow = ({ clientId, docType, annualReportId }: MissingDocR
       </div>
       <div className="flex items-center gap-2">
         {upload.isPending && <span className="text-xs text-gray-400">מעלה...</span>}
-        <button type="button" onClick={() => inputRef.current?.click()} disabled={upload.isPending}
-          className={cn("flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white transition-colors",
-            upload.isPending ? "bg-warning-300 cursor-not-allowed" : "bg-warning-500 hover:bg-warning-600")}>
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          onClick={() => inputRef.current?.click()}
+          disabled={upload.isPending}
+          isLoading={upload.isPending}
+          className="text-xs px-3 py-1.5 bg-warning-500 hover:bg-warning-600"
+        >
           <Upload className="h-3 w-3" /> העלה
-        </button>
+        </Button>
         <input ref={inputRef} type="file" className="hidden"
           onChange={(e) => { const f = e.target.files?.[0]; if (f) upload.mutate(f); }} />
       </div>
