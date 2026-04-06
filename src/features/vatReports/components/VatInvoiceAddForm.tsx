@@ -17,6 +17,7 @@ import {
   DEDUCTION_RATES,
   VAT_RATE_TYPES,
   DOCUMENT_TYPES,
+  DEFAULT_RATE_TYPE,
 } from "../constants";
 import { getVatInvoiceDefaultValues } from "../utils";
 import {
@@ -42,7 +43,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
     resolver: zodResolver(vatInvoiceRowSchema),
     defaultValues: {
       ...getVatInvoiceDefaultValues(invoiceType),
-      rate_type: "standard",
+      rate_type: DEFAULT_RATE_TYPE,
     },
   });
 
@@ -60,7 +61,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
     if (ok) {
       reset({
         ...getVatInvoiceDefaultValues(invoiceType),
-        rate_type: "standard",
+        rate_type: DEFAULT_RATE_TYPE,
       });
     }
   };

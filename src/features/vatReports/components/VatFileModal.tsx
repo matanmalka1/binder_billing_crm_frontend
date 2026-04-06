@@ -8,7 +8,12 @@ import { vatReportsApi } from "../api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import { vatReportsQK } from "../api/queryKeys";
-import { VAT_FILING_METHOD_LABELS } from "../constants";
+import {
+  DEFAULT_VAT_FILING_METHOD,
+  VAT_FILE_MODAL_MESSAGES,
+  VAT_FILING_METHOD_LABELS,
+  VAT_FILING_METHODS,
+} from "../constants";
 
 interface VatFileModalProps {
   open: boolean;
@@ -18,19 +23,17 @@ interface VatFileModalProps {
   onFilingEnd?: () => void;
 }
 
-const FILING_METHODS = ["online", "manual", "representative"] as const;
-
 export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, onClose, onFilingStart, onFilingEnd }) => {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
-  const [filingMethod, setFilingMethod] = useState<"online" | "manual" | "representative">("online");
+  const [filingMethod, setFilingMethod] = useState<"online" | "manual" | "representative">(DEFAULT_VAT_FILING_METHOD);
   const [submissionReference, setSubmissionReference] = useState("");
   const [isAmendment, setIsAmendment] = useState(false);
   const [amendsItemId, setAmendsItemId] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const handleClose = () => {
-    setFilingMethod("online");
+    setFilingMethod(DEFAULT_VAT_FILING_METHOD);
     setSubmissionReference("");
     setIsAmendment(false);
     setAmendsItemId("");
@@ -41,7 +44,7 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
   const handleSubmit = async () => {
     setError(null);
     if (isAmendment && amendsItemId && isNaN(Number(amendsItemId))) {
-      setError("מזהה ההגשה המקורית חייב להיות מספר");
+      setError(VAT_FILE_MODAL_MESSAGES.invalidAmendmentId);
       return;
     }
     setIsLoading(true);
@@ -53,7 +56,7 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
         is_amendment: isAmendment,
         amends_item_id: isAmendment && amendsItemId ? Number(amendsItemId) : null,
       });
-      toast.success("התיק הוגש בהצלחה");
+      toast.success(VAT_FILE_MODAL_MESSAGES.filingSuccess);
       // Optimistic cache update — set status to "filed" before background refetch
       queryClient.setQueryData(vatReportsQK.detail(workItemId), (prev: unknown) => {
         if (!prev || typeof prev !== "object") return prev;
@@ -63,7 +66,7 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
       await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
       handleClose();
     } catch (err) {
-      showErrorToast(err, "שגיאה בהגשה");
+      showErrorToast(err, VAT_FILE_MODAL_MESSAGES.filingError);
     } finally {
       setIsLoading(false);
       onFilingEnd?.();
@@ -92,7 +95,7 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
           <SelectDropdown
             value={filingMethod}
             onChange={(e) => setFilingMethod(e.target.value as "online" | "manual" | "representative")}
-            options={FILING_METHODS.map((m) => ({ value: m, label: VAT_FILING_METHOD_LABELS[m] }))}
+            options={VAT_FILING_METHODS.map((m) => ({ value: m, label: VAT_FILING_METHOD_LABELS[m] }))}
           />
         </div>
 

@@ -163,11 +163,26 @@ export const VAT_FILING_METHOD_LABELS: Record<string, string> = {
   representative: "דרך מערכת המייצגים",
 };
 
+export const VAT_FILING_METHODS = ["online", "manual", "representative"] as const;
+export const DEFAULT_VAT_FILING_METHOD = VAT_FILING_METHODS[0];
+
+export const VAT_FILE_MODAL_MESSAGES = {
+  invalidAmendmentId: "מזהה ההגשה המקורית חייב להיות מספר",
+  filingSuccess: "התיק הוגש בהצלחה",
+  filingError: "שגיאה בהגשה",
+} as const;
+
 export const VAT_RATE_TYPE_LABELS: Record<string, string> = {
   standard: "רגיל",
   exempt: "פטור",
   zero_rate: "אפס",
 };
+
+export const DEFAULT_RATE_TYPE = "standard" as const;
+
+// Mirrors app/vat_reports/services/constants.py: EXCEPTIONAL_INVOICE_THRESHOLD
+export const VAT_EXCEPTIONAL_INVOICE_THRESHOLD = 25_000;
+export const VAT_EXCEPTIONAL_INVOICE_TOOLTIP = `חשבונית מעל ${VAT_EXCEPTIONAL_INVOICE_THRESHOLD.toLocaleString("en-US")} ₪ — נדרש דיווח מיוחד`;
 
 export const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   tax_invoice: "חשבונית מס",

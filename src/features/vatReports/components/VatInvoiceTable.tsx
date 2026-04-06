@@ -6,7 +6,13 @@ import {
   getVatDeductionRateClass,
   getVatDeductionRateLabel,
 } from "../utils";
-import { CATEGORY_LABELS, CATEGORY_COLORS, DOCUMENT_TYPE_LABELS, VAT_RATE_TYPE_LABELS } from "../constants";
+import {
+  CATEGORY_LABELS,
+  CATEGORY_COLORS,
+  DOCUMENT_TYPE_LABELS,
+  VAT_EXCEPTIONAL_INVOICE_TOOLTIP,
+  VAT_RATE_TYPE_LABELS,
+} from "../constants";
 import { useDeleteInvoice, useUpdateInvoice } from "../hooks/useVatInvoiceMutations";
 import { VatInvoiceEditRow } from "./VatInvoiceEditRow";
 import { formatDate, formatDateTime } from "../../../utils/utils";
@@ -92,7 +98,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                     {inv.invoice_number}
                     {inv.is_exceptional && (
                       <span
-                        title='חשבונית מעל 25,000 ₪ — נדרש דיווח מיוחד'
+                        title={VAT_EXCEPTIONAL_INVOICE_TOOLTIP}
                         className="mr-1.5 rounded px-1 py-0.5 text-xs font-medium bg-orange-100 text-orange-700"
                       >
                         חריגה
