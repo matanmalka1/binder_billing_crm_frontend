@@ -1,22 +1,26 @@
 import { useState } from "react";
 import { Check, X, Loader2 } from "lucide-react";
+import { Select } from "../../../components/ui/inputs/Select";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { ADVANCE_PAYMENT_STATUS_OPTIONS } from "../constants";
 
 interface EditAdvancePaymentInlineProps {
   row: AdvancePaymentRow;
   isUpdating: boolean;
-  onSave: (paid_amount: string | null, status: AdvancePaymentStatus, expected_amount: string | null) => void;
+  onSave: (
+    paid_amount: string | null,
+    status: AdvancePaymentStatus,
+    expected_amount: string | null,
+  ) => void;
   onCancel?: () => void;
 }
 
-export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> = ({
-  row,
-  isUpdating,
-  onSave,
-  onCancel: onCancelProp,
-}) => {
-  const [paidAmount, setPaidAmount] = useState<string>(row.paid_amount != null ? String(row.paid_amount) : "");
+export const EditAdvancePaymentInline: React.FC<
+  EditAdvancePaymentInlineProps
+> = ({ row, isUpdating, onSave, onCancel: onCancelProp }) => {
+  const [paidAmount, setPaidAmount] = useState<string>(
+    row.paid_amount != null ? String(row.paid_amount) : "",
+  );
   const [expectedAmount, setExpectedAmount] = useState<string>(
     row.expected_amount != null ? String(row.expected_amount) : "",
   );
@@ -65,17 +69,14 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
         placeholder="צפוי"
         className="w-20 rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 text-left"
       />
-      <select
-        value={status}
-        onChange={(e) => setStatus(e.target.value as AdvancePaymentStatus)}
-        className="rounded border border-gray-300 px-1 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
-      >
-        {ADVANCE_PAYMENT_STATUS_OPTIONS.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+      <div className="min-w-28">
+        <Select
+          value={status}
+          onChange={(e) => setStatus(e.target.value as AdvancePaymentStatus)}
+          options={ADVANCE_PAYMENT_STATUS_OPTIONS}
+          className="px-2 py-1 text-xs"
+        />
+      </div>
       {isUpdating ? (
         <Loader2 size={14} className="animate-spin text-blue-500" />
       ) : (

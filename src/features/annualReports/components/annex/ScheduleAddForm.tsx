@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { AnnualReportScheduleKey, ScheduleEntry } from "../../api";
 import { getScheduleLabel } from "../../api";
+import { Select } from "../../../../components/ui/inputs/Select";
 import { Button } from "../../../../components/ui/primitives/Button";
 import { ALL_SCHEDULES } from "../../annex.constants";
 
@@ -10,7 +11,11 @@ interface ScheduleAddFormProps {
   isAdding: boolean;
 }
 
-export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onAdd, isAdding }) => {
+export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({
+  schedules,
+  onAdd,
+  isAdding,
+}) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<AnnualReportScheduleKey | "">("");
   const [notes, setNotes] = useState("");
@@ -19,6 +24,13 @@ export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onA
     const existing = new Set(schedules.map((entry) => entry.schedule));
     return ALL_SCHEDULES.filter((key) => !existing.has(key));
   }, [schedules]);
+  const scheduleOptions = [
+    { value: "", label: "בחר נספח...", disabled: true },
+    ...available.map((key) => ({
+      value: key,
+      label: getScheduleLabel(key),
+    })),
+  ];
 
   const handleOpen = () => {
     setOpen(true);
@@ -39,7 +51,9 @@ export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onA
   };
 
   if (available.length === 0) {
-    return <p className="text-xs text-gray-500">כל סוגי הנספחים כבר קיימים בדוח</p>;
+    return (
+      <p className="text-xs text-gray-500">כל סוגי הנספחים כבר קיימים בדוח</p>
+    );
   }
 
   if (!open) {
@@ -53,18 +67,14 @@ export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onA
   return (
     <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 space-y-2">
       <p className="text-xs font-medium text-gray-600">הוספת נספח ידנית</p>
-      <select
+      <Select
         value={selected}
-        onChange={(event) => setSelected(event.target.value as AnnualReportScheduleKey | "")}
-        className="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm"
-      >
-        <option value="">בחר נספח...</option>
-        {available.map((key) => (
-          <option key={key} value={key}>
-            {getScheduleLabel(key)}
-          </option>
-        ))}
-      </select>
+        onChange={(event) =>
+          setSelected(event.target.value as AnnualReportScheduleKey | "")
+        }
+        options={scheduleOptions}
+        className="w-full px-2 py-1"
+      />
       <input
         value={notes}
         onChange={(event) => setNotes(event.target.value)}
@@ -76,7 +86,13 @@ export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onA
         <Button type="button" variant="ghost" size="sm" onClick={handleCancel}>
           ביטול
         </Button>
-        <Button type="button" size="sm" onClick={handleAdd} isLoading={isAdding} disabled={!selected}>
+        <Button
+          type="button"
+          size="sm"
+          onClick={handleAdd}
+          isLoading={isAdding}
+          disabled={!selected}
+        >
           הוסף
         </Button>
       </div>

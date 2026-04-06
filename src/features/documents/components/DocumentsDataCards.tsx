@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { FileText } from "lucide-react";
 import { Card } from "../../../components/ui/primitives/Card";
+import { Select } from "../../../components/ui/inputs/Select";
 import { DataTable } from "../../../components/ui/table/DataTable";
 import { Alert } from "../../../components/ui/overlays/Alert";
 import { DocumentsUploadCard } from "./DocumentsUploadCard";
@@ -39,9 +40,18 @@ interface DocumentsDataCardsProps {
 }
 
 export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
-  documents, signals, taxYear, onTaxYearChange, taxYears,
-  submitUpload, uploadError, uploading, onDelete, onReplace,
-  handleApprove, handleReject,
+  documents,
+  signals,
+  taxYear,
+  onTaxYearChange,
+  taxYears,
+  submitUpload,
+  uploadError,
+  uploading,
+  onDelete,
+  onReplace,
+  handleApprove,
+  handleReject,
 }) => {
   const role = useAuthStore((s) => s.user?.role);
   const isAdvisor = role === "advisor";
@@ -53,9 +63,12 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
   const [downloadingId, setDownloadingId] = useState<number | null>(null);
   const [rejectingId, setRejectingId] = useState<number | null>(null);
   const [rejectNote, setRejectNote] = useState("");
-  const [expandedVersionsId, setExpandedVersionsId] = useState<number | null>(null);
+  const [expandedVersionsId, setExpandedVersionsId] = useState<number | null>(
+    null,
+  );
 
-  const [previewDoc, setPreviewDoc] = useState<PermanentDocumentResponse | null>(null);
+  const [previewDoc, setPreviewDoc] =
+    useState<PermanentDocumentResponse | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -65,7 +78,11 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     if (confirmDeleteId === null) return;
     setDeletingId(confirmDeleteId);
     setConfirmDeleteId(null);
-    try { await onDelete(confirmDeleteId); } finally { setDeletingId(null); }
+    try {
+      await onDelete(confirmDeleteId);
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handleReplaceClick = (id: number) => {
@@ -79,7 +96,12 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     if (!file || id === null) return;
     e.target.value = "";
     setReplacingId(id);
-    try { await onReplace(id, file); } finally { setReplacingId(null); pendingReplaceId.current = null; }
+    try {
+      await onReplace(id, file);
+    } finally {
+      setReplacingId(null);
+      pendingReplaceId.current = null;
+    }
   };
 
   const handleDownloadClick = async (id: number) => {
@@ -137,9 +159,14 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     handleExpandVersions,
   });
 
-  const expandedDoc = expandedVersionsId !== null
-    ? documents.find((d) => d.id === expandedVersionsId)
-    : null;
+  const expandedDoc =
+    expandedVersionsId !== null
+      ? documents.find((d) => d.id === expandedVersionsId)
+      : null;
+  const taxYearOptions = [
+    { value: "", label: "הכל" },
+    ...taxYears.map((year) => ({ value: String(year), label: String(year) })),
+  ];
 
   return (
     <div className="space-y-4">
@@ -164,14 +191,18 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         actions={
           <div className="flex items-center gap-2">
             <label className="text-sm text-gray-500">שנת מס:</label>
-            <select
-              value={taxYear ?? ""}
-              onChange={(e) => onTaxYearChange(e.target.value ? Number(e.target.value) : null)}
-              className="appearance-none rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="">הכל</option>
-              {taxYears.map((y) => <option key={y} value={y}>{y}</option>)}
-            </select>
+            <div className="w-28">
+              <Select
+                value={taxYear != null ? String(taxYear) : ""}
+                onChange={(e) =>
+                  onTaxYearChange(
+                    e.target.value ? Number(e.target.value) : null,
+                  )
+                }
+                options={taxYearOptions}
+                className="py-1.5"
+              />
+            </div>
           </div>
         }
       >
@@ -190,11 +221,19 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         )}
       </Card>
 
-      <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
+      <input
+        ref={fileInputRef}
+        type="file"
+        className="hidden"
+        onChange={handleFileChange}
+      />
 
       <DocumentPreviewModal
         open={previewDoc !== null}
-        onClose={() => { setPreviewDoc(null); setPreviewUrl(null); }}
+        onClose={() => {
+          setPreviewDoc(null);
+          setPreviewUrl(null);
+        }}
         url={previewUrl}
         filename={previewDoc?.original_filename ?? null}
         mimeType={previewDoc?.mime_type ?? null}
@@ -218,7 +257,10 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         confirmLabel="דחה"
         cancelLabel="ביטול"
         onConfirm={handleConfirmReject}
-        onCancel={() => { setRejectingId(null); setRejectNote(""); }}
+        onCancel={() => {
+          setRejectingId(null);
+          setRejectNote("");
+        }}
       >
         <textarea
           value={rejectNote}
