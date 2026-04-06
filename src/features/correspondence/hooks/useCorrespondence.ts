@@ -10,7 +10,7 @@ const PAGE_SIZE = 50;
 
 export const useCorrespondence = (clientId: number) => {
   const queryClient = useQueryClient();
-  const queryKey = [...correspondenceQK.forBusiness(clientId), { page: 1, page_size: PAGE_SIZE }];
+  const queryKey = correspondenceQK.forBusinessPaged(clientId, { page: 1, page_size: PAGE_SIZE });
 
   const listQuery = useQuery({
     enabled: clientId > 0,
@@ -21,7 +21,7 @@ export const useCorrespondence = (clientId: number) => {
 
   const contactsQuery = useQuery({
     enabled: clientId > 0,
-    queryKey: [...authorityContactsQK.forBusiness(clientId), { page: 1, page_size: 100 }],
+    queryKey: authorityContactsQK.forBusinessPaged(clientId, { page: 1, page_size: 100 }),
     queryFn: () => authorityContactsApi.listAuthorityContacts(clientId, undefined, 1, 100),
     staleTime: 60_000,
   });

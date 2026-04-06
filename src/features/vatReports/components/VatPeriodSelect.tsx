@@ -4,6 +4,7 @@ import { FormField } from "../../../components/ui/inputs/FormField";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
 import { vatReportsApi } from "../api";
 import { vatReportsQK } from "../api/queryKeys";
+import { isPositiveInt } from "../../../utils/utils";
 
 interface VatPeriodSelectProps {
   businessId: number;
@@ -24,7 +25,7 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
   className,
   enabled = true,
 }) => {
-  const isValidBusiness = Number.isInteger(businessId) && businessId > 0;
+  const isValidBusiness = isPositiveInt(businessId);
 
   const { data, isLoading } = useQuery({
     queryKey: vatReportsQK.periodOptions(businessId, year),

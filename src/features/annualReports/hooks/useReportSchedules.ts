@@ -4,12 +4,12 @@ import {
   annualReportsQK,
   type AnnualReportScheduleKey,
 } from "../api";
-import { showErrorToast } from "../../../utils/utils";
+import { isPositiveInt, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
 export const useReportSchedules = (reportId: number | null) => {
   const queryClient = useQueryClient();
-  const enabled = reportId !== null && reportId > 0;
+  const enabled = isPositiveInt(reportId);
   const queryKey = annualReportsQK.detail(reportId ?? 0);
   const qk = enabled ? queryKey : null;
 

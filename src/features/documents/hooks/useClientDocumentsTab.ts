@@ -15,7 +15,7 @@ export const useClientDocumentsTab = (businessId: number, taxYear?: number | nul
 
   const documentsQuery = useQuery<PermanentDocumentListResponse>({
     enabled: businessId > 0,
-    queryKey: [...documentsQK.businessList(businessId), taxYear ?? null],
+    queryKey: documentsQK.businessListFiltered(businessId, taxYear ?? null),
     queryFn: () => documentsApi.listByClient(businessId, taxYear ? { tax_year: taxYear } : undefined),
   });
 

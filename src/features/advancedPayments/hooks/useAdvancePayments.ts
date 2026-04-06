@@ -25,9 +25,7 @@ export const useAdvancePayments = (
 
   const listQuery = useQuery({
     enabled,
-    queryKey: statusFilter?.length
-      ? [...qk, { status: statusFilter, page }]
-      : [...qk, page],
+    queryKey: advancedPaymentsQK.list(businessId, year, page, statusFilter?.length ? statusFilter : undefined),
     queryFn: () =>
       advancePaymentsApi.list({
         business_id: businessId,

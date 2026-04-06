@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { annualReportsApi, annualReportsQK } from "../api";
 import type { AnnualReportDetail } from "../types";
+import { isPositiveInt } from "../../../utils/utils";
 import { useReportMutations } from "./useReportMutations";
 import { useReportSchedules } from "./useReportSchedules";
 
 export const useReportDetail = (reportId: number | null, onDeleted?: () => void) => {
-  const enabled = reportId !== null && reportId > 0;
+  const enabled = isPositiveInt(reportId);
   const queryKey = annualReportsQK.detail(reportId ?? 0);
 
   const reportQuery = useQuery<AnnualReportDetail>({

@@ -8,7 +8,7 @@ import {
 } from "../api";
 import { annualReportStatusApi } from "../api";
 import { timelineQK } from "@/features/timeline/api";
-import { showErrorToast } from "../../../utils/utils";
+import { isPositiveInt, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import type { AnnualReportDetail } from "../types";
 
@@ -19,7 +19,7 @@ export const useReportMutations = (
 ) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const enabled = reportId !== null && reportId > 0;
+  const enabled = isPositiveInt(reportId);
   const queryKey = annualReportsQK.detail(reportId ?? 0);
   const qk = enabled ? queryKey : null;
 

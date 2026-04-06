@@ -11,7 +11,7 @@ import { taxProfileApi, taxProfileQK } from "@/features/taxProfile/api";
 import { vatReportsApi } from "@/features/vatReports/api";
 import { useAuthStore } from "../../../store/auth.store";
 import { toast } from "../../../utils/toast";
-import { showErrorToast } from "../../../utils/utils";
+import { isPositiveInt, showErrorToast } from "../../../utils/utils";
 import { receiveBinderSchema, type ReceiveBinderFormValues } from "../schemas";
 
 const getDefaultValues = (): ReceiveBinderFormValues => ({
@@ -84,16 +84,16 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   const { data: taxProfile } = useQuery({
     queryKey: taxProfileQK.forBusiness(businessId!),
     queryFn: () => taxProfileApi.get(businessId!),
-    enabled: typeof businessId === "number" && businessId > 0,
+    enabled: isPositiveInt(businessId),
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
   });
 
   const { data: annualReportsData } = useQuery({
-    queryKey: annualReportsQK.forBusiness(typeof businessId === "number" ? businessId : 0),
+    queryKey: annualReportsQK.forBusiness(isPositiveInt(businessId) ? businessId! : 0),
     queryFn: () => annualReportsApi.listClientReports(businessId as number),
-    enabled: binderType === "annual_report" && typeof businessId === "number" && businessId > 0,
+    enabled: binderType === "annual_report" && isPositiveInt(businessId),
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
@@ -114,7 +114,7 @@ export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
   });
 
   const vatType: "monthly" | "bimonthly" | "exempt" | null = (() => {
-    if (typeof businessId === "number" && businessId > 0) {
+    if (isPositiveInt(businessId)) {
       return taxProfile?.vat_type ?? null;
     }
     if (businessId === null && allBusinessProfiles.length > 0) {

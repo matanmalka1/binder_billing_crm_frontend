@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { signatureRequestsApi, signatureRequestsQK } from "../api";
 import type { SignatureRequestResponse } from "../api";
-import { getErrorMessage } from "../../../utils/utils";
+import { getErrorMessage, isPositiveInt } from "../../../utils/utils";
 
 type Params = { clientId: number | null; page?: number; pageSize?: number };
 
@@ -13,7 +13,7 @@ type Result = {
 };
 
 export const useClientSignatureRequests = ({ clientId, page = 1, pageSize = 10 }: Params): Result => {
-  const enabled = clientId != null && clientId > 0;
+  const enabled = isPositiveInt(clientId);
 
   const query = useQuery({
     queryKey: signatureRequestsQK.forBusinessPage(clientId ?? 0, { page, page_size: pageSize }),
