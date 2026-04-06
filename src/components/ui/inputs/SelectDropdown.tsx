@@ -14,6 +14,7 @@ interface SelectDropdownProps {
   value?: string | number | readonly string[];
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onBlur?: React.FocusEventHandler<HTMLSelectElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
   options: SelectOption[];
   disabled?: boolean;
   className?: string;
@@ -28,6 +29,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
   value,
   onChange,
   onBlur,
+  onKeyDown,
   options,
   disabled,
   className,
@@ -93,7 +95,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 
   return (
     <>
-      <button ref={triggerRef} type="button" onClick={toggle} disabled={disabled} className={triggerClass}>
+      <button ref={triggerRef} type="button" onClick={toggle} onKeyDown={onKeyDown} disabled={disabled} className={triggerClass}>
         <span className={cn("truncate", !currentValue ? "text-gray-400" : "text-gray-800")}>
           {selectedLabel}
         </span>

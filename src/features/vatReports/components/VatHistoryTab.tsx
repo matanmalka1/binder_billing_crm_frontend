@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { vatReportsApi } from "../api";
 import { vatReportsQK } from "../api/queryKeys";
@@ -17,8 +17,14 @@ export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
     queryFn: () => vatReportsApi.getAuditTrail(workItemId),
   });
 
-  const items = [...(data?.items ?? [])].reverse();
+  const items = useMemo(() => [...(data?.items ?? [])].reverse(), [data?.items]);
   const totalPages = Math.ceil(items.length / PAGE_SIZE);
+  const maxPageIndex = Math.max(0, totalPages - 1);
+
+  useEffect(() => {
+    setPage((prev) => Math.min(Math.max(prev, 0), maxPageIndex));
+  }, [maxPageIndex]);
+
   const pageItems = items.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   if (isPending) {
@@ -75,8 +81,8 @@ export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
             עמוד {page + 1} מתוך {totalPages}
           </span>
           <button
-            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={page >= totalPages - 1}
+            onClick={() => setPage((p) => Math.min(maxPageIndex, Math.max(0, p + 1)))}
+            disabled={page >= maxPageIndex}
             className="rounded px-3 py-1 hover:bg-gray-100 disabled:opacity-40"
           >
             הבא

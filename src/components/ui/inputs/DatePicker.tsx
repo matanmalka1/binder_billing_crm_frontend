@@ -12,6 +12,7 @@ export interface DatePickerProps {
   value?: string;
   onChange?: (value: string) => void;
   onBlur?: () => void;
+  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   name?: string;
   maxDate?: Date;
@@ -26,6 +27,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   value,
   onChange,
   onBlur,
+  onKeyDown,
   disabled,
   maxDate,
   compact = false,
@@ -101,6 +103,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         type="button"
         disabled={disabled}
         onClick={handleOpen}
+        onKeyDown={onKeyDown}
         className={cn(
           "w-full flex items-center justify-between rounded-lg border shadow-sm text-sm transition-all bg-white text-right",
           compact ? "px-2 py-1 h-7 text-xs" : "px-3 py-3",

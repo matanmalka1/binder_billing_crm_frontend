@@ -55,15 +55,19 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
 
   const selectedCategory = invoice.expense_category ?? EXPENSE_CATEGORIES[0];
   const catColor = selectedCategory ? CATEGORY_COLORS[selectedCategory] : "";
+  const handleEscapeKeyDown: React.KeyboardEventHandler<HTMLElement> = (e) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      onCancel();
+    }
+  };
 
   return (
-    <tr
-      className="bg-blue-50/40"
-      onKeyDown={(e) => e.key === "Escape" && onCancel()}
-    >
+    <tr className="bg-blue-50/40">
       <td className={`border-r-2 ${accentBorder} px-2 py-1.5`}>
         <Input
           {...register("invoice_number")}
+          onKeyDown={handleEscapeKeyDown}
           className="h-7 w-28 text-xs px-1 font-mono"
         />
       </td>
@@ -76,6 +80,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
               value={field.value}
               onChange={field.onChange}
               onBlur={field.onBlur}
+              onKeyDown={handleEscapeKeyDown}
               compact
               noWrapper
               usePortal
@@ -86,12 +91,14 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
       <td className="px-2 py-1.5">
         <Input
           {...register("counterparty_name")}
+          onKeyDown={handleEscapeKeyDown}
           className="h-7 w-36 text-xs px-1"
         />
       </td>
       <td className="px-2 py-1.5">
         <Input
           {...register("counterparty_id")}
+          onKeyDown={handleEscapeKeyDown}
           className="h-7 w-28 text-xs px-1 font-mono"
           placeholder="—"
           dir="ltr"
@@ -114,6 +121,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
                   value={field.value}
                   onChange={field.onChange}
                   onBlur={field.onBlur}
+                  onKeyDown={handleEscapeKeyDown}
                   className="h-7 text-xs flex-1"
                   options={EXPENSE_CATEGORIES.map((cat) => ({
                     value: cat,
@@ -137,6 +145,11 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
           className="h-7 w-24 text-xs px-1 font-mono"
           inputMode="decimal"
           onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              e.preventDefault();
+              onCancel();
+              return;
+            }
             if (
               !/[\d.]/.test(e.key) &&
               ![
@@ -165,6 +178,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
         <div className="flex gap-1">
           <button
             onClick={handleSubmit(onSubmit)}
+            onKeyDown={handleEscapeKeyDown}
             disabled={isSaving}
             className="rounded p-1 text-emerald-600 hover:bg-emerald-50 disabled:opacity-50"
             aria-label="שמור"
@@ -174,6 +188,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
           <button
             type="button"
             onClick={onCancel}
+            onKeyDown={handleEscapeKeyDown}
             className="rounded p-1 text-gray-400 hover:bg-gray-100"
             aria-label="ביטול"
           >
