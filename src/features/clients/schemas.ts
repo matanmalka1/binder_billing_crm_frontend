@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { validateIsraeliIdChecksum } from "../../utils/validation";
-import type { BusinessType } from "./api/contracts";
-
-const BUSINESS_TYPES: [BusinessType, ...BusinessType[]] = ["osek_patur", "osek_murshe", "company", "employee"];
+import {
+  BUSINESS_TYPES,
+  CLIENT_ID_NUMBER_TYPES,
+  type ClientIdNumberType,
+} from "./constants";
 
 export const createBusinessSchema = z.object({
   business_type: z.enum(BUSINESS_TYPES),
@@ -18,27 +20,48 @@ export const createBusinessSchema = z.object({
 
 export type CreateBusinessFormValues = z.infer<typeof createBusinessSchema>;
 
-const idNumberField = z
-  .string()
-  .trim()
-  .regex(/^\d+$/, "מספר זהות/ח.פ חייב להכיל ספרות בלבד")
-  .length(9, "מספר זהות/ח.פ חייב להכיל בדיוק 9 ספרות");
+const requiresIsraeliNumericId = (idNumberType: ClientIdNumberType): boolean =>
+  idNumberType === "individual" || idNumberType === "corporation";
 
 export const createClientSchema = z
   .object({
+    id_number_type: z.enum(CLIENT_ID_NUMBER_TYPES),
     full_name: z.string().trim().min(2, "שם מלא חייב להכיל לפחות 2 תווים").max(100, "שם מלא ארוך מדי"),
-    id_number: idNumberField,
-    id_number_type: z.enum(["individual", "corporation", "passport", "other"]),
+    id_number: z.string().trim().min(1, "יש להזין מספר מזהה"),
     phone: z.string().trim().min(1, "יש להזין מספר טלפון").regex(/^0\d{1,2}-?\d{7}$/, "מספר טלפון לא תקין"),
     email: z.string().trim().min(1, "יש להזין כתובת אימייל").email("כתובת אימייל לא תקינה"),
+    address_street: z.string().trim().optional().or(z.literal("")),
+    address_building_number: z.string().trim().optional().or(z.literal("")),
+    address_city: z.string().trim().optional().or(z.literal("")),
   })
   .superRefine((data, ctx) => {
-    // חברה — ח.פ משתמש באותו אלגוריתם, אפשר להפעיל על הכל
-    if (!validateIsraeliIdChecksum(data.id_number)) {
+    if (!requiresIsraeliNumericId(data.id_number_type)) {
+      return;
+    }
+
+    if (!/^\d+$/.test(data.id_number)) {
       ctx.addIssue({
-      code: "custom",
-      message: "מספר זהות/ח.פ אינו תקין",
-      path: ["id_number"],
+        code: z.ZodIssueCode.custom,
+        path: ["id_number"],
+        message: "מספר זהות/ח.פ חייב להכיל ספרות בלבד",
+      });
+      return;
+    }
+
+    if (data.id_number.length !== 9) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["id_number"],
+        message: "מספר זהות/ח.פ חייב להכיל בדיוק 9 ספרות",
+      });
+      return;
+    }
+
+    if (data.id_number_type === "individual" && !validateIsraeliIdChecksum(data.id_number)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["id_number"],
+        message: "מספר זהות אינו תקין",
       });
     }
   });

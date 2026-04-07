@@ -1,13 +1,9 @@
 import { Badge } from "../../../components/ui/primitives/Badge";
 import type { Column } from "../../../components/ui/table/DataTable";
 import type { UserResponse } from "../api";
+import { getRoleLabel } from "../../../utils/enums";
 import { formatDateTime } from "../../../utils/utils";
 import { UserRowActions } from "./UserRowActions";
-
-const ROLE_LABELS: Record<string, string> = {
-  advisor: "יועץ",
-  secretary: "מזכירה",
-};
 
 interface BuildUserColumnsParams {
   onEdit: (user: UserResponse) => void;
@@ -39,7 +35,7 @@ export const buildUserColumns = ({
     header: "תפקיד",
     render: (user) => (
       <Badge variant={user.role === "advisor" ? "info" : "neutral"}>
-        {ROLE_LABELS[user.role] ?? user.role}
+        {getRoleLabel(user.role)}
       </Badge>
     ),
   },

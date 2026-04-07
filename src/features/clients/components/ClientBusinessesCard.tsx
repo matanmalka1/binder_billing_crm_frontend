@@ -3,15 +3,9 @@ import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/primitives/Button";
 import { clientsApi, clientsQK } from "../api";
+import { getBusinessTypeLabel } from "../constants";
 import { formatDate } from "../../../utils/utils";
 import type { BusinessStatus } from "../api/contracts";
-
-const BUSINESS_TYPE_LABELS: Record<string, string> = {
-  osek_patur: "עוסק פטור",
-  osek_murshe: "עוסק מורשה",
-  company: 'חברה בע"מ',
-  employee: "שכיר",
-};
 
 const STATUS_BADGE: Record<BusinessStatus, { label: string; className: string }> = {
   active: { label: "פעיל", className: "bg-positive-100 text-positive-800" },
@@ -68,7 +62,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium text-gray-900">
-                      {BUSINESS_TYPE_LABELS[biz.business_type] ?? biz.business_type}
+                      {getBusinessTypeLabel(biz.business_type)}
                       {biz.business_name ? ` — ${biz.business_name}` : ""}
                     </p>
                     <p className="text-xs text-gray-500">נפתח: {formatDate(biz.opened_at)}</p>

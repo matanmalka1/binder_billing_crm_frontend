@@ -13,19 +13,13 @@ import { ClientAnnualReportsTab } from "@/features/annualReports";
 import { TaxProfileCard } from "@/features/taxProfile";
 import { CorrespondenceCard } from "@/features/correspondence";
 import { SignatureRequestsCard } from "@/features/signatureRequests";
+import { getBusinessTypeLabel } from "@/features/clients/constants";
 import {
   BUSINESS_DETAILS_TABS,
   BUSINESS_DETAILS_TAB_LABELS,
   type ActiveBusinessDetailsTab,
 } from "../constants";
 import { useBusinessDetails } from "../hooks/useBusinessDetails";
-
-const BUSINESS_TYPE_LABELS: Record<string, string> = {
-  osek_patur: "עוסק פטור",
-  osek_murshe: "עוסק מורשה",
-  company: 'חברה בע"מ',
-  employee: "שכיר",
-};
 
 interface BusinessDetailsProps {
   initialTab?: ActiveBusinessDetailsTab;
@@ -58,7 +52,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
   }
 
   const businessDisplayName = business
-    ? `${BUSINESS_TYPE_LABELS[business.business_type] ?? business.business_type}${business.business_name ? ` — ${business.business_name}` : ""}`
+    ? `${getBusinessTypeLabel(business.business_type)}${business.business_name ? ` — ${business.business_name}` : ""}`
     : "פרטי עסק";
 
   const clientName = client?.full_name ?? "לקוח";

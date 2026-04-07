@@ -1,4 +1,5 @@
 import { makeLabelGetter } from "./labels";
+import { BUSINESS_TYPE_LABELS } from "../features/clients/constants";
 
 export const getStatusLabel = makeLabelGetter({
   in_office: "במשרד",
@@ -6,12 +7,7 @@ export const getStatusLabel = makeLabelGetter({
   returned: "הוחזר",
 });
 
-export const getClientTypeLabel = makeLabelGetter({
-  osek_patur: "עוסק פטור",
-  osek_murshe: "עוסק מורשה",
-  company: "חברה",
-  employee: "שכיר",
-});
+export const getClientTypeLabel = makeLabelGetter(BUSINESS_TYPE_LABELS);
 
 export const getClientStatusLabel = makeLabelGetter({
   active: "פעיל",
@@ -67,19 +63,32 @@ export const getSignatureRequestTypeLabel = makeLabelGetter({
   custom: 'מותאם אישית',
 });
 
-export const getVatRateTypeLabel = makeLabelGetter({
-  standard: 'חייב במע"מ',
+export const VAT_RATE_TYPE_LABELS: Record<string, string> = {
+  standard: "רגיל",
   exempt: "פטור",
   zero_rate: "אפס",
-});
+};
 
-export const getDocumentTypeLabel = makeLabelGetter({
+export const getVatRateTypeLabel = makeLabelGetter(VAT_RATE_TYPE_LABELS);
+
+export const VAT_TYPE_LABELS: Record<string, string> = {
+  monthly: "חודשי",
+  bimonthly: "דו-חודשי",
+  exempt: "פטור",
+};
+
+export const getVatTypeLabel = makeLabelGetter(VAT_TYPE_LABELS);
+
+export const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   tax_invoice: "חשבונית מס",
   transaction_invoice: "חשבונית עסקה",
   receipt: "קבלה",
   consolidated: "חשבונית מרוכזת",
   self_invoice: "חשבונית עצמית",
-});
+  credit_note: "הודעת זיכוי",
+};
+
+export const getDocumentTypeLabel = makeLabelGetter(DOCUMENT_TYPE_LABELS);
 
 export const getVatWorkItemStatusLabel = makeLabelGetter({
   pending_materials: "ממתין לחומרים",

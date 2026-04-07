@@ -5,6 +5,11 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import { Select } from "../../../components/ui/inputs/Select";
 import type { CreateClientPayload } from "../api";
+import {
+  CLIENT_ID_NUMBER_INPUT_LABELS,
+  CLIENT_ID_NUMBER_PLACEHOLDERS,
+  CLIENT_ID_NUMBER_TYPE_LABELS,
+} from "../constants";
 import { createClientSchema, type CreateClientFormValues } from "../schemas";
 
 interface Props {
@@ -13,6 +18,18 @@ interface Props {
   onSubmit: (data: CreateClientPayload) => Promise<void>;
   isLoading?: boolean;
 }
+
+const stripNonDigits = (e: React.FormEvent<HTMLInputElement>) => {
+  const input = e.currentTarget;
+  const cleaned = input.value.replace(/\D/g, "");
+  if (cleaned !== input.value) input.value = cleaned;
+};
+
+const stripNonPhone = (e: React.FormEvent<HTMLInputElement>) => {
+  const input = e.currentTarget;
+  const cleaned = input.value.replace(/[^\d-]/g, "");
+  if (cleaned !== input.value) input.value = cleaned;
+};
 
 export const CreateClientModal: React.FC<Props> = ({
   open,
@@ -23,18 +40,28 @@ export const CreateClientModal: React.FC<Props> = ({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
   } = useForm<CreateClientFormValues>({
     resolver: zodResolver(createClientSchema),
+    mode: "onBlur",
     defaultValues: {
+      id_number_type: "individual",
       full_name: "",
       id_number: "",
-      id_number_type: "individual",
       phone: "",
       email: "",
+      address_street: "",
+      address_building_number: "",
+      address_city: "",
     },
   });
+
+  const idNumberType = watch("id_number_type");
+  const idNumberLabel = CLIENT_ID_NUMBER_INPUT_LABELS[idNumberType] ?? "מספר מזהה";
+  const idNumberPlaceholder = CLIENT_ID_NUMBER_PLACEHOLDERS[idNumberType] ?? "הזן מספר מזהה";
+  const shouldStripToDigits = idNumberType === "individual" || idNumberType === "corporation";
 
   const handleClose = () => {
     if (!isLoading) {
@@ -45,13 +72,15 @@ export const CreateClientModal: React.FC<Props> = ({
 
   const onFormSubmit = handleSubmit(async (data) => {
     const payload: CreateClientPayload = {
-      ...data,
+      full_name: data.full_name,
+      id_number: data.id_number,
+      id_number_type: data.id_number_type,
       phone: data.phone,
       email: data.email,
-      address_street: null,
-      address_building_number: null,
+      address_street: data.address_street || null,
+      address_building_number: data.address_building_number || null,
+      address_city: data.address_city || null,
       address_apartment: null,
-      address_city: null,
       address_zip_code: null,
     };
     await onSubmit(payload);
@@ -73,51 +102,81 @@ export const CreateClientModal: React.FC<Props> = ({
       }
     >
       <form onSubmit={onFormSubmit} className="space-y-4">
-        <div className="space-y-4">
-          <Input
-            label="שם מלא *"
-            placeholder="ישראל ישראלי"
-            error={errors.full_name?.message}
-            disabled={isLoading}
-            {...register("full_name")}
-          />
-          <Input
-            label="מספר זהות / ח.פ *"
-            placeholder="123456789"
-            error={errors.id_number?.message}
-            disabled={isLoading}
-            {...register("id_number")}
-          />
-          <Select
-            label="סוג מזהה *"
-            error={errors.id_number_type?.message}
-            disabled={isLoading}
-            {...register("id_number_type")}
-          >
-            <option value="individual">יחיד</option>
-            <option value="corporation">תאגיד</option>
-            <option value="passport">דרכון</option>
-            <option value="other">אחר</option>
-          </Select>
+        <Select
+          label="סוג מזהה *"
+          error={errors.id_number_type?.message}
+          disabled={isLoading}
+          {...register("id_number_type")}
+        >
+          <option value="individual">{CLIENT_ID_NUMBER_TYPE_LABELS.individual}</option>
+          <option value="corporation">{CLIENT_ID_NUMBER_TYPE_LABELS.corporation}</option>
+          <option value="passport">{CLIENT_ID_NUMBER_TYPE_LABELS.passport}</option>
+          <option value="other">{CLIENT_ID_NUMBER_TYPE_LABELS.other}</option>
+        </Select>
+
+        <Input
+          label="שם מלא *"
+          error={errors.full_name?.message}
+          disabled={isLoading}
+          {...register("full_name")}
+        />
+
+        <Input
+          label={`${idNumberLabel} *`}
+          placeholder={idNumberPlaceholder}
+          error={errors.id_number?.message}
+          disabled={isLoading}
+          onInput={shouldStripToDigits ? stripNonDigits : undefined}
+          {...register("id_number")}
+        />
+
+        <div className="border-t border-gray-200 pt-4 space-y-4">
+          <p className="text-sm font-medium text-gray-700">פרטי התקשרות</p>
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              label="טלפון *"
+              type="tel"
+              placeholder="050-1234567"
+              error={errors.phone?.message}
+              disabled={isLoading}
+              onInput={stripNonPhone}
+              {...register("phone")}
+            />
+            <Input
+              label="אימייל *"
+              type="email"
+              placeholder="name@example.com"
+              error={errors.email?.message}
+              disabled={isLoading}
+              {...register("email")}
+            />
+          </div>
         </div>
 
-        <div className="space-y-4 border-t border-gray-200 pt-4">
-          <p className="text-sm font-medium text-gray-700">פרטי התקשרות</p>
+        <div className="border-t border-gray-200 pt-4 space-y-4">
+          <p className="text-sm font-medium text-gray-700">כתובת</p>
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              label="רחוב"
+              placeholder="שם הרחוב"
+              error={errors.address_street?.message}
+              disabled={isLoading}
+              {...register("address_street")}
+            />
+            <Input
+              label="מספר בניין"
+              placeholder="מספר"
+              error={errors.address_building_number?.message}
+              disabled={isLoading}
+              {...register("address_building_number")}
+            />
+          </div>
           <Input
-            label="טלפון *"
-            type="tel"
-            placeholder="050-1234567"
-            error={errors.phone?.message}
+            label="עיר"
+            placeholder="שם העיר"
+            error={errors.address_city?.message}
             disabled={isLoading}
-            {...register("phone")}
-          />
-          <Input
-            label="אימייל *"
-            type="email"
-            placeholder="הזן כתובת אימייל"
-            error={errors.email?.message}
-            disabled={isLoading}
-            {...register("email")}
+            {...register("address_city")}
           />
         </div>
 

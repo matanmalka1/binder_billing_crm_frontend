@@ -66,7 +66,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
 
         {/* Read-only identity number */}
         <div className="space-y-1">
-          <p className="text-xs font-medium text-gray-500">מספר זהות / ח.פ</p>
+          <p className="text-xs font-medium text-gray-500">מספר מזהה</p>
           <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500">
             {client.id_number}
           </p>

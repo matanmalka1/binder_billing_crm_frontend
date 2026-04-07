@@ -5,16 +5,7 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
 import { formatDate } from "../../../utils/utils";
 import type { ClientResponse } from "../api";
-
-const CLIENT_ID_TYPE_LABELS: Record<
-  Exclude<ClientResponse["id_number_type"], null>,
-  string
-> = {
-  individual: "תעודת זהות",
-  corporation: "חברה",
-  passport: "דרכון",
-  other: "אחר",
-};
+import { getClientIdNumberTypeLabel } from "../constants";
 
 type ClientInfoSectionProps = {
   client: ClientResponse;
@@ -43,11 +34,11 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   onDeleteStart,
 }) => {
   const idNumberTypeLabel = client.id_number_type
-    ? CLIENT_ID_TYPE_LABELS[client.id_number_type]
+    ? getClientIdNumberTypeLabel(client.id_number_type)
     : "—";
 
   const infoItems = [
-    { label: "מספר זהות / ח.פ", value: client.id_number },
+    { label: "מספר מזהה", value: client.id_number },
     { label: "סוג מזהה", value: idNumberTypeLabel },
     { label: "טלפון", value: client.phone || "—" },
     { label: "אימייל", value: client.email || "—" },

@@ -8,6 +8,7 @@ import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import type { BusinessType, CreateBusinessPayload, ISODateString } from "../api";
+import { BUSINESS_TYPE_LABELS } from "../constants";
 import { createBusinessSchema, type CreateBusinessFormValues } from "../schemas";
 
 interface Props {
@@ -99,16 +100,16 @@ export const CreateBusinessModal: React.FC<Props> = ({
             options={[
               {
                 value: "osek_patur",
-                label: "עוסק פטור",
+                label: BUSINESS_TYPE_LABELS.osek_patur,
                 disabled: existingSoleTraderType === "osek_murshe",
               },
               {
                 value: "osek_murshe",
-                label: "עוסק מורשה",
+                label: BUSINESS_TYPE_LABELS.osek_murshe,
                 disabled: existingSoleTraderType === "osek_patur",
               },
-              { value: "company", label: 'חברה בע"מ' },
-              { value: "employee", label: "שכיר" },
+              { value: "company", label: BUSINESS_TYPE_LABELS.company },
+              { value: "employee", label: BUSINESS_TYPE_LABELS.employee },
             ]}
             {...register("business_type")}
           />

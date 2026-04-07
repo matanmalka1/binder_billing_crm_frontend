@@ -4,14 +4,9 @@ import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
 import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
 import { Alert } from "../../../components/ui/overlays/Alert";
+import { getVatTypeLabel } from "../../../utils/enums";
 import { useTaxProfile } from "../hooks/useTaxProfile";
 import { TaxProfileForm } from "./TaxProfileForm";
-
-const VAT_TYPE_LABELS: Record<string, string> = {
-  monthly: "חודשי",
-  bimonthly: "דו-חודשי",
-  exempt: "פטור",
-};
 
 interface Props { businessId: number; readOnly?: boolean }
 
@@ -20,7 +15,7 @@ export const TaxProfileCard: React.FC<Props> = ({ businessId, readOnly = false }
   const [isEditing, setIsEditing] = useState(false);
 
   const items = [
-    { label: "סוג מע״מ", value: profile?.vat_type ? (VAT_TYPE_LABELS[profile.vat_type] ?? "—") : "—" },
+    { label: "סוג מע״מ", value: profile?.vat_type ? getVatTypeLabel(profile.vat_type) : "—" },
     { label: "תחום עיסוק", value: profile?.business_type ?? "—" },
     { label: "שנת מס ראשונה", value: profile?.tax_year_start ?? "—" },
     { label: "רואה חשבון מלווה", value: profile?.accountant_name ?? "—" },

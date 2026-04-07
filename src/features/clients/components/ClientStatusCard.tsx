@@ -85,18 +85,16 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
 
   if (!isLoading && (firstBusinessId == null || !data)) {
     return (
-      <Card title={`סטטוס לקוח — ${selectedYear}`} actions={yearSelector}>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-          <Tile icon={<Receipt size={18} />} title='מע"מ' primary="—" secondary="אין דיווחים" />
-          <Tile icon={<FileText size={18} />} title="דוח שנתי" primary="—" secondary="אין דוח" />
-          <Tile icon={<CreditCard size={18} />} title="חיובים פתוחים" primary="—" secondary="0 חיובים" />
-          <Tile icon={<TrendingUp size={18} />} title="מקדמות" primary="—" secondary="0 תשלומים" />
-          <Tile icon={<FolderOpen size={18} />} title="קלסרים" primary="0 פעילים" secondary="0 במשרד" />
-          <Tile icon={<FileCheck size={18} />} title="מסמכים" primary="0/0" secondary="מסמכים קיימים" />
+      <Card title="סטטוס לקוח">
+        <div className="flex flex-col items-center gap-3 py-6 text-center">
+          <FolderOpen size={32} className="text-gray-300" />
+          <p className="text-sm text-gray-500">אין עסקים רשומים — הוסף עסק כדי לראות סטטוס</p>
         </div>
       </Card>
     );
   }
+
+  if (!data) return null;
 
   const { vat, annual_report, charges, advance_payments, binders, documents, year } = data;
 

@@ -1,16 +1,10 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "../../../../components/ui/primitives/Button";
+import { getChargeStatusLabel } from "../../../../utils/enums";
 import { annualReportChargesApi, annualReportsQK } from "../../api";
 
 interface Props { reportId: number; }
-
-const STATUS_LABELS: Record<string, string> = {
-  draft: "טיוטה",
-  issued: "הונפק",
-  paid: "שולם",
-  canceled: "בוטל",
-};
 
 const fmt = (n: string | number) =>
   Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
@@ -52,7 +46,7 @@ export const ReportChargesPanel: React.FC<Props> = ({ reportId }) => {
               <tr key={charge.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 text-gray-700">{charge.description ?? "—"}</td>
                 <td className="px-4 py-3 font-medium text-gray-900">{fmt(charge.amount)}</td>
-                <td className="px-4 py-3 text-gray-600">{STATUS_LABELS[charge.status] ?? charge.status}</td>
+                <td className="px-4 py-3 text-gray-600">{getChargeStatusLabel(charge.status)}</td>
                 <td className="px-4 py-3 text-gray-500">
                   {new Date(charge.created_at).toLocaleDateString("he-IL")}
                 </td>

@@ -2,7 +2,11 @@
  * Single source of truth for VAT expense category keys and labels.
  * Imported by schemas.ts, useVatWorkItemDetail.ts, and enums.ts helpers.
  */
-import { getVatWorkItemStatusLabel } from "../../utils/enums";
+import {
+  DOCUMENT_TYPE_LABELS as SHARED_DOCUMENT_TYPE_LABELS,
+  VAT_RATE_TYPE_LABELS as SHARED_VAT_RATE_TYPE_LABELS,
+  getVatWorkItemStatusLabel,
+} from "../../utils/enums";
 import { CATEGORY_COLOR_TOKENS } from "../../utils/chartColors";
 
 export const INCOME_KEY = "income";
@@ -149,11 +153,7 @@ export const VAT_FILE_MODAL_MESSAGES = {
   filingError: "שגיאה בהגשה",
 } as const;
 
-export const VAT_RATE_TYPE_LABELS: Record<string, string> = {
-  standard: "רגיל",
-  exempt: "פטור",
-  zero_rate: "אפס",
-};
+export const VAT_RATE_TYPE_LABELS = SHARED_VAT_RATE_TYPE_LABELS;
 
 export const DEFAULT_RATE_TYPE = "standard" as const;
 
@@ -161,17 +161,9 @@ export const DEFAULT_RATE_TYPE = "standard" as const;
 export const VAT_EXCEPTIONAL_INVOICE_THRESHOLD = 25_000;
 export const VAT_EXCEPTIONAL_INVOICE_TOOLTIP = `חשבונית מעל ${VAT_EXCEPTIONAL_INVOICE_THRESHOLD.toLocaleString("en-US")} ₪ — נדרש דיווח מיוחד`;
 
-export const DOCUMENT_TYPE_LABELS: Record<string, string> = {
-  tax_invoice: "חשבונית מס",
-  transaction_invoice: "חשבונית עסקה",
-  receipt: "קבלה",
-  consolidated: "חשבונית מרוכזת",
-  self_invoice: "חשבונית עצמית",
-  credit_note: "הודעת זיכוי",
-};
-
 export const ISRAEL_VAT_RATE = 0.18;
 export const ISRAEL_VAT_RATE_PERCENT = 18;
+export const DOCUMENT_TYPE_LABELS = SHARED_DOCUMENT_TYPE_LABELS;
 
 // Any field backed by a backend enum MUST use a Zod enum in the frontend schema.
 export const VAT_RATE_TYPES = ["standard", "exempt", "zero_rate"] as const;
