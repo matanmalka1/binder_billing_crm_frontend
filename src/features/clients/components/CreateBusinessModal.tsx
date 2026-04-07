@@ -7,7 +7,7 @@ import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActio
 import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
-import type { CreateBusinessPayload, ISODateString } from "../api";
+import type { BusinessType, CreateBusinessPayload, ISODateString } from "../api";
 import { createBusinessSchema, type CreateBusinessFormValues } from "../schemas";
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
   onSubmit: (data: CreateBusinessPayload) => Promise<void>;
   isLoading?: boolean;
   clientNationalId: string;
+  existingSoleTraderType?: BusinessType | null;
 }
 
 export const CreateBusinessModal: React.FC<Props> = ({
@@ -24,6 +25,7 @@ export const CreateBusinessModal: React.FC<Props> = ({
   onSubmit,
   isLoading = false,
   clientNationalId,
+  existingSoleTraderType = null,
 }) => {
   const {
     register,
@@ -95,8 +97,16 @@ export const CreateBusinessModal: React.FC<Props> = ({
             error={errors.business_type?.message}
             disabled={isLoading}
             options={[
-              { value: "osek_patur", label: "עוסק פטור" },
-              { value: "osek_murshe", label: "עוסק מורשה" },
+              {
+                value: "osek_patur",
+                label: "עוסק פטור",
+                disabled: existingSoleTraderType === "osek_murshe",
+              },
+              {
+                value: "osek_murshe",
+                label: "עוסק מורשה",
+                disabled: existingSoleTraderType === "osek_patur",
+              },
               { value: "company", label: 'חברה בע"מ' },
               { value: "employee", label: "שכיר" },
             ]}

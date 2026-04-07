@@ -1,4 +1,5 @@
 import { type FC, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
 import { Modal } from "../../../components/ui/overlays/Modal";
 import { Button } from "../../../components/ui/primitives/Button";
@@ -14,6 +15,7 @@ import { ClientEditForm } from "./ClientEditForm";
 import { ClientBusinessesCard } from "./ClientBusinessesCard";
 import { ClientVatOverviewCard } from "./ClientVatOverviewCard";
 import { CreateBusinessModal } from "./CreateBusinessModal";
+import { clientsApi, clientsQK } from "../api";
 import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from "../api";
 import type { ClientChargeSummary } from "../types";
 import type { BinderDetailResponse } from "@/features/binders/api";
@@ -54,6 +56,16 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   isCreatingBusiness,
 }) => {
   const { id: firstBusinessId } = useFirstBusinessId(client.id);
+  const { data: businessesData } = useQuery({
+    queryKey: clientsQK.businessesAll(client.id),
+    queryFn: () => clientsApi.listAllBusinessesForClient(client.id),
+    enabled: client.id > 0,
+  });
+  const businesses = businessesData?.items ?? [];
+  const existingSoleTraderType = businesses.find(
+    (b) => b.business_type === "osek_patur" || b.business_type === "osek_murshe"
+  )?.business_type ?? null;
+
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [showBusinessModal, setShowBusinessModal] = useState(false);
@@ -146,6 +158,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
         }}
         isLoading={isCreatingBusiness}
         clientNationalId={client.id_number}
+        existingSoleTraderType={existingSoleTraderType}
       />
 
       {canEditClients && (

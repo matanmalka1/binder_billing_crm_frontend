@@ -27,7 +27,14 @@ export const useTaxProfile = (businessId: number) => {
       toast.success("פרטי מס עודכנו בהצלחה");
       queryClient.setQueryData(qk, updated);
     },
-    onError: (err) => showErrorToast(err, "שגיאה בעדכון פרטי מס"),
+    onError: (err) => {
+      const code = (err as any)?.response?.data?.error_code;
+      if (code === "BUSINESS.SOLE_TRADER_CONFLICT") {
+        toast.error("לא ניתן לשלב עוסק פטור ועוסק מורשה תחת אותו לקוח");
+      } else {
+        showErrorToast(err, "שגיאה בעדכון פרטי מס");
+      }
+    },
   });
 
   return {
