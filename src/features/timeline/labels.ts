@@ -3,12 +3,11 @@ import type {
   TimelineNotificationChannel,
   TimelineNotificationTrigger,
 } from "./api/contracts";
+import { BINDER_STATUS_LABELS } from "../../utils/enums";
 
 const TIMELINE_STATUS_LABELS: Record<TimelineBinderStatus, string> = {
   none: "חדש",
-  in_office: "במשרד",
-  ready_for_pickup: "מוכן לאיסוף",
-  returned: "הוחזר",
+  ...BINDER_STATUS_LABELS,
 };
 
 const TIMELINE_CHANNEL_LABELS: Record<TimelineNotificationChannel, string> = {

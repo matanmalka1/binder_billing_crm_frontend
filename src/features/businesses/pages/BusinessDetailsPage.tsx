@@ -13,7 +13,7 @@ import { ClientAnnualReportsTab } from "@/features/annualReports";
 import { TaxProfileCard } from "@/features/taxProfile";
 import { CorrespondenceCard } from "@/features/correspondence";
 import { SignatureRequestsCard } from "@/features/signatureRequests";
-import { getBusinessTypeLabel } from "@/features/clients/constants";
+import { getBusinessTypeLabel } from "@/features/clients";
 import {
   BUSINESS_DETAILS_TABS,
   BUSINESS_DETAILS_TAB_LABELS,

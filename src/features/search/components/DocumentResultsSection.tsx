@@ -11,11 +11,6 @@ interface DocumentResultsSectionProps {
   documents: DocumentSearchResult[];
 }
 
-const getDocumentTypeLabel = (documentType: string) =>
-  DOC_TYPE_LABELS[documentType] ?? "סוג מסמך לא ידוע";
-
-const getDocumentStatusLabel = (status: string) =>
-  STATUS_LABELS[status] ?? "סטטוס לא ידוע";
 
 export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ documents }) => {
   if (documents.length === 0) return null;
@@ -49,7 +44,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
             {documents.map((doc) => (
               <tr key={doc.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3 font-medium text-gray-800">
-                  {getDocumentTypeLabel(doc.document_type)}
+                  {DOC_TYPE_LABELS[doc.document_type] ?? "סוג מסמך לא ידוע"}
                 </td>
                 <td className="px-4 py-3 font-mono text-xs text-gray-600 max-w-xs truncate">
                   {doc.original_filename ?? <span className="text-gray-300">—</span>}
@@ -59,7 +54,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
                 </td>
                 <td className="px-4 py-3">
                   <Badge variant={STATUS_BADGE_VARIANT[doc.status] ?? "neutral"} className="text-xs">
-                    {getDocumentStatusLabel(doc.status)}
+                    {STATUS_LABELS[doc.status] ?? "סטטוס לא ידוע"}
                   </Badge>
                 </td>
                 <td className="px-4 py-3 text-gray-700">{doc.client_name}</td>

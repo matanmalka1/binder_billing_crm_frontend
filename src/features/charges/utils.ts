@@ -1,14 +1,6 @@
 import { MONTH_NAMES } from "../../utils/utils";
 import type { ChargeResponse } from "./api";
-
-export const CHARGE_TYPE_LABELS: Record<string, string> = {
-  monthly_retainer: "ריטיינר חודשי",
-  annual_report_fee: "שכר טרחה לדוח שנתי",
-  vat_filing_fee: "שכר טרחה לדוח מע״מ",
-  representation_fee: "שכר טרחה לייצוג",
-  consultation_fee: "שכר טרחה לייעוץ",
-  other: "אחר",
-};
+export { CHARGE_TYPE_LABELS, getChargeTypeLabel } from "../../utils/enums";
 
 export const canIssue = (status: string): boolean => status === "draft";
 
@@ -68,5 +60,3 @@ export const formatILS = (amount: number): string =>
     maximumFractionDigits: 2,
   }).replace(/\s/g, "");
 
-export const getChargeTypeLabel = (type: string): string =>
-  CHARGE_TYPE_LABELS[type] ?? type;

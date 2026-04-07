@@ -6,12 +6,8 @@ import { Button } from "../../../components/ui/primitives/Button";
 import type { LucideIcon } from "lucide-react";
 import type { ClientChargeSummary } from "../types";
 import type { BinderDetailResponse } from "@/features/binders/api";
-import { getChargeStatusLabel } from "../../../utils/enums";
+import { getChargeStatusLabel, getStatusLabel as getBinderStatusLabel } from "../../../utils/enums";
 import { getChargeTypeLabel } from "@/features/charges";
-import { BINDER_STATUS_OPTIONS } from "@/features/binders";
-
-const getBinderStatusLabel = (status: string): string =>
-  BINDER_STATUS_OPTIONS.find((o) => o.value === status)?.label ?? status;
 
 // ── Stat pill ───────────────────────────────────────────────────────────────
 

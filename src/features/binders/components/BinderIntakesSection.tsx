@@ -11,15 +11,8 @@ import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
 import { staggerDelay } from "../../../utils/animation";
 import { getBinderTypeLabel } from "../constants";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
+import { VAT_STATUS_BADGE_VARIANTS } from "../../vatReports/constants";
 import type { BinderIntakeMaterialResponse } from "../types";
-
-const VAT_STATUS_VARIANTS: Record<string, "success" | "warning" | "info" | "neutral"> = {
-  filed: "success",
-  ready_for_review: "warning",
-  data_entry_in_progress: "info",
-  material_received: "info",
-  pending_materials: "neutral",
-};
 
 const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse }> = ({ material }) => {
   const navigate = useNavigate();
@@ -36,7 +29,7 @@ const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse }> = ({ 
 
   return (
     <Badge
-      variant={VAT_STATUS_VARIANTS[lookup.status] ?? "neutral"}
+      variant={VAT_STATUS_BADGE_VARIANTS[lookup.status] ?? "neutral"}
       className="cursor-pointer mr-1"
       onClick={(e) => {
         e.stopPropagation();

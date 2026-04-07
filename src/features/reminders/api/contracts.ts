@@ -40,6 +40,13 @@ export const reminderStatusLabels: Record<ReminderStatus, string> = {
   canceled: "בוטל",
 };
 
+export const reminderStatusVariants: Record<ReminderStatus, "success" | "error" | "warning" | "neutral"> = {
+  sent: "success",
+  canceled: "error",
+  pending: "warning",
+  processing: "warning",
+};
+
 export const reminderTypeOptions = reminderTypeValues.map((value) => ({
   value,
   label: reminderTypeLabels[value],

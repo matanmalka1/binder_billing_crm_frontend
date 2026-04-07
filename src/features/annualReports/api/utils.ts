@@ -3,7 +3,7 @@ import type { AnnualReportStatus, ClientTypeForReport, AnnualReportScheduleKey }
 
 // ── Status labels ──────────────────────────────────────────────────────────
 
-const statusLabels: Record<AnnualReportStatus, string> = {
+export const STATUS_LABELS: Record<AnnualReportStatus, string> = {
   not_started: "טרם התחיל",
   collecting_docs: "איסוף מסמכים",
   docs_complete: "מסמכים התקבלו",
@@ -18,7 +18,7 @@ const statusLabels: Record<AnnualReportStatus, string> = {
 };
 
 export const getStatusLabel = (status: string): string =>
-  (statusLabels as Record<string, string>)[status] ?? status;
+  (STATUS_LABELS as Record<string, string>)[status] ?? status;
 
 // ── Status badge variants ──────────────────────────────────────────────────
 

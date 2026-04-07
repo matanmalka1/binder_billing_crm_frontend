@@ -5,7 +5,7 @@ import {
 } from "../../../components/ui/overlays/DetailDrawer";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import type { Reminder } from "../api";
-import { reminderTypeLabels, statusLabels } from "../types";
+import { reminderTypeLabels, statusLabels, reminderStatusVariants } from "../types";
 import { formatDate, formatDateTime } from "../../../utils/utils";
 
 interface ReminderDrawerProps {
@@ -13,12 +13,6 @@ interface ReminderDrawerProps {
   onClose: () => void;
 }
 
-const statusVariants: Record<string, "success" | "error" | "warning"> = {
-    sent: "success",
-    canceled: "error",
-    pending: "warning",
-    processing: "warning",
-};
 
 export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
   reminder,
@@ -48,7 +42,7 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
           <DrawerField
             label="סטטוס"
             value={
-              <Badge variant={statusVariants[reminder.status]}>
+              <Badge variant={reminderStatusVariants[reminder.status as keyof typeof reminderStatusVariants] ?? "neutral"}>
                 {statusLabels[reminder.status]}
               </Badge>
             }

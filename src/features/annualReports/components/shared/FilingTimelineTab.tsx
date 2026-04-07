@@ -5,7 +5,8 @@ import { TimelineEvent } from "../statusTransition/TimelineEvent";
 import type { TimelineEventStatus } from "../statusTransition/TimelineEvent";
 import { cn } from "../../../../utils/utils";
 import { UpcomingDeadlinesList } from "./UpcomingDeadlinesList";
-import { STATUS_LABELS, formatAnnualReportDate } from "./annualReports.constants";
+import { STATUS_LABELS } from "../../api";
+import { formatAnnualReportDate } from "./annualReports.constants";
 
 interface Props { reports: AnnualReportFull[]; }
 

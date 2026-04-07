@@ -1,10 +1,10 @@
-export const TAX_DEADLINE_TYPE_OPTIONS = [
-  { value: "vat", label: "מע״מ" },
-  { value: "advance_payment", label: "מקדמות" },
-  { value: "national_insurance", label: "ביטוח לאומי" },
-  { value: "annual_report", label: "דוח שנתי" },
-  { value: "other", label: "אחר" },
-];
+import { TAX_DEADLINE_TYPE_LABELS, getDeadlineTypeLabel } from "../../utils/enums";
+
+export { getDeadlineTypeLabel as getTaxDeadlineTypeLabel };
+
+export const TAX_DEADLINE_TYPE_OPTIONS = Object.entries(TAX_DEADLINE_TYPE_LABELS)
+  .filter(([value]) => value !== "")
+  .map(([value, label]) => ({ value, label }));
 
 export const TAX_DEADLINE_FILTER_TYPE_OPTIONS = [
   { value: "", label: "כל הסוגים" },
@@ -16,9 +16,6 @@ export const TAX_DEADLINE_STATUS_OPTIONS = [
   { value: "pending", label: "ממתין" },
   { value: "completed", label: "הושלם" },
 ];
-
-export const getTaxDeadlineTypeLabel = (value: string) =>
-  TAX_DEADLINE_FILTER_TYPE_OPTIONS.find((option) => option.value === value)?.label ?? value;
 
 export const getTaxDeadlineStatusLabel = (value: string) =>
   TAX_DEADLINE_STATUS_OPTIONS.find((option) => option.value === value)?.label ?? value;

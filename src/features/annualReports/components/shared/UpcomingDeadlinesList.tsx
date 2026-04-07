@@ -3,7 +3,8 @@ import { CalendarClock, CalendarCheck, AlertCircle, Clock } from "lucide-react";
 import type { AnnualReportFull } from "../../api";
 import type { TimelineEventStatus } from "../statusTransition/TimelineEvent";
 import { cn } from "../../../../utils/utils";
-import { STATUS_LABELS, formatAnnualReportDate } from "./annualReports.constants";
+import { STATUS_LABELS } from "../../api";
+import { formatAnnualReportDate } from "./annualReports.constants";
 
 interface Props { reports: AnnualReportFull[]; }
 

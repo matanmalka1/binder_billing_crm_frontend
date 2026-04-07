@@ -41,7 +41,7 @@ export const CLIENT_ID_NUMBER_INPUT_LABELS: Record<ClientIdNumberType, string> =
 export const CLIENT_ID_NUMBER_PLACEHOLDERS: Record<ClientIdNumberType, string> = {
   individual: "123456789",
   corporation: "512345678",
-  passport: "A1234567",
+  passport: "1234567",
   other: "הזן מספר מזהה",
 };
 

@@ -1,14 +1,7 @@
 import { useCallback, useState } from "react";
 import type { SendSignatureRequestResponse } from "./api";
 
-export const signatureRequestStatusVariants: Record<string, "neutral" | "info" | "warning" | "success" | "error"> = {
-  draft: "neutral",
-  pending_signature: "info",
-  signed: "success",
-  declined: "error",
-  expired: "warning",
-  canceled: "neutral",
-};
+export { SIGNATURE_REQUEST_STATUS_VARIANTS as signatureRequestStatusVariants } from "../../utils/enums";
 
 export const SIGNATURE_REQUEST_TERMINAL_STATUSES = new Set([
   "signed",

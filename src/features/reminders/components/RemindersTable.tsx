@@ -4,7 +4,7 @@ import { Badge } from "../../../components/ui/primitives/Badge";
 import { TruncateText } from "../../../components/ui/primitives/TruncateText";
 import { formatDate } from "../../../utils/utils";
 import type { Reminder } from "../types";
-import { reminderTypeLabels, statusLabels } from "../types";
+import { reminderTypeLabels, statusLabels, reminderStatusVariants } from "../types";
 import { ReminderRowActions } from "./ReminderRowActions";
 
 interface RemindersTableProps {
@@ -18,12 +18,6 @@ interface RemindersTableProps {
   showClient?: boolean;
 }
 
-const STATUS_VARIANTS: Record<string, "success" | "error" | "warning"> = {
-  sent: "success",
-  canceled: "error",
-  pending: "warning",
-  processing: "warning",
-};
 
 export const RemindersTable: React.FC<RemindersTableProps> = ({
   reminders,
@@ -89,7 +83,7 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
       key: "status",
       header: "סטטוס",
       render: (r) => (
-        <Badge variant={STATUS_VARIANTS[r.status] ?? "neutral"}>
+        <Badge variant={reminderStatusVariants[r.status as keyof typeof reminderStatusVariants] ?? "neutral"}>
           {statusLabels[r.status]}
         </Badge>
       ),

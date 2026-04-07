@@ -6,6 +6,7 @@ export { annualReportSeasonApi } from "./annualReports.season.api";
 export { annualReportChargesApi } from "./annualReports.charges.api";
 export { annualReportsQK } from "./queryKeys";
 export {
+  STATUS_LABELS,
   getStatusLabel,
   getStatusVariant,
   getAllowedTransitions,

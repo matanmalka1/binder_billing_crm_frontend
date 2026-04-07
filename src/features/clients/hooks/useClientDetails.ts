@@ -95,7 +95,7 @@ export const useClientDetails = ({
       queryClient.invalidateQueries({ queryKey: clientsQK.firstBusiness(id) });
     },
     onError: (err) => {
-      const code = (err as any)?.response?.data?.error_code;
+      const code = (err as { response?: { data?: { error_code?: string } } })?.response?.data?.error_code;
       if (code === "BUSINESS.SOLE_TRADER_CONFLICT") {
         toast.error("לא ניתן לשלב עוסק פטור ועוסק מורשה תחת אותו לקוח");
       } else {

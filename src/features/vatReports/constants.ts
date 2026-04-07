@@ -3,10 +3,11 @@
  * Imported by schemas.ts, useVatWorkItemDetail.ts, and enums.ts helpers.
  */
 import {
-  DOCUMENT_TYPE_LABELS as SHARED_DOCUMENT_TYPE_LABELS,
-  VAT_RATE_TYPE_LABELS as SHARED_VAT_RATE_TYPE_LABELS,
+  VAT_RATE_TYPE_LABELS,
+  DOCUMENT_TYPE_LABELS,
   getVatWorkItemStatusLabel,
 } from "../../utils/enums";
+export { VAT_RATE_TYPE_LABELS, DOCUMENT_TYPE_LABELS };
 import { CATEGORY_COLOR_TOKENS } from "../../utils/chartColors";
 
 export const INCOME_KEY = "income";
@@ -153,7 +154,6 @@ export const VAT_FILE_MODAL_MESSAGES = {
   filingError: "שגיאה בהגשה",
 } as const;
 
-export const VAT_RATE_TYPE_LABELS = SHARED_VAT_RATE_TYPE_LABELS;
 
 export const DEFAULT_RATE_TYPE = "standard" as const;
 
@@ -163,7 +163,6 @@ export const VAT_EXCEPTIONAL_INVOICE_TOOLTIP = `חשבונית מעל ${VAT_EXCE
 
 export const ISRAEL_VAT_RATE = 0.18;
 export const ISRAEL_VAT_RATE_PERCENT = 18;
-export const DOCUMENT_TYPE_LABELS = SHARED_DOCUMENT_TYPE_LABELS;
 
 // Any field backed by a backend enum MUST use a Zod enum in the frontend schema.
 export const VAT_RATE_TYPES = ["standard", "exempt", "zero_rate"] as const;
@@ -175,3 +174,4 @@ export const DOCUMENT_TYPES = [
   "self_invoice",
   "credit_note",
 ] as const;
+

@@ -1,13 +1,6 @@
-import { makeClassGetter, makeLabelGetter } from "@/utils/labels";
+import { makeClassGetter } from "@/utils/labels";
 import { parseISO, differenceInCalendarDays } from "date-fns";
-
-const deadlineTypeLabels = {
-  vat: "מע״מ",
-  advance_payment: "מקדמות",
-  national_insurance: "ביטוח לאומי",
-  annual_report: "דוח שנתי",
-  other: "אחר",
-};
+export { getDeadlineTypeLabel } from "@/utils/enums";
 
 const urgencyColors = {
   green: "bg-positive-100 text-positive-800 border-positive-200",
@@ -16,7 +9,6 @@ const urgencyColors = {
   overdue: "bg-negative-600 text-white border-negative-700",
 };
 
-export const getDeadlineTypeLabel = makeLabelGetter(deadlineTypeLabels, "אחר");
 export const getUrgencyColor = makeClassGetter(
   urgencyColors,
   undefined,

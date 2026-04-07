@@ -1,6 +1,7 @@
 // Re-export backend-aligned types from the API client to avoid divergence
 export {
   reminderStatusLabels as statusLabels,
+  reminderStatusVariants,
   reminderTypeLabels,
   reminderTypeOptions,
 } from "./api";

@@ -1,14 +1,10 @@
-import { getChargeStatusLabel } from "../../utils/enums";
-import { getChargeTypeLabel, CHARGE_TYPE_LABELS } from "./utils";
+import {
+  getChargeStatusLabel,
+  CHARGE_TYPE_LABELS,
+  CHARGE_STATUS_VARIANTS as chargeStatusVariants,
+} from "../../utils/enums";
 
-export { CHARGE_TYPE_LABELS };
-
-export const chargeStatusVariants: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
-  draft: "neutral",
-  issued: "info",
-  paid: "success",
-  canceled: "error",
-};
+export { CHARGE_TYPE_LABELS, chargeStatusVariants };
 
 export const CHARGE_STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: "", label: "כל הסטטוסים" },
@@ -18,14 +14,8 @@ export const CHARGE_STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: "canceled", label: getChargeStatusLabel("canceled") },
 ];
 
-export const CHARGE_TYPE_OPTIONS: { value: string; label: string }[] = [
-  { value: "monthly_retainer", label: getChargeTypeLabel("monthly_retainer") },
-  { value: "annual_report_fee", label: getChargeTypeLabel("annual_report_fee") },
-  { value: "vat_filing_fee", label: getChargeTypeLabel("vat_filing_fee") },
-  { value: "representation_fee", label: getChargeTypeLabel("representation_fee") },
-  { value: "consultation_fee", label: getChargeTypeLabel("consultation_fee") },
-  { value: "other", label: getChargeTypeLabel("other") },
-];
+export const CHARGE_TYPE_OPTIONS: { value: string; label: string }[] =
+  Object.entries(CHARGE_TYPE_LABELS).map(([value, label]) => ({ value, label }));
 
 export const CHARGE_TYPE_OPTIONS_WITH_ALL: { value: string; label: string }[] = [
   { value: "", label: "כל הסוגים" },

@@ -1,31 +1,18 @@
+import { BINDER_TYPE_LABELS, BINDER_STATUS_LABELS } from "../../utils/enums";
+export { getBinderTypeLabel } from "../../utils/enums";
+
 export const BINDER_STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   in_office: "info",
   ready_for_pickup: "success",
   returned: "neutral",
 };
 
-
-export const BINDER_TYPE_OPTIONS = [
+export const BINDER_TYPE_OPTIONS: { value: string; label: string; disabled?: true }[] = [
   { value: "", label: "בחר סוג חומר...", disabled: true },
-  { value: "vat", label: 'מע"מ' },
-  { value: "income_tax", label: "מס הכנסה" },
-  { value: "national_insurance", label: "ביטוח לאומי" },
-  { value: "capital_declaration", label: "הצהרת הון" },
-  { value: "annual_report", label: "דוח שנתי" },
-  { value: "salary", label: "שכר" },
-  { value: "bookkeeping", label: "הנהלת חשבונות" },
-  { value: "pension_and_insurance", label: "פנסיה וביטוח" },
-  { value: "corporate_docs", label: "מסמכי תאגיד" },
-  { value: "tax_assessment", label: "שומות מס" },
-  { value: "other", label: "אחר" },
-] as const;
+  ...Object.entries(BINDER_TYPE_LABELS).map(([value, label]) => ({ value, label })),
+];
 
-export const getBinderTypeLabel = (type: string): string =>
-  BINDER_TYPE_OPTIONS.find((o) => o.value === type)?.label ?? type;
-
-export const BINDER_STATUS_OPTIONS = [
+export const BINDER_STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: "", label: "כל הסטטוסים" },
-  { value: "in_office", label: "במשרד" },
-  { value: "ready_for_pickup", label: "מוכן לאיסוף" },
-  { value: "returned", label: "הוחזר" },
-] as const;
+  ...Object.entries(BINDER_STATUS_LABELS).map(([value, label]) => ({ value, label })),
+];
