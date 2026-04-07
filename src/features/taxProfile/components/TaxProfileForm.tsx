@@ -3,6 +3,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
+import { BUSINESS_TYPE_LABELS, BUSINESS_TYPES } from "../../clients/constants";
+import { getVatTypeLabel } from "../../../utils/enums";
+import { buildYearOptions } from "../../../utils/utils";
 import type { TaxProfileData } from "../hooks/useTaxProfile";
 import type { TaxProfileUpdatePayload } from "../types";
 import { taxProfileSchema, taxProfileDefaults, type TaxProfileFormValues } from "../schemas";
@@ -28,6 +31,10 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
       : taxProfileDefaults,
   });
 
+  const vatTypeField = register("vat_type");
+  const businessTypeField = register("business_type");
+  const taxYearStartField = register("tax_year_start");
+
   const onSubmit = handleSubmit((values) => {
     onSave({
       vat_type: values.vat_type,
@@ -41,19 +48,39 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
   return (
     <form onSubmit={onSubmit} className="space-y-4" noValidate>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Select label="סוג מע״מ" error={errors.vat_type?.message} {...register("vat_type")}>
-          <option value="monthly">חודשי</option>
-          <option value="bimonthly">דו-חודשי</option>
-          <option value="exempt">פטור</option>
-        </Select>
-        <Input label="תחום עיסוק" error={errors.business_type?.message} {...register("business_type")} />
-        <Input
+        <Select
+          label="סוג מע״מ"
+          error={errors.vat_type?.message}
+          disabled={isSaving}
+          options={[
+            { value: "monthly", label: getVatTypeLabel("monthly") },
+            { value: "bimonthly", label: getVatTypeLabel("bimonthly") },
+            { value: "exempt", label: getVatTypeLabel("exempt") },
+          ]}
+          {...vatTypeField}
+        />
+        <Select
+          label="סוג עסק"
+          error={errors.business_type?.message}
+          disabled={isSaving}
+          options={[
+            { value: "", label: "בחר סוג עסק" },
+            ...BUSINESS_TYPES.map((businessType) => ({
+              value: businessType,
+              label: BUSINESS_TYPE_LABELS[businessType],
+            })),
+          ]}
+          {...businessTypeField}
+        />
+        <Select
           label="שנת מס ראשונה"
-          type="number"
-          min={1900}
-          max={2100}
           error={errors.tax_year_start?.message}
-          {...register("tax_year_start")}
+          disabled={isSaving}
+          options={[
+            { value: "", label: "בחר שנה" },
+            ...buildYearOptions(),
+          ]}
+          {...taxYearStartField}
         />
         <Input label="רואה חשבון מלווה" error={errors.accountant_name?.message} {...register("accountant_name")} />
         <Input

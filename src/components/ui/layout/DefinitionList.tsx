@@ -8,7 +8,7 @@ export interface DefinitionItem {
 
 export interface DefinitionListProps {
   items: DefinitionItem[];
-  columns?: 1 | 2 | 3;
+  columns?: 1 | 2 | 3 | 4;
   /**
    * grid   — label above value in a responsive grid (DescriptionList style)
    * stacked — label + value as a horizontal row with border (DrawerField style)
@@ -21,6 +21,7 @@ const gridCols = {
   1: "grid-cols-1",
   2: "grid-cols-1 md:grid-cols-2",
   3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+  4: "grid-cols-2 md:grid-cols-4",
 };
 
 export const DefinitionList: React.FC<DefinitionListProps> = ({
@@ -50,7 +51,7 @@ export const DefinitionList: React.FC<DefinitionListProps> = ({
       {items.map((item, index) => (
         <div
           key={`${item.label}-${index}`}
-          className={cn("space-y-1", item.fullWidth && columns > 1 && "md:col-span-2 lg:col-span-3")}
+          className={cn("space-y-1", item.fullWidth && columns > 1 && "col-span-full")}
         >
           <dt className="text-xs font-medium text-gray-500">{item.label}</dt>
           <dd className="text-sm font-medium text-gray-900">{item.value || "—"}</dd>

@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { ChevronRight, FolderOpen, Receipt } from "lucide-react";
+import { ChevronRight, FolderOpen, Plus, Receipt } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
@@ -97,6 +97,9 @@ type ClientRelatedDataProps = {
   charges: ClientChargeSummary[];
   chargesTotal: number;
   canViewCharges: boolean;
+  canCreateCharge?: boolean;
+  onCreateCharge?: () => void;
+  onCreateBinder?: () => void;
 };
 
 export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
@@ -106,12 +109,30 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
   charges,
   chargesTotal,
   canViewCharges,
+  canCreateCharge,
+  onCreateCharge,
+  onCreateBinder,
 }) => {
   const hasBinderList = binders.length > 0;
   const hasChargeList = canViewCharges && charges.length > 0;
 
+  const actions = (
+    <div className="flex items-center gap-1.5">
+      <Button variant="ghost" size="sm" onClick={onCreateBinder} className="gap-1 text-xs">
+        <Plus className="h-3.5 w-3.5" />
+        קלסר
+      </Button>
+      {canCreateCharge && (
+        <Button variant="ghost" size="sm" onClick={onCreateCharge} className="gap-1 text-xs">
+          <Plus className="h-3.5 w-3.5" />
+          חיוב
+        </Button>
+      )}
+    </div>
+  );
+
   return (
-    <Card title="נתונים קשורים">
+    <Card title="נתונים קשורים" actions={actions}>
       {/* Stat pills — 3-col grid wraps to 2 rows in narrow right column */}
       <div className="grid grid-cols-2 gap-2">
         <StatPill
@@ -119,6 +140,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           iconColor="bg-primary-100 text-primary-600"
           count={bindersTotal}
           label="קלסרים"
+          href={`/binders?client_id=${clientId}`}
         />
         {canViewCharges && (
           <StatPill
@@ -126,6 +148,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
             iconColor="bg-positive-100 text-positive-700"
             count={chargesTotal}
             label="חיובים"
+            href={`/charges?client_id=${clientId}`}
           />
         )}
       </div>
@@ -141,7 +164,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           getKey={(binder) => binder.id}
           getTitle={(binder) => binder.binder_number}
           getSubtitle={(binder) => getBinderStatusLabel(binder.status)}
-          getItemHref={(binder) => `/binders/${binder.id}`}
+          getItemHref={() => `/binders?client_id=${clientId}`}
         />
       )}
 
@@ -156,7 +179,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           getKey={(charge) => charge.id}
           getTitle={(charge) => `חיוב #${charge.id}`}
           getSubtitle={(charge) => `${getChargeTypeLabel(charge.charge_type)} • ${getChargeStatusLabel(charge.status)}`}
-          getItemHref={(charge) => `/charges/${charge.id}`}
+          getItemHref={() => `/charges?client_id=${clientId}`}
         />
       )}
     </Card>

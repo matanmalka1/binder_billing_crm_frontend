@@ -80,6 +80,7 @@ export const CorrespondenceEntryItem = ({
               size="sm"
               onClick={() => onEdit(entry)}
               className="h-6 w-6 p-0"
+              title="ערוך רשומה"
             >
               <Edit2 className="h-3.5 w-3.5" />
             </Button>
@@ -90,6 +91,7 @@ export const CorrespondenceEntryItem = ({
               isLoading={isDeleting}
               onClick={() => onDelete(entry.id)}
               className="h-6 w-6 p-0 text-negative-600 hover:bg-negative-50"
+              title="מחק רשומה"
             >
               <Trash2 className="h-3.5 w-3.5" />
             </Button>

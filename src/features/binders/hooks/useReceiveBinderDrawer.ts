@@ -25,16 +25,34 @@ const getDefaultValues = (): ReceiveBinderFormValues => ({
   notes: null,
 });
 
-export const useReceiveBinderDrawer = (onSuccess?: () => void) => {
-  const [clientQuery, setClientQuery] = useState("");
-  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string; client_status?: string | null } | null>(null);
+interface UseReceiveBinderDrawerOptions {
+  onSuccess?: () => void;
+  initialClient?: { id: number; name: string } | null;
+}
+
+export const useReceiveBinderDrawer = (
+  onSuccessOrOptions?: (() => void) | UseReceiveBinderDrawerOptions,
+  _deprecated?: never,
+) => {
+  const opts: UseReceiveBinderDrawerOptions =
+    typeof onSuccessOrOptions === "function"
+      ? { onSuccess: onSuccessOrOptions }
+      : (onSuccessOrOptions ?? {});
+  const { onSuccess, initialClient } = opts;
+
+  const [clientQuery, setClientQuery] = useState(initialClient?.name ?? "");
+  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string; client_status?: string | null } | null>(
+    initialClient ? { id: initialClient.id, name: initialClient.name } : null,
+  );
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const userId = useAuthStore((s) => s.user?.id);
 
   const form = useForm<ReceiveBinderFormValues>({
     resolver: zodResolver(receiveBinderSchema),
-    defaultValues: getDefaultValues(),
+    defaultValues: initialClient
+      ? { ...getDefaultValues(), client_id: initialClient.id }
+      : getDefaultValues(),
   });
 
   const clientId: number | undefined = form.watch("client_id");

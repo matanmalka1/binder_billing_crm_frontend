@@ -7,7 +7,9 @@ import { BINDER_STATUS_LABELS } from "../../utils/enums";
 
 const TIMELINE_STATUS_LABELS: Record<TimelineBinderStatus, string> = {
   none: "חדש",
-  ...BINDER_STATUS_LABELS,
+  in_office: BINDER_STATUS_LABELS.in_office,
+  ready_for_pickup: BINDER_STATUS_LABELS.ready_for_pickup,
+  returned: BINDER_STATUS_LABELS.returned,
 };
 
 const TIMELINE_CHANNEL_LABELS: Record<TimelineNotificationChannel, string> = {

@@ -16,6 +16,7 @@ import type {
   UpdateClientPayload,
   CreateBusinessPayload,
   UpdateBusinessPayload,
+  EntityAuditTrailResponse,
 } from "./contracts";
 
 const CLIENT_BUSINESSES_PAGE_SIZE = 100;
@@ -98,6 +99,11 @@ export const clientsApi = {
       BUSINESS_ENDPOINTS.businessStatusCard(businessId),
       { params: year ? { year } : undefined },
     );
+    return response.data;
+  },
+
+  getAuditTrail: async (clientId: number): Promise<EntityAuditTrailResponse> => {
+    const response = await api.get<EntityAuditTrailResponse>(`/audit/client/${clientId}`);
     return response.data;
   },
 

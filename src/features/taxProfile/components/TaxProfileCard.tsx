@@ -4,6 +4,7 @@ import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
 import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
 import { Alert } from "../../../components/ui/overlays/Alert";
+import { BUSINESS_TYPE_LABELS } from "../../clients/constants";
 import { getVatTypeLabel } from "../../../utils/enums";
 import { useTaxProfile } from "../hooks/useTaxProfile";
 import { TaxProfileForm } from "./TaxProfileForm";
@@ -13,10 +14,14 @@ interface Props { businessId: number; readOnly?: boolean }
 export const TaxProfileCard: React.FC<Props> = ({ businessId, readOnly = false }) => {
   const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(businessId);
   const [isEditing, setIsEditing] = useState(false);
+  const businessType = profile?.business_type;
+  const businessTypeLabel = businessType && businessType in BUSINESS_TYPE_LABELS
+    ? BUSINESS_TYPE_LABELS[businessType as keyof typeof BUSINESS_TYPE_LABELS]
+    : businessType;
 
   const items = [
     { label: "סוג מע״מ", value: profile?.vat_type ? getVatTypeLabel(profile.vat_type) : "—" },
-    { label: "תחום עיסוק", value: profile?.business_type ?? "—" },
+    { label: "סוג עסק", value: businessTypeLabel ?? "—" },
     { label: "שנת מס ראשונה", value: profile?.tax_year_start ?? "—" },
     { label: "רואה חשבון מלווה", value: profile?.accountant_name ?? "—" },
     {

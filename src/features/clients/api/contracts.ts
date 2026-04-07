@@ -9,6 +9,7 @@ export interface ClientResponse {
   full_name: string;
   id_number: string;
   id_number_type: "individual" | "corporation" | "passport" | "other" | null;
+  status: ClientStatus;
   phone: string | null;
   email: string | null;
   notes: string | null;
@@ -44,6 +45,9 @@ export type ClientListResponse = PaginatedResponse<ClientResponse>;
 
 export interface ListClientsParams {
   search?: string;
+  status?: ClientStatus;
+  sort_by?: "full_name" | "created_at" | "status";
+  sort_order?: "asc" | "desc";
   page?: number;
   page_size?: number;
 }
@@ -66,6 +70,7 @@ export type DeletedClientInfo = DeletedClientSummary;
 
 export interface UpdateClientPayload {
   full_name?: string;
+  status?: ClientStatus;
   phone?: string | null;
   email?: string | null;
   notes?: string | null;
@@ -78,6 +83,7 @@ export interface UpdateClientPayload {
 
 export type BusinessType = "osek_patur" | "osek_murshe" | "company" | "employee";
 export type BusinessStatus = "active" | "frozen" | "closed";
+export type ClientStatus = "active" | "frozen" | "closed";
 
 export interface BusinessResponse {
   id: number;
@@ -129,6 +135,23 @@ export interface UpdateBusinessPayload {
   status?: BusinessStatus;
   notes?: string | null;
   closed_at?: string | null;
+}
+
+export interface EntityAuditLogEntry {
+  id: number;
+  entity_type: string;
+  entity_id: number;
+  performed_by: number;
+  performed_by_name: string | null;
+  action: string;
+  old_value: string | null;
+  new_value: string | null;
+  note: string | null;
+  performed_at: string;
+}
+
+export interface EntityAuditTrailResponse {
+  items: EntityAuditLogEntry[];
 }
 
 export interface VatSummaryCard {

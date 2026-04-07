@@ -1,13 +1,19 @@
-import { type FC } from "react";
-import {
-  ClientDetailsOverviewTab,
-  type ClientDetailsOverviewTabProps,
-} from "./ClientDetailsOverviewTab";
+import { useState, type FC } from "react";
+import { ClientDetailsOverviewTab, type ClientDetailsOverviewTabProps } from "./ClientDetailsOverviewTab";
+import { ClientDetailsTabBar } from "./ClientDetailsTabBar";
+import { type ActiveClientDetailsTab } from "../constants";
 
 type ClientDetailsTabContentProps = {
-  overviewProps: ClientDetailsOverviewTabProps;
+  overviewProps: Omit<ClientDetailsOverviewTabProps, "activeTab">;
 };
 
-export const ClientDetailsTabContent: FC<ClientDetailsTabContentProps> = ({
-  overviewProps,
-}) => <ClientDetailsOverviewTab {...overviewProps} />;
+export const ClientDetailsTabContent: FC<ClientDetailsTabContentProps> = ({ overviewProps }) => {
+  const [activeTab, setActiveTab] = useState<ActiveClientDetailsTab>("details");
+
+  return (
+    <div className="space-y-4">
+      <ClientDetailsTabBar activeTab={activeTab} onTabChange={setActiveTab} />
+      <ClientDetailsOverviewTab {...overviewProps} activeTab={activeTab} />
+    </div>
+  );
+};

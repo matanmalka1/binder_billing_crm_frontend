@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -25,6 +25,7 @@ interface ChargesCreateModalProps {
   createLoading: boolean;
   onClose: () => void;
   onSubmit: (payload: CreateChargePayload) => Promise<boolean>;
+  initialClient?: { id: number; name: string } | null;
 }
 
 export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
@@ -33,6 +34,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
   createLoading,
   onClose,
   onSubmit,
+  initialClient,
 }) => {
   const currencySuffix = <span className="text-sm text-gray-400">₪</span>;
 
@@ -61,6 +63,18 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
       setValue("business_id", value, options),
     ),
   );
+
+  // Pre-select client when modal opens with an initialClient
+  const didSeedRef = useRef(false);
+  useEffect(() => {
+    if (open && initialClient && !didSeedRef.current) {
+      handleSelectClient({ id: initialClient.id, name: initialClient.name });
+      didSeedRef.current = true;
+    }
+    if (!open) {
+      didSeedRef.current = false;
+    }
+  }, [open, initialClient]); // eslint-disable-line react-hooks/exhaustive-deps
   const monthsCovered = watch("months_covered") ?? 1;
 
   const periodOptions = useMemo(() => {

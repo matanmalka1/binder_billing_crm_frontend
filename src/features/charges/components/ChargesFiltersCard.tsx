@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Select } from "../../../components/ui/inputs/Select";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
 import { cn } from "../../../utils/utils";
 import { CHARGE_STATUS_OPTIONS, CHARGE_TYPE_OPTIONS_WITH_ALL } from "../constants";
+import { clientsApi, clientsQK } from "@/features/clients/api";
 import type { ChargesFilters } from "../types";
 
 interface ChargesFiltersCardProps {
@@ -19,6 +21,29 @@ export const ChargesFiltersCard = ({
 }: ChargesFiltersCardProps) => {
   const [clientQuery, setClientQuery] = useState("");
   const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
+
+  const urlClientId = filters.client_id ? Number(filters.client_id) : null;
+
+  const { data: urlClient } = useQuery({
+    queryKey: clientsQK.detail(urlClientId ?? 0),
+    queryFn: () => clientsApi.getById(urlClientId!),
+    enabled: urlClientId != null && selectedClient?.id !== urlClientId,
+    staleTime: 60_000,
+  });
+
+  useEffect(() => {
+    if (urlClient && selectedClient?.id !== urlClient.id) {
+      setSelectedClient({ id: urlClient.id, name: urlClient.full_name });
+      setClientQuery(urlClient.full_name);
+    }
+  }, [urlClient, selectedClient?.id]);
+
+  useEffect(() => {
+    if (!filters.client_id) {
+      setSelectedClient(null);
+      setClientQuery("");
+    }
+  }, [filters.client_id]);
 
   const handleSelectClient = (client: { id: number; name: string }) => {
     setSelectedClient(client);

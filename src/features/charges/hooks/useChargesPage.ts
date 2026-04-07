@@ -27,7 +27,7 @@ export const useChargesPage = () => {
   };
 
   const apiParams: ChargesListParams = {
-    business_id: toOptionalNumber(filters.client_id),
+    client_id: toOptionalNumber(filters.client_id),
     status: toOptionalString(filters.status),
     charge_type: toOptionalString(filters.charge_type),
     page: filters.page,

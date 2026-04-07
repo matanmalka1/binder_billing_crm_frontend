@@ -3,6 +3,7 @@ import { validateIsraeliIdChecksum } from "../../utils/validation";
 import {
   BUSINESS_TYPES,
   CLIENT_ID_NUMBER_TYPES,
+  CLIENT_STATUSES,
   type ClientIdNumberType,
 } from "./constants";
 
@@ -68,6 +69,7 @@ export const createClientSchema = z
 
 export const clientEditSchema = z.object({
   full_name: z.string().trim().min(1, "יש להזין שם מלא"),
+  status: z.enum(CLIENT_STATUSES),
   phone: z.string().trim().optional().or(z.literal("")),
   email: z.string().trim().email("כתובת אימייל לא תקינה").optional().or(z.literal("")),
   // Structured address fields

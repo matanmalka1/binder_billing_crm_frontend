@@ -11,4 +11,5 @@ export const clientsQK = {
   businessesAll: (clientId: number) => ["clients", "businesses", "all", clientId] as const,
   businessesAllFallback: () => ["clients", "businesses", "all", "none"] as const,
   firstBusiness: (clientId: number) => ["clients", "businesses", "first", clientId] as const,
+  auditTrail: (clientId: number) => ["clients", "audit", clientId] as const,
 } as const;

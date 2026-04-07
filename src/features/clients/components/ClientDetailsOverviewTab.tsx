@@ -1,5 +1,7 @@
 import { type FC, useEffect, useState } from "react";
+import { type ActiveClientDetailsTab } from "../constants";
 import { useQuery } from "@tanstack/react-query";
+import { Trash2 } from "lucide-react";
 import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
 import { Modal } from "../../../components/ui/overlays/Modal";
 import { Button } from "../../../components/ui/primitives/Button";
@@ -14,11 +16,15 @@ import { ClientRelatedData } from "./ClientRelatedData";
 import { ClientEditForm } from "./ClientEditForm";
 import { ClientBusinessesCard } from "./ClientBusinessesCard";
 import { ClientVatOverviewCard } from "./ClientVatOverviewCard";
+import { ClientAuditCard } from "./ClientAuditCard";
 import { CreateBusinessModal } from "./CreateBusinessModal";
 import { clientsApi, clientsQK } from "../api";
 import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from "../api";
 import type { ClientChargeSummary } from "../types";
 import type { BinderDetailResponse } from "@/features/binders/api";
+import { ChargesCreateModal } from "@/features/charges";
+import { BinderDrawer } from "@/features/binders/components/BinderDrawer";
+import { useClientQuickActions } from "../hooks/useClientQuickActions";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
 
 const EDIT_FORM_ID = "client-edit-form";
@@ -38,6 +44,7 @@ export type ClientDetailsOverviewTabProps = {
   isDeleting: boolean;
   createBusiness: (payload: CreateBusinessPayload) => Promise<void>;
   isCreatingBusiness: boolean;
+  activeTab: ActiveClientDetailsTab;
 };
 
 export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
@@ -54,6 +61,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   isDeleting,
   createBusiness,
   isCreatingBusiness,
+  activeTab,
 }) => {
   const { id: firstBusinessId } = useFirstBusinessId(client.id);
   const { data: businessesData } = useQuery({
@@ -70,6 +78,8 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [showBusinessModal, setShowBusinessModal] = useState(false);
 
+  const quickActions = useClientQuickActions({ id: client.id, name: client.full_name });
+
   useEffect(() => {
     document.body.style.overflow = isEditing ? "hidden" : "";
     return () => {
@@ -79,40 +89,55 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
 
   return (
     <div className="space-y-6">
-      <ClientStatusCard clientId={client.id} />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
-          <ClientInfoSection
-            client={client}
-            canEdit={canEditClients}
-            onEditStart={() => setIsEditing(true)}
-            onDeleteStart={canEditClients ? () => setIsConfirmingDelete(true) : undefined}
-          />
-          <ClientBusinessesCard
-            clientId={client.id}
-            canEdit={canEditClients}
-            onAddBusiness={() => setShowBusinessModal(true)}
-          />
-          <ClientVatOverviewCard clientId={client.id} />
+      {activeTab === "details" && (
+        <>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="space-y-6 lg:col-span-2">
+              <ClientInfoSection
+                client={client}
+                canEdit={canEditClients}
+                onEditStart={() => setIsEditing(true)}
+              />
+              <ClientBusinessesCard
+                clientId={client.id}
+                canEdit={canEditClients}
+                onAddBusiness={() => setShowBusinessModal(true)}
+              />
+              <ClientAuditCard clientId={client.id} />
+            </div>
+            <div className="space-y-6">
+              <ClientRelatedData
+                clientId={client.id}
+                binders={binders}
+                bindersTotal={bindersTotal}
+                charges={charges}
+                chargesTotal={chargesTotal}
+                canViewCharges={canViewCharges}
+                canCreateCharge={canEditClients}
+                onCreateCharge={quickActions.openCreateCharge}
+                onCreateBinder={quickActions.openReceiveBinder}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {activeTab === "communication" && (
+        <div className="space-y-6">
           <AuthorityContactsCard businessId={firstBusinessId ?? 0} />
           <CorrespondenceCard businessId={firstBusinessId ?? 0} />
           <SignatureRequestsCard client={client} businessId={firstBusinessId} canManage={canEditClients} />
         </div>
+      )}
 
+      {activeTab === "finance" && (
         <div className="space-y-6">
-          <ClientRelatedData
-            clientId={client.id}
-            binders={binders}
-            bindersTotal={bindersTotal}
-            charges={charges}
-            chargesTotal={chargesTotal}
-            canViewCharges={canViewCharges}
-          />
+          <ClientStatusCard clientId={client.id} />
+          <ClientVatOverviewCard clientId={client.id} />
+          <ClientRemindersCard clientId={client.id} businessId={firstBusinessId ?? 0} clientName={client.full_name} />
+          <NotificationsTab businessId={firstBusinessId ?? 0} />
         </div>
-      </div>
-
-      <ClientRemindersCard clientId={client.id} businessId={firstBusinessId ?? 0} clientName={client.full_name} />
-      <NotificationsTab businessId={firstBusinessId ?? 0} />
+      )}
 
       <Modal
         open={isConfirmingDelete}
@@ -161,6 +186,32 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
         existingSoleTraderType={existingSoleTraderType}
       />
 
+      <ChargesCreateModal
+        open={quickActions.showCreateCharge}
+        createError={quickActions.createChargeError}
+        createLoading={quickActions.createChargeLoading}
+        onClose={quickActions.closeCreateCharge}
+        onSubmit={quickActions.submitCreateCharge}
+        initialClient={{ id: client.id, name: client.full_name }}
+      />
+
+      <BinderDrawer
+        open={quickActions.showReceiveBinder}
+        mode="receive"
+        onClose={quickActions.closeReceiveBinder}
+        receiveForm={quickActions.receive.form}
+        clientQuery={quickActions.receive.clientQuery}
+        selectedClient={quickActions.receive.selectedClient}
+        businesses={quickActions.receive.businesses}
+        annualReports={quickActions.receive.annualReports}
+        hasActiveBinder={quickActions.receive.hasActiveBinder}
+        vatType={quickActions.receive.vatType}
+        onClientSelect={quickActions.receive.handleClientSelect}
+        onClientQueryChange={quickActions.receive.handleClientQueryChange}
+        onReceiveSubmit={quickActions.receive.handleSubmit}
+        isSubmitting={quickActions.receive.isSubmitting}
+      />
+
       {canEditClients && (
         <DetailDrawer
           open={isEditing}
@@ -168,24 +219,36 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
           subtitle={client.full_name}
           onClose={() => setIsEditing(false)}
           footer={(
-            <div className="flex items-center justify-end gap-3">
+            <div className="flex items-center justify-between gap-3">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsEditing(false)}
+                onClick={() => { setIsEditing(false); setIsConfirmingDelete(true); }}
                 disabled={isUpdating}
+                className="gap-2 text-negative-600 border-negative-200 hover:bg-negative-50"
               >
-                ביטול
+                <Trash2 className="h-4 w-4" />
+                מחק לקוח
               </Button>
-              <Button
-                type="submit"
-                form={EDIT_FORM_ID}
-                variant="primary"
-                isLoading={isUpdating}
-                disabled={isUpdating}
-              >
-                שמור שינויים
-              </Button>
+              <div className="flex items-center gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditing(false)}
+                  disabled={isUpdating}
+                >
+                  ביטול
+                </Button>
+                <Button
+                  type="submit"
+                  form={EDIT_FORM_ID}
+                  variant="primary"
+                  isLoading={isUpdating}
+                  disabled={isUpdating}
+                >
+                  שמור שינויים
+                </Button>
+              </div>
             </div>
           )}
         >

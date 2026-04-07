@@ -21,6 +21,7 @@ export interface AttentionResponse {
 
 export interface DashboardOverviewResponse {
   total_clients: number;
+  active_clients: number;
   active_binders: number;
   binders_in_office: number;
   binders_ready_for_pickup: number;
@@ -32,6 +33,7 @@ export interface DashboardOverviewResponse {
 
 export interface DashboardSummaryResponse {
   total_clients: number;
+  active_clients: number;
   binders_in_office: number;
   binders_ready_for_pickup: number;
   open_reminders: number;

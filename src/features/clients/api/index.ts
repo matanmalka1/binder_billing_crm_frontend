@@ -12,6 +12,7 @@ export type {
   CreateClientPayload,
   UpdateClientPayload,
   BulkClientActionPayload,
+  ClientStatus,
   BusinessType,
   BusinessStatus,
   BusinessResponse,

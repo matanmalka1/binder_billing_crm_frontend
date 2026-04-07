@@ -1,17 +1,16 @@
 import { type FC } from "react";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2 } from "lucide-react";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
 import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
 import { formatDate } from "../../../utils/utils";
 import type { ClientResponse } from "../api";
-import { getClientIdNumberTypeLabel } from "../constants";
+import { getClientIdNumberTypeLabel, getClientStatusLabel } from "../constants";
 
 type ClientInfoSectionProps = {
   client: ClientResponse;
   canEdit: boolean;
   onEditStart: () => void;
-  onDeleteStart?: () => void;
 };
 
 /** Formats the five structured address fields into a single human-readable string. */
@@ -31,7 +30,6 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   client,
   canEdit,
   onEditStart,
-  onDeleteStart,
 }) => {
   const idNumberTypeLabel = client.id_number_type
     ? getClientIdNumberTypeLabel(client.id_number_type)
@@ -40,9 +38,20 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   const infoItems = [
     { label: "מספר מזהה", value: client.id_number },
     { label: "סוג מזהה", value: idNumberTypeLabel },
-    { label: "טלפון", value: client.phone || "—" },
-    { label: "אימייל", value: client.email || "—" },
-    { label: "כתובת", value: formatStructuredAddress(client) },
+    { label: "סטטוס", value: getClientStatusLabel(client.status) },
+    {
+      label: "טלפון",
+      value: client.phone
+        ? <a href={`tel:${client.phone}`} className="text-primary-600 hover:underline">{client.phone}</a>
+        : "—",
+    },
+    {
+      label: "אימייל",
+      value: client.email
+        ? <a href={`mailto:${client.email}`} className="text-primary-600 hover:underline">{client.email}</a>
+        : "—",
+    },
+    { label: "כתובת", value: formatStructuredAddress(client)},
     { label: "נוצר בתאריך", value: formatDate(client.created_at) },
     { label: "עודכן בתאריך", value: client.updated_at ? formatDate(client.updated_at) : "—" },
   ];
@@ -52,22 +61,14 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
       title="פרטי לקוח"
       actions={
         canEdit ? (
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={onEditStart} className="gap-2">
-              <Edit2 className="h-4 w-4" />
-              ערוך פרטים
-            </Button>
-            {onDeleteStart && (
-              <Button variant="outline" size="sm" onClick={onDeleteStart} className="gap-2 text-negative-600 border-negative-200 hover:bg-negative-50">
-                <Trash2 className="h-4 w-4" />
-                מחק לקוח
-              </Button>
-            )}
-          </div>
+          <Button variant="outline" size="sm" onClick={onEditStart} className="gap-2">
+            <Edit2 className="h-4 w-4" />
+            ערוך פרטים
+          </Button>
         ) : undefined
       }
     >
-      <DefinitionList columns={2} items={infoItems} />
+      <DefinitionList columns={4} items={infoItems} />
     </Card>
   );
 };

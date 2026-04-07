@@ -2,8 +2,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
+import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type { ClientResponse, UpdateClientPayload } from "../api";
+import { CLIENT_STATUS_LABELS } from "../constants";
 import { clientEditSchema, type ClientEditFormValues } from "../schemas";
 
 interface ClientEditFormProps {
@@ -33,6 +35,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
     resolver: zodResolver(clientEditSchema),
     defaultValues: {
       full_name: client.full_name,
+      status: client.status,
       phone: client.phone ?? "",
       email: client.email ?? "",
       address_street: client.address_street ?? "",
@@ -63,6 +66,17 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       {/* Basic info */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900">מידע בסיסי</h3>
+
+        <Select
+          label="סטטוס לקוח"
+          disabled={isLoading}
+          options={[
+            { value: "active", label: CLIENT_STATUS_LABELS.active },
+            { value: "frozen", label: CLIENT_STATUS_LABELS.frozen },
+            { value: "closed", label: CLIENT_STATUS_LABELS.closed },
+          ]}
+          {...register("status")}
+        />
 
         {/* Read-only identity number */}
         <div className="space-y-1">

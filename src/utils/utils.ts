@@ -53,11 +53,11 @@ export const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => ({
 
 /**
  * Build a year options array from `from` up to current year + 1, newest first.
- * Default start: 2010.
+ * Default start: 2000.
  */
 
 export const buildYearOptions = (
-  from = 2010,
+  from = 2000,
 ): { value: string; label: string }[] => {
   const end = new Date().getFullYear() + 1;
   return Array.from({ length: end - from + 1 }, (_, i) => ({

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck } from "lucide-react";
+import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck, ChevronLeft } from "lucide-react";
 import { clientsApi, clientsQK } from "../api";
 import { Card } from "../../../components/ui/primitives/Card";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
@@ -19,15 +19,16 @@ interface TileProps {
 
 const Tile: React.FC<TileProps> = ({ icon, title, primary, secondary, onClick }) => (
   <div
-    className={`flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4 ${onClick ? "cursor-pointer hover:bg-gray-100 transition-colors" : ""}`}
+    className={`relative flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4 ${onClick ? "cursor-pointer hover:bg-gray-100 transition-colors" : ""}`}
     onClick={onClick}
   >
     <div className="mt-0.5 shrink-0 text-primary-600">{icon}</div>
-    <div className="min-w-0">
+    <div className="min-w-0 flex-1">
       <p className="text-xs font-medium text-gray-500">{title}</p>
       <p className="mt-0.5 text-lg font-semibold text-gray-900 leading-tight">{primary}</p>
       <p className="mt-0.5 text-xs text-gray-500">{secondary}</p>
     </div>
+    {onClick && <ChevronLeft className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-300" />}
   </div>
 );
 
@@ -139,7 +140,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title="חיובים פתוחים"
           primary={fmt(charges.total_outstanding)}
           secondary={`${charges.unpaid_count} חיובים`}
-          onClick={() => navigate(`/clients/${clientId}`)}
+          onClick={() => navigate(`/charges?client_id=${clientId}`)}
         />
         <Tile
           icon={<TrendingUp size={18} />}
@@ -153,7 +154,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title="קלסרים"
           primary={`${binders.active_count} פעילים`}
           secondary={`${binders.in_office_count} במשרד`}
-          onClick={() => navigate(`/clients/${clientId}`)}
+          onClick={() => navigate(`/binders?client_id=${clientId}`)}
         />
         <Tile
           icon={<FileCheck size={18} />}
