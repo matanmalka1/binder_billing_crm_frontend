@@ -1,5 +1,5 @@
 import { makeLabelGetter } from "../../utils/labels";
-import type { BusinessType, ClientResponse, ClientStatus } from "./api";
+import type { BusinessType, ClientResponse, ClientStatus, VatType } from "./api";
 
 export type ActiveClientDetailsTab = "details" | "communication" | "finance";
 export type ClientIdNumberType = Exclude<ClientResponse["id_number_type"], null>;
@@ -62,7 +62,16 @@ export const CLIENT_STATUS_LABELS: Record<ClientStatus, string> = {
   closed: "סגור",
 };
 
+export const VAT_TYPES = ["monthly", "bimonthly", "exempt"] as const satisfies readonly VatType[];
+
+export const VAT_TYPE_LABELS: Record<VatType, string> = {
+  monthly: "חודשי",
+  bimonthly: "דו-חודשי",
+  exempt: "פטור",
+};
+
 export const getClientIdNumberTypeLabel = makeLabelGetter(CLIENT_ID_NUMBER_TYPE_LABELS);
 export const getClientIdNumberInputLabel = makeLabelGetter(CLIENT_ID_NUMBER_INPUT_LABELS);
 export const getBusinessTypeLabel = makeLabelGetter(BUSINESS_TYPE_LABELS);
 export const getClientStatusLabel = makeLabelGetter(CLIENT_STATUS_LABELS);
+export const getVatTypeLabel = makeLabelGetter(VAT_TYPE_LABELS);

@@ -5,7 +5,7 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
 import { formatDate } from "../../../utils/utils";
 import type { ClientResponse } from "../api";
-import { getClientIdNumberTypeLabel, getClientStatusLabel } from "../constants";
+import { getClientIdNumberTypeLabel, getClientStatusLabel, getBusinessTypeLabel } from "../constants";
 
 type ClientInfoSectionProps = {
   client: ClientResponse;
@@ -36,8 +36,11 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
     : "—";
 
   const infoItems = [
+    { label: "מס' לקוח", value: String(client.id) },
     { label: "מספר מזהה", value: client.id_number },
     { label: "סוג מזהה", value: idNumberTypeLabel },
+    { label: "סוג לקוח", value: client.primary_business_type ? getBusinessTypeLabel(client.primary_business_type) : "—" },
+    { label: "קלסר פעיל", value: client.active_binder_number ?? "—" },
     { label: "סטטוס", value: getClientStatusLabel(client.status) },
     {
       label: "טלפון",

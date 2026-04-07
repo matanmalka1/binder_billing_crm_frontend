@@ -18,8 +18,11 @@ export interface ClientResponse {
   address_apartment: string | null;
   address_city: string | null;
   address_zip_code: string | null;
+  vat_reporting_frequency: VatType | null;
   created_at: string;
   updated_at: string | null;
+  primary_business_type: BusinessType | null;
+  active_binder_number: string | null;
 }
 
 export interface ActiveClientSummary {
@@ -63,6 +66,7 @@ export interface CreateClientPayload {
   address_apartment?: string | null;
   address_city?: string | null;
   address_zip_code?: string | null;
+  vat_reporting_frequency?: VatType | null;
 }
 
 export type BulkClientActionPayload = never;
@@ -79,11 +83,13 @@ export interface UpdateClientPayload {
   address_apartment?: string | null;
   address_city?: string | null;
   address_zip_code?: string | null;
+  vat_reporting_frequency?: VatType | null;
 }
 
 export type BusinessType = "osek_patur" | "osek_murshe" | "company" | "employee";
 export type BusinessStatus = "active" | "frozen" | "closed";
 export type ClientStatus = "active" | "frozen" | "closed";
+export type VatType = "monthly" | "bimonthly" | "exempt";
 
 export interface BusinessResponse {
   id: number;

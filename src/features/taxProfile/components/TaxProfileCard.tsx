@@ -19,8 +19,13 @@ export const TaxProfileCard: React.FC<Props> = ({ businessId, readOnly = false }
     ? BUSINESS_TYPE_LABELS[businessType as keyof typeof BUSINESS_TYPE_LABELS]
     : businessType;
 
+  const resolvedVatType =
+    profile?.business_type_key === "osek_murshe"
+      ? profile.client_vat_reporting_frequency
+      : profile?.vat_type;
+
   const items = [
-    { label: "סוג מע״מ", value: profile?.vat_type ? getVatTypeLabel(profile.vat_type) : "—" },
+    { label: "סוג דיווח", value: resolvedVatType ? getVatTypeLabel(resolvedVatType) : "—" },
     { label: "סוג עסק", value: businessTypeLabel ?? "—" },
     { label: "שנת מס ראשונה", value: profile?.tax_year_start ?? "—" },
     { label: "רואה חשבון מלווה", value: profile?.accountant_name ?? "—" },

@@ -18,6 +18,7 @@ interface Props {
 }
 
 export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isSaving }) => {
+  const isOsekMurshe = profile?.business_type_key === "osek_murshe";
   const { register, handleSubmit, formState: { errors } } = useForm<TaxProfileFormValues>({
     resolver: zodResolver(taxProfileSchema),
     defaultValues: profile
@@ -48,17 +49,19 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
   return (
     <form onSubmit={onSubmit} className="space-y-4" noValidate>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Select
-          label="סוג מע״מ"
-          error={errors.vat_type?.message}
-          disabled={isSaving}
-          options={[
-            { value: "monthly", label: getVatTypeLabel("monthly") },
-            { value: "bimonthly", label: getVatTypeLabel("bimonthly") },
-            { value: "exempt", label: getVatTypeLabel("exempt") },
-          ]}
-          {...vatTypeField}
-        />
+        {!isOsekMurshe && (
+          <Select
+            label="סוג דיווח"
+            error={errors.vat_type?.message}
+            disabled={isSaving}
+            options={[
+              { value: "monthly", label: getVatTypeLabel("monthly") },
+              { value: "bimonthly", label: getVatTypeLabel("bimonthly") },
+              { value: "exempt", label: getVatTypeLabel("exempt") },
+            ]}
+            {...vatTypeField}
+          />
+        )}
         <Select
           label="סוג עסק"
           error={errors.business_type?.message}

@@ -12,8 +12,6 @@ import { AdvancePaymentTable } from "./AdvancePaymentTable";
 import { AdvancePaymentsKPICards } from "./AdvancePaymentsKPICards";
 import { AdvancePaymentsChart } from "./AdvancePaymentsChart";
 import { CreateAdvancePaymentModal } from "./CreateAdvancePaymentModal";
-import { EditAdvanceRateModal } from "./EditAdvanceRateModal";
-import { AdvanceReductionModal } from "./AdvanceReductionModal";
 import { PaginationCard } from "../../../components/ui/table/PaginationCard";
 
 interface ClientAdvancePaymentsTabProps {
@@ -28,15 +26,13 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const [statusFilter, setStatusFilter] = useState<AdvancePaymentStatus[]>([]);
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editRateOpen, setEditRateOpen] = useState(false);
-  const [reductionOpen, setReductionOpen] = useState(false);
   const [generationFrequency, setGenerationFrequency] = useState<1 | 2>(1);
   const { isAdvisor } = useRole();
 
   const queryClient = useQueryClient();
   const { rows, isLoading, total, create, isCreating, updateRow, updatingId, deleteRow, isDeletingId } =
     useAdvancePayments(businessId, year, statusFilter, page);
-  const { advanceRate, vatType, updateAdvanceRate, isUpdatingRate } = useAdvanceRateInsights(businessId);
+  const { vatType } = useAdvanceRateInsights(businessId);
 
   useEffect(() => {
     if (vatType === "bimonthly") setGenerationFrequency(2);
@@ -106,8 +102,6 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         year={year}
         onYearChange={(nextYear) => { setPage(1); setYear(nextYear); }}
         onOpenCreate={() => setModalOpen(true)}
-        onOpenReduction={() => setReductionOpen(true)}
-        onOpenEditRate={() => setEditRateOpen(true)}
         onGenerateSchedule={() => generateMutation.mutate()}
         generationFrequency={generationFrequency}
         onGenerationFrequencyChange={setGenerationFrequency}
@@ -143,18 +137,6 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
           isCreating={isCreating}
           onClose={() => setModalOpen(false)}
           onCreate={handleCreate}
-        />
-      )}
-      {isAdvisor && (
-        <EditAdvanceRateModal businessId={businessId} isOpen={editRateOpen} onClose={() => setEditRateOpen(false)} />
-      )}
-      {isAdvisor && (
-        <AdvanceReductionModal
-          isOpen={reductionOpen}
-          onClose={() => setReductionOpen(false)}
-          advanceRate={advanceRate}
-          isUpdating={isUpdatingRate}
-          onSubmit={updateAdvanceRate}
         />
       )}
     </div>

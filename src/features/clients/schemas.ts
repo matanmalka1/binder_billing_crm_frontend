@@ -4,6 +4,7 @@ import {
   BUSINESS_TYPES,
   CLIENT_ID_NUMBER_TYPES,
   CLIENT_STATUSES,
+  VAT_TYPES,
   type ClientIdNumberType,
 } from "./constants";
 
@@ -34,6 +35,7 @@ export const createClientSchema = z
     address_street: z.string().trim().optional().or(z.literal("")),
     address_building_number: z.string().trim().optional().or(z.literal("")),
     address_city: z.string().trim().optional().or(z.literal("")),
+    vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
   })
   .superRefine((data, ctx) => {
     if (!requiresIsraeliNumericId(data.id_number_type)) {
@@ -79,6 +81,7 @@ export const clientEditSchema = z.object({
   address_city: z.string().trim().optional().or(z.literal("")),
   address_zip_code: z.string().trim().optional().or(z.literal("")),
   notes: z.string().trim().optional().or(z.literal("")),
+  vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
 });
 
 export type CreateClientFormValues = z.infer<typeof createClientSchema>;

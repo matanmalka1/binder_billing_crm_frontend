@@ -1,4 +1,3 @@
-import { TrendingDown, Edit2 } from "lucide-react";
 import type { AdvancePaymentStatus } from "../types";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Select } from "../../../components/ui/inputs/Select";
@@ -16,8 +15,6 @@ interface ClientAdvancePaymentsHeaderProps {
   year: number;
   onYearChange: (year: number) => void;
   onOpenCreate: () => void;
-  onOpenReduction: () => void;
-  onOpenEditRate: () => void;
   onGenerateSchedule: () => void;
   generationFrequency: 1 | 2;
   onGenerationFrequencyChange: (frequency: 1 | 2) => void;
@@ -31,8 +28,6 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
   year,
   onYearChange,
   onOpenCreate,
-  onOpenReduction,
-  onOpenEditRate,
   onGenerateSchedule,
   generationFrequency,
   onGenerationFrequencyChange,
@@ -42,14 +37,6 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
     {isAdvisor && (
       <div className="flex gap-2">
         <Button variant="primary" size="sm" onClick={onOpenCreate}>הוסף מקדמה</Button>
-        <Button variant="outline" size="sm" onClick={onOpenReduction}>
-          <TrendingDown size={14} className="mr-1" />
-          בקש הפחתה
-        </Button>
-        <Button variant="outline" size="sm" onClick={onOpenEditRate}>
-          <Edit2 size={14} className="mr-1" />
-          עריכת שיעור
-        </Button>
         <div className="w-32">
           <Select
             value={String(generationFrequency)}

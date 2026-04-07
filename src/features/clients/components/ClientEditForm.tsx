@@ -5,7 +5,7 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type { ClientResponse, UpdateClientPayload } from "../api";
-import { CLIENT_STATUS_LABELS } from "../constants";
+import { CLIENT_STATUS_LABELS, VAT_TYPE_LABELS } from "../constants";
 import { clientEditSchema, type ClientEditFormValues } from "../schemas";
 
 interface ClientEditFormProps {
@@ -44,6 +44,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_city: client.address_city ?? "",
       address_zip_code: client.address_zip_code ?? "",
       notes: client.notes ?? "",
+      vat_reporting_frequency: client.vat_reporting_frequency ?? null,
     },
   });
 
@@ -58,6 +59,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_city: data.address_city || null,
       address_zip_code: data.address_zip_code || null,
       notes: data.notes || null,
+      vat_reporting_frequency: data.vat_reporting_frequency || null,
     });
   });
 
@@ -162,6 +164,19 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       {/* Admin fields */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900">נתונים אדמיניסטרטיביים</h3>
+
+        <Select
+          label="תדירות דיווח מע״מ"
+          disabled={isLoading}
+          options={[
+            { value: "", label: "לא הוגדר" },
+            { value: "monthly", label: VAT_TYPE_LABELS.monthly },
+            { value: "bimonthly", label: VAT_TYPE_LABELS.bimonthly },
+            { value: "exempt", label: VAT_TYPE_LABELS.exempt },
+          ]}
+          {...register("vat_reporting_frequency")}
+        />
+
         <Textarea
           label="הערות לעדכון (אופציונלי)"
           rows={4}

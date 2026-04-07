@@ -24,6 +24,7 @@ import type { ClientChargeSummary } from "../types";
 import type { BinderDetailResponse } from "@/features/binders/api";
 import { ChargesCreateModal } from "@/features/charges";
 import { BinderDrawer } from "@/features/binders/components/BinderDrawer";
+import { TaxProfileCard } from "@/features/taxProfile";
 import { useClientQuickActions } from "../hooks/useClientQuickActions";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
 
@@ -98,6 +99,9 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
                 canEdit={canEditClients}
                 onEditStart={() => setIsEditing(true)}
               />
+              {firstBusinessId != null && (
+                <TaxProfileCard businessId={firstBusinessId} readOnly={!canEditClients} />
+              )}
               <ClientBusinessesCard
                 clientId={client.id}
                 canEdit={canEditClients}
