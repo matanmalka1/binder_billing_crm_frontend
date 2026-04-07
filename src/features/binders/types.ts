@@ -20,6 +20,14 @@ export interface BinderListResponse {
   page: number;
   page_size: number;
   total: number;
+  counters: BinderListCounters;
+}
+
+export interface BinderListCounters {
+  total: number;
+  in_office: number;
+  ready_for_pickup: number;
+  returned: number;
 }
 
 export interface BinderHistoryEntry {
@@ -79,6 +87,7 @@ export type BindersFilters = Omit<ListBindersParams, "client_name" | "binder_num
 
 export interface BindersFiltersBarProps {
   filters: BindersFilters;
+  counters: BinderListCounters;
   onFilterChange: (name: string, value: string) => void;
   onReset: () => void;
 }

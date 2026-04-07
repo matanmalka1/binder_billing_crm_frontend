@@ -2,7 +2,8 @@ import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Input } from "../../../components/ui/inputs/Input";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
-import { Search } from "lucide-react";
+import { StatsCard } from "../../../components/ui/layout/StatsCard";
+import { Archive, CheckCircle2, FolderKanban, Search, Undo2 } from "lucide-react";
 import { BINDER_STATUS_OPTIONS } from "../constants";
 import type { BindersFiltersBarProps } from "../types";
 import { cn, buildYearOptions } from "../../../utils/utils";
@@ -14,6 +15,7 @@ const YEAR_OPTIONS = [
 
 export const BindersFiltersBar = ({
   filters,
+  counters,
   onFilterChange,
   onReset,
 }: BindersFiltersBarProps) => {
@@ -27,8 +29,69 @@ export const BindersFiltersBar = ({
     onReset();
   };
 
+  const statusPills = [
+    {
+      key: "",
+      label: 'סה"כ קלסרים',
+      count: counters.total,
+      icon: FolderKanban,
+      variant: "blue" as const,
+    },
+    {
+      key: "in_office",
+      label: "במשרד",
+      count: counters.in_office,
+      icon: Archive,
+      variant: "orange" as const,
+    },
+    {
+      key: "ready_for_pickup",
+      label: "מוכן לאיסוף",
+      count: counters.ready_for_pickup,
+      icon: CheckCircle2,
+      variant: "green" as const,
+    },
+    {
+      key: "returned",
+      label: "הוחזר",
+      count: counters.returned,
+      icon: Undo2,
+      variant: "neutral" as const,
+    },
+  ] as const;
+
   return (
     <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+        {statusPills.map((pill) => {
+          const isActive = (filters.status ?? "") === pill.key;
+          return (
+            <button
+              key={pill.key || "total"}
+              type="button"
+              onClick={() => onFilterChange("status", pill.key)}
+              className={cn(
+                "text-right transition-transform",
+                isActive
+                  ? "scale-[1.01]"
+                  : "hover:scale-[1.01]",
+              )}
+            >
+              <StatsCard
+                title={pill.label}
+                value={pill.count}
+                icon={pill.icon}
+                variant={pill.variant}
+                className={cn(
+                  "h-full w-full text-right",
+                  isActive ? "ring-2 ring-primary-300 ring-offset-2" : "ring-1 ring-transparent",
+                )}
+              />
+            </button>
+          );
+        })}
+      </div>
+
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Input
           label="חיפוש"

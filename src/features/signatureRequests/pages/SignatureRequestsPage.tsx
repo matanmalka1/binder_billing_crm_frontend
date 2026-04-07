@@ -135,7 +135,7 @@ export const SignatureRequestsPage: React.FC = () => {
   return (
     <PageStateGuard isLoading={isLoading} error={error} header={header} loadingMessage="טוען בקשות חתימה...">
       <div className="space-y-6">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatsCard title='סה"כ' value={total} icon={FileSignature} variant="neutral" />
           <StatsCard title="טיוטה" value={draft} icon={ClipboardCheck} variant="blue" />
           <StatsCard title="ממתין לחתימה" value={pending} icon={Clock} variant="purple" />

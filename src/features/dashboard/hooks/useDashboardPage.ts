@@ -30,13 +30,41 @@ const isOverviewData = (
 const isSummaryData = (
   data: DashboardOverviewResponse | DashboardSummaryResponse | undefined,
 ): data is DashboardSummaryResponse =>
-  Boolean(data && "binders_in_office" in data);
+  Boolean(data && !("total_clients" in data));
 
-const buildSharedStats = <
-  T extends Pick<DashboardOverviewResponse, "open_reminders" | "vat_due_this_month">,
->(
-  data: T,
+const buildStats = (
+  data: Pick<
+    DashboardOverviewResponse,
+    "binders_in_office" | "binders_ready_for_pickup" | "open_reminders" | "vat_due_this_month"|"total_clients"
+  >,
 ): StatItem[] => [
+  {
+    key: "total_clients",
+    title: "לקוחות",
+    value: data.total_clients,
+    description: "סך הכל לקוחות פעילים",
+    icon: Users,
+    variant: "blue",
+    href: "/clients",
+  },
+  {
+    key: "in_office",
+    title: "קלסרים במשרד",
+    value: data.binders_in_office,
+    description: "כלל הקלסרים הפעילים",
+    icon: FolderOpen,
+    variant: "blue",
+    href: "/binders?status=in_office",
+  },
+  {
+    key: "ready",
+    title: "מוכן לאיסוף",
+    value: data.binders_ready_for_pickup,
+    description: "ממתינים לאיסוף לקוח",
+    icon: Users,
+    variant: "green",
+    href: "/binders?status=ready_for_pickup",
+  },
   {
     key: "open_reminders",
     title: "תזכורות פתוחות",
@@ -57,50 +85,6 @@ const buildSharedStats = <
     urgent: data.vat_due_this_month > 0,
     href: "/tax/vat",
   },
-];
-
-const buildAdvisorStats = (data: DashboardOverviewResponse): StatItem[] => [
-  {
-    key: "total_clients",
-    title: "לקוחות",
-    value: data.total_clients,
-    description: "סך הכל לקוחות פעילים",
-    icon: Users,
-    variant: "blue",
-    href: "/clients",
-  },
-  {
-    key: "active_binders",
-    title: "קלסרים פעילים",
-    value: data.active_binders,
-    description: "טרם הוחזרו ללקוח",
-    icon: FolderOpen,
-    variant: "blue",
-    href: "/binders?status=in_office",
-  },
-  ...buildSharedStats(data),
-];
-
-const buildSecretaryStats = (data: DashboardSummaryResponse): StatItem[] => [
-  {
-    key: "in_office",
-    title: "קלסרים במשרד",
-    value: data.binders_in_office,
-    description: "כלל הקלסרים הפעילים",
-    icon: FolderOpen,
-    variant: "blue",
-    href: "/binders?status=in_office",
-  },
-  {
-    key: "ready",
-    title: "מוכן לאיסוף",
-    value: data.binders_ready_for_pickup,
-    description: "ממתינים לאיסוף לקוח",
-    icon: Users,
-    variant: "green",
-    href: "/binders?status=ready_for_pickup",
-  },
-  ...buildSharedStats(data),
 ];
 
 export const useDashboardPage = () => {
@@ -195,8 +179,7 @@ export const useDashboardPage = () => {
 
   const stats = useMemo<StatItem[]>(() => {
     if (dashboard.status !== "ok" || !dashboard.data) return [];
-    if (dashboard.data.role_view === "advisor") return buildAdvisorStats(dashboard.data);
-    return buildSecretaryStats(dashboard.data);
+    return buildStats(dashboard.data);
   }, [dashboard]);
 
   const handleQuickAction = useCallback(

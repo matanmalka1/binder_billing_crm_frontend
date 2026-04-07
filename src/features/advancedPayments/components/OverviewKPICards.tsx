@@ -33,28 +33,13 @@ export const OverviewKPICards: React.FC<OverviewKPICardsProps> = ({
         variant="green"
         description="לפי הסינון הנבחר"
       />
-      <div className="relative rounded-xl p-4 bg-gradient-to-br from-purple-500/10 to-fuchsia-500/10 border border-purple-200/50 overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 opacity-20 blur-3xl bg-gradient-to-br from-purple-400 to-fuchsia-600" />
-        <div className="relative">
-          <div className="flex items-start justify-between mb-3">
-            <h3 className="text-xs font-medium text-gray-600">שיעור גבייה</h3>
-            <div className="rounded-lg p-2 bg-purple-100 text-purple-600">
-              <TrendingUp className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="text-2xl font-bold tracking-tight text-purple-700 mb-3">
-            {pct !== null ? `${pct}%` : "—"}
-          </div>
-          {pct !== null && (
-            <div className="w-full bg-purple-100 rounded-full h-2">
-              <div
-                className="bg-purple-500 h-2 rounded-full transition-all duration-700"
-                style={{ width: `${pct}%` }}
-              />
-            </div>
-          )}
-        </div>
-      </div>
+      <StatsCard
+        title="שיעור גבייה"
+        value={pct !== null ? `${pct}%` : "—"}
+        icon={TrendingUp}
+        variant="purple"
+        progress={pct ?? undefined}
+      />
     </div>
   );
 };

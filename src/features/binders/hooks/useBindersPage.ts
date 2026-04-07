@@ -133,6 +133,12 @@ export const useBindersPage = () => {
     selectedBinder,
     binders: bindersQuery.data?.items ?? [],
     total: bindersQuery.data?.total ?? 0,
+    counters: bindersQuery.data?.counters ?? {
+      total: 0,
+      in_office: 0,
+      ready_for_pickup: 0,
+      returned: 0,
+    },
     error: bindersQuery.error
       ? getErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת קלסרים")
       : null,

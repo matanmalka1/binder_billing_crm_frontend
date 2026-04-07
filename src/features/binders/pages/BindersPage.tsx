@@ -25,6 +25,7 @@ export const Binders: React.FC = () => {
     actionLoadingId,
     binders,
     total,
+    counters,
     error,
     filters,
     deepLinkBinderId,
@@ -108,7 +109,12 @@ export const Binders: React.FC = () => {
       />
 
       <ToolbarContainer>
-        <BindersFiltersBar filters={filters} onFilterChange={handleFilterChange} onReset={handleReset} />
+        <BindersFiltersBar
+          filters={filters}
+          counters={counters}
+          onFilterChange={handleFilterChange}
+          onReset={handleReset}
+        />
       </ToolbarContainer>
 
       <PaginatedDataTable

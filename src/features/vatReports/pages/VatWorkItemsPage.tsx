@@ -82,7 +82,7 @@ export const VatWorkItems: React.FC = () => {
       )}
 
       {!loading && workItems.length > 0 && (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatsCard title="ממתין לחומרים" value={statsPending ?? 0} icon={Hourglass} variant="orange" />
           <StatsCard title="בהקלדה" value={statsTyping ?? 0} icon={Clock} variant="blue" />
           <StatsCard title="ממתין לבדיקה" value={statsReview ?? 0} icon={FileText} variant="orange" />

@@ -1,19 +1,7 @@
 import { Bell, Calendar, AlertTriangle } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { Card } from "../../../components/ui/primitives/Card";
+import { StatsCard } from "../../../components/ui/layout/StatsCard";
 import { cn } from "../../../utils/utils";
 import type { Reminder } from "../types";
-
-interface StatConfig {
-  icon: LucideIcon;
-  colorBg: string;
-  iconBg: string;
-  iconColor: string;
-  textColor: string;
-  count: number;
-  label: string;
-  filterValue: string;
-}
 
 interface RemindersSummaryCardsProps {
   reminders: Reminder[];
@@ -26,33 +14,24 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
   activeFilter,
   onFilter,
 }) => {
-  const stats: StatConfig[] = [
+  const stats = [
     {
       icon: Bell,
-      colorBg: "bg-gradient-to-br from-primary-50 to-primary-100",
-      iconBg: "bg-primary-200",
-      iconColor: "text-primary-700",
-      textColor: "text-primary-900",
+      variant: "blue" as const,
       count: reminders.filter((r) => r.status === "pending").length,
       label: "תזכורות ממתינות",
       filterValue: "pending",
     },
     {
       icon: Calendar,
-      colorBg: "bg-gradient-to-br from-positive-50 to-positive-100",
-      iconBg: "bg-positive-200",
-      iconColor: "text-positive-700",
-      textColor: "text-positive-800",
+      variant: "green" as const,
       count: reminders.filter((r) => r.status === "sent").length,
       label: "תזכורות שנשלחו",
       filterValue: "sent",
     },
     {
       icon: AlertTriangle,
-      colorBg: "bg-gradient-to-br from-purple-50 to-purple-100",
-      iconBg: "bg-purple-200",
-      iconColor: "text-purple-700",
-      textColor: "text-purple-900",
+      variant: "purple" as const,
       count: reminders.length,
       label: 'סה"כ תזכורות',
       filterValue: "",
@@ -60,29 +39,34 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {stats.map(({ icon: Icon, colorBg, iconBg, iconColor, textColor, count, label, filterValue }) => (
-        <Card
-          key={label}
-          variant="elevated"
-          className={cn(
-            colorBg,
-            onFilter && "cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5",
-            activeFilter === filterValue && filterValue !== "" && "ring-2 ring-offset-1 ring-primary-400",
-          )}
-          onClick={onFilter ? () => onFilter(activeFilter === filterValue ? "" : filterValue) : undefined}
-        >
-          <div className="flex items-center gap-4">
-            <div className={`rounded-lg p-3 ${iconBg}`}>
-              <Icon className={`h-6 w-6 ${iconColor}`} />
-            </div>
-            <div>
-              <div className={`text-2xl font-bold ${textColor}`}>{count}</div>
-              <div className={`text-sm ${iconColor}`}>{label}</div>
-            </div>
-          </div>
-        </Card>
-      ))}
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+      {stats.map(({ icon, variant, count, label, filterValue }) => {
+        const isActive = activeFilter === filterValue && filterValue !== "";
+        return (
+          <button
+            key={label}
+            type="button"
+            onClick={onFilter ? () => onFilter(isActive ? "" : filterValue) : undefined}
+            className={cn(
+              "text-right transition-transform",
+              onFilter ? "cursor-pointer hover:scale-[1.01]" : "cursor-default",
+              isActive && "scale-[1.01]",
+            )}
+            disabled={!onFilter}
+          >
+            <StatsCard
+              title={label}
+              value={count}
+              icon={icon}
+              variant={variant}
+              className={cn(
+                "h-full w-full",
+                isActive ? "ring-2 ring-primary-300 ring-offset-2" : "ring-1 ring-transparent",
+              )}
+            />
+          </button>
+        );
+      })}
     </div>
   );
 };

@@ -1,37 +1,13 @@
 import { Clock, CheckCircle2, FileText, XCircle } from "lucide-react";
-import { semanticStatToneClasses } from "@/utils/semanticColors";
 import type { ChargeResponse } from "../api";
 import { formatILS } from "../utils";
+import { StatsCard } from "@/components/ui/layout/StatsCard";
 
 interface ChargesSummaryBarProps {
   charges: ChargeResponse[];
   isAdvisor: boolean;
   total: number;
 }
-
-interface StatCardProps {
-  label: string;
-  value: string;
-  icon: React.ReactNode;
-  tone: keyof typeof semanticStatToneClasses;
-}
-
-const StatCard: React.FC<StatCardProps> = ({ label, value, icon, tone }) => {
-  const styles = semanticStatToneClasses[tone];
-
-  return (
-    <div className="relative flex items-center gap-4 overflow-hidden rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm">
-      <div className={`absolute bottom-0 right-0 top-0 w-1 rounded-r-xl ${styles.accent}`} />
-      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${styles.iconBg}`}>
-      {icon}
-      </div>
-      <div className="min-w-0">
-        <p className="mb-0.5 text-xs text-gray-500">{label}</p>
-        <p className={`text-lg font-bold leading-tight tabular-nums ${styles.value}`}>{value}</p>
-      </div>
-    </div>
-  );
-};
 
 export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, isAdvisor }) => {
   if (charges.length === 0) return null;
@@ -49,29 +25,29 @@ export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, i
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      <StatCard
-        label="ממתין לגביה"
+      <StatsCard
+        title="ממתין לגביה"
         value={amountOrCount("issued")}
-        icon={<Clock className="h-5 w-5" />}
-        tone="info"
+        icon={Clock}
+        variant="blue"
       />
-      <StatCard
-        label="שולם"
+      <StatsCard
+        title="שולם"
         value={amountOrCount("paid")}
-        icon={<CheckCircle2 className="h-5 w-5" />}
-        tone="positive"
+        icon={CheckCircle2}
+        variant="green"
       />
-      <StatCard
-        label="טיוטה"
+      <StatsCard
+        title="טיוטה"
         value={amountOrCount("draft")}
-        icon={<FileText className="h-5 w-5" />}
-        tone="neutral"
+        icon={FileText}
+        variant="neutral"
       />
-      <StatCard
-        label="בוטל"
+      <StatsCard
+        title="בוטל"
         value={amountOrCount("canceled")}
-        icon={<XCircle className="h-5 w-5" />}
-        tone="negative"
+        icon={XCircle}
+        variant="red"
       />
     </div>
   );

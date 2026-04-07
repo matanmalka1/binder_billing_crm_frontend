@@ -23,7 +23,7 @@ export const AdvancePaymentsKPICards: React.FC<AdvancePaymentsKPICardsProps> = (
   const collectionPct = Math.round(data.collection_rate);
 
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       <StatsCard
         title="סה״כ צפוי"
         value={`₪${Number(data.total_expected).toLocaleString("he-IL")}`}

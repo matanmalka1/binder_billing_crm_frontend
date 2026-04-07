@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { cn } from "../../../utils/utils";
 import type { LucideIcon } from "lucide-react";
+import { semanticStatToneClasses } from "@/utils/semanticColors";
 
 export interface StatsCardProps {
   title: string;
@@ -57,46 +58,38 @@ export const StatsCard: React.FC<StatsCardProps> = ({
 
   const variants = {
     blue: {
-      bg: "from-primary-500/10 to-indigo-500/10",
-      border: "border-primary-200/50",
-      text: "text-primary-700",
-      icon: "bg-primary-100 text-primary-600",
-      accent: "bg-gradient-to-br from-primary-400 to-indigo-600",
+      ...semanticStatToneClasses.info,
+      progress: "bg-info-500",
+      progressTrack: "bg-info-50",
     },
     green: {
-      bg: "from-emerald-500/10 to-teal-500/10",
-      border: "border-emerald-200/50",
-      text: "text-emerald-700",
-      icon: "bg-emerald-100 text-emerald-600",
-      accent: "bg-gradient-to-br from-emerald-400 to-teal-600",
+      ...semanticStatToneClasses.positive,
+      progress: "bg-positive-500",
+      progressTrack: "bg-positive-50",
     },
     red: {
-      bg: "from-red-500/10 to-rose-500/10",
-      border: "border-red-200/50",
-      text: "text-red-700",
-      icon: "bg-red-100 text-red-600",
-      accent: "bg-gradient-to-br from-red-400 to-rose-600",
+      ...semanticStatToneClasses.negative,
+      progress: "bg-negative-500",
+      progressTrack: "bg-negative-50",
     },
     orange: {
-      bg: "from-orange-500/10 to-amber-500/10",
-      border: "border-orange-200/50",
-      text: "text-orange-700",
-      icon: "bg-orange-100 text-orange-600",
-      accent: "bg-gradient-to-br from-orange-400 to-amber-600",
+      ...semanticStatToneClasses.warning,
+      progress: "bg-warning-500",
+      progressTrack: "bg-warning-50",
     },
     purple: {
-      bg: "from-purple-500/10 to-fuchsia-500/10",
-      border: "border-purple-200/50",
-      text: "text-purple-700",
-      icon: "bg-purple-100 text-purple-600",
-      accent: "bg-gradient-to-br from-purple-400 to-fuchsia-600",
+      accent: "bg-violet-500",
+      border: "border-r-4 border-r-violet-500",
+      iconBg: "bg-violet-50 text-violet-500",
+      value: "text-violet-700",
+      strip: "from-violet-500/10 to-transparent",
+      progress: "bg-violet-500",
+      progressTrack: "bg-violet-50",
     },
     neutral: {
-      bg: "from-gray-500/10 to-slate-500/10",
-      border: "border-gray-200/50",
-      text: "text-gray-700",
-      icon: "bg-gray-100 text-gray-600",
-      accent: "bg-gradient-to-br from-gray-400 to-slate-600",
+      ...semanticStatToneClasses.neutral,
+      progress: "bg-gray-500",
+      progressTrack: "bg-gray-100",
     },
   };
 
@@ -105,57 +98,44 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   return (
     <div
       className={cn(
-        "relative rounded-xl p-4 transition-all duration-300",
-        "bg-gradient-to-br",
-        config.bg,
-        "border",
+        "relative overflow-hidden rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm transition-all duration-200",
+        "hover:shadow-md",
         config.border,
-        "hover:shadow-elevation-2 hover:-translate-y-1",
-        "overflow-hidden",
-        "animate-scale-in",
         className
       )}
     >
-      {/* Decorative gradient accent */}
-      <div className={cn("absolute top-0 right-0 w-32 h-32 opacity-30 blur-3xl", config.accent)} />
+      <div className={cn("absolute bottom-0 right-0 top-0 w-1 rounded-r-xl", config.accent)} />
 
-      <div className="relative">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <h3 className="text-xs font-medium text-gray-600 mb-1">{title}</h3>
-            <div className={cn("text-2xl font-bold tracking-tight", config.text)}>
-              {typeof value === "number" ? displayValue.toLocaleString('he-IL') : value}
-            </div>
-          </div>
-
-          {/* Icon with gradient background */}
-          {Icon && (
-            <div className={cn("rounded-lg p-2 shadow-sm", config.icon)}>
-              <Icon className="h-4 w-4" />
-            </div>
-          )}
-        </div>
-
-        {/* Progress bar */}
-        {progress !== undefined && (
-          <div className="mb-3 w-full rounded-full h-2 bg-white/40">
-            <div
-              className={cn("h-2 rounded-full transition-all duration-700", config.accent)}
-              style={{ width: `${Math.min(Math.max(progress, 0), 100)}%` }}
-            />
+      <div className="relative flex flex-row-reverse items-start gap-4">
+        {Icon && (
+          <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-lg", config.iconBg)}>
+            <Icon className="h-5 w-5" />
           </div>
         )}
 
-        {/* Description and trend */}
-        <div className="space-y-2">
+        <div className="min-w-0 flex-1 text-right">
+          <p className="mb-0.5 text-xs text-gray-500">{title}</p>
+          <div className={cn("text-lg font-bold leading-tight tabular-nums", config.value)}>
+            {typeof value === "number" ? displayValue.toLocaleString("he-IL") : value}
+          </div>
+
           {description && (
-            <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
+            <p className="mt-1 text-sm text-gray-600 leading-relaxed">{description}</p>
+          )}
+
+          {progress !== undefined && (
+            <div className={cn("mt-3 h-2 w-full rounded-full", config.progressTrack)}>
+              <div
+                className={cn("h-2 rounded-full transition-all duration-700", config.progress)}
+                style={{ width: `${Math.min(Math.max(progress, 0), 100)}%` }}
+              />
+            </div>
           )}
 
           {trend && (
-            <div className="flex items-center gap-2 text-sm">
+            <div className="mt-3 flex flex-row-reverse items-center gap-2 text-sm">
               <span className={cn(
-                "inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-medium",
+                "inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium",
                 trend.value > 0 ? "bg-positive-100 text-positive-700" : "bg-negative-100 text-negative-700"
               )}>
                 {trend.value > 0 ? "↑" : "↓"} {Math.abs(trend.value)}%
