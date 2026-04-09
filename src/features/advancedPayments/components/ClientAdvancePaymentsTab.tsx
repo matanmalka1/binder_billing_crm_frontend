@@ -16,10 +16,12 @@ import { PaginationCard } from "../../../components/ui/table/PaginationCard";
 
 interface ClientAdvancePaymentsTabProps {
   businessId: number;
+  clientId: number;
 }
 
 export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> = ({
   businessId,
+  clientId,
 }) => {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
@@ -32,7 +34,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const queryClient = useQueryClient();
   const { rows, isLoading, total, create, isCreating, updateRow, updatingId, deleteRow, isDeletingId } =
     useAdvancePayments(businessId, year, statusFilter, page);
-  const { vatType } = useAdvanceRateInsights(businessId);
+  const { vatType } = useAdvanceRateInsights(clientId);
 
   useEffect(() => {
     if (vatType === "bimonthly") setGenerationFrequency(2);

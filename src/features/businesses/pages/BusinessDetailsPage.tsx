@@ -98,7 +98,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
           <div>
             {activeTab === "details" && (
               <div className="space-y-6">
-                <TaxProfileCard businessId={businessIdNum} readOnly={!can.editClients} />
+                <TaxProfileCard clientId={clientIdNum} readOnly={!can.editClients} />
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                   {client && businessIdNum != null && <CorrespondenceCard businessId={businessIdNum} />}
                   {client && businessIdNum != null && <SignatureRequestsCard client={client} businessId={businessIdNum} canManage={can.editClients} />}
@@ -107,8 +107,8 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
             )}
             {activeTab === "documents" && <ClientDocumentsTab businessId={businessIdNum} />}
             {activeTab === "timeline" && <ClientTimelineTab businessId={String(businessIdNum)} />}
-            {activeTab === "vat" && <VatClientSummaryPanel businessId={businessIdNum} />}
-            {activeTab === "advance-payments" && <ClientAdvancePaymentsTab businessId={businessIdNum} />}
+            {activeTab === "vat" && clientIdNum != null && <VatClientSummaryPanel clientId={clientIdNum} />}
+            {activeTab === "advance-payments" && clientIdNum != null && <ClientAdvancePaymentsTab businessId={businessIdNum} clientId={clientIdNum!} />}
             {activeTab === "deadlines" && <FilingTimeline businessId={businessIdNum} />}
             {activeTab === "annual-reports" && <ClientAnnualReportsTab businessId={businessIdNum} />}
           </div>

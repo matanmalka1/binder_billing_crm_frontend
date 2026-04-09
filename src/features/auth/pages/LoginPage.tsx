@@ -177,7 +177,7 @@ export const Login: React.FC = () => {
 
           {/* Footer */}
           <p className="mt-10 text-center text-xs text-slate-400">
-            מערכת פנים-ארגונית בלבד — גישה מורשית בלבד
+            מערכת פנים ארגונית בלבד — גישה מורשית בלבד
           </p>
         </div>
       </div>
