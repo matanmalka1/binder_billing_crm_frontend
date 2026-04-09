@@ -6,7 +6,7 @@ import { vatReportsApi } from "../api";
 import { vatReportsQK } from "../api/queryKeys";
 
 interface VatPeriodSelectProps {
-  businessId: number;
+  clientId: number;
   year: number;
   value: string;
   onChange: (value: string) => void;
@@ -16,7 +16,7 @@ interface VatPeriodSelectProps {
 }
 
 export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
-  businessId,
+  clientId,
   year,
   value,
   onChange,
@@ -24,12 +24,12 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
   className,
   enabled = true,
 }) => {
-  const isValidBusiness = Number.isInteger(businessId) && businessId > 0;
+  const isValidClient = Number.isInteger(clientId) && (clientId as number) > 0;
 
   const { data, isLoading } = useQuery({
-    queryKey: vatReportsQK.periodOptions(businessId, year),
-    queryFn: () => vatReportsApi.getPeriodOptions(businessId, year),
-    enabled: enabled && isValidBusiness,
+    queryKey: vatReportsQK.periodOptions(clientId, year),
+    queryFn: () => vatReportsApi.getPeriodOptions(clientId, year),
+    enabled: enabled && isValidClient,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
@@ -42,8 +42,8 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
     () => [
       {
         value: "",
-        label: !isValidBusiness
-          ? "יש לבחור עסק"
+        label: !isValidClient
+          ? "יש לבחור לקוח"
           : isLoading
             ? "טוען תקופות..."
             : "בחר תקופה...",
@@ -54,10 +54,10 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
         disabled: opt.is_opened,
       })),
     ],
-    [isValidBusiness, isLoading, periodOptions],
+    [isValidClient, isLoading, periodOptions],
   );
 
-  const combinedError = error || (!selectedPeriodExists ? "התקופה שנבחרה אינה זמינה לעסק זה" : undefined);
+  const combinedError = error || (!selectedPeriodExists ? "התקופה שנבחרה אינה זמינה ללקוח זה" : undefined);
 
   return (
     <>
@@ -66,15 +66,15 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           options={options}
-          disabled={!isValidBusiness || isLoading}
+          disabled={!isValidClient || isLoading}
         />
       </FormField>
       {data?.period_type === "bimonthly" && (
         <p className={`text-xs text-gray-500 ${className ?? ""}`}>
-          העסק מוגדר לדיווח דו-חודשי
+          הלקוח מוגדר לדיווח דו-חודשי
         </p>
       )}
-      {!isLoading && isValidBusiness && periodOptions.length === 0 && (
+      {!isLoading && isValidClient && periodOptions.length === 0 && (
         <p className={`text-xs text-gray-500 ${className ?? ""}`}>
           לא נמצאו תקופות זמינות לשנה זו
         </p>

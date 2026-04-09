@@ -135,7 +135,7 @@ const AnnualCard = ({ row }: { row: VatAnnualSummary }) => {
 
 // ── Export controls ───────────────────────────────────────────────────────────
 
-const ExportControls = ({ businessId }: { businessId: number }) => {
+const ExportControls = ({ clientId }: { clientId: number }) => {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
   const [loadingExcel, setLoadingExcel] = useState(false);
@@ -145,7 +145,7 @@ const ExportControls = ({ businessId }: { businessId: number }) => {
     const setLoading = format === "excel" ? setLoadingExcel : setLoadingPdf;
     setLoading(true);
     try {
-      await vatReportsApi.exportBusinessVat(businessId, format, year);
+      await vatReportsApi.exportClientVat(clientId, format, year);
     } catch (err) {
       showErrorToast(err, "ייצוא נכשל, נסה שוב");
     } finally {
@@ -193,7 +193,7 @@ const ExportControls = ({ businessId }: { businessId: number }) => {
 
 // ── Panel ─────────────────────────────────────────────────────────────────────
 
-export const VatClientSummaryPanel = ({ businessId }: VatClientSummaryPanelProps) => {
+export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) => {
   const role = useAuthStore((s) => s.user?.role);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -201,8 +201,8 @@ export const VatClientSummaryPanel = ({ businessId }: VatClientSummaryPanelProps
   const [createError, setCreateError] = useState<string | null>(null);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: vatReportsQK.clientSummary(businessId),
-    queryFn: () => vatReportsApi.getBusinessSummary(businessId),
+    queryKey: vatReportsQK.clientSummary(clientId),
+    queryFn: () => vatReportsApi.getClientSummary(clientId),
     staleTime: 30_000,
     retry: 1,
   });
@@ -212,7 +212,7 @@ export const VatClientSummaryPanel = ({ businessId }: VatClientSummaryPanelProps
     onSuccess: async () => {
       toast.success('תיק מע"מ נוצר בהצלחה');
       await queryClient.invalidateQueries({
-        queryKey: vatReportsQK.clientSummary(businessId),
+        queryKey: vatReportsQK.clientSummary(clientId),
       });
     },
   });
@@ -245,7 +245,7 @@ export const VatClientSummaryPanel = ({ businessId }: VatClientSummaryPanelProps
         <Button onClick={() => setCreateOpen(true)} size="sm">
           + פתיחת תיק מע״מ
         </Button>
-        {role === "advisor" && <ExportControls businessId={businessId} />}
+        {role === "advisor" && <ExportControls clientId={clientId} />}
       </div>
 
       <DataTable<VatPeriodRow>
@@ -276,7 +276,7 @@ export const VatClientSummaryPanel = ({ businessId }: VatClientSummaryPanelProps
         createLoading={createMutation.isPending}
         onClose={() => setCreateOpen(false)}
         onSubmit={handleCreate}
-        initialClientId={businessId}
+        initialClientId={clientId}
       />
     </div>
   );

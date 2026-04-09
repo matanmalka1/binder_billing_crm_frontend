@@ -39,7 +39,7 @@ export const VatWorkItems: React.FC = () => {
 
   const navigate = useNavigate();
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const createBusinessId = urlParams.get("business_id");
+  const createClientId = urlParams.get("client_id");
   const createPeriod = urlParams.get("period");
 
   useEffect(() => {
@@ -151,7 +151,7 @@ export const VatWorkItems: React.FC = () => {
         createLoading={createLoading}
         onClose={() => setShowCreateModal(false)}
         onSubmit={submitCreate}
-        initialClientId={createBusinessId ? Number(createBusinessId) : undefined}
+        initialClientId={createClientId ? Number(createClientId) : undefined}
         initialPeriod={createPeriod ?? undefined}
       />
     </div>

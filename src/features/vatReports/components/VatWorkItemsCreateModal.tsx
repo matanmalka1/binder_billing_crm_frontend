@@ -5,9 +5,8 @@ import {
   ClientPickerField,
   useClientPickerState,
 } from "@/components/shared/client";
-import { FormField, Input, SelectDropdown } from "@/components/ui/inputs";
+import { Input } from "@/components/ui/inputs";
 import { Modal, ModalFormActions } from "@/components/ui/overlays";
-import { useBusinessesForClient } from "@/hooks/useBusinessesForClient";
 import { VatPeriodSelect } from "./VatPeriodSelect";
 import {
   vatWorkItemCreateDefaultValues,
@@ -40,10 +39,10 @@ export const VatWorkItemsCreateModal: React.FC<
     resolver: zodResolver(vatWorkItemCreateSchema),
   });
 
-  const resetClientDependentFields = () => {
-    setValue("business_id", "", { shouldDirty: true, shouldValidate: true });
+  const resetClientDependentFields = useCallback(() => {
+    setValue("client_id", "", { shouldDirty: true, shouldValidate: true });
     setValue("period", "", { shouldDirty: true, shouldValidate: true });
-  };
+  }, [setValue]);
 
   const {
     clientQuery,
@@ -57,23 +56,20 @@ export const VatWorkItemsCreateModal: React.FC<
     onClear: resetClientDependentFields,
   });
 
-  const businessIdValue = watch("business_id");
+  const clientIdValue = watch("client_id");
   const periodValue = watch("period");
-  const businessId = Number(businessIdValue);
+  const clientId = Number(clientIdValue);
 
-  const { businesses } = useBusinessesForClient({
-    clientId: selectedClient?.id,
-    enabled: open && initialClientId === undefined,
-    onAutoSelect: useCallback(
-      (business: { id: number }) =>
-        setValue("business_id", String(business.id), { shouldValidate: true }),
-      [setValue],
-    ),
-  });
+  // When a client is selected via picker, sync client_id
+  useEffect(() => {
+    if (selectedClient) {
+      setValue("client_id", String(selectedClient.id), { shouldValidate: true });
+    }
+  }, [selectedClient, setValue]);
 
   useEffect(() => {
     if (open && initialClientId !== undefined) {
-      setValue("business_id", String(initialClientId));
+      setValue("client_id", String(initialClientId));
     }
     if (open && initialPeriod) {
       setValue("period", initialPeriod);
@@ -83,7 +79,7 @@ export const VatWorkItemsCreateModal: React.FC<
   useEffect(() => {
     if (!open || initialClientId !== undefined) return;
     setValue("period", "");
-  }, [open, initialClientId, businessIdValue, setValue]);
+  }, [open, initialClientId, clientIdValue, setValue]);
 
   const periodYear = useMemo(() => {
     if (initialPeriod && /^\d{4}-/.test(initialPeriod)) {
@@ -129,45 +125,21 @@ export const VatWorkItemsCreateModal: React.FC<
       >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {initialClientId === undefined && (
-            <>
-              <div className="col-span-2">
-                <ClientPickerField
-                  selectedClient={selectedClient}
-                  clientQuery={clientQuery}
-                  onQueryChange={handleClientQueryChange}
-                  onSelect={handleSelectClient}
-                  onClear={handleClearClient}
-                  label="לקוח *"
-                />
-              </div>
-              <FormField label="עסק *" error={errors.business_id?.message}>
-                <SelectDropdown
-                  value={businessIdValue}
-                  onChange={(e) =>
-                    setValue("business_id", e.target.value, {
-                      shouldDirty: true,
-                      shouldValidate: true,
-                      shouldTouch: true,
-                    })
-                  }
-                  options={[
-                    {
-                      value: "",
-                      label: selectedClient ? "בחר עסק..." : "בחר קודם לקוח",
-                    },
-                    ...businesses.map((business) => ({
-                      value: String(business.id),
-                      label: business.business_name ?? `עסק #${business.id}`,
-                    })),
-                  ]}
-                  disabled={!selectedClient}
-                />
-              </FormField>
-              <input type="hidden" {...register("business_id")} />
-            </>
+            <div className="col-span-2">
+              <ClientPickerField
+                selectedClient={selectedClient}
+                clientQuery={clientQuery}
+                onQueryChange={handleClientQueryChange}
+                onSelect={handleSelectClient}
+                onClear={handleClearClient}
+                label="לקוח *"
+                error={errors.client_id?.message}
+              />
+              <input type="hidden" {...register("client_id")} />
+            </div>
           )}
           <VatPeriodSelect
-            businessId={businessId}
+            clientId={clientId}
             year={periodYear}
             value={periodValue}
             onChange={(value) =>

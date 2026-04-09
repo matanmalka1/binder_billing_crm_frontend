@@ -2,10 +2,9 @@ import type { PaginatedResponse } from "@/types";
 
 export interface VatWorkItemResponse {
   id: number;
-  business_id: number;
-  client_id: number | null;
-  business_name: string | null;
-  business_status: string | null;
+  client_id: number;
+  client_name: string | null;
+  client_status: string | null;
   period: string;
   period_type: string | null;
   status: string;
@@ -62,14 +61,14 @@ export interface VatPeriodOptionResponse {
 }
 
 export interface VatPeriodOptionsResponse {
-  business_id: number;
+  client_id: number;
   year: number;
   period_type: "monthly" | "bimonthly" | "exempt";
   options: VatPeriodOptionResponse[];
 }
 
 export interface CreateVatWorkItemPayload {
-  business_id: number;
+  client_id: number;
   period: string;
   assigned_to?: number | null;
   mark_pending?: boolean;
@@ -79,6 +78,7 @@ export interface CreateVatWorkItemPayload {
 export interface VatInvoiceResponse {
   id: number;
   work_item_id: number;
+  business_activity_id: number | null;
   invoice_type: string;
   document_type: string | null;
   invoice_number: string;
@@ -102,6 +102,7 @@ export interface VatInvoiceListResponse {
 
 export interface CreateVatInvoicePayload {
   invoice_type: "income" | "expense";
+  business_activity_id?: number | null;
   invoice_number?: string;
   invoice_date?: string;
   counterparty_name?: string;
@@ -166,7 +167,7 @@ export interface VatAnnualSummary {
 }
 
 export interface VatClientSummaryResponse {
-  business_id: number;
+  client_id: number;
   periods: VatPeriodRow[];
   annual: VatAnnualSummary[];
 }

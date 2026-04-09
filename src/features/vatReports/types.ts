@@ -59,7 +59,7 @@ export interface VatFiledBannerProps {
 }
 
 export interface VatClientSummaryPanelProps {
-  businessId: number;
+  clientId: number;
 }
 
 export interface VatExpenseTabProps {

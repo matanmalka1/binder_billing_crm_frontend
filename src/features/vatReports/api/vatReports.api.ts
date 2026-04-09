@@ -26,9 +26,9 @@ export const vatReportsApi = {
     return response.data;
   },
 
-  lookup: async (businessId: number, period: string): Promise<VatWorkItemLookupResponse | null> => {
+  lookup: async (clientId: number, period: string): Promise<VatWorkItemLookupResponse | null> => {
     const response = await api.get<VatWorkItemLookupResponse | null>(VAT_ENDPOINTS.vatWorkItemLookup, {
-      params: toQueryParams({ business_id: businessId, period }),
+      params: toQueryParams({ client_id: clientId, period }),
     });
     return response.data;
   },
@@ -43,8 +43,8 @@ export const vatReportsApi = {
     return response.data;
   },
 
-  getPeriodOptions: async (businessId: number, year?: number): Promise<VatPeriodOptionsResponse> => {
-    const response = await api.get<VatPeriodOptionsResponse>(VAT_ENDPOINTS.vatPeriodOptions(businessId), {
+  getPeriodOptions: async (clientId: number, year?: number): Promise<VatPeriodOptionsResponse> => {
+    const response = await api.get<VatPeriodOptionsResponse>(VAT_ENDPOINTS.vatPeriodOptions(clientId), {
       params: toQueryParams({ year }),
     });
     return response.data;
@@ -103,25 +103,25 @@ export const vatReportsApi = {
     return response.data;
   },
 
-  listByBusiness: async (businessId: number): Promise<VatWorkItemListResponse> => {
-    const response = await api.get<VatWorkItemListResponse>(VAT_ENDPOINTS.vatWorkItemsByBusiness(businessId));
+  listByClient: async (clientId: number): Promise<VatWorkItemListResponse> => {
+    const response = await api.get<VatWorkItemListResponse>(VAT_ENDPOINTS.vatWorkItemsByClient(clientId));
     return response.data;
   },
 
-  getBusinessSummary: async (businessId: number): Promise<VatClientSummaryResponse> => {
-    const response = await api.get<VatClientSummaryResponse>(VAT_ENDPOINTS.vatBusinessSummary(businessId));
+  getClientSummary: async (clientId: number): Promise<VatClientSummaryResponse> => {
+    const response = await api.get<VatClientSummaryResponse>(VAT_ENDPOINTS.vatClientSummary(clientId));
     return response.data;
   },
 
-  exportBusinessVat: async (businessId: number, format: "excel" | "pdf", year: number): Promise<void> => {
-    const response = await api.get<Blob>(VAT_ENDPOINTS.vatBusinessExport(businessId), {
+  exportClientVat: async (clientId: number, format: "excel" | "pdf", year: number): Promise<void> => {
+    const response = await api.get<Blob>(VAT_ENDPOINTS.vatClientExport(clientId), {
       params: toQueryParams({ format, year }),
       responseType: "blob",
     });
     const contentDisposition = response.headers["content-disposition"];
     const filenameMatch = contentDisposition?.match(/filename="?([^";]+)"?/);
     const ext = format === "excel" ? "xlsx" : "pdf";
-    const filename = filenameMatch?.[1] || `vat_business_${businessId}_${year}.${ext}`;
+    const filename = filenameMatch?.[1] || `vat_client_${clientId}_${year}.${ext}`;
     const mimeType =
       format === "excel"
         ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
