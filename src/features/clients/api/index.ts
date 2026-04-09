@@ -15,6 +15,8 @@ export type {
   ClientStatus,
   BusinessType,
   BusinessStatus,
+  EntityType,
+  VatType,
   BusinessResponse,
   BusinessWithClientResponse,
   BusinessListResponse,

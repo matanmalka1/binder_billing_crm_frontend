@@ -9,6 +9,7 @@ export interface ClientResponse {
   full_name: string;
   id_number: string;
   id_number_type: "individual" | "corporation" | "passport" | "other" | null;
+  entity_type: EntityType | null;
   status: ClientStatus;
   phone: string | null;
   email: string | null;
@@ -18,10 +19,18 @@ export interface ClientResponse {
   address_apartment: string | null;
   address_city: string | null;
   address_zip_code: string | null;
+  // Tax profile fields (formerly BusinessTaxProfile)
   vat_reporting_frequency: VatType | null;
+  vat_start_date: string | null;
+  vat_exempt_ceiling: string | null;
+  advance_rate: string | null;
+  advance_rate_updated_at: string | null;
+  accountant_name: string | null;
+  business_type_label: string | null;
+  fiscal_year_start_month: number;
+  tax_year_start: number | null;
   created_at: string;
   updated_at: string | null;
-  primary_business_type: BusinessType | null;
   active_binder_number: string | null;
 }
 
@@ -59,6 +68,7 @@ export interface CreateClientPayload {
   full_name: string;
   id_number: string;
   id_number_type?: "individual" | "corporation" | "passport" | "other";
+  entity_type?: EntityType | null;
   phone?: string | null;
   email?: string | null;
   address_street?: string | null;
@@ -67,6 +77,14 @@ export interface CreateClientPayload {
   address_city?: string | null;
   address_zip_code?: string | null;
   vat_reporting_frequency?: VatType | null;
+  vat_start_date?: string | null;
+  vat_exempt_ceiling?: string | null;
+  advance_rate?: string | null;
+  advance_rate_updated_at?: string | null;
+  accountant_name?: string | null;
+  business_type_label?: string | null;
+  fiscal_year_start_month?: number | null;
+  tax_year_start?: number | null;
 }
 
 export type BulkClientActionPayload = never;
@@ -84,9 +102,18 @@ export interface UpdateClientPayload {
   address_city?: string | null;
   address_zip_code?: string | null;
   vat_reporting_frequency?: VatType | null;
+  vat_start_date?: string | null;
+  vat_exempt_ceiling?: string | null;
+  advance_rate?: string | null;
+  advance_rate_updated_at?: string | null;
+  accountant_name?: string | null;
+  business_type_label?: string | null;
+  fiscal_year_start_month?: number | null;
+  tax_year_start?: number | null;
 }
 
 export type BusinessType = "osek_patur" | "osek_murshe" | "company" | "employee";
+export type EntityType = "osek_patur" | "osek_murshe" | "company_ltd" | "employee";
 export type BusinessStatus = "active" | "frozen" | "closed";
 export type ClientStatus = "active" | "frozen" | "closed";
 export type VatType = "monthly" | "bimonthly" | "exempt";

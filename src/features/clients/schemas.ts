@@ -4,6 +4,7 @@ import {
   BUSINESS_TYPES,
   CLIENT_ID_NUMBER_TYPES,
   CLIENT_STATUSES,
+  ENTITY_TYPES,
   VAT_TYPES,
   type ClientIdNumberType,
 } from "./constants";
@@ -30,12 +31,20 @@ export const createClientSchema = z
     id_number_type: z.enum(CLIENT_ID_NUMBER_TYPES),
     full_name: z.string().trim().min(2, "שם מלא חייב להכיל לפחות 2 תווים").max(100, "שם מלא ארוך מדי"),
     id_number: z.string().trim().min(1, "יש להזין מספר מזהה"),
+    entity_type: z.enum(ENTITY_TYPES).nullable().optional(),
     phone: z.string().trim().min(1, "יש להזין מספר טלפון").regex(/^0\d{1,2}-?\d{7}$/, "מספר טלפון לא תקין"),
     email: z.string().trim().min(1, "יש להזין כתובת אימייל").email("כתובת אימייל לא תקינה"),
     address_street: z.string().trim().optional().or(z.literal("")),
     address_building_number: z.string().trim().optional().or(z.literal("")),
+    address_apartment: z.string().trim().optional().or(z.literal("")),
     address_city: z.string().trim().optional().or(z.literal("")),
+    address_zip_code: z.string().trim().optional().or(z.literal("")),
     vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
+    vat_start_date: z.string().optional().nullable(),
+    vat_exempt_ceiling: z.string().optional().nullable(),
+    advance_rate: z.string().optional().nullable(),
+    fiscal_year_start_month: z.number().int().min(1).max(12).optional().nullable(),
+    tax_year_start: z.number().int().min(1900).max(2100).optional().nullable(),
   })
   .superRefine((data, ctx) => {
     if (!requiresIsraeliNumericId(data.id_number_type)) {
@@ -81,7 +90,16 @@ export const clientEditSchema = z.object({
   address_city: z.string().trim().optional().or(z.literal("")),
   address_zip_code: z.string().trim().optional().or(z.literal("")),
   notes: z.string().trim().optional().or(z.literal("")),
+  entity_type: z.enum(ENTITY_TYPES).nullable().optional(),
   vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
+  vat_start_date: z.string().optional().nullable(),
+  vat_exempt_ceiling: z.string().optional().nullable(),
+  advance_rate: z.string().optional().nullable(),
+  advance_rate_updated_at: z.string().optional().nullable(),
+  accountant_name: z.string().trim().optional().nullable(),
+  business_type_label: z.string().trim().optional().nullable(),
+  fiscal_year_start_month: z.number().int().min(1).max(12).optional().nullable(),
+  tax_year_start: z.number().int().min(1900).max(2100).optional().nullable(),
 });
 
 export type CreateClientFormValues = z.infer<typeof createClientSchema>;

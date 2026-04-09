@@ -99,9 +99,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
                 canEdit={canEditClients}
                 onEditStart={() => setIsEditing(true)}
               />
-              {firstBusinessId != null && (
-                <TaxProfileCard businessId={firstBusinessId} readOnly={!canEditClients} />
-              )}
+              <TaxProfileCard clientId={client.id} readOnly={!canEditClients} />
               <ClientBusinessesCard
                 clientId={client.id}
                 canEdit={canEditClients}

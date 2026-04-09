@@ -4,29 +4,19 @@ import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
 import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
 import { Alert } from "../../../components/ui/overlays/Alert";
-import { BUSINESS_TYPE_LABELS } from "../../clients/constants";
 import { getVatTypeLabel } from "../../../utils/enums";
 import { useTaxProfile } from "../hooks/useTaxProfile";
 import { TaxProfileForm } from "./TaxProfileForm";
 
-interface Props { businessId: number; readOnly?: boolean }
+interface Props { clientId: number | null; readOnly?: boolean }
 
-export const TaxProfileCard: React.FC<Props> = ({ businessId, readOnly = false }) => {
-  const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(businessId);
+export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) => {
+  const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(clientId ?? 0);
   const [isEditing, setIsEditing] = useState(false);
-  const businessType = profile?.business_type;
-  const businessTypeLabel = businessType && businessType in BUSINESS_TYPE_LABELS
-    ? BUSINESS_TYPE_LABELS[businessType as keyof typeof BUSINESS_TYPE_LABELS]
-    : businessType;
-
-  const resolvedVatType =
-    profile?.business_type_key === "osek_murshe"
-      ? profile.client_vat_reporting_frequency
-      : profile?.vat_type;
 
   const items = [
-    { label: "סוג דיווח", value: resolvedVatType ? getVatTypeLabel(resolvedVatType) : "—" },
-    { label: "סוג עסק", value: businessTypeLabel ?? "—" },
+    { label: "תדירות דיווח מע\"מ", value: profile?.vat_reporting_frequency ? getVatTypeLabel(profile.vat_reporting_frequency) : "—" },
+    { label: "סוג עסק", value: profile?.business_type_label ?? "—" },
     { label: "שנת מס ראשונה", value: profile?.tax_year_start ?? "—" },
     { label: "רואה חשבון מלווה", value: profile?.accountant_name ?? "—" },
     {

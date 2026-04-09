@@ -4,11 +4,11 @@ import type { TaxProfileFormValues } from "./schemas";
 export type { TaxProfileUpdatePayload };
 
 export interface TaxProfileQueryParams {
-  businessId: number;
+  clientId: number;
 }
 
 export interface TaxProfileCardProps {
-  businessId: number;
+  clientId: number | null;
   readOnly?: boolean;
 }
 

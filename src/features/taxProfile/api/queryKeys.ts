@@ -1,4 +1,3 @@
 export const taxProfileQK = {
-  forBusiness: (businessId: number) => ["businesses", "tax-profile", businessId] as const,
-  forClient: (businessId: number) => ["businesses", "tax-profile", businessId] as const,
+  forClient: (clientId: number) => ["clients", "tax-profile", clientId] as const,
 } as const;

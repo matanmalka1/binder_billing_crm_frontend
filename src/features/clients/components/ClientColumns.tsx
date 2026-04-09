@@ -3,7 +3,7 @@ import { buildSelectionColumn } from "../../../components/ui/table/tableSelectio
 import type { ClientResponse } from "../api";
 import { formatDate } from "../../../utils/utils";
 import { ClientRowActions } from "./ClientRowActions";
-import { getBusinessTypeLabel, getClientStatusLabel, getVatTypeLabel } from "../constants";
+import { getEntityTypeLabel, getClientStatusLabel, getVatTypeLabel } from "../constants";
 
 const STATUS_BADGE: Record<string, { className: string }> = {
   active: { className: "bg-positive-100 text-positive-800" },
@@ -55,12 +55,12 @@ export const buildClientColumns = ({
       ),
     },
     {
-      key: "primary_business_type",
-      header: "סוג לקוח",
+      key: "entity_type",
+      header: "סוג ישות",
       render: (client) => (
         <span className="text-sm text-gray-500">
-          {client.primary_business_type
-            ? getBusinessTypeLabel(client.primary_business_type)
+          {client.entity_type
+            ? getEntityTypeLabel(client.entity_type)
             : "—"}
         </span>
       ),

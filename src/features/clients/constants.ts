@@ -1,5 +1,5 @@
 import { makeLabelGetter } from "../../utils/labels";
-import type { BusinessType, ClientResponse, ClientStatus, VatType } from "./api";
+import type { BusinessType, ClientResponse, ClientStatus, EntityType, VatType } from "./api";
 
 export type ActiveClientDetailsTab = "details" | "communication" | "finance";
 export type ClientIdNumberType = Exclude<ClientResponse["id_number_type"], null>;
@@ -25,6 +25,13 @@ export const BUSINESS_TYPES = [
   "company",
   "employee",
 ] as const satisfies readonly BusinessType[];
+
+export const ENTITY_TYPES = [
+  "osek_patur",
+  "osek_murshe",
+  "company_ltd",
+  "employee",
+] as const satisfies readonly EntityType[];
 
 export const CLIENT_ID_NUMBER_TYPE_LABELS: Record<ClientIdNumberType, string> = {
   individual: "יחיד / עוסק",
@@ -54,6 +61,13 @@ export const BUSINESS_TYPE_LABELS: Record<BusinessType, string> = {
   employee: "שכיר",
 };
 
+export const ENTITY_TYPE_LABELS: Record<EntityType, string> = {
+  osek_patur: "עוסק פטור",
+  osek_murshe: "עוסק מורשה",
+  company_ltd: 'חברה בע"מ',
+  employee: "שכיר",
+};
+
 export const CLIENT_STATUSES = ["active", "frozen", "closed"] as const satisfies readonly ClientStatus[];
 
 export const CLIENT_STATUS_LABELS: Record<ClientStatus, string> = {
@@ -73,5 +87,6 @@ export const VAT_TYPE_LABELS: Record<VatType, string> = {
 export const getClientIdNumberTypeLabel = makeLabelGetter(CLIENT_ID_NUMBER_TYPE_LABELS);
 export const getClientIdNumberInputLabel = makeLabelGetter(CLIENT_ID_NUMBER_INPUT_LABELS);
 export const getBusinessTypeLabel = makeLabelGetter(BUSINESS_TYPE_LABELS);
+export const getEntityTypeLabel = makeLabelGetter(ENTITY_TYPE_LABELS);
 export const getClientStatusLabel = makeLabelGetter(CLIENT_STATUS_LABELS);
 export const getVatTypeLabel = makeLabelGetter(VAT_TYPE_LABELS);

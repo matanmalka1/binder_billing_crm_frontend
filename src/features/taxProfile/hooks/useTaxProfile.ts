@@ -10,30 +10,25 @@ import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 
 export type { TaxProfileData };
 
-export const useTaxProfile = (businessId: number) => {
+export const useTaxProfile = (clientId: number) => {
   const queryClient = useQueryClient();
-  const qk = taxProfileQK.forBusiness(businessId);
+  const qk = taxProfileQK.forClient(clientId);
 
   const profileQuery = useQuery({
-    enabled: businessId > 0,
+    enabled: clientId > 0,
     queryKey: qk,
-    queryFn: () => taxProfileApi.get(businessId),
+    queryFn: () => taxProfileApi.get(clientId),
     retry: false,
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data: TaxProfileUpdatePayload) => taxProfileApi.update(businessId, data),
+    mutationFn: (data: TaxProfileUpdatePayload) => taxProfileApi.update(clientId, data),
     onSuccess: (updated) => {
       toast.success("פרטי מס עודכנו בהצלחה");
       queryClient.setQueryData(qk, updated);
     },
     onError: (err) => {
-      const code = (err as { response?: { data?: { error_code?: string } } })?.response?.data?.error_code;
-      if (code === "BUSINESS.SOLE_TRADER_CONFLICT") {
-        toast.error("לא ניתן לשלב עוסק פטור ועוסק מורשה תחת אותו לקוח");
-      } else {
-        showErrorToast(err, "שגיאה בעדכון פרטי מס");
-      }
+      showErrorToast(err, "שגיאה בעדכון פרטי מס");
     },
   });
 
