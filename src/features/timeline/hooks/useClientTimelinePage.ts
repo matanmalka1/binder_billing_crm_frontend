@@ -5,15 +5,15 @@ import { timelineApi, timelineQK } from "../api";
 import { getErrorMessage, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
 import { useActionRunner } from "@/features/actions";
 
-export const useClientTimelinePage = (businessId: string | undefined) => {
+export const useClientTimelinePage = (clientId: string | undefined) => {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const page = parsePositiveInt(searchParams.get("page"), 1);
   const pageSize = parsePositiveInt(searchParams.get("page_size"), 50);
 
-  const businessIdNumber = Number(businessId || 0);
-  const hasValidClient = isPositiveInt(businessIdNumber);
+  const clientIdNumber = Number(clientId || 0);
+  const hasValidClient = isPositiveInt(clientIdNumber);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilters, setTypeFilters] = useState<string[]>([]);
@@ -22,8 +22,8 @@ export const useClientTimelinePage = (businessId: string | undefined) => {
 
   const timelineQuery = useQuery({
     enabled: hasValidClient,
-    queryKey: timelineQK.businessEvents(businessIdNumber, timelineParams),
-    queryFn: () => timelineApi.getClientTimeline(businessIdNumber, timelineParams),
+    queryKey: timelineQK.clientEvents(clientIdNumber, timelineParams),
+    queryFn: () => timelineApi.getClientTimeline(clientIdNumber, timelineParams),
   });
 
   const events = useMemo(() => timelineQuery.data?.events ?? [], [timelineQuery.data?.events]);
@@ -80,7 +80,7 @@ export const useClientTimelinePage = (businessId: string | undefined) => {
   } = useActionRunner({
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: timelineQK.businessRoot(businessIdNumber),
+        queryKey: timelineQK.clientRoot(clientIdNumber),
       }),
     errorFallback: "שגיאה בביצוע פעולה",
     canonicalAction: true,

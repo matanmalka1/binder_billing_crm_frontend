@@ -10,6 +10,7 @@ import { toast } from "../../../../utils/toast";
 import { Badge } from "../../../../components/ui/primitives/Badge";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "@/features/documents";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
+import { useFirstBusinessId } from "@/features/clients/hooks/useFirstBusinessId";
 
 const DOC_TYPE_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   id_copy:                 CreditCard,
@@ -59,15 +60,16 @@ export const MissingDocRow = ({ clientId, docType, annualReportId }: MissingDocR
   const Icon = DOC_TYPE_ICONS[docType] ?? FileText;
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+  const { id: firstBusinessId } = useFirstBusinessId(clientId);
 
   const upload = useMutation({
     mutationFn: (file: File) => documentsApi.upload({
-      business_id: clientId, document_type: docType as never, file,
+      business_id: firstBusinessId ?? 0, client_id: clientId, document_type: docType as never, file,
       ...(annualReportId != null ? { annual_report_id: annualReportId } : {}),
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: documentsQK.businessList(clientId) });
-      queryClient.invalidateQueries({ queryKey: documentsQK.businessSignals(clientId) });
+      queryClient.invalidateQueries({ queryKey: documentsQK.clientList(clientId) });
+      queryClient.invalidateQueries({ queryKey: documentsQK.clientSignals(clientId) });
       if (annualReportId != null)
         queryClient.invalidateQueries({ queryKey: documentsQK.byAnnualReport(annualReportId) });
     },
@@ -92,7 +94,7 @@ export const MissingDocRow = ({ clientId, docType, annualReportId }: MissingDocR
           variant="primary"
           size="sm"
           onClick={() => inputRef.current?.click()}
-          disabled={upload.isPending}
+          disabled={upload.isPending || firstBusinessId == null}
           isLoading={upload.isPending}
           className="text-xs px-3 py-1.5 bg-warning-500 hover:bg-warning-600"
         >

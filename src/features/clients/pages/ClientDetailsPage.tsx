@@ -3,12 +3,17 @@ import { useParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
+import type { ActiveClientDetailsTab } from "../constants";
 import {
   ClientDetailsTabContent,
   useClientDetails,
 } from "@/features/clients";
 
-export const ClientDetails: FC = () => {
+interface ClientDetailsProps {
+  initialTab?: ActiveClientDetailsTab;
+}
+
+export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = "details" }) => {
   const { clientId } = useParams<{ clientId: string }>();
   const clientIdNum = clientId ? Number(clientId) : null;
   const {
@@ -53,6 +58,7 @@ export const ClientDetails: FC = () => {
     >
       {client ? (
         <ClientDetailsTabContent
+          initialTab={initialTab}
           overviewProps={{
             client,
             clientId: client.id,

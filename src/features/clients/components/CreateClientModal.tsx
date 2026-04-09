@@ -11,18 +11,12 @@ import {
   CLIENT_ID_NUMBER_INPUT_LABELS,
   CLIENT_ID_NUMBER_PLACEHOLDERS,
   CLIENT_ID_NUMBER_TYPE_LABELS,
+  ENTITY_OPTIONS_BY_ID_TYPE,
   ENTITY_TYPE_LABELS,
   VAT_TYPE_LABELS,
 } from "../constants";
 import { createClientSchema, type CreateClientFormValues } from "../schemas";
 import type { ClientIdNumberType } from "../constants";
-
-const ENTITY_OPTIONS_BY_ID_TYPE: Record<ClientIdNumberType, EntityType[]> = {
-  individual: ["osek_patur", "osek_murshe", "employee"],
-  corporation: ["company_ltd"],
-  passport: ["osek_patur", "osek_murshe", "employee"],
-  other: ["osek_patur", "osek_murshe", "company_ltd", "employee"],
-};
 
 const VAT_EXEMPT_CEILING_DEFAULT = "120000";
 
@@ -81,17 +75,15 @@ export const CreateClientModal: React.FC<Props> = ({
       address_city: "",
       address_zip_code: "",
       vat_reporting_frequency: null,
-      vat_start_date: null,
       vat_exempt_ceiling: null,
       advance_rate: null,
-      fiscal_year_start_month: null,
-      tax_year_start: null,
+      business_start_date: null,
     },
   });
 
   const idNumberType = watch("id_number_type");
   const currentEntityType = watch("entity_type");
-  const { field: vatStartDateField } = useController({ name: "vat_start_date", control });
+  const { field: businessStartDateField } = useController({ name: "business_start_date", control });
   const idNumberLabel = CLIENT_ID_NUMBER_INPUT_LABELS[idNumberType] ?? "מספר מזהה";
   const idNumberPlaceholder = CLIENT_ID_NUMBER_PLACEHOLDERS[idNumberType] ?? "הזן מספר מזהה";
   const shouldStripToDigits = idNumberType === "individual" || idNumberType === "corporation";
@@ -145,11 +137,9 @@ export const CreateClientModal: React.FC<Props> = ({
       address_city: data.address_city || null,
       address_zip_code: data.address_zip_code || null,
       vat_reporting_frequency: data.vat_reporting_frequency || null,
-      vat_start_date: data.vat_start_date || null,
       vat_exempt_ceiling: data.vat_exempt_ceiling || null,
       advance_rate: data.advance_rate || null,
-      fiscal_year_start_month: data.fiscal_year_start_month || null,
-      tax_year_start: data.tax_year_start || null,
+      business_start_date: data.business_start_date || null,
     };
     await onSubmit(payload);
     reset();
@@ -285,28 +275,17 @@ export const CreateClientModal: React.FC<Props> = ({
         {/* הגדרות מע״מ ומס */}
         <div className="border-t border-gray-200 pt-4 space-y-4">
           <p className="text-sm font-medium text-gray-700">הגדרות מע״מ ומס</p>
-          <div className="grid grid-cols-2 gap-4">
-            <Select
-              label="תדירות דיווח מע״מ"
-              disabled={isLoading}
-              options={[
-                { value: "", label: "לא הוגדר" },
-                { value: "monthly", label: VAT_TYPE_LABELS.monthly },
-                { value: "bimonthly", label: VAT_TYPE_LABELS.bimonthly },
-                { value: "exempt", label: VAT_TYPE_LABELS.exempt },
-              ]}
-              {...register("vat_reporting_frequency")}
-            />
-            <DatePicker
-              label="תאריך תחילת מע״מ"
-              error={errors.vat_start_date?.message}
-              disabled={isLoading}
-              value={vatStartDateField.value ?? ""}
-              onChange={vatStartDateField.onChange}
-              onBlur={vatStartDateField.onBlur}
-              name={vatStartDateField.name}
-            />
-          </div>
+          <Select
+            label="תדירות דיווח מע״מ"
+            disabled={isLoading}
+            options={[
+              { value: "", label: "לא הוגדר" },
+              { value: "monthly", label: VAT_TYPE_LABELS.monthly },
+              { value: "bimonthly", label: VAT_TYPE_LABELS.bimonthly },
+              { value: "exempt", label: VAT_TYPE_LABELS.exempt },
+            ]}
+            {...register("vat_reporting_frequency")}
+          />
           <div className="grid grid-cols-2 gap-4">
             {showVatCeiling && (
               <div>
@@ -347,26 +326,15 @@ export const CreateClientModal: React.FC<Props> = ({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="חודש תחילת שנת מס"
-              type="number"
-              placeholder="1"
-              min={1}
-              max={12}
-              error={errors.fiscal_year_start_month?.message}
-              disabled={isLoading}
-              {...register("fiscal_year_start_month", { valueAsNumber: true })}
-            />
-            <Input
-              label="שנת מס התחלתית"
-              type="number"
-              placeholder="2024"
-              error={errors.tax_year_start?.message}
-              disabled={isLoading}
-              {...register("tax_year_start", { valueAsNumber: true })}
-            />
-          </div>
+          <DatePicker
+            label="תאריך הקמת העסק"
+            error={errors.business_start_date?.message}
+            disabled={isLoading}
+            value={businessStartDateField.value ?? ""}
+            onChange={businessStartDateField.onChange}
+            onBlur={businessStartDateField.onBlur}
+            name={businessStartDateField.name}
+          />
         </div>
 
         <p className="text-xs text-gray-500">* שדות חובה</p>

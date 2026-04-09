@@ -30,6 +30,13 @@ export const isPositiveInt = (
   return value != null && value > 0;
 };
 
+export const formatClientOfficeId = (
+  value: number | string | null | undefined,
+): string => {
+  if (value == null || value === "") return "—";
+  return `#${value}`;
+};
+
 export const formatDate = (value: string | null): string => {
   if (!value) return "—";
   return format(parseISO(value), "dd/MM/yyyy", { locale: he });

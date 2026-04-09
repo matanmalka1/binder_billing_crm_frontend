@@ -14,21 +14,25 @@ export const useDocumentUpload = (businessId: number) => {
       setUploadError(null);
       toast.success("מסמך הועלה בהצלחה");
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: documentsQK.businessList(variables.business_id) }),
-        queryClient.invalidateQueries({ queryKey: documentsQK.businessSignals(variables.business_id) }),
+        queryClient.invalidateQueries({ queryKey: documentsQK.clientList(variables.client_id) }),
+        queryClient.invalidateQueries({ queryKey: documentsQK.clientSignals(variables.client_id) }),
       ]);
     },
   });
 
   const submitUpload = async (
-    payload: Pick<UploadDocumentPayload, "document_type" | "file"> & { tax_year?: number | null },
+    payload: Pick<UploadDocumentPayload, "client_id" | "document_type" | "file"> & {
+      tax_year?: number | null;
+      notes?: string | null;
+      annual_report_id?: number | null;
+    },
   ): Promise<boolean> => {
     if (!businessId) {
-      setUploadError("יש לבחור לקוח לפני העלאה");
+      setUploadError("יש להגדיר עסק פעיל לפני העלאה");
       return false;
     }
     try {
-      await uploadMutation.mutateAsync({ business_id: businessId, ...payload });
+      await uploadMutation.mutateAsync({ business_id: businessId, client_id: payload.client_id, ...payload });
       return true;
     } catch (err: unknown) {
       setUploadError(getErrorMessage(err, "שגיאה בהעלאת מסמך"));

@@ -4,11 +4,15 @@ import { ClientDetailsTabBar } from "./ClientDetailsTabBar";
 import { type ActiveClientDetailsTab } from "../constants";
 
 type ClientDetailsTabContentProps = {
+  initialTab?: ActiveClientDetailsTab;
   overviewProps: Omit<ClientDetailsOverviewTabProps, "activeTab">;
 };
 
-export const ClientDetailsTabContent: FC<ClientDetailsTabContentProps> = ({ overviewProps }) => {
-  const [activeTab, setActiveTab] = useState<ActiveClientDetailsTab>("details");
+export const ClientDetailsTabContent: FC<ClientDetailsTabContentProps> = ({
+  initialTab = "details",
+  overviewProps,
+}) => {
+  const [activeTab, setActiveTab] = useState<ActiveClientDetailsTab>(initialTab);
 
   return (
     <div className="space-y-4">

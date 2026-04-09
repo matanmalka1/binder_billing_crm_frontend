@@ -6,10 +6,10 @@ import { AuthorityContactModal } from "./AuthorityContactModal";
 import { AuthorityContactsListCard } from "./AuthorityContactsListCard";
 
 interface AuthorityContactsCardProps {
-  businessId: number;
+  clientId: number;
 }
 
-export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ businessId }) => {
+export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ clientId }) => {
   const {
     contacts,
     total,
@@ -20,7 +20,7 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ bu
     error,
     deleteContact,
     deletingId,
-  } = useAuthorityContacts(businessId);
+  } = useAuthorityContacts(clientId);
   const {
     editing,
     isModalOpen,
@@ -57,7 +57,7 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ bu
 
       <AuthorityContactModal
         open={isModalOpen}
-        businessId={businessId}
+        clientId={clientId}
         existing={editing}
         onClose={closeModal}
       />

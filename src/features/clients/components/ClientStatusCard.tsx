@@ -126,14 +126,14 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title='מע"מ'
           primary={fmt(vat.net_vat_total)}
           secondary={vatStatus}
-          onClick={firstBusinessId != null ? () => navigate(`/clients/${clientId}/businesses/${firstBusinessId}/vat`) : undefined}
+          onClick={() => navigate(`/clients/${clientId}/vat`)}
         />
         <Tile
           icon={<FileText size={18} />}
           title="דוח שנתי"
           primary={arStatus}
           secondary={arSecondary}
-          onClick={firstBusinessId != null ? () => navigate(`/clients/${clientId}/businesses/${firstBusinessId}/annual-reports`) : undefined}
+          onClick={() => navigate(`/clients/${clientId}/annual-reports`)}
         />
         <Tile
           icon={<CreditCard size={18} />}
@@ -147,7 +147,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title="מקדמות"
           primary={fmt(advance_payments.total_paid)}
           secondary={`${advance_payments.count} תשלומים`}
-          onClick={firstBusinessId != null ? () => navigate(`/clients/${clientId}/businesses/${firstBusinessId}/advance-payments`) : undefined}
+          onClick={() => navigate(`/clients/${clientId}/advance-payments`)}
         />
         <Tile
           icon={<FolderOpen size={18} />}
@@ -161,7 +161,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title="מסמכים"
           primary={`${documents.present_count}/${documents.total_count}`}
           secondary="מסמכים קיימים"
-          onClick={firstBusinessId != null ? () => navigate(`/clients/${clientId}/businesses/${firstBusinessId}/documents`) : undefined}
+          onClick={() => navigate(`/clients/${clientId}/documents`)}
         />
       </div>
     </Card>

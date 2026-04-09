@@ -1,13 +1,38 @@
 import { makeLabelGetter } from "../../utils/labels";
 import type { BusinessType, ClientResponse, ClientStatus, EntityType, VatType } from "./api";
 
-export type ActiveClientDetailsTab = "details" | "communication" | "finance";
+export type ActiveClientDetailsTab =
+  | "details"
+  | "documents"
+  | "deadlines"
+  | "timeline"
+  | "vat"
+  | "advance-payments"
+  | "annual-reports"
+  | "communication"
+  | "finance";
 export type ClientIdNumberType = Exclude<ClientResponse["id_number_type"], null>;
 
-export const CLIENT_DETAILS_TABS: ActiveClientDetailsTab[] = ["details", "communication", "finance"];
+export const CLIENT_DETAILS_TABS: ActiveClientDetailsTab[] = [
+  "details",
+  "documents",
+  "deadlines",
+  "timeline",
+  "vat",
+  "advance-payments",
+  "annual-reports",
+  "communication",
+  "finance",
+];
 
 export const CLIENT_DETAILS_TAB_LABELS: Record<ActiveClientDetailsTab, string> = {
-  details: "פרטים ועסקים",
+  details: "פרטים",
+  documents: "מסמכים",
+  deadlines: "מועדים",
+  timeline: "ציר זמן",
+  vat: 'מע"מ',
+  "advance-payments": "מקדמות",
+  "annual-reports": "דוחות שנתיים",
   communication: "תקשורת",
   finance: "כספים",
 };
@@ -82,6 +107,13 @@ export const VAT_TYPE_LABELS: Record<VatType, string> = {
   monthly: "חודשי",
   bimonthly: "דו-חודשי",
   exempt: "פטור",
+};
+
+export const ENTITY_OPTIONS_BY_ID_TYPE: Record<ClientIdNumberType, EntityType[]> = {
+  individual: ["osek_patur", "osek_murshe", "employee"],
+  corporation: ["company_ltd"],
+  passport: ["osek_patur", "osek_murshe", "employee"],
+  other: ["osek_patur", "osek_murshe", "company_ltd", "employee"],
 };
 
 export const getClientIdNumberTypeLabel = makeLabelGetter(CLIENT_ID_NUMBER_TYPE_LABELS);

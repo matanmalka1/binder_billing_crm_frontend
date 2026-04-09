@@ -3,7 +3,7 @@ import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import type { Column } from "../../../components/ui/table/DataTable";
 import type { VatWorkItemResponse } from "../api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
-import { formatDate, formatDateTime } from "../../../utils/utils";
+import { formatClientOfficeId, formatDate, formatDateTime } from "@/utils/utils";
 import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { formatVatAmount } from "../utils";
 import { VatWorkItemRowActions } from "./VatWorkItemRowActions";
@@ -20,11 +20,20 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     ),
   },
   {
+    key: "client_office_id",
+    header: "מזהה מערכת",
+    render: (item) => (
+      <span className="font-mono text-sm text-gray-500 tabular-nums">
+        {formatClientOfficeId(item.client_id)}
+      </span>
+    ),
+  },
+  {
     key: "client_id",
     header: "לקוח",
     render: (item) => (
       <span className="text-sm font-semibold text-gray-900">
-        {item.client_name ?? `#${item.client_id}`}
+        {item.client_name ?? formatClientOfficeId(item.client_id)}
       </span>
     ),
   },

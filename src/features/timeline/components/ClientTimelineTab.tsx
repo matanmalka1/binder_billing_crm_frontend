@@ -6,10 +6,10 @@ import { PageLoading } from "../../../components/ui/layout/PageLoading";
 import { Alert } from "../../../components/ui/overlays/Alert";
 
 interface ClientTimelineTabProps {
-  businessId: string | undefined;
+  clientId: string | undefined;
 }
 
-export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ businessId }) => {
+export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }) => {
   const {
     error,
     filteredEvents,
@@ -24,7 +24,7 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ businessId
     filters,
     eventTypeStats,
     summary,
-  } = useClientTimelinePage(businessId);
+  } = useClientTimelinePage(clientId);
 
   if (loading) return <PageLoading message="טוען ציר זמן..." />;
   if (error) return <Alert variant="error" message={error} />;

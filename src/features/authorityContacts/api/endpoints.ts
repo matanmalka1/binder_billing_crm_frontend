@@ -1,5 +1,5 @@
 export const AUTHORITY_CONTACT_ENDPOINTS = {
-  businessAuthorityContacts: (businessId: number | string) =>
-    `/businesses/${businessId}/authority-contacts`,
-  authorityContactById: (id: number | string) => `/businesses/authority-contacts/${id}`,
+  clientAuthorityContacts: (clientId: number | string) =>
+    `/clients/${clientId}/authority-contacts`,
+  authorityContactById: (id: number | string) => `/clients/authority-contacts/${id}`,
 } as const;

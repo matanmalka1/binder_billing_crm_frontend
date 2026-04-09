@@ -4,7 +4,7 @@ import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { MonoValue } from "../../../components/ui/primitives/MonoValue";
 import type { BinderResponse } from "../types";
 import { getStatusLabel } from "../../../utils/enums";
-import { formatMonthYear } from "../../../utils/utils";
+import { formatClientOfficeId, formatMonthYear } from "../../../utils/utils";
 import { BINDER_STATUS_VARIANTS } from "../constants";
 import { BinderRowActions } from "./BinderRowActions";
 
@@ -45,6 +45,15 @@ export const buildBindersColumns = ({
   onOpenDetail,
   onDelete,
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
+  {
+    key: "client_id",
+    header: "מזהה מערכת",
+    render: (binder) => (
+      <span className="font-mono text-sm text-gray-500 tabular-nums">
+        {formatClientOfficeId(binder.client_id)}
+      </span>
+    ),
+  },
   {
     key: "client_name",
     header: "לקוח",

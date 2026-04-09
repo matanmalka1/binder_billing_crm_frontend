@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { Input } from "@/components/ui/inputs/Input";
 import { searchApi } from "@/features/search/api";
 import type { SearchResult } from "@/features/search/api";
+import { formatClientOfficeId } from "@/utils/utils";
 
 // ── Controlled search input (value/onChange) ──────────────────────────────────
 
@@ -95,7 +96,7 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
               className="flex cursor-pointer items-center justify-between px-4 py-2.5 hover:bg-primary-50 text-sm"
             >
               <span className="font-medium text-gray-900">{result.client_name}</span>
-              <span className="text-xs text-gray-400">#{result.client_id}</span>
+              <span className="text-xs text-gray-400">{formatClientOfficeId(result.client_id)}</span>
             </li>
           ))}
         </ul>
@@ -125,7 +126,7 @@ export const SelectedClientDisplay: React.FC<SelectedClientDisplayProps> = ({
     <label className="block text-sm font-medium text-gray-700">{label}</label>
     <div className="flex items-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-3 py-3">
       <span className="flex-1 text-sm font-medium text-primary-900">{name}</span>
-      <span className="text-xs text-primary-500">#{id}</span>
+      <span className="text-xs text-primary-500">{formatClientOfficeId(id)}</span>
       <button
         type="button"
         onClick={onClear}

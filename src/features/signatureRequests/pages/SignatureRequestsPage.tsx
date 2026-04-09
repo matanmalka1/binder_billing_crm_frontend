@@ -19,7 +19,7 @@ import {
   type SignatureRequestResponse,
 } from "@/features/signatureRequests";
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "@/utils/enums";
-import { formatDate } from "@/utils/utils";
+import { formatClientOfficeId, formatDate } from "@/utils/utils";
 
 export const SignatureRequestsPage: React.FC = () => {
   const { items, total, businessLookup, isLoading, error } = usePendingSignatureRequests();
@@ -41,6 +41,18 @@ export const SignatureRequestsPage: React.FC = () => {
 
   const columns = useMemo(
     () => [
+      {
+        key: "client_id",
+        header: "מזהה מערכת",
+        render: (req: SignatureRequestResponse) => {
+          const clientId = businessLookup[req.business_id]?.clientId;
+          return (
+            <span className="font-mono text-sm text-gray-500 tabular-nums">
+              {clientId != null ? formatClientOfficeId(clientId) : "—"}
+            </span>
+          );
+        },
+      },
       {
         key: "title",
         header: "כותרת",

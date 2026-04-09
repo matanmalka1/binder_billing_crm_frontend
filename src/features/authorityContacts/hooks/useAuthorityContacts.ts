@@ -6,22 +6,22 @@ import { toast } from "../../../utils/toast";
 
 const PAGE_SIZE = 20;
 
-export const useAuthorityContacts = (businessId: number) => {
+export const useAuthorityContacts = (clientId: number) => {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
-  const qk = [...authorityContactsQK.forBusiness(businessId), { page, page_size: PAGE_SIZE }];
+  const qk = [...authorityContactsQK.forClient(clientId), { page, page_size: PAGE_SIZE }];
 
   const listQuery = useQuery({
-    enabled: businessId > 0,
+    enabled: clientId > 0,
     queryKey: qk,
-    queryFn: () => authorityContactsApi.listAuthorityContacts(businessId, undefined, page, PAGE_SIZE),
+    queryFn: () => authorityContactsApi.listAuthorityContacts(clientId, undefined, page, PAGE_SIZE),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (contactId: number) => authorityContactsApi.deleteAuthorityContact(contactId),
     onSuccess: () => {
       toast.success("איש קשר נמחק בהצלחה");
-      queryClient.invalidateQueries({ queryKey: authorityContactsQK.forBusiness(businessId) });
+      queryClient.invalidateQueries({ queryKey: authorityContactsQK.forClient(clientId) });
     },
     onError: (err) => showErrorToast(err, "שגיאה במחיקת איש קשר"),
   });

@@ -14,14 +14,14 @@ interface UpdatePayload {
 }
 
 export const useAdvancePayments = (
-  businessId: number,
+  clientId: number,
   year: number,
   statusFilter?: AdvancePaymentStatus[],
   page = 1,
 ) => {
   const queryClient = useQueryClient();
-  const qk = advancedPaymentsQK.forBusinessYear(businessId, year);
-  const enabled = businessId > 0;
+  const qk = advancedPaymentsQK.forClientYear(clientId, year);
+  const enabled = clientId > 0;
 
   const listQuery = useQuery({
     enabled,
@@ -30,7 +30,7 @@ export const useAdvancePayments = (
       : [...qk, page],
     queryFn: () =>
       advancePaymentsApi.list({
-        business_id: businessId,
+        client_id: clientId,
         year,
         page,
         page_size: 20,
@@ -41,7 +41,7 @@ export const useAdvancePayments = (
 
   const updateMutation = useMutation({
     mutationFn: ({ id, ...payload }: UpdatePayload) =>
-      advancePaymentsApi.update(businessId, id, payload),
+      advancePaymentsApi.update(clientId, id, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: qk });
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all });
@@ -50,14 +50,14 @@ export const useAdvancePayments = (
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateAdvancePaymentPayload) =>
-      advancePaymentsApi.create(payload),
+      advancePaymentsApi.create(clientId, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: qk });
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => advancePaymentsApi.delete(businessId, id),
+    mutationFn: (id: number) => advancePaymentsApi.delete(clientId, id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: qk });
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all });

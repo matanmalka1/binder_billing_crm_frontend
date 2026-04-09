@@ -3,7 +3,6 @@ import { useState } from "react";
 import { annualReportSeasonApi, annualReportsQK } from "../api";
 import { annualReportStatusApi } from "../api";
 import { showErrorToast } from "../../../utils/utils";
-import { timelineQK } from "@/features/timeline/api";
 import { toast } from "../../../utils/toast";
 import { STAGE_ORDER, KANBAN_PAGE_SIZE, type StageKey, type KanbanStage } from "../types";
 
@@ -51,7 +50,7 @@ export const useAnnualReportsKanban = (taxYear: number) => {
       const allReports = kanbanQuery.data?.stages.flatMap((s) => s.reports) ?? [];
       const report = allReports.find((r) => r.id === reportId);
       if (report) {
-        queryClient.invalidateQueries({ queryKey: timelineQK.businessRoot(report.business_id) });
+        queryClient.invalidateQueries({ queryKey: ["timeline"] });
       }
     },
     onSettled: () => {

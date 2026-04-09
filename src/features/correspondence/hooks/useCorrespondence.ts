@@ -8,9 +8,10 @@ import { toast } from "../../../utils/toast";
 
 const PAGE_SIZE = 50;
 
-export const useCorrespondence = (businessId: number) => {
+export const useCorrespondence = (businessId: number, clientId?: number) => {
   const queryClient = useQueryClient();
   const queryKey = [...correspondenceQK.forBusiness(businessId), { page: 1, page_size: PAGE_SIZE }];
+  const contactsClientId = clientId ?? businessId;
 
   const listQuery = useQuery({
     enabled: businessId > 0,
@@ -20,9 +21,9 @@ export const useCorrespondence = (businessId: number) => {
   });
 
   const contactsQuery = useQuery({
-    enabled: businessId > 0,
-    queryKey: [...authorityContactsQK.forBusiness(businessId), { page: 1, page_size: 100 }],
-    queryFn: () => authorityContactsApi.listAuthorityContacts(businessId, undefined, 1, 100),
+    enabled: contactsClientId > 0,
+    queryKey: [...authorityContactsQK.forClient(contactsClientId), { page: 1, page_size: 100 }],
+    queryFn: () => authorityContactsApi.listAuthorityContacts(contactsClientId, undefined, 1, 100),
     staleTime: 60_000,
   });
 

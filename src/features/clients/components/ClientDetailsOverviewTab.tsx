@@ -1,6 +1,5 @@
 import { type FC, useEffect, useState } from "react";
 import { type ActiveClientDetailsTab } from "../constants";
-import { useQuery } from "@tanstack/react-query";
 import { Trash2 } from "lucide-react";
 import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
 import { Modal } from "../../../components/ui/overlays/Modal";
@@ -18,13 +17,17 @@ import { ClientBusinessesCard } from "./ClientBusinessesCard";
 import { ClientVatOverviewCard } from "./ClientVatOverviewCard";
 import { ClientAuditCard } from "./ClientAuditCard";
 import { CreateBusinessModal } from "./CreateBusinessModal";
-import { clientsApi, clientsQK } from "../api";
+import { ClientTimelineTab } from "@/features/timeline";
+import { ClientAnnualReportsTab } from "@/features/annualReports";
+import { ClientAdvancePaymentsTab } from "@/features/advancedPayments";
+import { ClientDocumentsTab } from "@/features/documents";
+import { FilingTimeline } from "@/features/taxDeadlines";
+import { VatClientSummaryPanel } from "@/features/vatReports";
 import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from "../api";
 import type { ClientChargeSummary } from "../types";
 import type { BinderDetailResponse } from "@/features/binders/api";
 import { ChargesCreateModal } from "@/features/charges";
 import { BinderDrawer } from "@/features/binders/components/BinderDrawer";
-import { TaxProfileCard } from "@/features/taxProfile";
 import { useClientQuickActions } from "../hooks/useClientQuickActions";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
 
@@ -65,15 +68,6 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   activeTab,
 }) => {
   const { id: firstBusinessId } = useFirstBusinessId(client.id);
-  const { data: businessesData } = useQuery({
-    queryKey: clientsQK.businessesAll(client.id),
-    queryFn: () => clientsApi.listAllBusinessesForClient(client.id),
-    enabled: client.id > 0,
-  });
-  const businesses = businessesData?.items ?? [];
-  const existingSoleTraderType = businesses.find(
-    (b) => b.business_type === "osek_patur" || b.business_type === "osek_murshe"
-  )?.business_type ?? null;
 
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
@@ -99,7 +93,6 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
                 canEdit={canEditClients}
                 onEditStart={() => setIsEditing(true)}
               />
-              <TaxProfileCard clientId={client.id} readOnly={!canEditClients} />
               <ClientBusinessesCard
                 clientId={client.id}
                 canEdit={canEditClients}
@@ -126,11 +119,23 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
 
       {activeTab === "communication" && (
         <div className="space-y-6">
-          <AuthorityContactsCard businessId={firstBusinessId ?? 0} />
-          <CorrespondenceCard businessId={firstBusinessId ?? 0} />
+          <AuthorityContactsCard clientId={client.id} />
+          <CorrespondenceCard businessId={firstBusinessId ?? 0} clientId={client.id} />
           <SignatureRequestsCard client={client} businessId={firstBusinessId} canManage={canEditClients} />
         </div>
       )}
+
+      {activeTab === "timeline" && <ClientTimelineTab clientId={String(client.id)} />}
+
+      {activeTab === "documents" && <ClientDocumentsTab clientId={client.id} />}
+
+      {activeTab === "deadlines" && <FilingTimeline clientId={client.id} />}
+
+      {activeTab === "vat" && <VatClientSummaryPanel clientId={client.id} />}
+
+      {activeTab === "advance-payments" && <ClientAdvancePaymentsTab clientId={client.id} />}
+
+      {activeTab === "annual-reports" && <ClientAnnualReportsTab clientId={client.id} />}
 
       {activeTab === "finance" && (
         <div className="space-y-6">
@@ -184,8 +189,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
           setShowBusinessModal(false);
         }}
         isLoading={isCreatingBusiness}
-        clientNationalId={client.id_number}
-        existingSoleTraderType={existingSoleTraderType}
+        clientEntityType={client.entity_type}
       />
 
       <ChargesCreateModal

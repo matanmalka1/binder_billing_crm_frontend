@@ -7,7 +7,7 @@ import {
   getClientTypeLabel,
 } from "../../api";
 import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
-import { formatDate } from "../../../../utils/utils";
+import { formatClientOfficeId, formatDate } from "../../../../utils/utils";
 import { AlertTriangle, Clock } from "lucide-react";
 import { cn } from "../../../../utils/utils";
 import { TERMINAL_STATUSES, daysUntil } from "../../utils";
@@ -54,6 +54,15 @@ const DeadlineCell: React.FC<{ report: AnnualReportFull }> = ({ report }) => {
 };
 
 const columns: Column<AnnualReportFull>[] = [
+  {
+    key: "client_id",
+    header: "מזהה מערכת",
+    render: (r) => (
+      <span className="font-mono text-sm text-gray-500 tabular-nums">
+        {formatClientOfficeId(r.client_id)}
+      </span>
+    ),
+  },
   {
     key: "client_name",
     header: "לקוח",

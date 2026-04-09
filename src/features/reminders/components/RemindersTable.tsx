@@ -2,7 +2,7 @@ import { Calendar } from "lucide-react";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { TruncateText } from "../../../components/ui/primitives/TruncateText";
-import { formatDate } from "../../../utils/utils";
+import { formatClientOfficeId, formatDate } from "../../../utils/utils";
 import type { Reminder } from "../types";
 import { reminderTypeLabels, statusLabels, reminderStatusVariants } from "../types";
 import { ReminderRowActions } from "./ReminderRowActions";
@@ -30,6 +30,19 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
   showClient = true,
 }) => {
   const columns: Column<Reminder>[] = [
+    ...(showClient
+      ? [
+          {
+            key: "client_id",
+            header: "מזהה מערכת",
+            render: (r: Reminder) => (
+              <span className="font-mono text-sm text-gray-500 tabular-nums">
+                {r.client_id != null ? formatClientOfficeId(r.client_id) : "—"}
+              </span>
+            ),
+          },
+        ]
+      : []),
     {
       key: "type",
       header: "סוג",

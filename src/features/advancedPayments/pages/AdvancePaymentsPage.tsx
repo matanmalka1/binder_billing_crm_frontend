@@ -10,7 +10,7 @@ import {
   fmtCurrency,
 } from "@/features/advancedPayments";
 import { AdvancePaymentReportView } from "@/features/reports";
-import { cn } from "@/utils/utils";
+import { cn, formatClientOfficeId } from "@/utils/utils";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 import { Button } from "@/components/ui/primitives/Button";
@@ -22,6 +22,15 @@ import { getAdvancePaymentMonthLabel } from "../utils";
 
 
 const columns: Column<AdvancePaymentOverviewRow>[] = [
+  {
+    key: "client_id",
+    header: "מזהה מערכת",
+    render: (row) => (
+      <span className="font-mono text-sm text-gray-500 tabular-nums">
+        {formatClientOfficeId(row.client_id)}
+      </span>
+    ),
+  },
   {
     key: "business_name",
     header: "לקוח",
@@ -181,7 +190,7 @@ export const AdvancePayments: React.FC = () => {
             data={rows}
             getRowKey={(row) => row.id}
             isLoading={isLoading}
-            onRowClick={(row) => navigate(`/clients/${row.client_id}?tab=advance-payments`)}
+            onRowClick={(row) => navigate(`/clients/${row.client_id}/advance-payments`)}
             emptyMessage="אין מקדמות לפי הסינון הנבחר"
           />
 

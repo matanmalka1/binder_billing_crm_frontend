@@ -84,10 +84,10 @@ export const taxDeadlinesApi = {
     return response.data;
   },
 
-  getTimeline: async (businessId: number): Promise<TimelineEntry[]> => {
+  getTimeline: async (clientId: number): Promise<TimelineEntry[]> => {
     const response = await api.get<TimelineEntry[]>(
       TAX_DEADLINE_ENDPOINTS.taxDeadlinesTimeline,
-      { params: toQueryParams({ business_id: businessId }) },
+      { params: toQueryParams({ client_id: clientId }) },
     );
     return response.data;
   },

@@ -116,7 +116,7 @@ interface MultiYearChartProps {
 
 const MultiYearChart: React.FC<MultiYearChartProps> = ({ clientId, currentReportId }) => {
   const reportsQ = useQuery({
-    queryKey: annualReportsQK.forBusiness(clientId),
+    queryKey: annualReportsQK.forClient(clientId),
     queryFn: () => annualReportsApi.listClientReports(clientId),
   });
 

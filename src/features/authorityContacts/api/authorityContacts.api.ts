@@ -14,7 +14,7 @@ export const authorityContactsApi = {
     payload: AuthorityContactCreatePayload,
   ): Promise<AuthorityContactResponse> => {
     const response = await api.post<AuthorityContactResponse>(
-      AUTHORITY_CONTACT_ENDPOINTS.businessAuthorityContacts(clientId),
+      AUTHORITY_CONTACT_ENDPOINTS.clientAuthorityContacts(clientId),
       payload,
     );
     return response.data;
@@ -27,7 +27,7 @@ export const authorityContactsApi = {
     page_size: number = 20,
   ): Promise<{ items: AuthorityContactResponse[]; page: number; page_size: number; total: number }> => {
     const response = await api.get<{ items: AuthorityContactResponse[]; page: number; page_size: number; total: number }>(
-      AUTHORITY_CONTACT_ENDPOINTS.businessAuthorityContacts(clientId),
+      AUTHORITY_CONTACT_ENDPOINTS.clientAuthorityContacts(clientId),
       { params: toQueryParams({ ...(contactType ? { contact_type: contactType } : {}), page, page_size }) },
     );
     return response.data;

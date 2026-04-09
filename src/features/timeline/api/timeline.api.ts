@@ -5,11 +5,11 @@ import type { TimelineResponse, TimelineParams } from "./contracts";
 
 export const timelineApi = {
   getClientTimeline: async (
-    businessId: number,
+    clientId: number,
     params: TimelineParams,
   ): Promise<TimelineResponse> => {
     const response = await api.get<TimelineResponse>(
-      TIMELINE_ENDPOINTS.businessTimeline(businessId),
+      TIMELINE_ENDPOINTS.clientTimeline(clientId),
       { params: toQueryParams(params) },
     );
     return response.data;

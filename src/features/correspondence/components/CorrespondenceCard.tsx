@@ -13,9 +13,10 @@ import type { CorrespondenceFormValues } from "../schemas";
 
 interface CorrespondenceCardProps {
   businessId: number;
+  clientId?: number;
 }
 
-export const CorrespondenceCard = ({ businessId }: CorrespondenceCardProps) => {
+export const CorrespondenceCard = ({ businessId, clientId }: CorrespondenceCardProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<CorrespondenceEntry | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
@@ -32,7 +33,7 @@ export const CorrespondenceCard = ({ businessId }: CorrespondenceCardProps) => {
     deleteEntry,
     deletingId,
     contacts,
-  } = useCorrespondence(businessId);
+  } = useCorrespondence(businessId, clientId);
 
   const handleSubmit = async (data: CorrespondenceFormValues) => {
     if (editing) {

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "@/features/documents";
 import type { DocumentSearchResult } from "../api";
-import { cn } from "../../../utils/utils";
+import { cn, formatClientOfficeId } from "../../../utils/utils";
 
 const DOCUMENT_SEARCH_LIMIT = 50;
 
@@ -32,6 +32,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-right text-xs font-medium text-gray-500">
+              <th className="px-4 py-2.5">מזהה מערכת</th>
               <th className="px-4 py-2.5">סוג מסמך</th>
               <th className="px-4 py-2.5">שם קובץ</th>
               <th className="px-4 py-2.5">שנת מס</th>
@@ -43,6 +44,9 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
           <tbody className="divide-y divide-gray-100">
             {documents.map((doc) => (
               <tr key={doc.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-4 py-3 font-mono text-sm text-gray-500 tabular-nums">
+                  {formatClientOfficeId(doc.client_id)}
+                </td>
                 <td className="px-4 py-3 font-medium text-gray-800">
                   {DOC_TYPE_LABELS[doc.document_type] ?? "סוג מסמך לא ידוע"}
                 </td>
@@ -60,7 +64,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
                 <td className="px-4 py-3 text-gray-700">{doc.client_name}</td>
                 <td className="px-4 py-3">
                   <Link
-                    to={`/clients/${doc.client_id}/businesses/${doc.business_id}/documents`}
+                    to={`/clients/${doc.client_id}/documents`}
                     className={cn(
                       "inline-flex items-center gap-1.5 rounded-lg",
                       "border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium",

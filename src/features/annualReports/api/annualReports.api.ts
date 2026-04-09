@@ -35,9 +35,9 @@ export const annualReportsApi = {
     return response.data;
   },
 
-  listClientReports: async (businessId: number): Promise<AnnualReportFull[]> => {
+  listClientReports: async (clientId: number): Promise<AnnualReportFull[]> => {
     const response = await api.get<AnnualReportListResponse>(
-      ANNUAL_REPORT_ENDPOINTS.clientAnnualReports(businessId),
+      ANNUAL_REPORT_ENDPOINTS.clientAnnualReports(clientId),
     );
     return response.data.items;
   },

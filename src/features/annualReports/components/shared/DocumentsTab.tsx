@@ -10,7 +10,7 @@ interface DocumentsTabProps { clientId: number; reportId?: number; }
 
 export const DocumentsTab = ({ clientId, reportId }: DocumentsTabProps) => {
   const byClient = useQuery({
-    queryKey: documentsQK.businessList(clientId),
+    queryKey: documentsQK.clientList(clientId),
     queryFn: () => documentsApi.listByClient(clientId),
     enabled: !!clientId && reportId == null,
   });
@@ -22,7 +22,7 @@ export const DocumentsTab = ({ clientId, reportId }: DocumentsTabProps) => {
   });
 
   const { data: signals } = useQuery({
-    queryKey: documentsQK.businessSignals(clientId),
+    queryKey: documentsQK.clientSignals(clientId),
     queryFn: () => documentsApi.getSignalsByClient(clientId),
     enabled: !!clientId,
   });

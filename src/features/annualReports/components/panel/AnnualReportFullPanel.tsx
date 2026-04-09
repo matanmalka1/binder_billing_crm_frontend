@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { cn } from "../../../../utils/utils";
+import { cn, formatClientOfficeId } from "@/utils/utils";
 import { Download, LayoutDashboard, TrendingUp, Scale, Scissors, FileText, CalendarClock, Trash2, Save, CreditCard } from "lucide-react";
 import { useAnnualReportDetailPage } from "../../hooks/useAnnualReportDetailPage";
 import { DeleteReportConfirmDialog } from "./DeleteReportConfirmDialog";
@@ -52,8 +52,8 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
   }
 
   const clientLabel = report.client_name
-    ? `${report.client_name} (#${report.client_id})`
-    : `לקוח #${report.client_id}`;
+    ? `${report.client_name} (${formatClientOfficeId(report.client_id)})`
+    : `לקוח ${formatClientOfficeId(report.client_id)}`;
 
   return (
     <>

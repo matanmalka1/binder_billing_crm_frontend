@@ -10,15 +10,8 @@ import {
 } from "./constants";
 
 export const createBusinessSchema = z.object({
-  business_type: z.enum(BUSINESS_TYPES),
   opened_at: z.string().min(1, "יש לבחור תאריך פתיחה"),
   business_name: z.string().trim().min(1, "יש להזין שם עסק").max(100, "שם עסק ארוך מדי"),
-  tax_id_number: z
-    .string()
-    .trim()
-    .regex(/^\d+$/, "מספר עוסק/ח.פ חייב להכיל ספרות בלבד")
-    .length(9, "מספר עוסק/ח.פ חייב להכיל בדיוק 9 ספרות"),
-  notes: z.string().trim().optional().or(z.literal("")),
 });
 
 export type CreateBusinessFormValues = z.infer<typeof createBusinessSchema>;
@@ -40,11 +33,9 @@ export const createClientSchema = z
     address_city: z.string().trim().optional().or(z.literal("")),
     address_zip_code: z.string().trim().optional().or(z.literal("")),
     vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
-    vat_start_date: z.string().optional().nullable(),
     vat_exempt_ceiling: z.string().optional().nullable(),
     advance_rate: z.string().optional().nullable(),
-    fiscal_year_start_month: z.number().int().min(1).max(12).optional().nullable(),
-    tax_year_start: z.number().int().min(1900).max(2100).optional().nullable(),
+    business_start_date: z.string().optional().nullable(),
   })
   .superRefine((data, ctx) => {
     if (!requiresIsraeliNumericId(data.id_number_type)) {
@@ -98,6 +89,7 @@ export const clientEditSchema = z.object({
   advance_rate_updated_at: z.string().optional().nullable(),
   accountant_name: z.string().trim().optional().nullable(),
   business_type_label: z.string().trim().optional().nullable(),
+  business_start_date: z.string().optional().nullable(),
   fiscal_year_start_month: z.number().int().min(1).max(12).optional().nullable(),
   tax_year_start: z.number().int().min(1900).max(2100).optional().nullable(),
 });

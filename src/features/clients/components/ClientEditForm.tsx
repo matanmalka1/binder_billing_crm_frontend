@@ -1,11 +1,18 @@
-import { useForm } from "react-hook-form";
+import { useController, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/primitives/Button";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type { ClientResponse, UpdateClientPayload } from "../api";
-import { CLIENT_STATUS_LABELS, VAT_TYPE_LABELS } from "../constants";
+import {
+  CLIENT_ID_NUMBER_TYPE_LABELS,
+  CLIENT_STATUS_LABELS,
+  ENTITY_OPTIONS_BY_ID_TYPE,
+  ENTITY_TYPE_LABELS,
+  VAT_TYPE_LABELS,
+} from "../constants";
 import { clientEditSchema, type ClientEditFormValues } from "../schemas";
 
 interface ClientEditFormProps {
@@ -28,6 +35,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
   formId,
 }) => {
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors, isDirty },
@@ -44,9 +52,27 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_city: client.address_city ?? "",
       address_zip_code: client.address_zip_code ?? "",
       notes: client.notes ?? "",
+      entity_type: client.entity_type ?? null,
       vat_reporting_frequency: client.vat_reporting_frequency ?? null,
+      vat_exempt_ceiling: client.vat_exempt_ceiling ?? null,
+      advance_rate: client.advance_rate ?? null,
+      business_start_date: client.business_start_date ?? null,
+      accountant_name: client.accountant_name ?? null,
+      business_type_label: client.business_type_label ?? null,
     },
   });
+  const idNumberType = client.id_number_type ?? "other";
+  const allowedEntityTypes = ENTITY_OPTIONS_BY_ID_TYPE[idNumberType];
+
+  const { field: statusField } = useController({ name: "status", control });
+  const { field: entityTypeField } = useController({ name: "entity_type", control });
+
+  const isOsekPatur = entityTypeField.value === "osek_patur";
+  const { field: vatReportingFrequencyField } = useController({
+    name: "vat_reporting_frequency",
+    control,
+  });
+  const { field: businessStartDateField } = useController({ name: "business_start_date", control });
 
   const onSubmit = handleSubmit(async (data) => {
     await onSave({
@@ -59,7 +85,13 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_city: data.address_city || null,
       address_zip_code: data.address_zip_code || null,
       notes: data.notes || null,
+      entity_type: data.entity_type || null,
       vat_reporting_frequency: data.vat_reporting_frequency || null,
+      vat_exempt_ceiling: data.vat_exempt_ceiling || null,
+      advance_rate: data.advance_rate || null,
+      business_start_date: data.business_start_date || null,
+      accountant_name: data.accountant_name || null,
+      business_type_label: data.business_type_label || null,
     });
   });
 
@@ -67,8 +99,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
     <form id={formId} onSubmit={onSubmit} className="space-y-6">
       {/* Basic info */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">מידע בסיסי</h3>
-
         <Select
           label="סטטוס לקוח"
           disabled={isLoading}
@@ -77,15 +107,27 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
             { value: "frozen", label: CLIENT_STATUS_LABELS.frozen },
             { value: "closed", label: CLIENT_STATUS_LABELS.closed },
           ]}
-          {...register("status")}
+          value={statusField.value}
+          onChange={statusField.onChange}
+          onBlur={statusField.onBlur}
+          name={statusField.name}
         />
 
-        {/* Read-only identity number */}
-        <div className="space-y-1">
-          <p className="text-xs font-medium text-gray-500">מספר מזהה</p>
-          <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500">
-            {client.id_number}
-          </p>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-gray-500">מספר מזהה</p>
+            <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500">
+              {client.id_number}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-gray-500">סוג מזהה</p>
+            <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500">
+              {client.id_number_type
+                ? CLIENT_ID_NUMBER_TYPE_LABELS[client.id_number_type]
+                : "לא הוגדר"}
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -111,6 +153,33 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
           error={errors.email?.message}
           disabled={isLoading}
           {...register("email")}
+        />
+
+        <Select
+          label="סוג ישות"
+          disabled={isLoading || allowedEntityTypes.length === 1}
+          options={[
+            { value: "", label: "לא הוגדר" },
+            ...allowedEntityTypes.map((type) => ({ value: type, label: ENTITY_TYPE_LABELS[type] })),
+          ]}
+          value={entityTypeField.value ?? ""}
+          onChange={entityTypeField.onChange}
+          onBlur={entityTypeField.onBlur}
+          name={entityTypeField.name}
+        />
+        <Select
+          label="תדירות דיווח מע״מ"
+          disabled={isLoading}
+          options={[
+            { value: "", label: "לא הוגדר" },
+            { value: "monthly", label: VAT_TYPE_LABELS.monthly },
+            { value: "bimonthly", label: VAT_TYPE_LABELS.bimonthly },
+            { value: "exempt", label: VAT_TYPE_LABELS.exempt },
+          ]}
+          value={vatReportingFrequencyField.value ?? ""}
+          onChange={vatReportingFrequencyField.onChange}
+          onBlur={vatReportingFrequencyField.onBlur}
+          name={vatReportingFrequencyField.name}
         />
       </div>
 
@@ -165,17 +234,51 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900">נתונים אדמיניסטרטיביים</h3>
 
-        <Select
-          label="תדירות דיווח מע״מ"
+        
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {isOsekPatur && (
+            <Input
+              label='תקרת פטור מע"מ'
+              placeholder="120000"
+              error={errors.vat_exempt_ceiling?.message}
+              disabled={isLoading}
+              {...register("vat_exempt_ceiling")}
+            />
+          )}
+          <Input
+            label="אחוז מקדמה %"
+            placeholder="8.5"
+            error={errors.advance_rate?.message}
+            disabled={isLoading}
+            {...register("advance_rate")}
+          />
+        </div>
+
+        <DatePicker
+          label="תאריך הקמת העסק"
+          error={errors.business_start_date?.message}
           disabled={isLoading}
-          options={[
-            { value: "", label: "לא הוגדר" },
-            { value: "monthly", label: VAT_TYPE_LABELS.monthly },
-            { value: "bimonthly", label: VAT_TYPE_LABELS.bimonthly },
-            { value: "exempt", label: VAT_TYPE_LABELS.exempt },
-          ]}
-          {...register("vat_reporting_frequency")}
+          value={businessStartDateField.value ?? ""}
+          onChange={businessStartDateField.onChange}
+          onBlur={businessStartDateField.onBlur}
+          name={businessStartDateField.name}
         />
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <Input
+            label="רואה חשבון מלווה"
+            error={errors.accountant_name?.message}
+            disabled={isLoading}
+            {...register("accountant_name")}
+          />
+          <Input
+            label="סוג עסק (תיאור חופשי)"
+            error={errors.business_type_label?.message}
+            disabled={isLoading}
+            {...register("business_type_label")}
+          />
+        </div>
 
         <Textarea
           label="הערות לעדכון (אופציונלי)"

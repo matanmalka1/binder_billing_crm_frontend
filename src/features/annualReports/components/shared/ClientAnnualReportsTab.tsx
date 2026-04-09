@@ -6,12 +6,12 @@ import { cn } from "../../../../utils/utils";
 import { semanticSignalBadgeClasses } from "@/utils/semanticColors";
 
 interface ClientAnnualReportsTabProps {
-  businessId: number;
+  clientId: number;
 }
 
-export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ businessId }) => {
+export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ clientId }) => {
   const { selectedYear, setSelectedYear, filteredReports, yearHasReports, openReport, isPending, errorMessage, YEAR_LIST } =
-    useClientAnnualReportsTab(businessId);
+    useClientAnnualReportsTab(clientId);
 
   if (isPending) return <PageLoading message="טוען דוחות שנתיים..." />;
   if (errorMessage) return <Alert variant="error" message={errorMessage} />;

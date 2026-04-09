@@ -87,13 +87,13 @@ export const AppRoutes: React.FC = () => {
             <Route path="binders" element={<Binders />} />
             <Route path="clients" element={<Clients />} />
             <Route path="clients/:clientId" element={<ClientDetails />} />
+            <Route path="clients/:clientId/documents" element={<ClientDetails initialTab="documents" />} />
+            <Route path="clients/:clientId/deadlines" element={<ClientDetails initialTab="deadlines" />} />
+            <Route path="clients/:clientId/timeline" element={<ClientDetails initialTab="timeline" />} />
+            <Route path="clients/:clientId/vat" element={<ClientDetails initialTab="vat" />} />
+            <Route path="clients/:clientId/advance-payments" element={<ClientDetails initialTab="advance-payments" />} />
+            <Route path="clients/:clientId/annual-reports" element={<ClientDetails initialTab="annual-reports" />} />
             <Route path="clients/:clientId/businesses/:businessId" element={<BusinessDetails />} />
-            <Route path="clients/:clientId/businesses/:businessId/documents" element={<BusinessDetails initialTab="documents" />} />
-            <Route path="clients/:clientId/businesses/:businessId/timeline" element={<BusinessDetails initialTab="timeline" />} />
-            <Route path="clients/:clientId/businesses/:businessId/vat" element={<BusinessDetails initialTab="vat" />} />
-            <Route path="clients/:clientId/businesses/:businessId/advance-payments" element={<BusinessDetails initialTab="advance-payments" />} />
-            <Route path="clients/:clientId/businesses/:businessId/deadlines" element={<BusinessDetails initialTab="deadlines" />} />
-            <Route path="clients/:clientId/businesses/:businessId/annual-reports" element={<BusinessDetails initialTab="annual-reports" />} />
             <Route path="search" element={<Search />} />
             <Route path="charges" element={<Charges />} />
             <Route path="tax" element={<Navigate to="/tax/deadlines" replace />} />

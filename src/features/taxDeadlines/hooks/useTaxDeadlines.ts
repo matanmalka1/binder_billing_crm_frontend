@@ -5,7 +5,6 @@ import { useRole } from "../../../hooks/useRole";
 import { useForm } from "react-hook-form";
 import { taxDeadlinesApi, taxDeadlinesQK } from "../api";
 import type { TaxDeadlineResponse } from "../api";
-import { timelineQK } from "@/features/timeline/api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toOptionalString } from "../../../utils/filters";
 import type { TaxDeadlineFilters, CreateTaxDeadlineForm, EditTaxDeadlineForm } from "../types";
@@ -65,7 +64,7 @@ export const useTaxDeadlines = () => {
     onSuccess: (_data, payload) => {
       toast.success("מועד נוצר בהצלחה");
       queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
-      queryClient.invalidateQueries({ queryKey: timelineQK.businessRoot(payload.business_id) });
+      queryClient.invalidateQueries({ queryKey: ["timeline"] });
       setShowCreateModal(false);
     },
     onError: (error) => showErrorToast(error, "שגיאה ביצירת מועד"),
@@ -85,6 +84,7 @@ export const useTaxDeadlines = () => {
     onSuccess: () => {
       toast.success("מועד עודכן בהצלחה");
       queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
+      queryClient.invalidateQueries({ queryKey: ["timeline"] });
       setEditingDeadline(null);
     },
     onError: (error) => showErrorToast(error, "שגיאה בעדכון מועד"),
@@ -95,6 +95,7 @@ export const useTaxDeadlines = () => {
     onSuccess: () => {
       toast.success("מועד נמחק בהצלחה");
       queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
+      queryClient.invalidateQueries({ queryKey: ["timeline"] });
     },
     onError: (error) => showErrorToast(error, "שגיאה במחיקת מועד"),
     onSettled: () => setDeletingId(null),
@@ -105,6 +106,7 @@ export const useTaxDeadlines = () => {
     onSuccess: () => {
       toast.success("מועד סומן כהושלם");
       queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
+      queryClient.invalidateQueries({ queryKey: ["timeline"] });
     },
     onError: (error) => showErrorToast(error, "שגיאה בסימון מועד"),
     onSettled: () => setCompletingId(null),
@@ -115,6 +117,7 @@ export const useTaxDeadlines = () => {
     onSuccess: () => {
       toast.success("מועד הוחזר לממתין");
       queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
+      queryClient.invalidateQueries({ queryKey: ["timeline"] });
     },
     onError: (error) => showErrorToast(error, "שגיאה בהחזרת המועד"),
     onSettled: () => setReopeningId(null),

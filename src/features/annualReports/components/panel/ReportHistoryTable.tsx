@@ -28,7 +28,7 @@ export const ReportHistoryTable: React.FC<Props> = ({
   onSelect,
 }) => {
   const { data: reports = [], isLoading } = useQuery({
-    queryKey: annualReportsQK.forBusiness(clientId),
+    queryKey: annualReportsQK.forClient(clientId),
     queryFn: () => annualReportsApi.listClientReports(clientId),
     staleTime: 30_000,
     enabled: !!clientId,

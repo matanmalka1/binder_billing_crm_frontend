@@ -7,13 +7,13 @@ import { CURRENT_YEAR } from "../types";
 
 const YEAR_LIST = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2, CURRENT_YEAR - 3];
 
-export const useClientAnnualReportsTab = (businessId: number) => {
+export const useClientAnnualReportsTab = (clientId: number) => {
   const [selectedYear, setSelectedYear] = useState<number>(CURRENT_YEAR);
   const navigate = useNavigate();
 
   const { data, isPending, error } = useQuery({
-    queryKey: annualReportsQK.forBusiness(businessId),
-    queryFn: () => annualReportsApi.listClientReports(businessId),
+    queryKey: annualReportsQK.forClient(clientId),
+    queryFn: () => annualReportsApi.listClientReports(clientId),
   });
 
   const allReports = data ?? [];

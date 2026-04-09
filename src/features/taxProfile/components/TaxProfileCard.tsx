@@ -4,11 +4,14 @@ import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
 import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
 import { Alert } from "../../../components/ui/overlays/Alert";
+import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
 import { getVatTypeLabel } from "../../../utils/enums";
 import { useTaxProfile } from "../hooks/useTaxProfile";
 import { TaxProfileForm } from "./TaxProfileForm";
 
 interface Props { clientId: number | null; readOnly?: boolean }
+
+const TAX_PROFILE_FORM_ID = "tax-profile-form";
 
 export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) => {
   const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(clientId ?? 0);
@@ -26,22 +29,15 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) 
   ];
 
   return (
-    <Card title="פרטי מס" subtitle="מידע מיסויי ספציפי ללקוח">
-      {isLoading && (
-        <p className="py-2 text-sm text-gray-500">טוען פרטי מס...</p>
-      )}
+    <>
+      <Card title="פרטי מס" subtitle="מידע מיסויי ספציפי ללקוח">
+        {isLoading && (
+          <p className="py-2 text-sm text-gray-500">טוען פרטי מס...</p>
+        )}
 
-      {error && <Alert variant="error" message={error} />}
+        {error && <Alert variant="error" message={error} />}
 
-      {!isLoading && !error && (
-        isEditing ? (
-          <TaxProfileForm
-            profile={profile}
-            onSave={(data) => { updateProfile(data); setIsEditing(false); }}
-            onCancel={() => setIsEditing(false)}
-            isSaving={isUpdating}
-          />
-        ) : (
+        {!isLoading && !error && (
           <div className="space-y-4">
             <DefinitionList items={items} columns={2} />
             {!readOnly && (
@@ -59,8 +55,47 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) 
               </div>
             )}
           </div>
-        )
-      )}
-    </Card>
+        )}
+      </Card>
+
+      <DetailDrawer
+        open={isEditing}
+        title="עריכת פרטי מס"
+        onClose={() => setIsEditing(false)}
+        footer={(
+          <div className="flex items-center justify-end gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsEditing(false)}
+              disabled={isUpdating}
+            >
+              ביטול
+            </Button>
+            <Button
+              type="submit"
+              form={TAX_PROFILE_FORM_ID}
+              variant="primary"
+              isLoading={isUpdating}
+              disabled={isUpdating}
+            >
+              שמור שינויים
+            </Button>
+          </div>
+        )}
+      >
+        <TaxProfileForm
+          profile={profile}
+          onSave={(data) => {
+            updateProfile(data);
+            setIsEditing(false);
+          }}
+          onCancel={() => setIsEditing(false)}
+          isSaving={isUpdating}
+          hideFooter
+          formId={TAX_PROFILE_FORM_ID}
+        />
+      </DetailDrawer>
+    </>
   );
 };

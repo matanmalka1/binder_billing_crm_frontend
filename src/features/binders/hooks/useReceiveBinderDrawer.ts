@@ -109,9 +109,9 @@ export const useReceiveBinderDrawer = (
   });
 
   const { data: annualReportsData } = useQuery({
-    queryKey: annualReportsQK.forBusiness(typeof businessId === "number" ? businessId : 0),
-    queryFn: () => annualReportsApi.listClientReports(businessId as number),
-    enabled: binderType === "annual_report" && typeof businessId === "number" && businessId > 0,
+    queryKey: annualReportsQK.forClient(typeof clientId === "number" ? clientId : 0),
+    queryFn: () => annualReportsApi.listClientReports(clientId as number),
+    enabled: binderType === "annual_report" && typeof clientId === "number" && clientId > 0,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,

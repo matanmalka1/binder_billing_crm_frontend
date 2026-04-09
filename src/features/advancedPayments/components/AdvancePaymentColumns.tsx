@@ -12,6 +12,7 @@ import { AdvancePaymentStatusBadge } from "./AdvancePaymentStatusBadge";
 
 interface BuildColumnsOptions extends Omit<AdvancePaymentRowActionsProps, "row"> {
   canEdit: boolean;
+  showBusinessName?: boolean;
 }
 
 export const buildAdvancePaymentColumns = (
@@ -70,6 +71,16 @@ export const buildAdvancePaymentColumns = (
         ) : null,
     },
   ];
+
+  if (options?.showBusinessName) {
+    base.splice(1, 0, {
+      key: "business_name",
+      header: "עסק",
+      render: (row) => (
+        <span className="text-sm text-gray-700">{row.business_name || `#${row.business_id}`}</span>
+      ),
+    });
+  }
 
   if (options?.canEdit) {
     base.push({

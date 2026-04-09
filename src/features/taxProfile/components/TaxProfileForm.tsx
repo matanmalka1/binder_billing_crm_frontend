@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useController, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
@@ -14,10 +14,24 @@ interface Props {
   onSave: (data: TaxProfileUpdatePayload) => void;
   onCancel: () => void;
   isSaving: boolean;
+  hideFooter?: boolean;
+  formId?: string;
 }
 
-export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isSaving }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<TaxProfileFormValues>({
+export const TaxProfileForm: React.FC<Props> = ({
+  profile,
+  onSave,
+  onCancel,
+  isSaving,
+  hideFooter = false,
+  formId,
+}) => {
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TaxProfileFormValues>({
     resolver: zodResolver(taxProfileSchema),
     defaultValues: profile
       ? {
@@ -28,6 +42,14 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
           advance_rate: profile.advance_rate != null ? String(profile.advance_rate) : "",
         }
       : taxProfileDefaults,
+  });
+  const { field: vatReportingFrequencyField } = useController({
+    name: "vat_reporting_frequency",
+    control,
+  });
+  const { field: taxYearStartField } = useController({
+    name: "tax_year_start",
+    control,
   });
 
   const onSubmit = handleSubmit((values) => {
@@ -41,7 +63,7 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
   });
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4" noValidate>
+    <form id={formId} onSubmit={onSubmit} className="space-y-4" noValidate>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Select
           label='תדירות דיווח מע"מ'
@@ -52,7 +74,10 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
             { value: "bimonthly", label: getVatTypeLabel("bimonthly") },
             { value: "exempt", label: getVatTypeLabel("exempt") },
           ]}
-          {...register("vat_reporting_frequency")}
+          value={vatReportingFrequencyField.value ?? ""}
+          onChange={vatReportingFrequencyField.onChange}
+          onBlur={vatReportingFrequencyField.onBlur}
+          name={vatReportingFrequencyField.name}
         />
         <Input
           label="סוג עסק (תיאור חופשי)"
@@ -68,7 +93,10 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
             { value: "", label: "בחר שנה" },
             ...buildYearOptions(),
           ]}
-          {...register("tax_year_start")}
+          value={taxYearStartField.value ?? ""}
+          onChange={taxYearStartField.onChange}
+          onBlur={taxYearStartField.onBlur}
+          name={taxYearStartField.name}
         />
         <Input label="רואה חשבון מלווה" error={errors.accountant_name?.message} {...register("accountant_name")} />
         <Input
@@ -81,14 +109,16 @@ export const TaxProfileForm: React.FC<Props> = ({ profile, onSave, onCancel, isS
           {...register("advance_rate")}
         />
       </div>
-      <div className="flex gap-2 justify-end pt-2">
-        <Button type="button" variant="outline" disabled={isSaving} onClick={onCancel}>
-          ביטול
-        </Button>
-        <Button type="submit" isLoading={isSaving}>
-          שמור
-        </Button>
-      </div>
+      {!hideFooter && (
+        <div className="flex gap-2 justify-end pt-2">
+          <Button type="button" variant="outline" disabled={isSaving} onClick={onCancel}>
+            ביטול
+          </Button>
+          <Button type="submit" isLoading={isSaving}>
+            שמור
+          </Button>
+        </div>
+      )}
     </form>
   );
 };

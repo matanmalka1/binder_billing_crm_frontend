@@ -6,7 +6,7 @@ import { cn } from "../../../utils/utils";
 import { semanticMonoToneClasses, semanticSignalBadgeClasses } from "@/utils/semanticColors";
 
 interface FilingTimelineProps {
-  businessId: number;
+  clientId: number;
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -41,10 +41,10 @@ const daysLabelClass = (entry: TimelineEntry): string => {
 const sortByDate = (a: TimelineEntry, b: TimelineEntry) =>
   new Date(a.due_date).getTime() - new Date(b.due_date).getTime();
 
-export const FilingTimeline: React.FC<FilingTimelineProps> = ({ businessId }) => {
+export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
   const { data, isLoading } = useQuery({
-    queryKey: taxDeadlinesQK.timeline(businessId),
-    queryFn: () => taxDeadlinesApi.getTimeline(businessId),
+    queryKey: taxDeadlinesQK.timeline(clientId),
+    queryFn: () => taxDeadlinesApi.getTimeline(clientId),
   });
 
   if (isLoading) {

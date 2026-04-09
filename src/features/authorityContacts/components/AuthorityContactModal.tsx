@@ -6,18 +6,18 @@ import { AuthorityContactModalFooter } from "./AuthorityContactModalFooter";
 
 interface AuthorityContactModalProps {
   open: boolean;
-  businessId: number;
+  clientId: number;
   existing?: AuthorityContactResponse | null;
   onClose: () => void;
 }
 
 export const AuthorityContactModal: React.FC<AuthorityContactModalProps> = ({
   open,
-  businessId,
+  clientId,
   existing,
   onClose,
 }) => {
-  const { form, onSubmit, isSaving } = useAuthorityContactForm(businessId, onClose, existing);
+  const { form, onSubmit, isSaving } = useAuthorityContactForm(clientId, onClose, existing);
 
   return (
     <Modal

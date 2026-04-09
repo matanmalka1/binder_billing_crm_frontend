@@ -57,7 +57,7 @@ export const AnnualReportSectionContent = ({
     case "financials": return <IncomeExpensePanel reportId={reportId} />;
     case "tax": return <TaxCalculationPanel reportId={reportId} />;
     case "deductions": return <DeductionsTab reportId={reportId} taxYear={report.tax_year} />;
-    case "documents": return <ClientDocumentsTab businessId={report.business_id} />;
+    case "documents": return <ClientDocumentsTab clientId={report.client_id ?? report.business_id} />;
     case "timeline": return <FilingTimelineTab reports={[report]} />;
     case "charges": return <ReportChargesPanel reportId={reportId} />;
   }

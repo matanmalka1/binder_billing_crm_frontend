@@ -1,7 +1,7 @@
 import type { Column } from "../../../components/ui/table/DataTable";
 import { buildSelectionColumn } from "../../../components/ui/table/tableSelection";
 import type { ClientResponse } from "../api";
-import { formatDate } from "../../../utils/utils";
+import { formatClientOfficeId, formatDate } from "@/utils/utils";
 import { ClientRowActions } from "./ClientRowActions";
 import { getEntityTypeLabel, getClientStatusLabel, getVatTypeLabel } from "../constants";
 
@@ -29,10 +29,10 @@ export const buildClientColumns = ({
   const dataColumns: Column<ClientResponse>[] = [
     {
       key: "id",
-      header: "מס' לקוח",
+      header: "מזהה מערכת",
       render: (client) => (
         <span className="font-mono text-sm text-gray-500 tabular-nums">
-          # {client.id} 
+          {formatClientOfficeId(client.id)}
         </span>
       ),
     },
@@ -145,7 +145,7 @@ export const buildClientColumns = ({
       onToggleSelect,
       onToggleAll,
       getId: (client) => client.id,
-      getItemAriaLabel: (client) => `בחר לקוח ${client.id}`,
+      getItemAriaLabel: (client) => `בחר לקוח ${formatClientOfficeId(client.id)}`,
     }),
     ...dataColumns,
   ];

@@ -10,6 +10,7 @@ export type AdvancePaymentMethod =
 export interface AdvancePaymentRow {
   id: number;
   business_id: number;
+  business_name?: string | null;
   period: string;
   period_months_count: 1 | 2;
   expected_amount: string | null;
@@ -26,7 +27,7 @@ export interface AdvancePaymentRow {
 }
 
 export interface ListAdvancePaymentsParams {
-  business_id: number;
+  client_id: number;
   year: number;
   status?: AdvancePaymentStatus[];
   page?: number;
@@ -87,14 +88,14 @@ export interface AdvancePaymentOverviewResponse {
 }
 
 export interface AdvancePaymentSuggestionResponse {
-  business_id: number;
+  client_id: number;
   year: number;
   suggested_amount: string | null;
   has_data: boolean;
 }
 
 export interface AnnualKPIResponse {
-  business_id: number;
+  client_id: number;
   year: number;
   total_expected: string;
   total_paid: string;
@@ -112,7 +113,7 @@ export interface MonthlyChartRow {
 }
 
 export interface ChartDataResponse {
-  business_id: number;
+  client_id: number;
   year: number;
   months: MonthlyChartRow[];
 }

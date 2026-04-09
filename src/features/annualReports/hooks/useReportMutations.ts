@@ -7,7 +7,6 @@ import {
   type ReportDetailResponse,
 } from "../api";
 import { annualReportStatusApi } from "../api";
-import { timelineQK } from "@/features/timeline/api";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import type { AnnualReportDetail } from "../types";
@@ -52,10 +51,7 @@ export const useReportMutations = (
       toast.success("סטטוס עודכן בהצלחה");
       if (qk) void queryClient.invalidateQueries({ queryKey: qk });
       void queryClient.invalidateQueries({ queryKey: annualReportsQK.all });
-      const businessId = reportData?.business_id;
-      if (businessId) {
-        void queryClient.invalidateQueries({ queryKey: timelineQK.businessRoot(businessId) });
-      }
+      void queryClient.invalidateQueries({ queryKey: ["timeline"] });
     },
   });
 

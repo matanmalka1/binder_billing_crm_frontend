@@ -2,9 +2,16 @@ import type { Column } from "../../../components/ui/table/DataTable";
 import type { SearchResult } from "../api";
 import { getResultColor, getResultIcon, getResultLabel } from "./SearchResultMeta";
 import { SearchRowActions } from "./SearchRowActions";
-import { cn } from "@/utils/utils";
+import { cn, formatClientOfficeId } from "@/utils/utils";
 
 export const searchColumns: Column<SearchResult>[] = [
+  {
+    key: "client_id",
+    header: "מזהה מערכת",
+    render: (result) => (
+      <span className="font-mono text-xs text-gray-400">{formatClientOfficeId(result.client_id)}</span>
+    ),
+  },
   {
     key: "type",
     header: "סוג",
@@ -22,10 +29,7 @@ export const searchColumns: Column<SearchResult>[] = [
     key: "client",
     header: "לקוח",
     render: (result) => (
-      <div>
-        <p className="text-sm font-semibold text-gray-900">{result.client_name ?? "—"}</p>
-        <p className="font-mono text-xs text-gray-400">#{result.client_id}</p>
-      </div>
+      <p className="text-sm font-semibold text-gray-900">{result.client_name ?? "—"}</p>
     ),
   },
   {

@@ -19,6 +19,7 @@ export interface CorrespondenceQueryParams {
 
 export interface CorrespondenceCardProps {
   businessId: number;
+  clientId?: number;
 }
 
 export interface CorrespondenceModalProps {

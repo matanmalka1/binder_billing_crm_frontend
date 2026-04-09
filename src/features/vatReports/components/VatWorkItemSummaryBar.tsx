@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, Clock, FolderOpen, Info, AlertTriangle, User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { formatDate } from "../../../utils/utils";
+import { formatClientOfficeId, formatDate } from "@/utils/utils";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
@@ -50,7 +50,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
           </Link>
           <ChevronLeft className="h-3.5 w-3.5 text-gray-300" />
           <span className="font-semibold text-gray-800">
-            {workItem.client_name ?? `לקוח #${workItem.client_id}`}
+            {workItem.client_name ?? `לקוח ${formatClientOfficeId(workItem.client_id)}`}
             <span className="mx-1.5 font-normal text-gray-400">—</span>
             <span className="font-mono">{workItem.period}</span>
           </span>

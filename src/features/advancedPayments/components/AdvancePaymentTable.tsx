@@ -6,6 +6,7 @@ import { CalendarDays } from "lucide-react";
 interface AdvancePaymentTableProps {
   rows: AdvancePaymentRow[];
   isLoading: boolean;
+  showBusinessName?: boolean;
   canEdit?: boolean;
   updatingId?: number | null;
   deletingId?: number | null;
@@ -16,6 +17,7 @@ interface AdvancePaymentTableProps {
 export const AdvancePaymentTable: React.FC<AdvancePaymentTableProps> = ({
   rows,
   isLoading,
+  showBusinessName = false,
   canEdit = false,
   updatingId = null,
   deletingId = null,
@@ -26,8 +28,8 @@ export const AdvancePaymentTable: React.FC<AdvancePaymentTableProps> = ({
     data={rows}
     columns={buildAdvancePaymentColumns(
       canEdit && onUpdate && onDelete
-        ? { canEdit: true, updatingId, deletingId, onUpdate, onDelete }
-        : undefined,
+        ? { canEdit: true, showBusinessName, updatingId, deletingId, onUpdate, onDelete }
+        : { canEdit: false, showBusinessName },
     )}
     getRowKey={(row) => row.id}
     isLoading={isLoading}

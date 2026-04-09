@@ -1,33 +1,12 @@
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import { useParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
-import { cn } from "@/utils/utils";
-import { ClientDocumentsTab } from "@/features/documents";
-import { ClientTimelineTab } from "@/features/timeline";
-import { VatClientSummaryPanel } from "@/features/vatReports";
-import { ClientAdvancePaymentsTab } from "@/features/advancedPayments";
-import { FilingTimeline } from "@/features/taxDeadlines";
-import { ClientAnnualReportsTab } from "@/features/annualReports";
-import { TaxProfileCard } from "@/features/taxProfile";
-import { CorrespondenceCard } from "@/features/correspondence";
-import { SignatureRequestsCard } from "@/features/signatureRequests";
 import { getBusinessTypeLabel } from "@/features/clients";
-import {
-  BUSINESS_DETAILS_TABS,
-  BUSINESS_DETAILS_TAB_LABELS,
-  type ActiveBusinessDetailsTab,
-} from "../constants";
 import { useBusinessDetails } from "../hooks/useBusinessDetails";
 
-interface BusinessDetailsProps {
-  initialTab?: ActiveBusinessDetailsTab;
-}
-
-export const BusinessDetails: FC<BusinessDetailsProps> = ({
-  initialTab = "details",
-}) => {
+export const BusinessDetails: FC = () => {
   const { clientId, businessId } = useParams<{
     clientId: string;
     businessId: string;
@@ -35,9 +14,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
   const clientIdNum = clientId ? Number(clientId) : null;
   const businessIdNum = businessId ? Number(businessId) : null;
 
-  const [activeTab, setActiveTab] = useState<ActiveBusinessDetailsTab>(initialTab);
-
-  const { client, business, isLoading, error, isValidId, can } = useBusinessDetails({
+  const { client, business, isLoading, error, isValidId } = useBusinessDetails({
     clientId: clientIdNum,
     businessId: businessIdNum,
   });
@@ -74,45 +51,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
       loadingMessage="טוען פרטי עסק..."
     >
       {business && businessIdNum != null ? (
-        <div className="space-y-6">
-          {/* Tab bar */}
-          <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 self-start">
-            {BUSINESS_DETAILS_TABS.map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setActiveTab(tab)}
-                className={cn(
-                  "rounded-md px-4 py-1.5 text-sm font-medium transition-all",
-                  activeTab === tab
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500 hover:text-gray-700",
-                )}
-              >
-                {BUSINESS_DETAILS_TAB_LABELS[tab]}
-              </button>
-            ))}
-          </div>
-
-          {/* Main content */}
-          <div>
-            {activeTab === "details" && (
-              <div className="space-y-6">
-                <TaxProfileCard clientId={clientIdNum} readOnly={!can.editClients} />
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                  {client && businessIdNum != null && <CorrespondenceCard businessId={businessIdNum} />}
-                  {client && businessIdNum != null && <SignatureRequestsCard client={client} businessId={businessIdNum} canManage={can.editClients} />}
-                </div>
-              </div>
-            )}
-            {activeTab === "documents" && <ClientDocumentsTab businessId={businessIdNum} />}
-            {activeTab === "timeline" && <ClientTimelineTab businessId={String(businessIdNum)} />}
-            {activeTab === "vat" && clientIdNum != null && <VatClientSummaryPanel clientId={clientIdNum} />}
-            {activeTab === "advance-payments" && clientIdNum != null && <ClientAdvancePaymentsTab businessId={businessIdNum} clientId={clientIdNum!} />}
-            {activeTab === "deadlines" && <FilingTimeline businessId={businessIdNum} />}
-            {activeTab === "annual-reports" && <ClientAnnualReportsTab businessId={businessIdNum} />}
-          </div>
-        </div>
+        <div className="space-y-6" />
       ) : null}
     </PageStateGuard>
   );

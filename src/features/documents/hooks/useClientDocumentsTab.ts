@@ -6,30 +6,32 @@ import {
   type PermanentDocumentListResponse,
 } from "../api";
 import { clientsQK } from "@/features/clients/api";
+import { useFirstBusinessId } from "@/features/clients/hooks/useFirstBusinessId";
 import { getErrorMessage } from "../../../utils/utils";
 import { useDocumentUpload } from "./useDocumentUpload";
 import { toast } from "../../../utils/toast";
 
-export const useClientDocumentsTab = (businessId: number, taxYear?: number | null) => {
+export const useClientDocumentsTab = (clientId: number, taxYear?: number | null) => {
   const queryClient = useQueryClient();
+  const { id: firstBusinessId } = useFirstBusinessId(clientId);
 
   const documentsQuery = useQuery<PermanentDocumentListResponse>({
-    enabled: businessId > 0,
-    queryKey: [...documentsQK.businessList(businessId), taxYear ?? null],
-    queryFn: () => documentsApi.listByClient(businessId, taxYear ? { tax_year: taxYear } : undefined),
+    enabled: clientId > 0,
+    queryKey: [...documentsQK.clientList(clientId), taxYear ?? null],
+    queryFn: () => documentsApi.listByClient(clientId, taxYear ? { tax_year: taxYear } : undefined),
   });
 
   const signalsQuery = useQuery<OperationalSignalsResponse>({
-    enabled: businessId > 0,
-    queryKey: documentsQK.businessSignals(businessId),
-    queryFn: () => documentsApi.getSignalsByClient(businessId),
+    enabled: clientId > 0,
+    queryKey: documentsQK.clientSignals(clientId),
+    queryFn: () => documentsApi.getSignalsByClient(clientId),
   });
 
-  const { submitUpload, uploadError, uploading } = useDocumentUpload(businessId);
+  const { submitUpload, uploadError, uploading } = useDocumentUpload(firstBusinessId ?? 0);
 
   const invalidateDocs = () => {
-    void queryClient.invalidateQueries({ queryKey: documentsQK.businessList(businessId) });
-    void queryClient.invalidateQueries({ queryKey: documentsQK.businessSignals(businessId) });
+    void queryClient.invalidateQueries({ queryKey: documentsQK.clientList(clientId) });
+    void queryClient.invalidateQueries({ queryKey: documentsQK.clientSignals(clientId) });
   };
 
   const handleDelete = async (id: number) => {
@@ -47,7 +49,7 @@ export const useClientDocumentsTab = (businessId: number, taxYear?: number | nul
   const approveMutation = useMutation({
     mutationFn: (id: number) => documentsApi.approveDocument(id),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: documentsQK.businessList(businessId) });
+      void queryClient.invalidateQueries({ queryKey: documentsQK.clientList(clientId) });
       void queryClient.invalidateQueries({ queryKey: clientsQK.list({}) });
       toast.success("המסמך אושר");
     },
@@ -58,7 +60,7 @@ export const useClientDocumentsTab = (businessId: number, taxYear?: number | nul
     mutationFn: ({ id, notes }: { id: number; notes: string }) =>
       documentsApi.rejectDocument(id, notes),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: documentsQK.businessList(businessId) });
+      void queryClient.invalidateQueries({ queryKey: documentsQK.clientList(clientId) });
       void queryClient.invalidateQueries({ queryKey: clientsQK.list({}) });
       toast.success("המסמך נדחה");
     },
@@ -69,7 +71,7 @@ export const useClientDocumentsTab = (businessId: number, taxYear?: number | nul
     mutationFn: ({ id, notes }: { id: number; notes: string }) =>
       documentsApi.updateNotes(id, notes),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: documentsQK.businessList(businessId) });
+      void queryClient.invalidateQueries({ queryKey: documentsQK.clientList(clientId) });
       toast.success("ההערה עודכנה");
     },
     onError: (error) => toast.error(getErrorMessage(error, "שגיאה בפעולה")),
@@ -79,10 +81,16 @@ export const useClientDocumentsTab = (businessId: number, taxYear?: number | nul
 
   return {
     documents: documentsQuery.data?.items ?? [],
-    signals: signalsQuery.data ?? { client_id: businessId, missing_documents: [] },
+    signals: signalsQuery.data ?? { client_id: clientId, missing_documents: [] },
     loading: documentsQuery.isPending || signalsQuery.isPending,
     error: errorSource ? getErrorMessage(errorSource, "שגיאה בטעינת מסמכים") : null,
-    submitUpload,
+    submitUpload: (payload: {
+      document_type: Parameters<typeof submitUpload>[0]["document_type"];
+      file: File;
+      tax_year?: number | null;
+      notes?: string | null;
+      annual_report_id?: number | null;
+    }) => submitUpload({ ...payload, client_id: clientId }),
     uploadError,
     uploading,
     handleDelete,
