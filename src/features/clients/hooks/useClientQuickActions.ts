@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { chargesApi, chargesQK, type CreateChargePayload } from "@/features/charges/api";
 import { bindersQK } from "@/features/binders/api";
-import { useReceiveBinderDrawer } from "@/features/binders/hooks/useReceiveBinderDrawer";
+import { useReceiveBinderDrawer } from "@/features/binders";
 import { toast } from "@/utils/toast";
 import { showErrorToast } from "@/utils/utils";
 

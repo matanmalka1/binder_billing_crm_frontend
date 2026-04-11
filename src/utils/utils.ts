@@ -139,7 +139,11 @@ const resolveErrorMessage = (
 
     const detail = error.response?.data?.detail;
     if (typeof detail === "string" && detail.trim()) return detail.trim();
-    if (Array.isArray(detail)) return fallbackMessage;
+    if (Array.isArray(detail) && detail.length > 0) {
+      const msg = detail[0]?.msg;
+      if (typeof msg === "string" && msg.trim()) return msg.trim();
+      return fallbackMessage;
+    }
   }
 
   if (error instanceof Error && error.message) {

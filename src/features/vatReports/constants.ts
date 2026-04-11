@@ -13,6 +13,7 @@ import { CATEGORY_COLOR_TOKENS } from "../../utils/chartColors";
 export const INCOME_KEY = "income";
 
 export const EXPENSE_CATEGORIES = [
+  "inventory",
   "office",
   "travel",
   "professional_services",
@@ -42,6 +43,7 @@ export type ExpenseCategoryKey = (typeof EXPENSE_CATEGORIES)[number];
 
 export const CATEGORY_LABELS: Record<string, string> = {
   [INCOME_KEY]: "הכנסות",
+  inventory: "קניית סחורה / מלאי",
   office: "משרד",
   travel: "נסיעות",
   professional_services: "שירותים מקצועיים",
@@ -71,6 +73,7 @@ export const CATEGORY_COLORS: Record<string, string> = CATEGORY_COLOR_TOKENS;
 
 /** VAT deduction rates per expense category (frontend display only) */
 export const DEDUCTION_RATES: Record<string, number> = {
+  inventory: 1.0,
   office: 1.0,
   travel: 2 / 3, // רכב — 66.67%
   professional_services: 1.0,
@@ -174,4 +177,3 @@ export const DOCUMENT_TYPES = [
   "self_invoice",
   "credit_note",
 ] as const;
-

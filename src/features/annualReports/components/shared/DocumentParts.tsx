@@ -10,7 +10,7 @@ import { toast } from "../../../../utils/toast";
 import { Badge } from "../../../../components/ui/primitives/Badge";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "@/features/documents";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
-import { useFirstBusinessId } from "@/features/clients/hooks/useFirstBusinessId";
+import { useFirstBusinessId } from "@/features/clients";
 
 const DOC_TYPE_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   id_copy:                 CreditCard,

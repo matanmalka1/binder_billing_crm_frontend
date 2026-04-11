@@ -1,40 +1,35 @@
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import type { UseFormReturn } from "react-hook-form";
 import {
   ClientPickerField,
   createClientIdPickerHandlers,
   useClientPickerState,
 } from "../../../components/shared/client";
+import { Input } from "../../../components/ui/inputs/Input";
 import { Modal } from "../../../components/ui/overlays/Modal";
-import type { UseFormReturn } from "react-hook-form";
-import {
-  TaxDeadlineCommonFields,
-  TaxDeadlineModalFooter,
-} from "./TaxDeadlineFormParts";
-import type { CreateTaxDeadlineForm } from "../types";
-import { clientsApi, clientsQK } from "@/features/clients";
+import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
+import type { GenerateTaxDeadlinesForm } from "../types";
 
-interface TaxDeadlineFormProps {
+interface GenerateTaxDeadlinesModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  form: UseFormReturn<CreateTaxDeadlineForm>;
+  form: UseFormReturn<GenerateTaxDeadlinesForm>;
   isSubmitting: boolean;
 }
 
-export const TaxDeadlineForm = ({
+export const GenerateTaxDeadlinesModal: React.FC<GenerateTaxDeadlinesModalProps> = ({
   open,
   onClose,
   onSubmit,
   form,
   isSubmitting,
-}: TaxDeadlineFormProps) => {
+}) => {
   const {
     register,
-    setValue,
-    watch,
-    formState: { errors },
     reset,
+    setValue,
+    formState: { errors },
   } = form;
   const {
     clientQuery,
@@ -44,17 +39,8 @@ export const TaxDeadlineForm = ({
     handleClientQueryChange,
     resetClientPicker,
   } = useClientPickerState(
-    createClientIdPickerHandlers((value, options) =>
-      setValue("client_id", value, options),
-    ),
+    createClientIdPickerHandlers((value, options) => setValue("client_id", value, options)),
   );
-  const selectedClientId = watch("client_id");
-  const clientIdNumber = Number(selectedClientId);
-  const selectedClientQuery = useQuery({
-    queryKey: clientsQK.detail(clientIdNumber),
-    queryFn: () => clientsApi.getById(clientIdNumber),
-    enabled: Number.isInteger(clientIdNumber) && clientIdNumber > 0,
-  });
 
   useEffect(() => {
     if (open) return;
@@ -63,6 +49,7 @@ export const TaxDeadlineForm = ({
   }, [open, reset, resetClientPicker]);
 
   const handleClose = () => {
+    if (isSubmitting) return;
     reset();
     resetClientPicker();
     onClose();
@@ -71,9 +58,16 @@ export const TaxDeadlineForm = ({
   return (
     <Modal
       open={open}
-      title="יצירת מועד מס חדש"
       onClose={handleClose}
-      footer={<TaxDeadlineModalFooter isSubmitting={isSubmitting} submitLabel="צור מועד" onCancel={handleClose} onSubmit={onSubmit} />}
+      title="יצירת מועדים אוטומטית"
+      footer={(
+        <ModalFormActions
+          onCancel={handleClose}
+          onSubmit={onSubmit}
+          isLoading={isSubmitting}
+          submitLabel="צור מועדים"
+        />
+      )}
     >
       <div className="space-y-4">
         <input type="hidden" {...register("client_id", { required: "שדה חובה" })} />
@@ -86,13 +80,21 @@ export const TaxDeadlineForm = ({
           error={errors.client_id?.message}
           label="לקוח *"
         />
-        <TaxDeadlineCommonFields
-          form={form}
-          vatType={selectedClientQuery.data?.vat_reporting_frequency ?? null}
+
+        <Input
+          label="שנת מס *"
+          type="number"
+          min="2000"
+          max="2100"
+          {...register("year", {
+            required: "שדה חובה",
+            validate: (value) => /^\d{4}$/.test(value) || "יש להזין שנה בת 4 ספרות",
+          })}
+          error={errors.year?.message}
         />
       </div>
     </Modal>
   );
 };
 
-TaxDeadlineForm.displayName = "TaxDeadlineForm";
+GenerateTaxDeadlinesModal.displayName = "GenerateTaxDeadlinesModal";

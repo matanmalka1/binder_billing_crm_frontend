@@ -158,7 +158,7 @@ export interface ListBusinessesParams {
 
 export interface CreateBusinessPayload {
   business_type: BusinessType;
-  opened_at: ISODateString;
+  opened_at?: ISODateString | null;
   business_name?: string | null;
   notes?: string | null;
   tax_id_number?: string | null;

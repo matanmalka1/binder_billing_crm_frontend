@@ -7,6 +7,7 @@ export {
   calculateDaysRemaining,
 } from "./api";
 export { FilingTimeline } from "./components/FilingTimeline";
+export { GenerateTaxDeadlinesModal } from "./components/GenerateTaxDeadlinesModal";
 export { TaxDeadlineDrawer } from "./components/TaxDeadlineDrawer";
 export { EditTaxDeadlineFormModal } from "./components/EditTaxDeadlineForm";
 export { TaxDeadlineForm } from "./components/TaxDeadlineForm";

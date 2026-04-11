@@ -10,7 +10,7 @@ import type {
 
 export const taxDeadlinesApi = {
   createTaxDeadline: async (payload: {
-    business_id: number;
+    client_id: number;
     deadline_type: string;
     due_date: string;
     period?: string | null;
@@ -93,7 +93,7 @@ export const taxDeadlinesApi = {
   },
 
   generateDeadlines: async (payload: {
-    business_id: number;
+    client_id: number;
     year: number;
   }): Promise<{ created_count: number }> => {
     const response = await api.post<{ created_count: number }>(

@@ -1,10 +1,9 @@
-import { useController, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/overlays/Modal";
 import { Input } from "../../../components/ui/inputs/Input";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
-import { DatePicker } from "../../../components/ui/inputs/DatePicker";
-import type { CreateBusinessPayload, EntityType, ISODateString } from "../api";
+import type { CreateBusinessPayload, EntityType } from "../api";
 import { createBusinessSchema, type CreateBusinessFormValues } from "../schemas";
 
 interface Props {
@@ -36,18 +35,14 @@ export const CreateBusinessModal: React.FC<Props> = ({
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
     reset,
   } = useForm<CreateBusinessFormValues>({
     resolver: zodResolver(createBusinessSchema),
     defaultValues: {
-      opened_at: "",
       business_name: "",
     },
   });
-
-  const { field: openedAtField } = useController({ name: "opened_at", control });
 
   const handleClose = () => {
     if (!isLoading) {
@@ -59,7 +54,6 @@ export const CreateBusinessModal: React.FC<Props> = ({
   const onFormSubmit = handleSubmit(async (data) => {
     const payload: CreateBusinessPayload = {
       business_type: entityTypeToBusinessType(clientEntityType),
-      opened_at: data.opened_at as ISODateString,
       business_name: data.business_name || null,
     };
     await onSubmit(payload);
@@ -81,15 +75,6 @@ export const CreateBusinessModal: React.FC<Props> = ({
       }
     >
       <form onSubmit={onFormSubmit} className="space-y-4">
-        <DatePicker
-          label="תאריך פתיחה *"
-          error={errors.opened_at?.message}
-          disabled={isLoading}
-          value={openedAtField.value}
-          onChange={openedAtField.onChange}
-          onBlur={openedAtField.onBlur}
-          name={openedAtField.name}
-        />
         <Input
           label="שם עסק *"
           placeholder="לדוגמה: מסעדת ישראל"

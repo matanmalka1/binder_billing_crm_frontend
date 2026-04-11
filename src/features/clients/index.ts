@@ -9,6 +9,7 @@ export { CreateClientModal } from "./components/CreateClientModal";
 export { DeletedClientDialog } from "./components/DeletedClientDialog";
 export { useClientDetails } from "./hooks/useClientDetails";
 export { useClientsPage } from "./hooks/useClientsPage";
+export { useFirstBusinessId } from "./hooks/useFirstBusinessId";
 export { getBusinessTypeLabel, BUSINESS_TYPE_LABELS } from "./constants";
 export { ClientDetails } from "./pages/ClientDetailsPage";
 export { Clients } from "./pages/ClientsPage";

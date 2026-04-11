@@ -9,6 +9,7 @@ import {
 import { annualReportStatusApi } from "../api";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
+import { timelineQK } from "@/features/timeline";
 import type { AnnualReportDetail } from "../types";
 
 export const useReportMutations = (
@@ -51,7 +52,7 @@ export const useReportMutations = (
       toast.success("סטטוס עודכן בהצלחה");
       if (qk) void queryClient.invalidateQueries({ queryKey: qk });
       void queryClient.invalidateQueries({ queryKey: annualReportsQK.all });
-      void queryClient.invalidateQueries({ queryKey: ["timeline"] });
+      void queryClient.invalidateQueries({ queryKey: timelineQK.all });
     },
   });
 

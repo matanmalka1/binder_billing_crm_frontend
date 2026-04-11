@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 import { Button } from "../../../components/ui/primitives/Button";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
@@ -17,25 +18,58 @@ import type {
   EditTaxDeadlineForm,
   TaxDeadlineFormValues,
 } from "../types";
+import type { VatType } from "@/features/clients";
 
 type SharedTaxDeadlineForm = UseFormReturn<CreateTaxDeadlineForm> | UseFormReturn<EditTaxDeadlineForm>;
 
 const currencySuffix = <span className="text-sm text-gray-400">₪</span>;
 
+const VAT_FILING_DUE_DAY = 19;
+
+const computeVatDueDate = (period: string, vatType: VatType | null) => {
+  if (!period || vatType === "exempt") return "";
+
+  const [yearPart, monthPart] = period.split("-");
+  const year = Number(yearPart);
+  const month = Number(monthPart);
+  if (!Number.isInteger(year) || !Number.isInteger(month)) return "";
+
+  const filingMonthOffset = vatType === "bimonthly" ? 2 : 1;
+  const dueMonthIndex = month - 1 + filingMonthOffset;
+  const dueYear = year + Math.floor(dueMonthIndex / 12);
+  const dueMonth = (dueMonthIndex % 12) + 1;
+
+  return `${dueYear}-${String(dueMonth).padStart(2, "0")}-${String(VAT_FILING_DUE_DAY).padStart(2, "0")}`;
+};
+
 interface TaxDeadlineCommonFieldsProps {
   form: SharedTaxDeadlineForm;
+  vatType?: VatType | null;
 }
 
 export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = ({
   form,
+  vatType = null,
 }) => {
   const typedForm = form as unknown as UseFormReturn<TaxDeadlineFormValues>;
   const register = typedForm.register as UseFormRegister<TaxDeadlineFormValues>;
   const control = typedForm.control as Control<TaxDeadlineFormValues>;
   const errors = typedForm.formState.errors as FieldErrors<TaxDeadlineFormValues>;
   const deadlineType = typedForm.watch("deadline_type");
+  const period = typedForm.watch("period");
 
-  const periodMaterialType = deadlineType === "vat" ? "vat" : "other";
+  const periodMaterialType = deadlineType === "vat"
+    ? "vat"
+    : deadlineType === "annual_report"
+      ? "annual_report"
+      : "other";
+  const isAutoVatDueDate = deadlineType === "vat";
+
+  useEffect(() => {
+    if (deadlineType !== "vat") return;
+    const dueDate = computeVatDueDate(period, vatType);
+    typedForm.setValue("due_date", dueDate, { shouldDirty: true, shouldValidate: true });
+  }, [deadlineType, period, typedForm, vatType]);
 
   return (
     <>
@@ -56,13 +90,14 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
             value={field.value}
             onChange={field.onChange}
             onBlur={field.onBlur}
+            disabled={isAutoVatDueDate}
           />
         )}
       />
 
       <ReportingPeriodField
         materialType={periodMaterialType}
-        vatType={null}
+        vatType={vatType}
         value={typedForm.watch("period")}
         onChange={(value) => typedForm.setValue("period", value, { shouldDirty: true, shouldValidate: true })}
         error={errors.period?.message}

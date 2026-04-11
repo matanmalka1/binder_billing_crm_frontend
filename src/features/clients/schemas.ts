@@ -10,7 +10,6 @@ import {
 } from "./constants";
 
 export const createBusinessSchema = z.object({
-  opened_at: z.string().min(1, "יש לבחור תאריך פתיחה"),
   business_name: z.string().trim().min(1, "יש להזין שם עסק").max(100, "שם עסק ארוך מדי"),
 });
 

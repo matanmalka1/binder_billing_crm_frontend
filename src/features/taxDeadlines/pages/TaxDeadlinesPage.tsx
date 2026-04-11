@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { CalendarPlus, Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { PaginationCard } from "@/components/ui/table/PaginationCard";
 import { PageLoading } from "@/components/ui/layout/PageLoading";
@@ -7,6 +7,7 @@ import { Alert } from "@/components/ui/overlays/Alert";
 import { Button } from "@/components/ui/primitives/Button";
 import {
   EditTaxDeadlineFormModal,
+  GenerateTaxDeadlinesModal,
   TaxDeadlineDrawer,
   TaxDeadlineForm,
   TaxDeadlinesFilters,
@@ -23,6 +24,7 @@ export const TaxDeadlines: React.FC = () => {
     isLoading,
     error,
     isCreating,
+    isGenerating,
     isUpdating,
     handleFilterChange,
     handleComplete,
@@ -38,12 +40,16 @@ export const TaxDeadlines: React.FC = () => {
     deletingId,
     form,
     onSubmit,
+    generateForm,
+    onGenerateSubmit,
     editForm,
     onEditSubmit,
     deadlines,
     total,
     totalPages,
     isAdvisor,
+    showGenerateModal,
+    setShowGenerateModal,
   } = useTaxDeadlines();
 
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
@@ -55,6 +61,12 @@ export const TaxDeadlines: React.FC = () => {
       description={`ניהול מועדי מס ומעקב הגשה לשנת ${currentYear}`}
       actions={
         <div className="flex gap-2">
+          {isAdvisor && (
+            <Button variant="outline" onClick={() => setShowGenerateModal(true)} className="gap-2">
+              <CalendarPlus className="h-4 w-4" />
+              צור מועדים
+            </Button>
+          )}
           {isAdvisor && (
             <Button variant="primary" onClick={() => setShowCreateModal(true)} className="gap-2">
               <Plus className="h-4 w-4" />
@@ -123,6 +135,16 @@ export const TaxDeadlines: React.FC = () => {
           onSubmit={onSubmit}
           form={form}
           isSubmitting={isCreating}
+        />
+      )}
+
+      {isAdvisor && (
+        <GenerateTaxDeadlinesModal
+          open={showGenerateModal}
+          onClose={() => setShowGenerateModal(false)}
+          onSubmit={onGenerateSubmit}
+          form={generateForm}
+          isSubmitting={isGenerating}
         />
       )}
 

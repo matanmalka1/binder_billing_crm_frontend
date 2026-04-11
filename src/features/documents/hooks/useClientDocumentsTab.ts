@@ -5,8 +5,7 @@ import {
   type OperationalSignalsResponse,
   type PermanentDocumentListResponse,
 } from "../api";
-import { clientsQK } from "@/features/clients/api";
-import { useFirstBusinessId } from "@/features/clients/hooks/useFirstBusinessId";
+import { useFirstBusinessId } from "@/features/clients";
 import { getErrorMessage } from "../../../utils/utils";
 import { useDocumentUpload } from "./useDocumentUpload";
 import { toast } from "../../../utils/toast";
@@ -46,27 +45,6 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
     invalidateDocs();
   };
 
-  const approveMutation = useMutation({
-    mutationFn: (id: number) => documentsApi.approveDocument(id),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: documentsQK.clientList(clientId) });
-      void queryClient.invalidateQueries({ queryKey: clientsQK.list({}) });
-      toast.success("המסמך אושר");
-    },
-    onError: (error) => toast.error(getErrorMessage(error, "שגיאה בפעולה")),
-  });
-
-  const rejectMutation = useMutation({
-    mutationFn: ({ id, notes }: { id: number; notes: string }) =>
-      documentsApi.rejectDocument(id, notes),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: documentsQK.clientList(clientId) });
-      void queryClient.invalidateQueries({ queryKey: clientsQK.list({}) });
-      toast.success("המסמך נדחה");
-    },
-    onError: (error) => toast.error(getErrorMessage(error, "שגיאה בפעולה")),
-  });
-
   const updateNotesMutation = useMutation({
     mutationFn: ({ id, notes }: { id: number; notes: string }) =>
       documentsApi.updateNotes(id, notes),
@@ -95,8 +73,6 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
     uploading,
     handleDelete,
     handleReplace,
-    handleApprove: (id: number) => approveMutation.mutate(id),
-    handleReject: (id: number, notes: string) => rejectMutation.mutate({ id, notes }),
     handleUpdateNotes: (id: number, notes: string) => updateNotesMutation.mutate({ id, notes }),
   };
 };

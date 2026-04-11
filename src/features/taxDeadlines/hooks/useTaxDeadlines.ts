@@ -4,10 +4,16 @@ import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { useRole } from "../../../hooks/useRole";
 import { useForm } from "react-hook-form";
 import { taxDeadlinesApi, taxDeadlinesQK } from "../api";
+import { timelineQK } from "@/features/timeline";
 import type { TaxDeadlineResponse } from "../api";
 import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toOptionalString } from "../../../utils/filters";
-import type { TaxDeadlineFilters, CreateTaxDeadlineForm, EditTaxDeadlineForm } from "../types";
+import type {
+  TaxDeadlineFilters,
+  CreateTaxDeadlineForm,
+  EditTaxDeadlineForm,
+  GenerateTaxDeadlinesForm,
+} from "../types";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
 
@@ -16,6 +22,7 @@ export const useTaxDeadlines = () => {
   const { isAdvisor } = useRole();
   const { searchParams, setFilter } = useSearchParamFilters();
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [completingId, setCompletingId] = useState<number | null>(null);
   const [reopeningId, setReopeningId] = useState<number | null>(null);
   const [editingDeadline, setEditingDeadline] = useState<TaxDeadlineResponse | null>(null);
@@ -54,20 +61,35 @@ export const useTaxDeadlines = () => {
 
   const createMutation = useMutation({
     mutationFn: (payload: {
-      business_id: number;
+      client_id: number;
       deadline_type: string;
       due_date: string;
       period?: string | null;
       payment_amount?: string | null;
       description?: string | null;
     }) => taxDeadlinesApi.createTaxDeadline(payload),
-    onSuccess: (_data, payload) => {
+    onSuccess: (_data) => {
       toast.success("מועד נוצר בהצלחה");
       queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
-      queryClient.invalidateQueries({ queryKey: ["timeline"] });
+      queryClient.invalidateQueries({ queryKey: timelineQK.all });
       setShowCreateModal(false);
     },
     onError: (error) => showErrorToast(error, "שגיאה ביצירת מועד"),
+  });
+
+  const generateMutation = useMutation({
+    mutationFn: (payload: { client_id: number; year: number }) => taxDeadlinesApi.generateDeadlines(payload),
+    onSuccess: ({ created_count }) => {
+      if (created_count > 0) {
+        toast.success(`נוצרו ${created_count} מועדים בהצלחה`);
+      } else {
+        toast.success("לא נוצרו מועדים חדשים");
+      }
+      queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
+      queryClient.invalidateQueries({ queryKey: timelineQK.all });
+      setShowGenerateModal(false);
+    },
+    onError: (error) => showErrorToast(error, "שגיאה ביצירת מועדים אוטומטית"),
   });
 
   const updateMutation = useMutation({
@@ -84,7 +106,7 @@ export const useTaxDeadlines = () => {
     onSuccess: () => {
       toast.success("מועד עודכן בהצלחה");
       queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
-      queryClient.invalidateQueries({ queryKey: ["timeline"] });
+      queryClient.invalidateQueries({ queryKey: timelineQK.all });
       setEditingDeadline(null);
     },
     onError: (error) => showErrorToast(error, "שגיאה בעדכון מועד"),
@@ -95,7 +117,7 @@ export const useTaxDeadlines = () => {
     onSuccess: () => {
       toast.success("מועד נמחק בהצלחה");
       queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
-      queryClient.invalidateQueries({ queryKey: ["timeline"] });
+      queryClient.invalidateQueries({ queryKey: timelineQK.all });
     },
     onError: (error) => showErrorToast(error, "שגיאה במחיקת מועד"),
     onSettled: () => setDeletingId(null),
@@ -106,7 +128,7 @@ export const useTaxDeadlines = () => {
     onSuccess: () => {
       toast.success("מועד סומן כהושלם");
       queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
-      queryClient.invalidateQueries({ queryKey: ["timeline"] });
+      queryClient.invalidateQueries({ queryKey: timelineQK.all });
     },
     onError: (error) => showErrorToast(error, "שגיאה בסימון מועד"),
     onSettled: () => setCompletingId(null),
@@ -117,7 +139,7 @@ export const useTaxDeadlines = () => {
     onSuccess: () => {
       toast.success("מועד הוחזר לממתין");
       queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
-      queryClient.invalidateQueries({ queryKey: ["timeline"] });
+      queryClient.invalidateQueries({ queryKey: timelineQK.all });
     },
     onError: (error) => showErrorToast(error, "שגיאה בהחזרת המועד"),
     onSettled: () => setReopeningId(null),
@@ -129,7 +151,7 @@ export const useTaxDeadlines = () => {
 
   const form = useForm<CreateTaxDeadlineForm>({
     defaultValues: {
-      business_id: "",
+      client_id: "",
       deadline_type: "vat",
       due_date: "",
       period: "",
@@ -140,7 +162,7 @@ export const useTaxDeadlines = () => {
 
   const onSubmit = form.handleSubmit(async (values) => {
     await createMutation.mutateAsync({
-      business_id: Number(values.business_id),
+      client_id: Number(values.client_id),
       deadline_type: values.deadline_type,
       due_date: values.due_date,
       period: values.period || null,
@@ -148,6 +170,21 @@ export const useTaxDeadlines = () => {
       description: values.description || null,
     });
     form.reset();
+  });
+
+  const generateForm = useForm<GenerateTaxDeadlinesForm>({
+    defaultValues: {
+      client_id: "",
+      year: String(new Date().getFullYear()),
+    },
+  });
+
+  const onGenerateSubmit = generateForm.handleSubmit(async (values) => {
+    await generateMutation.mutateAsync({
+      client_id: Number(values.client_id),
+      year: Number(values.year),
+    });
+    generateForm.reset({ client_id: "", year: values.year });
   });
 
   const onEditSubmit = editForm.handleSubmit(async (values) => {
@@ -214,9 +251,11 @@ export const useTaxDeadlines = () => {
     reopeningId,
     deletingId,
     showCreateModal,
+    showGenerateModal,
     editingDeadline,
     // Actions
     setShowCreateModal,
+    setShowGenerateModal,
     setEditingDeadline,
     handleFilterChange,
     handleComplete,
@@ -226,10 +265,13 @@ export const useTaxDeadlines = () => {
     // Forms
     form,
     onSubmit,
+    generateForm,
+    onGenerateSubmit,
     editForm,
     onEditSubmit,
 
     // Permissions
     isAdvisor,
+    isGenerating: generateMutation.isPending,
   };
 };

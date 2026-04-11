@@ -23,8 +23,6 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
     uploading,
     handleDelete,
     handleReplace,
-    handleApprove,
-    handleReject,
   } = useClientDocumentsTab(clientId, taxYear);
 
   if (loading) return <TableSkeleton rows={4} columns={2} />;
@@ -42,8 +40,6 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
       uploading={uploading}
       onDelete={handleDelete}
       onReplace={handleReplace}
-      handleApprove={handleApprove}
-      handleReject={handleReject}
     />
   );
 };

@@ -1,6 +1,5 @@
 import { Bell } from "lucide-react";
-import { NotificationDrawer } from "../../features/notifications/components/NotificationDrawer";
-import { useNotificationBell } from "../../features/notifications/hooks/useNotificationBell";
+import { NotificationDrawer, useNotificationBell } from "../../features/notifications";
 
 export const NotificationBell: React.FC = () => {
   const { drawerOpen, unreadCount, handleOpen, handleClose } =

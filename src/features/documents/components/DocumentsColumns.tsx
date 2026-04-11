@@ -9,17 +9,13 @@ type BuildDocColumnsOptions = Omit<DocumentRowActionsProps, "doc">;
 
 export const buildDocumentColumns = ({
   isAdvisor,
-  canPerformActions,
   downloadingId,
   replacingId,
   deletingId,
-  rejectingId,
   onDownload,
   onPreview,
   onReplace,
   onDelete,
-  handleApprove,
-  handleReject,
   handleExpandVersions,
 }: BuildDocColumnsOptions): Column<PermanentDocumentResponse>[] => [
   {
@@ -65,17 +61,13 @@ export const buildDocumentColumns = ({
       <DocumentRowActions
         doc={doc}
         isAdvisor={isAdvisor}
-        canPerformActions={canPerformActions}
         downloadingId={downloadingId}
         replacingId={replacingId}
         deletingId={deletingId}
-        rejectingId={rejectingId}
         onDownload={onDownload}
         onPreview={onPreview}
         onReplace={onReplace}
         onDelete={onDelete}
-        handleApprove={handleApprove}
-        handleReject={handleReject}
         handleExpandVersions={handleExpandVersions}
       />
     ),
