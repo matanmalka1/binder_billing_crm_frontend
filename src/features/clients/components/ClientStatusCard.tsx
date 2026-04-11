@@ -53,8 +53,8 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
   });
 
   const { data, isLoading: isStatusLoading } = useQuery({
-    queryKey: clientsQK.statusCard(firstBusinessId ?? 0, selectedYear),
-    queryFn: () => clientsApi.getStatusCard(firstBusinessId!, selectedYear),
+    queryKey: clientsQK.statusCard(clientId, selectedYear),
+    queryFn: () => clientsApi.getStatusCard(clientId, selectedYear),
     enabled: firstBusinessId != null,
     staleTime: 30_000,
     retry: 1,

@@ -14,9 +14,6 @@ interface ClientAdvancePaymentsHeaderProps {
   onToggleStatus: (status: AdvancePaymentStatus) => void;
   year: number;
   onYearChange: (year: number) => void;
-  selectedBusinessId: number | null;
-  businessOptions: Array<{ value: string; label: string }>;
-  onBusinessChange: (businessId: number) => void;
   onOpenCreate: () => void;
   onGenerateSchedule: () => void;
   generationFrequency: 1 | 2;
@@ -30,9 +27,6 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
   onToggleStatus,
   year,
   onYearChange,
-  selectedBusinessId,
-  businessOptions,
-  onBusinessChange,
   onOpenCreate,
   onGenerateSchedule,
   generationFrequency,
@@ -40,17 +34,8 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
   isGenerating,
 }) => (
   <div className="flex items-center justify-between">
-    {isAdvisor && selectedBusinessId != null && (
+    {isAdvisor && (
       <div className="flex gap-2">
-        {businessOptions.length > 1 && (
-          <div className="w-48">
-            <Select
-              value={String(selectedBusinessId)}
-              onChange={(e) => onBusinessChange(Number(e.target.value))}
-              options={businessOptions}
-            />
-          </div>
-        )}
         <Button variant="primary" size="sm" onClick={onOpenCreate}>הוסף מקדמה</Button>
         <div className="w-32">
           <Select

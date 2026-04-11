@@ -103,13 +103,12 @@ export const advancePaymentsApi = {
 
   generateSchedule: async (
     clientId: number,
-    businessId: number,
     year: number,
     periodMonthsCount: 1 | 2,
   ): Promise<{ created: number; skipped: number }> => {
     const response = await api.post<{ created: number; skipped: number }>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentsGenerate(clientId),
-      { business_id: businessId, year, period_months_count: periodMonthsCount },
+      { year, period_months_count: periodMonthsCount },
     );
     return response.data;
   },

@@ -1,7 +1,7 @@
 export const BUSINESS_ENDPOINTS = {
-  businesses: "/businesses",
-  businessById: (businessId: number | string) => `/businesses/${businessId}`,
-  businessRestore: (businessId: number | string) => `/businesses/${businessId}/restore`,
-  businessStatusCard: (businessId: number | string) => `/businesses/${businessId}/status-card`,
-  businessTaxProfile: (businessId: number | string) => `/businesses/${businessId}/tax-profile`,
+  clientBusinesses: (clientId: number | string) => `/clients/${clientId}/businesses`,
+  businessById: (clientId: number | string, businessId: number | string) =>
+    `/clients/${clientId}/businesses/${businessId}`,
+  businessRestore: (clientId: number | string, businessId: number | string) =>
+    `/clients/${clientId}/businesses/${businessId}/restore`,
 } as const;

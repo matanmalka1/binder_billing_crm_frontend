@@ -19,8 +19,8 @@ export const useBusinessDetails = ({ clientId, businessId }: UseBusinessDetailsP
   });
 
   const businessQuery = useQuery({
-    queryKey: clientsQK.businessDetail(businessId ?? "none"),
-    queryFn: () => clientsApi.getBusinessById(businessId!),
+    queryKey: clientsQK.businessDetail(clientId ?? "none", businessId ?? "none"),
+    queryFn: () => clientsApi.getBusinessById(clientId!, businessId!),
     enabled: isValidId,
   });
 

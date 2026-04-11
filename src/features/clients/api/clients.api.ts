@@ -8,9 +8,7 @@ import type {
   ListClientsParams,
   ClientConflictInfo,
   BusinessResponse,
-  BusinessListResponse,
   ClientBusinessesResponse,
-  ListBusinessesParams,
   BusinessStatusCardResponse,
   CreateClientPayload,
   UpdateClientPayload,
@@ -41,15 +39,8 @@ export const clientsApi = {
     return response.data;
   },
 
-  listBusinesses: async (params: ListBusinessesParams): Promise<BusinessListResponse> => {
-    const response = await api.get<BusinessListResponse>(BUSINESS_ENDPOINTS.businesses, {
-      params: toQueryParams(params),
-    });
-    return response.data;
-  },
-
-  getBusinessById: async (businessId: number): Promise<BusinessResponse> => {
-    const response = await api.get<BusinessResponse>(BUSINESS_ENDPOINTS.businessById(businessId));
+  getBusinessById: async (clientId: number, businessId: number): Promise<BusinessResponse> => {
+    const response = await api.get<BusinessResponse>(BUSINESS_ENDPOINTS.businessById(clientId, businessId));
     return response.data;
   },
 
@@ -58,7 +49,7 @@ export const clientsApi = {
     params?: { page?: number; page_size?: number },
   ): Promise<ClientBusinessesResponse> => {
     const response = await api.get<ClientBusinessesResponse>(
-      `/clients/${clientId}/businesses`,
+      BUSINESS_ENDPOINTS.clientBusinesses(clientId),
       params ? { params: toQueryParams(params) } : undefined,
     );
     return response.data;
@@ -94,9 +85,9 @@ export const clientsApi = {
     };
   },
 
-  getStatusCard: async (businessId: number, year?: number): Promise<BusinessStatusCardResponse> => {
+  getStatusCard: async (clientId: number, year?: number): Promise<BusinessStatusCardResponse> => {
     const response = await api.get<BusinessStatusCardResponse>(
-      BUSINESS_ENDPOINTS.businessStatusCard(businessId),
+      `/clients/${clientId}/status-card`,
       { params: year ? { year } : undefined },
     );
     return response.data;
@@ -129,21 +120,30 @@ export const clientsApi = {
   },
 
   createBusiness: async (clientId: number, payload: CreateBusinessPayload): Promise<BusinessResponse> => {
-    const response = await api.post<BusinessResponse>(`/clients/${clientId}/businesses`, payload);
+    const response = await api.post<BusinessResponse>(BUSINESS_ENDPOINTS.clientBusinesses(clientId), payload);
     return response.data;
   },
 
-  updateBusiness: async (businessId: number, payload: UpdateBusinessPayload): Promise<BusinessResponse> => {
-    const response = await api.patch<BusinessResponse>(BUSINESS_ENDPOINTS.businessById(businessId), payload);
+  updateBusiness: async (
+    clientId: number,
+    businessId: number,
+    payload: UpdateBusinessPayload,
+  ): Promise<BusinessResponse> => {
+    const response = await api.patch<BusinessResponse>(
+      BUSINESS_ENDPOINTS.businessById(clientId, businessId),
+      payload,
+    );
     return response.data;
   },
 
-  deleteBusiness: async (businessId: number): Promise<void> => {
-    await api.delete(BUSINESS_ENDPOINTS.businessById(businessId));
+  deleteBusiness: async (clientId: number, businessId: number): Promise<void> => {
+    await api.delete(BUSINESS_ENDPOINTS.businessById(clientId, businessId));
   },
 
-  restoreBusiness: async (businessId: number): Promise<BusinessResponse> => {
-    const response = await api.post<BusinessResponse>(BUSINESS_ENDPOINTS.businessRestore(businessId));
+  restoreBusiness: async (clientId: number, businessId: number): Promise<BusinessResponse> => {
+    const response = await api.post<BusinessResponse>(
+      BUSINESS_ENDPOINTS.businessRestore(clientId, businessId),
+    );
     return response.data;
   },
 };

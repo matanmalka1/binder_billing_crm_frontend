@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { signatureRequestsApi, signatureRequestsQK } from "../api";
 import type { SignatureRequestResponse } from "../api";
-import { clientsApi } from "@/features/clients/api";
 import { getErrorMessage } from "../../../utils/utils";
 
 type Params = { page?: number; pageSize?: number };
@@ -9,7 +8,7 @@ type Params = { page?: number; pageSize?: number };
 type Result = {
   items: SignatureRequestResponse[];
   total: number;
-  businessLookup: Record<number, { name: string; clientId: number }>;
+  businessLookup: Record<number, { name: string; clientId: number | null }>;
   isLoading: boolean;
   error: string | null;
 };
@@ -21,29 +20,20 @@ export const usePendingSignatureRequests = ({ page = 1, pageSize = 50 }: Params 
   });
 
   const items = listQuery.data?.items ?? [];
-  const uniqueBusinessIds = [...new Set(items.map((r) => r.business_id))];
-
-  const businessQueries = useQuery({
-    queryKey: signatureRequestsQK.businessNamesBatch(uniqueBusinessIds),
-    queryFn: async () => {
-      const results = await Promise.all(uniqueBusinessIds.map((id) => clientsApi.getBusinessById(id)));
-      return Object.fromEntries(
-        results.map((business) => [
-          business.id,
-          {
-            name: business.business_name ?? `עסק #${business.id}`,
-            clientId: business.client_id,
-          },
-        ]),
-      );
-    },
-    enabled: uniqueBusinessIds.length > 0,
-  });
+  const businessLookup = Object.fromEntries(
+    items.map((request) => [
+      request.business_id,
+      {
+        name: request.business_name ?? `עסק #${request.business_id}`,
+        clientId: request.client_id ?? null,
+      },
+    ]),
+  ) as Record<number, { name: string; clientId: number | null }>;
 
   return {
     items,
     total: listQuery.data?.total ?? 0,
-    businessLookup: businessQueries.data ?? {},
+    businessLookup,
     isLoading: listQuery.isLoading,
     error: listQuery.error ? getErrorMessage(listQuery.error, "שגיאה בטעינת בקשות חתימה") : null,
   };

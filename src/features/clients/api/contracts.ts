@@ -235,3 +235,8 @@ export interface BusinessStatusCardResponse {
   binders: BindersCard;
   documents: DocumentsCard;
 }
+
+export interface ClientScopedSignatureBusinessRef {
+  client_id: number | null;
+  business_name: string | null;
+}

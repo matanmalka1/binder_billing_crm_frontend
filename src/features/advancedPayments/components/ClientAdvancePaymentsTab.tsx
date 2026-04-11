@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AdvancePaymentStatus } from "../types";
 import { useAdvancePayments } from "../hooks/useAdvancePayments";
 import { useAdvanceRateInsights } from "../hooks/useAdvanceRateInsights";
@@ -13,7 +13,6 @@ import { AdvancePaymentsKPICards } from "./AdvancePaymentsKPICards";
 import { AdvancePaymentsChart } from "./AdvancePaymentsChart";
 import { CreateAdvancePaymentModal } from "./CreateAdvancePaymentModal";
 import { PaginationCard } from "../../../components/ui/table/PaginationCard";
-import { clientsApi, clientsQK } from "@/features/clients/api";
 
 interface ClientAdvancePaymentsTabProps {
   clientId: number;
@@ -28,42 +27,12 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [generationFrequency, setGenerationFrequency] = useState<1 | 2>(1);
-  const [selectedBusinessId, setSelectedBusinessId] = useState<number | null>(null);
   const { isAdvisor } = useRole();
 
   const queryClient = useQueryClient();
-  const { data: businessesData } = useQuery({
-    queryKey: clientsQK.businessesAll(clientId),
-    queryFn: () => clientsApi.listAllBusinessesForClient(clientId),
-    enabled: clientId > 0,
-    staleTime: 60_000,
-  });
-  const businessOptions = (businessesData?.items ?? []).map((business) => ({
-    value: String(business.id),
-    label: business.business_name || `עסק #${business.id}`,
-  }));
-  const businessNameById = new Map(
-    (businessesData?.items ?? []).map((business) => [
-      business.id,
-      business.business_name || `עסק #${business.id}`,
-    ]),
-  );
-  const hasMultipleBusinesses = businessOptions.length > 1;
   const { rows, isLoading, total, create, isCreating, updateRow, updatingId, deleteRow, isDeletingId } =
     useAdvancePayments(clientId, year, statusFilter, page);
-  const displayRows = rows.map((row) => ({
-    ...row,
-    business_name: row.business_name ?? businessNameById.get(row.business_id) ?? null,
-  }));
   const { vatType } = useAdvanceRateInsights(clientId);
-
-  useEffect(() => {
-    if (selectedBusinessId != null) {
-      const exists = (businessesData?.items ?? []).some((business) => business.id === selectedBusinessId);
-      if (exists) return;
-    }
-    setSelectedBusinessId(businessesData?.items?.[0]?.id ?? null);
-  }, [businessesData, selectedBusinessId]);
 
   useEffect(() => {
     if (vatType === "bimonthly") setGenerationFrequency(2);
@@ -71,10 +40,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   }, [vatType]);
 
   const generateMutation = useMutation({
-    mutationFn: () =>
-      selectedBusinessId == null
-        ? Promise.reject(new Error("missing business"))
-        : advancePaymentsApi.generateSchedule(clientId, selectedBusinessId, year, generationFrequency),
+    mutationFn: () => advancePaymentsApi.generateSchedule(clientId, year, generationFrequency),
     onSuccess: (data) => {
       const msg = data.created > 0 ? `נוצרו ${data.created} מקדמות` : "הכול קיים";
       toast.success(msg);
@@ -135,9 +101,6 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         onToggleStatus={handleStatusToggle}
         year={year}
         onYearChange={(nextYear) => { setPage(1); setYear(nextYear); }}
-        selectedBusinessId={selectedBusinessId}
-        businessOptions={businessOptions}
-        onBusinessChange={setSelectedBusinessId}
         onOpenCreate={() => setModalOpen(true)}
         onGenerateSchedule={() => generateMutation.mutate()}
         generationFrequency={generationFrequency}
@@ -147,9 +110,8 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
       <AdvancePaymentsKPICards clientId={clientId} year={year} />
       <AdvancePaymentsChart clientId={clientId} year={year} />
       <AdvancePaymentTable
-        rows={displayRows}
+        rows={rows}
         isLoading={isLoading}
-        showBusinessName={hasMultipleBusinesses}
         canEdit={isAdvisor}
         updatingId={updatingId}
         deletingId={isDeletingId}
@@ -163,14 +125,14 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
           totalPages={totalPages}
           total={total}
           label="מקדמות"
-        onPageChange={setPage}
-      />
+          onPageChange={setPage}
+        />
       )}
 
       {isAdvisor && (
         <CreateAdvancePaymentModal
           open={modalOpen}
-          businessId={selectedBusinessId ?? 0}
+          clientId={clientId}
           year={year}
           isCreating={isCreating}
           onClose={() => setModalOpen(false)}

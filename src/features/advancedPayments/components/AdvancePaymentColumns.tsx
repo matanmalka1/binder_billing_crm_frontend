@@ -77,7 +77,7 @@ export const buildAdvancePaymentColumns = (
       key: "business_name",
       header: "עסק",
       render: (row) => (
-        <span className="text-sm text-gray-700">{row.business_name || `#${row.business_id}`}</span>
+        <span className="text-sm text-gray-700">{row.business_name || "—"}</span>
       ),
     });
   }

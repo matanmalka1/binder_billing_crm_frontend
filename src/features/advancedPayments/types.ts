@@ -9,7 +9,7 @@ export type AdvancePaymentMethod =
 
 export interface AdvancePaymentRow {
   id: number;
-  business_id: number;
+  client_id: number;
   business_name?: string | null;
   period: string;
   period_months_count: 1 | 2;
@@ -35,7 +35,6 @@ export interface ListAdvancePaymentsParams {
 }
 
 export interface CreateAdvancePaymentPayload {
-  business_id: number;
   period: string;
   period_months_count: 1 | 2;
   due_date: string;
@@ -58,7 +57,6 @@ export interface UpdateAdvancePaymentPayload {
 export interface AdvancePaymentOverviewRow {
   id: number;
   client_id: number;
-  business_id: number;
   business_name: string;
   period: string;
   period_months_count: 1 | 2;

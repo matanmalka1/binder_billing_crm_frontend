@@ -20,7 +20,7 @@ import type { CreateAdvancePaymentPayload } from "../types";
 
 interface CreateAdvancePaymentModalProps {
   open: boolean;
-  businessId: number;
+  clientId: number;
   year: number;
   isCreating: boolean;
   onClose: () => void;
@@ -29,7 +29,7 @@ interface CreateAdvancePaymentModalProps {
 
 export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps> = ({
   open,
-  businessId,
+  clientId,
   year,
   isCreating,
   onClose,
@@ -61,9 +61,9 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
   }, [month, periodMonthsCount, setValue]);
 
   const { data: suggestion } = useQuery({
-    queryKey: advancedPaymentsQK.suggestion(businessId, year, periodMonthsCount),
-    queryFn: () => advancePaymentsApi.getSuggestion(businessId, year, periodMonthsCount),
-    enabled: open && businessId > 0 && year > 0,
+    queryKey: advancedPaymentsQK.suggestion(clientId, year, periodMonthsCount),
+    queryFn: () => advancePaymentsApi.getSuggestion(clientId, year, periodMonthsCount),
+    enabled: open && clientId > 0 && year > 0,
     staleTime: 60_000,
   });
 
@@ -74,7 +74,6 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
 
   const onSubmit = handleSubmit(async (data) => {
     await onCreate({
-      business_id: businessId,
       period: `${year}-${String(data.month).padStart(2, "0")}`,
       period_months_count: data.period_months_count,
       due_date: data.due_date,
