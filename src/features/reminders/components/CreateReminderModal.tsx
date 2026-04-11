@@ -211,7 +211,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
         <input type="hidden" {...register("client_id", { required: "שדה חובה" })} />
         {clientDisplay ? (
           <div>
-            <p className="mb-1 text-sm font-medium text-gray-700">עסק</p>
+            <p className="mb-1 text-sm font-medium text-gray-700">לקוח</p>
             <p className="text-sm text-gray-900">{clientDisplay}</p>
           </div>
         ) : (
@@ -222,7 +222,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             onSelect={handleSelectClient}
             onClear={handleClearClient}
             error={e.client_id?.message}
-            label="עסק *"
+            label="לקוח *"
           />
         )}
 

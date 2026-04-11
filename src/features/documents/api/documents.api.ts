@@ -66,7 +66,10 @@ export const documentsApi = {
 
   upload: async (payload: UploadDocumentPayload): Promise<PermanentDocumentResponse> => {
     const formData = new FormData();
-    formData.append("business_id", String(payload.business_id));
+    formData.append("client_id", String(payload.client_id));
+    if (payload.business_id != null) {
+      formData.append("business_id", String(payload.business_id));
+    }
     formData.append("document_type", payload.document_type);
     formData.append("file", payload.file);
     if (payload.tax_year != null) {

@@ -18,6 +18,7 @@ import type {
 import { useAuthStore } from "../../../store/auth.store";
 import { toast } from "../../../utils/toast";
 import { DOC_TYPE_LABELS } from "../documents.constants";
+import type { BusinessResponse } from "@/features/clients/api";
 
 interface DocumentsDataCardsProps {
   documents: PermanentDocumentResponse[];
@@ -25,8 +26,11 @@ interface DocumentsDataCardsProps {
   taxYear: number | null;
   onTaxYearChange: (year: number | null) => void;
   taxYears: number[];
+  businesses: BusinessResponse[];
+  businessesLoading: boolean;
   submitUpload: (payload: {
     document_type: UploadDocumentPayload["document_type"];
+    business_id?: number | null;
     file: File;
     tax_year?: number | null;
   }) => Promise<boolean>;
@@ -42,6 +46,8 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
   taxYear,
   onTaxYearChange,
   taxYears,
+  businesses,
+  businessesLoading,
   submitUpload,
   uploadError,
   uploading,
@@ -149,6 +155,8 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
 
       <Card title="העלאת מסמך">
         <DocumentsUploadCard
+          businesses={businesses}
+          businessesLoading={businessesLoading}
           submitUpload={submitUpload}
           uploadError={uploadError}
           uploading={uploading}

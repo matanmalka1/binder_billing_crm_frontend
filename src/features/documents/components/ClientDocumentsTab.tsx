@@ -18,6 +18,8 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
     signals,
     loading,
     error,
+    businesses,
+    businessesLoading,
     submitUpload,
     uploadError,
     uploading,
@@ -35,6 +37,8 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
       taxYear={taxYear}
       onTaxYearChange={setTaxYear}
       taxYears={TAX_YEARS}
+      businesses={businesses}
+      businessesLoading={businessesLoading}
       submitUpload={submitUpload}
       uploadError={uploadError}
       uploading={uploading}

@@ -5,14 +5,14 @@ import {
   type OperationalSignalsResponse,
   type PermanentDocumentListResponse,
 } from "../api";
-import { useFirstBusinessId } from "@/features/clients";
+import { useBusinessesForClient } from "@/hooks/useBusinessesForClient";
 import { getErrorMessage } from "../../../utils/utils";
 import { useDocumentUpload } from "./useDocumentUpload";
 import { toast } from "../../../utils/toast";
 
 export const useClientDocumentsTab = (clientId: number, taxYear?: number | null) => {
   const queryClient = useQueryClient();
-  const { id: firstBusinessId } = useFirstBusinessId(clientId);
+  const { businesses, isLoading: businessesLoading } = useBusinessesForClient({ clientId });
 
   const documentsQuery = useQuery<PermanentDocumentListResponse>({
     enabled: clientId > 0,
@@ -26,7 +26,7 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
     queryFn: () => documentsApi.getSignalsByClient(clientId),
   });
 
-  const { submitUpload, uploadError, uploading } = useDocumentUpload(firstBusinessId ?? 0);
+  const { submitUpload, uploadError, uploading } = useDocumentUpload();
 
   const invalidateDocs = () => {
     void queryClient.invalidateQueries({ queryKey: documentsQK.clientList(clientId) });
@@ -62,8 +62,11 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
     signals: signalsQuery.data ?? { client_id: clientId, missing_documents: [] },
     loading: documentsQuery.isPending || signalsQuery.isPending,
     error: errorSource ? getErrorMessage(errorSource, "שגיאה בטעינת מסמכים") : null,
+    businesses,
+    businessesLoading,
     submitUpload: (payload: {
       document_type: Parameters<typeof submitUpload>[0]["document_type"];
+      business_id?: number | null;
       file: File;
       tax_year?: number | null;
       notes?: string | null;

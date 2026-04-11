@@ -14,79 +14,68 @@ import {
 } from "../schemas";
 
 const makeDefaultFormValues = (
-  businessId?: number,
+  clientId?: number,
 ): CreateReminderFormValues => ({
   ...createReminderDefaultValues,
-  client_id: businessId ? String(businessId) : "",
+  client_id: clientId ? String(clientId) : "",
 });
 
 const buildPayload = (
   values: CreateReminderFormValues,
-  fixedBusinessId?: number,
+  fixedClientId?: number,
 ): CreateReminderRequest => {
-  // Schema guarantees all fields are valid at this point.
-  const businessId = fixedBusinessId ?? Number(values.client_id);
-  const base = {
-    business_id: businessId,
+  const clientId = fixedClientId ?? Number(values.client_id);
+  const scheduling = {
     target_date: values.target_date,
     days_before: values.days_before,
     message: values.message || undefined,
   };
 
+  // Client-scoped types — owner derived from the linked entity on the backend.
   if (values.reminder_type === "tax_deadline_approaching") {
     return {
-      ...base,
+      ...scheduling,
       reminder_type: "tax_deadline_approaching",
+      client_id: clientId,
       tax_deadline_id: Number(values.tax_deadline_id),
     };
   }
   if (values.reminder_type === "vat_filing") {
     return {
-      ...base,
+      ...scheduling,
       reminder_type: "vat_filing",
       tax_deadline_id: Number(values.tax_deadline_id),
     };
   }
   if (values.reminder_type === "annual_report_deadline") {
     return {
-      ...base,
+      ...scheduling,
       reminder_type: "annual_report_deadline",
       annual_report_id: Number(values.annual_report_id),
     };
   }
-  if (values.reminder_type === "advance_payment_due") {
-    return {
-      ...base,
-      reminder_type: "advance_payment_due",
-      advance_payment_id: Number(values.advance_payment_id),
-    };
-  }
   if (values.reminder_type === "binder_idle") {
     return {
-      ...base,
+      ...scheduling,
       reminder_type: "binder_idle",
       binder_id: Number(values.binder_id),
     };
   }
+
+  // Business-scoped types — must name the business explicitly.
+  const businessId = clientId; // form field "client_id" holds the business_id for these types
+  const businessBase = { ...scheduling, business_id: businessId };
+  if (values.reminder_type === "advance_payment_due") {
+    return { ...businessBase, reminder_type: "advance_payment_due", advance_payment_id: Number(values.advance_payment_id) };
+  }
   if (values.reminder_type === "unpaid_charge") {
-    return {
-      ...base,
-      reminder_type: "unpaid_charge",
-      charge_id: Number(values.charge_id),
-    };
+    return { ...businessBase, reminder_type: "unpaid_charge", charge_id: Number(values.charge_id) };
   }
   if (values.reminder_type === "document_missing") {
-    return {
-      ...base,
-      reminder_type: "document_missing",
-    };
+    return { ...businessBase, reminder_type: "document_missing" };
   }
   // custom — schema guarantees message is non-empty
-  return {
-    ...base,
-    reminder_type: "custom",
-    message: values.message as string,
-  };
+  return { ...businessBase, reminder_type: "custom", message: values.message as string };
 };
 
 export const useReminders = (opts?: { clientId?: number }) => {
@@ -105,7 +94,7 @@ export const useReminders = (opts?: { clientId?: number }) => {
   const remindersQuery = useQuery({
     queryKey: remindersQK.list(clientId),
     queryFn: () =>
-      remindersApi.list(clientId ? { business_id: clientId } : undefined),
+      remindersApi.list(clientId ? { client_id: clientId } : undefined),
     enabled: clientId !== 0,
   });
 
@@ -118,7 +107,7 @@ export const useReminders = (opts?: { clientId?: number }) => {
       setShowCreateModal(false);
       form.reset(makeDefaultFormValues(clientId));
     },
-    onError: (error) => showErrorToast(error, "שגיאה ביצירת תזכורת"),
+    onError: (err) => showErrorToast(err, "שגיאה ביצירת תזכורת"),
   });
 
   const cancelMutation = useMutation({
@@ -142,7 +131,6 @@ export const useReminders = (opts?: { clientId?: number }) => {
   });
 
   const onSubmit = form.handleSubmit((values) => {
-    // zodResolver has already validated; buildPayload is now total (no null branch).
     void createMutation.mutateAsync(buildPayload(values, clientId));
   });
 

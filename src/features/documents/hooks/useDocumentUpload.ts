@@ -4,7 +4,7 @@ import { documentsApi, documentsQK, type UploadDocumentPayload } from "../api";
 import { getErrorMessage } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 
-export const useDocumentUpload = (businessId: number) => {
+export const useDocumentUpload = () => {
   const queryClient = useQueryClient();
   const [uploadError, setUploadError] = useState<string | null>(null);
 
@@ -22,17 +22,14 @@ export const useDocumentUpload = (businessId: number) => {
 
   const submitUpload = async (
     payload: Pick<UploadDocumentPayload, "client_id" | "document_type" | "file"> & {
+      business_id?: number | null;
       tax_year?: number | null;
       notes?: string | null;
       annual_report_id?: number | null;
     },
   ): Promise<boolean> => {
-    if (!businessId) {
-      setUploadError("יש להגדיר עסק פעיל לפני העלאה");
-      return false;
-    }
     try {
-      await uploadMutation.mutateAsync({ business_id: businessId, client_id: payload.client_id, ...payload });
+      await uploadMutation.mutateAsync(payload);
       return true;
     } catch (err: unknown) {
       setUploadError(getErrorMessage(err, "שגיאה בהעלאת מסמך"));

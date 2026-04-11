@@ -5,6 +5,7 @@ export type DocumentStatus = "pending" | "received" | "approved" | "rejected";
 
 export interface DocumentsUploadFormValues {
   document_type: UploadDocumentPayload["document_type"];
+  business_id: number | null;
   file: File | null;
   tax_year: number | null;
   annual_report_id: number | null;
@@ -24,6 +25,7 @@ export const documentsUploadSchema = z.object({
     "nii_approval",
     "other",
   ]),
+  business_id: z.number().nullable(),
   file: z
     .custom<File | null>((value) => value === null || value instanceof File)
     .refine(
@@ -39,6 +41,7 @@ export const documentsUploadSchema = z.object({
 
 export const documentsUploadDefaultValues: DocumentsUploadFormValues = {
   document_type: "id_copy",
+  business_id: null,
   file: null,
   tax_year: null,
   annual_report_id: null,

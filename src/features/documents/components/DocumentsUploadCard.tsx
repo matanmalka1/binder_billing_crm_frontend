@@ -6,6 +6,7 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Input } from "../../../components/ui/inputs/Input";
 import type { UploadDocumentPayload } from "../api";
+import type { BusinessResponse } from "@/features/clients/api";
 import {
   documentsUploadDefaultValues,
   documentsUploadSchema,
@@ -26,8 +27,11 @@ const ACCEPTED_MIME_TYPES = [
 const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 
 interface DocumentsUploadCardProps {
+  businesses: BusinessResponse[];
+  businessesLoading: boolean;
   submitUpload: (payload: {
     document_type: UploadDocumentPayload["document_type"];
+    business_id?: number | null;
     file: File;
     tax_year?: number | null;
     notes?: string | null;
@@ -40,6 +44,8 @@ interface DocumentsUploadCardProps {
 }
 
 export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
+  businesses,
+  businessesLoading,
   submitUpload,
   uploadError,
   uploading,
@@ -62,6 +68,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
   const [fileError, setFileError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const selectedFile = watch("file");
+  const selectedBusinessId = watch("business_id");
   const annualReportIdValue = watch("annual_report_id");
 
   const applyFile = (file: File) => {
@@ -88,6 +95,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
     if (!values.file) return;
     const uploaded = await submitUpload({
       document_type: values.document_type,
+      business_id: values.business_id,
       file: values.file,
       tax_year: selectedTaxYear ?? null,
       notes: values.notes ?? null,
@@ -101,8 +109,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      {/* Row 1: doc type + notes */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Select
           label="סוג מסמך"
           error={errors.document_type?.message}
@@ -110,6 +117,22 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         >
           {Object.entries(DOC_TYPE_LABELS).map(([value, label]) => (
             <option key={value} value={value}>{label}</option>
+          ))}
+        </Select>
+
+        <Select
+          label="שיוך עסקי"
+          value={selectedBusinessId ?? ""}
+          onChange={(e) =>
+            setValue("business_id", e.target.value ? Number(e.target.value) : null)
+          }
+          disabled={businessesLoading}
+        >
+          <option value="">מסמך כללי ללקוח</option>
+          {businesses.map((business) => (
+            <option key={business.id} value={business.id}>
+              {business.business_name ?? `עסק #${business.id}`}
+            </option>
           ))}
         </Select>
 

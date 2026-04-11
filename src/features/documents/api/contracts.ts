@@ -1,6 +1,8 @@
 export interface PermanentDocumentResponse {
   id: number;
   client_id: number;
+  business_id: number | null;
+  scope: "client" | "business";
   document_type: string;
   storage_key: string;
   tax_year: number | null;
@@ -42,8 +44,8 @@ export interface UpdateNotesRequest {
 }
 
 export interface UploadDocumentPayload {
-  business_id: number;
   client_id: number;
+  business_id?: number | null;
   document_type:
     | "id_copy"
     | "power_of_attorney"
