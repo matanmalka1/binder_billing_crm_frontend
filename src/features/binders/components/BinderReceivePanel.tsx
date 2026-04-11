@@ -100,7 +100,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         {...register("binder_type")}
       />
 
-      {selectedClient && (
+      {selectedClient && binderType !== "vat" && (
         <Controller
           name="business_id"
           control={control}

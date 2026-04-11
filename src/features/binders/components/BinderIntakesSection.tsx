@@ -14,14 +14,17 @@ import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { VAT_STATUS_BADGE_VARIANTS } from "../../vatReports/constants";
 import type { BinderIntakeMaterialResponse } from "../types";
 
-const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse }> = ({ material }) => {
+const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse; clientId: number }> = ({
+  material,
+  clientId,
+}) => {
   const navigate = useNavigate();
   const period = material.description?.slice(0, 7);
 
   const { data: lookup } = useQuery({
-    queryKey: vatReportsQK.lookup(material.business_id!, period!),
-    queryFn: () => vatReportsApi.lookup(material.business_id!, period!),
-    enabled: !!material.business_id && !!period && /^\d{4}-\d{2}$/.test(period),
+    queryKey: vatReportsQK.lookup(clientId, period!),
+    queryFn: () => vatReportsApi.lookup(clientId, period!),
+    enabled: clientId > 0 && !!period && /^\d{4}-\d{2}$/.test(period),
     staleTime: 30_000,
   });
 
@@ -43,9 +46,10 @@ const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse }> = ({ 
 
 interface BinderIntakesSectionProps {
   binderId: number;
+  clientId: number;
 }
 
-export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ binderId }) => {
+export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ binderId, clientId }) => {
   const { data, isLoading } = useQuery({
     queryKey: bindersQK.intakes(binderId),
     queryFn: () => bindersApi.getIntakes(binderId),
@@ -76,8 +80,8 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ bind
                       {m.description && (
                         <span className="font-normal text-gray-500"> · {m.description}</span>
                       )}
-                      {m.material_type === "vat" && m.business_id && m.description && (
-                        <VatStatusBadge material={m} />
+                      {m.material_type === "vat" && m.description && (
+                        <VatStatusBadge material={m} clientId={clientId} />
                       )}
                     </div>
                   ))}

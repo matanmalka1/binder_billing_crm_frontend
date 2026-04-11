@@ -62,6 +62,10 @@ export const useReceiveBinderDrawer = (
   useEffect(() => {
     form.setValue("reporting_period", null);
     form.setValue("annual_report_id", null);
+    if (binderType === "vat") {
+      // VAT is client-scoped: keep business_id empty to avoid business-coupled intake.
+      form.setValue("business_id", null, { shouldValidate: false });
+    }
   }, [binderType, form]);
 
   useEffect(() => {
@@ -81,10 +85,11 @@ export const useReceiveBinderDrawer = (
   const businesses = useMemo(() => businessesData?.items ?? [], [businessesData?.items]);
 
   useEffect(() => {
+    if (binderType === "vat") return;
     if (businesses.length === 1) {
       form.setValue("business_id", businesses[0].id, { shouldValidate: true });
     }
-  }, [businesses, form]);
+  }, [businesses, binderType, form]);
 
   const { data: clientBindersData } = useQuery({
     queryKey: bindersQK.list({ client_id: clientId, page_size: 10 }),
@@ -149,10 +154,10 @@ export const useReceiveBinderDrawer = (
       toast.success(result.is_new_binder ? "קלסר חדש נפתח והחומר נקלט" : "החומר נוסף לקלסר קיים");
       await queryClient.invalidateQueries({ queryKey: bindersQK.all });
 
-      if (values.binder_type === "vat" && values.business_id && values.reporting_period) {
+      if (values.binder_type === "vat" && values.client_id && values.reporting_period) {
         const period = values.reporting_period.slice(0, 7);
         try {
-          const existing = await vatReportsApi.lookup(values.business_id, period);
+          const existing = await vatReportsApi.lookup(values.client_id, period);
           if (existing) {
             toast.info("קיים תיק מע״מ לתקופה זו", {
               action: { label: "פתח", onClick: () => navigate(`/tax/vat/${existing.id}`) },
@@ -161,7 +166,7 @@ export const useReceiveBinderDrawer = (
             toast.info('לא קיים תיק מע"מ לתקופה זו', {
               action: {
                 label: "צור תיק מע״מ",
-                onClick: () => navigate(`/tax/vat?create=1&business_id=${values.business_id}&period=${period}`),
+                onClick: () => navigate(`/tax/vat?create=1&client_id=${values.client_id}&period=${period}`),
               },
             });
           }

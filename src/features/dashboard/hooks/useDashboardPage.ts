@@ -90,9 +90,9 @@ const buildStats = (
   },
   {
     key: "vat_due_this_month",
-    title: "דוחות מע״מ לחודש",
+    title: 'דוחות מע״מ ללקוחות (חודשי)',
     value: data.vat_due_this_month,
-    description: "טרם הוגשו לחודש הנוכחי",
+    description: "דוחות לקוח שטרם הוגשו לחודש הנוכחי",
     icon: FileText,
     variant: data.vat_due_this_month > 0 ? "red" : "green",
     urgent: data.vat_due_this_month > 0,

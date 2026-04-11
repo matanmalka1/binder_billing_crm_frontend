@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck, ChevronLeft } from "lucide-react";
 import { clientsApi, clientsQK } from "../api";
+import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
 import { Card } from "../../../components/ui/primitives/Card";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
 interface Props {
@@ -43,6 +44,14 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
   const [selectedYear, setSelectedYear] = useState<number>(CURRENT_YEAR);
   const { id: firstBusinessId, isLoading: isBusinessLoading } = useFirstBusinessId(clientId);
 
+  const { data: vatSummary, isLoading: isVatLoading } = useQuery({
+    queryKey: vatReportsQK.clientSummary(clientId),
+    queryFn: () => vatReportsApi.getClientSummary(clientId),
+    enabled: clientId > 0,
+    staleTime: 30_000,
+    retry: 1,
+  });
+
   const { data, isLoading: isStatusLoading } = useQuery({
     queryKey: clientsQK.statusCard(firstBusinessId ?? 0, selectedYear),
     queryFn: () => clientsApi.getStatusCard(firstBusinessId!, selectedYear),
@@ -51,7 +60,14 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
     retry: 1,
   });
 
-  const isLoading = isBusinessLoading || isStatusLoading;
+  const isLoading = isBusinessLoading || isStatusLoading || isVatLoading;
+  const vatYear = vatSummary?.annual?.find((entry) => entry.year === selectedYear);
+  const vatPrimary = vatYear ? fmt(vatYear.net_vat) : "—";
+  const vatStatus = vatYear
+    ? vatYear.periods_count === 0
+      ? "אין דיווחים"
+      : `${vatYear.filed_count}/${vatYear.periods_count} דווחו`
+    : "אין דיווחים";
 
   const yearSelector = (
     <div className="flex gap-1">
@@ -86,10 +102,19 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
 
   if (!isLoading && (firstBusinessId == null || !data)) {
     return (
-      <Card title="סטטוס לקוח">
-        <div className="flex flex-col items-center gap-3 py-6 text-center">
-          <FolderOpen size={32} className="text-gray-300" />
-          <p className="text-sm text-gray-500">אין עסקים רשומים — הוסף עסק כדי לראות סטטוס</p>
+      <Card title={`סטטוס לקוח — ${selectedYear}`} actions={yearSelector}>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <Tile
+            icon={<Receipt size={18} />}
+            title='מע"מ (לקוח)'
+            primary={vatPrimary}
+            secondary={vatStatus}
+            onClick={() => navigate(`/clients/${clientId}/vat`)}
+          />
+          <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-5 text-center">
+            <FolderOpen size={24} className="text-gray-300" />
+            <p className="text-sm text-gray-500">אין עסקים רשומים — סטטוס תפעולי יוצג לאחר יצירת עסק</p>
+          </div>
         </div>
       </Card>
     );
@@ -97,12 +122,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
 
   if (!data) return null;
 
-  const { vat, annual_report, charges, advance_payments, binders, documents, year } = data;
-
-  const vatStatus =
-    vat.periods_total === 0
-      ? "אין דיווחים"
-      : `${vat.periods_filed}/${vat.periods_total} דווחו`;
+  const { annual_report, charges, advance_payments, binders, documents, year } = data;
 
   const arStatus = annual_report.status
     ? annual_report.form_type
@@ -123,8 +143,8 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
         <Tile
           icon={<Receipt size={18} />}
-          title='מע"מ'
-          primary={fmt(vat.net_vat_total)}
+          title='מע"מ (לקוח)'
+          primary={vatPrimary}
           secondary={vatStatus}
           onClick={() => navigate(`/clients/${clientId}/vat`)}
         />

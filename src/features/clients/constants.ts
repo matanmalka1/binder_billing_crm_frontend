@@ -30,7 +30,7 @@ export const CLIENT_DETAILS_TAB_LABELS: Record<ActiveClientDetailsTab, string> =
   documents: "מסמכים",
   deadlines: "מועדים",
   timeline: "ציר זמן",
-  vat: 'מע"מ',
+  vat: 'מע"מ (לקוח)',
   "advance-payments": "מקדמות",
   "annual-reports": "דוחות שנתיים",
   communication: "תקשורת",

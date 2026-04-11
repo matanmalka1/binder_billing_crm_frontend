@@ -14,7 +14,6 @@ import { ClientInfoSection } from "./ClientInfoSection";
 import { ClientRelatedData } from "./ClientRelatedData";
 import { ClientEditForm } from "./ClientEditForm";
 import { ClientBusinessesCard } from "./ClientBusinessesCard";
-import { ClientVatOverviewCard } from "./ClientVatOverviewCard";
 import { ClientAuditCard } from "./ClientAuditCard";
 import { CreateBusinessModal } from "./CreateBusinessModal";
 import { ClientTimelineTab } from "@/features/timeline";
@@ -140,7 +139,6 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
       {activeTab === "finance" && (
         <div className="space-y-6">
           <ClientStatusCard clientId={client.id} />
-          <ClientVatOverviewCard clientId={client.id} />
           <ClientRemindersCard clientId={client.id} businessId={firstBusinessId ?? 0} clientName={client.full_name} />
           <NotificationsTab businessId={firstBusinessId ?? 0} />
         </div>

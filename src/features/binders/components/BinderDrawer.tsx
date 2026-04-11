@@ -121,7 +121,7 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
             onRevertReady={() => onRevertReady?.()}
             onReturn={() => onReturn?.()}
           />
-          <BinderIntakesSection binderId={binder.id} />
+          <BinderIntakesSection binderId={binder.id} clientId={binder.client_id} />
           <BinderHistorySection binderId={binder.id} />
         </>
       )}

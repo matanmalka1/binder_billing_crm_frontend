@@ -63,8 +63,8 @@ export const VatWorkItems: React.FC = () => {
   return (
     <div className="space-y-6">
       <PageHeader
-        title='דוחות מע"מ'
-        description='ניהול תיקי מע"מ חודשיים — הקלדה, בדיקה והגשה'
+        title='דוחות מע"מ (לקוח)'
+        description='ניהול תיקי מע"מ חודשיים ברמת לקוח — הקלדה, בדיקה והגשה'
         actions={
           isAdvisor ? (
             <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)}>

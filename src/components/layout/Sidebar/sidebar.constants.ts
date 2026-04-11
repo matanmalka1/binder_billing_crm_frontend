@@ -45,7 +45,7 @@ export const NAV_GROUPS: NavGroup[] = [
     key: "tax",
     label: "מיסים",
     items: [
-      { to: "/tax/vat", label: 'דוחות מע"מ', icon: ClipboardList },
+      { to: "/tax/vat", label: 'דוחות מע"מ (לקוח)', icon: ClipboardList },
       { to: "/tax/reports", label: "לוח דוחות שנתיים", icon: KanbanSquare, end: true },
       { to: "/tax/advance-payments", label: "מקדמות", icon: CalendarDays },
       { to: "/tax/deadlines", label: "דוחות מס", icon: FileSpreadsheet },
