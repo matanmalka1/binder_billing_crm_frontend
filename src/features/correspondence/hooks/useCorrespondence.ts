@@ -8,15 +8,15 @@ import { toast } from "../../../utils/toast";
 
 const PAGE_SIZE = 50;
 
-export const useCorrespondence = (businessId: number, clientId?: number) => {
+export const useCorrespondence = (businessId: number | undefined, clientId?: number) => {
   const queryClient = useQueryClient();
-  const queryKey = [...correspondenceQK.forBusiness(businessId), { page: 1, page_size: PAGE_SIZE }];
-  const contactsClientId = clientId ?? businessId;
+  const queryKey = [...correspondenceQK.forBusiness(businessId ?? 0), { page: 1, page_size: PAGE_SIZE }];
+  const contactsClientId = clientId ?? businessId ?? 0;
 
   const listQuery = useQuery({
-    enabled: businessId > 0,
+    enabled: (businessId ?? 0) > 0,
     queryKey,
-    queryFn: () => correspondenceApi.list(businessId, { page: 1, page_size: PAGE_SIZE }),
+    queryFn: () => correspondenceApi.list(businessId ?? 0, { page: 1, page_size: PAGE_SIZE }),
     retry: false,
   });
 
@@ -29,7 +29,7 @@ export const useCorrespondence = (businessId: number, clientId?: number) => {
 
   const createMutation = useMutation({
     mutationFn: (values: CorrespondenceFormValues) =>
-      correspondenceApi.create(businessId, {
+      correspondenceApi.create(businessId ?? 0, {
         ...values,
         notes: values.notes || null,
         contact_id: values.contact_id ?? null,
@@ -43,7 +43,7 @@ export const useCorrespondence = (businessId: number, clientId?: number) => {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: number; payload: UpdateCorrespondencePayload }) =>
-      correspondenceApi.update(businessId, id, payload),
+      correspondenceApi.update(businessId ?? 0, id, payload),
     onSuccess: () => {
       toast.success("רשומת התכתבות עודכנה בהצלחה");
       void queryClient.invalidateQueries({ queryKey });
@@ -52,7 +52,7 @@ export const useCorrespondence = (businessId: number, clientId?: number) => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => correspondenceApi.delete(businessId, id),
+    mutationFn: (id: number) => correspondenceApi.delete(businessId ?? 0, id),
     onSuccess: () => {
       toast.success("רשומת התכתבות נמחקה בהצלחה");
       void queryClient.invalidateQueries({ queryKey });

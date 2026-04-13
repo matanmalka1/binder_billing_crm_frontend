@@ -2,7 +2,6 @@ import { CheckCircle2, Clock, ShieldCheck, XCircle } from "lucide-react";
 import type { SignerViewResponse } from "@/features/signatureRequests/api";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
-import { getSignatureRequestTypeLabel } from "../../../utils/enums";
 import { formatDate } from "../../../utils/utils";
 import type { SigningPageState } from "../types";
 
@@ -118,9 +117,6 @@ export const SigningForm: React.FC<SigningFormProps> = ({
     <div className="space-y-5">
       <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
         <h2 className="font-semibold text-gray-900">{data.title}</h2>
-        <p className="mt-0.5 text-xs text-gray-500">
-          {getSignatureRequestTypeLabel(data.request_type)}
-        </p>
         {data.description && (
           <p className="mt-2 text-sm leading-relaxed text-gray-700">{data.description}</p>
         )}

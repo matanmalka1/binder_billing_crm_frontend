@@ -65,7 +65,8 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   isCreatingBusiness,
   activeTab,
 }) => {
-  const { id: firstBusinessId } = useFirstBusinessId(client.id);
+  const { id: firstBusinessIdOrNull } = useFirstBusinessId(client.id);
+  const firstBusinessId = firstBusinessIdOrNull ?? undefined;
 
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
@@ -117,7 +118,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
       {activeTab === "communication" && (
         <div className="space-y-6">
           <AuthorityContactsCard clientId={client.id} />
-          <CorrespondenceCard businessId={firstBusinessId ?? 0} clientId={client.id} />
+          <CorrespondenceCard businessId={firstBusinessId} clientId={client.id} />
           <SignatureRequestsCard client={client} businessId={firstBusinessId} canManage={canEditClients} />
         </div>
       )}
@@ -137,8 +138,8 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
       {activeTab === "finance" && (
         <div className="space-y-6">
           <ClientStatusCard clientId={client.id} />
-          <ClientRemindersCard clientId={client.id} businessId={firstBusinessId ?? 0} clientName={client.full_name} />
-          <NotificationsTab businessId={firstBusinessId ?? 0} />
+          <ClientRemindersCard clientId={client.id} clientName={client.full_name} />
+          <NotificationsTab businessId={firstBusinessId} />
         </div>
       )}
 

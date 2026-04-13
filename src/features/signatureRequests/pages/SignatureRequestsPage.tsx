@@ -45,10 +45,9 @@ export const SignatureRequestsPage: React.FC = () => {
         key: "client_id",
         header: "מזהה מערכת",
         render: (req: SignatureRequestResponse) => {
-          const clientId = businessLookup[req.business_id]?.clientId;
           return (
             <span className="font-mono text-sm text-gray-500 tabular-nums">
-              {clientId != null ? formatClientOfficeId(clientId) : "—"}
+              {formatClientOfficeId(req.client_id)}
             </span>
           );
         },
@@ -64,21 +63,17 @@ export const SignatureRequestsPage: React.FC = () => {
         key: "client",
         header: "לקוח",
         render: (req: SignatureRequestResponse) => {
-          if (businessLookup[req.business_id]?.clientId == null) {
-            return (
-              <span className="text-sm text-gray-700">
-                {businessLookup[req.business_id]?.name ?? `עסק #${req.business_id}`}
-              </span>
-            );
-          }
+          const bizId = req.business_id;
+          const entry = bizId != null ? businessLookup[bizId] : undefined;
+          const displayName = entry?.name ?? (bizId != null ? `עסק #${bizId}` : `לקוח #${req.client_id}`);
 
           return (
             <Link
-              to={`/clients/${businessLookup[req.business_id]?.clientId}`}
+              to={`/clients/${req.client_id}`}
               onClick={(e) => e.stopPropagation()}
               className="text-sm text-gray-700 hover:text-primary-600 hover:underline"
             >
-              {businessLookup[req.business_id]?.name ?? `עסק #${req.business_id}`}
+              {displayName}
             </Link>
           );
         },

@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
-import { CLIENT_ROUTES, getBusinessTypeLabel } from "@/features/clients";
+import { CLIENT_ROUTES } from "@/features/clients";
 import { useBusinessDetails } from "../hooks/useBusinessDetails";
 import { BusinessDetailsCard } from "../components/BusinessDetailsCard";
-import { BUSINESS_DETAILS_COPY } from "../constants";
+import { BUSINESS_DETAILS_COPY, formatBusinessDisplayName } from "../constants";
 
 export const BusinessDetails: FC = () => {
   const { clientId, businessId } = useParams<{
@@ -30,9 +30,7 @@ export const BusinessDetails: FC = () => {
     );
   }
 
-  const businessDisplayName = business
-    ? `${getBusinessTypeLabel(business.business_type)}${business.business_name ? ` — ${business.business_name}` : ""}`
-    : BUSINESS_DETAILS_COPY.title;
+  const businessDisplayName = business ? formatBusinessDisplayName(business) : BUSINESS_DETAILS_COPY.title;
 
   const clientName = client?.full_name ?? BUSINESS_DETAILS_COPY.clientFallback;
 
@@ -44,7 +42,7 @@ export const BusinessDetails: FC = () => {
         <PageHeader
           title={businessDisplayName}
           breadcrumbs={[
-            { label: "לקוחות", to: CLIENT_ROUTES.list },
+            { label: BUSINESS_DETAILS_COPY.clientsListLabel, to: CLIENT_ROUTES.list },
             { label: clientName, to: CLIENT_ROUTES.detail(clientId!) },
             { label: businessDisplayName, to: CLIENT_ROUTES.businessDetail(clientId!, businessId!) },
           ]}

@@ -21,14 +21,16 @@ export const usePendingSignatureRequests = ({ page = 1, pageSize = 50 }: Params 
 
   const items = listQuery.data?.items ?? [];
   const businessLookup = Object.fromEntries(
-    items.map((request) => [
-      request.business_id,
-      {
-        name: request.business_name ?? `עסק #${request.business_id}`,
-        clientId: request.client_id ?? null,
-      },
-    ]),
-  ) as Record<number, { name: string; clientId: number | null }>;
+    items
+      .filter((request) => request.business_id != null)
+      .map((request) => [
+        request.business_id,
+        {
+          name: request.business_name ?? `עסק #${request.business_id}`,
+          clientId: request.client_id,
+        },
+      ]),
+  ) as Record<number, { name: string; clientId: number }>;
 
   return {
     items,

@@ -1,15 +1,14 @@
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/primitives/Card";
 import { DefinitionList } from "@/components/ui/layout/DefinitionList";
+import { CLIENT_ROUTES } from "@/features/clients";
+import type { BusinessResponse, ClientResponse } from "@/features/clients/api";
+import { formatClientOfficeId, formatDate } from "@/utils/utils";
 import {
-  CLIENT_ROUTES,
+  BUSINESS_DETAILS_COPY,
   getBusinessStatusLabel,
   getBusinessTypeLabel,
-  type BusinessResponse,
-  type ClientResponse,
-} from "@/features/clients";
-import { formatClientOfficeId, formatDate } from "@/utils/utils";
-import { BUSINESS_DETAILS_COPY } from "../constants";
+} from "../constants";
 
 type BusinessDetailsCardProps = {
   business: BusinessResponse;
@@ -18,9 +17,9 @@ type BusinessDetailsCardProps = {
 
 export const BusinessDetailsCard = ({ business, client }: BusinessDetailsCardProps) => {
   const summaryItems = [
-    { label: "מזהה מערכת", value: formatClientOfficeId(business.id) },
+    { label: BUSINESS_DETAILS_COPY.systemIdLabel, value: formatClientOfficeId(business.id) },
     {
-      label: "לקוח",
+      label: BUSINESS_DETAILS_COPY.clientLabel,
       value: client ? (
         <Link
           to={CLIENT_ROUTES.detail(client.id)}
@@ -29,15 +28,15 @@ export const BusinessDetailsCard = ({ business, client }: BusinessDetailsCardPro
           {client.full_name}
         </Link>
       ) : (
-        "—"
+        BUSINESS_DETAILS_COPY.emptyValue
       ),
     },
-    { label: "שם עסק", value: business.business_name ?? "—" },
-    { label: "סוג עסק", value: getBusinessTypeLabel(business.business_type) },
-    { label: "סטטוס", value: getBusinessStatusLabel(business.status) },
-    { label: "נפתח בתאריך", value: formatDate(business.opened_at) },
-    { label: "נסגר בתאריך", value: formatDate(business.closed_at) },
-    { label: "נוצר בתאריך", value: formatDate(business.created_at) },
+    { label: BUSINESS_DETAILS_COPY.businessNameLabel, value: business.business_name ?? BUSINESS_DETAILS_COPY.emptyValue },
+    { label: BUSINESS_DETAILS_COPY.businessTypeLabel, value: getBusinessTypeLabel(business.business_type) },
+    { label: BUSINESS_DETAILS_COPY.statusLabel, value: getBusinessStatusLabel(business.status) },
+    { label: BUSINESS_DETAILS_COPY.openedAtLabel, value: formatDate(business.opened_at) },
+    { label: BUSINESS_DETAILS_COPY.closedAtLabel, value: formatDate(business.closed_at) },
+    { label: BUSINESS_DETAILS_COPY.createdAtLabel, value: formatDate(business.created_at) },
   ];
 
   return (

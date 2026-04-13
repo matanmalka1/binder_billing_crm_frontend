@@ -16,7 +16,7 @@ export const useClientSignatureRequests = ({ clientId, page = 1, pageSize = 10 }
   const enabled = clientId != null && clientId > 0;
 
   const query = useQuery({
-    queryKey: signatureRequestsQK.forBusinessPage(clientId ?? 0, { page, page_size: pageSize }),
+    queryKey: signatureRequestsQK.forClientPage(clientId ?? 0, { page, page_size: pageSize }),
     queryFn: () => signatureRequestsApi.listForClient(clientId!, { page, page_size: pageSize }),
     enabled,
   });

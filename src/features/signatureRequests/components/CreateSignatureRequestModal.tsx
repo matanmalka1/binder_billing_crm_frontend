@@ -20,6 +20,7 @@ const REQUEST_TYPES: SignatureRequestType[] = [
 interface Props {
   open: boolean;
   clientId?: number;
+  businessId?: number;
   signerName?: string;
   signerEmail?: string;
   signerPhone?: string;
@@ -31,6 +32,7 @@ interface Props {
 export const CreateSignatureRequestModal: React.FC<Props> = ({
   open,
   clientId: initialClientId,
+  businessId,
   signerName: initialSignerName = "",
   signerEmail,
   isLoading,
@@ -67,7 +69,8 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
     const resolvedSignerNameFinal = overrideName.trim() || resolvedSignerName;
     if (!title.trim() || !resolvedClientId || !resolvedSignerNameFinal) return;
     await onCreate({
-      business_id: resolvedClientId,
+      client_id: resolvedClientId,
+      business_id: businessId,
       request_type: requestType,
       title: title.trim(),
       description: description.trim() || undefined,

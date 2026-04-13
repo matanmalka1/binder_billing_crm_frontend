@@ -12,7 +12,7 @@ import type { CorrespondenceEntry } from "../api";
 import type { CorrespondenceFormValues } from "../schemas";
 
 interface CorrespondenceCardProps {
-  businessId: number;
+  businessId: number | undefined;
   clientId?: number;
 }
 

@@ -19,7 +19,7 @@ export const useSignatureRequestActions = (clientId?: number) => {
     queryClient.invalidateQueries({ queryKey: signatureRequestsQK.all });
     if (clientId != null) {
       queryClient.invalidateQueries({
-        queryKey: signatureRequestsQK.forBusiness(clientId),
+        queryKey: signatureRequestsQK.forClient(clientId),
       });
     }
   };

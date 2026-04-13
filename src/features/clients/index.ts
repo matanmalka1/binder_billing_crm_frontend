@@ -11,7 +11,6 @@ export { useClientDetails } from "./hooks/useClientDetails";
 export { useClientsPage } from "./hooks/useClientsPage";
 export { useFirstBusinessId } from "./hooks/useFirstBusinessId";
 export {
-  getBusinessStatusLabel,
   getBusinessTypeLabel,
   BUSINESS_STATUS_LABELS,
   BUSINESS_TYPE_LABELS,

@@ -46,12 +46,6 @@ export const CLIENT_ID_NUMBER_TYPES = [
   "other",
 ] as const satisfies readonly ClientIdNumberType[];
 
-export const BUSINESS_TYPES = [
-  "osek_patur",
-  "osek_murshe",
-  "company",
-  "employee",
-] as const satisfies readonly BusinessType[];
 
 export const ENTITY_TYPES = [
   "osek_patur",
@@ -186,9 +180,7 @@ export const getBusinessTypeForEntityType = (
 };
 
 export const getClientIdNumberTypeLabel = makeLabelGetter(CLIENT_ID_NUMBER_TYPE_LABELS);
-export const getClientIdNumberInputLabel = makeLabelGetter(CLIENT_ID_NUMBER_INPUT_LABELS);
 export const getBusinessTypeLabel = makeLabelGetter(BUSINESS_TYPE_LABELS);
-export const getBusinessStatusLabel = makeLabelGetter(BUSINESS_STATUS_LABELS);
 export const getEntityTypeLabel = makeLabelGetter(ENTITY_TYPE_LABELS);
 export const getClientStatusLabel = makeLabelGetter(CLIENT_STATUS_LABELS);
 export const getVatTypeLabel = makeLabelGetter(VAT_TYPE_LABELS);

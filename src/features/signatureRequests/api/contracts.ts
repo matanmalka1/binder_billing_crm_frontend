@@ -17,9 +17,9 @@ export type SignatureRequestType =
 
 export interface SignatureRequestResponse {
   id: number;
-  business_id: number;
-  client_id?: number | null;
-  business_name?: string | null;
+  client_id: number;
+  business_id: number | null;
+  business_name: string | null;
   created_by: number;
   request_type: SignatureRequestType;
   title: string;
@@ -28,21 +28,26 @@ export interface SignatureRequestResponse {
   signer_email: string | null;
   signer_phone: string | null;
   status: SignatureRequestStatus;
+  content_hash: string | null;
+  storage_key: string | null;
+  annual_report_id: number | null;
+  document_id: number | null;
   created_at: string;
   sent_at: string | null;
   expires_at: string | null;
   signed_at: string | null;
   declined_at: string | null;
   canceled_at: string | null;
+  canceled_by: number | null;
   decline_reason: string | null;
-  annual_report_id: number | null;
-  document_id: number | null;
+  signed_document_key: string | null;
 }
 
 export interface AuditEvent {
   id: number;
   event_type: string;
   actor_type: string;
+  actor_id: number | null;
   actor_name: string | null;
   ip_address: string | null;
   notes: string | null;
@@ -54,13 +59,17 @@ export interface SignatureRequestWithAudit extends SignatureRequestResponse {
 }
 
 export interface CreateSignatureRequestPayload {
-  business_id: number;
+  client_id: number;
+  business_id?: number;
   request_type: SignatureRequestType;
   title: string;
   description?: string;
   signer_name: string;
   signer_email?: string;
   signer_phone?: string;
+  annual_report_id?: number;
+  document_id?: number;
+  content_to_hash?: string;
 }
 
 export interface SendSignatureRequestPayload {
@@ -82,7 +91,6 @@ export interface SignerViewResponse {
   description: string | null;
   signer_name: string;
   status: SignatureRequestStatus;
-  request_type: string;
   content_hash: string | null;
   expires_at: string | null;
 }

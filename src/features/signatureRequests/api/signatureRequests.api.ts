@@ -25,8 +25,20 @@ export const signatureRequestsApi = {
     clientId: number,
     params?: { page?: number; page_size?: number; status?: string },
   ): Promise<SignatureRequestListResponse> => {
+    
     const response = await api.get<SignatureRequestListResponse>(
-      SIGNATURE_REQUEST_ENDPOINTS.businessSignatureRequests(clientId),
+      SIGNATURE_REQUEST_ENDPOINTS.clientSignatureRequests(clientId),
+      { params },
+    );
+    return response.data;
+  },
+
+  listForBusiness: async (
+    businessId: number,
+    params?: { page?: number; page_size?: number; status?: string },
+  ): Promise<SignatureRequestListResponse> => {
+    const response = await api.get<SignatureRequestListResponse>(
+      SIGNATURE_REQUEST_ENDPOINTS.businessSignatureRequests(businessId),
       { params },
     );
     return response.data;

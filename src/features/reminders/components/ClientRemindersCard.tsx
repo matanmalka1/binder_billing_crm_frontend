@@ -8,7 +8,6 @@ import { useReminders } from "../hooks/useReminders";
 
 interface ClientRemindersCardProps {
   clientId: number;
-  businessId: number;
   clientName?: string;
 }
 
