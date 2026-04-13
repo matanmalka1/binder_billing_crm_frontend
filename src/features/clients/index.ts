@@ -1,6 +1,6 @@
 // Public surface of the clients feature — only import from this barrel externally
 export { clientsApi, clientsQK } from "./api";
-export { CLIENT_ENDPOINTS } from "./api/endpoints";
+export { CLIENT_ENDPOINTS, CLIENT_ROUTES } from "./api/endpoints";
 export { ClientEditForm } from "./components/ClientEditForm";
 export { buildClientColumns } from "./components/ClientColumns";
 export { ClientDetailsTabContent } from "./components/ClientDetailsTabContent";

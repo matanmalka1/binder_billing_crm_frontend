@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck, ChevronLeft } from "lucide-react";
 import { clientsApi, clientsQK } from "../api";
+import { CLIENT_ROUTES } from "../api/endpoints";
 import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
 import { Card } from "../../../components/ui/primitives/Card";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
@@ -109,7 +110,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
             title='מע"מ (לקוח)'
             primary={vatPrimary}
             secondary={vatStatus}
-            onClick={() => navigate(`/clients/${clientId}/vat`)}
+            onClick={() => navigate(CLIENT_ROUTES.vat(clientId))}
           />
           <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-5 text-center">
             <FolderOpen size={24} className="text-gray-300" />
@@ -146,14 +147,14 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title='מע"מ (לקוח)'
           primary={vatPrimary}
           secondary={vatStatus}
-          onClick={() => navigate(`/clients/${clientId}/vat`)}
+          onClick={() => navigate(CLIENT_ROUTES.vat(clientId))}
         />
         <Tile
           icon={<FileText size={18} />}
           title="דוח שנתי"
           primary={arStatus}
           secondary={arSecondary}
-          onClick={() => navigate(`/clients/${clientId}/annual-reports`)}
+          onClick={() => navigate(CLIENT_ROUTES.annualReports(clientId))}
         />
         <Tile
           icon={<CreditCard size={18} />}
@@ -167,7 +168,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title="מקדמות"
           primary={fmt(advance_payments.total_paid)}
           secondary={`${advance_payments.count} תשלומים`}
-          onClick={() => navigate(`/clients/${clientId}/advance-payments`)}
+          onClick={() => navigate(CLIENT_ROUTES.advancePayments(clientId))}
         />
         <Tile
           icon={<FolderOpen size={18} />}
@@ -181,7 +182,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title="מסמכים"
           primary={`${documents.present_count}/${documents.total_count}`}
           secondary="מסמכים קיימים"
-          onClick={() => navigate(`/clients/${clientId}/documents`)}
+          onClick={() => navigate(CLIENT_ROUTES.documents(clientId))}
         />
       </div>
     </Card>

@@ -87,14 +87,14 @@ export const clientsApi = {
 
   getStatusCard: async (clientId: number, year?: number): Promise<BusinessStatusCardResponse> => {
     const response = await api.get<BusinessStatusCardResponse>(
-      `/clients/${clientId}/status-card`,
+      CLIENT_ENDPOINTS.clientStatusCard(clientId),
       { params: year ? { year } : undefined },
     );
     return response.data;
   },
 
   getAuditTrail: async (clientId: number): Promise<EntityAuditTrailResponse> => {
-    const response = await api.get<EntityAuditTrailResponse>(`/audit/client/${clientId}`);
+    const response = await api.get<EntityAuditTrailResponse>(CLIENT_ENDPOINTS.clientAuditTrail(clientId));
     return response.data;
   },
 

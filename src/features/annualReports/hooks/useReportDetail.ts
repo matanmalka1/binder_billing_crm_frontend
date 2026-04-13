@@ -16,7 +16,7 @@ export const useReportDetail = (reportId: number | null, onDeleted?: () => void)
   });
 
   const schedules = useReportSchedules(reportId);
-  const mutations = useReportMutations(reportId, reportQuery.data ?? null, onDeleted);
+  const mutations = useReportMutations(reportId, onDeleted);
 
   return {
     report: reportQuery.data ?? null,

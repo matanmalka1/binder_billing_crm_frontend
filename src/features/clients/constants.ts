@@ -12,6 +12,8 @@ export type ActiveClientDetailsTab =
   | "communication"
   | "finance";
 export type ClientIdNumberType = Exclude<ClientResponse["id_number_type"], null>;
+export type ClientSortBy = "full_name" | "created_at" | "status";
+export type ClientSortOrder = "asc" | "desc";
 
 export const CLIENT_DETAILS_TABS: ActiveClientDetailsTab[] = [
   "details",
@@ -115,6 +117,35 @@ export const ENTITY_OPTIONS_BY_ID_TYPE: Record<ClientIdNumberType, EntityType[]>
   passport: ["osek_patur", "osek_murshe", "employee"],
   other: ["osek_patur", "osek_murshe", "company_ltd", "employee"],
 };
+
+export const CLIENT_ID_NUMBER_TYPE_OPTIONS = CLIENT_ID_NUMBER_TYPES.map((type) => ({
+  value: type,
+  label: CLIENT_ID_NUMBER_TYPE_LABELS[type],
+}));
+
+export const CLIENT_STATUS_OPTIONS = CLIENT_STATUSES.map((status) => ({
+  value: status,
+  label: CLIENT_STATUS_LABELS[status],
+}));
+
+export const VAT_TYPE_OPTIONS = VAT_TYPES.map((type) => ({
+  value: type,
+  label: VAT_TYPE_LABELS[type],
+}));
+
+export const CLIENT_SORT_BY_OPTIONS: { value: ClientSortBy; label: string }[] = [
+  { value: "full_name", label: "שם לקוח" },
+  { value: "created_at", label: "תאריך יצירה" },
+  { value: "status", label: "סטטוס" },
+];
+
+export const CLIENT_SORT_ORDER_OPTIONS: { value: ClientSortOrder; label: string }[] = [
+  { value: "asc", label: "סדר עולה" },
+  { value: "desc", label: "סדר יורד" },
+];
+
+export const DEFAULT_CLIENT_SORT_BY: ClientSortBy = "full_name";
+export const DEFAULT_CLIENT_SORT_ORDER: ClientSortOrder = "asc";
 
 export const ENTITY_TYPE_TO_BUSINESS_TYPE: Record<EntityType, BusinessType> = {
   osek_patur: "osek_patur",

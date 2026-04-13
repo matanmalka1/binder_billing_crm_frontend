@@ -1,16 +1,17 @@
-import { Bell, Calendar, AlertTriangle } from "lucide-react";
+import { Bell, Calendar } from "lucide-react";
 import { StatsCard } from "../../../components/ui/layout/StatsCard";
 import { cn } from "../../../utils/utils";
-import type { Reminder } from "../types";
 
 interface RemindersSummaryCardsProps {
-  reminders: Reminder[];
+  pendingCount: number;
+  sentCount: number;
   activeFilter?: string;
   onFilter?: (status: string) => void;
 }
 
 export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
-  reminders,
+  pendingCount,
+  sentCount,
   activeFilter,
   onFilter,
 }) => {
@@ -18,23 +19,16 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
     {
       icon: Bell,
       variant: "blue" as const,
-      count: reminders.filter((r) => r.status === "pending").length,
+      count: pendingCount,
       label: "תזכורות ממתינות",
       filterValue: "pending",
     },
     {
       icon: Calendar,
       variant: "green" as const,
-      count: reminders.filter((r) => r.status === "sent").length,
+      count: sentCount,
       label: "תזכורות שנשלחו",
       filterValue: "sent",
-    },
-    {
-      icon: AlertTriangle,
-      variant: "purple" as const,
-      count: reminders.length,
-      label: 'סה"כ תזכורות',
-      filterValue: "",
     },
   ];
 

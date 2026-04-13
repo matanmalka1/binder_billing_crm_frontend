@@ -68,7 +68,7 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
     {
       key: "message",
       header: "הודעה",
-      render: (r) => <TruncateText text={r.message} maxWidth="max-w-md" className="text-gray-700" />,
+      render: (r) => <TruncateText text={r.message.replace(/\s*\(\d{4}-\d{2}-\d{2}\)$/, "")} maxWidth="max-w-md" className="text-gray-700" />,
     },
     {
       key: "target_date",

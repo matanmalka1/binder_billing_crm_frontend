@@ -1,10 +1,11 @@
 import type { ClientStatus, ListClientsParams } from "./api";
+import type { ClientSortBy, ClientSortOrder } from "./constants";
 
 export interface ClientsFilters extends ListClientsParams {
   search: string;
   status?: ClientStatus;
-  sort_by: "full_name" | "created_at" | "status";
-  sort_order: "asc" | "desc";
+  sort_by: ClientSortBy;
+  sort_order: ClientSortOrder;
 }
 
 export interface ClientsFiltersBarProps {

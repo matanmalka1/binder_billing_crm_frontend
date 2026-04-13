@@ -17,6 +17,7 @@ import {
   useClientsPage,
 } from "@/features/clients";
 import type { ClientResponse } from "@/features/clients/api";
+import { CLIENT_ROUTES } from "@/features/clients/api/endpoints";
 import { ImportExportModal } from "@/features/importExport";
 
 const EDIT_FORM_ID = "client-edit-form-list";
@@ -86,7 +87,7 @@ export const Clients: React.FC = () => {
         data={clients}
         columns={columns}
         getRowKey={(client) => client.id}
-        onRowClick={(client) => navigate(`/clients/${client.id}`)}
+        onRowClick={(client) => navigate(CLIENT_ROUTES.detail(client.id))}
         isLoading={loading}
         error={error}
         summary={

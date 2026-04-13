@@ -1,4 +1,3 @@
-import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/primitives/Button";
@@ -16,6 +15,10 @@ export const RemindersPage: React.FC = () => {
     reminders,
     isLoading,
     error,
+    statusFilter,
+    setStatusFilter,
+    pendingCount,
+    sentCount,
     showCreateModal,
     setShowCreateModal,
     form,
@@ -28,13 +31,6 @@ export const RemindersPage: React.FC = () => {
     selectedReminder,
     setSelectedReminder,
   } = useReminders();
-
-  const [statusFilter, setStatusFilter] = useState("");
-
-  const filteredReminders = useMemo(() => {
-    if (!statusFilter) return reminders;
-    return reminders.filter((r) => r.status === statusFilter);
-  }, [reminders, statusFilter]);
 
   const header = (
     <PageHeader
@@ -61,7 +57,8 @@ export const RemindersPage: React.FC = () => {
       loadingMessage="טוען תזכורות..."
     >
       <RemindersSummaryCards
-        reminders={reminders}
+        pendingCount={pendingCount}
+        sentCount={sentCount}
         activeFilter={statusFilter}
         onFilter={setStatusFilter}
       />
@@ -77,7 +74,7 @@ export const RemindersPage: React.FC = () => {
         </div>
       ) : (
         <RemindersTable
-          reminders={filteredReminders}
+          reminders={reminders}
           cancelingId={cancelingId}
           markingSentId={markingSentId}
           onCancel={handleCancel}

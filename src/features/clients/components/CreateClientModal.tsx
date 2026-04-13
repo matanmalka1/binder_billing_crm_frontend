@@ -9,13 +9,13 @@ import type { CreateClientPayload} from "../api";
 import {
   CLIENT_ID_NUMBER_INPUT_LABELS,
   CLIENT_ID_NUMBER_PLACEHOLDERS,
-  CLIENT_ID_NUMBER_TYPE_LABELS,
+  CLIENT_ID_NUMBER_TYPE_OPTIONS,
   DEFAULT_CLIENT_ID_NUMBER_TYPE,
   DEFAULT_VAT_EXEMPT_CEILING,
   ENTITY_OPTIONS_BY_ID_TYPE,
   ENTITY_TYPE_LABELS,
   requiresIsraeliNumericId,
-  VAT_TYPE_LABELS,
+  VAT_TYPE_OPTIONS,
 } from "../constants";
 import { createClientSchema, type CreateClientFormValues } from "../schemas";
 
@@ -164,10 +164,11 @@ export const CreateClientModal: React.FC<Props> = ({
           disabled={isLoading}
           {...register("id_number_type")}
         >
-          <option value="individual">{CLIENT_ID_NUMBER_TYPE_LABELS.individual}</option>
-          <option value="corporation">{CLIENT_ID_NUMBER_TYPE_LABELS.corporation}</option>
-          <option value="passport">{CLIENT_ID_NUMBER_TYPE_LABELS.passport}</option>
-          <option value="other">{CLIENT_ID_NUMBER_TYPE_LABELS.other}</option>
+          {CLIENT_ID_NUMBER_TYPE_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </Select>
 
         <Input
@@ -277,9 +278,7 @@ export const CreateClientModal: React.FC<Props> = ({
             disabled={isLoading}
             options={[
               { value: "", label: "לא הוגדר" },
-              { value: "monthly", label: VAT_TYPE_LABELS.monthly },
-              { value: "bimonthly", label: VAT_TYPE_LABELS.bimonthly },
-              { value: "exempt", label: VAT_TYPE_LABELS.exempt },
+              ...VAT_TYPE_OPTIONS,
             ]}
             {...register("vat_reporting_frequency")}
           />

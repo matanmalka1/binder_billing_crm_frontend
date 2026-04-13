@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
+import { CLIENT_ROUTES } from "../api/endpoints";
 import type { ActiveClientDetailsTab } from "../constants";
 import {
   ClientDetailsTabContent,
@@ -50,7 +51,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = "details" }
           {!can.editClients && <Alert variant="info" message="צפייה בלבד. עריכת פרטי לקוח זמינה ליועצים בלבד." />}
           <PageHeader
             title={pageTitle}
-            breadcrumbs={[{ label: "לקוחות", to: "/clients" }, { label: pageTitle, to: `/clients/${clientId}` }]}
+            breadcrumbs={[
+              { label: "לקוחות", to: CLIENT_ROUTES.list },
+              { label: pageTitle, to: CLIENT_ROUTES.detail(clientId!) },
+            ]}
           />
         </>
       }

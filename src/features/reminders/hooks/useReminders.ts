@@ -85,6 +85,7 @@ export const useReminders = (opts?: { clientId?: number }) => {
   const [cancelingId, setCancelingId] = useState<number | null>(null);
   const [markingSentId, setMarkingSentId] = useState<number | null>(null);
   const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>("pending");
 
   const form = useForm<CreateReminderFormValues>({
     defaultValues: makeDefaultFormValues(clientId),
@@ -92,18 +93,52 @@ export const useReminders = (opts?: { clientId?: number }) => {
   });
 
   const remindersQuery = useQuery({
-    queryKey: remindersQK.list(clientId),
+    queryKey: remindersQK.list(clientId, statusFilter),
     queryFn: () =>
-      remindersApi.list(clientId ? { client_id: clientId } : undefined),
+      remindersApi.list({
+        ...(clientId ? { client_id: clientId } : {}),
+        ...(statusFilter ? { status: statusFilter as import("../api/contracts").ReminderStatus } : {}),
+      }),
     enabled: clientId !== 0,
   });
+
+  const pendingCountQuery = useQuery({
+    queryKey: remindersQK.list(clientId, "pending"),
+    queryFn: () =>
+      remindersApi.list({
+        ...(clientId ? { client_id: clientId } : {}),
+        status: "pending",
+        page_size: 1,
+      }),
+    enabled: clientId !== 0 && statusFilter !== "pending",
+  });
+
+  const sentCountQuery = useQuery({
+    queryKey: remindersQK.list(clientId, "sent"),
+    queryFn: () =>
+      remindersApi.list({
+        ...(clientId ? { client_id: clientId } : {}),
+        status: "sent",
+        page_size: 1,
+      }),
+    enabled: clientId !== 0 && statusFilter !== "sent",
+  });
+
+  const pendingCount =
+    statusFilter === "pending"
+      ? (remindersQuery.data?.total ?? 0)
+      : (pendingCountQuery.data?.total ?? 0);
+
+  const sentCount =
+    statusFilter === "sent"
+      ? (remindersQuery.data?.total ?? 0)
+      : (sentCountQuery.data?.total ?? 0);
 
   const createMutation = useMutation({
     mutationFn: remindersApi.create,
     onSuccess: () => {
       toast.success("תזכורת נוצרה בהצלחה");
       queryClient.invalidateQueries({ queryKey: remindersQK.all });
-      queryClient.invalidateQueries({ queryKey: remindersQK.list(clientId) });
       setShowCreateModal(false);
       form.reset(makeDefaultFormValues(clientId));
     },
@@ -150,6 +185,10 @@ export const useReminders = (opts?: { clientId?: number }) => {
     error: remindersQuery.error
       ? getErrorMessage(remindersQuery.error, "שגיאה בטעינת תזכורות")
       : null,
+    statusFilter,
+    setStatusFilter,
+    pendingCount,
+    sentCount,
     showCreateModal,
     setShowCreateModal,
     form,

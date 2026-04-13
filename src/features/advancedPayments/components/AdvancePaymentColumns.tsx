@@ -10,10 +10,9 @@ import {
 } from "./AdvancePaymentRowActions";
 import { AdvancePaymentStatusBadge } from "./AdvancePaymentStatusBadge";
 
-interface BuildColumnsOptions extends Omit<AdvancePaymentRowActionsProps, "row"> {
-  canEdit: boolean;
-  showBusinessName?: boolean;
-}
+type BuildColumnsOptions =
+  | { canEdit: false; showBusinessName?: boolean }
+  | ({ canEdit: true; showBusinessName?: boolean } & Omit<AdvancePaymentRowActionsProps, "row">);
 
 export const buildAdvancePaymentColumns = (
   options?: BuildColumnsOptions,

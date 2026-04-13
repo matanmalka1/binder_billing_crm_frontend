@@ -7,11 +7,11 @@ import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type { ClientResponse, UpdateClientPayload } from "../api";
 import {
   CLIENT_ID_NUMBER_TYPE_LABELS,
-  CLIENT_STATUS_LABELS,
+  CLIENT_STATUS_OPTIONS,
   DEFAULT_VAT_EXEMPT_CEILING,
   ENTITY_OPTIONS_BY_ID_TYPE,
   ENTITY_TYPE_LABELS,
-  VAT_TYPE_LABELS,
+  VAT_TYPE_OPTIONS,
 } from "../constants";
 import { clientEditSchema, type ClientEditFormValues } from "../schemas";
 
@@ -97,11 +97,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
         <Select
           label="סטטוס לקוח"
           disabled={isLoading}
-          options={[
-            { value: "active", label: CLIENT_STATUS_LABELS.active },
-            { value: "frozen", label: CLIENT_STATUS_LABELS.frozen },
-            { value: "closed", label: CLIENT_STATUS_LABELS.closed },
-          ]}
+          options={CLIENT_STATUS_OPTIONS}
           value={statusField.value}
           onChange={statusField.onChange}
           onBlur={statusField.onBlur}
@@ -167,9 +163,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
           disabled={isLoading}
           options={[
             { value: "", label: "לא הוגדר" },
-            { value: "monthly", label: VAT_TYPE_LABELS.monthly },
-            { value: "bimonthly", label: VAT_TYPE_LABELS.bimonthly },
-            { value: "exempt", label: VAT_TYPE_LABELS.exempt },
+            ...VAT_TYPE_OPTIONS,
           ]}
           value={vatReportingFrequencyField.value ?? ""}
           onChange={vatReportingFrequencyField.onChange}

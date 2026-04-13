@@ -5,6 +5,7 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { clientsApi, clientsQK } from "../api";
 import { getBusinessTypeLabel } from "../constants";
 import type { BusinessStatus } from "../api/contracts";
+import { CLIENT_ROUTES } from "../api/endpoints";
 import { formatDate } from "@/utils/utils";
 
 const STATUS_BADGE: Record<BusinessStatus, { label: string; className: string }> = {
@@ -57,7 +58,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
             return (
               <li key={biz.id}>
                 <Link
-                  to={`/clients/${clientId}/businesses/${biz.id}`}
+                  to={CLIENT_ROUTES.businessDetail(clientId, biz.id)}
                   className="flex items-center justify-between py-2 hover:bg-gray-50 rounded-lg px-1 transition-colors"
                 >
                   <div className="min-w-0">

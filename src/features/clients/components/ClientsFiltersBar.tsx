@@ -4,25 +4,18 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import {
-  CLIENT_STATUSES,
+  CLIENT_SORT_BY_OPTIONS,
+  CLIENT_SORT_ORDER_OPTIONS,
   CLIENT_STATUS_LABELS,
+  CLIENT_STATUS_OPTIONS,
+  DEFAULT_CLIENT_SORT_BY,
+  DEFAULT_CLIENT_SORT_ORDER,
 } from "../constants";
 import type { ClientsFiltersBarProps } from "../types";
 
 const STATUS_OPTIONS = [
   { value: "", label: "כל הסטטוסים" },
-  ...CLIENT_STATUSES.map((s) => ({ value: s, label: CLIENT_STATUS_LABELS[s] })),
-];
-
-const SORT_BY_OPTIONS = [
-  { value: "full_name", label: "שם לקוח" },
-  { value: "created_at", label: "תאריך יצירה" },
-  { value: "status", label: "סטטוס" },
-];
-
-const SORT_ORDER_OPTIONS = [
-  { value: "asc", label: "סדר עולה" },
-  { value: "desc", label: "סדר יורד" },
+  ...CLIENT_STATUS_OPTIONS,
 ];
 
 export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
@@ -38,8 +31,8 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
     setSearchDraft("");
     onFilterChange("search", "");
     onFilterChange("status", "");
-    onFilterChange("sort_by", "full_name");
-    onFilterChange("sort_order", "asc");
+    onFilterChange("sort_by", DEFAULT_CLIENT_SORT_BY);
+    onFilterChange("sort_order", DEFAULT_CLIENT_SORT_ORDER);
   };
 
   const activeStatus = filters.status ?? "";
@@ -64,13 +57,13 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
           label="מיון לפי"
           value={filters.sort_by}
           onChange={(e) => onFilterChange("sort_by", e.target.value)}
-          options={SORT_BY_OPTIONS}
+          options={CLIENT_SORT_BY_OPTIONS}
         />
         <Select
           label="כיוון מיון"
           value={filters.sort_order}
           onChange={(e) => onFilterChange("sort_order", e.target.value)}
-          options={SORT_ORDER_OPTIONS}
+          options={CLIENT_SORT_ORDER_OPTIONS}
         />
       </div>
 

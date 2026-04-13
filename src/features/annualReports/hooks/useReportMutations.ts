@@ -14,7 +14,6 @@ import type { AnnualReportDetail } from "../types";
 
 export const useReportMutations = (
   reportId: number | null,
-  reportData: AnnualReportDetail | null,
   onDeleted?: () => void,
 ) => {
   const queryClient = useQueryClient();
