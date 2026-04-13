@@ -3,15 +3,14 @@ import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/primitives/Button";
 import { clientsApi, clientsQK } from "../api";
-import { getBusinessTypeLabel } from "../constants";
-import type { BusinessStatus } from "../api/contracts";
+import { BUSINESS_STATUS_LABELS, getBusinessTypeLabel } from "../constants";
 import { CLIENT_ROUTES } from "../api/endpoints";
 import { formatDate } from "@/utils/utils";
 
-const STATUS_BADGE: Record<BusinessStatus, { label: string; className: string }> = {
-  active: { label: "פעיל", className: "bg-positive-100 text-positive-800" },
-  frozen: { label: "מוקפא", className: "bg-warning-100 text-warning-800" },
-  closed: { label: "סגור", className: "bg-gray-100 text-gray-600" },
+const STATUS_BADGE = {
+  active: { label: BUSINESS_STATUS_LABELS.active, className: "bg-positive-100 text-positive-800" },
+  frozen: { label: BUSINESS_STATUS_LABELS.frozen, className: "bg-warning-100 text-warning-800" },
+  closed: { label: BUSINESS_STATUS_LABELS.closed, className: "bg-gray-100 text-gray-600" },
 };
 
 interface Props {

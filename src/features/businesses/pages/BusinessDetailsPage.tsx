@@ -3,8 +3,10 @@ import { useParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
-import { getBusinessTypeLabel } from "@/features/clients";
+import { CLIENT_ROUTES, getBusinessTypeLabel } from "@/features/clients";
 import { useBusinessDetails } from "../hooks/useBusinessDetails";
+import { BusinessDetailsCard } from "../components/BusinessDetailsCard";
+import { BUSINESS_DETAILS_COPY } from "../constants";
 
 export const BusinessDetails: FC = () => {
   const { clientId, businessId } = useParams<{
@@ -22,17 +24,17 @@ export const BusinessDetails: FC = () => {
   if (!isValidId) {
     return (
       <div className="space-y-6">
-        <PageHeader title="פרטי עסק" />
-        <Alert variant="error" message="מזהה לא תקין" />
+        <PageHeader title={BUSINESS_DETAILS_COPY.title} />
+        <Alert variant="error" message={BUSINESS_DETAILS_COPY.invalidId} />
       </div>
     );
   }
 
   const businessDisplayName = business
     ? `${getBusinessTypeLabel(business.business_type)}${business.business_name ? ` — ${business.business_name}` : ""}`
-    : "פרטי עסק";
+    : BUSINESS_DETAILS_COPY.title;
 
-  const clientName = client?.full_name ?? "לקוח";
+  const clientName = client?.full_name ?? BUSINESS_DETAILS_COPY.clientFallback;
 
   return (
     <PageStateGuard
@@ -42,17 +44,15 @@ export const BusinessDetails: FC = () => {
         <PageHeader
           title={businessDisplayName}
           breadcrumbs={[
-            { label: "לקוחות", to: "/clients" },
-            { label: clientName, to: `/clients/${clientId}` },
-            { label: businessDisplayName, to: `/clients/${clientId}/businesses/${businessId}` },
+            { label: "לקוחות", to: CLIENT_ROUTES.list },
+            { label: clientName, to: CLIENT_ROUTES.detail(clientId!) },
+            { label: businessDisplayName, to: CLIENT_ROUTES.businessDetail(clientId!, businessId!) },
           ]}
         />
       }
-      loadingMessage="טוען פרטי עסק..."
+      loadingMessage={BUSINESS_DETAILS_COPY.loading}
     >
-      {business && businessIdNum != null ? (
-        <div className="space-y-6" />
-      ) : null}
+      {business ? <BusinessDetailsCard business={business} client={client} /> : null}
     </PageStateGuard>
   );
 };

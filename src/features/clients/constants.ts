@@ -1,5 +1,5 @@
 import { makeLabelGetter } from "../../utils/labels";
-import type { BusinessType, ClientResponse, ClientStatus, EntityType, VatType } from "./api";
+import type { BusinessStatus, BusinessType, ClientResponse, ClientStatus, EntityType, VatType } from "./api";
 
 export type ActiveClientDetailsTab =
   | "details"
@@ -103,6 +103,12 @@ export const CLIENT_STATUS_LABELS: Record<ClientStatus, string> = {
   closed: "סגור",
 };
 
+export const BUSINESS_STATUS_LABELS: Record<BusinessStatus, string> = {
+  active: "פעיל",
+  frozen: "מוקפא",
+  closed: "סגור",
+};
+
 export const VAT_TYPES = ["monthly", "bimonthly", "exempt"] as const satisfies readonly VatType[];
 
 export const VAT_TYPE_LABELS: Record<VatType, string> = {
@@ -182,6 +188,7 @@ export const getBusinessTypeForEntityType = (
 export const getClientIdNumberTypeLabel = makeLabelGetter(CLIENT_ID_NUMBER_TYPE_LABELS);
 export const getClientIdNumberInputLabel = makeLabelGetter(CLIENT_ID_NUMBER_INPUT_LABELS);
 export const getBusinessTypeLabel = makeLabelGetter(BUSINESS_TYPE_LABELS);
+export const getBusinessStatusLabel = makeLabelGetter(BUSINESS_STATUS_LABELS);
 export const getEntityTypeLabel = makeLabelGetter(ENTITY_TYPE_LABELS);
 export const getClientStatusLabel = makeLabelGetter(CLIENT_STATUS_LABELS);
 export const getVatTypeLabel = makeLabelGetter(VAT_TYPE_LABELS);
