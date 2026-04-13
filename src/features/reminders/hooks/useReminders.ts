@@ -12,6 +12,7 @@ import {
   createReminderDefaultValues,
   type CreateReminderFormValues,
 } from "../schemas";
+import { useReminderLinkedEntities } from "./useReminderLinkedEntities";
 
 const makeDefaultFormValues = (
   clientId?: number,
@@ -78,10 +79,11 @@ const buildPayload = (
   return { ...businessBase, reminder_type: "custom", message: values.message as string };
 };
 
-export const useReminders = (opts?: { clientId?: number }) => {
+export const useReminders = (opts?: { clientId?: number; clientName?: string }) => {
   const clientId = opts?.clientId;
   const queryClient = useQueryClient();
   const [showCreateModal, setShowCreateModal] = useState(false);
+
   const [cancelingId, setCancelingId] = useState<number | null>(null);
   const [markingSentId, setMarkingSentId] = useState<number | null>(null);
   const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
@@ -91,6 +93,17 @@ export const useReminders = (opts?: { clientId?: number }) => {
     defaultValues: makeDefaultFormValues(clientId),
     resolver: zodResolver(createReminderSchema),
   });
+
+  const watchedClientId = form.watch("client_id");
+  const watchedReminderType = form.watch("reminder_type");
+  // When the hook is used with a fixed clientId, use that; otherwise use the form value.
+  const activeClientId = clientId ?? (watchedClientId ? Number(watchedClientId) : undefined);
+
+  const linkedEntities = useReminderLinkedEntities(
+    activeClientId,
+    watchedReminderType,
+    showCreateModal,
+  );
 
   const remindersQuery = useQuery({
     queryKey: remindersQK.list(clientId, statusFilter),
@@ -200,5 +213,6 @@ export const useReminders = (opts?: { clientId?: number }) => {
     handleMarkSent,
     selectedReminder,
     setSelectedReminder,
+    ...linkedEntities,
   };
 };

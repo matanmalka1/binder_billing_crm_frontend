@@ -19,6 +19,8 @@ import { getChargeTypeLabel } from "@/features/charges";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import type { TaxDeadlineResponse } from "@/features/taxDeadlines/api";
 import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
+import type { AnnualReportFull } from "@/features/annualReports/api";
+import type { AdvancePaymentRow } from "@/features/advancedPayments/types";
 import { reminderTypeOptions } from "../types";
 
 interface CreateReminderModalProps {
@@ -32,6 +34,8 @@ interface CreateReminderModalProps {
   clientBinders?: BinderResponse[];
   clientCharges?: ChargeResponse[];
   clientTaxDeadlines?: TaxDeadlineResponse[];
+  clientAnnualReports?: AnnualReportFull[];
+  clientAdvancePayments?: AdvancePaymentRow[];
 }
 
 // react-hook-form types errors on discriminated unions narrowly; cast once here.
@@ -48,6 +52,8 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   clientBinders = [],
   clientCharges = [],
   clientTaxDeadlines = [],
+  clientAnnualReports = [],
+  clientAdvancePayments = [],
 }) => {
   const {
     register,
@@ -102,6 +108,24 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">
+        <input type="hidden" {...register("client_id", { required: "שדה חובה" })} />
+        {clientDisplay ? (
+          <div>
+            <p className="mb-1 text-sm font-medium text-gray-700">לקוח</p>
+            <p className="text-sm text-gray-900">{clientDisplay}</p>
+          </div>
+        ) : (
+          <ClientPickerField
+            selectedClient={selectedClient}
+            clientQuery={clientQuery}
+            onQueryChange={handleClientQueryChange}
+            onSelect={handleSelectClient}
+            onClear={handleClearClient}
+            error={e.client_id?.message}
+            label="לקוח *"
+          />
+        )}
+
         <Select
           label="סוג תזכורת"
           error={e.reminder_type?.message}
@@ -171,24 +195,44 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
               {...register("charge_id")}
             />
           ))}
-        {reminderType === "annual_report_deadline" && (
-          <Input
-            type="number"
-            min={1}
-            label='מזהה דוח שנתי'
-            error={e.annual_report_id?.message}
-            {...register("annual_report_id")}
-          />
-        )}
-        {reminderType === "advance_payment_due" && (
-          <Input
-            type="number"
-            min={1}
-            label="מזהה מקדמה"
-            error={e.advance_payment_id?.message}
-            {...register("advance_payment_id")}
-          />
-        )}
+        {reminderType === "annual_report_deadline" &&
+          (clientAnnualReports.length > 0 ? (
+            <Select label="דוח שנתי" error={e.annual_report_id?.message} {...register("annual_report_id")}>
+              <option value="">בחר דוח שנתי...</option>
+              {clientAnnualReports.map((r) => (
+                <option key={r.id} value={String(r.id)}>
+                  {r.tax_year} — {r.status}
+                </option>
+              ))}
+            </Select>
+          ) : (
+            <Input
+              type="number"
+              min={1}
+              label="מזהה דוח שנתי"
+              error={e.annual_report_id?.message}
+              {...register("annual_report_id")}
+            />
+          ))}
+        {reminderType === "advance_payment_due" &&
+          (clientAdvancePayments.length > 0 ? (
+            <Select label="מקדמה" error={e.advance_payment_id?.message} {...register("advance_payment_id")}>
+              <option value="">בחר מקדמה...</option>
+              {clientAdvancePayments.map((p) => (
+                <option key={p.id} value={String(p.id)}>
+                  {p.period} — {p.status}
+                </option>
+              ))}
+            </Select>
+          ) : (
+            <Input
+              type="number"
+              min={1}
+              label="מזהה מקדמה"
+              error={e.advance_payment_id?.message}
+              {...register("advance_payment_id")}
+            />
+          ))}
 
         {reminderType === "custom" && (
           <Input
@@ -205,24 +249,6 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             placeholder="אופציונלי — אם ריק תופק הודעת ברירת מחדל"
             error={e.message?.message}
             {...register("message")}
-          />
-        )}
-
-        <input type="hidden" {...register("client_id", { required: "שדה חובה" })} />
-        {clientDisplay ? (
-          <div>
-            <p className="mb-1 text-sm font-medium text-gray-700">לקוח</p>
-            <p className="text-sm text-gray-900">{clientDisplay}</p>
-          </div>
-        ) : (
-          <ClientPickerField
-            selectedClient={selectedClient}
-            clientQuery={clientQuery}
-            onQueryChange={handleClientQueryChange}
-            onSelect={handleSelectClient}
-            onClear={handleClearClient}
-            error={e.client_id?.message}
-            label="לקוח *"
           />
         )}
 

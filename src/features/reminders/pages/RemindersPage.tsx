@@ -30,6 +30,11 @@ export const RemindersPage: React.FC = () => {
     handleMarkSent,
     selectedReminder,
     setSelectedReminder,
+    clientBinders,
+    clientCharges,
+    clientTaxDeadlines,
+    clientAnnualReports,
+    clientAdvancePayments,
   } = useReminders();
 
   const header = (
@@ -93,6 +98,11 @@ export const RemindersPage: React.FC = () => {
           setShowCreateModal(false);
         }}
         onSubmit={onSubmit}
+        clientBinders={clientBinders}
+        clientCharges={clientCharges}
+        clientTaxDeadlines={clientTaxDeadlines}
+        clientAnnualReports={clientAnnualReports}
+        clientAdvancePayments={clientAdvancePayments}
       />
 
       <ReminderDrawer

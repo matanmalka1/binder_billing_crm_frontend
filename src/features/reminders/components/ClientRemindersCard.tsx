@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
@@ -6,9 +5,6 @@ import { RemindersTable } from "./RemindersTable";
 import { ReminderDrawer } from "./ReminderDrawer";
 import { CreateReminderModal } from "./CreateReminderModal";
 import { useReminders } from "../hooks/useReminders";
-import { bindersApi, bindersQK } from "@/features/binders/api";
-import { chargesApi, chargesQK } from "@/features/charges/api";
-import { taxDeadlinesApi, taxDeadlinesQK } from "@/features/taxDeadlines/api";
 
 interface ClientRemindersCardProps {
   clientId: number;
@@ -35,25 +31,12 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
     handleMarkSent,
     selectedReminder,
     setSelectedReminder,
-  } = useReminders({ clientId });
-
-  const { data: bindersData } = useQuery({
-    queryKey: bindersQK.forClient(clientId),
-    queryFn: () => bindersApi.list({ client_id: clientId, page_size: 100 }),
-    enabled: showCreateModal,
-  });
-
-  const { data: chargesData } = useQuery({
-    queryKey: chargesQK.list({ client_id: clientId, page_size: 100 }),
-    queryFn: () => chargesApi.list({ client_id: clientId, page_size: 100 }),
-    enabled: showCreateModal,
-  });
-
-  const { data: taxDeadlinesData } = useQuery({
-    queryKey: taxDeadlinesQK.list({ business_name: clientName, page_size: 100 }),
-    queryFn: () => taxDeadlinesApi.listTaxDeadlines({ business_name: clientName, page_size: 100 }),
-    enabled: showCreateModal,
-  });
+    clientBinders,
+    clientCharges,
+    clientTaxDeadlines,
+    clientAnnualReports,
+    clientAdvancePayments,
+  } = useReminders({ clientId, clientName });
 
   return (
     <Card
@@ -96,9 +79,11 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
           setShowCreateModal(false);
         }}
         onSubmit={onSubmit}
-        clientBinders={bindersData?.items}
-        clientCharges={chargesData?.items}
-        clientTaxDeadlines={taxDeadlinesData?.items}
+        clientBinders={clientBinders}
+        clientCharges={clientCharges}
+        clientTaxDeadlines={clientTaxDeadlines}
+        clientAnnualReports={clientAnnualReports}
+        clientAdvancePayments={clientAdvancePayments}
       />
 
       <ReminderDrawer
