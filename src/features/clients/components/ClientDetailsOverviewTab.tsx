@@ -14,7 +14,6 @@ import { ClientInfoSection } from "./ClientInfoSection";
 import { ClientRelatedData } from "./ClientRelatedData";
 import { ClientEditForm } from "./ClientEditForm";
 import { ClientBusinessesCard } from "./ClientBusinessesCard";
-import { ClientAuditCard } from "./ClientAuditCard";
 import { CreateBusinessModal } from "./CreateBusinessModal";
 import { ClientTimelineTab } from "@/features/timeline";
 import { ClientAnnualReportsTab } from "@/features/annualReports";
@@ -97,7 +96,6 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
                 canEdit={canEditClients}
                 onAddBusiness={() => setShowBusinessModal(true)}
               />
-              <ClientAuditCard clientId={client.id} />
             </div>
             <div className="space-y-6">
               <ClientRelatedData

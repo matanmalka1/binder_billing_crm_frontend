@@ -97,6 +97,20 @@ export const MONTH_OPTIONS = MONTH_NAMES.map((label, index) => ({
   label,
 }));
 
+export const getReportingPeriodMonthLabel = (
+  period: string,
+  periodMonthsCount: 1 | 2 = 1,
+): string => {
+  const month = Number(period.split("-")[1]);
+  const monthIndex = Number.isInteger(month) && month >= 1 && month <= 12 ? month - 1 : null;
+  if (monthIndex === null) return period;
+  if (periodMonthsCount === 1) return MONTH_NAMES[monthIndex];
+
+  const endMonthIndex = monthIndex + periodMonthsCount - 1;
+  if (endMonthIndex >= MONTH_NAMES.length) return period;
+  return `${MONTH_NAMES[monthIndex]}-${MONTH_NAMES[endMonthIndex]}`;
+};
+
 export const fmtCurrency = (n: string | number | null): string => {
   if (n == null) return "—";
   const numeric = Number(n);

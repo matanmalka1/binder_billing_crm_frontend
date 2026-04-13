@@ -13,6 +13,19 @@ import { getBinderTypeLabel } from "../constants";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { VAT_STATUS_BADGE_VARIANTS } from "../../vatReports/constants";
 import type { BinderIntakeMaterialResponse } from "../types";
+import { taxProfileApi, taxProfileQK } from "@/features/taxProfile/api";
+import { getReportingPeriodMonthLabel } from "../../../utils/utils";
+
+const formatVatPeriodLabel = (period: string, isBimonthly: boolean): string => {
+  const match = /^(\d{4})-(\d{2})$/.exec(period);
+  if (!match) return period;
+
+  const year = Number(match[1]);
+  if (!Number.isInteger(year)) return period;
+
+  const periodMonthsCount = isBimonthly ? 2 : 1;
+  return `${getReportingPeriodMonthLabel(period, periodMonthsCount)} ${year}`;
+};
 
 const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse; clientId: number }> = ({
   material,
@@ -54,8 +67,15 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ bind
     queryKey: bindersQK.intakes(binderId),
     queryFn: () => bindersApi.getIntakes(binderId),
   });
+  const { data: taxProfile } = useQuery({
+    queryKey: taxProfileQK.forClient(clientId),
+    queryFn: () => taxProfileApi.get(clientId),
+    enabled: clientId > 0,
+    staleTime: 30_000,
+  });
 
   const intakes = data?.intakes ?? [];
+  const isBimonthly = taxProfile?.vat_reporting_frequency === "bimonthly";
 
   if (isLoading) return null;
 
@@ -77,9 +97,14 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ bind
                   {intake.materials.map((m) => (
                     <div key={m.id} className="flex items-center gap-1 text-xs text-gray-700 font-medium">
                       <span>{getBinderTypeLabel(m.material_type)}</span>
-                      {m.description && (
+                      {m.material_type === "vat" && m.description && /^\d{4}-\d{2}$/.test(m.description) ? (
+                        <span className="font-normal text-gray-500">
+                          {" · "}
+                          {formatVatPeriodLabel(m.description, isBimonthly)}
+                        </span>
+                      ) : m.description ? (
                         <span className="font-normal text-gray-500"> · {m.description}</span>
-                      )}
+                      ) : null}
                       {m.material_type === "vat" && m.description && (
                         <VatStatusBadge material={m} clientId={clientId} />
                       )}

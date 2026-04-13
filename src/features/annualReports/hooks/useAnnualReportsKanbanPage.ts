@@ -6,7 +6,7 @@ import { CURRENT_YEAR, type ActiveTab } from "../types";
 
 export const useAnnualReportsKanbanPage = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("kanban");
-  const [taxYear, setTaxYear] = useState(CURRENT_YEAR - 1);
+  const [taxYear, setTaxYear] = useState(CURRENT_YEAR);
   const [showCreate, setShowCreate] = useState(false);
   const navigate = useNavigate();
 

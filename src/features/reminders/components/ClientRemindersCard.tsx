@@ -18,7 +18,6 @@ interface ClientRemindersCardProps {
 
 export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
   clientId,
-  businessId,
   clientName,
 }) => {
   const {
@@ -36,7 +35,7 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
     handleMarkSent,
     selectedReminder,
     setSelectedReminder,
-  } = useReminders({ clientId: businessId });
+  } = useReminders({ clientId });
 
   const { data: bindersData } = useQuery({
     queryKey: bindersQK.forClient(clientId),
