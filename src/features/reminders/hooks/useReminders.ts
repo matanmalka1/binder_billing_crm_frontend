@@ -116,7 +116,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   });
 
   const pendingCountQuery = useQuery({
-    queryKey: remindersQK.list(clientId, "pending"),
+    queryKey: remindersQK.count(clientId, "pending"),
     queryFn: () =>
       remindersApi.list({
         ...(clientId ? { client_id: clientId } : {}),
@@ -127,7 +127,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   });
 
   const sentCountQuery = useQuery({
-    queryKey: remindersQK.list(clientId, "sent"),
+    queryKey: remindersQK.count(clientId, "sent"),
     queryFn: () =>
       remindersApi.list({
         ...(clientId ? { client_id: clientId } : {}),

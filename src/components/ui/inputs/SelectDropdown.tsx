@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown } from "lucide-react";
 import { cn } from "../../../utils/utils";
@@ -54,14 +54,25 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 
   const selectedLabel = options.find((o) => String(o.value) === currentValue)?.label ?? "בחר...";
 
-  const toggle = () => {
-    if (disabled) return;
-    if (open) { setOpen(false); return; }
+  const updateCoords = () => {
     const rect = triggerRef.current?.getBoundingClientRect();
     if (!rect) return;
     const spaceBelow = window.innerHeight - rect.bottom;
     setOpenAbove(spaceBelow < 220);
     setCoords({ top: rect.bottom, bottom: window.innerHeight - rect.top, left: rect.left, width: rect.width });
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    window.addEventListener("scroll", updateCoords, true);
+    return () => window.removeEventListener("scroll", updateCoords, true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  const toggle = () => {
+    if (disabled) return;
+    if (open) { setOpen(false); return; }
+    updateCoords();
     setOpen(true);
   };
 

@@ -32,7 +32,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   maxDate,
   compact = false,
   noWrapper = false,
-  usePortal = false,
+  usePortal = true,
 }) => {
   const [open, setOpen] = useState(false);
   const [month, setMonthState] = useState<Date>(new Date());
@@ -58,7 +58,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     if (disabled) return;
     if (!open && usePortal && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      setDropdownPos({ top: rect.bottom + window.scrollY + 4, left: rect.left + window.scrollX });
+      setDropdownPos({ top: rect.bottom + 4, left: rect.right });
     }
     setOpen((o) => !o);
   };
@@ -83,6 +83,18 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, onBlur]);
 
+  useEffect(() => {
+    if (!open || !usePortal) return;
+    const updatePos = () => {
+      if (triggerRef.current) {
+        const rect = triggerRef.current.getBoundingClientRect();
+        setDropdownPos({ top: rect.bottom + 4, left: rect.right });
+      }
+    };
+    window.addEventListener("scroll", updatePos, true);
+    return () => window.removeEventListener("scroll", updatePos, true);
+  }, [open, usePortal]);
+
   const calendar = (
     <DatePickerCalendar
       selected={selected}
@@ -92,7 +104,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       maxDate={maxDate}
       containerRef={usePortal ? containerRef : undefined}
       className={usePortal ? "fixed z-[9999]" : "absolute z-50 mt-1 end-0"}
-      style={usePortal && dropdownPos ? { top: dropdownPos.top, left: dropdownPos.left } : undefined}
+      style={
+        usePortal && dropdownPos
+          ? { top: dropdownPos.top, left: dropdownPos.left, transform: "translateX(-100%)" }
+          : undefined
+      }
     />
   );
 
