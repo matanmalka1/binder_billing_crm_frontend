@@ -5,6 +5,7 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { clientsApi, clientsQK } from "../api";
 import { getBusinessTypeLabel } from "../constants";
 import type { BusinessStatus } from "../api/contracts";
+import { formatDate } from "@/utils/utils";
 
 const STATUS_BADGE: Record<BusinessStatus, { label: string; className: string }> = {
   active: { label: "פעיל", className: "bg-positive-100 text-positive-800" },
@@ -63,6 +64,9 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                     <p className="truncate text-sm font-medium text-gray-900">
                       {getBusinessTypeLabel(biz.business_type)}
                       {biz.business_name ? ` — ${biz.business_name}` : ""}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      נפתח בתאריך {formatDate(biz.opened_at)}
                     </p>
                   </div>
                   <span className={`ml-2 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${badge.className}`}>

@@ -1,7 +1,6 @@
 import { useController, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/primitives/Button";
-import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
@@ -9,6 +8,7 @@ import type { ClientResponse, UpdateClientPayload } from "../api";
 import {
   CLIENT_ID_NUMBER_TYPE_LABELS,
   CLIENT_STATUS_LABELS,
+  DEFAULT_VAT_EXEMPT_CEILING,
   ENTITY_OPTIONS_BY_ID_TYPE,
   ENTITY_TYPE_LABELS,
   VAT_TYPE_LABELS,
@@ -56,9 +56,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       vat_reporting_frequency: client.vat_reporting_frequency ?? null,
       vat_exempt_ceiling: client.vat_exempt_ceiling ?? null,
       advance_rate: client.advance_rate ?? null,
-      business_start_date: client.business_start_date ?? null,
       accountant_name: client.accountant_name ?? null,
-      business_type_label: client.business_type_label ?? null,
     },
   });
   const idNumberType = client.id_number_type ?? "other";
@@ -72,7 +70,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
     name: "vat_reporting_frequency",
     control,
   });
-  const { field: businessStartDateField } = useController({ name: "business_start_date", control });
 
   const onSubmit = handleSubmit(async (data) => {
     await onSave({
@@ -89,9 +86,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       vat_reporting_frequency: data.vat_reporting_frequency || null,
       vat_exempt_ceiling: data.vat_exempt_ceiling || null,
       advance_rate: data.advance_rate || null,
-      business_start_date: data.business_start_date || null,
       accountant_name: data.accountant_name || null,
-      business_type_label: data.business_type_label || null,
     });
   });
 
@@ -240,7 +235,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
           {isOsekPatur && (
             <Input
               label='תקרת פטור מע"מ'
-              placeholder="120000"
+              placeholder={DEFAULT_VAT_EXEMPT_CEILING}
               error={errors.vat_exempt_ceiling?.message}
               disabled={isLoading}
               {...register("vat_exempt_ceiling")}
@@ -254,31 +249,12 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
             {...register("advance_rate")}
           />
         </div>
-
-        <DatePicker
-          label="תאריך הקמת העסק"
-          error={errors.business_start_date?.message}
+        <Input
+          label="רואה חשבון מלווה"
+          error={errors.accountant_name?.message}
           disabled={isLoading}
-          value={businessStartDateField.value ?? ""}
-          onChange={businessStartDateField.onChange}
-          onBlur={businessStartDateField.onBlur}
-          name={businessStartDateField.name}
+          {...register("accountant_name")}
         />
-
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Input
-            label="רואה חשבון מלווה"
-            error={errors.accountant_name?.message}
-            disabled={isLoading}
-            {...register("accountant_name")}
-          />
-          <Input
-            label="סוג עסק (תיאור חופשי)"
-            error={errors.business_type_label?.message}
-            disabled={isLoading}
-            {...register("business_type_label")}
-          />
-        </div>
 
         <Textarea
           label="הערות לעדכון (אופציונלי)"

@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
-import { useController, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/overlays/Modal";
-import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { Input } from "../../../components/ui/inputs/Input";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import { Select } from "../../../components/ui/inputs/Select";
-import type { CreateClientPayload, EntityType } from "../api";
+import type { CreateClientPayload} from "../api";
 import {
   CLIENT_ID_NUMBER_INPUT_LABELS,
   CLIENT_ID_NUMBER_PLACEHOLDERS,
   CLIENT_ID_NUMBER_TYPE_LABELS,
+  DEFAULT_CLIENT_ID_NUMBER_TYPE,
+  DEFAULT_VAT_EXEMPT_CEILING,
   ENTITY_OPTIONS_BY_ID_TYPE,
   ENTITY_TYPE_LABELS,
+  requiresIsraeliNumericId,
   VAT_TYPE_LABELS,
 } from "../constants";
 import { createClientSchema, type CreateClientFormValues } from "../schemas";
-import type { ClientIdNumberType } from "../constants";
-
-const VAT_EXEMPT_CEILING_DEFAULT = "120000";
 
 interface Props {
   open: boolean;
@@ -55,7 +54,6 @@ export const CreateClientModal: React.FC<Props> = ({
     register,
     handleSubmit,
     watch,
-    control,
     setValue,
     formState: { errors },
     reset,
@@ -63,7 +61,7 @@ export const CreateClientModal: React.FC<Props> = ({
     resolver: zodResolver(createClientSchema),
     mode: "onBlur",
     defaultValues: {
-      id_number_type: "individual",
+      id_number_type: DEFAULT_CLIENT_ID_NUMBER_TYPE,
       full_name: "",
       id_number: "",
       entity_type: null,
@@ -77,16 +75,15 @@ export const CreateClientModal: React.FC<Props> = ({
       vat_reporting_frequency: null,
       vat_exempt_ceiling: null,
       advance_rate: null,
-      business_start_date: null,
+      accountant_name: null,
     },
   });
 
   const idNumberType = watch("id_number_type");
   const currentEntityType = watch("entity_type");
-  const { field: businessStartDateField } = useController({ name: "business_start_date", control });
   const idNumberLabel = CLIENT_ID_NUMBER_INPUT_LABELS[idNumberType] ?? "מספר מזהה";
   const idNumberPlaceholder = CLIENT_ID_NUMBER_PLACEHOLDERS[idNumberType] ?? "הזן מספר מזהה";
-  const shouldStripToDigits = idNumberType === "individual" || idNumberType === "corporation";
+  const shouldStripToDigits = requiresIsraeliNumericId(idNumberType);
 
   const allowedEntityTypes = ENTITY_OPTIONS_BY_ID_TYPE[idNumberType] ?? [];
   const isOsekPatur = currentEntityType === "osek_patur";
@@ -108,7 +105,7 @@ export const CreateClientModal: React.FC<Props> = ({
   // כשנבחר עוסק פטור — ממלאים תקרה ברירת מחדל; כשלא — מנקים
   useEffect(() => {
     if (isOsekPatur) {
-      setValue("vat_exempt_ceiling", VAT_EXEMPT_CEILING_DEFAULT, { shouldValidate: false });
+      setValue("vat_exempt_ceiling", DEFAULT_VAT_EXEMPT_CEILING, { shouldValidate: false });
       setCeilingEditable(false);
     } else {
       setValue("vat_exempt_ceiling", null, { shouldValidate: false });
@@ -139,7 +136,7 @@ export const CreateClientModal: React.FC<Props> = ({
       vat_reporting_frequency: data.vat_reporting_frequency || null,
       vat_exempt_ceiling: data.vat_exempt_ceiling || null,
       advance_rate: data.advance_rate || null,
-      business_start_date: data.business_start_date || null,
+      accountant_name: data.accountant_name || null,
     };
     await onSubmit(payload);
     reset();
@@ -325,15 +322,11 @@ export const CreateClientModal: React.FC<Props> = ({
               {...register("advance_rate")}
             />
           </div>
-
-          <DatePicker
-            label="תאריך הקמת העסק"
-            error={errors.business_start_date?.message}
+          <Input
+            label="רואה חשבון מלווה"
+            error={errors.accountant_name?.message}
             disabled={isLoading}
-            value={businessStartDateField.value ?? ""}
-            onChange={businessStartDateField.onChange}
-            onBlur={businessStartDateField.onBlur}
-            name={businessStartDateField.name}
+            {...register("accountant_name")}
           />
         </div>
 

@@ -116,6 +116,38 @@ export const ENTITY_OPTIONS_BY_ID_TYPE: Record<ClientIdNumberType, EntityType[]>
   other: ["osek_patur", "osek_murshe", "company_ltd", "employee"],
 };
 
+export const ENTITY_TYPE_TO_BUSINESS_TYPE: Record<EntityType, BusinessType> = {
+  osek_patur: "osek_patur",
+  osek_murshe: "osek_murshe",
+  company_ltd: "company",
+  employee: "employee",
+};
+
+export const CLIENT_ID_TYPES_REQUIRING_ISRAELI_NUMERIC_ID: readonly ClientIdNumberType[] = [
+  "individual",
+  "corporation",
+] as const;
+
+export const CLIENT_ID_TYPES_REQUIRING_ISRAELI_ID_CHECKSUM: readonly ClientIdNumberType[] = [
+  "individual",
+] as const;
+
+export const DEFAULT_CLIENT_ID_NUMBER_TYPE: ClientIdNumberType = "individual";
+export const DEFAULT_VAT_EXEMPT_CEILING = "120000";
+
+export const requiresIsraeliNumericId = (idNumberType: ClientIdNumberType): boolean =>
+  CLIENT_ID_TYPES_REQUIRING_ISRAELI_NUMERIC_ID.includes(idNumberType);
+
+export const requiresIsraeliIdChecksum = (idNumberType: ClientIdNumberType): boolean =>
+  CLIENT_ID_TYPES_REQUIRING_ISRAELI_ID_CHECKSUM.includes(idNumberType);
+
+export const getBusinessTypeForEntityType = (
+  entityType: EntityType | null | undefined,
+): BusinessType => {
+  if (!entityType) return "osek_patur";
+  return ENTITY_TYPE_TO_BUSINESS_TYPE[entityType];
+};
+
 export const getClientIdNumberTypeLabel = makeLabelGetter(CLIENT_ID_NUMBER_TYPE_LABELS);
 export const getClientIdNumberInputLabel = makeLabelGetter(CLIENT_ID_NUMBER_INPUT_LABELS);
 export const getBusinessTypeLabel = makeLabelGetter(BUSINESS_TYPE_LABELS);

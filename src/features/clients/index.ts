@@ -20,5 +20,6 @@ export type {
   BusinessListResponse,
   BusinessStatus,
   BusinessType,
+  VatType,
   ISODateString,
 } from "./api";

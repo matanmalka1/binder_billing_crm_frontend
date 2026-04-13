@@ -1,5 +1,9 @@
 import { makeLabelGetter } from "./labels";
-import { BUSINESS_TYPE_LABELS } from "../features/clients/constants";
+import {
+  BUSINESS_TYPE_LABELS,
+  CLIENT_STATUS_LABELS,
+  VAT_TYPE_LABELS,
+} from "../features/clients/constants";
 
 // ── Binder status ──────────────────────────────────────────────────────────
 
@@ -32,12 +36,6 @@ export const getBinderTypeLabel = makeLabelGetter(BINDER_TYPE_LABELS);
 // ── Client ─────────────────────────────────────────────────────────────────
 
 export const getClientTypeLabel = makeLabelGetter(BUSINESS_TYPE_LABELS);
-
-export const CLIENT_STATUS_LABELS: Record<string, string> = {
-  active: "פעיל",
-  frozen: "מוקפא",
-  closed: "סגור",
-};
 
 export const getClientStatusLabel = makeLabelGetter(CLIENT_STATUS_LABELS);
 
@@ -138,12 +136,6 @@ export const VAT_RATE_TYPE_LABELS: Record<string, string> = {
 };
 
 export const getVatRateTypeLabel = makeLabelGetter(VAT_RATE_TYPE_LABELS);
-
-export const VAT_TYPE_LABELS: Record<string, string> = {
-  monthly: "חודשי",
-  bimonthly: "דו-חודשי",
-  exempt: "פטור",
-};
 
 export const getVatTypeLabel = makeLabelGetter(VAT_TYPE_LABELS);
 

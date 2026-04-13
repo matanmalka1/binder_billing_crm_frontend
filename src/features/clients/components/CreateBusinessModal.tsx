@@ -1,9 +1,11 @@
-import { useForm } from "react-hook-form";
+import { useController, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/overlays/Modal";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { Input } from "../../../components/ui/inputs/Input";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
-import type { CreateBusinessPayload, EntityType } from "../api";
+import type { CreateBusinessPayload, EntityType, ISODateString } from "../api";
+import { getBusinessTypeForEntityType } from "../constants";
 import { createBusinessSchema, type CreateBusinessFormValues } from "../schemas";
 
 interface Props {
@@ -14,17 +16,6 @@ interface Props {
   clientEntityType?: EntityType | null;
 }
 
-/** Maps client entity_type to the business_type sent to the backend. */
-function entityTypeToBusinessType(entityType: EntityType | null | undefined): CreateBusinessPayload["business_type"] {
-  switch (entityType) {
-    case "osek_patur":   return "osek_patur";
-    case "osek_murshe":  return "osek_murshe";
-    case "company_ltd":  return "company";
-    case "employee":     return "employee";
-    default:             return "osek_patur";
-  }
-}
-
 export const CreateBusinessModal: React.FC<Props> = ({
   open,
   onClose,
@@ -33,6 +24,7 @@ export const CreateBusinessModal: React.FC<Props> = ({
   clientEntityType,
 }) => {
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -41,8 +33,10 @@ export const CreateBusinessModal: React.FC<Props> = ({
     resolver: zodResolver(createBusinessSchema),
     defaultValues: {
       business_name: "",
+      opened_at: null,
     },
   });
+  const { field: openedAtField } = useController({ name: "opened_at", control });
 
   const handleClose = () => {
     if (!isLoading) {
@@ -53,8 +47,9 @@ export const CreateBusinessModal: React.FC<Props> = ({
 
   const onFormSubmit = handleSubmit(async (data) => {
     const payload: CreateBusinessPayload = {
-      business_type: entityTypeToBusinessType(clientEntityType),
+      business_type: getBusinessTypeForEntityType(clientEntityType),
       business_name: data.business_name || null,
+      opened_at: data.opened_at ? (data.opened_at as ISODateString) : null,
     };
     await onSubmit(payload);
     reset();
@@ -81,6 +76,15 @@ export const CreateBusinessModal: React.FC<Props> = ({
           error={errors.business_name?.message}
           disabled={isLoading}
           {...register("business_name")}
+        />
+        <DatePicker
+          label="תאריך פתיחת עסק"
+          error={errors.opened_at?.message}
+          disabled={isLoading}
+          value={openedAtField.value ?? ""}
+          onChange={openedAtField.onChange}
+          onBlur={openedAtField.onBlur}
+          name={openedAtField.name}
         />
         <p className="text-xs text-gray-500">* שדות חובה</p>
       </form>

@@ -26,10 +26,6 @@ export interface ClientResponse {
   advance_rate: string | null;
   advance_rate_updated_at: string | null;
   accountant_name: string | null;
-  business_type_label: string | null;
-  fiscal_year_start_month: number;
-  tax_year_start: number | null;
-  business_start_date: string | null;
   created_at: string;
   updated_at: string | null;
   active_binder_number: string | null;
@@ -83,8 +79,6 @@ export interface CreateClientPayload {
   advance_rate?: string | null;
   advance_rate_updated_at?: string | null;
   accountant_name?: string | null;
-  business_type_label?: string | null;
-  business_start_date?: string | null;
 }
 
 export type BulkClientActionPayload = never;
@@ -108,10 +102,6 @@ export interface UpdateClientPayload {
   advance_rate?: string | null;
   advance_rate_updated_at?: string | null;
   accountant_name?: string | null;
-  business_type_label?: string | null;
-  business_start_date?: string | null;
-  fiscal_year_start_month?: number | null;
-  tax_year_start?: number | null;
 }
 
 export type BusinessType = "osek_patur" | "osek_murshe" | "company" | "employee";

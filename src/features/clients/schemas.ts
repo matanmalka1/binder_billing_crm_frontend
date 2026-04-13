@@ -1,22 +1,20 @@
 import { z } from "zod";
 import { validateIsraeliIdChecksum } from "../../utils/validation";
 import {
-  BUSINESS_TYPES,
   CLIENT_ID_NUMBER_TYPES,
   CLIENT_STATUSES,
+  requiresIsraeliIdChecksum,
+  requiresIsraeliNumericId,
   ENTITY_TYPES,
   VAT_TYPES,
-  type ClientIdNumberType,
 } from "./constants";
 
 export const createBusinessSchema = z.object({
   business_name: z.string().trim().min(1, "יש להזין שם עסק").max(100, "שם עסק ארוך מדי"),
+  opened_at: z.string().optional().nullable(),
 });
 
 export type CreateBusinessFormValues = z.infer<typeof createBusinessSchema>;
-
-const requiresIsraeliNumericId = (idNumberType: ClientIdNumberType): boolean =>
-  idNumberType === "individual" || idNumberType === "corporation";
 
 export const createClientSchema = z
   .object({
@@ -34,7 +32,7 @@ export const createClientSchema = z
     vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
     vat_exempt_ceiling: z.string().optional().nullable(),
     advance_rate: z.string().optional().nullable(),
-    business_start_date: z.string().optional().nullable(),
+    accountant_name: z.string().trim().optional().nullable(),
   })
   .superRefine((data, ctx) => {
     if (!requiresIsraeliNumericId(data.id_number_type)) {
@@ -59,7 +57,7 @@ export const createClientSchema = z
       return;
     }
 
-    if (data.id_number_type === "individual" && !validateIsraeliIdChecksum(data.id_number)) {
+    if (requiresIsraeliIdChecksum(data.id_number_type) && !validateIsraeliIdChecksum(data.id_number)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["id_number"],
@@ -82,15 +80,9 @@ export const clientEditSchema = z.object({
   notes: z.string().trim().optional().or(z.literal("")),
   entity_type: z.enum(ENTITY_TYPES).nullable().optional(),
   vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
-  vat_start_date: z.string().optional().nullable(),
   vat_exempt_ceiling: z.string().optional().nullable(),
   advance_rate: z.string().optional().nullable(),
-  advance_rate_updated_at: z.string().optional().nullable(),
   accountant_name: z.string().trim().optional().nullable(),
-  business_type_label: z.string().trim().optional().nullable(),
-  business_start_date: z.string().optional().nullable(),
-  fiscal_year_start_month: z.number().int().min(1).max(12).optional().nullable(),
-  tax_year_start: z.number().int().min(1900).max(2100).optional().nullable(),
 });
 
 export type CreateClientFormValues = z.infer<typeof createClientSchema>;

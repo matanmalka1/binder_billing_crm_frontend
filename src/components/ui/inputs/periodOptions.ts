@@ -38,7 +38,7 @@ export const buildBimonthlyPeriodOptions = (count: number): PeriodOption[] => {
     const secondMonth = month + 1;
 
     options.push({
-      value: `${year}-${String(firstMonth + 1).padStart(2, "0")}`,
+      value: `${year}-${String(firstMonth + 1).padStart(2, "0")}-${String(secondMonth + 1).padStart(2, "0")}`,
       label: `${MONTH_NAMES[firstMonth]}-${MONTH_NAMES[secondMonth]} ${year}`,
     });
 

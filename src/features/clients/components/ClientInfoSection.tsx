@@ -5,12 +5,12 @@ import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
 import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
 import { formatClientOfficeId, formatDate } from "@/utils/utils";
-import { getVatTypeLabel } from "../../../utils/enums";
 import type { ClientResponse } from "../api";
 import {
   getClientIdNumberTypeLabel,
   getClientStatusLabel,
   getEntityTypeLabel,
+  getVatTypeLabel,
 } from "../constants";
 import { authorityContactsApi, authorityContactsQK } from "../../authorityContacts/api";
 
@@ -108,12 +108,6 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
 
   const taxItems = [
     {
-      label: "תאריך הקמת העסק",
-      value: client.business_start_date
-        ? formatDate(client.business_start_date)
-        : "—",
-    },
-    {
       label: 'תדירות דיווח מע"מ',
       value: client.vat_reporting_frequency
         ? getVatTypeLabel(client.vat_reporting_frequency)
@@ -133,7 +127,6 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
       label: "אחוז מקדמה",
       value: client.advance_rate != null ? `${client.advance_rate}%` : "—",
     },
-    { label: "סוג עסק", value: client.business_type_label ?? "—" },
     { label: "רואה חשבון מלווה", value: client.accountant_name ?? "—" },
     { label: 'סניף מע"מ', value: officeByType("vat_branch") ?? "—" },
     { label: "סניף ביטוח לאומי", value: officeByType("national_insurance") ?? "—" },

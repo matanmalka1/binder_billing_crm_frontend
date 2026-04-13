@@ -100,7 +100,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         {...register("binder_type")}
       />
 
-      {selectedClient && binderType !== "vat" && (
+      {selectedClient && binderType !== "vat" && businesses.length > 0 && (
         <Controller
           name="business_id"
           control={control}
@@ -108,7 +108,6 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
             <Select
               label="עסק"
               error={errors.business_id?.message}
-              disabled={businesses.length === 0}
               options={businessOptions}
               value={
                 field.value === null

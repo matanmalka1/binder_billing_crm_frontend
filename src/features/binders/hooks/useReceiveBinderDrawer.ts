@@ -86,7 +86,9 @@ export const useReceiveBinderDrawer = (
 
   useEffect(() => {
     if (binderType === "vat") return;
-    if (businesses.length === 1) {
+    if (businesses.length === 0) {
+      form.setValue("business_id", null, { shouldValidate: false });
+    } else if (businesses.length === 1) {
       form.setValue("business_id", businesses[0].id, { shouldValidate: true });
     }
   }, [businesses, binderType, form]);
