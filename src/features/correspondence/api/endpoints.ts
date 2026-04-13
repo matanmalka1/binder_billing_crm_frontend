@@ -1,6 +1,6 @@
 export const CORRESPONDENCE_ENDPOINTS = {
-  correspondenceList: (businessId: number | string) =>
-    `/businesses/${businessId}/correspondence`,
-  correspondenceById: (businessId: number | string, id: number | string) =>
-    `/businesses/${businessId}/correspondence/${id}`,
+  correspondenceList: (clientId: number | string) =>
+    `/clients/${clientId}/correspondence`,
+  correspondenceById: (clientId: number | string, id: number | string) =>
+    `/clients/${clientId}/correspondence/${id}`,
 } as const;

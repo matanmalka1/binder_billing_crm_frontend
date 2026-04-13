@@ -1,4 +1,4 @@
-import { Phone, Mail, FileText, Users, Edit2, Trash2 } from "lucide-react";
+import { Phone, Mail, FileText, Users, Printer, Edit2, Trash2 } from "lucide-react";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Button } from "../../../components/ui/primitives/Button";
 import type { CorrespondenceEntry as CorrespondenceEntryType } from "../api";
@@ -35,6 +35,12 @@ const TYPE_CONFIG: Record<string, TypeConfig> = {
     icon: <Users className="h-3.5 w-3.5" />,
     variant: "success",
     dotColor: "bg-positive-500",
+  },
+  fax: {
+    label: "פקס",
+    icon: <Printer className="h-3.5 w-3.5" />,
+    variant: "neutral",
+    dotColor: "bg-gray-500",
   },
 };
 

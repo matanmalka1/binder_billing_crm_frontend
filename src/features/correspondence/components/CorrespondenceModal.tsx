@@ -97,6 +97,7 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
           <option value="letter">מכתב</option>
           <option value="email">אימייל</option>
           <option value="meeting">פגישה</option>
+          <option value="fax">פקס</option>
         </Select>
 
         <Input label="נושא *" error={errors.subject?.message} {...register("subject")} />

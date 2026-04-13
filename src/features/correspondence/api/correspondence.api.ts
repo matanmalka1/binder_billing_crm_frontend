@@ -10,7 +10,7 @@ import type {
 export const correspondenceApi = {
   list: async (
     clientId: number,
-    params?: { page?: number; page_size?: number },
+    params?: { page?: number; page_size?: number; business_id?: number },
   ): Promise<CorrespondenceListResponse> => {
     const response = await api.get<CorrespondenceListResponse>(
       CORRESPONDENCE_ENDPOINTS.correspondenceList(clientId),

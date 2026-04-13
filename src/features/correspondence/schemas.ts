@@ -2,7 +2,7 @@ import { z } from "zod";
 import { format } from "date-fns";
 
 export const correspondenceSchema = z.object({
-  correspondence_type: z.enum(["call", "letter", "email", "meeting"]),
+  correspondence_type: z.enum(["call", "letter", "email", "meeting", "fax"]),
   subject: z.string().trim().min(1, "יש להזין נושא"),
   notes: z.string().trim().optional().or(z.literal("")),
   occurred_at: z.string().trim().min(1, "יש להזין תאריך"),

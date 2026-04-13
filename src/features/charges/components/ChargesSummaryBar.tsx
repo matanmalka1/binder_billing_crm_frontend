@@ -15,11 +15,7 @@ export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, i
   const amountOrCount = (status: string): string => {
     const group = charges.filter((c) => c.status === status);
     if (!isAdvisor) return String(group.length);
-    const sum = group
-      .filter((c): c is ChargeResponse & { amount: number } =>
-        "amount" in c && typeof c.amount === "number"
-      )
-      .reduce((s, c) => s + c.amount, 0);
+    const sum = group.reduce((s, c) => s + parseFloat(c.amount ?? "0"), 0);
     return formatILS(sum);
   };
 

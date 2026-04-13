@@ -10,27 +10,28 @@ const PAGE_SIZE = 50;
 
 export const useCorrespondence = (businessId: number | undefined, clientId?: number) => {
   const queryClient = useQueryClient();
-  const queryKey = [...correspondenceQK.forBusiness(businessId ?? 0), { page: 1, page_size: PAGE_SIZE }];
-  const contactsClientId = clientId ?? businessId ?? 0;
+  const resolvedClientId = clientId ?? 0;
+  const queryKey = [...correspondenceQK.forClient(resolvedClientId), { page: 1, page_size: PAGE_SIZE, business_id: businessId }];
 
   const listQuery = useQuery({
-    enabled: (businessId ?? 0) > 0,
+    enabled: resolvedClientId > 0,
     queryKey,
-    queryFn: () => correspondenceApi.list(businessId ?? 0, { page: 1, page_size: PAGE_SIZE }),
+    queryFn: () => correspondenceApi.list(resolvedClientId, { page: 1, page_size: PAGE_SIZE, business_id: businessId }),
     retry: false,
   });
 
   const contactsQuery = useQuery({
-    enabled: contactsClientId > 0,
-    queryKey: [...authorityContactsQK.forClient(contactsClientId), { page: 1, page_size: 100 }],
-    queryFn: () => authorityContactsApi.listAuthorityContacts(contactsClientId, undefined, 1, 100),
+    enabled: resolvedClientId > 0,
+    queryKey: [...authorityContactsQK.forClient(resolvedClientId), { page: 1, page_size: 100 }],
+    queryFn: () => authorityContactsApi.listAuthorityContacts(resolvedClientId, undefined, 1, 100),
     staleTime: 60_000,
   });
 
   const createMutation = useMutation({
     mutationFn: (values: CorrespondenceFormValues) =>
-      correspondenceApi.create(businessId ?? 0, {
+      correspondenceApi.create(resolvedClientId, {
         ...values,
+        business_id: businessId ?? null,
         notes: values.notes || null,
         contact_id: values.contact_id ?? null,
       }),
@@ -43,7 +44,7 @@ export const useCorrespondence = (businessId: number | undefined, clientId?: num
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: number; payload: UpdateCorrespondencePayload }) =>
-      correspondenceApi.update(businessId ?? 0, id, payload),
+      correspondenceApi.update(resolvedClientId, id, payload),
     onSuccess: () => {
       toast.success("רשומת התכתבות עודכנה בהצלחה");
       void queryClient.invalidateQueries({ queryKey });
@@ -52,7 +53,7 @@ export const useCorrespondence = (businessId: number | undefined, clientId?: num
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => correspondenceApi.delete(businessId ?? 0, id),
+    mutationFn: (id: number) => correspondenceApi.delete(resolvedClientId, id),
     onSuccess: () => {
       toast.success("רשומת התכתבות נמחקה בהצלחה");
       void queryClient.invalidateQueries({ queryKey });
