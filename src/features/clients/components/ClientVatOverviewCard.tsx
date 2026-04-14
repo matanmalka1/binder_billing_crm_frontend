@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
+import { vatReportsApi, vatReportsQK } from "@/features/vatReports";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Badge } from "../../../components/ui/primitives/Badge";
 

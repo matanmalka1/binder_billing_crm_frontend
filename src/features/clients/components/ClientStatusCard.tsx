@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FileText, Receipt, CreditCard, TrendingUp, FolderOpen, FileCheck, ChevronLeft } from "lucide-react";
 import { clientsApi, clientsQK } from "../api";
 import { CLIENT_ROUTES } from "../api/endpoints";
-import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
+import { vatReportsApi, vatReportsQK } from "@/features/vatReports";
 import { Card } from "../../../components/ui/primitives/Card";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
 interface Props {

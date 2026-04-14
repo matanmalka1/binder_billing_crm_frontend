@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import { differenceInCalendarDays, format, addDays, subDays, parseISO } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import { taxDeadlinesApi } from "@/features/taxDeadlines/api";
-import { annualReportsApi, getStatusLabel } from "@/features/annualReports/api";
-import { remindersApi } from "@/features/reminders/api";
+import { taxDeadlinesApi } from "@/features/taxDeadlines";
+import { annualReportsApi, getStatusLabel } from "@/features/annualReports";
+import { remindersApi } from "@/features/reminders";
 import { dashboardQK } from "../api";
 import { useRole } from "../../../hooks/useRole";
 import { formatDate } from "../../../utils/utils";
-import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
+import { getDeadlineTypeLabel } from "@/features/taxDeadlines";
 import type { SectionItem } from "../utils";
 
 // Compute once per calendar day — stable across re-renders within the same day

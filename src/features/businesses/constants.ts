@@ -1,5 +1,5 @@
 import { makeLabelGetter } from "@/utils/labels";
-import type { BusinessResponse, BusinessStatus } from "@/features/clients/api";
+import type { BusinessResponse, BusinessStatus } from "@/features/clients";
 
 export const BUSINESS_STATUS_LABELS: Record<BusinessStatus, string> = {
   active: "פעיל",

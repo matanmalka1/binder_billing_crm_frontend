@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { clientsApi, clientsQK } from "@/features/clients/api";
+import { clientsApi, clientsQK } from "@/features/clients";
 import { getErrorMessage, isPositiveInt } from "@/utils/utils";
 
 type UseBusinessDetailsParams = {

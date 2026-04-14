@@ -66,7 +66,6 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
     if (!open) return;
     window.addEventListener("scroll", updateCoords, true);
     return () => window.removeEventListener("scroll", updateCoords, true);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const toggle = () => {

@@ -17,7 +17,7 @@ import {
   useClientsPage,
 } from "@/features/clients";
 import type { ClientResponse } from "@/features/clients/api";
-import { CLIENT_ROUTES } from "@/features/clients/api/endpoints";
+import { CLIENT_ROUTES } from "@/features/clients";
 import { ImportExportModal } from "@/features/importExport";
 
 const EDIT_FORM_ID = "client-edit-form-list";

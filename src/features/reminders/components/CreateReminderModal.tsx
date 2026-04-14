@@ -17,10 +17,10 @@ import type { BinderResponse } from "@/features/binders";
 import type { ChargeResponse } from "@/features/charges/api";
 import { getChargeTypeLabel } from "@/features/charges";
 import { getChargeStatusLabel } from "../../../utils/enums";
-import type { TaxDeadlineResponse } from "@/features/taxDeadlines/api";
-import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
-import type { AnnualReportFull } from "@/features/annualReports/api";
-import type { AdvancePaymentRow } from "@/features/advancedPayments/types";
+import type { TaxDeadlineResponse } from "@/features/taxDeadlines";
+import { getDeadlineTypeLabel } from "@/features/taxDeadlines";
+import type { AnnualReportFull } from "@/features/annualReports";
+import type { AdvancePaymentRow } from "@/features/advancedPayments";
 import { reminderTypeOptions } from "../types";
 
 interface CreateReminderModalProps {

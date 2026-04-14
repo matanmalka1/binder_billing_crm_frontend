@@ -153,22 +153,11 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         />
       )}
 
-      <Card title="העלאת מסמך">
-        <DocumentsUploadCard
-          businesses={businesses}
-          businessesLoading={businessesLoading}
-          submitUpload={submitUpload}
-          uploadError={uploadError}
-          uploading={uploading}
-          selectedTaxYear={taxYear}
-        />
-      </Card>
-
       <Card
         title={`מסמכים (${documents.length})`}
         actions={
           <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-500">שנת מס:</label>
+            <label className="text-sm text-gray-500 whitespace-nowrap">שנת מס:</label>
             <Select
               value={taxYear ?? ""}
               onChange={(e) =>
@@ -198,6 +187,17 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
             taxYear={expandedDoc.tax_year ?? undefined}
           />
         )}
+      </Card>
+
+      <Card title="העלאת מסמך">
+        <DocumentsUploadCard
+          businesses={businesses}
+          businessesLoading={businessesLoading}
+          submitUpload={submitUpload}
+          uploadError={uploadError}
+          uploading={uploading}
+          selectedTaxYear={taxYear}
+        />
       </Card>
 
       <input

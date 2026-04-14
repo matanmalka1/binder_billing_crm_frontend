@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
 import type { LucideIcon } from "lucide-react";
-import type { ChargeResponse } from "@/features/charges/api";
-import type { BinderDetailResponse } from "@/features/binders/api";
+import type { ChargeResponse } from "@/features/charges";
+import type { BinderDetailResponse } from "@/features/binders";
 import { getChargeStatusLabel, getStatusLabel as getBinderStatusLabel } from "../../../utils/enums";
 import { getChargeTypeLabel } from "@/features/charges";
 

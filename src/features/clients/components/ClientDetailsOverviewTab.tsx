@@ -22,10 +22,10 @@ import { ClientDocumentsTab } from "@/features/documents";
 import { FilingTimeline } from "@/features/taxDeadlines";
 import { VatClientSummaryPanel } from "@/features/vatReports";
 import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from "../api";
-import type { ChargeResponse } from "@/features/charges/api";
-import type { BinderDetailResponse } from "@/features/binders/api";
+import type { ChargeResponse } from "@/features/charges";
+import type { BinderDetailResponse } from "@/features/binders";
 import { ChargesCreateModal } from "@/features/charges";
-import { BinderDrawer } from "@/features/binders/components/BinderDrawer";
+import { BinderDrawer } from "@/features/binders";
 import { useClientQuickActions } from "../hooks/useClientQuickActions";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
 

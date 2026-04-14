@@ -47,12 +47,12 @@ const validTransitions: Record<AnnualReportStatus, AnnualReportStatus[]> = {
   docs_complete: ["in_preparation", "collecting_docs"],
   in_preparation: ["pending_client", "docs_complete"],
   pending_client: ["in_preparation", "submitted"],
-  submitted: ["accepted", "assessment_issued"],
+  submitted: ["accepted", "assessment_issued", "amended"],
   accepted: ["closed"],
   assessment_issued: ["objection_filed", "closed", "pending_client", "in_preparation", "docs_complete"],
   objection_filed: ["closed", "docs_complete"],
   closed: [],
-  amended: ["in_preparation", "collecting_docs"],
+  amended: ["in_preparation", "submitted"],
 };
 
 export const getAllowedTransitions = (status: string): AnnualReportStatus[] =>
@@ -78,8 +78,8 @@ export const getClientTypeLabel = (type: string): string =>
 const scheduleLabels: Record<AnnualReportScheduleKey, string> = {
   schedule_a: "נספח א — הכנסה מעסק",
   schedule_b: "נספח ב — שכירות",
-  schedule_gimmel: 'נספח ג — הכנסות מחו"ל',
-  schedule_dalet: "נספח ד — פחת",
+  schedule_gimmel: "נספח ג — רווח הון מניירות ערך",
+  schedule_dalet: 'נספח ד — הכנסות מחו"ל ומס זר',
   form_150: "טופס 150 — החזקה בחבר בני אדם תושב חוץ",
   form_1504: "טופס 1504 — שותף בשותפות",
   form_6111: "טופס 6111 — קידוד דוחות כספיים",

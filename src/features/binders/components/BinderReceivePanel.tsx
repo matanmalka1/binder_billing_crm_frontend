@@ -16,7 +16,7 @@ interface BinderReceivePanelProps {
   form: UseFormReturn<ReceiveBinderFormValues>;
   clientQuery: string;
   selectedClient: { id: number; name: string; client_status?: string | null } | null;
-  businesses: { id: number; business_name: string | null; business_type: string }[];
+  businesses: { id: number; business_name: string | null }[];
   annualReports: AnnualReportFull[];
   hasActiveBinder: boolean;
   vatType: "monthly" | "bimonthly" | "exempt" | null;

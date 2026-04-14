@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { BUSINESS_ENDPOINTS } from "@/features/businesses/api/endpoints";
+import { BUSINESS_ENDPOINTS } from "@/features/businesses";
 import { toQueryParams } from "@/api/queryParams";
 import { CLIENT_ENDPOINTS } from "./endpoints";
 import type {

@@ -1,15 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { clientsApi, clientsQK, type UpdateClientPayload, type ClientResponse, type CreateBusinessPayload } from "../api";
-import { bindersApi, bindersQK } from "@/features/binders/api";
-import type { BinderDetailResponse } from "@/features/binders/api";
-import { chargesApi, chargesQK } from "@/features/charges/api";
+import { bindersApi, bindersQK, type BinderDetailResponse } from "@/features/binders";
+import { chargesApi, chargesQK, type ChargeResponse } from "@/features/charges";
 import {
   getErrorMessage,
   isPositiveInt,
   showErrorToast,
 } from "../../../utils/utils";
-import type { ChargeResponse } from "@/features/charges/api";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
 

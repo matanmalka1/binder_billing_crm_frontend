@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/primitives/Card";
 import { DefinitionList } from "@/components/ui/layout/DefinitionList";
 import { CLIENT_ROUTES } from "@/features/clients";
-import type { BusinessResponse, ClientResponse } from "@/features/clients/api";
+import type { BusinessResponse, ClientResponse } from "@/features/clients";
 import { formatClientOfficeId, formatDate } from "@/utils/utils";
 import {
   BUSINESS_DETAILS_COPY,

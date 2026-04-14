@@ -1,8 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { clientsApi, clientsQK } from "@/features/clients/api";
-import { BUSINESS_QUERY_OPTIONS } from "@/features/businesses/queryOptions";
-import type { BusinessResponse } from "@/features/clients/api";
+import { clientsApi, clientsQK } from "@/features/clients";
+import type { BusinessResponse } from "@/features/clients";
 
 interface UseBusinessesForClientOptions {
   clientId: number | null | undefined;
@@ -19,7 +18,9 @@ export const useBusinessesForClient = ({
     queryKey: clientId ? clientsQK.businessesAll(clientId) : clientsQK.businessesAllFallback(),
     queryFn: () => clientsApi.listAllBusinessesForClient(clientId!),
     enabled: enabled && !!clientId,
-    ...BUSINESS_QUERY_OPTIONS.list,
+    staleTime: 30_000,
+    retry: 1,
+    refetchOnWindowFocus: false,
   });
 
   const businesses = useMemo(() => data?.items ?? [], [data?.items]);

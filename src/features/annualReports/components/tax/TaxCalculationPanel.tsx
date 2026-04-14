@@ -5,6 +5,7 @@ import { annualReportTaxApi } from "../../api";
 import { annualReportsApi, annualReportsQK } from "../../api";
 import { cn } from "../../../../utils/utils";
 import { toast } from "../../../../utils/toast";
+import { showErrorToast } from "../../../../utils/utils";
 import { useRole } from "../../../../hooks/useRole";
 import { TaxBracketsTable } from "./TaxBracketsTable";
 import { TaxCalculatorInputs } from "./TaxCalculatorInputs";
@@ -58,6 +59,7 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
       queryClient.invalidateQueries({ queryKey: annualReportsQK.taxCalc(reportId) });
       queryClient.invalidateQueries({ queryKey: annualReportsQK.details(reportId) });
     },
+    onError: (err) => showErrorToast(err, "שגיאה בשמירת נתוני דוח"),
   });
 
   const saveTaxMutation = useMutation({

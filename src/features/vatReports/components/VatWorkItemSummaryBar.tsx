@@ -8,7 +8,7 @@ import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { useRole } from "../../../hooks/useRole";
 import { useVatWorkItemActions } from "../hooks/useVatWorkItemActions";
-import { bindersApi, bindersQK } from "@/features/binders/api";
+import { bindersApi, bindersQK } from "@/features/binders";
 import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { VatProgressBar } from "./VatProgressBar";
 import { VatActionButtons } from "./VatActionButtons";

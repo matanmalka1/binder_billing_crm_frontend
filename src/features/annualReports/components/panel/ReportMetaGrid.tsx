@@ -6,10 +6,13 @@ interface ReportMetaGridProps {
 }
 
 const CLIENT_TYPE_LABELS: Record<ClientTypeForReport, string> = {
-  individual: "יחיד",
-  self_employed: "עוסק",
-  corporation: "חברה",
-  partnership: "שותפות",
+  individual: "יחיד (1301)",
+  self_employed: "עצמאי (1301)",
+  corporation: "חברה (1214)",
+  public_institution: 'מלכ"ר / מוסד ציבורי (1215)',
+  partnership: "שותף בשותפות (1301)",
+  control_holder: "בעל שליטה (1301)",
+  exempt_dealer: "עוסק פטור (1301)",
 };
 
 const formatDate = (value: string | null): string => {
@@ -23,7 +26,7 @@ export const ReportMetaGrid = ({ report }: ReportMetaGridProps) => (
     items={[
       { label: "שנת מס", value: report.tax_year },
       { label: "סוג לקוח", value: CLIENT_TYPE_LABELS[report.client_type] ?? report.client_type },
-      { label: "מזהה דוח", value: report.form_type },
+      { label: "טופס", value: report.form_type ? `טופס ${report.form_type}` : "—" },
       { label: "מספר אסמכתא", value: report.ita_reference },
       { label: "הוגש בתאריך", value: formatDate(report.submitted_at) },
       { label: "מועד הגשה", value: formatDate(report.filing_deadline) },

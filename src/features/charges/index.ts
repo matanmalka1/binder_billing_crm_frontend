@@ -8,5 +8,5 @@ export { ChargesFiltersCard } from "./components/ChargesFiltersCard";
 export { ChargesSummaryBar } from "./components/ChargesSummaryBar";
 export { useChargesPage } from "./hooks/useChargesPage";
 export { Charges } from "./pages/ChargesPage";
-export type { ChargeResponse, ChargeAdvisorResponse } from "./api";
+export type { ChargeResponse, ChargeAdvisorResponse, CreateChargePayload } from "./api";
 export { getChargeTypeLabel } from "./utils";
