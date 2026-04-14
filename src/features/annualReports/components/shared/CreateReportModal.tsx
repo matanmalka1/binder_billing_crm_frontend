@@ -37,7 +37,7 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
     handleClientQueryChange,
     resetClientPicker,
   } = useClientPickerState(
-    createClientIdPickerHandlers((value, options) => setValue("business_id", value, options)),
+    createClientIdPickerHandlers((value, options) => setValue("client_id", value, options)),
   );
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">
-        <input type="hidden" {...register("business_id")} />
+        <input type="hidden" {...register("client_id")} />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <ClientPickerField
@@ -76,8 +76,8 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
               onQueryChange={handleClientQueryChange}
               onSelect={handleSelectClient}
               onClear={handleClearClient}
-              error={errors.business_id?.message}
-              label="עסק *"
+              error={errors.client_id?.message}
+              label="לקוח *"
             />
           </div>
           <Input

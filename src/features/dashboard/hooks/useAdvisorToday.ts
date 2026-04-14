@@ -87,7 +87,10 @@ export const useAdvisorToday = () => {
         .sort((a, b) => b.staleDays - a.staleDays)
         .map(({ report, staleDays }) => ({
           id: report.id,
-          label: report.business_name ?? `עסק #${report.business_id}`,
+          label:
+            report.business_name ??
+            report.client_name ??
+            `לקוח #${report.client_id}`,
           sublabel: `${report.tax_year} · ${getStatusLabel(report.status)} · ללא התקדמות ${staleDays} ימים`,
           href: `/tax/reports/${report.id}`,
         })),

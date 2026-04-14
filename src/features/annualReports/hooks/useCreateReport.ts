@@ -17,7 +17,7 @@ export const useCreateReport = (onSuccess?: () => void) => {
   const form = useForm<CreateReportFormValues, undefined, CreateReportFormOutput>({
     resolver: zodResolver(createReportSchema),
     defaultValues: {
-      business_id: "",
+      client_id: "",
       tax_year: String(new Date().getFullYear() - 1),
       client_type: "individual",
       deadline_type: "standard",
@@ -65,7 +65,7 @@ export const useCreateReport = (onSuccess?: () => void) => {
   });
 
   const buildPayload = (values: CreateReportFormOutput): CreateAnnualReportPayload => ({
-    business_id: Number(values.business_id),
+    client_id: Number(values.client_id),
     tax_year: Number(values.tax_year),
     client_type: values.client_type,
     deadline_type: values.deadline_type,

@@ -9,7 +9,6 @@ import { semanticSignalBadgeClasses } from "@/utils/semanticColors";
 interface AnnualReportCardProps {
   report: {
     id: number;
-    business_id: number;
     business_name: string;
     tax_year: number;
     days_until_due: number | null;

@@ -67,8 +67,7 @@ export type ExpenseCategoryType =
 
 export interface AnnualReportFull {
   id: number;
-  business_id: number;
-  client_id?: number | null;
+  client_id: number;
   client_name?: string | null;
   business_name?: string | null;
   tax_year: number;
@@ -183,7 +182,6 @@ export interface KanbanStage {
   stage: StageKey;
   reports: Array<{
     id: number;
-    business_id: number;
     business_name: string;
     tax_year: number;
     days_until_due: number | null;
@@ -191,7 +189,7 @@ export interface KanbanStage {
 }
 
 export interface CreateAnnualReportPayload {
-  business_id: number;
+  client_id: number;
   tax_year: number;
   client_type: ClientTypeForReport;
   deadline_type?: DeadlineType;

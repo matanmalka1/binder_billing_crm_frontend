@@ -20,7 +20,6 @@ export interface KanbanStage {
   stage: StageKey;
   reports: {
     id: number;
-    business_id: number;
     business_name: string;
     tax_year: number;
     days_until_due: number | null;
