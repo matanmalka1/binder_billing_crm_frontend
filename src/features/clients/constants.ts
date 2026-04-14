@@ -1,5 +1,5 @@
 import { makeLabelGetter } from "../../utils/labels";
-import type { BusinessStatus, BusinessType, ClientResponse, ClientStatus, EntityType, VatType } from "./api";
+import type { BusinessStatus, ClientResponse, ClientStatus, EntityType, VatType } from "./api";
 
 export type ActiveClientDetailsTab =
   | "details"
@@ -75,13 +75,6 @@ export const CLIENT_ID_NUMBER_PLACEHOLDERS: Record<ClientIdNumberType, string> =
   other: "הזן מספר מזהה",
 };
 
-export const BUSINESS_TYPE_LABELS: Record<BusinessType, string> = {
-  osek_patur: "עוסק פטור",
-  osek_murshe: "עוסק מורשה",
-  company: 'חברה בע"מ',
-  employee: "שכיר",
-};
-
 export const ENTITY_TYPE_LABELS: Record<EntityType, string> = {
   osek_patur: "עוסק פטור",
   osek_murshe: "עוסק מורשה",
@@ -147,13 +140,6 @@ export const CLIENT_SORT_ORDER_OPTIONS: { value: ClientSortOrder; label: string 
 export const DEFAULT_CLIENT_SORT_BY: ClientSortBy = "full_name";
 export const DEFAULT_CLIENT_SORT_ORDER: ClientSortOrder = "asc";
 
-export const ENTITY_TYPE_TO_BUSINESS_TYPE: Record<EntityType, BusinessType> = {
-  osek_patur: "osek_patur",
-  osek_murshe: "osek_murshe",
-  company_ltd: "company",
-  employee: "employee",
-};
-
 export const CLIENT_ID_TYPES_REQUIRING_ISRAELI_NUMERIC_ID: readonly ClientIdNumberType[] = [
   "individual",
   "corporation",
@@ -172,15 +158,8 @@ export const requiresIsraeliNumericId = (idNumberType: ClientIdNumberType): bool
 export const requiresIsraeliIdChecksum = (idNumberType: ClientIdNumberType): boolean =>
   CLIENT_ID_TYPES_REQUIRING_ISRAELI_ID_CHECKSUM.includes(idNumberType);
 
-export const getBusinessTypeForEntityType = (
-  entityType: EntityType | null | undefined,
-): BusinessType => {
-  if (!entityType) return "osek_patur";
-  return ENTITY_TYPE_TO_BUSINESS_TYPE[entityType];
-};
-
 export const getClientIdNumberTypeLabel = makeLabelGetter(CLIENT_ID_NUMBER_TYPE_LABELS);
-export const getBusinessTypeLabel = makeLabelGetter(BUSINESS_TYPE_LABELS);
+
 export const getEntityTypeLabel = makeLabelGetter(ENTITY_TYPE_LABELS);
 export const getClientStatusLabel = makeLabelGetter(CLIENT_STATUS_LABELS);
 export const getVatTypeLabel = makeLabelGetter(VAT_TYPE_LABELS);

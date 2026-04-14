@@ -96,9 +96,12 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
           {...register("client_type")}
         >
           <option value="individual">יחיד (טופס 1301)</option>
-          <option value="self_employed">עצמאי (טופס 1215)</option>
-          <option value="corporation">חברה (טופס 6111)</option>
-          <option value="partnership">שותפות (טופס 1215)</option>
+          <option value="self_employed">עצמאי (טופס 1301)</option>
+          <option value="corporation">חברה (טופס 1214)</option>
+          <option value="public_institution">מלכ&quot;ר / מוסד ציבורי (טופס 1215)</option>
+          <option value="partnership">שותף בשותפות (טופס 1301)</option>
+          <option value="control_holder">בעל שליטה (טופס 1301)</option>
+          <option value="exempt_dealer">עוסק פטור (טופס 1301)</option>
         </Select>
 
         <Select

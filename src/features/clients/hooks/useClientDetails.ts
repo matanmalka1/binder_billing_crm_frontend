@@ -9,7 +9,7 @@ import {
   isPositiveInt,
   showErrorToast,
 } from "../../../utils/utils";
-import type { ClientChargeSummary } from "../types";
+import type { ChargeResponse } from "@/features/charges/api";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
 
@@ -22,7 +22,7 @@ type UseClientDetailsResult = {
   error: string | null;
   binders: BinderDetailResponse[];
   bindersTotal: number;
-  charges: ClientChargeSummary[];
+  charges: ChargeResponse[];
   chargesTotal: number;
   updateClient: (payload: UpdateClientPayload) => Promise<void>;
   isUpdating: boolean;

@@ -22,7 +22,7 @@ import { ClientDocumentsTab } from "@/features/documents";
 import { FilingTimeline } from "@/features/taxDeadlines";
 import { VatClientSummaryPanel } from "@/features/vatReports";
 import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from "../api";
-import type { ClientChargeSummary } from "../types";
+import type { ChargeResponse } from "@/features/charges/api";
 import type { BinderDetailResponse } from "@/features/binders/api";
 import { ChargesCreateModal } from "@/features/charges";
 import { BinderDrawer } from "@/features/binders/components/BinderDrawer";
@@ -38,7 +38,7 @@ export type ClientDetailsOverviewTabProps = {
   canViewCharges: boolean;
   binders: BinderDetailResponse[];
   bindersTotal: number;
-  charges: ClientChargeSummary[];
+  charges: ChargeResponse[];
   chargesTotal: number;
   updateClient: (payload: UpdateClientPayload) => Promise<void>;
   isUpdating: boolean;
@@ -186,7 +186,6 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
           setShowBusinessModal(false);
         }}
         isLoading={isCreatingBusiness}
-        clientEntityType={client.entity_type}
       />
 
       <ChargesCreateModal

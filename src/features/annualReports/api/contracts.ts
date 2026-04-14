@@ -17,20 +17,29 @@ export type ClientTypeForReport =
   | "individual"
   | "self_employed"
   | "corporation"
-  | "partnership";
+  | "public_institution"
+  | "partnership"
+  | "control_holder"
+  | "exempt_dealer";
 
 export type DeadlineType = "standard" | "extended" | "custom";
 
 export type AnnualReportScheduleKey =
   | "schedule_a"
   | "schedule_b"
-  | "schedule_bet"
   | "schedule_gimmel"
   | "schedule_dalet"
-  | "schedule_heh"
-  | "schedule_vav"
-  | "annex_15"
-  | "annex_867";
+  | "form_150"
+  | "form_1504"
+  | "form_6111"
+  | "form_1344"
+  | "form_1399"
+  | "form_1350"
+  | "form_1327"
+  | "form_1342"
+  | "form_1343"
+  | "form_1348"
+  | "form_858";
 
 export type StageKey =
   | "material_collection"

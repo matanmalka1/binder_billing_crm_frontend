@@ -4,8 +4,7 @@ import { Modal } from "../../../components/ui/overlays/Modal";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { Input } from "../../../components/ui/inputs/Input";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
-import type { CreateBusinessPayload, EntityType, ISODateString } from "../api";
-import { getBusinessTypeForEntityType } from "../constants";
+import type { CreateBusinessPayload, ISODateString } from "../api";
 import { createBusinessSchema, type CreateBusinessFormValues } from "../schemas";
 
 interface Props {
@@ -13,7 +12,6 @@ interface Props {
   onClose: () => void;
   onSubmit: (data: CreateBusinessPayload) => Promise<void>;
   isLoading?: boolean;
-  clientEntityType?: EntityType | null;
 }
 
 export const CreateBusinessModal: React.FC<Props> = ({
@@ -21,7 +19,6 @@ export const CreateBusinessModal: React.FC<Props> = ({
   onClose,
   onSubmit,
   isLoading = false,
-  clientEntityType,
 }) => {
   const {
     control,
@@ -47,7 +44,6 @@ export const CreateBusinessModal: React.FC<Props> = ({
 
   const onFormSubmit = handleSubmit(async (data) => {
     const payload: CreateBusinessPayload = {
-      business_type: getBusinessTypeForEntityType(clientEntityType),
       business_name: data.business_name || null,
       opened_at: data.opened_at ? (data.opened_at as ISODateString) : null,
     };

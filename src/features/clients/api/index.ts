@@ -13,7 +13,6 @@ export type {
   UpdateClientPayload,
   BulkClientActionPayload,
   ClientStatus,
-  BusinessType,
   BusinessStatus,
   EntityType,
   VatType,

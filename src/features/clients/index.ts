@@ -11,9 +11,7 @@ export { useClientDetails } from "./hooks/useClientDetails";
 export { useClientsPage } from "./hooks/useClientsPage";
 export { useFirstBusinessId } from "./hooks/useFirstBusinessId";
 export {
-  getBusinessTypeLabel,
   BUSINESS_STATUS_LABELS,
-  BUSINESS_TYPE_LABELS,
 } from "./constants";
 export { ClientDetails } from "./pages/ClientDetailsPage";
 export { Clients } from "./pages/ClientsPage";
@@ -23,7 +21,6 @@ export type {
   BusinessWithClientResponse,
   BusinessListResponse,
   BusinessStatus,
-  BusinessType,
   VatType,
   ISODateString,
 } from "./api";

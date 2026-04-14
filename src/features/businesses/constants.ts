@@ -1,12 +1,5 @@
 import { makeLabelGetter } from "@/utils/labels";
-import type { BusinessResponse, BusinessStatus, BusinessType } from "@/features/clients/api";
-
-export const BUSINESS_TYPE_LABELS: Record<BusinessType, string> = {
-  osek_patur: "עוסק פטור",
-  osek_murshe: "עוסק מורשה",
-  company: 'חברה בע"מ',
-  employee: "שכיר",
-};
+import type { BusinessResponse, BusinessStatus } from "@/features/clients/api";
 
 export const BUSINESS_STATUS_LABELS: Record<BusinessStatus, string> = {
   active: "פעיל",
@@ -14,7 +7,6 @@ export const BUSINESS_STATUS_LABELS: Record<BusinessStatus, string> = {
   closed: "סגור",
 };
 
-export const getBusinessTypeLabel = makeLabelGetter(BUSINESS_TYPE_LABELS);
 export const getBusinessStatusLabel = makeLabelGetter(BUSINESS_STATUS_LABELS);
 
 export const BUSINESS_DETAILS_COPY = {
@@ -37,5 +29,5 @@ export const BUSINESS_DETAILS_COPY = {
   noNotes: "אין הערות",
 } as const;
 
-export const formatBusinessDisplayName = (business: Pick<BusinessResponse, "business_type" | "business_name">) =>
-  `${getBusinessTypeLabel(business.business_type)}${business.business_name ? ` — ${business.business_name}` : ""}`;
+export const formatBusinessDisplayName = (business: Pick<BusinessResponse, "business_name">) =>
+  business.business_name ?? "—";

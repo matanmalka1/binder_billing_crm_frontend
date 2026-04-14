@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
 import type { LucideIcon } from "lucide-react";
-import type { ClientChargeSummary } from "../types";
+import type { ChargeResponse } from "@/features/charges/api";
 import type { BinderDetailResponse } from "@/features/binders/api";
 import { getChargeStatusLabel, getStatusLabel as getBinderStatusLabel } from "../../../utils/enums";
 import { getChargeTypeLabel } from "@/features/charges";
@@ -94,7 +94,7 @@ type ClientRelatedDataProps = {
   clientId: number;
   binders: BinderDetailResponse[];
   bindersTotal: number;
-  charges: ClientChargeSummary[];
+  charges: ChargeResponse[];
   chargesTotal: number;
   canViewCharges: boolean;
   canCreateCharge?: boolean;

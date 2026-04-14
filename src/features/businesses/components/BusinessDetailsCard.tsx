@@ -7,7 +7,6 @@ import { formatClientOfficeId, formatDate } from "@/utils/utils";
 import {
   BUSINESS_DETAILS_COPY,
   getBusinessStatusLabel,
-  getBusinessTypeLabel,
 } from "../constants";
 
 type BusinessDetailsCardProps = {
@@ -32,7 +31,6 @@ export const BusinessDetailsCard = ({ business, client }: BusinessDetailsCardPro
       ),
     },
     { label: BUSINESS_DETAILS_COPY.businessNameLabel, value: business.business_name ?? BUSINESS_DETAILS_COPY.emptyValue },
-    { label: BUSINESS_DETAILS_COPY.businessTypeLabel, value: getBusinessTypeLabel(business.business_type) },
     { label: BUSINESS_DETAILS_COPY.statusLabel, value: getBusinessStatusLabel(business.status) },
     { label: BUSINESS_DETAILS_COPY.openedAtLabel, value: formatDate(business.opened_at) },
     { label: BUSINESS_DETAILS_COPY.closedAtLabel, value: formatDate(business.closed_at) },

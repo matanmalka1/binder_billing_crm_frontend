@@ -62,9 +62,12 @@ export const getAllowedTransitions = (status: string): AnnualReportStatus[] =>
 
 const clientTypeLabels: Record<ClientTypeForReport, string> = {
   individual: "יחיד (1301)",
-  self_employed: "עצמאי (1215)",
-  corporation: "חברה (6111)",
-  partnership: "שותפות (1215)",
+  self_employed: "עצמאי (1301)",
+  corporation: "חברה (1214)",
+  public_institution: 'מלכ"ר / מוסד ציבורי (1215)',
+  partnership: "שותף בשותפות (1301)",
+  control_holder: "בעל שליטה (1301)",
+  exempt_dealer: "עוסק פטור (1301)",
 };
 
 export const getClientTypeLabel = (type: string): string =>
@@ -75,13 +78,19 @@ export const getClientTypeLabel = (type: string): string =>
 const scheduleLabels: Record<AnnualReportScheduleKey, string> = {
   schedule_a: "נספח א — הכנסה מעסק",
   schedule_b: "נספח ב — שכירות",
-  schedule_bet: "נספח בית — רווחי הון",
   schedule_gimmel: 'נספח ג — הכנסות מחו"ל',
   schedule_dalet: "נספח ד — פחת",
-  schedule_heh: "נספח ה — שכר דירה פטור",
-  schedule_vav: "נספח ו — ניירות ערך",
-  annex_15: 'נספח 15 — הכנסות מחו"ל מפורט',
-  annex_867: "נספח 867 — נתונים בנקאיים",
+  form_150: "טופס 150 — החזקה בחבר בני אדם תושב חוץ",
+  form_1504: "טופס 1504 — שותף בשותפות",
+  form_6111: "טופס 6111 — קידוד דוחות כספיים",
+  form_1344: "טופס 1344 — דיווח על הפסדים",
+  form_1399: "טופס 1399 — מכירת נכס ורווח הון",
+  form_1350: "טופס 1350 — משיכות בעל מניות מהותי",
+  form_1327: "טופס 1327 — דוח לנאמן בנאמנות",
+  form_1342: "טופס 1342 — פירוט נכסים לפחת",
+  form_1343: "טופס 1343 — ניכוי נוסף בשל פחת",
+  form_1348: "טופס 1348 — טענת אי-תושבות ישראל",
+  form_858: "טופס 858 — יחידות השתתפות בשותפות נפט",
 };
 
 export const getScheduleLabel = (key: string): string =>
@@ -109,13 +118,6 @@ const stageLabels = {
   post_submission: "לאחר הגשה",
 };
 
-const reportStatusLabels = {
-  not_started: "טרם התחיל",
-  in_progress: "בתהליך",
-  submitted: "הוגש",
-  completed: "הושלם",
-};
-
 const stageColors = {
   material_collection: "bg-gray-100 text-gray-700",
   in_progress: "bg-info-100 text-info-700",
@@ -126,5 +128,6 @@ const stageColors = {
 };
 
 export const getReportStageLabel = makeLabelGetter(stageLabels);
-export const getReportStatusLabel = makeLabelGetter(reportStatusLabels);
+/** @deprecated Use getStatusLabel instead — same underlying data. */
+export const getReportStatusLabel = getStatusLabel;
 export const getStageColor = makeClassGetter(stageColors, "material_collection");

@@ -5,7 +5,7 @@ import { z } from "zod";
 export const createReportSchema = z.object({
   client_id: z.string().min(1, "שדה חובה"),
   tax_year: z.string().min(4, "שנה לא תקינה"),
-  client_type: z.enum(["individual", "self_employed", "corporation", "partnership"]),
+  client_type: z.enum(["individual", "self_employed", "corporation", "public_institution", "partnership", "control_holder", "exempt_dealer"]),
   deadline_type: z.enum(["standard", "extended", "custom"]).default("standard"),
   filing_date: z.string().optional(),
   notes: z.string().optional(),

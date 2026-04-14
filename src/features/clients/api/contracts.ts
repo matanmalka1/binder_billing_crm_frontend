@@ -21,7 +21,6 @@ export interface ClientResponse {
   address_zip_code: string | null;
   // Tax profile fields (formerly BusinessTaxProfile)
   vat_reporting_frequency: VatType | null;
-  vat_start_date: string | null;
   vat_exempt_ceiling: string | null;
   advance_rate: string | null;
   advance_rate_updated_at: string | null;
@@ -74,7 +73,6 @@ export interface CreateClientPayload {
   address_city?: string | null;
   address_zip_code?: string | null;
   vat_reporting_frequency?: VatType | null;
-  vat_start_date?: string | null;
   vat_exempt_ceiling?: string | null;
   advance_rate?: string | null;
   advance_rate_updated_at?: string | null;
@@ -97,14 +95,12 @@ export interface UpdateClientPayload {
   address_zip_code?: string | null;
   entity_type?: EntityType | null;
   vat_reporting_frequency?: VatType | null;
-  vat_start_date?: string | null;
   vat_exempt_ceiling?: string | null;
   advance_rate?: string | null;
   advance_rate_updated_at?: string | null;
   accountant_name?: string | null;
 }
 
-export type BusinessType = "osek_patur" | "osek_murshe" | "company" | "employee";
 export type EntityType = "osek_patur" | "osek_murshe" | "company_ltd" | "employee";
 export type BusinessStatus = "active" | "frozen" | "closed";
 export type ClientStatus = "active" | "frozen" | "closed";
@@ -114,7 +110,6 @@ export interface BusinessResponse {
   id: number;
   client_id: number;
   business_name: string | null;
-  business_type: BusinessType;
   status: BusinessStatus;
   opened_at: ISODateString;
   closed_at: string | null;
@@ -139,7 +134,6 @@ export type ClientBusinessesResponse = {
 
 export interface ListBusinessesParams {
   status?: BusinessStatus;
-  business_type?: BusinessType;
   has_signals?: boolean;
   search?: string;
   page?: number;
@@ -147,16 +141,13 @@ export interface ListBusinessesParams {
 }
 
 export interface CreateBusinessPayload {
-  business_type: BusinessType;
   opened_at?: ISODateString | null;
   business_name?: string | null;
   notes?: string | null;
-  tax_id_number?: string | null;
 }
 
 export interface UpdateBusinessPayload {
   business_name?: string | null;
-  business_type?: BusinessType;
   status?: BusinessStatus;
   notes?: string | null;
   closed_at?: string | null;

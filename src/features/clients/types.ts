@@ -13,8 +13,4 @@ export interface ClientsFiltersBarProps {
   onFilterChange: (name: "page_size" | "search" | "status" | "sort_by" | "sort_order", value: string) => void;
 }
 
-export interface ClientChargeSummary {
-  id: number;
-  charge_type: string;
-  status: string;
-}
+

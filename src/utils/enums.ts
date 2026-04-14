@@ -1,6 +1,6 @@
 import { makeLabelGetter } from "./labels";
 import {
-  BUSINESS_TYPE_LABELS,
+  ENTITY_TYPE_LABELS,
   CLIENT_STATUS_LABELS,
   VAT_TYPE_LABELS,
 } from "../features/clients/constants";
@@ -35,7 +35,7 @@ export const getBinderTypeLabel = makeLabelGetter(BINDER_TYPE_LABELS);
 
 // ── Client ─────────────────────────────────────────────────────────────────
 
-export const getClientTypeLabel = makeLabelGetter(BUSINESS_TYPE_LABELS);
+export const getClientTypeLabel = makeLabelGetter(ENTITY_TYPE_LABELS);
 
 export const getClientStatusLabel = makeLabelGetter(CLIENT_STATUS_LABELS);
 

@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/primitives/Button";
 import { clientsApi, clientsQK } from "../api";
-import { BUSINESS_STATUS_LABELS, getBusinessTypeLabel } from "../constants";
+import { BUSINESS_STATUS_LABELS } from "../constants";
 import { CLIENT_ROUTES } from "../api/endpoints";
 import { formatDate } from "@/utils/utils";
 
@@ -62,8 +62,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium text-gray-900">
-                      {getBusinessTypeLabel(biz.business_type)}
-                      {biz.business_name ? ` ${biz.business_name}` : ""}
+                      {biz.business_name ?? "—"}
                     </p>
                     <p className="text-xs text-gray-500">
                       נפתח בתאריך {formatDate(biz.opened_at)}
