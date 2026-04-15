@@ -1,5 +1,5 @@
 import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
@@ -43,6 +43,13 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
           onChange={(e) => setSearchDraft(e.target.value)}
           placeholder="שם עסק..."
           startIcon={<Search className="h-4 w-4" />}
+          endElement={
+            searchDraft ? (
+              <button type="button" onClick={() => { setSearchDraft(""); onChange("business_name", ""); }} className="p-1 text-gray-400 hover:text-gray-600">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            ) : undefined
+          }
         />
         <Select
           label="סוג מועד"

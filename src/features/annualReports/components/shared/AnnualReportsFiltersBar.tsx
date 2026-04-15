@@ -54,13 +54,11 @@ export const AnnualReportsFiltersBar: React.FC<AnnualReportsFiltersBarProps> = (
   };
 
   const handleClearClient = () => {
-    setClientQuery("");
     onFilterChange("client_id", "");
     onFilterChange("client_name", "");
   };
 
   const handleReset = () => {
-    setClientQuery("");
     onReset();
   };
 

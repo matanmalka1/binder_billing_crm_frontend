@@ -81,9 +81,13 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
         autoComplete="off"
         error={error}
         startIcon={<Search className="h-4 w-4" />}
-        endIcon={
+        endElement={
           loading ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
+          ) : value ? (
+            <button type="button" onClick={() => { onChange(""); setResults([]); setOpen(false); }} className="p-1 text-gray-400 hover:text-gray-600">
+              <X className="h-3.5 w-3.5" />
+            </button>
           ) : undefined
         }
       />

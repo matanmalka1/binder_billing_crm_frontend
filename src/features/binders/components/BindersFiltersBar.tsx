@@ -3,7 +3,7 @@ import { Select } from "../../../components/ui/inputs/Select";
 import { Input } from "../../../components/ui/inputs/Input";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { StatsCard } from "../../../components/ui/layout/StatsCard";
-import { Archive, CheckCircle2, FolderKanban, Search, Undo2 } from "lucide-react";
+import { Archive, CheckCircle2, FolderKanban, Search, Undo2, X } from "lucide-react";
 import { BINDER_STATUS_OPTIONS } from "../constants";
 import type { BindersFiltersBarProps } from "../types";
 import { cn, buildYearOptions } from "../../../utils/utils";
@@ -100,6 +100,13 @@ export const BindersFiltersBar = ({
           onChange={(e) => setSearchDraft(e.target.value)}
           placeholder="שם לקוח או מספר קלסר..."
           startIcon={<Search className="h-4 w-4" />}
+          endElement={
+            searchDraft ? (
+              <button type="button" onClick={() => { setSearchDraft(""); onFilterChange("query", ""); }} className="p-1 text-gray-400 hover:text-gray-600">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            ) : undefined
+          }
         />
         <Select
           label="סטטוס"
