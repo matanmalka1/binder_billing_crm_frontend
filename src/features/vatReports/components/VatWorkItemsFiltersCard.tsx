@@ -121,17 +121,6 @@ export const VatWorkItemsFiltersCard = ({
                   onRemove: () => onFilterChange("period", ""),
                 }
               : null,
-            filters.clientSearch
-              ? {
-                  key: "clientSearch",
-                  label: selectedClient
-                    ? `לקוח: ${selectedClient.name}`
-                    : `חיפוש: ${filters.clientSearch}`,
-                  onRemove: () => {
-                    handleClearClient();
-                  },
-                }
-              : null,
           ].filter((b): b is NonNullable<typeof b> => b !== null)}
           onReset={handleReset}
         />

@@ -68,9 +68,9 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
           actions={
             <>
               {isAdvisor && (
-                <Button variant="secondary" onClick={handleExportPdf} disabled={isExportingPdf} className="gap-1.5">
-                  <Download size={14} />
-                  {isExportingPdf ? "מפיק..." : "הורד טיוטה"}
+                <Button variant="ghost" size="sm" onClick={handleExportPdf} isLoading={isExportingPdf}>
+                  <Download className="h-4 w-4" />
+                  הורד טיוטה
                 </Button>
               )}
               <Button

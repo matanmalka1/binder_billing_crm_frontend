@@ -52,13 +52,10 @@ export const ChargesFiltersCard = ({
   };
 
   const handleClearClient = () => {
-    setSelectedClient(null);
-    setClientQuery("");
     onFilterChange("client_id", "");
   };
 
   const handleClearAll = () => {
-    handleClearClient();
     onClear();
   };
 
@@ -101,7 +98,6 @@ export const ChargesFiltersCard = ({
 
       <ActiveFilterBadges
         badges={[
-          selectedClient ? { key: "client", label: `לקוח: ${selectedClient.name}`, onRemove: handleClearClient } : null,
           filters.status ? { key: "status", label: CHARGE_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onFilterChange("status", "") } : null,
           filters.charge_type ? { key: "charge_type", label: CHARGE_TYPE_OPTIONS_WITH_ALL.find((o) => o.value === filters.charge_type)?.label ?? filters.charge_type, onRemove: () => onFilterChange("charge_type", "") } : null,
         ].filter((b): b is NonNullable<typeof b> => b !== null)}

@@ -59,13 +59,13 @@ export const AnnualReportPanelLayout = ({
               {onExportPdf && (
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   onClick={onExportPdf}
-                  disabled={isExportingPdf}
+                  isLoading={isExportingPdf}
                 >
-                  <Download size={14} />
-                  {isExportingPdf ? "מפיק..." : "הורד טיוטה"}
+                  <Download className="h-4 w-4" />
+                  הורד טיוטה
                 </Button>
               )}
               <Button

@@ -25,9 +25,11 @@ export { AnnualReportFullPanel } from "./components/panel/AnnualReportFullPanel"
 export { ClientAnnualReportsTab } from "./components/shared/ClientAnnualReportsTab";
 export { CreateReportModal } from "./components/shared/CreateReportModal";
 export { OverdueBanner } from "./components/shared/OverdueBanner";
+export { AnnualReportsFiltersBar } from "./components/shared/AnnualReportsFiltersBar";
+export type { AnnualReportsFilters } from "./components/shared/AnnualReportsFiltersBar";
 export { useAnnualReportsKanbanPage } from "./hooks/useAnnualReportsKanbanPage";
 export { AnnualReportDetail } from "./pages/AnnualReportDetailPage";
-export { AnnualReportsKanban } from "./pages/AnnualReportsKanbanPage";
+export { AnnualReportsPage } from "./pages/AnnualReportsPage";
 export {
   KANBAN_PAGE_SIZE,
   STAGE_ORDER,

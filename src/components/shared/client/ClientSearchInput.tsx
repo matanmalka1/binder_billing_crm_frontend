@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/inputs/Input";
 import { searchApi } from "@/features/search/api";
 import type { SearchResult } from "@/features/search/api";
@@ -80,6 +80,7 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
         placeholder={placeholder}
         autoComplete="off"
         error={error}
+        startIcon={<Search className="h-4 w-4" />}
         endIcon={
           loading ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { annualReportsApi, annualReportsQK } from "../api";
 import { getErrorMessage } from "../../../utils/utils";
@@ -9,7 +8,6 @@ const YEAR_LIST = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2, CURRENT_YEA
 
 export const useClientAnnualReportsTab = (clientId: number) => {
   const [selectedYear, setSelectedYear] = useState<number>(CURRENT_YEAR);
-  const navigate = useNavigate();
 
   const { data, isPending, error } = useQuery({
     queryKey: annualReportsQK.forClient(clientId),
@@ -17,17 +15,15 @@ export const useClientAnnualReportsTab = (clientId: number) => {
   });
 
   const allReports = data ?? [];
-  const filteredReports = allReports.filter((r) => r.tax_year === selectedYear);
+  const selectedReport = allReports.find((r) => r.tax_year === selectedYear) ?? null;
   const yearHasReports = (year: number) => allReports.some((r) => r.tax_year === year);
-
-  const openReport = (id: number) => navigate(`/tax/reports/${id}`);
 
   return {
     selectedYear,
     setSelectedYear,
-    filteredReports,
+    allReports,
+    selectedReport,
     yearHasReports,
-    openReport,
     isPending,
     errorMessage: error ? getErrorMessage(error, "שגיאה בטעינת דוחות שנתיים") : null,
     YEAR_LIST,

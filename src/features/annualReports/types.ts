@@ -26,12 +26,10 @@ export interface KanbanStage {
   }[];
 }
 
-export type ActiveTab = "kanban" | "season" | "status";
+export type ActiveTab = "season";
 
 export const TAB_LABELS: Record<ActiveTab, string> = {
-  kanban: "קנבן",
   season: "עונה",
-  status: "סטטוס",
 };
 
 export const CURRENT_YEAR = new Date().getFullYear();

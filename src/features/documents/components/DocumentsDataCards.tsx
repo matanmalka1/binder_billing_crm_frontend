@@ -33,6 +33,7 @@ interface DocumentsDataCardsProps {
     business_id?: number | null;
     file: File;
     tax_year?: number | null;
+    notes?: string | null;
   }) => Promise<boolean>;
   uploadError: string | null;
   uploading: boolean;

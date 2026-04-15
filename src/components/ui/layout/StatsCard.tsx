@@ -138,7 +138,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
                 "inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium",
                 trend.value > 0 ? "bg-positive-100 text-positive-700" : "bg-negative-100 text-negative-700"
               )}>
-                {trend.value > 0 ? "↑" : "↓"} {Math.abs(trend.value)}%
+                {trend.value > 0 ? "↑" : "↓"} {Math.abs(trend.value).toFixed(1)}%
               </span>
               <span className="text-gray-500">{trend.label}</span>
             </div>

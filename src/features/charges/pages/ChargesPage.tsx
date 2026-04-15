@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Plus, ArrowUpDown } from "lucide-react";
+import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { Button } from "@/components/ui/primitives/Button";
@@ -14,13 +14,11 @@ import {
   ChargesSummaryBar,
   useChargesPage,
 } from "@/features/charges";
-import { ImportExportModal } from "@/features/importExport";
 import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 
 export const Charges: React.FC = () => {
   const [, setSearchParams] = useSearchParams();
   const [selectedChargeId, setSelectedChargeId] = useState<number | null>(null);
-  const [showImportExport, setShowImportExport] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const {
     actionLoadingId,
@@ -65,10 +63,6 @@ export const Charges: React.FC = () => {
         description="רשימת חיובים ופעולות חיוב נתמכות"
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)}>
-              <ArrowUpDown className="h-3.5 w-3.5" />
-              ייבוא / ייצוא
-            </Button>
             {isAdvisor && (
               <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)}>
                 <Plus className="h-3.5 w-3.5" />
@@ -143,7 +137,6 @@ export const Charges: React.FC = () => {
         onClose={() => setShowCreateModal(false)}
         onSubmit={submitCreate}
       />
-      <ImportExportModal open={showImportExport} onClose={() => setShowImportExport(false)} />
     </div>
   );
 };

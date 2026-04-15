@@ -63,7 +63,7 @@ export const Clients: React.FC = () => {
         description="רשימת כל הלקוחות במערכת"
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)}>
+            <Button variant="primary" size="sm" onClick={() => setShowImportExport(true)}>
               ייבוא / ייצוא
             </Button>
             {can.createClients && (

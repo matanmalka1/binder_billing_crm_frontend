@@ -46,6 +46,13 @@ export const buildDocumentColumns = ({
     ),
   },
   {
+    key: "notes",
+    header: "הערות",
+    render: (doc) => (
+      <span className="text-gray-500 text-sm">{doc.notes ?? "—"}</span>
+    ),
+  },
+  {
     key: "uploaded_at",
     header: "תאריך העלאה",
     render: (doc) => (

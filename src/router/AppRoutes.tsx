@@ -5,7 +5,7 @@ import { useAuthStore } from "../store/auth.store";
 import { selectIsAuthenticated } from "../store/auth.selectors";
 import type { UserRole } from "@/types";
 import { Login } from "../features/auth";
-import { AnnualReportDetail, AnnualReportsKanban } from "../features/annualReports";
+import { AnnualReportDetail, AnnualReportsPage } from "../features/annualReports";
 import { AdvancePayments } from "../features/advancedPayments";
 import { Binders } from "../features/binders";
 import { Charges } from "../features/charges";
@@ -97,7 +97,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="search" element={<Search />} />
             <Route path="charges" element={<Charges />} />
             <Route path="tax" element={<Navigate to="/tax/deadlines" replace />} />
-            <Route path="tax/reports" element={<AnnualReportsKanban />} />
+            <Route path="tax/reports" element={<AnnualReportsPage />} />
             <Route path="tax/reports/:reportId" element={<AnnualReportDetail />} />
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
             <Route path="tax/advance-payments" element={<AdvancePayments />} />

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { FileSpreadsheet, FileText } from "lucide-react";
+import { FILE_FORMAT_COLORS } from "../../../utils/chartColors";
 import { useNavigate } from "react-router-dom";
 import { buildYearOptions, showErrorToast } from "../../../utils/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -169,23 +171,13 @@ const ExportControls = ({ clientId }: { clientId: number }) => {
           className="py-1.5"
         />
       </div>
-      <Button
-        type="button"
-        size="sm"
-        onClick={() => handleExport("excel")}
-        isLoading={loadingExcel}
-        className="bg-positive-600 text-white hover:bg-positive-700 active:bg-positive-800"
-      >
-        {loadingExcel ? "מייצא..." : "Excel"}
+      <Button variant="ghost" size="sm" isLoading={loadingExcel} onClick={() => handleExport("excel")}>
+        <FileSpreadsheet className={`h-4 w-4 ${FILE_FORMAT_COLORS.excel}`} />
+        Excel
       </Button>
-      <Button
-        type="button"
-        size="sm"
-        onClick={() => handleExport("pdf")}
-        isLoading={loadingPdf}
-        className="bg-negative-600 text-white hover:bg-negative-700 active:bg-negative-800"
-      >
-        {loadingPdf ? "מייצא..." : "PDF"}
+      <Button variant="ghost" size="sm" isLoading={loadingPdf} onClick={() => handleExport("pdf")}>
+        <FileText className={`h-4 w-4 ${FILE_FORMAT_COLORS.pdf}`} />
+        PDF
       </Button>
     </div>
   );

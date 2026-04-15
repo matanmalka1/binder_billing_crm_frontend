@@ -44,6 +44,7 @@ export const RemindersPage: React.FC = () => {
       actions={
         <Button
           variant="primary"
+          size="md"
           onClick={() => setShowCreateModal(true)}
           className="gap-2"
         >
