@@ -100,7 +100,11 @@ export const TaxDeadlines: React.FC = () => {
     <div className="space-y-6">
       {header}
 
-      <TaxSubmissionStats data={submissions} />
+      <TaxSubmissionStats
+        data={submissions}
+        activeFilter={filters.status}
+        onFilter={(status) => handleFilterChange("status", status)}
+      />
 
       <ToolbarContainer>
         <TaxDeadlinesFilters filters={filters} onChange={handleFilterChange} />

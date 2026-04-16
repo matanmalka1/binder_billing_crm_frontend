@@ -15,6 +15,8 @@ export interface StatsCardProps {
   };
   /** When provided, renders a progress bar below the value (0–100). */
   progress?: number;
+  selected?: boolean;
+  onClick?: () => void;
   className?: string;
 }
 
@@ -26,6 +28,8 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   variant = "neutral",
   trend,
   progress,
+  selected,
+  onClick,
   className,
 }) => {
   const [displayValue, setDisplayValue] = useState(0);
@@ -94,12 +98,15 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   };
 
   const config = variants[variant];
+  const isInteractive = !!onClick;
 
-  return (
+  const card = (
     <div
       className={cn(
         "relative overflow-hidden rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm transition-all duration-200",
         "hover:shadow-md",
+        selected && "ring-2 ring-primary-300 ring-offset-2",
+        isInteractive && !selected && "ring-1 ring-transparent",
         config.border,
         className
       )}
@@ -147,4 +154,10 @@ export const StatsCard: React.FC<StatsCardProps> = ({
       </div>
     </div>
   );
+
+  return isInteractive ? (
+    <button type="button" onClick={onClick} className="w-full text-right transition-transform hover:scale-[1.01]">
+      {card}
+    </button>
+  ) : card;
 };

@@ -66,28 +66,16 @@ export const BindersFiltersBar = ({
         {statusPills.map((pill) => {
           const isActive = (filters.status ?? "") === pill.key;
           return (
-            <button
+            <StatsCard
               key={pill.key || "total"}
-              type="button"
+              title={pill.label}
+              value={pill.count}
+              icon={pill.icon}
+              variant={pill.variant}
               onClick={() => onFilterChange("status", pill.key)}
-              className={cn(
-                "text-right transition-transform",
-                isActive
-                  ? "scale-[1.01]"
-                  : "hover:scale-[1.01]",
-              )}
-            >
-              <StatsCard
-                title={pill.label}
-                value={pill.count}
-                icon={pill.icon}
-                variant={pill.variant}
-                className={cn(
-                  "h-full w-full text-right",
-                  isActive ? "ring-2 ring-primary-300 ring-offset-2" : "ring-1 ring-transparent",
-                )}
-              />
-            </button>
+              selected={isActive}
+              className="h-full w-full text-right"
+            />
           );
         })}
       </div>

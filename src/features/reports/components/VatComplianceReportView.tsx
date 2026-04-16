@@ -16,8 +16,8 @@ const complianceBadgeVariant = (rate: number) => {
 const ComplianceTable = ({ items }: { items: VatComplianceItem[] }) => {
   if (items.length === 0) return <p className="text-sm text-gray-500">אין נתונים לשנה זו.</p>;
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
+    <div className="overflow-x-auto rounded-lg border border-gray-200 w-full">
+      <table className="w-full divide-gray-200 text-sm">
         <thead className="bg-gray-50 text-right">
           <tr>
             {["לקוח", "תקופות צפויות", "הוגשו", "פתוחות", "בזמן", "באיחור", "ציות"].map((h) => (

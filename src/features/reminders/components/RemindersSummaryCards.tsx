@@ -1,6 +1,5 @@
 import { Bell, Calendar } from "lucide-react";
 import { StatsCard } from "../../../components/ui/layout/StatsCard";
-import { cn } from "../../../utils/utils";
 
 interface RemindersSummaryCardsProps {
   pendingCount: number;
@@ -37,28 +36,16 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
       {stats.map(({ icon, variant, count, label, filterValue }) => {
         const isActive = activeFilter === filterValue && filterValue !== "";
         return (
-          <button
+          <StatsCard
             key={label}
-            type="button"
+            title={label}
+            value={count}
+            icon={icon}
+            variant={variant}
             onClick={onFilter ? () => onFilter(isActive ? "" : filterValue) : undefined}
-            className={cn(
-              "text-right transition-transform",
-              onFilter ? "cursor-pointer hover:scale-[1.01]" : "cursor-default",
-              isActive && "scale-[1.01]",
-            )}
-            disabled={!onFilter}
-          >
-            <StatsCard
-              title={label}
-              value={count}
-              icon={icon}
-              variant={variant}
-              className={cn(
-                "h-full w-full",
-                isActive ? "ring-2 ring-primary-300 ring-offset-2" : "ring-1 ring-transparent",
-              )}
-            />
-          </button>
+            selected={isActive}
+            className="h-full w-full"
+          />
         );
       })}
     </div>

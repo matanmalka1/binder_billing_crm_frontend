@@ -1,38 +1,90 @@
+import { CheckCircle2, Clock, Users, XCircle, TrendingUp, Banknote } from "lucide-react";
+import { StatsCard } from "@/components/ui/layout/StatsCard";
 import type { TaxSubmissionWidgetResponse } from "../api";
 
 interface TaxSubmissionStatsProps {
   data?: TaxSubmissionWidgetResponse;
+  activeFilter?: string;
+  onFilter?: (status: string) => void;
 }
 
 const formatCurrency = (value: number) =>
   `₪${value.toLocaleString("he-IL", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
-const Stat = ({ value, label }: { value: number | string; label: string }) => (
-  <div className="flex items-center gap-2.5 px-4 first:pr-0">
-    <span className="text-2xl font-bold tabular-nums text-gray-900">{value}</span>
-    <span className="text-xs leading-tight text-gray-500 max-w-[72px]">{label}</span>
-  </div>
-);
-
-export const TaxSubmissionStats = ({ data }: TaxSubmissionStatsProps) => {
+export const TaxSubmissionStats = ({ data, activeFilter, onFilter }: TaxSubmissionStatsProps) => {
   if (!data) return null;
 
+  const filter = (status: string) => {
+    if (!onFilter) return undefined;
+    return () => onFilter(activeFilter === status ? "" : status);
+  };
+
+  const stats = [
+    {
+      key: "total",
+      title: 'סה"כ לקוחות',
+      value: data.total_clients,
+      icon: Users,
+      variant: "neutral" as const,
+      filterValue: "",
+    },
+    {
+      key: "submitted",
+      title: "דוחות שהוגשו",
+      value: data.reports_submitted,
+      icon: CheckCircle2,
+      variant: "green" as const,
+      filterValue: "completed",
+    },
+    {
+      key: "in_progress",
+      title: "בתהליך עבודה",
+      value: data.reports_in_progress,
+      icon: Clock,
+      variant: "blue" as const,
+      filterValue: "pending",
+    },
+    {
+      key: "not_started",
+      title: "טרם התחילו",
+      value: data.reports_not_started,
+      icon: XCircle,
+      variant: "red" as const,
+      filterValue: null,
+    },
+    {
+      key: "completion",
+      title: "אחוז השלמה",
+      value: `${data.submission_percentage}%`,
+      icon: TrendingUp,
+      variant: "purple" as const,
+      filterValue: null,
+    },
+    ...(data.total_refund_due > 0
+      ? [{ key: "refund", title: "החזרי מס", value: formatCurrency(data.total_refund_due), icon: Banknote, variant: "green" as const, filterValue: null }]
+      : []),
+    ...(data.total_tax_due > 0
+      ? [{ key: "tax_due", title: "תשלומי מס", value: formatCurrency(data.total_tax_due), icon: Banknote, variant: "red" as const, filterValue: null }]
+      : []),
+  ];
+
   return (
-    <div className="flex flex-wrap items-center gap-0 divide-x divide-x-reverse divide-gray-200 rounded-xl border border-gray-200 bg-white px-4 py-3">
-      <Stat value={data.reports_submitted} label="דוחות שהוגשו" />
-      <Stat value={data.reports_in_progress} label="בתהליך עבודה" />
-      <Stat value={data.reports_not_started} label="טרם התחילו" />
-      <Stat value={data.total_clients} label='סה"כ לקוחות' />
-      {data.total_refund_due > 0 && (
-        <Stat value={formatCurrency(data.total_refund_due)} label="החזרי מס" />
-      )}
-      {data.total_tax_due > 0 && (
-        <Stat value={formatCurrency(data.total_tax_due)} label="תשלומי מס" />
-      )}
-      <div className="mr-auto flex items-center gap-1.5 pr-4">
-        <span className="text-sm font-semibold text-positive-700">{data.submission_percentage}%</span>
-        <span className="text-xs text-gray-400">אחוז השלמה</span>
-      </div>
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      {stats.map(({ key, title, value, icon, variant, filterValue }) => {
+        const isFilterable = filterValue !== null;
+        const isSelected = isFilterable && activeFilter === filterValue;
+        return (
+          <StatsCard
+            key={key}
+            title={title}
+            value={value}
+            icon={icon}
+            variant={variant}
+            onClick={isFilterable ? filter(filterValue) : undefined}
+            selected={isSelected}
+          />
+        );
+      })}
     </div>
   );
 };
