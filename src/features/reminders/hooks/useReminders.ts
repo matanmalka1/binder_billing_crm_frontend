@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -88,6 +88,8 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   const [markingSentId, setMarkingSentId] = useState<number | null>(null);
   const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("pending");
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState<string>("");
 
   const form = useForm<CreateReminderFormValues>({
     defaultValues: makeDefaultFormValues(clientId),
@@ -147,6 +149,25 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
       ? (remindersQuery.data?.total ?? 0)
       : (sentCountQuery.data?.total ?? 0);
 
+  const reminders = useMemo(() => {
+    let items = remindersQuery.data?.items ?? [];
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      items = items.filter((r) => r.client_name?.toLowerCase().includes(q));
+    }
+    if (typeFilter) {
+      items = items.filter((r) => r.reminder_type === typeFilter);
+    }
+    return items;
+  }, [remindersQuery.data?.items, search, typeFilter]);
+
+  const hasFilters = !!search || !!typeFilter;
+
+  const clearFilters = () => {
+    setSearch("");
+    setTypeFilter("");
+  };
+
   const createMutation = useMutation({
     mutationFn: remindersApi.create,
     onSuccess: () => {
@@ -193,13 +214,20 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   };
 
   return {
-    reminders: remindersQuery.data?.items ?? [],
+    reminders,
+    rawTotal: remindersQuery.data?.total ?? 0,
     isLoading: remindersQuery.isLoading,
     error: remindersQuery.error
       ? getErrorMessage(remindersQuery.error, "שגיאה בטעינת תזכורות")
       : null,
     statusFilter,
     setStatusFilter,
+    search,
+    setSearch,
+    typeFilter,
+    setTypeFilter,
+    hasFilters,
+    clearFilters,
     pendingCount,
     sentCount,
     showCreateModal,

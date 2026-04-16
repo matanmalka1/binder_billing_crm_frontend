@@ -58,6 +58,7 @@ export interface Reminder {
   business_name: string | null;
   client_id: number | null;
   client_name: string | null;
+  client_id_number: string | null;
   reminder_type: ReminderType;
   status: ReminderStatus;
   target_date: string;

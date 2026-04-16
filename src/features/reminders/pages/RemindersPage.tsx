@@ -9,14 +9,22 @@ import {
   RemindersTable,
   useReminders,
 } from "@/features/reminders";
+import { RemindersFiltersBar } from "@/features/reminders/components/RemindersFiltersBar";
 
 export const RemindersPage: React.FC = () => {
   const {
     reminders,
+    rawTotal,
     isLoading,
     error,
     statusFilter,
     setStatusFilter,
+    search,
+    setSearch,
+    typeFilter,
+    setTypeFilter,
+    hasFilters,
+    clearFilters,
     pendingCount,
     sentCount,
     showCreateModal,
@@ -55,6 +63,46 @@ export const RemindersPage: React.FC = () => {
     />
   );
 
+  const renderBody = () => {
+    if (reminders.length === 0) {
+      if (hasFilters) {
+        return (
+          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
+            <p className="text-lg font-semibold mb-2">לא נמצאו תזכורות</p>
+            <p className="text-sm mb-4">אין תוצאות התואמות את הסינון הנוכחי.</p>
+            <Button variant="secondary" onClick={clearFilters}>
+              נקה סינון
+            </Button>
+          </div>
+        );
+      }
+      if (rawTotal === 0) {
+        return (
+          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
+            <p className="text-lg font-semibold mb-2">אין תזכורות להצגה</p>
+            <p className="text-sm mb-4">צור תזכורת חדשה כדי להופיע כאן.</p>
+            <Button variant="primary" className="gap-2" onClick={() => setShowCreateModal(true)}>
+              <Plus className="h-4 w-4" />
+              תזכורת חדשה
+            </Button>
+          </div>
+        );
+      }
+    }
+
+    return (
+      <RemindersTable
+        reminders={reminders}
+        cancelingId={cancelingId}
+        markingSentId={markingSentId}
+        onCancel={handleCancel}
+        onMarkSent={handleMarkSent}
+        onViewDetails={setSelectedReminder}
+        onRowClick={setSelectedReminder}
+      />
+    );
+  };
+
   return (
     <PageStateGuard
       isLoading={isLoading}
@@ -69,26 +117,16 @@ export const RemindersPage: React.FC = () => {
         onFilter={setStatusFilter}
       />
 
-      {reminders.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
-          <p className="text-lg font-semibold mb-2">אין תזכורות להצגה</p>
-          <p className="text-sm mb-4">צור תזכורת חדשה כדי להופיע כאן.</p>
-          <Button variant="primary" className="gap-2" onClick={() => setShowCreateModal(true)}>
-            <Plus className="h-4 w-4" />
-            תזכורת חדשה
-          </Button>
-        </div>
-      ) : (
-        <RemindersTable
-          reminders={reminders}
-          cancelingId={cancelingId}
-          markingSentId={markingSentId}
-          onCancel={handleCancel}
-          onMarkSent={handleMarkSent}
-          onViewDetails={setSelectedReminder}
-          onRowClick={setSelectedReminder}
-        />
-      )}
+      <RemindersFiltersBar
+        search={search}
+        onSearchChange={setSearch}
+        typeFilter={typeFilter}
+        onTypeChange={setTypeFilter}
+        hasFilters={hasFilters}
+        onClear={clearFilters}
+      />
+
+      {renderBody()}
 
       <CreateReminderModal
         open={showCreateModal}

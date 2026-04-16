@@ -1,8 +1,9 @@
 import { Calendar } from "lucide-react";
+import { Link } from "react-router-dom";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { TruncateText } from "../../../components/ui/primitives/TruncateText";
-import { formatClientOfficeId, formatDate } from "../../../utils/utils";
+import { formatDate } from "../../../utils/utils";
 import type { Reminder } from "../types";
 import { reminderTypeLabels, statusLabels, reminderStatusVariants } from "../types";
 import { ReminderRowActions } from "./ReminderRowActions";
@@ -30,19 +31,6 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
   showClient = true,
 }) => {
   const columns: Column<Reminder>[] = [
-    ...(showClient
-      ? [
-          {
-            key: "client_id",
-            header: "מזהה מערכת",
-            render: (r: Reminder) => (
-              <span className="font-mono text-sm text-gray-500 tabular-nums">
-                {r.client_id != null ? formatClientOfficeId(r.client_id) : "—"}
-              </span>
-            ),
-          },
-        ]
-      : []),
     {
       key: "type",
       header: "סוג",
@@ -58,8 +46,38 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
             key: "client",
             header: "לקוח",
             render: (r: Reminder) => (
-              <span className="block truncate text-sm font-medium text-gray-700">
-                {r.client_name ?? "ללא שם לקוח"}{(r.business_name || r.business_id != null) ? ` / ${r.business_name ?? `עסק #${r.business_id}`}` : ""}
+              <div>
+                {r.client_id != null ? (
+                  <Link
+                    to={`/clients/${r.client_id}`}
+                    className="block truncate text-sm font-medium text-gray-700 hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {r.client_name ?? "ללא שם לקוח"}
+                  </Link>
+                ) : (
+                  <span className="block truncate text-sm font-medium text-gray-700">
+                    {r.client_name ?? "ללא שם לקוח"}
+                  </span>
+                )}
+                {(r.business_name || r.business_id != null) && (
+                  <span className="block truncate text-xs text-gray-400">
+                    {r.business_name ?? `עסק #${r.business_id}`}
+                  </span>
+                )}
+              </div>
+            ),
+          },
+        ]
+      : []),
+    ...(showClient
+      ? [
+          {
+            key: "client_id_number",
+            header: "ת.ז / ח.פ",
+            render: (r: Reminder) => (
+              <span className="font-mono text-sm text-gray-500 tabular-nums">
+                {r.client_id_number ?? "—"}
               </span>
             ),
           },
@@ -68,7 +86,7 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
     {
       key: "message",
       header: "הודעה",
-      render: (r) => <TruncateText text={r.message.replace(/\s*\(\d{4}-\d{2}-\d{2}\)$/, "")} maxWidth="max-w-md" className="text-gray-700" />,
+      render: (r) => <TruncateText text={r.message} maxWidth="max-w-xs" className="text-gray-700" />,
     },
     {
       key: "target_date",
