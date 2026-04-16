@@ -147,6 +147,7 @@ export const CLIENT_ID_TYPES_REQUIRING_ISRAELI_NUMERIC_ID: readonly ClientIdNumb
 
 export const CLIENT_ID_TYPES_REQUIRING_ISRAELI_ID_CHECKSUM: readonly ClientIdNumberType[] = [
   "individual",
+  "corporation",
 ] as const;
 
 export const DEFAULT_CLIENT_ID_NUMBER_TYPE: ClientIdNumberType = "individual";

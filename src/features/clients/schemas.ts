@@ -61,7 +61,20 @@ export const createClientSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["id_number"],
-        message: "מספר זהות אינו תקין",
+        message: data.id_number_type === "corporation" ? "מספר ח.פ אינו תקין" : "מספר זהות אינו תקין",
+      });
+    }
+
+    const nonEmployeeEntityTypes = ["osek_patur", "osek_murshe", "company_ltd"] as const;
+    if (
+      data.entity_type &&
+      (nonEmployeeEntityTypes as readonly string[]).includes(data.entity_type) &&
+      !data.vat_reporting_frequency
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["vat_reporting_frequency"],
+        message: 'יש לציין תדירות דיווח מע"מ עבור עוסק/חברה',
       });
     }
   });
@@ -77,7 +90,6 @@ export const clientEditSchema = z.object({
   address_apartment: z.string().trim().optional().or(z.literal("")),
   address_city: z.string().trim().optional().or(z.literal("")),
   address_zip_code: z.string().trim().optional().or(z.literal("")),
-  notes: z.string().trim().optional().or(z.literal("")),
   entity_type: z.enum(ENTITY_TYPES).nullable().optional(),
   vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
   vat_exempt_ceiling: z.string().optional().nullable(),

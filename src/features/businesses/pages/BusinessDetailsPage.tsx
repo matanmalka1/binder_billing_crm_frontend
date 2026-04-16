@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
 import { CLIENT_ROUTES } from "@/features/clients";
+import { useRole } from "@/hooks/useRole";
 import { useBusinessDetails } from "../hooks/useBusinessDetails";
 import { BusinessDetailsCard } from "../components/BusinessDetailsCard";
 import { BUSINESS_DETAILS_COPY, formatBusinessDisplayName } from "../constants";
@@ -16,6 +17,7 @@ export const BusinessDetails: FC = () => {
   const clientIdNum = clientId ? Number(clientId) : null;
   const businessIdNum = businessId ? Number(businessId) : null;
 
+  const { can } = useRole();
   const { client, business, isLoading, error, isValidId } = useBusinessDetails({
     clientId: clientIdNum,
     businessId: businessIdNum,
@@ -50,7 +52,7 @@ export const BusinessDetails: FC = () => {
       }
       loadingMessage={BUSINESS_DETAILS_COPY.loading}
     >
-      {business ? <BusinessDetailsCard business={business} client={client} /> : null}
+      {business ? <BusinessDetailsCard business={business} client={client} canEdit={can.editClients} /> : null}
     </PageStateGuard>
   );
 };

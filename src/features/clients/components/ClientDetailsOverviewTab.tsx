@@ -28,6 +28,7 @@ import { ChargesCreateModal } from "@/features/charges";
 import { BinderDrawer } from "@/features/binders";
 import { useClientQuickActions } from "../hooks/useClientQuickActions";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
+import { ClientNotesCard } from "@/features/notes";
 
 const EDIT_FORM_ID = "client-edit-form";
 
@@ -110,6 +111,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
                 onCreateCharge={quickActions.openCreateCharge}
                 onCreateBinder={quickActions.openReceiveBinder}
               />
+              <ClientNotesCard clientId={client.id} canEdit={canEditClients} />
             </div>
           </div>
         </>

@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
-import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type { ClientResponse, UpdateClientPayload } from "../api";
 import {
   CLIENT_ID_NUMBER_TYPE_LABELS,
@@ -51,7 +50,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_apartment: client.address_apartment ?? "",
       address_city: client.address_city ?? "",
       address_zip_code: client.address_zip_code ?? "",
-      notes: client.notes ?? "",
       entity_type: client.entity_type ?? null,
       vat_reporting_frequency: client.vat_reporting_frequency ?? null,
       vat_exempt_ceiling: client.vat_exempt_ceiling ?? null,
@@ -81,7 +79,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_apartment: data.address_apartment || null,
       address_city: data.address_city || null,
       address_zip_code: data.address_zip_code || null,
-      notes: data.notes || null,
       entity_type: data.entity_type || null,
       vat_reporting_frequency: data.vat_reporting_frequency || null,
       vat_exempt_ceiling: data.vat_exempt_ceiling || null,
@@ -250,14 +247,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
           {...register("accountant_name")}
         />
 
-        <Textarea
-          label="הערות לעדכון (אופציונלי)"
-          rows={4}
-          placeholder="הוסף הערות על העדכון..."
-          disabled={isLoading}
-          error={errors.notes?.message}
-          {...register("notes")}
-        />
       </div>
 
       {!hideFooter && (

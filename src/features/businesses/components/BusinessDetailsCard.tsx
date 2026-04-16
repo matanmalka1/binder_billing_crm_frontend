@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/primitives/Card";
 import { DefinitionList } from "@/components/ui/layout/DefinitionList";
 import { CLIENT_ROUTES } from "@/features/clients";
 import type { BusinessResponse, ClientResponse } from "@/features/clients";
+import { BusinessNotesCard } from "@/features/notes";
 import { formatClientOfficeId, formatDate } from "@/utils/utils";
 import {
   BUSINESS_DETAILS_COPY,
@@ -12,9 +13,10 @@ import {
 type BusinessDetailsCardProps = {
   business: BusinessResponse;
   client: ClientResponse | null;
+  canEdit?: boolean;
 };
 
-export const BusinessDetailsCard = ({ business, client }: BusinessDetailsCardProps) => {
+export const BusinessDetailsCard = ({ business, client, canEdit = false }: BusinessDetailsCardProps) => {
   const summaryItems = [
     { label: BUSINESS_DETAILS_COPY.systemIdLabel, value: formatClientOfficeId(business.id) },
     {
@@ -38,18 +40,18 @@ export const BusinessDetailsCard = ({ business, client }: BusinessDetailsCardPro
   ];
 
   return (
-    <Card title={BUSINESS_DETAILS_COPY.sectionTitle}>
-      <div className="space-y-6">
+    <div className="space-y-6">
+      <Card title={BUSINESS_DETAILS_COPY.sectionTitle}>
         <DefinitionList columns={4} items={summaryItems} />
-        <div className="border-t border-gray-100 pt-4">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
-            {BUSINESS_DETAILS_COPY.notesTitle}
-          </p>
-          <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-sm text-gray-700">
-            {business.notes ?? BUSINESS_DETAILS_COPY.noNotes}
-          </div>
-        </div>
-      </div>
-    </Card>
+      </Card>
+
+      {client && (
+        <BusinessNotesCard
+          clientId={client.id}
+          businessId={business.id}
+          canEdit={canEdit}
+        />
+      )}
+    </div>
   );
 };

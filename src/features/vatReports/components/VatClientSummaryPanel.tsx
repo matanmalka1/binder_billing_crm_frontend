@@ -1,107 +1,46 @@
-import { useState } from "react";
-import { FileSpreadsheet, FileText } from "lucide-react";
-import { FILE_FORMAT_COLORS } from "../../../utils/chartColors";
+import { useState, useMemo } from "react";
+import { FileSpreadsheet, FileText, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { buildYearOptions, showErrorToast } from "../../../utils/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { vatReportsApi } from "../api";
-import type {
-  CreateVatWorkItemPayload,
-  VatAnnualSummary,
-  VatPeriodRow,
-} from "../api";
-import { vatReportsQK } from "../api/queryKeys";
+
+// Components
 import { Card } from "../../../components/ui/primitives/Card";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Select } from "../../../components/ui/inputs/Select";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
-import { useAuthStore } from "../../../store/auth.store";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
-import {
-  VAT_CLIENT_SUMMARY_STATUS_VARIANTS,
-} from "../constants";
+
+// Logic & Utils
+import { vatReportsApi, type CreateVatWorkItemPayload, type VatAnnualSummary, type VatPeriodRow } from "../api";
+import { vatReportsQK } from "../api/queryKeys";
+import { FILE_FORMAT_COLORS } from "../../../utils/chartColors";
+import { buildYearOptions, showErrorToast } from "../../../utils/utils";
+import { useAuthStore } from "../../../store/auth.store";
+import { VAT_CLIENT_SUMMARY_STATUS_VARIANTS } from "../constants";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatVatAmountLtrSafe } from "../utils";
-import type { VatClientSummaryPanelProps } from "../types";
 import { semanticMonoToneClasses } from "../../../utils/semanticColors";
 import { toast } from "../../../utils/toast";
+import type { VatClientSummaryPanelProps } from "../types";
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 const fmt = formatVatAmountLtrSafe;
+
 const getNetVatTone = (value: string | number | null | undefined) =>
   Number(value) >= 0
     ? semanticMonoToneClasses.negative
     : semanticMonoToneClasses.positive;
 
-// ── Columns ──────────────────────────────────────────────────────────────────
-
-const buildColumns = (): Column<VatPeriodRow>[] => [
-  {
-    key: "period",
-    header: "תקופה",
-    render: (r) => <span className="font-mono text-sm font-semibold text-gray-800">{r.period}</span>,
-  },
-  {
-    key: "status",
-    header: "סטטוס",
-    render: (r) => (
-      <Badge variant={VAT_CLIENT_SUMMARY_STATUS_VARIANTS[r.status] ?? "neutral"}>
-        {getVatWorkItemStatusLabel(r.status)}
-      </Badge>
-    ),
-  },
-  {
-    key: "total_output_net",
-    header: "נטו הכנסות",
-    render: (r) => <span dir="ltr" className="tabular-nums text-gray-700">{fmt(r.total_output_net)}</span>,
-  },
-  {
-    key: "total_output_vat",
-    header: "מע״מ עסקאות",
-    render: (r) => <span dir="ltr" className="tabular-nums text-gray-700">{fmt(r.total_output_vat)}</span>,
-  },
-  {
-    key: "total_input_net",
-    header: "נטו תשומות",
-    render: (r) => <span dir="ltr" className="tabular-nums text-gray-700">{fmt(r.total_input_net)}</span>,
-  },
-  {
-    key: "total_input_vat",
-    header: "מע״מ תשומות",
-    render: (r) => <span dir="ltr" className="tabular-nums text-gray-700">{fmt(r.total_input_vat)}</span>,
-  },
-  {
-    key: "net_vat",
-    header: "נטו לתשלום",
-    render: (r) => (
-      <span
-        dir="ltr"
-        className={`tabular-nums font-semibold ${getNetVatTone(r.net_vat)}`}
-      >
-        {fmt(r.net_vat)}
-      </span>
-    ),
-  },
-  {
-    key: "final_vat_amount",
-    header: "סופי",
-    render: (r) => <span dir="ltr" className="tabular-nums text-gray-500">{fmt(r.final_vat_amount)}</span>,
-  },
-  {
-    key: "filed_at",
-    header: "הוגש",
-    render: (r) =>
-      r.filed_at ? new Date(r.filed_at).toLocaleDateString("he-IL") : "—",
-  },
-];
-
-// ── Annual summary card ───────────────────────────────────────────────────────
+// ── Sub-Components ───────────────────────────────────────────────────────────
 
 const AnnualCard = ({ row }: { row: VatAnnualSummary }) => {
   const allFiled = row.filed_count === row.periods_count && row.periods_count > 0;
-  const yearNetVatTone = getNetVatTone(row.net_vat);
+  const tone = getNetVatTone(row.net_vat);
+
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-hover hover:border-gray-300">
       <div className="mb-4 flex items-center justify-between">
         <span className="text-lg font-bold text-gray-900">{row.year}</span>
         <Badge variant={allFiled ? "success" : "neutral"}>
@@ -109,24 +48,20 @@ const AnnualCard = ({ row }: { row: VatAnnualSummary }) => {
         </Badge>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-lg bg-gray-50 p-3">
-          <div className="text-xs font-medium text-gray-500 mb-1">מע״מ עסקאות</div>
-          <div dir="ltr" className="text-sm font-semibold tabular-nums text-gray-900">
-            {fmt(row.total_output_vat)}
+        {[
+          { label: "מע״מ עסקאות", val: row.total_output_vat },
+          { label: "מע״מ תשומות", val: row.total_input_vat },
+        ].map((item) => (
+          <div key={item.label} className="rounded-lg bg-gray-50 p-3">
+            <div className="mb-1 text-xs font-medium text-gray-500">{item.label}</div>
+            <div dir="ltr" className="text-sm font-semibold tabular-nums text-gray-900">
+              {fmt(item.val)}
+            </div>
           </div>
-        </div>
-        <div className="rounded-lg bg-gray-50 p-3">
-          <div className="text-xs font-medium text-gray-500 mb-1">מע״מ תשומות</div>
-          <div dir="ltr" className="text-sm font-semibold tabular-nums text-gray-900">
-            {fmt(row.total_input_vat)}
-          </div>
-        </div>
+        ))}
         <div className="col-span-2 rounded-lg bg-gray-50 p-3">
-          <div className="text-xs font-medium text-gray-500 mb-1">נטו לתשלום</div>
-          <div
-            dir="ltr"
-            className={`text-sm font-bold tabular-nums ${yearNetVatTone}`}
-          >
+          <div className="mb-1 text-xs font-medium text-gray-500">נטו לתשלום</div>
+          <div dir="ltr" className={`text-sm font-bold tabular-nums ${tone}`}>
             {fmt(row.net_vat)}
           </div>
         </div>
@@ -135,47 +70,48 @@ const AnnualCard = ({ row }: { row: VatAnnualSummary }) => {
   );
 };
 
-// ── Export controls ───────────────────────────────────────────────────────────
-
 const ExportControls = ({ clientId }: { clientId: number }) => {
-  const currentYear = new Date().getFullYear();
-  const [year, setYear] = useState(currentYear);
-  const [loadingExcel, setLoadingExcel] = useState(false);
-  const [loadingPdf, setLoadingPdf] = useState(false);
+  const [year, setYear] = useState(() => new Date().getFullYear());
+  const [loadingType, setLoadingType] = useState<"excel" | "pdf" | null>(null);
 
   const handleExport = async (format: "excel" | "pdf") => {
-    const setLoading = format === "excel" ? setLoadingExcel : setLoadingPdf;
-    setLoading(true);
+    setLoadingType(format);
     try {
       await vatReportsApi.exportClientVat(clientId, format, year);
     } catch (err) {
       showErrorToast(err, "ייצוא נכשל, נסה שוב");
     } finally {
-      setLoading(false);
+      setLoadingType(null);
     }
   };
 
-  const years = buildYearOptions().map((o) => Number(o.value));
-  const yearOptions = years.map((entryYear) => ({
-    value: String(entryYear),
-    label: String(entryYear),
-  }));
+  const yearOptions = useMemo(() => 
+    buildYearOptions().map((o) => ({ value: o.value, label: o.value })), 
+  []);
 
   return (
     <div className="flex items-center gap-2">
-      <div className="w-28">
-        <Select
-          value={String(year)}
-          onChange={(e) => setYear(Number(e.target.value))}
-          options={yearOptions}
-          className="py-1.5"
-        />
-      </div>
-      <Button variant="ghost" size="sm" isLoading={loadingExcel} onClick={() => handleExport("excel")}>
+      <Select
+        value={String(year)}
+        onChange={(e) => setYear(Number(e.target.value))}
+        options={yearOptions}
+        className="w-28 py-1.5"
+      />
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        isLoading={loadingType === "excel"} 
+        onClick={() => handleExport("excel")}
+      >
         <FileSpreadsheet className={`h-4 w-4 ${FILE_FORMAT_COLORS.excel}`} />
         Excel
       </Button>
-      <Button variant="ghost" size="sm" isLoading={loadingPdf} onClick={() => handleExport("pdf")}>
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        isLoading={loadingType === "pdf"} 
+        onClick={() => handleExport("pdf")}
+      >
         <FileText className={`h-4 w-4 ${FILE_FORMAT_COLORS.pdf}`} />
         PDF
       </Button>
@@ -183,12 +119,13 @@ const ExportControls = ({ clientId }: { clientId: number }) => {
   );
 };
 
-// ── Panel ─────────────────────────────────────────────────────────────────────
+// ── Main Component ───────────────────────────────────────────────────────────
 
 export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) => {
   const role = useAuthStore((s) => s.user?.role);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
 
@@ -196,20 +133,64 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
     queryKey: vatReportsQK.clientSummary(clientId),
     queryFn: () => vatReportsApi.getClientSummary(clientId),
     staleTime: 30_000,
-    retry: 1,
   });
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateVatWorkItemPayload) => vatReportsApi.create(payload),
-    onSuccess: async () => {
+    onSuccess: () => {
       toast.success('תיק מע"מ נוצר בהצלחה');
-      await queryClient.invalidateQueries({
-        queryKey: vatReportsQK.clientSummary(clientId),
-      });
+      queryClient.invalidateQueries({ queryKey: vatReportsQK.clientSummary(clientId) });
+      setCreateOpen(false);
     },
   });
 
-  const handleCreate = async (payload: CreateVatWorkItemPayload): Promise<boolean> => {
+  const columns = useMemo((): Column<VatPeriodRow>[] => [
+    {
+      key: "period",
+      header: "תקופה",
+      render: (r) => <span className="font-mono text-sm font-semibold text-gray-800">{r.period}</span>,
+    },
+    {
+      key: "status",
+      header: "סטטוס",
+      render: (r) => (
+        <Badge variant={VAT_CLIENT_SUMMARY_STATUS_VARIANTS[r.status] ?? "neutral"}>
+          {getVatWorkItemStatusLabel(r.status)}
+        </Badge>
+      ),
+    },
+    {
+      key: "total_output_net",
+      header: "נטו הכנסות",
+      render: (r) => <span dir="ltr" className="tabular-nums text-gray-700">{fmt(r.total_output_net)}</span>,
+    },
+    {
+      key: "total_output_vat",
+      header: "מע״מ עסקאות",
+      render: (r) => <span dir="ltr" className="tabular-nums text-gray-700">{fmt(r.total_output_vat)}</span>,
+    },
+    {
+      key: "total_input_vat",
+      header: "מע״מ תשומות",
+      render: (r) => <span dir="ltr" className="tabular-nums text-gray-700">{fmt(r.total_input_vat)}</span>,
+    },
+    {
+      key: "net_vat",
+      header: "נטו לתשלום",
+      render: (r) => (
+        <span dir="ltr" className={`tabular-nums font-semibold ${getNetVatTone(r.net_vat)}`}>
+          {fmt(r.net_vat)}
+        </span>
+      ),
+    },
+    {
+      key: "filed_at",
+      header: "הוגש",
+      render: (r) => r.filed_at ? new Date(r.filed_at).toLocaleDateString("he-IL") : "—",
+    },
+  ], []);
+
+  const handleCreate = async (payload: CreateVatWorkItemPayload) => {
     setCreateError(null);
     try {
       await createMutation.mutateAsync(payload);
@@ -222,40 +203,40 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
 
   if (error) {
     return (
-      <Card>
-        <p className="text-sm text-negative-600">שגיאה בטעינת נתוני מע״מ</p>
+      <Card className="flex h-32 items-center justify-center border-negative-200 bg-negative-50">
+        <p className="text-sm font-medium text-negative-700">שגיאה בטעינת נתוני מע״מ. אנא נסה שוב מאוחר יותר.</p>
       </Card>
     );
   }
 
-  const PERIOD_COLUMNS = buildColumns();
+  const annualData = data?.annual ?? [];
 
   return (
     <div className="space-y-6">
-      {/* Header row */}
       <div className="flex items-center justify-between">
-        <Button onClick={() => setCreateOpen(true)} size="sm">
-          + פתיחת תיק מע״מ
+        <Button onClick={() => setCreateOpen(true)} size="sm" className="gap-2">
+          <Plus className="h-4 w-4" />
+          פתיחת תיק מע״מ
         </Button>
         {role === "advisor" && <ExportControls clientId={clientId} />}
       </div>
 
-      <DataTable<VatPeriodRow>
+      <DataTable
         data={data?.periods ?? []}
-        columns={PERIOD_COLUMNS}
+        columns={columns}
         getRowKey={(r) => r.period}
         isLoading={isLoading}
         emptyMessage='אין תקופות מע״מ ללקוח זה'
         onRowClick={(r) => navigate(`/tax/vat/${r.work_item_id}`)}
       />
 
-      {(data?.annual ?? []).length > 0 && (
+      {annualData.length > 0 && (
         <Card title="סיכום שנתי">
-          <div
-            className="grid gap-4"
-            style={{ gridTemplateColumns: `repeat(${Math.min(data!.annual.length, 3)}, minmax(0, 1fr))` }}
+          <div 
+            className="grid gap-4" 
+            style={{ gridTemplateColumns: `repeat(auto-fill, minmax(280px, 1fr))` }}
           >
-            {data!.annual.map((row) => (
+            {annualData.map((row) => (
               <AnnualCard key={row.year} row={row} />
             ))}
           </div>
