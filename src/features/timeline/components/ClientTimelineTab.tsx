@@ -27,7 +27,7 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }
   } = useClientTimelinePage(clientId);
 
   if (loading) return <PageLoading message="טוען ציר זמן..." />;
-  if (error) return <Alert variant="error" message={error} />;
+  if (error)   return <Alert variant="error" message={error} />;
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 

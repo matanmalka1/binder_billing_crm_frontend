@@ -1,30 +1,46 @@
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
-import { RefreshCw, Search, X, ChevronDown, Filter } from "lucide-react";
+import { ChevronDown, Filter, RefreshCw, Search, X } from "lucide-react";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { getEventColor } from "../constants";
 import { getEventTypeLabel } from "../utils";
 import { cn } from "../../../utils/utils";
+import type { EventTypeStat } from "../hooks/useClientTimelinePage";
 
-// ── TimelineCommandBar ────────────────────────────────────────────────────────
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface TimelineCommandBarProps {
-  total: number;
-  hasActiveFilters: boolean;
-  lastEventTimestamp: string | null;
-  refreshing: boolean;
-  onRefresh: () => void;
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
-  typeFilters: string[];
-  onToggleTypeFilter: (type: string) => void;
-  onClearFilters: () => void;
-  pageSize: number;
-  onPageSizeChange: (value: string) => void;
-  eventTypeStats: { type: string; count: number }[];
+  total:               number;
+  hasActiveFilters:    boolean;
+  lastEventTimestamp:  string | null;
+  refreshing:          boolean;
+  onRefresh:           () => void;
+  searchTerm:          string;
+  onSearchChange:      (value: string) => void;
+  typeFilters:         string[];
+  onToggleTypeFilter:  (type: string) => void;
+  onClearFilters:      () => void;
+  pageSize:            number;
+  onPageSizeChange:    (value: string) => void;
+  eventTypeStats:      EventTypeStat[];
 }
+
+// ── Filter chips ──────────────────────────────────────────────────────────────
+// De-duplicate by label so visually identical event types (e.g. invoice_created /
+// invoice_attached → "חשבונית") are merged into a single chip.
+
+function buildFilterChips(stats: EventTypeStat[]) {
+  const seen = new Map<string, EventTypeStat & { label: string }>();
+  for (const stat of stats) {
+    const label = getEventTypeLabel(stat.type);
+    if (!seen.has(label)) seen.set(label, { ...stat, label });
+  }
+  return Array.from(seen.values());
+}
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
   total,
@@ -45,19 +61,14 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
     ? format(parseISO(lastEventTimestamp), "d MMM HH:mm", { locale: he })
     : null;
 
-  const filterTypes = (() => {
-    const seen = new Map<string, { type: string; label: string; count: number }>();
-    eventTypeStats.forEach(({ type, count }) => {
-      const label = getEventTypeLabel(type);
-      if (!seen.has(label)) seen.set(label, { type, label, count });
-    });
-    return Array.from(seen.values());
-  })();
+  const filterChips = buildFilterChips(eventTypeStats);
 
   return (
     <div className="rounded-2xl border border-gray-200/60 bg-white/95 shadow-sm backdrop-blur-sm overflow-hidden">
-      {/* Top row: search + page size + refresh */}
+
+      {/* ── Top row: search + controls ── */}
       <div className="flex flex-col gap-3 px-4 py-3 md:flex-row md:items-center border-b border-gray-100">
+
         {/* Search */}
         <div className="flex-1 relative">
           <Input
@@ -82,31 +93,28 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
 
         {/* Right controls */}
         <div className="flex items-center gap-3 shrink-0">
-          {/* Total count */}
-          <span className="text-xs text-gray-400 whitespace-nowrap hidden sm:block">
+          <span className="hidden sm:block text-xs text-gray-400 whitespace-nowrap">
             {total.toLocaleString("he-IL")} אירועים
           </span>
 
-          {/* Last updated */}
           {lastUpdated && (
             <span className="hidden md:block text-xs text-gray-400 whitespace-nowrap">
               עדכון: {lastUpdated}
             </span>
           )}
 
-          {/* Page size */}
+          {/* Page size selector */}
           <div className="flex items-center gap-1.5">
-            <span className="text-xs text-gray-500 whitespace-nowrap hidden sm:block">שורות:</span>
+            <span className="hidden sm:block text-xs text-gray-500 whitespace-nowrap">שורות:</span>
             <div className="relative">
               <Select
                 value={String(pageSize)}
                 onChange={(e) => onPageSizeChange(e.target.value)}
                 className="w-20 appearance-none pr-3 pl-7 text-sm"
               >
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
+                {[20, 50, 100, 200].map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
               </Select>
               <ChevronDown className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
             </div>
@@ -126,21 +134,23 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
         </div>
       </div>
 
-      {/* Bottom row: type filter chips */}
+      {/* ── Bottom row: filter chips ── */}
       <div className="flex flex-wrap items-center gap-2 px-4 py-2.5">
         <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 ml-1">
           <Filter className="h-3 w-3" />
           סנן:
         </span>
-        {filterTypes.map(({ type, label, count }) => {
+
+        {filterChips.map(({ type, label, count }) => {
           const isActive = typeFilters.includes(type);
-          const colors = getEventColor(type);
+          const colors   = getEventColor(type);
           return (
             <button
               key={label}
               onClick={() => onToggleTypeFilter(type)}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-150 border",
+                "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium",
+                "transition-all duration-150 border",
                 isActive
                   ? cn(colors.chipActiveBg, colors.chipActiveText, colors.chipActiveBorder, "shadow-sm")
                   : "bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-100",
@@ -148,12 +158,10 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
             >
               {label}
               {count > 0 && (
-                <span
-                  className={cn(
-                    "rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none",
-                    isActive ? "bg-white/50" : "bg-gray-200 text-gray-600",
-                  )}
-                >
+                <span className={cn(
+                  "rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none",
+                  isActive ? "bg-white/50" : "bg-gray-200 text-gray-600",
+                )}>
                   {count}
                 </span>
               )}

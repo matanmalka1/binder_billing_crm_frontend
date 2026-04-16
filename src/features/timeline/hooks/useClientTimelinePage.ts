@@ -4,71 +4,90 @@ import { useSearchParams } from "react-router-dom";
 import { timelineApi, timelineQK } from "../api";
 import { getErrorMessage, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
 import { useActionRunner } from "@/features/actions";
+import type { TimelineEvent } from "../api";
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+export interface EventTypeStat {
+  type:  string;
+  count: number;
+}
+
+// ── Hook ──────────────────────────────────────────────────────────────────────
 
 export const useClientTimelinePage = (clientId: string | undefined) => {
-  const queryClient = useQueryClient();
+  const queryClient    = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const page = parsePositiveInt(searchParams.get("page"), 1);
+  const page     = parsePositiveInt(searchParams.get("page"),      1);
   const pageSize = parsePositiveInt(searchParams.get("page_size"), 50);
 
-  const clientIdNumber = Number(clientId || 0);
-  const hasValidClient = isPositiveInt(clientIdNumber);
+  const clientIdNumber  = Number(clientId ?? 0);
+  const hasValidClient  = isPositiveInt(clientIdNumber);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilters, setTypeFilters] = useState<string[]>([]);
+  const [searchTerm,   setSearchTerm]   = useState("");
+  const [typeFilters,  setTypeFilters]  = useState<string[]>([]);
 
-  const timelineParams = useMemo(() => ({ page, page_size: pageSize }), [page, pageSize]);
+  // ── Query ──────────────────────────────────────────────────────────────────
+
+  const timelineParams = useMemo(
+    () => ({ page, page_size: pageSize }),
+    [page, pageSize],
+  );
 
   const timelineQuery = useQuery({
-    enabled: hasValidClient,
-    queryKey: timelineQK.clientEvents(clientIdNumber, timelineParams),
-    queryFn: () => timelineApi.getClientTimeline(clientIdNumber, timelineParams),
+    enabled:   hasValidClient,
+    queryKey:  timelineQK.clientEvents(clientIdNumber, timelineParams),
+    queryFn:   () => timelineApi.getClientTimeline(clientIdNumber, timelineParams),
   });
 
-  const events = useMemo(() => timelineQuery.data?.events ?? [], [timelineQuery.data?.events]);
+  const events = useMemo<TimelineEvent[]>(
+    () => timelineQuery.data?.events ?? [],
+    [timelineQuery.data?.events],
+  );
 
-  const eventTypeStats = useMemo(() => {
+  // ── Derived stats ──────────────────────────────────────────────────────────
+
+  const eventTypeStats = useMemo<EventTypeStat[]>(() => {
     const counts: Record<string, number> = {};
-    events.forEach((event) => {
-      counts[event.event_type] = (counts[event.event_type] || 0) + 1;
-    });
+    for (const { event_type } of events) {
+      counts[event_type] = (counts[event_type] ?? 0) + 1;
+    }
     return Object.entries(counts).map(([type, count]) => ({ type, count }));
   }, [events]);
 
-  const hasActiveFilters = typeFilters.length > 0 || searchTerm.trim().length > 0;
-
-  const filteredEvents = useMemo(() => {
-    if (!hasActiveFilters) return events;
-
-    const query = searchTerm.trim().toLowerCase();
-    return events.filter((event) => {
-      const matchesType = typeFilters.length === 0 || typeFilters.includes(event.event_type);
-      const matchesQuery =
-        !query ||
-        event.description?.toLowerCase().includes(query) ||
-        (event.binder_id !== null && String(event.binder_id).includes(query)) ||
-        (event.charge_id !== null && String(event.charge_id).includes(query));
-      return matchesType && matchesQuery;
-    });
-  }, [events, searchTerm, typeFilters, hasActiveFilters]);
-
-  const filteredAvailableActions = useMemo(
-    () =>
-      filteredEvents.reduce(
-        (total, event) => total + (event.actions?.length ?? event.available_actions?.length ?? 0),
-        0,
-      ),
-    [filteredEvents],
-  );
-
-  const lastEventTimestamp = useMemo(() => {
+  const lastEventTimestamp = useMemo<string | null>(() => {
     if (events.length === 0) return null;
-    return events.reduce((latest, current) =>
-      new Date(current.timestamp) > new Date(latest) ? current.timestamp : latest,
+    return events.reduce((latest, { timestamp }) =>
+      new Date(timestamp) > new Date(latest) ? timestamp : latest,
       events[0].timestamp,
     );
   }, [events]);
+
+  // ── Filtering ──────────────────────────────────────────────────────────────
+
+  const hasActiveFilters = typeFilters.length > 0 || searchTerm.trim().length > 0;
+
+  const filteredEvents = useMemo<TimelineEvent[]>(() => {
+    if (!hasActiveFilters) return events;
+
+    const query = searchTerm.trim().toLowerCase();
+
+    return events.filter((event) => {
+      const matchesType =
+        typeFilters.length === 0 || typeFilters.includes(event.event_type);
+
+      const matchesSearch =
+        !query ||
+        event.description?.toLowerCase().includes(query) ||
+        (event.binder_id != null && String(event.binder_id).includes(query)) ||
+        (event.charge_id  != null && String(event.charge_id).includes(query));
+
+      return matchesType && matchesSearch;
+    });
+  }, [events, searchTerm, typeFilters, hasActiveFilters]);
+
+  // ── Actions ────────────────────────────────────────────────────────────────
 
   const {
     activeActionKey,
@@ -78,37 +97,43 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     handleAction,
     pendingAction,
   } = useActionRunner({
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: timelineQK.clientRoot(clientIdNumber),
-      }),
+    onSuccess:     () => queryClient.invalidateQueries({ queryKey: timelineQK.clientRoot(clientIdNumber) }),
     errorFallback: "שגיאה בביצוע פעולה",
     canonicalAction: true,
   });
 
+  // ── Navigation helpers ─────────────────────────────────────────────────────
+
   const setPage = (nextPage: number) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("page", String(nextPage));
-    setSearchParams(next);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set("page", String(nextPage));
+      return next;
+    });
   };
 
   const setPageSize = (value: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("page_size", value);
-    next.set("page", "1");
-    setSearchParams(next);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set("page_size", value);
+      next.set("page", "1");
+      return next;
+    });
   };
 
-  const toggleTypeFilter = (type: string) => {
+  // ── Filter helpers ─────────────────────────────────────────────────────────
+
+  const toggleTypeFilter = (type: string) =>
     setTypeFilters((prev) =>
       prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
     );
-  };
 
   const clearFilters = () => {
     setSearchTerm("");
     setTypeFilters([]);
   };
+
+  // ── Error ──────────────────────────────────────────────────────────────────
 
   const error = !hasValidClient
     ? "מזהה לקוח חסר"
@@ -116,29 +141,31 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
       ? getErrorMessage(timelineQuery.error, "שגיאה בטעינת ציר זמן")
       : null;
 
+  // ── Public API ─────────────────────────────────────────────────────────────
+
   return {
-    // Query state
-    loading: timelineQuery.isPending,
+    loading:    timelineQuery.isPending,
     refreshing: timelineQuery.isRefetching,
+    refresh:    () => timelineQuery.refetch(),
     error,
-    // Pagination
+
     page,
     pageSize,
     total: timelineQuery.data?.total ?? 0,
     setPage,
     setPageSize,
-    // Events
+
     events,
     filteredEvents,
     eventTypeStats,
-    // Actions
+
     activeActionKey,
     activeActionKeyRef,
     handleAction,
     pendingAction,
     confirmPendingAction,
     cancelPendingAction,
-    refresh: () => timelineQuery.refetch(),
+
     filters: {
       searchTerm,
       setSearchTerm,
@@ -147,10 +174,10 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
       clearFilters,
       hasActiveFilters,
     },
+
     summary: {
-      filteredTotal: filteredEvents.length,
-      totalOnPage: events.length,
-      filteredAvailableActions,
+      totalOnPage:        events.length,
+      filteredTotal:      filteredEvents.length,
       lastEventTimestamp,
     },
   };
