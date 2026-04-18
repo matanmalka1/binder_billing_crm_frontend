@@ -32,7 +32,7 @@ const urgencyRowMap: Record<string, string> = {
   yellow: "bg-warning-50/30",
 };
 
-const TABLE_HEADERS = ["עסק", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", ""];
+const TABLE_HEADERS = ["לקוח", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", ""];
 
 export const TaxDeadlinesTable = ({
   deadlines,

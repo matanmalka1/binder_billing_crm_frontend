@@ -1,72 +1,54 @@
-import { useQuery } from "@tanstack/react-query";
-import { getYear } from "date-fns";
 import { TrendingUp, AlertTriangle, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { annualReportSeasonApi, annualReportsQK } from "@/features/annualReports/api";
-import { cn } from "../../../utils/utils";
+import { cn } from "@/utils/utils";
 import { semanticMonoToneClasses, semanticSignalBadgeClasses } from "@/utils/semanticColors";
-
-const currentYear = getYear(new Date());
+import { useSeasonSummary } from "../hooks/useSeasonSummary";
 
 export const SeasonSummaryWidget: React.FC = () => {
-  const { data, isPending } = useQuery({
-    queryKey: annualReportsQK.seasonSummary(currentYear),
-    queryFn: () => annualReportSeasonApi.getSeasonSummary(currentYear),
-  });
+  const { stats, isPending } = useSeasonSummary();
 
   if (isPending) {
-    return (
-      <div className="h-28 animate-pulse rounded-2xl bg-gray-100" />
-    );
+    return <div className="h-28 animate-pulse rounded-2xl bg-gray-100" />;
   }
 
-  if (!data || data.total === 0) return null;
-
-  const completionPct = Math.round(data.completion_rate);
-  const inProgress = data.total - data.not_started - data.submitted - data.accepted - data.closed;
-  const done = data.submitted + data.accepted + data.closed;
-
-  const progressColor =
-    completionPct >= 75 ? "bg-positive-500" :
-    completionPct >= 40 ? "bg-info-500" :
-    "bg-warning-500";
+  if (!stats || stats.total === 0) return null;
 
   return (
     <Link
       to="/tax/reports"
       className={cn(
         "block rounded-2xl border border-gray-100 bg-white p-5",
-        "transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-gray-200/60",
+        "transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-gray-200/60"
       )}
     >
       <div className="flex items-start justify-between gap-4 mb-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">
-            עונת הגשה {currentYear}
+            עונת הגשה {stats.currentYear}
           </p>
           <h3 className="mt-0.5 text-lg font-bold text-gray-900">
-            {done} / {data.total} דוחות הוגשו
+            {stats.done} / {stats.total} דוחות הוגשו
           </h3>
         </div>
 
         <div className="flex items-center gap-3">
-          {data.overdue_count > 0 && (
+          {stats.hasOverdue ? (
             <div className={cn("flex items-center gap-1.5 rounded-lg px-2.5 py-1", semanticSignalBadgeClasses.negative)}>
               <AlertTriangle className="h-3.5 w-3.5 text-negative-500" />
               <span className="text-xs font-semibold text-negative-600">
-                {data.overdue_count} באיחור
+                {stats.overdueCount} באיחור
               </span>
             </div>
-          )}
-          {data.overdue_count === 0 && done > 0 && (
+          ) : stats.done > 0 && (
             <div className={cn("flex items-center gap-1.5 rounded-lg px-2.5 py-1", semanticSignalBadgeClasses.positive)}>
               <CheckCircle className="h-3.5 w-3.5 text-positive-500" />
               <span className="text-xs font-semibold text-positive-700">ללא איחורים</span>
             </div>
           )}
+          
           <div className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1">
             <TrendingUp className="h-3.5 w-3.5 text-gray-500" />
-            <span className="text-xs font-semibold text-gray-700">{completionPct}%</span>
+            <span className="text-xs font-semibold text-gray-700">{stats.completionPct}%</span>
           </div>
         </div>
       </div>
@@ -74,35 +56,29 @@ export const SeasonSummaryWidget: React.FC = () => {
       {/* Progress bar */}
       <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
         <div
-          className={cn("h-2 rounded-full transition-all duration-700", progressColor)}
-          style={{ width: `${completionPct}%` }}
+          className={cn("h-2 rounded-full transition-all duration-700", stats.progressColor)}
+          style={{ width: `${stats.completionPct}%` }}
         />
       </div>
 
       {/* Stats row */}
-      <div className="mt-3 flex gap-4 text-xs text-gray-500">
-        {data.not_started > 0 && (
-          <span>
-            <span className="font-semibold text-gray-700">{data.not_started}</span> לא התחילו
-          </span>
-        )}
-        {inProgress > 0 && (
-          <span>
-            <span className={cn("font-semibold", semanticMonoToneClasses.info)}>{inProgress}</span> בעבודה
-          </span>
-        )}
-        {data.submitted > 0 && (
-          <span>
-            <span className={cn("font-semibold", semanticMonoToneClasses.positive)}>{data.submitted}</span> הוגשו
-          </span>
-        )}
-        {data.closed > 0 && (
-          <span>
-            <span className="font-semibold text-gray-400">{data.closed}</span> סגורים
-          </span>
-        )}
+      <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-500">
+        <StatLabel count={stats.notStarted} label="לא התחילו" />
+        <StatLabel count={stats.inProgress} label="בעבודה" className={semanticMonoToneClasses.info} />
+        <StatLabel count={stats.submitted} label="הוגשו" className={semanticMonoToneClasses.positive} />
+        <StatLabel count={stats.closed} label="סגורים" />
       </div>
     </Link>
+  );
+};
+
+/** קומפוננטת עזר פנימית להצגת פריט סטטיסטיקה */
+const StatLabel = ({ count, label, className }: { count: number; label: string; className?: string }) => {
+  if (count <= 0) return null;
+  return (
+    <span>
+      <span className={cn("font-semibold text-gray-700", className)}>{count}</span> {label}
+    </span>
   );
 };
 
