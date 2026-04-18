@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { Button } from "@/components/ui/primitives/Button";
 import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
@@ -80,9 +79,7 @@ export const Clients: React.FC = () => {
           message="צפייה בלבד. יצירה ועריכה של לקוחות זמינה ליועצים בלבד."
         />
       )}
-      <ToolbarContainer>
-        <ClientsFiltersBar filters={filters} onFilterChange={handleFilterChange} />
-      </ToolbarContainer>
+      <ClientsFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       <PaginatedDataTable
         data={clients}
         columns={columns}

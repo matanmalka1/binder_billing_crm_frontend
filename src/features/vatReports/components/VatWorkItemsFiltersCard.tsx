@@ -62,7 +62,7 @@ export const VatWorkItemsFiltersCard = ({
             ) : (
               <ClientSearchInput
                 label="לקוח"
-                placeholder='שם / ת"ז / ח.פ'
+                placeholder="שם, ת.ז. / ח.פ..."
                 value={clientQuery}
                 onChange={setClientQuery}
                 onSelect={handleSelectClient}

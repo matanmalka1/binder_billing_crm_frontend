@@ -11,7 +11,7 @@ interface Props {
   onReset?: () => void;
 }
 
-export const ActiveFilterBadges: React.FC<Props> = ({ badges }) => {
+export const ActiveFilterBadges: React.FC<Props> = ({ badges, onReset }) => {
   if (badges.length === 0) return null;
   return (
     <div className="flex flex-wrap items-center gap-2 animate-fade-in">
@@ -20,6 +20,15 @@ export const ActiveFilterBadges: React.FC<Props> = ({ badges }) => {
           {b.label}
         </Badge>
       ))}
+      {onReset && (
+        <button
+          type="button"
+          onClick={onReset}
+          className="text-xs text-gray-500 transition-colors underline underline-offset-2 hover:text-gray-700"
+        >
+          נקה הכל
+        </button>
+      )}
     </div>
   );
 };

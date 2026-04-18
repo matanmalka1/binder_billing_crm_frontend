@@ -14,7 +14,6 @@ import {
   ChargesSummaryBar,
   useChargesPage,
 } from "@/features/charges";
-import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 
 export const Charges: React.FC = () => {
   const [, setSearchParams] = useSearchParams();
@@ -82,13 +81,11 @@ export const Charges: React.FC = () => {
         />
       )}
 
-      <ToolbarContainer>
-        <ChargesFiltersCard
-          filters={filters}
-          onFilterChange={setFilter}
-          onClear={() => setSearchParams(new URLSearchParams())}
-        />
-      </ToolbarContainer>
+      <ChargesFiltersCard
+        filters={filters}
+        onFilterChange={setFilter}
+        onClear={() => setSearchParams(new URLSearchParams())}
+      />
 
       {isAdvisor && selectedIds.size > 0 && (
         <ChargeBulkToolbar

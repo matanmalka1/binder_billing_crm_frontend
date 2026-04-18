@@ -32,6 +32,7 @@ export interface ListUsersParams {
   page?: number;
   page_size?: number;
   is_active?: "true" | "false";
+  search?: string;
 }
 
 export interface CreateUserPayload {

@@ -1,6 +1,7 @@
 import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Input } from "../../../components/ui/inputs/Input";
+import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { StatsCard } from "../../../components/ui/layout/StatsCard";
 import { Archive, CheckCircle2, FolderKanban, Search, Undo2, X } from "lucide-react";
@@ -80,73 +81,77 @@ export const BindersFiltersBar = ({
         })}
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <Input
-          label="חיפוש"
-          type="text"
-          value={searchDraft}
-          onChange={(e) => setSearchDraft(e.target.value)}
-          placeholder="שם לקוח או מספר קלסר..."
-          startIcon={<Search className="h-4 w-4" />}
-          endElement={
-            searchDraft ? (
-              <button type="button" onClick={() => { setSearchDraft(""); onFilterChange("query", ""); }} className="p-1 text-gray-400 hover:text-gray-600">
-                <X className="h-3.5 w-3.5" />
-              </button>
-            ) : undefined
-          }
-        />
-        <Select
-          label="סטטוס"
-          value={filters.status ?? ""}
-          onChange={(e) => onFilterChange("status", e.target.value)}
-          options={[...BINDER_STATUS_OPTIONS]}
-          className={cn(
-            filters.status && "border-primary-400 ring-1 ring-primary-200",
-          )}
-        />
-        <Select
-          label="תקופה"
-          value={filters.year ?? ""}
-          onChange={(e) => onFilterChange("year", e.target.value)}
-          options={YEAR_OPTIONS}
-          className={cn(
-            filters.year && "border-primary-400 ring-1 ring-primary-200",
-          )}
-        />
-      </div>
+      <ToolbarContainer>
+        <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <Input
+              label="חיפוש לקוח"
+              type="text"
+              value={searchDraft}
+              onChange={(e) => setSearchDraft(e.target.value)}
+              placeholder="שם לקוח או מספר קלסר..."
+              startIcon={<Search className="h-4 w-4" />}
+              endElement={
+                searchDraft ? (
+                  <button type="button" onClick={() => { setSearchDraft(""); onFilterChange("query", ""); }} className="p-1 text-gray-400 hover:text-gray-600">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                ) : undefined
+              }
+            />
+            <Select
+              label="סטטוס"
+              value={filters.status ?? ""}
+              onChange={(e) => onFilterChange("status", e.target.value)}
+              options={[...BINDER_STATUS_OPTIONS]}
+              className={cn(
+                filters.status && "border-primary-400 ring-1 ring-primary-200",
+              )}
+            />
+            <Select
+              label="תקופה"
+              value={filters.year ?? ""}
+              onChange={(e) => onFilterChange("year", e.target.value)}
+              options={YEAR_OPTIONS}
+              className={cn(
+                filters.year && "border-primary-400 ring-1 ring-primary-200",
+              )}
+            />
+          </div>
 
-      <ActiveFilterBadges
-        badges={[
-          filters.query
-            ? {
-                key: "query",
-                label: `חיפוש: ${filters.query}`,
-                onRemove: () => {
-                  setSearchDraft("");
-                  onFilterChange("query", "");
-                },
-              }
-            : null,
-          filters.status
-            ? {
-                key: "status",
-                label:
-                  BINDER_STATUS_OPTIONS.find((o) => o.value === filters.status)
-                    ?.label ?? filters.status,
-                onRemove: () => onFilterChange("status", ""),
-              }
-            : null,
-          filters.year
-            ? {
-                key: "year",
-                label: filters.year,
-                onRemove: () => onFilterChange("year", ""),
-              }
-            : null,
-        ].filter((b): b is NonNullable<typeof b> => b !== null)}
-        onReset={handleReset}
-      />
+          <ActiveFilterBadges
+            badges={[
+              filters.query
+                ? {
+                    key: "query",
+                    label: `חיפוש: ${filters.query}`,
+                    onRemove: () => {
+                      setSearchDraft("");
+                      onFilterChange("query", "");
+                    },
+                  }
+                : null,
+              filters.status
+                ? {
+                    key: "status",
+                    label:
+                      BINDER_STATUS_OPTIONS.find((o) => o.value === filters.status)
+                        ?.label ?? filters.status,
+                    onRemove: () => onFilterChange("status", ""),
+                  }
+                : null,
+              filters.year
+                ? {
+                    key: "year",
+                    label: filters.year,
+                    onRemove: () => onFilterChange("year", ""),
+                  }
+                : null,
+            ].filter((b): b is NonNullable<typeof b> => b !== null)}
+            onReset={handleReset}
+          />
+        </div>
+      </ToolbarContainer>
     </div>
   );
 };

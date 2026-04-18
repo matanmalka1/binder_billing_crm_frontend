@@ -16,7 +16,6 @@ import {
   type TaxDeadlineResponse,
 } from "@/features/taxDeadlines";
 import { TaxSubmissionStats, useTaxDashboard } from "@/features/taxDashboard";
-import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 
 export const TaxDeadlines: React.FC = () => {
   const {
@@ -106,9 +105,7 @@ export const TaxDeadlines: React.FC = () => {
         onFilter={(status) => handleFilterChange("status", status)}
       />
 
-      <ToolbarContainer>
-        <TaxDeadlinesFilters filters={filters} onChange={handleFilterChange} />
-      </ToolbarContainer>
+      <TaxDeadlinesFilters filters={filters} onChange={handleFilterChange} />
 
       <TaxDeadlinesTable
         deadlines={deadlines}

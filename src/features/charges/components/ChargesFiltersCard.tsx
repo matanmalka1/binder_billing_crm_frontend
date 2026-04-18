@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Select } from "../../../components/ui/inputs/Select";
+import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
 import { cn } from "../../../utils/utils";
@@ -60,50 +61,52 @@ export const ChargesFiltersCard = ({
   };
 
   return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div>
-          {selectedClient ? (
-            <SelectedClientDisplay
-              name={selectedClient.name}
-              id={selectedClient.id}
-              onClear={handleClearClient}
-              label="לקוח"
-            />
-          ) : (
-            <ClientSearchInput
-              label="לקוח"
-              value={clientQuery}
-              onChange={setClientQuery}
-              onSelect={handleSelectClient}
-              placeholder="חפש לקוח..."
-            />
-          )}
+    <ToolbarContainer>
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div>
+            {selectedClient ? (
+              <SelectedClientDisplay
+                name={selectedClient.name}
+                id={selectedClient.id}
+                onClear={handleClearClient}
+                label="לקוח"
+              />
+            ) : (
+              <ClientSearchInput
+                label="לקוח"
+                value={clientQuery}
+                onChange={setClientQuery}
+                onSelect={handleSelectClient}
+                placeholder="שם, ת.ז. / ח.פ..."
+              />
+            )}
+          </div>
+          <Select
+            label="סטטוס"
+            value={filters.status}
+            onChange={(e) => onFilterChange("status", e.target.value)}
+            options={CHARGE_STATUS_OPTIONS}
+            className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
+          />
+          <Select
+            label="סוג חיוב"
+            value={filters.charge_type}
+            onChange={(e) => onFilterChange("charge_type", e.target.value)}
+            options={CHARGE_TYPE_OPTIONS_WITH_ALL}
+            className={cn(filters.charge_type && "border-primary-400 ring-1 ring-primary-200")}
+          />
         </div>
-        <Select
-          label="סטטוס"
-          value={filters.status}
-          onChange={(e) => onFilterChange("status", e.target.value)}
-          options={CHARGE_STATUS_OPTIONS}
-          className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
-        />
-        <Select
-          label="סוג חיוב"
-          value={filters.charge_type}
-          onChange={(e) => onFilterChange("charge_type", e.target.value)}
-          options={CHARGE_TYPE_OPTIONS_WITH_ALL}
-          className={cn(filters.charge_type && "border-primary-400 ring-1 ring-primary-200")}
+
+        <ActiveFilterBadges
+          badges={[
+            filters.status ? { key: "status", label: CHARGE_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onFilterChange("status", "") } : null,
+            filters.charge_type ? { key: "charge_type", label: CHARGE_TYPE_OPTIONS_WITH_ALL.find((o) => o.value === filters.charge_type)?.label ?? filters.charge_type, onRemove: () => onFilterChange("charge_type", "") } : null,
+          ].filter((b): b is NonNullable<typeof b> => b !== null)}
+          onReset={handleClearAll}
         />
       </div>
-
-      <ActiveFilterBadges
-        badges={[
-          filters.status ? { key: "status", label: CHARGE_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onFilterChange("status", "") } : null,
-          filters.charge_type ? { key: "charge_type", label: CHARGE_TYPE_OPTIONS_WITH_ALL.find((o) => o.value === filters.charge_type)?.label ?? filters.charge_type, onRemove: () => onFilterChange("charge_type", "") } : null,
-        ].filter((b): b is NonNullable<typeof b> => b !== null)}
-        onReset={handleClearAll}
-      />
-    </div>
+    </ToolbarContainer>
   );
 };
 

@@ -2,6 +2,8 @@ import { Search, X } from "lucide-react";
 import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
+import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
+import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { reminderTypeLabels, type ReminderType } from "../types";
 
 const TYPE_OPTIONS = [
@@ -37,44 +39,59 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap items-end gap-3">
-      <div className="flex-1 min-w-48">
-        <Input
-          label="חיפוש לקוח"
-          value={searchDraft}
-          onChange={(e) => setSearchDraft(e.target.value)}
-          placeholder="חיפוש לפי שם לקוח..."
-          startIcon={<Search className="h-4 w-4" />}
-          endElement={
-            searchDraft ? (
-              <button
-                type="button"
-                onClick={() => { setSearchDraft(""); onSearchChange(""); }}
-                className="p-1 text-gray-400 hover:text-gray-600"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            ) : undefined
-          }
-        />
+    <ToolbarContainer>
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Input
+            label="חיפוש לקוח"
+            value={searchDraft}
+            onChange={(e) => setSearchDraft(e.target.value)}
+            placeholder="שם, ת.ז. / ח.פ..."
+            startIcon={<Search className="h-4 w-4" />}
+            endElement={
+              searchDraft ? (
+                <button
+                  type="button"
+                  onClick={() => { setSearchDraft(""); onSearchChange(""); }}
+                  className="p-1 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              ) : undefined
+            }
+          />
+          <Select
+            label="סוג תזכורת"
+            value={typeFilter}
+            onChange={(e) => onTypeChange(e.target.value)}
+            options={TYPE_OPTIONS}
+          />
+        </div>
+        {hasFilters && (
+          <ActiveFilterBadges
+            badges={[
+              search
+                ? {
+                    key: "search",
+                    label: `חיפוש: ${search}`,
+                    onRemove: () => {
+                      setSearchDraft("");
+                      onSearchChange("");
+                    },
+                  }
+                : null,
+              typeFilter
+                ? {
+                    key: "typeFilter",
+                    label: `סוג: ${reminderTypeLabels[typeFilter as ReminderType] ?? typeFilter}`,
+                    onRemove: () => onTypeChange(""),
+                  }
+                : null,
+            ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}
+            onReset={handleClear}
+          />
+        )}
       </div>
-      <div className="w-52">
-        <Select
-          label="סוג תזכורת"
-          value={typeFilter}
-          onChange={(e) => onTypeChange(e.target.value)}
-          options={TYPE_OPTIONS}
-        />
-      </div>
-      {hasFilters && (
-        <button
-          type="button"
-          onClick={handleClear}
-          className="mb-0.5 text-sm text-gray-500 hover:text-gray-700 underline"
-        >
-          נקה סינון
-        </button>
-      )}
-    </div>
+    </ToolbarContainer>
   );
 };

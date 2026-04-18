@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/primitives/Button";
 import { Input } from "@/components/ui/inputs/Input";
 import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
 import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
-import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 import { PageHeader } from "@/components/layout/PageHeader";
 import {
   BinderDrawer,
@@ -108,14 +107,12 @@ export const Binders: React.FC = () => {
         }
       />
 
-      <ToolbarContainer>
-        <BindersFiltersBar
-          filters={filters}
-          counters={counters}
-          onFilterChange={handleFilterChange}
-          onReset={handleReset}
-        />
-      </ToolbarContainer>
+      <BindersFiltersBar
+        filters={filters}
+        counters={counters}
+        onFilterChange={handleFilterChange}
+        onReset={handleReset}
+      />
 
       <PaginatedDataTable
         data={binders}

@@ -58,10 +58,6 @@ export const AnnualReportsFiltersBar: React.FC<AnnualReportsFiltersBarProps> = (
     onFilterChange("client_name", "");
   };
 
-  const handleReset = () => {
-    onReset();
-  };
-
   return (
     <ToolbarContainer>
       <div className="space-y-3">
@@ -80,7 +76,7 @@ export const AnnualReportsFiltersBar: React.FC<AnnualReportsFiltersBarProps> = (
                 value={clientQuery}
                 onChange={setClientQuery}
                 onSelect={handleSelectClient}
-                placeholder="חפש לפי שם, ת.ז. / ח.פ..."
+                placeholder="שם, ת.ז. / ח.פ..."
               />
             )}
           </div>
@@ -117,7 +113,7 @@ export const AnnualReportsFiltersBar: React.FC<AnnualReportsFiltersBarProps> = (
                 }
               : null,
           ].filter((b): b is NonNullable<typeof b> => b !== null)}
-          onReset={handleReset}
+          onReset={onReset}
         />
       </div>
     </ToolbarContainer>

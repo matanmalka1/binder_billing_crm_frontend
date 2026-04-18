@@ -12,7 +12,6 @@ import {
 import { AdvancePaymentReportView } from "@/features/reports";
 import { cn, formatClientOfficeId } from "@/utils/utils";
 import { Alert } from "@/components/ui/overlays/Alert";
-import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 import { Button } from "@/components/ui/primitives/Button";
 import { DataTable, type Column } from "@/components/ui/table/DataTable";
 import { PaginationCard } from "@/components/ui/table/PaginationCard";
@@ -170,14 +169,12 @@ export const AdvancePayments: React.FC = () => {
             />
           )}
 
-          <ToolbarContainer>
-            <AdvancePaymentsFiltersBar
-              year={year}
-              month={month}
-              status={statusFilter}
-              onParamChange={setParam}
-            />
-          </ToolbarContainer>
+          <AdvancePaymentsFiltersBar
+            year={year}
+            month={month}
+            status={statusFilter}
+            onParamChange={setParam}
+          />
 
           {error && <Alert variant="error" message="שגיאה בטעינת מקדמות" />}
 

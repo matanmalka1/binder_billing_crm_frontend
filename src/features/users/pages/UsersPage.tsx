@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { Button } from "@/components/ui/primitives/Button";
 import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
@@ -82,9 +81,7 @@ export const Users: React.FC = () => {
           </div>
         }
       />
-      <ToolbarContainer>
-        <UsersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
-      </ToolbarContainer>
+      <UsersFiltersBar filters={filters} onFilterChange={handleFilterChange} />
       <PaginatedDataTable
         data={users}
         columns={columns}
