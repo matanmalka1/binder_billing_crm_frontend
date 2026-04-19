@@ -5,6 +5,8 @@ import { DatePicker } from "@/components/ui/inputs/DatePicker";
 import { Input } from "@/components/ui/inputs/Input";
 import { Select } from "@/components/ui/inputs/Select";
 import { Textarea } from "@/components/ui/inputs/Textarea";
+import { Button } from "@/components/ui/primitives/Button";
+import { Checkbox } from "@/components/ui/primitives/Checkbox";
 import { bindersApi, bindersQK } from "../api";
 import { formatMonthYear, buildYearOptions } from "@/utils/utils";
 
@@ -100,8 +102,7 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
                   key={binder.id}
                   className="flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 bg-white px-3 py-2"
                 >
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={checked}
                     onChange={() =>
                       setSelectedIds((current) =>
@@ -110,7 +111,7 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
                           : [...current, binder.id],
                       )
                     }
-                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary-600"
+                    inputClassName="mt-0.5"
                   />
                   <div className="min-w-0">
                     <div className="text-sm font-medium text-gray-900">{binder.binder_number}</div>
@@ -163,14 +164,15 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
 
       <div className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600">
         <span>{selectedCount} קלסרים נבחרו למסירה</span>
-        <button
+        <Button
           type="button"
-          className="font-medium text-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
+          variant="ghost"
+          size="sm"
           disabled={!canSubmit || isSubmitting}
           onClick={() => onSubmit(submitPayload)}
         >
           אשר מסירה
-        </button>
+        </Button>
       </div>
     </div>
   );

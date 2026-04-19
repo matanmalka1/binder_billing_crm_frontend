@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { TruncateText } from "../../../components/ui/primitives/TruncateText";
-import { formatDate } from "../../../utils/utils";
+import { formatClientOfficeId, formatDate } from "../../../utils/utils";
 import type { Reminder } from "../types";
 import { reminderTypeLabels, statusLabels, reminderStatusVariants } from "../types";
 import { ReminderRowActions } from "./ReminderRowActions";
@@ -40,6 +40,19 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
         </Badge>
       ),
     },
+    ...(showClient
+      ? [
+          {
+            key: "office_client_number",
+            header: "מס' לקוח",
+            render: (r: Reminder) => (
+              <span className="font-mono text-sm text-gray-500 tabular-nums">
+                {formatClientOfficeId(r.office_client_number)}
+              </span>
+            ),
+          },
+        ]
+      : []),
     ...(showClient
       ? [
           {

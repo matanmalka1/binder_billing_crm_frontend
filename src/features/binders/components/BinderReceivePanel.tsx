@@ -2,6 +2,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { Alert } from "../../../components/ui/overlays/Alert";
 import { Button } from "../../../components/ui/primitives/Button";
+import { Checkbox } from "../../../components/ui/primitives/Checkbox";
 import { ClientSearchInput } from "@/components/shared/client";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { Select } from "../../../components/ui/inputs/Select";
@@ -174,10 +175,12 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
       />
 
       {selectedClient && hasActiveBinder && (
-        <label className="flex items-center gap-2 text-sm text-amber-700 cursor-pointer" dir="rtl">
-          <input type="checkbox" {...register("open_new_binder")} className="rounded" />
-          קלסר מלא – פתח קלסר חדש
-        </label>
+        <Checkbox
+          {...register("open_new_binder")}
+          label="קלסר מלא – פתח קלסר חדש"
+          containerClassName="text-amber-700"
+          inputClassName="mt-0.5"
+        />
       )}
 
       <Textarea

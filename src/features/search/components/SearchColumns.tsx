@@ -2,7 +2,7 @@ import type { Column } from "../../../components/ui/table/DataTable";
 import type { SearchResult } from "../api";
 import { getResultColor, getResultIcon, getResultLabel } from "./SearchResultMeta";
 import { SearchRowActions } from "./SearchRowActions";
-import { cn, formatClientOfficeId } from "@/utils/utils";
+import { cn, formatBinderNumber, formatClientOfficeId } from "@/utils/utils";
 
 export const searchColumns: Column<SearchResult>[] = [
   {
@@ -47,7 +47,7 @@ export const searchColumns: Column<SearchResult>[] = [
     header: "מספר קלסר",
     render: (result) =>
       result.binder_number ? (
-        <span className="font-mono text-sm font-semibold text-gray-800">{result.binder_number}</span>
+        <span className="font-mono text-sm font-semibold text-gray-800">{formatBinderNumber(result.binder_number)}</span>
       ) : (
         <span className="text-sm text-gray-300">—</span>
       ),

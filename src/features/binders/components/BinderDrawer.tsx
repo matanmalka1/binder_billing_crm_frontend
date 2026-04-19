@@ -1,6 +1,5 @@
 import type { UseFormReturn } from "react-hook-form";
 import { Trash2 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
 import { Button } from "../../../components/ui/primitives/Button";
 import type { ReceiveBinderFormValues } from "../schemas";
@@ -65,27 +64,10 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
 }) => {
   const title = mode === "receive" ? "קליטת חומר מלקוח" : binder ? `קלסר ${binder.binder_number}` : "";
 
-  const subtitle =
-    mode === "receive"
-      ? undefined
-      : binder
-      ? (
-          <div className="flex flex-col gap-0.5">
-            <Link to={`/clients/${binder.client_id}`} className="text-sm text-primary-600 hover:underline">
-              {binder.client_name ?? `לקוח #${binder.client_id}`}
-            </Link>
-            <span className="font-mono text-xs text-gray-500 tabular-nums">
-              {binder.client_id_number ?? "—"}
-            </span>
-          </div>
-        )
-      : undefined;
-
   return (
     <DetailDrawer
       open={open}
       title={title}
-      subtitle={subtitle}
       onClose={onClose}
       isDirty={mode === "receive" && (receiveForm?.formState.isDirty ?? false)}
       footer={

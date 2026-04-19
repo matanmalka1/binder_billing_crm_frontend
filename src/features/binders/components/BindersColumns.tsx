@@ -4,7 +4,7 @@ import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { MonoValue } from "../../../components/ui/primitives/MonoValue";
 import type { BinderResponse } from "../types";
 import { getStatusLabel } from "../../../utils/enums";
-import { formatClientOfficeId, formatMonthYear } from "../../../utils/utils";
+import { formatBinderNumber, formatClientOfficeId, formatMonthYear } from "../../../utils/utils";
 import { BINDER_STATUS_VARIANTS } from "../constants";
 import { BinderRowActions } from "./BinderRowActions";
 
@@ -73,7 +73,7 @@ export const buildBindersColumns = ({
     header: "מספר קלסר",
     render: (binder) => (
       <span className="font-mono text-sm font-semibold text-gray-700">
-        {binder.binder_number}
+        {formatBinderNumber(binder.binder_number)}
       </span>
     ),
   },

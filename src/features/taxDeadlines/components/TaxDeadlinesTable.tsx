@@ -12,7 +12,7 @@ import {
 } from "../api";
 import { getDeadlineUrgency, getDeadlineDaysLabelShort } from "../utils";
 import { staggerDelay } from "../../../utils/animation";
-import { formatDate, cn } from "../../../utils/utils";
+import { formatClientOfficeId, formatDate, cn } from "../../../utils/utils";
 
 interface TaxDeadlinesTableProps {
   deadlines: TaxDeadlineResponse[];
@@ -32,7 +32,7 @@ const urgencyRowMap: Record<string, string> = {
   yellow: "bg-warning-50/30",
 };
 
-const TABLE_HEADERS = ["לקוח", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", ""];
+const TABLE_HEADERS = ["מס' לקוח", "לקוח", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", ""];
 
 export const TaxDeadlinesTable = ({
   deadlines,
@@ -90,6 +90,11 @@ export const TaxDeadlinesTable = ({
                   style={{ animationDelay: staggerDelay(index) }}
                   onClick={() => onRowClick?.(deadline)}
                 >
+                  <td className="py-3.5 pr-4">
+                    <span className="font-mono text-sm text-gray-500 tabular-nums">
+                      {formatClientOfficeId(deadline.office_client_number)}
+                    </span>
+                  </td>
                   <td className="py-3.5 pr-4">
                     <span className="font-mono text-sm font-semibold text-gray-800">
                       {deadline.business_name ?? `#${deadline.business_id}`}

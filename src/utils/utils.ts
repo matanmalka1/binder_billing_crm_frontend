@@ -37,6 +37,12 @@ export const formatClientOfficeId = (
   return `#${value}`;
 };
 
+export const formatBinderNumber = (binderNumber: string | null | undefined): string => {
+  if (!binderNumber) return "—";
+  const parts = binderNumber.split("/");
+  return parts[parts.length - 1];
+};
+
 export const formatDate = (value: string | null): string => {
   if (!value) return "—";
   return format(parseISO(value), "dd/MM/yyyy", { locale: he });

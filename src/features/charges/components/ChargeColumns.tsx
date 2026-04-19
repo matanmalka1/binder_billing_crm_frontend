@@ -3,7 +3,7 @@ import type { Column } from "../../../components/ui/table/DataTable";
 import { buildSelectionColumn } from "../../../components/ui/table/tableSelection";
 import type { ChargeResponse } from "../api";
 import { getChargeAmountText, getChargePeriodLabel, getChargeTypeLabel } from "../utils";
-import { formatDate } from "../../../utils/utils";
+import { formatClientOfficeId, formatDate } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { ChargeRowActions } from "./ChargeRowActions";
 import { chargeStatusVariants } from "../constants";
@@ -32,6 +32,17 @@ export const buildChargeColumns = ({
   allIds = [],
 }: BuildChargeColumnsParams): Column<ChargeResponse>[] => {
   const dataColumns: Column<ChargeResponse>[] = [
+    {
+      key: "office_client_number",
+      header: "מס' לקוח",
+      headerClassName: "w-28",
+      className: "w-28",
+      render: (charge) => (
+        <span className="font-mono text-sm text-gray-500 tabular-nums">
+          {formatClientOfficeId(charge.office_client_number)}
+        </span>
+      ),
+    },
     {
       key: "id",
       header: "#",

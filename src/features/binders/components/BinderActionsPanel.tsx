@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/primitives/Button";
 import { BinderActionButtons } from "./BinderActionButtons";
 
 interface BinderActionsPanelProps {
@@ -34,24 +35,28 @@ export const BinderActionsPanel: React.FC<BinderActionsPanelProps> = ({
         size="sm"
       />
       {(status === "in_office" || status === "closed_in_office") && onBulkReady && (
-        <button
+        <Button
           type="button"
-          className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-50"
+          variant="outline"
+          size="sm"
+          className="border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100"
           onClick={onBulkReady}
           disabled={disabled}
         >
           מוכן עד תקופה
-        </button>
+        </Button>
       )}
       {status === "ready_for_pickup" && onOpenHandover && (
-        <button
+        <Button
           type="button"
-          className="rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-800 transition hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-50"
+          variant="outline"
+          size="sm"
+          className="border-primary-200 bg-primary-50 text-primary-800 hover:bg-primary-100"
           onClick={onOpenHandover}
           disabled={disabled}
         >
           מסירת כמה קלסרים
-        </button>
+        </Button>
       )}
     </div>
   );

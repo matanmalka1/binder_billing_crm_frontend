@@ -7,6 +7,7 @@ import type { LucideIcon } from "lucide-react";
 import type { ChargeResponse } from "@/features/charges";
 import type { BinderDetailResponse } from "@/features/binders";
 import { getChargeStatusLabel, getStatusLabel as getBinderStatusLabel } from "../../../utils/enums";
+import { formatBinderNumber } from "../../../utils/utils";
 import { getChargeTypeLabel } from "@/features/charges";
 
 // ── Stat pill ───────────────────────────────────────────────────────────────
@@ -162,7 +163,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           items={binders}
           className="mt-6"
           getKey={(binder) => binder.id}
-          getTitle={(binder) => binder.binder_number}
+          getTitle={(binder) => formatBinderNumber(binder.binder_number)}
           getSubtitle={(binder) => getBinderStatusLabel(binder.status)}
           getItemHref={() => `/binders?client_id=${clientId}`}
         />

@@ -31,7 +31,7 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
         <DrawerSection title="פרטי תזכורת">
           <DrawerField label="לקוח" value={reminder.client_name} />
           <DrawerField
-            label="מספר לקוח במשרד"
+            label="מס' לקוח "
             value={reminder.office_client_number != null ? formatClientOfficeId(reminder.office_client_number) : "—"}
           />
           <DrawerField label="ת.ז / ח.פ" value={reminder.client_id_number ?? "—"} />

@@ -3,6 +3,7 @@ import type { PaginatedResponse } from "@/types";
 export interface ChargeResponse {
   id: number;
   client_id: number;
+  office_client_number?: number | null;
   business_id?: number | null;
   business_name: string | null;
   annual_report_id: number | null;
