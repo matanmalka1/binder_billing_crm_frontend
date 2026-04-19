@@ -139,7 +139,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
               onSelect={handleSelectClient}
               onClear={handleClearClient}
               error={errors.client_id?.message}
-              label="עסק *"
+              label="לקוח *"
             />
           </div>
           <Input
