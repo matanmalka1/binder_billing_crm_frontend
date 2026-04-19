@@ -81,7 +81,7 @@ export interface CreateClientPayload {
   business_opened_at?: ISODateString | null;
 }
 
-export interface ClientOnboardingResponse {
+export interface CreateClientResponse {
   client: ClientResponse;
   business: BusinessResponse;
 }

@@ -10,7 +10,7 @@ import type {
   BusinessResponse,
   ClientBusinessesResponse,
   BusinessStatusCardResponse,
-  ClientOnboardingResponse,
+  CreateClientResponse,
   CreateClientPayload,
   UpdateClientPayload,
   CreateBusinessPayload,
@@ -103,7 +103,7 @@ export const clientsApi = {
 
   create: async (payload: CreateClientPayload): Promise<ClientResponse> => {
     const { business_name, business_opened_at, ...clientPayload } = payload;
-    const response = await api.post<ClientOnboardingResponse>(CLIENT_ENDPOINTS.clientsOnboarding, {
+    const response = await api.post<CreateClientResponse>(CLIENT_ENDPOINTS.clients, {
       client: clientPayload,
       business: {
         business_name,
