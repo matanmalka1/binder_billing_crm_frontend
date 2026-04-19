@@ -39,7 +39,7 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
-            label="חיפוש עסק"
+            label="חיפוש לקוח"
             type="text"
             value={searchDraft}
             onChange={(e) => setSearchDraft(e.target.value)}

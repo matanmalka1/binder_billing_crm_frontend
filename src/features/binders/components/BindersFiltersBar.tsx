@@ -70,7 +70,7 @@ export const BindersFiltersBar = ({
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-5">
         {statusPills.map((pill) => {
           const isActive = (filters.status ?? "") === pill.key;
           return (
