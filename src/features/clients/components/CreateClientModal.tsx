@@ -74,7 +74,6 @@ export const CreateClientModal: React.FC<Props> = ({
       address_apartment: "",
       address_city: "",
       address_zip_code: "",
-      office_client_number: "",
       vat_reporting_frequency: undefined,
       vat_exempt_ceiling: null,
       advance_rate: "",
@@ -139,7 +138,6 @@ export const CreateClientModal: React.FC<Props> = ({
       address_apartment: data.address_apartment,
       address_city: data.address_city,
       address_zip_code: data.address_zip_code,
-      office_client_number: Number(data.office_client_number),
       vat_reporting_frequency: data.vat_reporting_frequency,
       vat_exempt_ceiling: data.vat_exempt_ceiling || null,
       advance_rate: data.advance_rate,
@@ -299,18 +297,6 @@ export const CreateClientModal: React.FC<Props> = ({
             error={errors.address_city?.message}
             disabled={isLoading}
             {...register("address_city")}
-          />
-        </div>
-
-        <div className="border-t border-gray-200 pt-4 space-y-4">
-          <p className="text-sm font-medium text-gray-700">נתונים אדמיניסטרטיביים</p>
-          <Input
-            label="מספר לקוח במשרד *"
-            placeholder="למשל 123"
-            error={errors.office_client_number?.message}
-            disabled={isLoading}
-            onInput={stripNonDigits}
-            {...register("office_client_number")}
           />
         </div>
 

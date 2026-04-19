@@ -73,7 +73,6 @@ export interface CreateClientPayload {
   address_apartment: string;
   address_city: string;
   address_zip_code: string;
-  office_client_number: number;
   vat_reporting_frequency: VatType;
   vat_exempt_ceiling?: string | null;
   advance_rate: string;
@@ -101,7 +100,6 @@ export interface UpdateClientPayload {
   address_apartment?: string | null;
   address_city?: string | null;
   address_zip_code?: string | null;
-  office_client_number?: number | null;
   entity_type?: EntityType | null;
   vat_reporting_frequency?: VatType | null;
   vat_exempt_ceiling?: string | null;
