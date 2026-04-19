@@ -158,6 +158,18 @@ const resolveErrorMessage = (
       if (typeof msg === "string" && msg.trim()) return msg.trim();
       return fallbackMessage;
     }
+
+    if (detail && typeof detail === "object") {
+      const nestedDetail = (detail as { detail?: unknown }).detail;
+      if (typeof nestedDetail === "string" && nestedDetail.trim()) {
+        return nestedDetail.trim();
+      }
+    }
+
+    const errorMetaDetail = error.response?.data?.error_meta?.detail;
+    if (typeof errorMetaDetail === "string" && errorMetaDetail.trim()) {
+      return errorMetaDetail.trim();
+    }
   }
 
   if (error instanceof Error && error.message) {

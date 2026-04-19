@@ -75,6 +75,7 @@ export interface Reminder {
   sent_at: string | null;
   canceled_at: string | null;
   canceled_by: number | null;
+  display_label: string | null;
 }
 
 const positiveIdSchema = z.number().int().positive();

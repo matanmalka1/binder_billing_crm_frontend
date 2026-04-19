@@ -22,7 +22,7 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
     open={reminder !== null}
     title={
       reminder
-        ? (reminderTypeLabels[reminder.reminder_type] ?? reminder.reminder_type)
+        ? (reminder.display_label ?? reminderTypeLabels[reminder.reminder_type] ?? reminder.reminder_type)
         : ""
     }
     subtitle={reminder ? (reminder.business_name ? `${reminder.business_name} (#${reminder.business_id})` : `עסק #${reminder.business_id}`) : undefined}
@@ -34,6 +34,7 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
           <DrawerField
             label="סוג"
             value={
+              reminder.display_label ??
               reminderTypeLabels[reminder.reminder_type] ??
               reminder.reminder_type
             }

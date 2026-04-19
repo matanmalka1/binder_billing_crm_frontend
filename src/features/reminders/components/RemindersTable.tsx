@@ -36,7 +36,7 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
       header: "סוג",
       render: (r) => (
         <Badge variant="info">
-          {reminderTypeLabels[r.reminder_type] ?? r.reminder_type}
+          {r.display_label ?? reminderTypeLabels[r.reminder_type] ?? r.reminder_type}
         </Badge>
       ),
     },
