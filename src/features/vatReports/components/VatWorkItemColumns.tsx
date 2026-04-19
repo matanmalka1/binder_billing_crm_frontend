@@ -38,6 +38,15 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     ),
   },
   {
+    key: "client_id_number",
+    header: "ת.ז / ח.פ",
+    render: (item) => (
+      <span className="font-mono text-sm text-gray-500 tabular-nums">
+        {item.client_id_number ?? "—"}
+      </span>
+    ),
+  },
+  {
     key: "period",
     header: "תקופה",
     render: (item) => (

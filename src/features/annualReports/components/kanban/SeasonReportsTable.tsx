@@ -71,6 +71,15 @@ const columns: Column<AnnualReportFull>[] = [
     ),
   },
   {
+    key: "client_id_number",
+    header: "ת.ז / ח.פ",
+    render: (r) => (
+      <span className="font-mono text-sm text-gray-500 tabular-nums">
+        {r.client_id_number ?? "—"}
+      </span>
+    ),
+  },
+  {
     key: "client_type",
     header: "סוג / טופס",
     render: (r) => (

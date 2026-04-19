@@ -6,13 +6,12 @@ import {
 import { Badge } from "../../../components/ui/primitives/Badge";
 import type { Reminder } from "../api";
 import { reminderTypeLabels, statusLabels, reminderStatusVariants } from "../types";
-import { formatDate, formatDateTime } from "../../../utils/utils";
+import { formatClientOfficeId, formatDate, formatDateTime } from "../../../utils/utils";
 
 interface ReminderDrawerProps {
   reminder: Reminder | null;
   onClose: () => void;
 }
-
 
 export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
   reminder,
@@ -25,12 +24,17 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
         ? (reminder.display_label ?? reminderTypeLabels[reminder.reminder_type] ?? reminder.reminder_type)
         : ""
     }
-    subtitle={reminder ? (reminder.business_name ? `${reminder.business_name} (#${reminder.business_id})` : `עסק #${reminder.business_id}`) : undefined}
     onClose={onClose}
   >
     {reminder && (
       <>
         <DrawerSection title="פרטי תזכורת">
+          <DrawerField label="לקוח" value={reminder.client_name} />
+          <DrawerField
+            label="מספר לקוח במשרד"
+            value={reminder.office_client_number != null ? formatClientOfficeId(reminder.office_client_number) : "—"}
+          />
+          <DrawerField label="ת.ז / ח.פ" value={reminder.client_id_number ?? "—"} />
           <DrawerField
             label="סוג"
             value={
@@ -39,7 +43,6 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
               reminder.reminder_type
             }
           />
-          <DrawerField label="עסק" value={reminder.business_name ? `${reminder.business_name} (#${reminder.business_id})` : `#${reminder.business_id}`} />
           <DrawerField
             label="סטטוס"
             value={

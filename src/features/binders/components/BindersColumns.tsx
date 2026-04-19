@@ -60,6 +60,15 @@ export const buildBindersColumns = ({
     render: (binder) => <ClientCell binder={binder} />,
   },
   {
+    key: "client_id_number",
+    header: "ת.ז / ח.פ",
+    render: (binder) => (
+      <span className="font-mono text-sm text-gray-500 tabular-nums">
+        {binder.client_id_number ?? "—"}
+      </span>
+    ),
+  },
+  {
     key: "binder_number",
     header: "מספר קלסר",
     render: (binder) => (

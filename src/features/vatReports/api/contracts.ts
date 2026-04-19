@@ -4,6 +4,7 @@ export interface VatWorkItemResponse {
   id: number;
   client_id: number;
   client_name: string | null;
+  client_id_number?: string | null;
   client_status: string | null;
   period: string;
   period_type: string | null;

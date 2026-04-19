@@ -70,9 +70,14 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
       ? undefined
       : binder
       ? (
-          <Link to={`/clients/${binder.client_id}`} className="text-sm text-primary-600 hover:underline">
-            {binder.client_name ?? `לקוח #${binder.client_id}`}
-          </Link>
+          <div className="flex flex-col gap-0.5">
+            <Link to={`/clients/${binder.client_id}`} className="text-sm text-primary-600 hover:underline">
+              {binder.client_name ?? `לקוח #${binder.client_id}`}
+            </Link>
+            <span className="font-mono text-xs text-gray-500 tabular-nums">
+              {binder.client_id_number ?? "—"}
+            </span>
+          </div>
         )
       : undefined;
 
