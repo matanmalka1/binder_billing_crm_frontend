@@ -19,8 +19,6 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) 
 
   const items = [
     { label: "תדירות דיווח מע\"מ", value: profile?.vat_reporting_frequency ? getVatTypeLabel(profile.vat_reporting_frequency) : "—" },
-    { label: "סוג עסק", value: profile?.business_type_label ?? "—" },
-    { label: "שנת מס ראשונה", value: profile?.tax_year_start ?? "—" },
     { label: "רואה חשבון מלווה", value: profile?.accountant_name ?? "—" },
     {
       label: "אחוז מקדמה",
