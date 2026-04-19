@@ -43,6 +43,12 @@ const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse; clientI
         e.stopPropagation();
         navigate(`/tax/vat/${lookup.id}`);
       }}
+      onKeyDown={(e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        e.preventDefault();
+        e.stopPropagation();
+        navigate(`/tax/vat/${lookup.id}`);
+      }}
     >
       {getVatWorkItemStatusLabel(lookup.status)}
     </Badge>

@@ -27,13 +27,16 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
   const [results, setResults] = useState<SearchResult[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false);
+        setHighlightedIndex(-1);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -47,6 +50,7 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
     if (query.trim().length < 2) {
       setResults([]);
       setOpen(false);
+      setHighlightedIndex(-1);
       return;
     }
 
@@ -57,9 +61,11 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
         const clientResults = res.results.filter((r) => r.result_type === "client");
         setResults(clientResults);
         setOpen(clientResults.length > 0);
+        setHighlightedIndex(clientResults.length > 0 ? 0 : -1);
       } catch {
         setResults([]);
         setOpen(false);
+        setHighlightedIndex(-1);
       } finally {
         setLoading(false);
       }
@@ -69,23 +75,67 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
   const handleSelect = (result: SearchResult) => {
     onSelect({ id: result.client_id, name: result.client_name, id_number: "", client_status: result.client_status });
     setOpen(false);
+    setHighlightedIndex(-1);
+    inputRef.current?.focus();
+  };
+
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
+    if (!open || results.length === 0) {
+      if (event.key === "Escape") {
+        setOpen(false);
+        setHighlightedIndex(-1);
+      }
+      return;
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setHighlightedIndex((prev) => (prev + 1) % results.length);
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setHighlightedIndex((prev) => (prev <= 0 ? results.length - 1 : prev - 1));
+      return;
+    }
+
+    if (event.key === "Enter") {
+      const selected = results[highlightedIndex] ?? results[0];
+      if (!selected) return;
+      event.preventDefault();
+      handleSelect(selected);
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setOpen(false);
+      setHighlightedIndex(-1);
+    }
   };
 
   return (
     <div ref={containerRef} className="relative w-full">
       <Input
+        ref={inputRef}
         label={label}
         value={value}
         onChange={(e) => handleChange(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         autoComplete="off"
         error={error}
+        role="combobox"
+        aria-expanded={open}
+        aria-controls="client-search-results"
+        aria-activedescendant={highlightedIndex >= 0 ? `client-search-option-${results[highlightedIndex]?.client_id}` : undefined}
         startIcon={<Search className="h-4 w-4" />}
         endElement={
           loading ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
           ) : value ? (
-            <button type="button" onClick={() => { onChange(""); setResults([]); setOpen(false); }} className="p-1 text-gray-400 hover:text-gray-600">
+            <button type="button" onClick={() => { onChange(""); setResults([]); setOpen(false); setHighlightedIndex(-1); }} className="p-1 text-gray-400 hover:text-gray-600">
               <X className="h-3.5 w-3.5" />
             </button>
           ) : undefined
@@ -93,12 +143,22 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
       />
 
       {open && results.length > 0 && (
-        <ul className="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg">
-          {results.map((result) => (
+        <ul
+          id="client-search-results"
+          role="listbox"
+          className="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg"
+        >
+          {results.map((result, index) => (
             <li
+              id={`client-search-option-${result.client_id}`}
               key={result.client_id}
+              role="option"
+              aria-selected={highlightedIndex === index}
               onMouseDown={() => handleSelect(result)}
-              className="flex cursor-pointer items-center justify-between px-4 py-2.5 hover:bg-primary-50 text-sm"
+              onMouseEnter={() => setHighlightedIndex(index)}
+              className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm ${
+                highlightedIndex === index ? "bg-primary-50" : "hover:bg-primary-50"
+              }`}
             >
               <span className="font-medium text-gray-900">{result.client_name}</span>
               <span className="text-xs text-gray-400">{formatClientOfficeId(result.client_id)}</span>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { StatsCard } from "@/components/ui/layout/StatsCard";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { Button } from "@/components/ui/primitives/Button";
 import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
@@ -32,12 +33,14 @@ export const Clients: React.FC = () => {
     error,
     filters,
     handleFilterChange,
+    handleReset,
     isAdvisor,
     loading,
     pendingAction,
     cancelPendingAction,
     confirmPendingAction,
     setPage,
+    stats,
     total,
     createClient,
     createLoading,
@@ -79,7 +82,30 @@ export const Clients: React.FC = () => {
           message="צפייה בלבד. יצירה ועריכה של לקוחות זמינה ליועצים בלבד."
         />
       )}
-      <ClientsFiltersBar filters={filters} onFilterChange={handleFilterChange} />
+      <div className="grid grid-cols-3 gap-4">
+        <StatsCard
+          title="פעילים"
+          value={stats.active}
+          variant="green"
+          selected={filters.status === "active"}
+          onClick={() => handleFilterChange("status", filters.status === "active" ? "" : "active")}
+        />
+        <StatsCard
+          title="מוקפאים"
+          value={stats.frozen}
+          variant="orange"
+          selected={filters.status === "frozen"}
+          onClick={() => handleFilterChange("status", filters.status === "frozen" ? "" : "frozen")}
+        />
+        <StatsCard
+          title="סגורים"
+          value={stats.closed}
+          variant="neutral"
+          selected={filters.status === "closed"}
+          onClick={() => handleFilterChange("status", filters.status === "closed" ? "" : "closed")}
+        />
+      </div>
+      <ClientsFiltersBar filters={filters} onFilterChange={handleFilterChange} onReset={handleReset} />
       <PaginatedDataTable
         data={clients}
         columns={columns}

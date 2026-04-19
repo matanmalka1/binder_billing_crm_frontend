@@ -38,6 +38,62 @@ export const DropdownMenu = ({ ariaLabel, children }: DropdownMenuProps) => {
     setOpen(true);
   };
 
+  const focusMenuItem = (direction: 1 | -1, target?: HTMLElement) => {
+    const container = portalRef.current;
+    if (!container) return;
+    const items = Array.from(container.querySelectorAll<HTMLElement>("button:not(:disabled)"));
+    if (items.length === 0) return;
+
+    const activeIndex = target ? items.indexOf(target) : -1;
+    const nextIndex = activeIndex < 0
+      ? (direction === 1 ? 0 : items.length - 1)
+      : (activeIndex + direction + items.length) % items.length;
+    items[nextIndex]?.focus();
+  };
+
+  const handleTriggerKeyDown: React.KeyboardEventHandler<HTMLButtonElement> = (event) => {
+    if (event.key !== "ArrowDown" && event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    if (!open) {
+      const rect = triggerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      setTriggerRect(rect);
+      setPos(null);
+      setOpen(true);
+      requestAnimationFrame(() => focusMenuItem(1));
+      return;
+    }
+    focusMenuItem(1);
+  };
+
+  const handleMenuKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      focusMenuItem(1, event.target as HTMLElement);
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      focusMenuItem(-1, event.target as HTMLElement);
+      return;
+    }
+    if (event.key === "Home") {
+      event.preventDefault();
+      focusMenuItem(1);
+      return;
+    }
+    if (event.key === "End") {
+      event.preventDefault();
+      focusMenuItem(-1);
+      return;
+    }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setOpen(false);
+      triggerRef.current?.focus();
+    }
+  };
+
   // Measure menu after first render, then compute position
   useLayoutEffect(() => {
     if (!open || !triggerRect || pos) return;
@@ -57,8 +113,11 @@ export const DropdownMenu = ({ ariaLabel, children }: DropdownMenuProps) => {
         ref={triggerRef}
         type="button"
         onClick={toggle}
+        onKeyDown={handleTriggerKeyDown}
         className="flex h-7 w-7 items-center justify-center rounded-md border border-transparent text-gray-400 transition-colors hover:border-gray-200 hover:bg-gray-100 hover:text-gray-600"
         aria-label={ariaLabel ?? "פעולות"}
+        aria-haspopup="menu"
+        aria-expanded={open}
       >
         <MoreHorizontal className="h-4 w-4" />
       </button>
@@ -82,6 +141,8 @@ export const DropdownMenu = ({ ariaLabel, children }: DropdownMenuProps) => {
           }}
           className="rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={handleMenuKeyDown}
+          role="menu"
         >
           {children}
         </div>,

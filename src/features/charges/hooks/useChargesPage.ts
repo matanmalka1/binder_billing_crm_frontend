@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePaginatedList } from "../../../hooks/usePaginatedList";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   chargesApi,
@@ -34,11 +33,16 @@ export const useChargesPage = () => {
     page_size: filters.page_size,
   };
 
-  const { items: chargeItems, total, loading, error } = usePaginatedList({
+  const { data: listData, isPending: loading, error: listError } = useQuery({
     queryKey: chargesQK.list(apiParams),
     queryFn: () => chargesApi.list(apiParams),
-    errorMessage: "שגיאה בטעינת רשימת חיובים",
   });
+
+  const chargeItems = listData?.items ?? [];
+  const total = listData?.total ?? 0;
+  const defaultStat = { count: 0, amount: "0" };
+  const stats = listData?.stats ?? { draft: defaultStat, issued: defaultStat, paid: defaultStat, canceled: defaultStat };
+  const error = listError ? getErrorMessage(listError, "שגיאה בטעינת רשימת חיובים") : null;
   const { isAdvisor } = useRole();
 
   const createMutation = useMutation({
@@ -176,6 +180,7 @@ export const useChargesPage = () => {
     clearSelection,
     setFilter,
     setSearchParams,
+    stats,
     submitCreate,
     total,
   };

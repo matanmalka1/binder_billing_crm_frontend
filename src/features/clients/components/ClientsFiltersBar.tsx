@@ -9,8 +9,7 @@ import {
   CLIENT_SORT_ORDER_OPTIONS,
   CLIENT_STATUS_LABELS,
   CLIENT_STATUS_OPTIONS,
-  DEFAULT_CLIENT_SORT_BY,
-  DEFAULT_CLIENT_SORT_ORDER,
+
 } from "../constants";
 import type { ClientsFiltersBarProps } from "../types";
 
@@ -22,6 +21,7 @@ const STATUS_OPTIONS = [
 export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
   filters,
   onFilterChange,
+  onReset,
 }) => {
   const [searchDraft, setSearchDraft] = useSearchDebounce(
     filters.search,
@@ -30,10 +30,7 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
 
   const handleReset = () => {
     setSearchDraft("");
-    onFilterChange("search", "");
-    onFilterChange("status", "");
-    onFilterChange("sort_by", DEFAULT_CLIENT_SORT_BY);
-    onFilterChange("sort_order", DEFAULT_CLIENT_SORT_ORDER);
+    onReset();
   };
 
   const activeStatus = filters.status ?? "";

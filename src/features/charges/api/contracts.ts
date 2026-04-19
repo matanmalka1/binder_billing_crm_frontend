@@ -28,7 +28,19 @@ export type ChargeBase = ChargeResponse;
 export type ChargeAdvisorResponse = ChargeResponse;
 export type ChargeSecretaryResponse = ChargeResponse;
 
-export type ChargesListResponse = PaginatedResponse<ChargeResponse>;
+export interface ChargeStatusStat {
+  count: number;
+  amount: string;
+}
+
+export interface ChargeListStats {
+  draft: ChargeStatusStat;
+  issued: ChargeStatusStat;
+  paid: ChargeStatusStat;
+  canceled: ChargeStatusStat;
+}
+
+export type ChargesListResponse = PaginatedResponse<ChargeResponse> & { stats: ChargeListStats };
 
 export interface ChargesListParams {
   client_id?: number;

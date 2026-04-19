@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePaginatedList } from "../../../hooks/usePaginatedList";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getErrorMessage } from "../../../utils/utils";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   clientsApi,
@@ -36,7 +36,7 @@ const extractErrorCode = (err: unknown): string | null => {
 
 export const useClientsPage = () => {
   const queryClient = useQueryClient();
-  const { searchParams, setFilter, setPage } = useSearchParamFilters();
+  const { searchParams, setFilter, setPage, resetFilters } = useSearchParamFilters();
   const { isAdvisor, can } = useRole();
 
   // Pending payload held while the "deleted client" dialog is open.
@@ -61,16 +61,15 @@ export const useClientsPage = () => {
     page_size: filters.page_size,
   };
 
-  const {
-    items: clientItems,
-    total,
-    loading,
-    error,
-  } = usePaginatedList({
+  const { data: listData, isPending: loading, error: listError } = useQuery({
     queryKey: clientsQK.list(apiParams),
     queryFn: () => clientsApi.list(apiParams),
-    errorMessage: "שגיאה בטעינת רשימת לקוחות",
   });
+
+  const clientItems = listData?.items ?? [];
+  const total = listData?.total ?? 0;
+  const stats = listData?.stats ?? { active: 0, frozen: 0, closed: 0 };
+  const error = listError ? getErrorMessage(listError, "שגיאה בטעינת רשימת לקוחות") : null;
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateClientPayload) => clientsApi.create(payload),
@@ -147,6 +146,13 @@ export const useClientsPage = () => {
     setFilter(name, value);
   };
 
+  const handleReset = () => {
+    resetFilters({
+      sort_by: DEFAULT_CLIENT_SORT_BY,
+      sort_order: DEFAULT_CLIENT_SORT_ORDER,
+    });
+  };
+
   return {
     activeActionKey,
     activeActionKeyRef,
@@ -155,9 +161,11 @@ export const useClientsPage = () => {
     filters,
     onAction,
     handleFilterChange,
+    handleReset,
     loading,
     pendingAction,
     setPage,
+    stats,
     total,
     cancelPendingAction,
     confirmPendingAction,

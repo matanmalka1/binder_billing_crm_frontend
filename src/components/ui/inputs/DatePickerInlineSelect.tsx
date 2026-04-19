@@ -10,6 +10,7 @@ interface InlineSelectProps {
 
 export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({ value, options, onChange }) => {
   const [open, setOpen] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const ref = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -21,6 +22,15 @@ export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({ value, opt
   }, [open]);
 
   useEffect(() => {
+    if (!open) {
+      setHighlightedIndex(-1);
+      return;
+    }
+    const selectedIndex = options.findIndex((opt) => opt.value === value);
+    setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : 0);
+  }, [open, options, value]);
+
+  useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
@@ -30,12 +40,55 @@ export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({ value, opt
 
   const current = options.find((o) => o.value === value);
 
+  const moveHighlight = (direction: 1 | -1) => {
+    if (options.length === 0) return;
+    setHighlightedIndex((prev) => {
+      if (prev < 0) return direction === 1 ? 0 : options.length - 1;
+      return (prev + direction + options.length) % options.length;
+    });
+  };
+
+  const handleTriggerKeyDown: React.KeyboardEventHandler<HTMLButtonElement> = (event) => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!open) {
+        setOpen(true);
+        return;
+      }
+      moveHighlight(event.key === "ArrowDown" ? 1 : -1);
+      return;
+    }
+
+    if ((event.key === "Enter" || event.key === " ") && !open) {
+      event.preventDefault();
+      setOpen(true);
+      return;
+    }
+
+    if ((event.key === "Enter" || event.key === " ") && open) {
+      const highlighted = options[highlightedIndex];
+      if (!highlighted) return;
+      event.preventDefault();
+      onChange(highlighted.value);
+      setOpen(false);
+      return;
+    }
+
+    if (event.key === "Escape" && open) {
+      event.preventDefault();
+      setOpen(false);
+    }
+  };
+
   return (
     <div ref={ref} className="relative">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
+        onKeyDown={handleTriggerKeyDown}
         className="flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 text-sm font-semibold text-gray-800 transition-colors"
+        aria-haspopup="listbox"
+        aria-expanded={open}
       >
         {current?.label}
         <ChevronDown className={cn("h-3 w-3 text-gray-500 transition-transform", open && "rotate-180")} />
@@ -44,19 +97,24 @@ export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({ value, opt
         <div
           ref={listRef}
           className="absolute z-[60] top-full mt-1 start-0 w-28 max-h-48 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-xl"
+          role="listbox"
         >
-          {options.map((opt) => (
+          {options.map((opt, index) => (
             <button
               key={opt.value}
               type="button"
               data-selected={opt.value === value}
               onClick={() => { onChange(opt.value); setOpen(false); }}
+              onMouseEnter={() => setHighlightedIndex(index)}
               className={cn(
                 "w-full text-right px-3 py-1.5 text-sm transition-colors",
+                highlightedIndex === index && opt.value !== value && "bg-gray-100",
                 opt.value === value
                   ? "bg-primary-600 text-white font-semibold"
                   : "text-gray-700 hover:bg-gray-100",
               )}
+              role="option"
+              aria-selected={opt.value === value}
             >
               {opt.label}
             </button>

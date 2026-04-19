@@ -11,6 +11,7 @@ export interface ClientsFilters extends ListClientsParams {
 export interface ClientsFiltersBarProps {
   filters: ClientsFilters;
   onFilterChange: (name: "page_size" | "search" | "status" | "sort_by" | "sort_order", value: string) => void;
+  onReset: () => void;
 }
 
 

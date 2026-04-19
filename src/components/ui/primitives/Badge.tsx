@@ -18,6 +18,7 @@ interface BadgeProps {
   removable?: boolean;
   onRemove?: () => void;
   onClick?: React.MouseEventHandler<HTMLSpanElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLSpanElement>;
   className?: string;
 }
 
@@ -45,6 +46,7 @@ export const Badge: React.FC<BadgeProps> = ({
   removable,
   onRemove,
   onClick,
+  onKeyDown,
   className,
 }) => {
   if (removable) {
@@ -86,10 +88,11 @@ export const Badge: React.FC<BadgeProps> = ({
       className={cn(
         "px-2.5 py-0.5 rounded-full text-xs font-medium",
         variantClasses[variant],
-        onClick && "cursor-pointer",
+        onClick && "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
         className,
       )}
       onClick={onClick}
+      onKeyDown={onKeyDown}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
     >

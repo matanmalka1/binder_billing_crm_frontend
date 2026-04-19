@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
 import { Card } from "../primitives/Card";
 import { cn } from "../../../utils/utils";
 import { StateCard } from "../feedback/StateCard";
@@ -42,6 +42,31 @@ export const DataTable = <T,>({
   rowClassName,
   emptyState,
 }: DataTableProps<T>) => {
+  const handleRowKeyDown = (
+    event: KeyboardEvent<HTMLTableRowElement>,
+    item: T,
+  ) => {
+    if (!onRowClick) return;
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onRowClick(item);
+      return;
+    }
+
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+
+    event.preventDefault();
+    const currentRow = event.currentTarget;
+    const sibling = event.key === "ArrowDown"
+      ? currentRow.nextElementSibling
+      : currentRow.previousElementSibling;
+
+    if (sibling instanceof HTMLTableRowElement) {
+      sibling.focus();
+    }
+  };
+
   if (isLoading) {
     return (
       <TableSkeleton
@@ -90,11 +115,13 @@ export const DataTable = <T,>({
                 key={getRowKey(item)}
                 className={cn(
                   "transition-colors duration-100",
-                  onRowClick && "cursor-pointer hover:bg-primary-50/40 active:bg-primary-50/70",
+                  onRowClick && "cursor-pointer hover:bg-primary-50/40 active:bg-primary-50/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset",
                   !onRowClick && "hover:bg-gray-50/60",
                   rowClassName?.(item, index),
                 )}
                 onClick={() => onRowClick?.(item)}
+                onKeyDown={(event) => handleRowKeyDown(event, item)}
+                tabIndex={onRowClick ? 0 : undefined}
               >
                 {columns.map((column) => (
                   <td

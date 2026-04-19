@@ -36,6 +36,7 @@ export const Charges: React.FC = () => {
     toggleSelectAll,
     clearSelection,
     setFilter,
+    stats,
     submitCreate,
     total,
   } = useChargesPage();
@@ -72,7 +73,12 @@ export const Charges: React.FC = () => {
         }
       />
 
-      <ChargesSummaryBar charges={charges} isAdvisor={isAdvisor} total={total} />
+      <ChargesSummaryBar
+        stats={stats}
+        isAdvisor={isAdvisor}
+        currentStatus={filters.status}
+        onStatusClick={(status) => setFilter("status", status)}
+      />
 
       {!isAdvisor && (
         <Alert

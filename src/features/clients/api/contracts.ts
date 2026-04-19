@@ -50,7 +50,13 @@ export interface ClientConflictInfo {
   deleted_clients: DeletedClientSummary[];
 }
 
-export type ClientListResponse = PaginatedResponse<ClientResponse>;
+export interface ClientListStats {
+  active: number;
+  frozen: number;
+  closed: number;
+}
+
+export type ClientListResponse = PaginatedResponse<ClientResponse> & { stats: ClientListStats };
 
 export interface ListClientsParams {
   search?: string;

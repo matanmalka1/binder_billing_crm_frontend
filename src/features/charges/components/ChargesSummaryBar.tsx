@@ -1,49 +1,61 @@
 import { Clock, CheckCircle2, FileText, XCircle } from "lucide-react";
-import type { ChargeResponse } from "../api";
+import type { ChargeListStats, ChargeStatusStat } from "../api";
 import { formatILS } from "../utils";
 import { StatsCard } from "@/components/ui/layout/StatsCard";
 
 interface ChargesSummaryBarProps {
-  charges: ChargeResponse[];
+  stats: ChargeListStats;
   isAdvisor: boolean;
-  total: number;
+  currentStatus: string;
+  onStatusClick: (status: string) => void;
 }
 
-export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({ charges, isAdvisor }) => {
-  if (charges.length === 0) return null;
+export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({
+  stats,
+  isAdvisor,
+  currentStatus,
+  onStatusClick,
+}) => {
+  const display = (stat: ChargeStatusStat): string =>
+    isAdvisor ? formatILS(parseFloat(stat.amount)) : String(stat.count);
 
-  const amountOrCount = (status: string): string => {
-    const group = charges.filter((c) => c.status === status);
-    if (!isAdvisor) return String(group.length);
-    const sum = group.reduce((s, c) => s + parseFloat(c.amount ?? "0"), 0);
-    return formatILS(sum);
+  const handleClick = (status: string) => {
+    onStatusClick(currentStatus === status ? "" : status);
   };
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       <StatsCard
         title="ממתין לגביה"
-        value={amountOrCount("issued")}
+        value={display(stats.issued)}
         icon={Clock}
         variant="blue"
+        selected={currentStatus === "issued"}
+        onClick={() => handleClick("issued")}
       />
       <StatsCard
         title="שולם"
-        value={amountOrCount("paid")}
+        value={display(stats.paid)}
         icon={CheckCircle2}
         variant="green"
+        selected={currentStatus === "paid"}
+        onClick={() => handleClick("paid")}
       />
       <StatsCard
         title="טיוטה"
-        value={amountOrCount("draft")}
+        value={display(stats.draft)}
         icon={FileText}
         variant="neutral"
+        selected={currentStatus === "draft"}
+        onClick={() => handleClick("draft")}
       />
       <StatsCard
         title="בוטל"
-        value={amountOrCount("canceled")}
+        value={display(stats.canceled)}
         icon={XCircle}
         variant="red"
+        selected={currentStatus === "canceled"}
+        onClick={() => handleClick("canceled")}
       />
     </div>
   );

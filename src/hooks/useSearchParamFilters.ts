@@ -17,5 +17,14 @@ export const useSearchParamFilters = () => {
     setSearchParams(next);
   };
 
-  return { searchParams, setFilter, setPage, setSearchParams };
+  const resetFilters = (defaults: Record<string, string> = {}) => {
+    const next = new URLSearchParams();
+    for (const [k, v] of Object.entries(defaults)) {
+      if (v) next.set(k, v);
+    }
+    next.set("page", "1");
+    setSearchParams(next);
+  };
+
+  return { searchParams, setFilter, setPage, resetFilters, setSearchParams };
 };

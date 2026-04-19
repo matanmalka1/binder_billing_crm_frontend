@@ -78,6 +78,17 @@ export const buildBindersColumns = ({
     ),
   },
   {
+    key: "status",
+    header: "סטטוס",
+    render: (binder) => (
+      <StatusBadge
+        status={binder.status}
+        getLabel={getStatusLabel}
+        variantMap={BINDER_STATUS_VARIANTS}
+      />
+    ),
+  },
+  {
     key: "period_start",
     header: "תקופה",
     render: (binder) => {
@@ -92,17 +103,6 @@ export const buildBindersColumns = ({
         </span>
       );
     },
-  },
-  {
-    key: "status",
-    header: "סטטוס",
-    render: (binder) => (
-      <StatusBadge
-        status={binder.status}
-        getLabel={getStatusLabel}
-        variantMap={BINDER_STATUS_VARIANTS}
-      />
-    ),
   },
   {
     key: "days_in_office",

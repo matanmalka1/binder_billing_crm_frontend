@@ -37,6 +37,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [internalValue, setInternalValue] = useState<string>("");
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [coords, setCoords] = useState<{ top: number; bottom: number; left: number; width: number } | null>(null);
   const [openAbove, setOpenAbove] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -68,11 +69,79 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
     return () => window.removeEventListener("scroll", updateCoords, true);
   }, [open]);
 
+  useEffect(() => {
+    if (!open) {
+      setHighlightedIndex(-1);
+      return;
+    }
+
+    const selectedIndex = options.findIndex((opt) => !opt.disabled && String(opt.value) === currentValue);
+    const firstEnabledIndex = options.findIndex((opt) => !opt.disabled);
+    setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : firstEnabledIndex);
+  }, [currentValue, open, options]);
+
   const toggle = () => {
     if (disabled) return;
     if (open) { setOpen(false); return; }
     updateCoords();
     setOpen(true);
+  };
+
+  const moveHighlight = (direction: 1 | -1) => {
+    if (options.length === 0) return;
+
+    let nextIndex = highlightedIndex;
+    for (let i = 0; i < options.length; i += 1) {
+      nextIndex = (nextIndex + direction + options.length) % options.length;
+      if (!options[nextIndex]?.disabled) {
+        setHighlightedIndex(nextIndex);
+        break;
+      }
+    }
+  };
+
+  const handleTriggerKeyDown: React.KeyboardEventHandler<HTMLButtonElement> = (event) => {
+    onKeyDown?.(event);
+    if (event.defaultPrevented || disabled) return;
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!open) {
+        updateCoords();
+        setOpen(true);
+        return;
+      }
+      moveHighlight(event.key === "ArrowDown" ? 1 : -1);
+      return;
+    }
+
+    if ((event.key === "Enter" || event.key === " ") && !open) {
+      event.preventDefault();
+      updateCoords();
+      setOpen(true);
+      return;
+    }
+
+    if (event.key === "Home" && open) {
+      event.preventDefault();
+      const firstEnabledIndex = options.findIndex((opt) => !opt.disabled);
+      setHighlightedIndex(firstEnabledIndex);
+      return;
+    }
+
+    if (event.key === "End" && open) {
+      event.preventDefault();
+      const lastEnabledIndex = [...options].reverse().findIndex((opt) => !opt.disabled);
+      if (lastEnabledIndex >= 0) setHighlightedIndex(options.length - 1 - lastEnabledIndex);
+      return;
+    }
+
+    if ((event.key === "Enter" || event.key === " ") && open) {
+      const highlighted = options[highlightedIndex];
+      if (!highlighted || highlighted.disabled) return;
+      event.preventDefault();
+      select(highlighted.value);
+    }
   };
 
   const select = (optValue: string) => {
@@ -105,7 +174,16 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 
   return (
     <>
-      <button ref={triggerRef} type="button" onClick={toggle} onKeyDown={onKeyDown} disabled={disabled} className={triggerClass}>
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={toggle}
+        onKeyDown={handleTriggerKeyDown}
+        disabled={disabled}
+        className={triggerClass}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
         <span className={cn("truncate", !currentValue ? "text-gray-400" : "text-gray-800")}>
           {selectedLabel}
         </span>
@@ -124,18 +202,23 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
             zIndex: 9999,
           }}
           className="rounded-lg border border-gray-200 bg-white py-1 shadow-lg overflow-auto max-h-60 overscroll-contain"
+          role="listbox"
         >
-          {options.map((opt) => (
+          {options.map((opt, index) => (
             <button
               key={opt.value}
               type="button"
               disabled={opt.disabled}
               onClick={() => select(opt.value)}
+              onMouseEnter={() => !opt.disabled && setHighlightedIndex(index)}
               className={cn(
                 "flex w-full items-center gap-2 px-3 py-2 text-right text-sm transition-colors",
-                "hover:bg-primary-50 disabled:opacity-40 disabled:cursor-not-allowed",
+                "disabled:opacity-40 disabled:cursor-not-allowed",
+                highlightedIndex === index ? "bg-primary-50" : "hover:bg-primary-50",
                 currentValue === String(opt.value) ? "text-primary-600 font-medium" : "text-gray-700",
               )}
+              role="option"
+              aria-selected={currentValue === String(opt.value)}
             >
               <span className="flex-1 truncate">{opt.label}</span>
               {currentValue === String(opt.value) && (
