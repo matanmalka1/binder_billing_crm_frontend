@@ -3,7 +3,7 @@ import { Select } from "@/components/ui/inputs/Select";
 import { buildYearOptions, MONTH_OPTIONS } from "@/utils/utils";
 import type { ReceiveBinderFormValues } from "../schemas";
 
-const ANNUAL_BINDER_TYPES = new Set(["annual_report", "capital_declaration"]);
+const PERIODIC_BINDER_TYPES = new Set(["vat", "salary"]);
 
 interface BinderPeriodFieldsProps {
   form: UseFormReturn<ReceiveBinderFormValues>;
@@ -26,7 +26,7 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
     formState: { errors },
   } = form;
 
-  const annualMode = ANNUAL_BINDER_TYPES.has(materialType);
+  const periodicMode = PERIODIC_BINDER_TYPES.has(materialType);
   const bimonthlyVatMode = materialType === "vat" && vatType === "bimonthly";
   const monthOptions = (bimonthlyVatMode
     ? MONTH_OPTIONS.filter((option) => [1, 3, 5, 7, 9, 11].includes(Number(option.value)))
@@ -40,10 +40,10 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
         control={control}
         render={({ field }) => (
           <Select
-            label={annualMode ? "שנת דיווח" : "שנה"}
+            label="שנת דיווח"
             error={errors.period_year?.message}
             options={[
-              { value: "", label: annualMode ? "בחר שנה..." : "בחר שנה...", disabled: true },
+              { value: "", label: "בחר שנה...", disabled: true },
               ...YEAR_OPTIONS,
             ]}
             value={field.value ? String(field.value) : ""}
@@ -54,7 +54,7 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
         )}
       />
 
-      {!annualMode && (
+      {periodicMode && (
         <Controller
           name="period_month_start"
           control={control}

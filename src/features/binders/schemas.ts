@@ -2,6 +2,7 @@ import { z } from "zod";
 import { format } from "date-fns";
 
 const ANNUAL_BINDER_TYPES = new Set(["annual_report", "capital_declaration"]);
+const PERIODIC_BINDER_TYPES = new Set(["vat", "salary"]);
 
 export const receiveBinderSchema = z
   .object({
@@ -27,7 +28,7 @@ export const receiveBinderSchema = z
     notes: z.string().optional().nullable(),
   })
   .superRefine((data, ctx) => {
-    if (data.binder_type !== "vat" && data.business_id === undefined) {
+    if (data.binder_type === "vat" && data.business_id === undefined) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "נא לבחור עסק",
@@ -44,6 +45,10 @@ export const receiveBinderSchema = z
     }
 
     if (ANNUAL_BINDER_TYPES.has(data.binder_type)) {
+      return;
+    }
+
+    if (!PERIODIC_BINDER_TYPES.has(data.binder_type)) {
       return;
     }
 

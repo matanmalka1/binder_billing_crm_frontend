@@ -114,7 +114,11 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
             onBulkReady={onBulkReady ? () => onBulkReady() : undefined}
             onOpenHandover={onOpenHandover ? () => onOpenHandover() : undefined}
           />
-          <BinderIntakesSection binderId={binder.id} clientId={binder.client_id} />
+          <BinderIntakesSection
+            binderId={binder.id}
+            clientId={binder.client_id}
+            onNavigateToAnnualReport={onClose}
+          />
           <BinderHistorySection binderId={binder.id} />
         </>
       )}

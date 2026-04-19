@@ -7,6 +7,8 @@ import { Card } from "../../../components/ui/primitives/Card";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Timeline, TimelineEntry } from "../../../components/ui/feedback/Timeline";
 import { bindersApi, bindersQK } from "../api";
+import { annualReportsApi, annualReportsQK, getReportStatusLabel } from "@/features/annualReports";
+import { clientsApi, clientsQK } from "@/features/clients";
 import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
 import { staggerDelay } from "../../../utils/animation";
 import { getBinderTypeLabel } from "../constants";
@@ -50,15 +52,35 @@ const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse; clientI
 interface BinderIntakesSectionProps {
   binderId: number;
   clientId: number;
+  onNavigateToAnnualReport?: () => void;
 }
 
-export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ binderId, clientId }) => {
+export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({
+  binderId,
+  clientId,
+  onNavigateToAnnualReport,
+}) => {
+  const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: bindersQK.intakes(binderId),
     queryFn: () => bindersApi.getIntakes(binderId),
   });
+  const { data: businessesData } = useQuery({
+    queryKey: clientsQK.businessesAll(clientId),
+    queryFn: () => clientsApi.listAllBusinessesForClient(clientId),
+    enabled: clientId > 0,
+    staleTime: 30_000,
+  });
+  const { data: annualReportsData } = useQuery({
+    queryKey: annualReportsQK.forClient(clientId),
+    queryFn: () => annualReportsApi.listClientReports(clientId),
+    enabled: clientId > 0,
+    staleTime: 30_000,
+  });
 
   const intakes = data?.intakes ?? [];
+  const businesses = businessesData?.items ?? [];
+  const annualReports = annualReportsData ?? [];
 
   if (isLoading) return null;
 
@@ -79,6 +101,12 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ bind
                 <div className="mt-1 flex flex-col gap-1">
                   {intake.materials.map((m) => {
                     const period = formatStructuredBinderPeriod(m.period_year, m.period_month_start, m.period_month_end);
+                    const businessName = m.business_id != null
+                      ? businesses.find((business) => business.id === m.business_id)?.business_name ?? `עסק #${m.business_id}`
+                      : null;
+                    const annualReport = m.annual_report_id != null
+                      ? annualReports.find((report) => report.id === m.annual_report_id) ?? null
+                      : null;
                     return (
                       <div key={m.id} className="flex flex-col gap-0.5 text-xs border-t border-gray-100 pt-1 first:border-0 first:pt-0">
                         <div className="flex items-center gap-1">
@@ -88,6 +116,29 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ bind
                             <VatStatusBadge material={m} clientId={clientId} />
                           )}
                         </div>
+                        {businessName && (
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-400 w-20 shrink-0">עסק</span>
+                            <span className="text-gray-700">{businessName}</span>
+                          </div>
+                        )}
+                        {m.material_type === "annual_report" && m.annual_report_id != null && (
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-400 w-20 shrink-0">דוח שנתי</span>
+                            <button
+                              type="button"
+                              className="text-primary-700 hover:text-primary-800 hover:underline"
+                              onClick={() => {
+                                onNavigateToAnnualReport?.();
+                                navigate(`/tax/reports/${m.annual_report_id}`);
+                              }}
+                            >
+                              {annualReport
+                                ? `${annualReport.tax_year} — ${getReportStatusLabel(annualReport.status)}`
+                                : `דוח #${m.annual_report_id}`}
+                            </button>
+                          </div>
+                        )}
                         {period && (
                           <div className="flex items-center gap-1">
                             <span className="text-gray-400 w-20 shrink-0">תקופת דיווח</span>

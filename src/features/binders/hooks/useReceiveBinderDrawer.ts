@@ -16,6 +16,7 @@ import { receiveBinderSchema, type ReceiveBinderFormValues } from "../schemas";
 import { toBinderPeriodValue } from "../utils";
 
 const ANNUAL_BINDER_TYPES = new Set(["annual_report", "capital_declaration"]);
+const PERIODIC_BINDER_TYPES = new Set(["vat", "salary"]);
 
 const getDefaultValues = (): ReceiveBinderFormValues => ({
   client_id: undefined as unknown as number,
@@ -70,8 +71,7 @@ export const useReceiveBinderDrawer = (
     form.setValue("period_month_start", null);
     form.setValue("period_month_end", null);
     form.setValue("annual_report_id", null);
-    if (binderType === "vat") {
-      // VAT is client-scoped: keep business_id empty to avoid business-coupled intake.
+    if (binderType && binderType !== "vat") {
       form.setValue("business_id", null, { shouldValidate: false });
     }
   }, [binderType, form]);
@@ -95,7 +95,11 @@ export const useReceiveBinderDrawer = (
   const businesses = useMemo(() => businessesData?.items ?? [], [businessesData?.items]);
 
   useEffect(() => {
-    if (binderType === "vat") return;
+    if (binderType !== "vat") {
+      form.setValue("business_id", null, { shouldValidate: false });
+      return;
+    }
+
     if (businesses.length === 0) {
       form.setValue("business_id", null, { shouldValidate: false });
     } else if (businesses.length === 1) {
@@ -140,7 +144,7 @@ export const useReceiveBinderDrawer = (
 
   useEffect(() => {
     if (!binderType) return;
-    if (ANNUAL_BINDER_TYPES.has(binderType)) {
+    if (!PERIODIC_BINDER_TYPES.has(binderType)) {
       form.setValue("period_month_start", 1, { shouldValidate: false });
       form.setValue("period_month_end", 12, { shouldValidate: false });
       return;
