@@ -7,6 +7,7 @@ import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import { Select } from "../../../components/ui/inputs/Select";
 import type { CreateClientPayload, ISODateString } from "../api";
+import { useClientCreationImpact } from "../hooks/useClientCreationImpact";
 import {
   CLIENT_ID_NUMBER_INPUT_LABELS,
   CLIENT_ID_NUMBER_PLACEHOLDERS,
@@ -86,6 +87,13 @@ export const CreateClientModal: React.FC<Props> = ({
 
   const idNumberType = watch("id_number_type");
   const currentEntityType = watch("entity_type");
+  const currentVatFrequency = watch("vat_reporting_frequency");
+
+  const impactQuery = useClientCreationImpact(
+    currentEntityType && currentVatFrequency
+      ? { entity_type: currentEntityType, vat_reporting_frequency: currentVatFrequency }
+      : null,
+  );
   const idNumberLabel = CLIENT_ID_NUMBER_INPUT_LABELS[idNumberType] ?? "מספר מזהה";
   const idNumberPlaceholder = CLIENT_ID_NUMBER_PLACEHOLDERS[idNumberType] ?? "הזן מספר מזהה";
   const shouldStripToDigits = requiresIsraeliNumericId(idNumberType);
@@ -358,6 +366,28 @@ export const CreateClientModal: React.FC<Props> = ({
         </div>
 
         <p className="text-xs text-gray-500">* שדות חובה</p>
+
+        {impactQuery.data && (
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4" dir="rtl">
+            <p className="mb-2 text-sm font-semibold text-blue-800">
+              מה ייווצר אוטומטית עם פתיחת הלקוח
+            </p>
+            <ul className="space-y-1">
+              {impactQuery.data.items.map((item) => (
+                <li key={item.label} className="flex justify-between text-sm text-blue-700">
+                  <span>{item.label}</span>
+                  <span className="font-medium">{item.count}</span>
+                </li>
+              ))}
+            </ul>
+            {impactQuery.data.note && (
+              <p className="mt-2 text-xs text-blue-600">{impactQuery.data.note}</p>
+            )}
+            {impactQuery.data.years_scope === 2 && (
+              <p className="mt-1 text-xs text-blue-600">ייווצר עבור השנה הנוכחית והשנה הבאה</p>
+            )}
+          </div>
+        )}
       </form>
     </Modal>
   );

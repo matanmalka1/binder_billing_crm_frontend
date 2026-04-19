@@ -16,6 +16,7 @@ import type {
   CreateBusinessPayload,
   UpdateBusinessPayload,
   EntityAuditTrailResponse,
+  ClientCreationImpactResponse,
 } from "./contracts";
 
 const CLIENT_BUSINESSES_PAGE_SIZE = 100;
@@ -101,7 +102,7 @@ export const clientsApi = {
 
   // ── Mutations ────────────────────────────────────────────────────────────
 
-  create: async (payload: CreateClientPayload): Promise<ClientResponse> => {
+  create: async (payload: CreateClientPayload): Promise<CreateClientResponse> => {
     const { business_name, business_opened_at, ...clientPayload } = payload;
     const response = await api.post<CreateClientResponse>(CLIENT_ENDPOINTS.clients, {
       client: clientPayload,
@@ -110,7 +111,22 @@ export const clientsApi = {
         opened_at: business_opened_at ?? null,
       },
     });
-    return response.data.client;
+    return response.data;
+  },
+
+  previewImpact: async (payload: CreateClientPayload): Promise<ClientCreationImpactResponse> => {
+    const { business_name, business_opened_at, ...clientPayload } = payload;
+    const response = await api.post<ClientCreationImpactResponse>(
+      CLIENT_ENDPOINTS.clientsPreviewImpact,
+      {
+        client: clientPayload,
+        business: {
+          business_name,
+          opened_at: business_opened_at ?? null,
+        },
+      },
+    );
+    return response.data;
   },
 
   update: async (clientId: number, payload: UpdateClientPayload): Promise<ClientResponse> => {

@@ -74,8 +74,9 @@ export const useClientsPage = () => {
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateClientPayload) => clientsApi.create(payload),
-    onSuccess: () => {
-      toast.success("לקוח נוצר בהצלחה");
+    onSuccess: (data) => {
+      const summary = data.impact.items.map((i) => `${i.label}: ${i.count}`).join(" | ");
+      toast.success(`לקוח נוצר בהצלחה\n${summary}`);
       queryClient.invalidateQueries({ queryKey: clientsQK.all });
       setDeletedClientInfo(null);
     },

@@ -82,9 +82,21 @@ export interface CreateClientPayload {
   business_opened_at: ISODateString;
 }
 
+export interface CreationImpactItem {
+  label: string;
+  count: number;
+}
+
+export interface ClientCreationImpactResponse {
+  items: CreationImpactItem[];
+  years_scope: number;
+  note?: string | null;
+}
+
 export interface CreateClientResponse {
   client: ClientResponse;
   business: BusinessResponse;
+  impact: ClientCreationImpactResponse;
 }
 
 export type BulkClientActionPayload = never;

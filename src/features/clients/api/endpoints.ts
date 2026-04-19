@@ -8,6 +8,7 @@ export const CLIENT_ENDPOINTS = {
   clientsExport: "/clients/export",
   clientsTemplate: "/clients/template",
   clientsImport: "/clients/import",
+  clientsPreviewImpact: "/clients/preview-impact",
 } as const;
 
 export const CLIENT_ROUTES = {
