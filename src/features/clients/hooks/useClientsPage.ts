@@ -24,7 +24,12 @@ import { isAxiosError } from "axios";
 /** Extract the application-level error code from an Axios error response. */
 const extractErrorCode = (err: unknown): string | null => {
   if (isAxiosError(err)) {
-    return err.response?.data?.error ?? err.response?.data?.code ?? null;
+    return (
+      err.response?.data?.error ??
+      err.response?.data?.code ??
+      err.response?.data?.detail?.error ??
+      null
+    );
   }
   return null;
 };

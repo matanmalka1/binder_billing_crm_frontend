@@ -33,6 +33,8 @@ export const createClientSchema = z
     vat_exempt_ceiling: z.string().optional().nullable(),
     advance_rate: z.string().optional().nullable(),
     accountant_name: z.string().trim().optional().nullable(),
+    business_name: z.string().trim().min(1, "יש להזין שם עסק").max(100, "שם עסק ארוך מדי"),
+    business_opened_at: z.string().optional().nullable(),
   })
   .superRefine((data, ctx) => {
     if (!requiresIsraeliNumericId(data.id_number_type)) {

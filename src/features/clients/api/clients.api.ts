@@ -10,6 +10,7 @@ import type {
   BusinessResponse,
   ClientBusinessesResponse,
   BusinessStatusCardResponse,
+  ClientOnboardingResponse,
   CreateClientPayload,
   UpdateClientPayload,
   CreateBusinessPayload,
@@ -101,8 +102,15 @@ export const clientsApi = {
   // ── Mutations ────────────────────────────────────────────────────────────
 
   create: async (payload: CreateClientPayload): Promise<ClientResponse> => {
-    const response = await api.post<ClientResponse>(CLIENT_ENDPOINTS.clients, payload);
-    return response.data;
+    const { business_name, business_opened_at, ...clientPayload } = payload;
+    const response = await api.post<ClientOnboardingResponse>(CLIENT_ENDPOINTS.clientsOnboarding, {
+      client: clientPayload,
+      business: {
+        business_name,
+        opened_at: business_opened_at ?? null,
+      },
+    });
+    return response.data.client;
   },
 
   update: async (clientId: number, payload: UpdateClientPayload): Promise<ClientResponse> => {

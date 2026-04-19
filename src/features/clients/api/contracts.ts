@@ -77,6 +77,13 @@ export interface CreateClientPayload {
   advance_rate?: string | null;
   advance_rate_updated_at?: string | null;
   accountant_name?: string | null;
+  business_name: string;
+  business_opened_at?: ISODateString | null;
+}
+
+export interface ClientOnboardingResponse {
+  client: ClientResponse;
+  business: BusinessResponse;
 }
 
 export type BulkClientActionPayload = never;
@@ -141,7 +148,7 @@ export interface ListBusinessesParams {
 
 export interface CreateBusinessPayload {
   opened_at?: ISODateString | null;
-  business_name?: string | null;
+  business_name: string;
   notes?: string | null;
 }
 

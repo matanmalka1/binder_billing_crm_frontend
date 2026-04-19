@@ -44,7 +44,7 @@ export const CreateBusinessModal: React.FC<Props> = ({
 
   const onFormSubmit = handleSubmit(async (data) => {
     const payload: CreateBusinessPayload = {
-      business_name: data.business_name || null,
+      business_name: data.business_name,
       opened_at: data.opened_at ? (data.opened_at as ISODateString) : null,
     };
     await onSubmit(payload);

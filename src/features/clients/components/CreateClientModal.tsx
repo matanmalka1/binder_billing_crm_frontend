@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useController, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/overlays/Modal";
 import { Input } from "../../../components/ui/inputs/Input";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import { Select } from "../../../components/ui/inputs/Select";
-import type { CreateClientPayload} from "../api";
+import type { CreateClientPayload, ISODateString } from "../api";
 import {
   CLIENT_ID_NUMBER_INPUT_LABELS,
   CLIENT_ID_NUMBER_PLACEHOLDERS,
@@ -52,6 +53,7 @@ export const CreateClientModal: React.FC<Props> = ({
 }) => {
   const {
     register,
+    control,
     handleSubmit,
     watch,
     setValue,
@@ -76,8 +78,11 @@ export const CreateClientModal: React.FC<Props> = ({
       vat_exempt_ceiling: null,
       advance_rate: null,
       accountant_name: null,
+      business_name: "",
+      business_opened_at: null,
     },
   });
+  const { field: businessOpenedAtField } = useController({ name: "business_opened_at", control });
 
   const idNumberType = watch("id_number_type");
   const currentEntityType = watch("entity_type");
@@ -137,6 +142,8 @@ export const CreateClientModal: React.FC<Props> = ({
       vat_exempt_ceiling: data.vat_exempt_ceiling || null,
       advance_rate: data.advance_rate || null,
       accountant_name: data.accountant_name || null,
+      business_name: data.business_name,
+      business_opened_at: data.business_opened_at ? (data.business_opened_at as ISODateString) : null,
     };
     await onSubmit(payload);
     reset();
@@ -152,7 +159,7 @@ export const CreateClientModal: React.FC<Props> = ({
           onCancel={handleClose}
           onSubmit={onFormSubmit}
           isLoading={isLoading}
-          submitLabel="יצור לקוח"
+          submitLabel="צור לקוח"
         />
       }
     >
@@ -186,6 +193,29 @@ export const CreateClientModal: React.FC<Props> = ({
           onInput={shouldStripToDigits ? stripNonDigits : undefined}
           {...register("id_number")}
         />
+
+        {/* עסק ראשון */}
+        <div className="border-t border-gray-200 pt-4 space-y-4">
+          <p className="text-sm font-medium text-gray-700">עסק ראשון</p>
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              label="שם עסק *"
+              placeholder="לדוגמה: מסעדת ישראל"
+              error={errors.business_name?.message}
+              disabled={isLoading}
+              {...register("business_name")}
+            />
+            <DatePicker
+              label="תאריך פתיחת עסק"
+              error={errors.business_opened_at?.message}
+              disabled={isLoading}
+              value={businessOpenedAtField.value ?? ""}
+              onChange={businessOpenedAtField.onChange}
+              onBlur={businessOpenedAtField.onBlur}
+              name={businessOpenedAtField.name}
+            />
+          </div>
+        </div>
 
         <Select
           label="סוג ישות"
