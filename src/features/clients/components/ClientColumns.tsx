@@ -28,11 +28,11 @@ export const buildClientColumns = ({
 }: BuildClientColumnsParams = {}): Column<ClientResponse>[] => {
   const dataColumns: Column<ClientResponse>[] = [
     {
-      key: "id",
-      header: "מזהה מערכת",
+      key: "office_client_number",
+      header: "מס' לקוח",
       render: (client) => (
         <span className="font-mono text-sm text-gray-500 tabular-nums">
-          {formatClientOfficeId(client.id)}
+          {formatClientOfficeId(client.office_client_number)}
         </span>
       ),
     },

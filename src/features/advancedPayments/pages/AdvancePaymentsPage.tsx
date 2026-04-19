@@ -22,11 +22,11 @@ import { getAdvancePaymentMonthLabel } from "../utils";
 
 const columns: Column<AdvancePaymentOverviewRow>[] = [
   {
-    key: "client_id",
-    header: "מזהה מערכת",
+    key: "office_client_number",
+    header: "מס' לקוח",
     render: (row) => (
       <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {formatClientOfficeId(row.client_id)}
+        {formatClientOfficeId(row.office_client_number)}
       </span>
     ),
   },

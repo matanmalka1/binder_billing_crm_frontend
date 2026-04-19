@@ -18,6 +18,7 @@ export type SignatureRequestType =
 export interface SignatureRequestResponse {
   id: number;
   client_id: number;
+  office_client_number?: number | null;
   business_id: number | null;
   business_name: string | null;
   created_by: number;

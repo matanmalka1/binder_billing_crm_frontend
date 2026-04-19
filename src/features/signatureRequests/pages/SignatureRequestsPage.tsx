@@ -42,12 +42,12 @@ export const SignatureRequestsPage: React.FC = () => {
   const columns = useMemo(
     () => [
       {
-        key: "client_id",
-        header: "מזהה מערכת",
+        key: "office_client_number",
+        header: "מס' לקוח",
         render: (req: SignatureRequestResponse) => {
           return (
             <span className="font-mono text-sm text-gray-500 tabular-nums">
-              {formatClientOfficeId(req.client_id)}
+              {formatClientOfficeId(req.office_client_number)}
             </span>
           );
         },

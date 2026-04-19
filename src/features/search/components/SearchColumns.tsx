@@ -6,10 +6,10 @@ import { cn, formatClientOfficeId } from "@/utils/utils";
 
 export const searchColumns: Column<SearchResult>[] = [
   {
-    key: "client_id",
-    header: "מזהה מערכת",
+    key: "office_client_number",
+    header: "מס' לקוח",
     render: (result) => (
-      <span className="font-mono text-xs text-gray-400">{formatClientOfficeId(result.client_id)}</span>
+      <span className="font-mono text-xs text-gray-400">{formatClientOfficeId(result.office_client_number)}</span>
     ),
   },
   {

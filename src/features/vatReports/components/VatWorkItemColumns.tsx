@@ -20,11 +20,11 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     ),
   },
   {
-    key: "client_office_id",
-    header: "מזהה מערכת",
+    key: "office_client_number",
+    header: "מס' לקוח",
     render: (item) => (
       <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {formatClientOfficeId(item.client_id)}
+        {formatClientOfficeId(item.office_client_number)}
       </span>
     ),
   },
@@ -33,7 +33,7 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     header: "לקוח",
     render: (item) => (
       <span className="text-sm font-semibold text-gray-900">
-        {item.client_name ?? formatClientOfficeId(item.client_id)}
+        {item.client_name ?? formatClientOfficeId(item.office_client_number)}
       </span>
     ),
   },

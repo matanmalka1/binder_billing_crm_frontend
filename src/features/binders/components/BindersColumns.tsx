@@ -46,11 +46,11 @@ export const buildBindersColumns = ({
   onDelete,
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
   {
-    key: "client_id",
-    header: "מזהה מערכת",
+    key: "office_client_number",
+    header: "מס' לקוח",
     render: (binder) => (
       <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {formatClientOfficeId(binder.client_id)}
+        {formatClientOfficeId(binder.office_client_number)}
       </span>
     ),
   },

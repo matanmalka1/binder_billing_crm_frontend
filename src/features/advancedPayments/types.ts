@@ -57,6 +57,7 @@ export interface UpdateAdvancePaymentPayload {
 export interface AdvancePaymentOverviewRow {
   id: number;
   client_id: number;
+  office_client_number?: number | null;
   business_name: string;
   period: string;
   period_months_count: 1 | 2;

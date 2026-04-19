@@ -32,7 +32,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-right text-xs font-medium text-gray-500">
-              <th className="px-4 py-2.5">מזהה מערכת</th>
+              <th className="px-4 py-2.5">מס' לקוח</th>
               <th className="px-4 py-2.5">סוג מסמך</th>
               <th className="px-4 py-2.5">שם קובץ</th>
               <th className="px-4 py-2.5">שנת מס</th>
@@ -45,7 +45,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
             {documents.map((doc) => (
               <tr key={doc.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3 font-mono text-sm text-gray-500 tabular-nums">
-                  {formatClientOfficeId(doc.client_id)}
+                  {formatClientOfficeId(doc.office_client_number)}
                 </td>
                 <td className="px-4 py-3 font-medium text-gray-800">
                   {DOC_TYPE_LABELS[doc.document_type] ?? "סוג מסמך לא ידוע"}

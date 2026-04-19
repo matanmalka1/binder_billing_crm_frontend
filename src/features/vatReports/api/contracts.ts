@@ -3,6 +3,7 @@ import type { PaginatedResponse } from "@/types";
 export interface VatWorkItemResponse {
   id: number;
   client_id: number;
+  office_client_number?: number | null;
   client_name: string | null;
   client_id_number?: string | null;
   client_status: string | null;

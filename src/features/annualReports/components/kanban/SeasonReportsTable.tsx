@@ -55,11 +55,11 @@ const DeadlineCell: React.FC<{ report: AnnualReportFull }> = ({ report }) => {
 
 const columns: Column<AnnualReportFull>[] = [
   {
-    key: "client_id",
-    header: "מזהה מערכת",
+    key: "office_client_number",
+    header: "מס' לקוח",
     render: (r) => (
       <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {formatClientOfficeId(r.client_id)}
+        {formatClientOfficeId(r.office_client_number)}
       </span>
     ),
   },
