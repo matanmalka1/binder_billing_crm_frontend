@@ -66,7 +66,7 @@ export const CreateClientModal: React.FC<Props> = ({
       id_number_type: DEFAULT_CLIENT_ID_NUMBER_TYPE,
       full_name: "",
       id_number: "",
-      entity_type: null,
+      entity_type: undefined,
       phone: "",
       email: "",
       address_street: "",
@@ -74,12 +74,13 @@ export const CreateClientModal: React.FC<Props> = ({
       address_apartment: "",
       address_city: "",
       address_zip_code: "",
-      vat_reporting_frequency: null,
+      office_client_number: "",
+      vat_reporting_frequency: undefined,
       vat_exempt_ceiling: null,
-      advance_rate: null,
-      accountant_name: null,
+      advance_rate: "",
+      accountant_name: "",
       business_name: "",
-      business_opened_at: null,
+      business_opened_at: "",
     },
   });
   const { field: businessOpenedAtField } = useController({ name: "business_opened_at", control });
@@ -99,7 +100,7 @@ export const CreateClientModal: React.FC<Props> = ({
   // אם סוג המזהה השתנה וסוג הישות הנוכחי כבר לא תקין — מאפסים
   useEffect(() => {
     if (currentEntityType && !allowedEntityTypes.includes(currentEntityType)) {
-      setValue("entity_type", null);
+      setValue("entity_type", undefined);
     }
     // אם יש רק אופציה אחת — בוחרים אותה אוטומטית
     if (allowedEntityTypes.length === 1) {
@@ -130,20 +131,21 @@ export const CreateClientModal: React.FC<Props> = ({
       full_name: data.full_name,
       id_number: data.id_number,
       id_number_type: data.id_number_type,
-      entity_type: data.entity_type || null,
+      entity_type: data.entity_type,
       phone: data.phone,
       email: data.email,
-      address_street: data.address_street || null,
-      address_building_number: data.address_building_number || null,
-      address_apartment: data.address_apartment || null,
-      address_city: data.address_city || null,
-      address_zip_code: data.address_zip_code || null,
-      vat_reporting_frequency: data.vat_reporting_frequency || null,
+      address_street: data.address_street,
+      address_building_number: data.address_building_number,
+      address_apartment: data.address_apartment,
+      address_city: data.address_city,
+      address_zip_code: data.address_zip_code,
+      office_client_number: Number(data.office_client_number),
+      vat_reporting_frequency: data.vat_reporting_frequency,
       vat_exempt_ceiling: data.vat_exempt_ceiling || null,
-      advance_rate: data.advance_rate || null,
-      accountant_name: data.accountant_name || null,
+      advance_rate: data.advance_rate,
+      accountant_name: data.accountant_name,
       business_name: data.business_name,
-      business_opened_at: data.business_opened_at ? (data.business_opened_at as ISODateString) : null,
+      business_opened_at: data.business_opened_at as ISODateString,
     };
     await onSubmit(payload);
     reset();
@@ -206,7 +208,7 @@ export const CreateClientModal: React.FC<Props> = ({
               {...register("business_name")}
             />
             <DatePicker
-              label="תאריך פתיחת עסק"
+              label="תאריך פתיחת עסק *"
               error={errors.business_opened_at?.message}
               disabled={isLoading}
               value={businessOpenedAtField.value ?? ""}
@@ -218,11 +220,11 @@ export const CreateClientModal: React.FC<Props> = ({
         </div>
 
         <Select
-          label="סוג ישות"
+          label="סוג ישות *"
           error={errors.entity_type?.message}
           disabled={isLoading || allowedEntityTypes.length === 1}
           options={[
-            { value: "", label: "לא הוגדר" },
+            { value: "", label: "בחר סוג ישות" },
             ...allowedEntityTypes.map((type) => ({
               value: type,
               label: ENTITY_TYPE_LABELS[type],
@@ -260,14 +262,14 @@ export const CreateClientModal: React.FC<Props> = ({
           <p className="text-sm font-medium text-gray-700">כתובת</p>
           <div className="grid grid-cols-2 gap-4">
             <Input
-              label="רחוב"
+              label="רחוב *"
               placeholder="שם הרחוב"
               error={errors.address_street?.message}
               disabled={isLoading}
               {...register("address_street")}
             />
             <Input
-              label="מספר בניין"
+              label="מספר בניין *"
               placeholder="מספר"
               error={errors.address_building_number?.message}
               disabled={isLoading}
@@ -276,14 +278,14 @@ export const CreateClientModal: React.FC<Props> = ({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Input
-              label="דירה"
+              label="דירה *"
               placeholder="מספר דירה"
               error={errors.address_apartment?.message}
               disabled={isLoading}
               {...register("address_apartment")}
             />
             <Input
-              label="מיקוד"
+              label="מיקוד *"
               placeholder="1234567"
               error={errors.address_zip_code?.message}
               disabled={isLoading}
@@ -292,7 +294,7 @@ export const CreateClientModal: React.FC<Props> = ({
             />
           </div>
           <Input
-            label="עיר"
+            label="עיר *"
             placeholder="שם העיר"
             error={errors.address_city?.message}
             disabled={isLoading}
@@ -300,14 +302,26 @@ export const CreateClientModal: React.FC<Props> = ({
           />
         </div>
 
+        <div className="border-t border-gray-200 pt-4 space-y-4">
+          <p className="text-sm font-medium text-gray-700">נתונים אדמיניסטרטיביים</p>
+          <Input
+            label="מספר לקוח במשרד *"
+            placeholder="למשל 123"
+            error={errors.office_client_number?.message}
+            disabled={isLoading}
+            onInput={stripNonDigits}
+            {...register("office_client_number")}
+          />
+        </div>
+
         {/* הגדרות מע״מ ומס */}
         <div className="border-t border-gray-200 pt-4 space-y-4">
           <p className="text-sm font-medium text-gray-700">הגדרות מע״מ ומס</p>
           <Select
-            label="תדירות דיווח מע״מ"
+            label="תדירות דיווח מע״מ *"
             disabled={isLoading}
             options={[
-              { value: "", label: "לא הוגדר" },
+              { value: "", label: "בחר תדירות דיווח" },
               ...VAT_TYPE_OPTIONS,
             ]}
             {...register("vat_reporting_frequency")}
@@ -315,11 +329,9 @@ export const CreateClientModal: React.FC<Props> = ({
           <div className="grid grid-cols-2 gap-4">
             {showVatCeiling && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  תקרת פטור מע״מ (₪)
-                </label>
                 <div className="relative">
                   <Input
+                    label="תקרת פטור מע״מ (₪) *"
                     error={errors.vat_exempt_ceiling?.message}
                     disabled={isLoading || !ceilingEditable}
                     onInput={stripNonDecimal}
@@ -343,7 +355,7 @@ export const CreateClientModal: React.FC<Props> = ({
               </div>
             )}
             <Input
-              label="אחוז מקדמה (%)"
+              label="אחוז מקדמה (%) *"
               placeholder="לדוגמה: 8.5"
               error={errors.advance_rate?.message}
               disabled={isLoading}
@@ -352,7 +364,7 @@ export const CreateClientModal: React.FC<Props> = ({
             />
           </div>
           <Input
-            label="רואה חשבון מלווה"
+            label="רואה חשבון מלווה *"
             error={errors.accountant_name?.message}
             disabled={isLoading}
             {...register("accountant_name")}

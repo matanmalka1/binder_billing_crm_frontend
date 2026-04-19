@@ -50,6 +50,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_apartment: client.address_apartment ?? "",
       address_city: client.address_city ?? "",
       address_zip_code: client.address_zip_code ?? "",
+      office_client_number: client.office_client_number != null ? String(client.office_client_number) : "",
       entity_type: client.entity_type ?? null,
       vat_reporting_frequency: client.vat_reporting_frequency ?? null,
       vat_exempt_ceiling: client.vat_exempt_ceiling ?? null,
@@ -79,6 +80,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_apartment: data.address_apartment || null,
       address_city: data.address_city || null,
       address_zip_code: data.address_zip_code || null,
+      office_client_number: data.office_client_number ? Number(data.office_client_number) : null,
       entity_type: data.entity_type || null,
       vat_reporting_frequency: data.vat_reporting_frequency || null,
       vat_exempt_ceiling: data.vat_exempt_ceiling || null,
@@ -219,8 +221,13 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       {/* Admin fields */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900">נתונים אדמיניסטרטיביים</h3>
-
-        
+        <Input
+          label="מספר לקוח במשרד"
+          placeholder="123"
+          error={errors.office_client_number?.message}
+          disabled={isLoading}
+          {...register("office_client_number")}
+        />
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {isOsekPatur && (

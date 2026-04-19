@@ -19,6 +19,7 @@ export interface ClientResponse {
   address_apartment: string | null;
   address_city: string | null;
   address_zip_code: string | null;
+  office_client_number: number | null;
   // Tax profile fields (formerly BusinessTaxProfile)
   vat_reporting_frequency: VatType | null;
   vat_exempt_ceiling: string | null;
@@ -63,22 +64,23 @@ export interface ListClientsParams {
 export interface CreateClientPayload {
   full_name: string;
   id_number: string;
-  id_number_type?: "individual" | "corporation" | "passport" | "other";
-  entity_type?: EntityType | null;
-  phone?: string | null;
-  email?: string | null;
-  address_street?: string | null;
-  address_building_number?: string | null;
-  address_apartment?: string | null;
-  address_city?: string | null;
-  address_zip_code?: string | null;
-  vat_reporting_frequency?: VatType | null;
+  id_number_type: "individual" | "corporation" | "passport" | "other";
+  entity_type: EntityType;
+  phone: string;
+  email: string;
+  address_street: string;
+  address_building_number: string;
+  address_apartment: string;
+  address_city: string;
+  address_zip_code: string;
+  office_client_number: number;
+  vat_reporting_frequency: VatType;
   vat_exempt_ceiling?: string | null;
-  advance_rate?: string | null;
+  advance_rate: string;
   advance_rate_updated_at?: string | null;
-  accountant_name?: string | null;
+  accountant_name: string;
   business_name: string;
-  business_opened_at?: ISODateString | null;
+  business_opened_at: ISODateString;
 }
 
 export interface CreateClientResponse {
@@ -99,6 +101,7 @@ export interface UpdateClientPayload {
   address_apartment?: string | null;
   address_city?: string | null;
   address_zip_code?: string | null;
+  office_client_number?: number | null;
   entity_type?: EntityType | null;
   vat_reporting_frequency?: VatType | null;
   vat_exempt_ceiling?: string | null;

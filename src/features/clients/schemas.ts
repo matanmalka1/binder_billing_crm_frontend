@@ -21,22 +21,39 @@ export const createClientSchema = z
     id_number_type: z.enum(CLIENT_ID_NUMBER_TYPES),
     full_name: z.string().trim().min(2, "שם מלא חייב להכיל לפחות 2 תווים").max(100, "שם מלא ארוך מדי"),
     id_number: z.string().trim().min(1, "יש להזין מספר מזהה"),
-    entity_type: z.enum(ENTITY_TYPES).nullable().optional(),
+    entity_type: z.enum(ENTITY_TYPES, { message: "יש לבחור סוג ישות" }),
     phone: z.string().trim().min(1, "יש להזין מספר טלפון").regex(/^0\d{1,2}-?\d{7}$/, "מספר טלפון לא תקין"),
     email: z.string().trim().min(1, "יש להזין כתובת אימייל").email("כתובת אימייל לא תקינה"),
-    address_street: z.string().trim().optional().or(z.literal("")),
-    address_building_number: z.string().trim().optional().or(z.literal("")),
-    address_apartment: z.string().trim().optional().or(z.literal("")),
-    address_city: z.string().trim().optional().or(z.literal("")),
-    address_zip_code: z.string().trim().optional().or(z.literal("")),
-    vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
+    address_street: z.string().trim().min(1, "יש להזין רחוב"),
+    address_building_number: z.string().trim().min(1, "יש להזין מספר בניין"),
+    address_apartment: z.string().trim().min(1, "יש להזין מספר דירה"),
+    address_city: z.string().trim().min(1, "יש להזין עיר"),
+    address_zip_code: z.string().trim().min(1, "יש להזין מיקוד"),
+    office_client_number: z.string().trim().min(1, "יש להזין מספר לקוח במשרד"),
+    vat_reporting_frequency: z.enum(VAT_TYPES, { message: 'יש לציין תדירות דיווח מע"מ' }),
     vat_exempt_ceiling: z.string().optional().nullable(),
-    advance_rate: z.string().optional().nullable(),
-    accountant_name: z.string().trim().optional().nullable(),
+    advance_rate: z.string().trim().min(1, "יש להזין אחוז מקדמה"),
+    accountant_name: z.string().trim().min(1, "יש להזין רואה חשבון מלווה"),
     business_name: z.string().trim().min(1, "יש להזין שם עסק").max(100, "שם עסק ארוך מדי"),
-    business_opened_at: z.string().optional().nullable(),
+    business_opened_at: z.string().min(1, "יש להזין תאריך פתיחת עסק"),
   })
   .superRefine((data, ctx) => {
+    if (!/^\d+$/.test(data.office_client_number)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["office_client_number"],
+        message: "מספר לקוח במשרד חייב להכיל ספרות בלבד",
+      });
+    }
+
+    if (data.entity_type === "osek_patur" && !data.vat_exempt_ceiling?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["vat_exempt_ceiling"],
+        message: 'יש להזין תקרת פטור מע"מ',
+      });
+    }
+
     if (!requiresIsraeliNumericId(data.id_number_type)) {
       return;
     }
@@ -67,18 +84,6 @@ export const createClientSchema = z
       });
     }
 
-    const nonEmployeeEntityTypes = ["osek_patur", "osek_murshe", "company_ltd"] as const;
-    if (
-      data.entity_type &&
-      (nonEmployeeEntityTypes as readonly string[]).includes(data.entity_type) &&
-      !data.vat_reporting_frequency
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["vat_reporting_frequency"],
-        message: 'יש לציין תדירות דיווח מע"מ עבור עוסק/חברה',
-      });
-    }
   });
 
 export const clientEditSchema = z.object({
@@ -92,6 +97,12 @@ export const clientEditSchema = z.object({
   address_apartment: z.string().trim().optional().or(z.literal("")),
   address_city: z.string().trim().optional().or(z.literal("")),
   address_zip_code: z.string().trim().optional().or(z.literal("")),
+  office_client_number: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(""))
+    .refine((value) => !value || /^\d+$/.test(value), "מספר לקוח במשרד חייב להכיל ספרות בלבד"),
   entity_type: z.enum(ENTITY_TYPES).nullable().optional(),
   vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
   vat_exempt_ceiling: z.string().optional().nullable(),
