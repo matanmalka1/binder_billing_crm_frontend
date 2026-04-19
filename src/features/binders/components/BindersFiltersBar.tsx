@@ -4,7 +4,7 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { StatsCard } from "../../../components/ui/layout/StatsCard";
-import { Archive, CheckCircle2, FolderKanban, Search, Undo2, X } from "lucide-react";
+import { Archive, CheckCircle2, FolderKanban, Search, Undo2, X, Boxes } from "lucide-react";
 import { BINDER_STATUS_OPTIONS } from "../constants";
 import type { BindersFiltersBarProps } from "../types";
 import { cn, buildYearOptions } from "../../../utils/utils";
@@ -43,6 +43,13 @@ export const BindersFiltersBar = ({
       label: "במשרד",
       count: counters.in_office,
       icon: Archive,
+      variant: "orange" as const,
+    },
+    {
+      key: "closed_in_office",
+      label: "סגור במשרד",
+      count: counters.closed_in_office,
+      icon: Boxes,
       variant: "orange" as const,
     },
     {

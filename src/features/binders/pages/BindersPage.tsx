@@ -1,24 +1,39 @@
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/primitives/Button";
 import { Input } from "@/components/ui/inputs/Input";
+import { Select } from "@/components/ui/inputs/Select";
 import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
+import { Modal } from "@/components/ui/overlays/Modal";
 import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
 import { PageHeader } from "@/components/layout/PageHeader";
 import {
   BinderDrawer,
+  BinderHandoverPanel,
   buildBindersColumns,
   BindersFiltersBar,
   useBindersPage,
   useReceiveBinderDrawer,
 } from "@/features/binders";
+import { buildYearOptions } from "@/utils/utils";
 
 type DrawerMode = "detail" | "receive" | null;
+
+const YEAR_OPTIONS = buildYearOptions().map((option) => ({ ...option, disabled: false as const }));
+const MONTH_OPTIONS = Array.from({ length: 12 }, (_, index) => ({
+  value: String(index + 1),
+  label: String(index + 1).padStart(2, "0"),
+  disabled: false as const,
+}));
 
 export const Binders: React.FC = () => {
   const [drawerMode, setDrawerMode] = useState<DrawerMode>(null);
   const [confirmDeleteForId, setConfirmDeleteForId] = useState<number | null>(null);
   const [confirmReturnForId, setConfirmReturnForId] = useState<number | null>(null);
   const [pickupPersonName, setPickupPersonName] = useState("");
+  const [bulkReadyOpen, setBulkReadyOpen] = useState(false);
+  const [handoverOpen, setHandoverOpen] = useState(false);
+  const [bulkReadyYear, setBulkReadyYear] = useState(new Date().getFullYear());
+  const [bulkReadyMonth, setBulkReadyMonth] = useState(new Date().getMonth() + 1);
 
   const {
     actionLoadingId,
@@ -38,9 +53,13 @@ export const Binders: React.FC = () => {
     deleteBinder,
     isDeleting,
     markReady,
+    markReadyBulk,
+    isMarkingReadyBulk,
     revertReady,
     returnBinder,
     isReturning,
+    handoverBinders,
+    isHandingOver,
   } = useBindersPage();
 
   const handleOpenReceive = () => setDrawerMode("receive");
@@ -66,6 +85,12 @@ export const Binders: React.FC = () => {
     await returnBinder(confirmReturnForId, pickupPersonName);
     setConfirmReturnForId(null);
     setPickupPersonName("");
+  };
+
+  const handleBulkReadyConfirm = async () => {
+    if (!selectedBinder) return;
+    await markReadyBulk(selectedBinder.client_id, bulkReadyYear, bulkReadyMonth);
+    setBulkReadyOpen(false);
   };
 
   const columns = useMemo(
@@ -176,6 +201,79 @@ export const Binders: React.FC = () => {
         onCancel={() => setConfirmDeleteForId(null)}
       />
 
+      <Modal
+        open={bulkReadyOpen}
+        title="סימון עד תקופה כמוכן לאיסוף"
+        onClose={() => setBulkReadyOpen(false)}
+        footer={
+          <div className="flex items-center justify-end gap-2">
+            <Button type="button" variant="secondary" onClick={() => setBulkReadyOpen(false)}>
+              ביטול
+            </Button>
+            <Button
+              type="button"
+              isLoading={isMarkingReadyBulk}
+              disabled={!selectedBinder}
+              onClick={() => void handleBulkReadyConfirm()}
+            >
+              סמן כמוכן
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-gray-700">
+            הפעולה תסמן את כל הקלסרים של הלקוח עד תקופת הדיווח שנבחרה כמוכנים לאיסוף.
+          </p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Select
+              label="עד שנת דיווח"
+              value={String(bulkReadyYear)}
+              onChange={(event) => setBulkReadyYear(Number(event.target.value))}
+              options={YEAR_OPTIONS}
+            />
+            <Select
+              label="עד חודש דיווח"
+              value={String(bulkReadyMonth)}
+              onChange={(event) => setBulkReadyMonth(Number(event.target.value))}
+              options={MONTH_OPTIONS}
+            />
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        open={handoverOpen}
+        title="מסירת קלסרים"
+        onClose={() => setHandoverOpen(false)}
+        footer={
+          <div className="flex items-center justify-end">
+            <Button type="button" variant="secondary" onClick={() => setHandoverOpen(false)}>
+              סגור
+            </Button>
+          </div>
+        }
+      >
+        {selectedBinder ? (
+          <BinderHandoverPanel
+            clientId={selectedBinder.client_id}
+            initialBinderId={selectedBinder.id}
+            isSubmitting={isHandingOver}
+            onSubmit={(payload) =>
+              void handoverBinders(
+                selectedBinder.client_id,
+                payload.binderIds,
+                payload.receivedByName,
+                payload.handedOverAt,
+                payload.untilPeriodYear,
+                payload.untilPeriodMonth,
+                payload.notes,
+              ).then(() => setHandoverOpen(false))
+            }
+          />
+        ) : null}
+      </Modal>
+
       <BinderDrawer
         open={drawerOpen}
         mode={effectiveMode}
@@ -184,6 +282,8 @@ export const Binders: React.FC = () => {
         onMarkReady={selectedBinder ? () => void markReady(selectedBinder.id) : undefined}
         onRevertReady={selectedBinder ? () => void revertReady(selectedBinder.id) : undefined}
         onReturn={selectedBinder ? () => setConfirmReturnForId(selectedBinder.id) : undefined}
+        onBulkReady={selectedBinder ? () => setBulkReadyOpen(true) : undefined}
+        onOpenHandover={selectedBinder ? () => setHandoverOpen(true) : undefined}
         onDelete={selectedBinder ? () => setConfirmDeleteForId(selectedBinder.id) : undefined}
         actionLoading={selectedBinder ? actionLoadingId === selectedBinder.id : false}
         receiveForm={receive.form}

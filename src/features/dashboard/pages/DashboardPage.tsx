@@ -37,8 +37,8 @@ export const Dashboard: React.FC = () => {
       )}
       {/* Stats — skeleton while loading */}
       {dashboard.status === "loading" ? (
-        <div className="grid grid-cols-2 gap-3 animate-pulse md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {[1, 2, 3, 4, 5].map((i) => (
+        <div className="grid grid-cols-2 gap-3 animate-pulse md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="h-24 rounded-xl bg-gray-100" />
           ))}
         </div>

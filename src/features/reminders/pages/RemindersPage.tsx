@@ -5,11 +5,11 @@ import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
 import {
   CreateReminderModal,
   ReminderDrawer,
+  RemindersFiltersBar,
   RemindersSummaryCards,
   RemindersTable,
   useReminders,
 } from "@/features/reminders";
-import { RemindersFiltersBar } from "@/features/reminders/components/RemindersFiltersBar";
 
 export const RemindersPage: React.FC = () => {
   const {

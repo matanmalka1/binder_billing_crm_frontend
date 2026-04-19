@@ -72,6 +72,9 @@ export const buildBindersColumns = ({
     key: "period_start",
     header: "תקופה",
     render: (binder) => {
+      if (!binder.period_start && !binder.period_end) {
+        return <span className="text-sm text-gray-400">—</span>;
+      }
       const start = formatMonthYear(binder.period_start);
       const end = binder.period_end ? formatMonthYear(binder.period_end) : "פעיל";
       return (
@@ -95,7 +98,13 @@ export const buildBindersColumns = ({
   {
     key: "days_in_office",
     header: "ימים במשרד",
-    render: (binder) => <MonoValue value={binder.days_in_office} format="days" returned={binder.status === "returned"} />,
+    render: (binder) => (
+      <MonoValue
+        value={binder.days_in_office}
+        format="days"
+        returned={binder.status === "returned"}
+      />
+    ),
   },
   {
     key: "actions",

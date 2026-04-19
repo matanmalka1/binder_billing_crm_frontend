@@ -11,7 +11,6 @@ export interface BinderResponse {
   returned_at: string | null;
   pickup_person_name?: string | null;
   days_in_office?: number | null;
-  is_full: boolean;
   available_actions?: BackendAction[] | null;
 }
 
@@ -26,6 +25,7 @@ export interface BinderListResponse {
 export interface BinderListCounters {
   total: number;
   in_office: number;
+  closed_in_office: number;
   ready_for_pickup: number;
   returned: number;
 }
@@ -72,6 +72,10 @@ export interface ReceiveBinderPayload {
     material_type: string;
     business_id?: number | null;
     annual_report_id?: number | null;
+    vat_report_id?: number | null;
+    period_year: number;
+    period_month_start: number;
+    period_month_end: number;
     description?: string | null;
   }[];
 }
@@ -98,6 +102,10 @@ export interface BinderIntakeMaterialResponse {
   material_type: string;
   business_id?: number | null;
   annual_report_id?: number | null;
+  vat_report_id?: number | null;
+  period_year?: number | null;
+  period_month_start?: number | null;
+  period_month_end?: number | null;
   description?: string | null;
   created_at: string;
 }

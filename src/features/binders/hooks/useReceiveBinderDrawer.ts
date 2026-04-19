@@ -13,6 +13,9 @@ import { useAuthStore } from "../../../store/auth.store";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import { receiveBinderSchema, type ReceiveBinderFormValues } from "../schemas";
+import { toBinderPeriodValue } from "../utils";
+
+const ANNUAL_BINDER_TYPES = new Set(["annual_report", "capital_declaration"]);
 
 const getDefaultValues = (): ReceiveBinderFormValues => ({
   client_id: undefined as unknown as number,
@@ -20,7 +23,9 @@ const getDefaultValues = (): ReceiveBinderFormValues => ({
   binder_type: "",
   annual_report_id: null,
   open_new_binder: false,
-  reporting_period: null,
+  period_year: new Date().getFullYear(),
+  period_month_start: null,
+  period_month_end: null,
   received_at: format(new Date(), "yyyy-MM-dd"),
   notes: null,
 });
@@ -58,9 +63,12 @@ export const useReceiveBinderDrawer = (
   const clientId: number | undefined = form.watch("client_id");
   const binderType: string = form.watch("binder_type") ?? "";
   const businessId = form.watch("business_id");
+  const periodMonthStart = form.watch("period_month_start");
 
   useEffect(() => {
-    form.setValue("reporting_period", null);
+    form.setValue("period_year", new Date().getFullYear());
+    form.setValue("period_month_start", null);
+    form.setValue("period_month_end", null);
     form.setValue("annual_report_id", null);
     if (binderType === "vat") {
       // VAT is client-scoped: keep business_id empty to avoid business-coupled intake.
@@ -69,7 +77,9 @@ export const useReceiveBinderDrawer = (
   }, [binderType, form]);
 
   useEffect(() => {
-    form.setValue("reporting_period", null);
+    form.setValue("period_year", new Date().getFullYear());
+    form.setValue("period_month_start", null);
+    form.setValue("period_month_end", null);
     form.setValue("annual_report_id", null);
   }, [businessId, form]);
 
@@ -103,7 +113,7 @@ export const useReceiveBinderDrawer = (
   });
 
   const hasActiveBinder = (clientBindersData?.items ?? []).some(
-    (b) => b.status !== "returned" && !b.is_full,
+    (b) => b.status === "in_office",
   );
 
   const { data: taxProfile } = useQuery({
@@ -128,6 +138,25 @@ export const useReceiveBinderDrawer = (
   const vatType: "monthly" | "bimonthly" | "exempt" | null =
     taxProfile?.vat_reporting_frequency ?? null;
 
+  useEffect(() => {
+    if (!binderType) return;
+    if (ANNUAL_BINDER_TYPES.has(binderType)) {
+      form.setValue("period_month_start", 1, { shouldValidate: false });
+      form.setValue("period_month_end", 12, { shouldValidate: false });
+      return;
+    }
+
+    if (periodMonthStart == null) {
+      form.setValue("period_month_end", null, { shouldValidate: false });
+      return;
+    }
+
+    const monthEnd = binderType === "vat" && vatType === "bimonthly"
+      ? Math.min(periodMonthStart + 1, 12)
+      : periodMonthStart;
+    form.setValue("period_month_end", monthEnd, { shouldValidate: false });
+  }, [binderType, periodMonthStart, vatType, form]);
+
   const annualReports: AnnualReportFull[] = annualReportsData ?? [];
 
   const resetState = () => {
@@ -137,7 +166,29 @@ export const useReceiveBinderDrawer = (
   };
 
   const mutation = useMutation({
-    mutationFn: (values: ReceiveBinderFormValues) => {
+    mutationFn: async (values: ReceiveBinderFormValues) => {
+      const monthStart = ANNUAL_BINDER_TYPES.has(values.binder_type)
+        ? 1
+        : values.period_month_start;
+      const monthEnd = ANNUAL_BINDER_TYPES.has(values.binder_type)
+        ? 12
+        : values.period_month_end;
+
+      let vatReportId: number | null = null;
+      if (
+        values.binder_type === "vat" &&
+        values.client_id &&
+        values.period_year &&
+        monthStart &&
+        monthEnd
+      ) {
+        const lookup = await vatReportsApi.lookup(
+          values.client_id,
+          toBinderPeriodValue(values.period_year, monthStart, monthEnd),
+        );
+        vatReportId = lookup?.id ?? null;
+      }
+
       return bindersApi.receive({
         client_id: values.client_id,
         received_at: values.received_at,
@@ -148,7 +199,11 @@ export const useReceiveBinderDrawer = (
           material_type: values.binder_type,
           business_id: values.business_id ?? null,
           annual_report_id: values.annual_report_id ?? null,
-          description: values.reporting_period ?? null,
+          vat_report_id: vatReportId,
+          period_year: values.period_year,
+          period_month_start: monthStart ?? 1,
+          period_month_end: monthEnd ?? monthStart ?? 1,
+          description: null,
         }],
       });
     },
@@ -156,8 +211,18 @@ export const useReceiveBinderDrawer = (
       toast.success(result.is_new_binder ? "קלסר חדש נפתח והחומר נקלט" : "החומר נוסף לקלסר קיים");
       await queryClient.invalidateQueries({ queryKey: bindersQK.all });
 
-      if (values.binder_type === "vat" && values.client_id && values.reporting_period) {
-        const period = values.reporting_period.slice(0, 7);
+      if (
+        values.binder_type === "vat" &&
+        values.client_id &&
+        values.period_year &&
+        values.period_month_start &&
+        values.period_month_end
+      ) {
+        const period = toBinderPeriodValue(
+          values.period_year,
+          values.period_month_start,
+          values.period_month_end,
+        );
         try {
           const existing = await vatReportsApi.lookup(values.client_id, period);
           if (existing) {
@@ -190,7 +255,9 @@ export const useReceiveBinderDrawer = (
     setClientQuery(client.name);
     form.setValue("client_id", client.id, { shouldValidate: true });
     form.setValue("annual_report_id", null);
-    form.setValue("reporting_period", null);
+    form.setValue("period_year", new Date().getFullYear());
+    form.setValue("period_month_start", null);
+    form.setValue("period_month_end", null);
     form.setValue("business_id", undefined as unknown as number | null);
   };
 
@@ -200,7 +267,9 @@ export const useReceiveBinderDrawer = (
       setSelectedClient(null);
       form.setValue("client_id", undefined as unknown as number);
       form.setValue("annual_report_id", null);
-      form.setValue("reporting_period", null);
+      form.setValue("period_year", new Date().getFullYear());
+      form.setValue("period_month_start", null);
+      form.setValue("period_month_end", null);
       form.setValue("business_id", undefined as unknown as number | null);
     }
   };

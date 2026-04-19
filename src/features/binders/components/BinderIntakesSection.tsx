@@ -13,31 +13,21 @@ import { getBinderTypeLabel } from "../constants";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { VAT_STATUS_BADGE_VARIANTS } from "../../vatReports/constants";
 import type { BinderIntakeMaterialResponse } from "../types";
-import { taxProfileApi, taxProfileQK } from "@/features/taxProfile/api";
-import { getReportingPeriodMonthLabel } from "../../../utils/utils";
-
-const formatVatPeriodLabel = (period: string, isBimonthly: boolean): string => {
-  const match = /^(\d{4})-(\d{2})$/.exec(period);
-  if (!match) return period;
-
-  const year = Number(match[1]);
-  if (!Number.isInteger(year)) return period;
-
-  const periodMonthsCount = isBimonthly ? 2 : 1;
-  return `${getReportingPeriodMonthLabel(period, periodMonthsCount)} ${year}`;
-};
+import { formatStructuredBinderPeriod, toBinderPeriodValue } from "../utils";
 
 const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse; clientId: number }> = ({
   material,
   clientId,
 }) => {
   const navigate = useNavigate();
-  const period = material.description?.slice(0, 7);
+  const period = material.period_year && material.period_month_start && material.period_month_end
+    ? toBinderPeriodValue(material.period_year, material.period_month_start, material.period_month_end)
+    : null;
 
   const { data: lookup } = useQuery({
     queryKey: vatReportsQK.lookup(clientId, period!),
     queryFn: () => vatReportsApi.lookup(clientId, period!),
-    enabled: clientId > 0 && !!period && /^\d{4}-\d{2}$/.test(period),
+    enabled: clientId > 0 && !!period,
     staleTime: 30_000,
   });
 
@@ -67,15 +57,8 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ bind
     queryKey: bindersQK.intakes(binderId),
     queryFn: () => bindersApi.getIntakes(binderId),
   });
-  const { data: taxProfile } = useQuery({
-    queryKey: taxProfileQK.forClient(clientId),
-    queryFn: () => taxProfileApi.get(clientId),
-    enabled: clientId > 0,
-    staleTime: 30_000,
-  });
 
   const intakes = data?.intakes ?? [];
-  const isBimonthly = taxProfile?.vat_reporting_frequency === "bimonthly";
 
   if (isLoading) return null;
 
@@ -97,15 +80,32 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ bind
                   {intake.materials.map((m) => (
                     <div key={m.id} className="flex items-center gap-1 text-xs text-gray-700 font-medium">
                       <span>{getBinderTypeLabel(m.material_type)}</span>
-                      {m.material_type === "vat" && m.description && /^\d{4}-\d{2}$/.test(m.description) ? (
+                      {m.material_type === "vat" && m.period_year && m.period_month_start && m.period_month_end ? (
                         <span className="font-normal text-gray-500">
                           {" · "}
-                          {formatVatPeriodLabel(m.description, isBimonthly)}
+                          {formatStructuredBinderPeriod(
+                            m.period_year,
+                            m.period_month_start,
+                            m.period_month_end,
+                          )}
+                        </span>
+                      ) : formatStructuredBinderPeriod(
+                        m.period_year,
+                        m.period_month_start,
+                        m.period_month_end,
+                      ) ? (
+                        <span className="font-normal text-gray-500">
+                          {" · "}
+                          {formatStructuredBinderPeriod(
+                            m.period_year,
+                            m.period_month_start,
+                            m.period_month_end,
+                          )}
                         </span>
                       ) : m.description ? (
                         <span className="font-normal text-gray-500"> · {m.description}</span>
                       ) : null}
-                      {m.material_type === "vat" && m.description && (
+                      {m.material_type === "vat" && m.period_year && m.period_month_start && m.period_month_end && (
                         <VatStatusBadge material={m} clientId={clientId} />
                       )}
                     </div>

@@ -1,5 +1,7 @@
-import { DrawerField, DrawerSection } from "../../../components/ui/overlays/DetailDrawer";
-import { Badge } from "../../../components/ui/primitives/Badge";
+import {
+  DrawerField,
+  DrawerSection,
+} from "../../../components/ui/overlays/DetailDrawer";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { MonoValue } from "../../../components/ui/primitives/MonoValue";
 import type { BinderResponse } from "../types";
@@ -16,27 +18,34 @@ interface BinderDetailsPanelProps {
   binder: BinderResponse;
 }
 
-export const BinderDetailsPanel: React.FC<BinderDetailsPanelProps> = ({ binder }) => {
+export const BinderDetailsPanel: React.FC<BinderDetailsPanelProps> = ({
+  binder,
+}) => {
   return (
     <>
       <DrawerSection title="פרטי קלסר">
         <DrawerField label="מספר קלסר" value={binder.binder_number} />
         {(binder.period_start != null || binder.period_end != null) && (
-          <DrawerField label="תקופה" value={formatPeriod(binder.period_start, binder.period_end)} />
+          <DrawerField
+            label="תקופה"
+            value={formatPeriod(binder.period_start, binder.period_end)}
+          />
         )}
         <DrawerField
-          label="מצב מילוי"
+          label="סטטוס"
           value={
-            <Badge variant={binder.is_full ? "success" : "neutral"}>
-              {binder.is_full ? "מלא" : "חלקי"}
-            </Badge>
+            <StatusBadge
+              status={binder.status}
+              getLabel={getStatusLabel}
+              variantMap={BINDER_STATUS_VARIANTS}
+            />
           }
         />
-        <DrawerField label="סטטוס" value={
-          <StatusBadge status={binder.status} getLabel={getStatusLabel} variantMap={BINDER_STATUS_VARIANTS} />
-        } />
         {binder.returned_at && (
-          <DrawerField label="תאריך החזרה" value={formatDate(binder.returned_at)} />
+          <DrawerField
+            label="תאריך החזרה"
+            value={formatDate(binder.returned_at)}
+          />
         )}
         {binder.pickup_person_name && (
           <DrawerField label="נאסף על ידי" value={binder.pickup_person_name} />
@@ -46,8 +55,7 @@ export const BinderDetailsPanel: React.FC<BinderDetailsPanelProps> = ({ binder }
           value={<MonoValue value={binder.days_in_office} format="days" />}
         />
       </DrawerSection>
-
-</>
+    </>
   );
 };
 

@@ -5,6 +5,8 @@ export const BINDER_ENDPOINTS = {
   binderRevertReady: (binderId: number | string) => `/binders/${binderId}/revert-ready`,
   binderReturn: (binderId: number | string) => `/binders/${binderId}/return`,
   binderReceive: "/binders/receive",
+  binderMarkReadyBulk: "/binders/mark-ready-bulk",
+  binderHandover: "/binders/handover",
   binderHistory: (binderId: number | string) => `/binders/${binderId}/history`,
   binderIntakes: (binderId: number | string) => `/binders/${binderId}/intakes`,
   bindersOpen: "/binders/open",

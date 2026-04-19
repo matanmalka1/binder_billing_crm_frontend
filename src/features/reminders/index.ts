@@ -2,6 +2,7 @@
 export { remindersApi, remindersQK } from "./api";
 export { CreateReminderModal } from "./components/CreateReminderModal";
 export { ReminderDrawer } from "./components/ReminderDrawer";
+export { RemindersFiltersBar } from "./components/RemindersFiltersBar";
 export { RemindersSummaryCards } from "./components/RemindersSummaryCards";
 export { RemindersTable } from "./components/RemindersTable";
 export { useReminders } from "./hooks/useReminders";

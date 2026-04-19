@@ -20,3 +20,31 @@ export interface BinderListResponseExtended {
   page_size: number;
   total: number;
 }
+
+export interface BinderMarkReadyBulkPayload {
+  client_id: number;
+  until_period_year: number;
+  until_period_month: number;
+}
+
+export interface BinderHandoverPayload {
+  client_id: number;
+  binder_ids: number[];
+  received_by_name: string;
+  handed_over_at: string;
+  until_period_year: number;
+  until_period_month: number;
+  notes?: string | null;
+}
+
+export interface BinderHandoverResponse {
+  id: number;
+  client_id: number;
+  received_by_name: string;
+  handed_over_at: string;
+  until_period_year: number;
+  until_period_month: number;
+  binder_ids: number[];
+  notes?: string | null;
+  created_at: string;
+}

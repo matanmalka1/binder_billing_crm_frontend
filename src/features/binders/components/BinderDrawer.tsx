@@ -22,6 +22,8 @@ interface BinderDrawerProps {
   onMarkReady?: () => void;
   onRevertReady?: () => void;
   onReturn?: () => void;
+  onBulkReady?: () => void;
+  onOpenHandover?: () => void;
   onDelete?: () => void;
   actionLoading?: boolean;
   receiveForm?: UseFormReturn<ReceiveBinderFormValues>;
@@ -45,6 +47,8 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
   onMarkReady,
   onRevertReady,
   onReturn,
+  onBulkReady,
+  onOpenHandover,
   onDelete,
   actionLoading = false,
   receiveForm,
@@ -120,6 +124,8 @@ export const BinderDrawer: React.FC<BinderDrawerProps> = ({
             onMarkReady={() => onMarkReady?.()}
             onRevertReady={() => onRevertReady?.()}
             onReturn={() => onReturn?.()}
+            onBulkReady={onBulkReady ? () => onBulkReady() : undefined}
+            onOpenHandover={onOpenHandover ? () => onOpenHandover() : undefined}
           />
           <BinderIntakesSection binderId={binder.id} clientId={binder.client_id} />
           <BinderHistorySection binderId={binder.id} />

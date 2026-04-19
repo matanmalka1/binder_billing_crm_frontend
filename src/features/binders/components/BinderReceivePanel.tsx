@@ -4,13 +4,13 @@ import { Alert } from "../../../components/ui/overlays/Alert";
 import { Button } from "../../../components/ui/primitives/Button";
 import { ClientSearchInput } from "@/components/shared/client";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
-import { ReportingPeriodField } from "../../../components/ui/inputs/ReportingPeriodField";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { isClientLockedForCreate } from "../../../utils/clientStatus";
 import { getReportStatusLabel, type AnnualReportFull } from "@/features/annualReports";
 import { BINDER_TYPE_OPTIONS } from "../constants";
 import type { ReceiveBinderFormValues } from "../schemas";
+import { BinderPeriodFields } from "./BinderPeriodFields";
 
 interface BinderReceivePanelProps {
   form: UseFormReturn<ReceiveBinderFormValues>;
@@ -136,22 +136,10 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
       )}
 
       {selectedClient && binderType && (
-        <Controller
-          name="reporting_period"
-          control={control}
-          render={({ field }) => (
-            <ReportingPeriodField
-              materialType={binderType}
-              vatType={vatType}
-              value={field.value ?? ""}
-              onChange={field.onChange}
-              error={errors.reporting_period?.message}
-            />
-          )}
-        />
+        <BinderPeriodFields form={form} materialType={binderType} vatType={vatType} />
       )}
 
-      {selectedClient && binderType === "annual_report" && typeof form.watch("business_id") === "number" && (
+      {selectedClient && binderType === "annual_report" && (
         <Controller
           name="annual_report_id"
           control={control}
