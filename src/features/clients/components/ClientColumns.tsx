@@ -4,11 +4,12 @@ import type { ClientResponse } from "../api";
 import { formatClientOfficeId, formatDate } from "@/utils/utils";
 import { ClientRowActions } from "./ClientRowActions";
 import { getEntityTypeLabel, getClientStatusLabel, getVatTypeLabel } from "../constants";
+import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 
-const STATUS_BADGE: Record<string, { className: string }> = {
-  active: { className: "bg-positive-100 text-positive-800" },
-  frozen: { className: "bg-warning-100 text-warning-800" },
-  closed: { className: "bg-gray-100 text-gray-600" },
+const CLIENT_STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+  active: "success",
+  frozen: "warning",
+  closed: "neutral",
 };
 
 interface BuildClientColumnsParams {
@@ -86,14 +87,13 @@ export const buildClientColumns = ({
     {
       key: "status",
       header: "סטטוס",
-      render: (client) => {
-        const badge = STATUS_BADGE[client.status];
-        return (
-          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${badge.className}`}>
-            {getClientStatusLabel(client.status)}
-          </span>
-        );
-      },
+      render: (client) => (
+        <StatusBadge
+          status={client.status}
+          getLabel={getClientStatusLabel}
+          variantMap={CLIENT_STATUS_VARIANTS}
+        />
+      ),
     },
     {
       key: "phone",

@@ -76,45 +76,40 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({ bind
               </div>
 
               {intake.materials.length > 0 && (
-                <div className="mt-0.5 flex flex-col gap-0.5">
-                  {intake.materials.map((m) => (
-                    <div key={m.id} className="flex items-center gap-1 text-xs text-gray-700 font-medium">
-                      <span>{getBinderTypeLabel(m.material_type)}</span>
-                      {m.material_type === "vat" && m.period_year && m.period_month_start && m.period_month_end ? (
-                        <span className="font-normal text-gray-500">
-                          {" · "}
-                          {formatStructuredBinderPeriod(
-                            m.period_year,
-                            m.period_month_start,
-                            m.period_month_end,
+                <div className="mt-1 flex flex-col gap-1">
+                  {intake.materials.map((m) => {
+                    const period = formatStructuredBinderPeriod(m.period_year, m.period_month_start, m.period_month_end);
+                    return (
+                      <div key={m.id} className="flex flex-col gap-0.5 text-xs border-t border-gray-100 pt-1 first:border-0 first:pt-0">
+                        <div className="flex items-center gap-1">
+                          <span className="text-gray-400 w-20 shrink-0">סוג חומר</span>
+                          <span className="text-gray-700 font-medium">{getBinderTypeLabel(m.material_type)}</span>
+                          {m.material_type === "vat" && m.period_year && m.period_month_start && m.period_month_end && (
+                            <VatStatusBadge material={m} clientId={clientId} />
                           )}
-                        </span>
-                      ) : formatStructuredBinderPeriod(
-                        m.period_year,
-                        m.period_month_start,
-                        m.period_month_end,
-                      ) ? (
-                        <span className="font-normal text-gray-500">
-                          {" · "}
-                          {formatStructuredBinderPeriod(
-                            m.period_year,
-                            m.period_month_start,
-                            m.period_month_end,
-                          )}
-                        </span>
-                      ) : m.description ? (
-                        <span className="font-normal text-gray-500"> · {m.description}</span>
-                      ) : null}
-                      {m.material_type === "vat" && m.period_year && m.period_month_start && m.period_month_end && (
-                        <VatStatusBadge material={m} clientId={clientId} />
-                      )}
-                    </div>
-                  ))}
+                        </div>
+                        {period && (
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-400 w-20 shrink-0">תקופת דיווח</span>
+                            <span className="text-gray-700">{period}</span>
+                          </div>
+                        )}
+                        {!period && m.description && (
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-400 w-20 shrink-0">תיאור</span>
+                            <span className="text-gray-700">{m.description}</span>
+                          </div>
+                        )}
+                        {intake.received_by_name && (
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-400 w-20 shrink-0">נקלט ע״י</span>
+                            <span className="text-gray-700">{intake.received_by_name}</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-              )}
-
-              {intake.received_by_name && (
-                <p className="text-xs text-gray-500 mt-0.5">{intake.received_by_name}</p>
               )}
 
               {intake.notes && (

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import { DetailDrawer, DrawerField, DrawerSection } from "../../../components/ui/overlays/DetailDrawer";
+import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { Alert } from "../../../components/ui/overlays/Alert";
 import { Button } from "../../../components/ui/primitives/Button";
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
@@ -31,7 +32,7 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
   const [cancelReason, setCancelReason] = useState("");
 
   const footer = charge && isAdvisor ? (
-    <div className="flex items-center justify-between gap-3">
+    <div className="flex flex-wrap items-center justify-between gap-3">
       <ChargeActionButtons
         status={charge.status}
         disabled={actionLoading}
@@ -73,8 +74,8 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
         }}
         onCancel={() => { setIsConfirmingCancel(false); setCancelReason(""); }}
       >
-        <textarea
-          className="mt-3 w-full rounded border border-gray-300 p-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+        <Textarea
+          className="mt-3 resize-none"
           rows={3}
           placeholder="סיבת ביטול (אופציונלי)"
           value={cancelReason}

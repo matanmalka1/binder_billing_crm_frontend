@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/overlays/Modal";
+import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import { UserFormFields } from "./UserFormFields";
-import { UserModalFooter } from "./UserModalFooter";
 import { editUserSchema, type EditUserFormValues } from "../schemas";
 import type { UserResponse, UpdateUserPayload } from "../api";
 
@@ -64,7 +64,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
       onClose={handleClose}
       title={`עריכת משתמש — ${user?.full_name ?? ""}`}
       footer={
-        <UserModalFooter
+        <ModalFormActions
           isLoading={isLoading}
           submitLabel="שמור שינויים"
           onCancel={handleClose}

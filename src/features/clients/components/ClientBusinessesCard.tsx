@@ -2,15 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/primitives/Button";
+import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { clientsApi, clientsQK } from "../api";
 import { BUSINESS_STATUS_LABELS } from "../constants";
 import { CLIENT_ROUTES } from "../api/endpoints";
 import { formatDate } from "@/utils/utils";
 
-const STATUS_BADGE = {
-  active: { label: BUSINESS_STATUS_LABELS.active, className: "bg-positive-100 text-positive-800" },
-  frozen: { label: BUSINESS_STATUS_LABELS.frozen, className: "bg-warning-100 text-warning-800" },
-  closed: { label: BUSINESS_STATUS_LABELS.closed, className: "bg-gray-100 text-gray-600" },
+const BUSINESS_STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+  active: "success",
+  frozen: "warning",
+  closed: "neutral",
 };
 
 interface Props {
@@ -52,29 +53,28 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
         <p className="text-xs text-gray-400">אין עסקים רשומים</p>
       ) : (
         <ul className="divide-y divide-gray-100">
-          {businesses.map((biz) => {
-            const badge = STATUS_BADGE[biz.status];
-            return (
-              <li key={biz.id}>
-                <Link
-                  to={CLIENT_ROUTES.businessDetail(clientId, biz.id)}
-                  className="flex items-center justify-between py-2 hover:bg-gray-50 rounded-lg px-1 transition-colors"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-gray-900">
-                      {biz.business_name ?? "—"}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      נפתח בתאריך {formatDate(biz.opened_at)}
-                    </p>
-                  </div>
-                  <span className={`ml-2 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${badge.className}`}>
-                    {badge.label}
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
+          {businesses.map((biz) => (
+            <li key={biz.id}>
+              <Link
+                to={CLIENT_ROUTES.businessDetail(clientId, biz.id)}
+                className="flex items-center justify-between py-2 hover:bg-gray-50 rounded-lg px-1 transition-colors"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-gray-900">
+                    {biz.business_name ?? "—"}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    נפתח בתאריך {formatDate(biz.opened_at)}
+                  </p>
+                </div>
+                <StatusBadge
+                  status={biz.status}
+                  getLabel={(s) => BUSINESS_STATUS_LABELS[s as keyof typeof BUSINESS_STATUS_LABELS] ?? s}
+                  variantMap={BUSINESS_STATUS_VARIANTS}
+                />
+              </Link>
+            </li>
+          ))}
         </ul>
       )}
     </div>

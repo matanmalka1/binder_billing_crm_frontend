@@ -85,9 +85,9 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
               <DrawerField
                 label="זמן נותר"
                 value={
-                  <span className={cn("font-semibold text-sm px-2 py-0.5 rounded-full border text-xs", getUrgencyColor(urgency))}>
+                  <Badge className={cn("font-semibold", getUrgencyColor(urgency))}>
                     {daysLabel}
-                  </span>
+                  </Badge>
                 }
               />
             )}

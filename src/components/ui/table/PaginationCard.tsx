@@ -6,10 +6,6 @@ interface PaginationCardProps {
   total: number;
   label?: string;
   onPageChange: (nextPage: number) => void;
-  showPageSizeSelect?: boolean;
-  pageSize?: number;
-  pageSizeOptions?: number[];
-  onPageSizeChange?: (pageSize: number) => void;
 }
 
 export const PaginationCard: React.FC<PaginationCardProps> = ({
@@ -18,9 +14,6 @@ export const PaginationCard: React.FC<PaginationCardProps> = ({
   total,
   label = "תוצאות",
   onPageChange,
-  showPageSizeSelect = false,
-  pageSize,
-  onPageSizeChange,
 }) => {
   return (
     <Card>
@@ -53,9 +46,6 @@ export const PaginationCard: React.FC<PaginationCardProps> = ({
         </div>
       </div>
 
-      {showPageSizeSelect &&
-        pageSize !== undefined &&
-        typeof onPageSizeChange === "function"}
     </Card>
   );
 };

@@ -37,7 +37,7 @@ export const Search: React.FC = () => {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <PageHeader
         title="חיפוש"
         description="חיפוש גלובלי על פני לקוחות, קלסרים ומסמכים"
@@ -53,7 +53,6 @@ export const Search: React.FC = () => {
           placeholder="חיפוש חופשי — שם לקוח, מספר קלסר..."
           startIcon={<SearchIcon className="h-4 w-4" />}
           autoFocus
-          dir="rtl"
         />
       </ToolbarContainer>
 

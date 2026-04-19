@@ -67,8 +67,8 @@ export const RemindersPage: React.FC = () => {
     if (reminders.length === 0) {
       if (hasFilters) {
         return (
-          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
-            <p className="text-lg font-semibold mb-2">לא נמצאו תזכורות</p>
+          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center text-gray-500">
+            <p className="text-lg font-medium mb-2">לא נמצאו תזכורות</p>
             <p className="text-sm mb-4">אין תוצאות התואמות את הסינון הנוכחי.</p>
             <Button variant="secondary" onClick={clearFilters}>
               נקה סינון
@@ -78,8 +78,8 @@ export const RemindersPage: React.FC = () => {
       }
       if (rawTotal === 0) {
         return (
-          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
-            <p className="text-lg font-semibold mb-2">אין תזכורות להצגה</p>
+          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center text-gray-500">
+            <p className="text-lg font-medium mb-2">אין תזכורות להצגה</p>
             <p className="text-sm mb-4">צור תזכורת חדשה כדי להופיע כאן.</p>
             <Button variant="primary" className="gap-2" onClick={() => setShowCreateModal(true)}>
               <Plus className="h-4 w-4" />

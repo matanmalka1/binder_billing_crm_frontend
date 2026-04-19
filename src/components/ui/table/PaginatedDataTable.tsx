@@ -4,7 +4,6 @@ import { DataTable, type DataTableProps } from "./DataTable";
 import { getTotalPages } from "../../../utils/paginationUtils";
 import { PaginationCard } from "./PaginationCard";
 
-const DEFAULT_PAGE_SIZE_OPTIONS = [20, 50, 100];
 
 type BasePaginatedDataTableProps<T> = Pick<
   DataTableProps<T>,
@@ -23,7 +22,7 @@ export interface PaginatedDataTableProps<T> extends BasePaginatedDataTableProps<
   isLoading?: boolean;
   label?: string;
   onPageChange: (page: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
   page: number;
   pageSize: number;
   pageSizeOptions?: number[];
@@ -43,11 +42,9 @@ export const PaginatedDataTable = <T,>({
   isLoading = false,
   label,
   onPageChange,
-  onPageSizeChange,
   onRowClick,
   page,
   pageSize,
-  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
   rowClassName,
   showPagination,
   summary,
@@ -77,10 +74,7 @@ export const PaginatedDataTable = <T,>({
           total={total}
           label={label}
           onPageChange={onPageChange}
-          showPageSizeSelect
-          pageSize={pageSize}
-          pageSizeOptions={pageSizeOptions}
-          onPageSizeChange={onPageSizeChange}
+
         />
       )}
     </>

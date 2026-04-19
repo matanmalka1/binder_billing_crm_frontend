@@ -56,7 +56,7 @@ export const Clients: React.FC = () => {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <PageHeader
         title="לקוחות"
         description="רשימת כל הלקוחות במערכת"

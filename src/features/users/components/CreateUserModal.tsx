@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/overlays/Modal";
+import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import { UserFormFields } from "./UserFormFields";
-import { UserModalFooter } from "./UserModalFooter";
 import { createUserSchema, type CreateUserFormValues } from "../schemas";
 import type { CreateUserPayload } from "../api";
 
@@ -47,7 +47,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
       open={open}
       onClose={handleClose}
       title="יצירת משתמש חדש"
-      footer={<UserModalFooter isLoading={isLoading} submitLabel="צור משתמש" onCancel={handleClose} onSubmit={onFormSubmit} />}
+      footer={<ModalFormActions isLoading={isLoading} submitLabel="צור משתמש" onCancel={handleClose} onSubmit={onFormSubmit} />}
     >
       <form onSubmit={onFormSubmit}>
         <UserFormFields register={register} errors={errors} showPassword />

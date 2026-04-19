@@ -50,12 +50,12 @@ export const ClientVatOverviewCard: React.FC<Props> = ({ clientId }) => {
               {fmt(yearData.net_vat)}
             </p>
             <div className="flex items-center justify-end gap-1">
-              <p className="text-[10px] text-gray-400">מע&quot;מ נטו</p>
+              <p className="text-xs text-gray-400">מע&quot;מ נטו</p>
               {yearData.filed_count === yearData.periods_count && yearData.periods_count > 0 && (
-                <Badge variant="success" className="text-[10px]">מדווח</Badge>
+                <Badge variant="success" className="text-xs">מדווח</Badge>
               )}
               {yearData.filed_count < yearData.periods_count && yearData.periods_count > 0 && (
-                <Badge variant="warning" className="text-[10px]">חסר דיווח</Badge>
+                <Badge variant="warning" className="text-xs">חסר דיווח</Badge>
               )}
             </div>
           </div>

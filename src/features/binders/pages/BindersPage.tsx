@@ -125,7 +125,6 @@ export const Binders: React.FC = () => {
         pageSize={filters.page_size}
         total={total}
         onPageChange={setPage}
-        onPageSizeChange={(pageSize) => handleFilterChange("page_size", String(pageSize))}
         emptyMessage="אין קלסרים התואמים לסינון הנוכחי"
         emptyState={{
           title: "לא נמצאו קלסרים",
