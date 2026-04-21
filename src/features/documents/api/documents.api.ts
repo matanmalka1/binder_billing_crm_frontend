@@ -8,7 +8,6 @@ import type {
   ListDocumentsByClientParams,
   PermanentDocumentResponse,
   UploadDocumentPayload,
-  RejectDocumentRequest,
   UpdateNotesRequest,
 } from "./contracts";
 
@@ -66,7 +65,7 @@ export const documentsApi = {
 
   upload: async (payload: UploadDocumentPayload): Promise<PermanentDocumentResponse> => {
     const formData = new FormData();
-    formData.append("client_id", String(payload.client_id));
+    formData.append("client_record_id", String(payload.client_record_id));
     if (payload.business_id != null) {
       formData.append("business_id", String(payload.business_id));
     }
@@ -100,21 +99,6 @@ export const documentsApi = {
       DOCUMENT_ENDPOINTS.documentReplace(id),
       formData,
       { headers: { "Content-Type": "multipart/form-data" } },
-    );
-    return response.data;
-  },
-
-  approveDocument: async (id: number): Promise<PermanentDocumentResponse> => {
-    const response = await api.post<PermanentDocumentResponse>(
-      DOCUMENT_ENDPOINTS.documentApprove(id),
-    );
-    return response.data;
-  },
-
-  rejectDocument: async (id: number, notes: string): Promise<PermanentDocumentResponse> => {
-    const response = await api.post<PermanentDocumentResponse>(
-      DOCUMENT_ENDPOINTS.documentReject(id),
-      { notes } satisfies RejectDocumentRequest,
     );
     return response.data;
   },

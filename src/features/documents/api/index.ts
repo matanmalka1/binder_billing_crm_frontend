@@ -7,6 +7,5 @@ export type {
   OperationalSignalsResponse,
   UploadDocumentPayload,
   ListDocumentsByClientParams,
-  RejectDocumentRequest,
   UpdateNotesRequest,
 } from "./contracts";

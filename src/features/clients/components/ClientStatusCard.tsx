@@ -161,7 +161,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           title="חיובים פתוחים"
           primary={fmt(charges.total_outstanding)}
           secondary={`${charges.unpaid_count} חיובים`}
-          onClick={() => navigate(`/charges?client_id=${clientId}`)}
+          onClick={() => navigate(`/charges?client_record_id=${clientId}`)}
         />
         <Tile
           icon={<TrendingUp size={18} />}

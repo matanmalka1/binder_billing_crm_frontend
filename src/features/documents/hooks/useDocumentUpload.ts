@@ -14,14 +14,14 @@ export const useDocumentUpload = () => {
       setUploadError(null);
       toast.success("מסמך הועלה בהצלחה");
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: documentsQK.clientList(variables.client_id) }),
-        queryClient.invalidateQueries({ queryKey: documentsQK.clientSignals(variables.client_id) }),
+        queryClient.invalidateQueries({ queryKey: documentsQK.clientList(variables.client_record_id) }),
+        queryClient.invalidateQueries({ queryKey: documentsQK.clientSignals(variables.client_record_id) }),
       ]);
     },
   });
 
   const submitUpload = async (
-    payload: Pick<UploadDocumentPayload, "client_id" | "document_type" | "file"> & {
+    payload: Pick<UploadDocumentPayload, "client_record_id" | "document_type" | "file"> & {
       business_id?: number | null;
       tax_year?: number | null;
       notes?: string | null;

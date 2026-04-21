@@ -57,7 +57,7 @@ export const useClientDetails = ({
 
   const chargesQuery = useQuery({
     queryKey: chargesQK.forClientPage(id, CHARGES_PAGE.page, CHARGES_PAGE.page_size),
-    queryFn: () => chargesApi.list({ client_id: id, ...CHARGES_PAGE }),
+    queryFn: () => chargesApi.list({ client_record_id: id, ...CHARGES_PAGE }),
     enabled: isValidId && isAdvisor,
   });
 

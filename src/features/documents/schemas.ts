@@ -47,9 +47,3 @@ export const documentsUploadDefaultValues: DocumentsUploadFormValues = {
   annual_report_id: null,
   notes: null,
 };
-
-export const rejectDocumentSchema = z.object({
-  notes: z.string().min(1, "יש להזין הערה"),
-});
-
-export type RejectDocumentFormValues = z.infer<typeof rejectDocumentSchema>;

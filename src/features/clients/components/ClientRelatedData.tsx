@@ -149,7 +149,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
             iconColor="bg-positive-100 text-positive-700"
             count={chargesTotal}
             label="חיובים"
-            href={`/charges?client_id=${clientId}`}
+            href={`/charges?client_record_id=${clientId}`}
           />
         )}
       </div>
@@ -174,13 +174,13 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
         <RelatedItemsSection
           title="חיובים אחרונים"
           total={chargesTotal}
-          allHref={`/charges?client_id=${clientId}`}
+          allHref={`/charges?client_record_id=${clientId}`}
           items={charges}
           className="mt-4"
           getKey={(charge) => charge.id}
           getTitle={(charge) => `חיוב #${charge.id}`}
           getSubtitle={(charge) => `${getChargeTypeLabel(charge.charge_type)} • ${getChargeStatusLabel(charge.status)}`}
-          getItemHref={() => `/charges?client_id=${clientId}`}
+          getItemHref={() => `/charges?client_record_id=${clientId}`}
         />
       )}
     </Card>

@@ -60,7 +60,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
     resetClientPicker,
   } = useClientPickerState(
     createClientIdPickerHandlers((value, options) =>
-      setValue("client_id", value, options),
+      setValue("client_record_id", value, options),
     ),
   );
 
@@ -129,7 +129,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
         onSubmit={submitForm}
         className="space-y-4"
       >
-        <input type="hidden" {...register("client_id")} />
+        <input type="hidden" {...register("client_record_id")} />
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="col-span-2">
             <ClientPickerField
@@ -138,7 +138,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
               onQueryChange={handleClientQueryChange}
               onSelect={handleSelectClient}
               onClear={handleClearClient}
-              error={errors.client_id?.message}
+              error={errors.client_record_id?.message}
               label="לקוח *"
             />
           </div>

@@ -114,10 +114,6 @@ export const Search: React.FC = () => {
               totalPages={totalPages}
               total={total}
               onPageChange={(page) => handleFilterChange("page", String(page))}
-              showPageSizeSelect
-              pageSize={filters.page_size}
-              pageSizeOptions={[20, 50, 100]}
-              onPageSizeChange={(pageSize) => handleFilterChange("page_size", String(pageSize))}
             />
           )}
         </>

@@ -12,7 +12,7 @@ const chargeTypeValues = [
 ] as const;
 
 export const chargeCreateSchema = z.object({
-  client_id: z
+  client_record_id: z
     .string()
     .trim()
     .min(1, "יש להזין לקוח")
@@ -40,7 +40,7 @@ export const chargeCreateSchema = z.object({
 export type ChargeCreateFormValues = z.infer<typeof chargeCreateSchema>;
 
 export const chargeCreateDefaultValues: ChargeCreateFormValues = {
-  client_id: "",
+  client_record_id: "",
   amount: "",
   charge_type: "monthly_retainer",
   months_covered: 1,
@@ -50,7 +50,7 @@ export const chargeCreateDefaultValues: ChargeCreateFormValues = {
 export const toCreateChargePayload = (
   values: ChargeCreateFormValues,
 ): CreateChargePayload => ({
-  client_id: Number(values.client_id),
+  client_record_id: Number(values.client_record_id),
   amount: values.amount,
   charge_type: values.charge_type,
   months_covered: values.months_covered,

@@ -183,7 +183,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         />
         {expandedDoc && (
           <DocumentVersionsPanel
-            clientId={expandedDoc.client_id}
+            clientId={expandedDoc.client_record_id}
             documentType={expandedDoc.document_type}
             taxYear={expandedDoc.tax_year ?? undefined}
           />

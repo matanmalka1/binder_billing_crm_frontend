@@ -2,7 +2,7 @@ import type { PaginatedResponse } from "@/types";
 
 export interface ChargeResponse {
   id: number;
-  client_id: number;
+  client_record_id: number;
   office_client_number?: number | null;
   business_id?: number | null;
   business_name: string | null;
@@ -43,7 +43,7 @@ export interface ChargeListStats {
 export type ChargesListResponse = PaginatedResponse<ChargeResponse> & { stats: ChargeListStats };
 
 export interface ChargesListParams {
-  client_id?: number;
+  client_record_id?: number;
   business_id?: number;
   status?: string;
   charge_type?: string;
@@ -53,7 +53,7 @@ export interface ChargesListParams {
 }
 
 export interface CreateChargePayload {
-  client_id: number;
+  client_record_id: number;
   business_id?: number | null;
   amount: string;
   charge_type:

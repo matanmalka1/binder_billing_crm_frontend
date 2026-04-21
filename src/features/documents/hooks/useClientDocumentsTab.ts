@@ -59,7 +59,7 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
 
   return {
     documents: documentsQuery.data?.items ?? [],
-    signals: signalsQuery.data ?? { client_id: clientId, missing_documents: [] },
+    signals: signalsQuery.data ?? { client_record_id: clientId, missing_documents: [] },
     loading: documentsQuery.isPending || signalsQuery.isPending,
     error: errorSource ? getErrorMessage(errorSource, "שגיאה בטעינת מסמכים") : null,
     businesses,
@@ -71,7 +71,7 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
       tax_year?: number | null;
       notes?: string | null;
       annual_report_id?: number | null;
-    }) => submitUpload({ ...payload, client_id: clientId }),
+    }) => submitUpload({ ...payload, client_record_id: clientId }),
     uploadError,
     uploading,
     handleDelete,

@@ -23,7 +23,7 @@ export const ChargesFiltersCard = ({
   const [clientQuery, setClientQuery] = useState("");
   const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(null);
 
-  const urlClientId = filters.client_id ? Number(filters.client_id) : null;
+  const urlClientId = filters.client_record_id ? Number(filters.client_record_id) : null;
 
   const { data: urlClient } = useQuery({
     queryKey: clientsQK.detail(urlClientId ?? 0),
@@ -40,20 +40,20 @@ export const ChargesFiltersCard = ({
   }, [urlClient, selectedClient?.id]);
 
   useEffect(() => {
-    if (!filters.client_id) {
+    if (!filters.client_record_id) {
       setSelectedClient(null);
       setClientQuery("");
     }
-  }, [filters.client_id]);
+  }, [filters.client_record_id]);
 
   const handleSelectClient = (client: { id: number; name: string }) => {
     setSelectedClient(client);
     setClientQuery(client.name);
-    onFilterChange("client_id", String(client.id));
+    onFilterChange("client_record_id", String(client.id));
   };
 
   const handleClearClient = () => {
-    onFilterChange("client_id", "");
+    onFilterChange("client_record_id", "");
   };
 
   const handleClearAll = () => {

@@ -105,11 +105,11 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
           charge ? (
             <span className="inline-flex items-center gap-2 flex-wrap">
               <Link
-                to={`/clients/${charge.client_id}`}
+                to={`/clients/${charge.client_record_id}`}
                 className="text-primary-600 hover:underline"
                 onClick={onClose}
               >
-                {charge.business_name ?? `לקוח #${charge.client_id}`}
+                {charge.business_name ?? `לקוח #${charge.client_record_id}`}
               </Link>
               <StatusBadge
                 status={charge.status}
@@ -132,11 +132,11 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
               label="לקוח"
               value={
                 <Link
-                  to={`/clients/${charge.client_id}`}
+                  to={`/clients/${charge.client_record_id}`}
                   className="text-primary-600 hover:underline"
                   onClick={onClose}
                 >
-                  {charge.business_name ?? `לקוח #${charge.client_id}`}
+                  {charge.business_name ?? `לקוח #${charge.client_record_id}`}
                 </Link>
               }
             />

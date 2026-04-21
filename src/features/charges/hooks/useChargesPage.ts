@@ -18,7 +18,7 @@ export const useChargesPage = () => {
   const { searchParams, setFilter, setSearchParams } = useSearchParamFilters();
 
   const filters = {
-    client_id: searchParams.get("client_id") ?? "",
+    client_record_id: searchParams.get("client_record_id") ?? "",
     status: searchParams.get("status") ?? "",
     charge_type: searchParams.get("charge_type") ?? "",
     page: parsePositiveInt(searchParams.get("page"), 1),
@@ -26,7 +26,7 @@ export const useChargesPage = () => {
   };
 
   const apiParams: ChargesListParams = {
-    client_id: toOptionalNumber(filters.client_id),
+    client_record_id: toOptionalNumber(filters.client_record_id),
     status: toOptionalString(filters.status),
     charge_type: toOptionalString(filters.charge_type),
     page: filters.page,

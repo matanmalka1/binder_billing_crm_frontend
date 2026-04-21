@@ -58,6 +58,7 @@ export const CreateClientModal: React.FC<Props> = ({
     handleSubmit,
     watch,
     setValue,
+    resetField,
     formState: { errors },
     reset,
   } = useForm<CreateClientFormValues>({
@@ -107,7 +108,7 @@ export const CreateClientModal: React.FC<Props> = ({
   // אם סוג המזהה השתנה וסוג הישות הנוכחי כבר לא תקין — מאפסים
   useEffect(() => {
     if (currentEntityType && !allowedEntityTypes.includes(currentEntityType)) {
-      setValue("entity_type", undefined);
+      resetField("entity_type", { defaultValue: undefined });
     }
     // אם יש רק אופציה אחת — בוחרים אותה אוטומטית
     if (allowedEntityTypes.length === 1) {

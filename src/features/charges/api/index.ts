@@ -5,6 +5,8 @@ export type {
   ChargeAdvisorResponse,
   ChargeSecretaryResponse,
   ChargeResponse,
+  ChargeListStats,
+  ChargeStatusStat,
   ChargesListResponse,
   ChargesListParams,
   CreateChargePayload,

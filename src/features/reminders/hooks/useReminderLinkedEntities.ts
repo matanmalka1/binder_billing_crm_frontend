@@ -28,19 +28,19 @@ export const useReminderLinkedEntities = (
 
   const bindersQuery = useQuery({
     queryKey: bindersQK.forClient(clientId!),
-    queryFn: () => bindersApi.list({ client_id: clientId!, page_size: 100 }),
+    queryFn: () => bindersApi.list({ client_record_id: clientId!, page_size: 100 }),
     enabled: needsBinders,
   });
 
   const chargesQuery = useQuery({
-    queryKey: chargesQK.list({ client_id: clientId!, page_size: 100 }),
-    queryFn: () => chargesApi.list({ client_id: clientId!, page_size: 100 }),
+    queryKey: chargesQK.list({ client_record_id: clientId!, page_size: 100 }),
+    queryFn: () => chargesApi.list({ client_record_id: clientId!, page_size: 100 }),
     enabled: needsCharges,
   });
 
   const taxDeadlinesQuery = useQuery({
-    queryKey: taxDeadlinesQK.list({ client_id: clientId!, page_size: 100 }),
-    queryFn: () => taxDeadlinesApi.listTaxDeadlines({ client_id: clientId!, page_size: 100 }),
+    queryKey: taxDeadlinesQK.list({ client_record_id: clientId!, page_size: 100 }),
+    queryFn: () => taxDeadlinesApi.listTaxDeadlines({ client_record_id: clientId!, page_size: 100 }),
     enabled: needsTaxDeadlines,
   });
 

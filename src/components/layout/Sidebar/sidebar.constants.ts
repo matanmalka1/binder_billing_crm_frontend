@@ -33,8 +33,8 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "ראשי",
     items: [
       { to: "/", label: "לוח בקרה", icon: LayoutDashboard, end: true },
-      { to: "/binders", label: "קלסרים", icon: Briefcase },
       { to: "/clients", label: "לקוחות", icon: Users },
+      { to: "/binders", label: "קלסרים", icon: Briefcase },
       { to: "/search", label: "חיפוש", icon: Search },
       { to: "/charges", label: "חיובים", icon: ReceiptText },
       { to: "/reminders", label: "תזכורות", icon: Bell },

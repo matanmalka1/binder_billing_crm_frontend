@@ -1,6 +1,6 @@
 export interface PermanentDocumentResponse {
   id: number;
-  client_id: number;
+  client_record_id: number;
   business_id: number | null;
   scope: "client" | "business";
   document_type: string;
@@ -19,6 +19,8 @@ export interface PermanentDocumentResponse {
   notes: string | null;
   approved_by: number | null;
   approved_at: string | null;
+  rejected_by: number | null;
+  rejected_at: string | null;
   is_deleted: boolean;
 }
 
@@ -31,12 +33,8 @@ export interface DocumentVersionsResponse {
 }
 
 export interface OperationalSignalsResponse {
-  client_id: number;
+  client_record_id: number;
   missing_documents: string[];
-}
-
-export interface RejectDocumentRequest {
-  notes: string;
 }
 
 export interface UpdateNotesRequest {
@@ -44,7 +42,7 @@ export interface UpdateNotesRequest {
 }
 
 export interface UploadDocumentPayload {
-  client_id: number;
+  client_record_id: number;
   business_id?: number | null;
   document_type:
     | "id_copy"

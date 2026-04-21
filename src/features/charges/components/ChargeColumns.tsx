@@ -53,13 +53,13 @@ export const buildChargeColumns = ({
       ),
     },
     {
-      key: "client_id",
+      key: "client_record_id",
       header: "לקוח",
       headerClassName: "w-48",
       className: "w-48 max-w-[12rem]",
       render: (charge) => (
         <span className="text-sm font-semibold text-gray-900">
-          {charge.business_name ?? `לקוח #${charge.client_id}`}
+          {charge.business_name ?? `לקוח #${charge.client_record_id}`}
         </span>
       ),
     },

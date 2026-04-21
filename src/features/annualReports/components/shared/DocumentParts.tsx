@@ -62,7 +62,7 @@ export const MissingDocRow = ({ clientId, docType, annualReportId }: MissingDocR
 
   const upload = useMutation({
     mutationFn: (file: File) => documentsApi.upload({
-      client_id: clientId, document_type: docType as never, file,
+      client_record_id: clientId, document_type: docType as never, file,
       ...(annualReportId != null ? { annual_report_id: annualReportId } : {}),
     }),
     onSuccess: () => {
