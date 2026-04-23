@@ -30,7 +30,7 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
     <DetailDrawer
       open={deadline !== null}
       title={deadline ? getDeadlineTypeLabel(deadline.deadline_type) : ""}
-      subtitle={deadline?.business_name ?? (deadline ? `עסק #${deadline.business_id}` : undefined)}
+      subtitle={deadline?.client_name ?? (deadline ? `לקוח #${deadline.client_record_id}` : undefined)}
       onClose={onClose}
     >
       {deadline && (
@@ -51,7 +51,7 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
           )}
 
           <DrawerSection title="פרטי מועד">
-            <DrawerField label="עסק" value={deadline.business_name ?? `#${deadline.business_id}`} />
+            <DrawerField label="לקוח" value={deadline.client_name ?? `#${deadline.client_record_id}`} />
             <DrawerField label="סוג מועד" value={getDeadlineTypeLabel(deadline.deadline_type)} />
             <DrawerField label="תאריך יעד" value={formatDate(deadline.due_date)} />
             <DrawerField

@@ -27,10 +27,11 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
 
   const qk = annualReportsQK.annex(reportId, schedule);
 
-  const { data: lines = [], isLoading } = useQuery({
+  const { data: annexData, isLoading } = useQuery({
     queryKey: qk,
     queryFn: () => annualReportsApi.getAnnexLines(reportId, schedule),
   });
+  const lines = annexData?.items ?? [];
 
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: qk });

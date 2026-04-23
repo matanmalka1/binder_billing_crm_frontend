@@ -99,7 +99,7 @@ export const TaxDeadlinesTable = ({
                   </td>
                   <td className="py-3.5 pr-4">
                     <span className="font-mono text-sm font-semibold text-gray-800">
-                      {deadline.business_name ?? `#${deadline.business_id}`}
+                      {deadline.client_name ?? `לקוח #${deadline.client_record_id}`}
                     </span>
                   </td>
                   <td className="py-3.5 pr-4 text-sm text-gray-700">

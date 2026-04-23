@@ -141,7 +141,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           iconColor="bg-primary-100 text-primary-600"
           count={bindersTotal}
           label="קלסרים"
-          href={`/binders?client_id=${clientId}`}
+          href={`/binders?client_record_id=${clientId}`}
         />
         {canViewCharges && (
           <StatPill
@@ -159,13 +159,13 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
         <RelatedItemsSection
           title="קלסרים אחרונים"
           total={bindersTotal}
-          allHref={`/binders?client_id=${clientId}`}
+          allHref={`/binders?client_record_id=${clientId}`}
           items={binders}
           className="mt-6"
           getKey={(binder) => binder.id}
           getTitle={(binder) => formatBinderNumber(binder.binder_number)}
           getSubtitle={(binder) => getBinderStatusLabel(binder.status)}
-          getItemHref={() => `/binders?client_id=${clientId}`}
+          getItemHref={() => `/binders?client_record_id=${clientId}`}
         />
       )}
 

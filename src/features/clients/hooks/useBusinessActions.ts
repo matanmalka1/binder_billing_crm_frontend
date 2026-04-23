@@ -25,19 +25,11 @@ export const useBusinessActions = (clientId: number) => {
     onError: (err) => showErrorToast(err, "שגיאה במחיקת עסק"),
   });
 
-  const restoreMutation = useMutation({
-    mutationFn: (businessId: number) => clientsApi.restoreBusiness(clientId, businessId),
-    onSuccess: () => { toast.success("העסק שוחזר בהצלחה"); invalidate(); },
-    onError: (err) => showErrorToast(err, "שגיאה בשחזור עסק"),
-  });
-
   return {
     updateBusiness: (businessId: number, payload: UpdateBusinessPayload) =>
       updateMutation.mutateAsync({ businessId, payload }),
     isUpdating: updateMutation.isPending,
     deleteBusiness: (businessId: number) => deleteMutation.mutate(businessId),
     isDeleting: deleteMutation.isPending,
-    restoreBusiness: (businessId: number) => restoreMutation.mutate(businessId),
-    isRestoring: restoreMutation.isPending,
   };
 };

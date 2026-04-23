@@ -8,7 +8,8 @@ import type {
   CreateAnnualReportPayload,
   ReportDetailResponse,
   ScheduleEntry,
-  StatusHistoryEntry,
+  StatusHistoryPagedResponse,
+  AnnexDataPagedResponse,
   AnnexDataLine,
   AnnexDataAddPayload,
 } from "./contracts";
@@ -66,8 +67,8 @@ export const annualReportsApi = {
     return response.data;
   },
 
-  getHistory: async (reportId: number): Promise<StatusHistoryEntry[]> => {
-    const response = await api.get<StatusHistoryEntry[]>(ANNUAL_REPORT_ENDPOINTS.annualReportHistory(reportId));
+  getHistory: async (reportId: number): Promise<StatusHistoryPagedResponse> => {
+    const response = await api.get<StatusHistoryPagedResponse>(ANNUAL_REPORT_ENDPOINTS.annualReportHistory(reportId));
     return response.data;
   },
 
@@ -91,8 +92,8 @@ export const annualReportsApi = {
     await api.delete(ANNUAL_REPORT_ENDPOINTS.annualReportById(reportId));
   },
 
-  getAnnexLines: async (reportId: number, schedule: AnnualReportScheduleKey): Promise<AnnexDataLine[]> => {
-    const response = await api.get<AnnexDataLine[]>(
+  getAnnexLines: async (reportId: number, schedule: AnnualReportScheduleKey): Promise<AnnexDataPagedResponse> => {
+    const response = await api.get<AnnexDataPagedResponse>(
       ANNUAL_REPORT_ENDPOINTS.annualReportAnnex(reportId, schedule),
     );
     return response.data;

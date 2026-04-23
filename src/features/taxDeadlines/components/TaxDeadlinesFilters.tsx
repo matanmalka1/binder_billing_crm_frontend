@@ -21,13 +21,13 @@ interface TaxDeadlinesFiltersProps {
 
 export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersProps) => {
   const [searchDraft, setSearchDraft] = useSearchDebounce(
-    filters.business_name ?? "",
-    (v) => onChange("business_name", v),
+    filters.client_name ?? "",
+    (v) => onChange("client_name", v),
   );
 
   const handleReset = () => {
     setSearchDraft("");
-    onChange("business_name", "");
+    onChange("client_name", "");
     onChange("deadline_type", "");
     onChange("status", "");
     onChange("due_from", "");
@@ -43,11 +43,11 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
             type="text"
             value={searchDraft}
             onChange={(e) => setSearchDraft(e.target.value)}
-            placeholder="שם עסק..."
+            placeholder="שם לקוח..."
             startIcon={<Search className="h-4 w-4" />}
             endElement={
               searchDraft ? (
-                <button type="button" onClick={() => { setSearchDraft(""); onChange("business_name", ""); }} className="p-1 text-gray-400 hover:text-gray-600">
+                <button type="button" onClick={() => { setSearchDraft(""); onChange("client_name", ""); }} className="p-1 text-gray-400 hover:text-gray-600">
                   <X className="h-3.5 w-3.5" />
                 </button>
               ) : undefined
@@ -81,8 +81,8 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
 
         <ActiveFilterBadges
           badges={[
-            filters.business_name
-              ? { key: "business_name", label: `עסק: ${filters.business_name}`, onRemove: () => { setSearchDraft(""); onChange("business_name", ""); } }
+            filters.client_name
+              ? { key: "client_name", label: `לקוח: ${filters.client_name}`, onRemove: () => { setSearchDraft(""); onChange("client_name", ""); } }
               : null,
             filters.deadline_type
               ? { key: "deadline_type", label: getTaxDeadlineTypeLabel(filters.deadline_type), onRemove: () => onChange("deadline_type", "") }

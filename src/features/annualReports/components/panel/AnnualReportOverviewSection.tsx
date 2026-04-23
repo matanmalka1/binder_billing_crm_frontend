@@ -109,7 +109,7 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
 
       <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
         <h3 className="mb-4 text-sm font-semibold text-gray-700">היסטוריית סטטוסים</h3>
-        <StatusHistoryTimeline history={history ?? []} />
+        <StatusHistoryTimeline history={history?.items ?? []} />
       </div>
     </div>
   );

@@ -35,7 +35,7 @@ export const useTaxDeadlines = () => {
 
   const filters: TaxDeadlineFilters = useMemo(
     () => ({
-      business_name: searchParams.get("business_name") || "",
+      client_name: searchParams.get("client_name") || searchParams.get("business_name") || "",
       deadline_type: searchParams.get("deadline_type") || "",
       status: searchParams.get("status") || "",
       due_from: searchParams.get("due_from") || "",
@@ -48,7 +48,7 @@ export const useTaxDeadlines = () => {
 
   const apiParams = useMemo(
     () => ({
-      business_name: toOptionalString(filters.business_name),
+      client_name: toOptionalString(filters.client_name),
       deadline_type: toOptionalString(filters.deadline_type),
       status: toOptionalString(filters.status),
       due_from: toOptionalString(filters.due_from),
@@ -201,7 +201,12 @@ export const useTaxDeadlines = () => {
     editForm.reset();
   });
 
-  const handleFilterChange = (key: string, value: string) => setFilter(key, value);
+  const handleFilterChange = (key: string, value: string) => {
+    if (key === "client_name") {
+      setFilter("business_name", "");
+    }
+    setFilter(key, value);
+  };
 
   const handleComplete = async (deadlineId: number) => {
     setCompletingId(deadlineId);

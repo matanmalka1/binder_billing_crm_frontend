@@ -1,4 +1,5 @@
 import type { BackendAction } from "@/lib/actions/types";
+import type { PaginatedResponse } from "@/types";
 
 export type AnnualReportStatus =
   | "not_started"
@@ -165,6 +166,8 @@ export interface StatusHistoryEntry {
   occurred_at: string;
 }
 
+export type StatusHistoryPagedResponse = PaginatedResponse<StatusHistoryEntry>;
+
 export interface SeasonSummary {
   tax_year: number;
   total: number;
@@ -297,6 +300,8 @@ export interface AnnexDataLine {
   created_at: string;
   updated_at: string | null;
 }
+
+export type AnnexDataPagedResponse = PaginatedResponse<AnnexDataLine>;
 
 export interface AnnexDataAddPayload {
   data: Record<string, unknown>;

@@ -24,7 +24,7 @@ export const taxDeadlinesApi = {
 
   listTaxDeadlines: async (params: {
     client_record_id?: number;
-    business_name?: string;
+    client_name?: string;
     deadline_type?: string;
     status?: string;
     due_from?: string;

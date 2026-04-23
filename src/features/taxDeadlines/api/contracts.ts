@@ -3,10 +3,9 @@ import type { PaginatedResponse } from "@/types";
 
 export interface TaxDeadlineResponse {
   id: number;
-  business_id: number;
-  client_record_id?: number;
+  client_record_id: number;
   office_client_number?: number | null;
-  business_name: string | null;
+  client_name: string | null;
   deadline_type: string;
   period: string | null;
   due_date: string;
@@ -22,7 +21,7 @@ export interface TaxDeadlineResponse {
 
 export interface TimelineEntry {
   id: number;
-  business_id: number;
+  client_record_id: number;
   deadline_type: string;
   period: string | null;
   due_date: string;
@@ -34,8 +33,8 @@ export interface TimelineEntry {
 
 export interface DeadlineUrgentItem {
   id: number;
-  business_id: number;
-  business_name: string;
+  client_record_id: number;
+  client_name: string;
   deadline_type: string;
   due_date: string;
   urgency: string;

@@ -66,7 +66,7 @@ export const useAdvisorToday = () => {
         .filter((d) => d.due_date >= today && d.due_date <= weekEnd)
         .map((d) => ({
           id: d.id,
-          label: d.business_name ?? `עסק #${d.business_id}`,
+          label: d.client_name ?? `לקוח #${d.client_record_id}`,
           sublabel: `${getDeadlineTypeLabel(d.deadline_type)} — ${formatDate(d.due_date)}`,
           href: `/tax/deadlines`,
         })),

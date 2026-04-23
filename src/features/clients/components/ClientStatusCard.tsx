@@ -56,7 +56,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
   const { data, isLoading: isStatusLoading } = useQuery({
     queryKey: clientsQK.statusCard(clientId, selectedYear),
     queryFn: () => clientsApi.getStatusCard(clientId, selectedYear),
-    enabled: firstBusinessId != null,
+    enabled: clientId > 0,
     staleTime: 30_000,
     retry: 1,
   });
@@ -96,26 +96,6 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="h-24 animate-pulse rounded-lg bg-gray-100" />
           ))}
-        </div>
-      </Card>
-    );
-  }
-
-  if (!isLoading && (firstBusinessId == null || !data)) {
-    return (
-      <Card title={`סטטוס לקוח — ${selectedYear}`} actions={yearSelector}>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <Tile
-            icon={<Receipt size={18} />}
-            title='מע"מ (לקוח)'
-            primary={vatPrimary}
-            secondary={vatStatus}
-            onClick={() => navigate(CLIENT_ROUTES.vat(clientId))}
-          />
-          <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-5 text-center">
-            <FolderOpen size={24} className="text-gray-300" />
-            <p className="text-sm text-gray-500">אין עסקים רשומים — סטטוס תפעולי יוצג לאחר יצירת עסק</p>
-          </div>
         </div>
       </Card>
     );
@@ -173,16 +153,16 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
         <Tile
           icon={<FolderOpen size={18} />}
           title="קלסרים"
-          primary={`${binders.active_count} פעילים`}
-          secondary={`${binders.in_office_count} במשרד`}
-          onClick={() => navigate(`/binders?client_id=${clientId}`)}
+          primary={firstBusinessId == null ? "—" : `${binders.active_count} פעילים`}
+          secondary={firstBusinessId == null ? "אין עסקים רשומים" : `${binders.in_office_count} במשרד`}
+          onClick={firstBusinessId == null ? undefined : () => navigate(`/binders?client_record_id=${clientId}`)}
         />
         <Tile
           icon={<FileCheck size={18} />}
           title="מסמכים"
-          primary={`${documents.present_count}/${documents.total_count}`}
-          secondary="מסמכים קיימים"
-          onClick={() => navigate(CLIENT_ROUTES.documents(clientId))}
+          primary={firstBusinessId == null ? "—" : `${documents.present_count}/${documents.total_count}`}
+          secondary={firstBusinessId == null ? "אין עסקים רשומים" : "מסמכים קיימים"}
+          onClick={firstBusinessId == null ? undefined : () => navigate(CLIENT_ROUTES.documents(clientId))}
         />
       </div>
     </Card>
