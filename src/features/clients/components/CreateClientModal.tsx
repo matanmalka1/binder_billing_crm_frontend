@@ -205,7 +205,7 @@ export const CreateClientModal: React.FC<Props> = ({
 
         {/* עסק ראשון */}
         <div className="border-t border-gray-200 pt-4 space-y-4">
-          <p className="text-sm font-medium text-gray-700">עסק ראשון</p>
+          <p className="text-sm font-medium text-gray-700">פרטי עסק</p>
           <div className="grid grid-cols-2 gap-4">
             <Input
               label="שם עסק *"
