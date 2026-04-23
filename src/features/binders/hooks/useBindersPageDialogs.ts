@@ -31,6 +31,7 @@ export const useBindersPageDialogs = ({
   const [handoverOpen, setHandoverOpen] = useState(false);
   const [bulkReadyYear, setBulkReadyYear] = useState(new Date().getFullYear());
   const [bulkReadyMonth, setBulkReadyMonth] = useState(new Date().getMonth() + 1);
+  const [dialogBinder, setDialogBinder] = useState<BinderResponse | null>(null);
 
   const openDeleteDialog = (binderId: number) => setConfirmDeleteForId(binderId);
   const closeDeleteDialog = () => setConfirmDeleteForId(null);
@@ -41,11 +42,23 @@ export const useBindersPageDialogs = ({
     setPickupPersonName("");
   };
 
-  const openBulkReadyDialog = () => setBulkReadyOpen(true);
-  const closeBulkReadyDialog = () => setBulkReadyOpen(false);
+  const openBulkReadyDialog = (binder?: BinderResponse) => {
+    setDialogBinder(binder ?? getSelectedBinder());
+    setBulkReadyOpen(true);
+  };
+  const closeBulkReadyDialog = () => {
+    setBulkReadyOpen(false);
+    setDialogBinder(null);
+  };
 
-  const openHandoverDialog = () => setHandoverOpen(true);
-  const closeHandoverDialog = () => setHandoverOpen(false);
+  const openHandoverDialog = (binder?: BinderResponse) => {
+    setDialogBinder(binder ?? getSelectedBinder());
+    setHandoverOpen(true);
+  };
+  const closeHandoverDialog = () => {
+    setHandoverOpen(false);
+    setDialogBinder(null);
+  };
 
   const confirmReturn = async () => {
     if (confirmReturnForId === null) return;
@@ -60,7 +73,7 @@ export const useBindersPageDialogs = ({
   };
 
   const confirmBulkReady = async () => {
-    const binder = getSelectedBinder();
+    const binder = dialogBinder;
     if (!binder) return;
     await markReadyBulk(binder.client_record_id, bulkReadyYear, bulkReadyMonth);
     closeBulkReadyDialog();
@@ -74,7 +87,7 @@ export const useBindersPageDialogs = ({
     untilPeriodMonth: number;
     notes: string | null;
   }) => {
-    const binder = getSelectedBinder();
+    const binder = dialogBinder;
     if (!binder) return;
     await handoverBinders(
       binder.client_record_id,
@@ -101,6 +114,7 @@ export const useBindersPageDialogs = ({
     confirmDeleteForId,
     confirmReturn,
     confirmReturnForId,
+    dialogBinder,
     handoverOpen,
     openBulkReadyDialog,
     openDeleteDialog,

@@ -97,17 +97,32 @@ export const BindersFiltersBar = ({
 
       <ToolbarContainer>
         <div className="space-y-3">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
             <Input
-              label="חיפוש לקוח"
+              label="חיפוש"
               type="text"
               value={searchDraft}
               onChange={(e) => setSearchDraft(e.target.value)}
-              placeholder="שם לקוח או מספר קלסר..."
+              placeholder="שם לקוח..."
               startIcon={<Search className="h-4 w-4" />}
               endElement={
                 searchDraft ? (
                   <button type="button" onClick={() => { setSearchDraft(""); onFilterChange("query", ""); }} className="p-1 text-gray-400 hover:text-gray-600">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                ) : undefined
+              }
+            />
+            <Input
+              label="מספר קלסר"
+              type="text"
+              value={filters.binder_number ?? ""}
+              onChange={(e) => onFilterChange("binder_number", e.target.value)}
+              placeholder="מספר קלסר מדויק..."
+              startIcon={<Search className="h-4 w-4" />}
+              endElement={
+                filters.binder_number ? (
+                  <button type="button" onClick={() => onFilterChange("binder_number", "")} className="p-1 text-gray-400 hover:text-gray-600">
                     <X className="h-3.5 w-3.5" />
                   </button>
                 ) : undefined
@@ -166,6 +181,13 @@ export const BindersFiltersBar = ({
                     key: "year",
                     label: filters.year,
                     onRemove: () => onFilterChange("year", ""),
+                  }
+                : null,
+              filters.client_record_id
+                ? {
+                    key: "client_record_id",
+                    label: `לקוח #${filters.client_record_id}`,
+                    onRemove: () => onFilterChange("client_record_id", ""),
                   }
                 : null,
             ].filter((b): b is NonNullable<typeof b> => b !== null)}

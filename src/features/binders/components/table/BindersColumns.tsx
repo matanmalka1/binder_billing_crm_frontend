@@ -8,25 +8,19 @@ import { formatBinderNumber, formatClientOfficeId, formatMonthYear } from "@/uti
 import { BINDER_STATUS_VARIANTS } from "../../constants";
 import { BinderRowActions } from "./BinderRowActions";
 
-/* ─── Client cell ────────────────────────────────────────────── */
-
 // eslint-disable-next-line react-refresh/only-export-components
-const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <Link
-        to={`/clients/${binder.client_record_id}`}
-        onClick={(e) => e.stopPropagation()}
-        className="text-sm font-semibold text-gray-900 hover:text-primary-700 hover:underline"
-      >
-        {binder.client_name ?? `#${binder.client_record_id}`}
-      </Link>
-    </div>
-  );
-};
+const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => (
+  <div className="flex flex-col gap-0.5">
+    <Link
+      to={`/clients/${binder.client_record_id}`}
+      onClick={(e) => e.stopPropagation()}
+      className="text-sm font-semibold text-gray-900 hover:text-primary-700 hover:underline"
+    >
+      {binder.client_name ?? `#${binder.client_record_id}`}
+    </Link>
+  </div>
+);
 ClientCell.displayName = "ClientCell";
-
-/* ─── Column builder ─────────────────────────────────────────── */
 
 interface BuildBindersColumnsParams {
   actionLoadingId: number | null;
@@ -35,6 +29,8 @@ interface BuildBindersColumnsParams {
   onReturn: (binderId: number) => void;
   onOpenDetail: (binderId: number) => void;
   onDelete: (binderId: number) => void;
+  onBulkReady?: (binder: BinderResponse) => void;
+  onHandover?: (binder: BinderResponse) => void;
 }
 
 export const buildBindersColumns = ({
@@ -44,6 +40,8 @@ export const buildBindersColumns = ({
   onReturn,
   onOpenDetail,
   onDelete,
+  onBulkReady,
+  onHandover,
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
   {
     key: "office_client_number",
@@ -122,14 +120,15 @@ export const buildBindersColumns = ({
     className: "w-10",
     render: (binder) => (
       <BinderRowActions
-        binderId={binder.id}
-        status={binder.status}
-        disabled={actionLoadingId !== null}
+        binder={binder}
+        disabled={actionLoadingId === binder.id}
         onOpenDetail={() => onOpenDetail(binder.id)}
         onMarkReady={() => onMarkReady(binder.id)}
         onRevertReady={() => onRevertReady(binder.id)}
         onReturn={() => onReturn(binder.id)}
         onDelete={() => onDelete(binder.id)}
+        onBulkReady={onBulkReady ? () => onBulkReady(binder) : undefined}
+        onHandover={onHandover ? () => onHandover(binder) : undefined}
       />
     ),
   },

@@ -75,15 +75,17 @@ export const Binders: React.FC = () => {
         onReturn: dialogs.openReturnDialog,
         onOpenDetail: (id) => handleSelectBinder({ id }),
         onDelete: dialogs.openDeleteDialog,
+        onBulkReady: (binder) => dialogs.openBulkReadyDialog(binder),
+        onHandover: (binder) => dialogs.openHandoverDialog(binder),
       }),
-    [actionLoadingId, dialogs.openDeleteDialog, dialogs.openReturnDialog, markReady, revertReady, handleSelectBinder],
+    [actionLoadingId, dialogs, markReady, revertReady, handleSelectBinder],
   );
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="קלסרים"
-        description="רשימת הקלסרים במשרד — סינון לפי סטטוס ותקופה"
+        description="רשימת הקלסרים במשרד — סינון לפי סטטוס, תקופה וחיפוש חופשי"
         actions={
           <Button variant="primary" size="sm" onClick={() => setReceiveOpen(true)}>
             קליטת חומר
@@ -137,7 +139,7 @@ export const Binders: React.FC = () => {
         setBulkReadyYear={dialogs.setBulkReadyYear}
         setBulkReadyMonth={dialogs.setBulkReadyMonth}
         isMarkingReadyBulk={isMarkingReadyBulk}
-        selectedBinder={selectedBinder}
+        dialogBinder={dialogs.dialogBinder}
         handoverOpen={dialogs.handoverOpen}
         onCloseHandover={dialogs.closeHandoverDialog}
         onSubmitHandover={(payload) => void dialogs.submitHandover(payload)}
@@ -151,8 +153,8 @@ export const Binders: React.FC = () => {
         onMarkReady={selectedBinder ? () => void markReady(selectedBinder.id) : undefined}
         onRevertReady={selectedBinder ? () => void revertReady(selectedBinder.id) : undefined}
         onReturn={selectedBinder ? () => dialogs.openReturnDialog(selectedBinder.id) : undefined}
-        onBulkReady={selectedBinder ? dialogs.openBulkReadyDialog : undefined}
-        onOpenHandover={selectedBinder ? dialogs.openHandoverDialog : undefined}
+        onBulkReady={selectedBinder ? () => dialogs.openBulkReadyDialog(selectedBinder) : undefined}
+        onOpenHandover={selectedBinder ? () => dialogs.openHandoverDialog(selectedBinder) : undefined}
         onDelete={selectedBinder ? () => dialogs.openDeleteDialog(selectedBinder.id) : undefined}
         actionLoading={selectedBinder ? actionLoadingId === selectedBinder.id : false}
       />

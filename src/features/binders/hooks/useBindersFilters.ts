@@ -23,6 +23,7 @@ export const useBindersFilters = () => {
     next.delete("status");
     next.delete("query");
     next.delete("binder_number");
+    next.delete("client_record_id");
     next.delete("year");
     next.set("page", "1");
     setSearchParams(next);

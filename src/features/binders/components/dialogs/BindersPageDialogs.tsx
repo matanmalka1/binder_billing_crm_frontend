@@ -27,7 +27,7 @@ interface BindersPageDialogsProps {
   setBulkReadyYear: (year: number) => void;
   setBulkReadyMonth: (month: number) => void;
   isMarkingReadyBulk: boolean;
-  selectedBinder: BinderResponse | null;
+  dialogBinder: BinderResponse | null;
   handoverOpen: boolean;
   onCloseHandover: () => void;
   onSubmitHandover: (payload: {
@@ -69,7 +69,7 @@ export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
   onConfirmReturn,
   onSubmitHandover,
   pickupPersonName,
-  selectedBinder,
+  dialogBinder,
   setBulkReadyMonth,
   setBulkReadyYear,
   setPickupPersonName,
@@ -124,7 +124,7 @@ export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
           <Button
             type="button"
             isLoading={isMarkingReadyBulk}
-            disabled={!selectedBinder}
+            disabled={!dialogBinder}
             onClick={onConfirmBulkReady}
           >
             סמן כמוכן
@@ -165,10 +165,10 @@ export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
         </div>
       }
     >
-      {selectedBinder ? (
+      {dialogBinder ? (
         <BinderHandoverPanel
-          clientId={selectedBinder.client_record_id}
-          initialBinderId={selectedBinder.id}
+          clientId={dialogBinder.client_record_id}
+          initialBinderId={dialogBinder.id}
           isSubmitting={isHandingOver}
           onSubmit={onSubmitHandover}
         />
