@@ -9,7 +9,7 @@ export type AdvancePaymentMethod =
 
 export interface AdvancePaymentRow {
   id: number;
-  client_id: number;
+  client_record_id: number;
   business_name?: string | null;
   period: string;
   period_months_count: 1 | 2;
@@ -56,7 +56,7 @@ export interface UpdateAdvancePaymentPayload {
 
 export interface AdvancePaymentOverviewRow {
   id: number;
-  client_id: number;
+  client_record_id: number;
   office_client_number?: number | null;
   business_name: string;
   period: string;
@@ -87,14 +87,14 @@ export interface AdvancePaymentOverviewResponse {
 }
 
 export interface AdvancePaymentSuggestionResponse {
-  client_id: number;
+  client_record_id: number;
   year: number;
   suggested_amount: string | null;
   has_data: boolean;
 }
 
 export interface AnnualKPIResponse {
-  client_id: number;
+  client_record_id: number;
   year: number;
   total_expected: string;
   total_paid: string;
@@ -112,7 +112,7 @@ export interface MonthlyChartRow {
 }
 
 export interface ChartDataResponse {
-  client_id: number;
+  client_record_id: number;
   year: number;
   months: MonthlyChartRow[];
 }

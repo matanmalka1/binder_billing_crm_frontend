@@ -2,7 +2,7 @@ import type { PaginatedResponse } from "@/types";
 
 export interface CorrespondenceEntry {
   id: number;
-  client_id: number;
+  client_record_id: number;
   business_id: number | null;
   contact_id: number | null;
   correspondence_type: "call" | "letter" | "email" | "meeting" | "fax";

@@ -1,6 +1,7 @@
 import { api } from "@/api/client";
 import { TAX_DEADLINE_ENDPOINTS } from "./endpoints";
 import { toQueryParams } from "@/api/queryParams";
+import type { PaginatedResponse } from "@/types";
 import type {
   TaxDeadlineResponse,
   TaxDeadlineListResponse,
@@ -10,7 +11,7 @@ import type {
 
 export const taxDeadlinesApi = {
   createTaxDeadline: async (payload: {
-    client_id: number;
+    client_record_id: number;
     deadline_type: string;
     due_date: string;
     period?: string | null;
@@ -22,7 +23,7 @@ export const taxDeadlinesApi = {
   },
 
   listTaxDeadlines: async (params: {
-    client_id?: number;
+    client_record_id?: number;
     business_name?: string;
     deadline_type?: string;
     status?: string;
@@ -86,15 +87,15 @@ export const taxDeadlinesApi = {
   },
 
   getTimeline: async (clientId: number): Promise<TimelineEntry[]> => {
-    const response = await api.get<TimelineEntry[]>(
+    const response = await api.get<PaginatedResponse<TimelineEntry>>(
       TAX_DEADLINE_ENDPOINTS.taxDeadlinesTimeline,
-      { params: toQueryParams({ client_id: clientId }) },
+      { params: toQueryParams({ client_record_id: clientId }) },
     );
-    return response.data;
+    return response.data.items;
   },
 
   generateDeadlines: async (payload: {
-    client_id: number;
+    client_record_id: number;
     year: number;
   }): Promise<{ created_count: number }> => {
     const response = await api.post<{ created_count: number }>(

@@ -6,7 +6,7 @@ export interface AgingBucket {
 }
 
 export interface AgingReportItem {
-  client_id: number;
+  client_record_id: number;
   client_name: string;
   total_outstanding: number;
   current: number;
@@ -27,7 +27,7 @@ export interface AgingReportResponse {
 }
 
 export interface AnnualReportClientEntry {
-  client_id: number;
+  client_record_id: number;
   client_name: string;
   form_type: string | null;
   filing_deadline: string | null;
@@ -47,7 +47,7 @@ export interface AnnualReportStatusReportResponse {
 }
 
 export interface AdvancePaymentReportItem {
-  client_id: number;
+  client_record_id: number;
   client_name: string;
   total_expected: number;
   total_paid: number;
@@ -66,7 +66,7 @@ export interface AdvancePaymentReportResponse {
 }
 
 export interface VatComplianceItem {
-  client_id: number;
+  client_record_id: number;
   client_name: string;
   periods_expected: number;
   periods_filed: number;
@@ -77,7 +77,7 @@ export interface VatComplianceItem {
 }
 
 export interface StalePendingItem {
-  client_id: number;
+  client_record_id: number;
   client_name: string;
   period: string;
   days_pending: number;

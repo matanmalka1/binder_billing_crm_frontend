@@ -28,7 +28,7 @@ export const vatReportsApi = {
 
   lookup: async (clientId: number, period: string): Promise<VatWorkItemLookupResponse | null> => {
     const response = await api.get<VatWorkItemLookupResponse | null>(VAT_ENDPOINTS.vatWorkItemLookup, {
-      params: toQueryParams({ client_id: clientId, period }),
+      params: toQueryParams({ client_record_id: clientId, period }),
     });
     return response.data;
   },

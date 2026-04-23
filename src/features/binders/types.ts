@@ -2,7 +2,7 @@ import type { BackendAction } from "../../lib/actions/types";
 
 export interface BinderResponse {
   id: number;
-  client_id: number;
+  client_record_id: number;
   office_client_number?: number | null;
   client_name: string | null;
   client_id_number?: string | null;
@@ -48,7 +48,7 @@ export interface BinderHistoryResponse {
 
 export interface ListBindersParams {
   status?: string;
-  client_id?: number;
+  client_record_id?: number;
   query?: string;
   client_name?: string;
   binder_number?: string;
@@ -65,7 +65,7 @@ export interface ListOperationalBindersParams {
 }
 
 export interface ReceiveBinderPayload {
-  client_id: number;
+  client_record_id: number;
   received_at: string;
   received_by: number;
   open_new_binder?: boolean;

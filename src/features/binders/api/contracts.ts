@@ -2,7 +2,7 @@ import type { BackendAction } from "@/lib/actions/types";
 
 export interface BinderDetailResponse {
   id: number;
-  client_id: number;
+  client_record_id: number;
   office_client_number?: number | null;
   client_name: string | null;
   client_id_number?: string | null;
@@ -24,13 +24,13 @@ export interface BinderListResponseExtended {
 }
 
 export interface BinderMarkReadyBulkPayload {
-  client_id: number;
+  client_record_id: number;
   until_period_year: number;
   until_period_month: number;
 }
 
 export interface BinderHandoverPayload {
-  client_id: number;
+  client_record_id: number;
   binder_ids: number[];
   received_by_name: string;
   handed_over_at: string;
@@ -41,7 +41,7 @@ export interface BinderHandoverPayload {
 
 export interface BinderHandoverResponse {
   id: number;
-  client_id: number;
+  client_record_id: number;
   received_by_name: string;
   handed_over_at: string;
   until_period_year: number;

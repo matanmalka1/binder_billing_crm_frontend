@@ -21,7 +21,7 @@ export const AUTHORITY_CONTACT_TYPE_OPTIONS = AUTHORITY_CONTACT_TYPE_VALUES.map(
 
 export interface AuthorityContactResponse {
   id: number;
-  client_id: number;
+  client_record_id: number;
   contact_type: ContactType;
   name: string;
   office: string | null;

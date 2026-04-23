@@ -56,7 +56,7 @@ export interface Reminder {
   id: number;
   business_id: number | null;
   business_name: string | null;
-  client_id: number | null;
+  client_record_id: number | null;
   client_name: string | null;
   client_id_number: string | null;
   office_client_number: number | null;
@@ -100,7 +100,7 @@ export const createReminderRequestSchema = z.discriminatedUnion("reminder_type",
   // ── Client-scoped ────────────────────────────────────────────────────────────
   clientScopedBase.extend({
     reminder_type: z.literal("tax_deadline_approaching"),
-    client_id: positiveIdSchema,
+    client_record_id: positiveIdSchema,
     tax_deadline_id: positiveIdSchema,
   }),
   clientScopedBase.extend({

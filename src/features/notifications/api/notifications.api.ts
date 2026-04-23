@@ -30,7 +30,7 @@ export const notificationsApi = {
   getUnreadCount: async (clientId?: number): Promise<UnreadCountResponse> => {
     const response = await api.get<UnreadCountResponse>(
       NOTIFICATION_ENDPOINTS.notificationsUnreadCount,
-      clientId != null ? { params: toQueryParams({ client_id: clientId }) } : undefined,
+      clientId != null ? { params: toQueryParams({ client_record_id: clientId }) } : undefined,
     );
     return response.data;
   },
@@ -47,7 +47,7 @@ export const notificationsApi = {
     const response = await api.post<MarkReadResponse>(
       NOTIFICATION_ENDPOINTS.notificationsMarkAllRead,
       null,
-      clientId != null ? { params: toQueryParams({ client_id: clientId }) } : undefined,
+      clientId != null ? { params: toQueryParams({ client_record_id: clientId }) } : undefined,
     );
     return response.data;
   },

@@ -11,7 +11,7 @@ export interface SearchResult {
 
 export interface DocumentSearchResult {
   id: number;
-  client_id: number;
+  client_record_id: number;
   office_client_number?: number | null;
   business_id: number;
   client_name: string;

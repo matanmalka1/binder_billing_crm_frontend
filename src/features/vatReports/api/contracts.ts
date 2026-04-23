@@ -2,7 +2,7 @@ import type { PaginatedResponse } from "@/types";
 
 export interface VatWorkItemResponse {
   id: number;
-  client_id: number;
+  client_record_id: number;
   office_client_number?: number | null;
   client_name: string | null;
   client_id_number?: string | null;
@@ -63,14 +63,14 @@ export interface VatPeriodOptionResponse {
 }
 
 export interface VatPeriodOptionsResponse {
-  client_id: number;
+  client_record_id: number;
   year: number;
   period_type: "monthly" | "bimonthly" | "exempt";
   options: VatPeriodOptionResponse[];
 }
 
 export interface CreateVatWorkItemPayload {
-  client_id: number;
+  client_record_id: number;
   period: string;
   assigned_to?: number | null;
   mark_pending?: boolean;
@@ -169,7 +169,7 @@ export interface VatAnnualSummary {
 }
 
 export interface VatClientSummaryResponse {
-  client_id: number;
+  client_record_id: number;
   periods: VatPeriodRow[];
   annual: VatAnnualSummary[];
 }

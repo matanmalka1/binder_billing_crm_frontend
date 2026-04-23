@@ -44,7 +44,7 @@ export interface TimelineEvent {
 // ── API contracts ─────────────────────────────────────────────────────────────
 
 export interface TimelineResponse {
-  client_id: number;
+  client_record_id: number;
   events:    TimelineEvent[];
   page:      number;
   page_size: number;
