@@ -5,10 +5,10 @@ import { he } from "date-fns/locale";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Timeline, TimelineEntry } from "../../../components/ui/feedback/Timeline";
-import { bindersApi, bindersQK } from "../api";
+import { bindersApi, bindersQK } from "../../api";
 import { getStatusLabel } from "../../../utils/enums";
 import { staggerDelay } from "../../../utils/animation";
-import { BINDER_STATUS_VARIANTS } from "../constants";
+import { BINDER_STATUS_VARIANTS } from "../../constants";
 
 interface BinderHistorySectionProps {
   binderId: number;

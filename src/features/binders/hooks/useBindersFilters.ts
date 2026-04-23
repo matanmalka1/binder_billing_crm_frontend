@@ -6,7 +6,7 @@ export const useBindersFilters = () => {
 
   const filters = {
     status: searchParams.get("status") ?? "",
-    client_id: parsePositiveInt(searchParams.get("client_id"), 0) || undefined,
+    client_record_id: parsePositiveInt(searchParams.get("client_record_id"), 0) || undefined,
     query: searchParams.get("query") ?? "",
     year: searchParams.get("year") ?? "",
     page: parsePositiveInt(searchParams.get("page"), 1),

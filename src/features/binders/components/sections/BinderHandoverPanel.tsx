@@ -7,7 +7,7 @@ import { Select } from "@/components/ui/inputs/Select";
 import { Textarea } from "@/components/ui/inputs/Textarea";
 import { Button } from "@/components/ui/primitives/Button";
 import { Checkbox } from "@/components/ui/primitives/Checkbox";
-import { bindersApi, bindersQK } from "../api";
+import { bindersApi, bindersQK } from "../../api";
 import { formatMonthYear, buildYearOptions } from "@/utils/utils";
 
 interface BinderHandoverPanelProps {

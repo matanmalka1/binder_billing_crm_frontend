@@ -1,16 +1,16 @@
 import type { UseFormReturn } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import { Alert } from "../../../components/ui/overlays/Alert";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Checkbox } from "../../../components/ui/primitives/Checkbox";
+import { Alert } from "@/components/ui";
+import { Button } from "@/components/ui";
+import { Checkbox } from "@/components/ui/primitives/Checkbox";
 import { ClientSearchInput } from "@/components/shared/client";
-import { DatePicker } from "../../../components/ui/inputs/DatePicker";
-import { Select } from "../../../components/ui/inputs/Select";
-import { Textarea } from "../../../components/ui/inputs/Textarea";
-import { isClientLockedForCreate } from "../../../utils/clientStatus";
+import { DatePicker } from "@/components/ui";
+import { Select } from "@/components/ui/inputs/Select";
+import { Textarea } from "@/components/ui";
+import { isClientLockedForCreate } from "@/utils/clientStatus";
 import { getReportStatusLabel, type AnnualReportFull } from "@/features/annualReports";
-import { BINDER_TYPE_OPTIONS } from "../constants";
-import type { ReceiveBinderFormValues } from "../schemas";
+import { BINDER_TYPE_OPTIONS } from "../../constants";
+import type { ReceiveBinderFormValues } from "../../schemas";
 import { BinderPeriodFields } from "./BinderPeriodFields";
 
 interface BinderReceivePanelProps {
@@ -72,7 +72,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         onChange={onClientQueryChange}
         onSelect={onClientSelect}
         error={
-          errors.client_id?.message ??
+          errors.client_record_id?.message ??
           (!selectedClient && clientQuery.length > 0 ? "נא לבחור לקוח מהרשימה" : undefined)
         }
       />

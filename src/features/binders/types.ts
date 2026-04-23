@@ -12,6 +12,7 @@ export interface BinderResponse {
   status: string;
   returned_at: string | null;
   pickup_person_name?: string | null;
+  notes?: string | null;
   days_in_office?: number | null;
   available_actions?: BackendAction[] | null;
 }
@@ -85,6 +86,7 @@ export interface ReceiveBinderPayload {
 export interface ReturnBinderPayload {
   pickup_person_name?: string;
   returned_by?: number;
+  returned_at?: string;
 }
 
 export type BindersFilters = Omit<ListBindersParams, "client_name" | "binder_number" | "year"> & {

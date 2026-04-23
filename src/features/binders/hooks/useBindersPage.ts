@@ -10,7 +10,7 @@ export const useBindersPage = () => {
 
   const listParams = {
     status: filters.status || undefined,
-    client_id: filters.client_id || undefined,
+    client_record_id: filters.client_record_id || undefined,
     query: filters.query || undefined,
     year: filters.year ? Number(filters.year) : undefined,
     page: filters.page,

@@ -1,5 +1,3 @@
-import type { BackendAction } from "@/lib/actions/types";
-
 export interface BinderDetailResponse {
   id: number;
   client_record_id: number;
@@ -13,7 +11,6 @@ export interface BinderDetailResponse {
   returned_at: string | null;
   pickup_person_name: string | null;
   days_in_office: number | null;
-  available_actions?: BackendAction[];
 }
 
 export interface BinderListResponseExtended {

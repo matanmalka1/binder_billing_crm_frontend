@@ -6,16 +6,16 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Timeline, TimelineEntry } from "../../../components/ui/feedback/Timeline";
-import { bindersApi, bindersQK } from "../api";
+import { bindersApi, bindersQK } from "../../api";
 import { annualReportsApi, annualReportsQK, getReportStatusLabel } from "@/features/annualReports";
 import { clientsApi, clientsQK } from "@/features/clients";
 import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
 import { staggerDelay } from "../../../utils/animation";
-import { getBinderTypeLabel } from "../constants";
+import { getBinderTypeLabel } from "../../constants";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { VAT_STATUS_BADGE_VARIANTS } from "../../vatReports/constants";
-import type { BinderIntakeMaterialResponse } from "../types";
-import { formatStructuredBinderPeriod, toBinderPeriodValue } from "../utils";
+import type { BinderIntakeMaterialResponse } from "../../types";
+import { formatStructuredBinderPeriod, toBinderPeriodValue } from "../../utils";
 
 const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse; clientId: number }> = ({
   material,

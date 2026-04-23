@@ -19,9 +19,9 @@ const ANNUAL_BINDER_TYPES = new Set(["annual_report", "capital_declaration"]);
 const PERIODIC_BINDER_TYPES = new Set(["vat", "salary"]);
 
 const getDefaultValues = (): ReceiveBinderFormValues => ({
-  client_id: undefined as unknown as number,
+  client_record_id: undefined as unknown as number,
   business_id: undefined as unknown as number | null,
-  binder_type: "",
+  binder_type: undefined as unknown as ReceiveBinderFormValues["binder_type"],
   annual_report_id: null,
   open_new_binder: false,
   period_year: new Date().getFullYear(),
@@ -57,12 +57,12 @@ export const useReceiveBinderDrawer = (
   const form = useForm<ReceiveBinderFormValues>({
     resolver: zodResolver(receiveBinderSchema),
     defaultValues: initialClient
-      ? { ...getDefaultValues(), client_id: initialClient.id }
+      ? { ...getDefaultValues(), client_record_id: initialClient.id }
       : getDefaultValues(),
   });
 
-  const clientId: number | undefined = form.watch("client_id");
-  const binderType: string = form.watch("binder_type") ?? "";
+  const clientRecordId: number | undefined = form.watch("client_record_id");
+  const binderType = form.watch("binder_type");
   const businessId = form.watch("business_id");
   const periodMonthStart = form.watch("period_month_start");
 
@@ -84,9 +84,9 @@ export const useReceiveBinderDrawer = (
   }, [businessId, form]);
 
   const { data: businessesData } = useQuery({
-    queryKey: clientsQK.businessesAll(clientId!),
-    queryFn: () => clientsApi.listAllBusinessesForClient(clientId!),
-    enabled: !!clientId,
+    queryKey: clientsQK.businessesAll(clientRecordId!),
+    queryFn: () => clientsApi.listAllBusinessesForClient(clientRecordId!),
+    enabled: !!clientRecordId,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
@@ -108,9 +108,9 @@ export const useReceiveBinderDrawer = (
   }, [businesses, binderType, form]);
 
   const { data: clientBindersData } = useQuery({
-    queryKey: bindersQK.list({ client_id: clientId, page_size: 10 }),
-    queryFn: () => bindersApi.list({ client_id: clientId, page_size: 10 }),
-    enabled: !!clientId,
+    queryKey: bindersQK.list({ client_record_id: clientRecordId, page_size: 10 }),
+    queryFn: () => bindersApi.list({ client_record_id: clientRecordId, page_size: 10 }),
+    enabled: !!clientRecordId,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
@@ -121,24 +121,23 @@ export const useReceiveBinderDrawer = (
   );
 
   const { data: taxProfile } = useQuery({
-    queryKey: taxProfileQK.forClient(clientId!),
-    queryFn: () => taxProfileApi.get(clientId!),
-    enabled: typeof clientId === "number" && clientId > 0,
+    queryKey: taxProfileQK.forClient(clientRecordId!),
+    queryFn: () => taxProfileApi.get(clientRecordId!),
+    enabled: typeof clientRecordId === "number" && clientRecordId > 0,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
   });
 
   const { data: annualReportsData } = useQuery({
-    queryKey: annualReportsQK.forClient(typeof clientId === "number" ? clientId : 0),
-    queryFn: () => annualReportsApi.listClientReports(clientId as number),
-    enabled: binderType === "annual_report" && typeof clientId === "number" && clientId > 0,
+    queryKey: annualReportsQK.forClient(typeof clientRecordId === "number" ? clientRecordId : 0),
+    queryFn: () => annualReportsApi.listClientReports(clientRecordId as number),
+    enabled: binderType === "annual_report" && typeof clientRecordId === "number" && clientRecordId > 0,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
   });
 
-  // VAT frequency is now client-scoped (not per-business).
   const vatType: "monthly" | "bimonthly" | "exempt" | null =
     taxProfile?.vat_reporting_frequency ?? null;
 
@@ -181,20 +180,20 @@ export const useReceiveBinderDrawer = (
       let vatReportId: number | null = null;
       if (
         values.binder_type === "vat" &&
-        values.client_id &&
+        values.client_record_id &&
         values.period_year &&
         monthStart &&
         monthEnd
       ) {
         const lookup = await vatReportsApi.lookup(
-          values.client_id,
+          values.client_record_id,
           toBinderPeriodValue(values.period_year, monthStart, monthEnd),
         );
         vatReportId = lookup?.id ?? null;
       }
 
       return bindersApi.receive({
-        client_record_id: values.client_id,
+        client_record_id: values.client_record_id,
         received_at: values.received_at,
         received_by: userId!,
         open_new_binder: values.open_new_binder ?? false,
@@ -217,7 +216,7 @@ export const useReceiveBinderDrawer = (
 
       if (
         values.binder_type === "vat" &&
-        values.client_id &&
+        values.client_record_id &&
         values.period_year &&
         values.period_month_start &&
         values.period_month_end
@@ -228,7 +227,7 @@ export const useReceiveBinderDrawer = (
           values.period_month_end,
         );
         try {
-          const existing = await vatReportsApi.lookup(values.client_id, period);
+          const existing = await vatReportsApi.lookup(values.client_record_id, period);
           if (existing) {
             toast.info("קיים תיק מע״מ לתקופה זו", {
               action: { label: "פתח", onClick: () => navigate(`/tax/vat/${existing.id}`) },
@@ -237,7 +236,7 @@ export const useReceiveBinderDrawer = (
             toast.info('לא קיים תיק מע"מ לתקופה זו', {
               action: {
                 label: "צור תיק מע״מ",
-                onClick: () => navigate(`/tax/vat?create=1&client_id=${values.client_id}&period=${period}`),
+                onClick: () => navigate(`/tax/vat?create=1&client_id=${values.client_record_id}&period=${period}`),
               },
             });
           }
@@ -257,7 +256,7 @@ export const useReceiveBinderDrawer = (
   const handleClientSelect = (client: { id: number; name: string; id_number: string; client_status?: string | null }) => {
     setSelectedClient({ id: client.id, name: client.name, client_status: client.client_status });
     setClientQuery(client.name);
-    form.setValue("client_id", client.id, { shouldValidate: true });
+    form.setValue("client_record_id", client.id, { shouldValidate: true });
     form.setValue("annual_report_id", null);
     form.setValue("period_year", new Date().getFullYear());
     form.setValue("period_month_start", null);
@@ -269,7 +268,7 @@ export const useReceiveBinderDrawer = (
     setClientQuery(query);
     if (selectedClient) {
       setSelectedClient(null);
-      form.setValue("client_id", undefined as unknown as number);
+      form.setValue("client_record_id", undefined as unknown as number);
       form.setValue("annual_report_id", null);
       form.setValue("period_year", new Date().getFullYear());
       form.setValue("period_month_start", null);
