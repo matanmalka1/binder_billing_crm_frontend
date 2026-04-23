@@ -1,6 +1,7 @@
 import { getStatusLabel } from "../../api";
 import { Button } from "../../../../components/ui/primitives/Button";
 import { Input } from "../../../../components/ui/inputs/Input";
+import { Select } from "../../../../components/ui/inputs/Select";
 import type { TransitionDetailsFormProps } from "../../types";
 
 export const TransitionDetailsForm = ({
@@ -21,12 +22,24 @@ export const TransitionDetailsForm = ({
       />
 
       {selected === "submitted" && (
-        <Input
-          label="מספר אסמכתא (ITA)"
-          value={form.itaRef}
-          onChange={onFieldChange("itaRef")}
-          placeholder="מספר אסמכתא ממס הכנסה"
-        />
+        <>
+          <Input
+            label="מספר אסמכתא (ITA)"
+            value={form.itaRef}
+            onChange={onFieldChange("itaRef")}
+            placeholder="מספר אסמכתא ממס הכנסה"
+          />
+          <Select
+            label="שיטת הגשה"
+            value={form.submissionMethod}
+            onChange={onFieldChange("submissionMethod")}
+          >
+            <option value="">— לא צוין —</option>
+            <option value="online">מקוון (שידור ישיר)</option>
+            <option value="manual">ידני (פיזי לפקיד שומה)</option>
+            <option value="representative">דרך מערכת המייצגים (שע"מ)</option>
+          </Select>
+        </>
       )}
 
       {selected === "assessment_issued" && (

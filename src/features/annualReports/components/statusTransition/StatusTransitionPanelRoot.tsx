@@ -54,7 +54,7 @@ export const StatusTransitionPanel = ({
 
   const setField =
     (field: keyof TransitionForm) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       setForm((prev) => ({ ...prev, [field]: event.target.value }));
     };
 
@@ -75,11 +75,10 @@ export const StatusTransitionPanel = ({
       status: selected,
       note: form.note || null,
       ita_reference: form.itaRef || null,
-      assessment_amount: form.assessmentAmount
-        ? form.assessmentAmount
-        : null,
-      refund_due: form.refundDue ? form.refundDue : null,
-      tax_due: form.taxDue ? form.taxDue : null,
+      submission_method: form.submissionMethod || null,
+      assessment_amount: form.assessmentAmount || null,
+      refund_due: form.refundDue || null,
+      tax_due: form.taxDue || null,
     });
     setSelected(null);
     setForm(EMPTY_FORM);

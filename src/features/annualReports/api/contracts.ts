@@ -112,6 +112,10 @@ export interface AnnualReportFull {
   pension_contribution?: string | null;
   donation_amount?: string | null;
   other_credits?: string | null;
+  credit_points?: number | null;
+  pension_credit_points?: number | null;
+  life_insurance_credit_points?: number | null;
+  tuition_credit_points?: number | null;
   client_approved_at?: string | null;
   internal_notes?: string | null;
   amendment_reason?: string | null;
@@ -213,6 +217,7 @@ export interface StatusTransitionPayload {
   status: AnnualReportStatus;
   note?: string | null;
   ita_reference?: string | null;
+  submission_method?: string | null;
   assessment_amount?: string | null;
   refund_due?: string | null;
   tax_due?: string | null;

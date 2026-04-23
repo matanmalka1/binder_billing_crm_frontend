@@ -28,6 +28,7 @@ export const useReportMutations = (
         return annualReportStatusApi.submitReport(reportId as number, {
           note: payload.note ?? undefined,
           ita_reference: payload.ita_reference ?? undefined,
+          submission_method: payload.submission_method ?? undefined,
         });
       }
       return annualReportStatusApi.transitionStatus(reportId as number, payload);

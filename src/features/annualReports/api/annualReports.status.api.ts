@@ -13,7 +13,7 @@ export const annualReportStatusApi = {
 
   submitReport: async (
     reportId: number,
-    payload: { submitted_at?: string; ita_reference?: string | null; note?: string | null } = {},
+    payload: { submitted_at?: string; ita_reference?: string | null; submission_method?: string | null; note?: string | null } = {},
   ): Promise<AnnualReportFull> => {
     const response = await api.post<AnnualReportFull>(
       ANNUAL_REPORT_ENDPOINTS.annualReportSubmit(reportId),

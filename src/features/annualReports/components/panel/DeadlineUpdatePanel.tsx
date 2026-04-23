@@ -15,8 +15,8 @@ interface Props {
 }
 
 const DEADLINE_OPTIONS: { value: DeadlineType; label: string }[] = [
-  { value: "standard", label: "רגיל (30 אפריל)" },
-  { value: "extended", label: "מורחב (31 ינואר — מייצגים)" },
+  { value: "standard", label: "סטנדרטי (29.05 ידני / 30.06 מקוון / 31.07 חברה)" },
+  { value: "extended", label: "מורחב מייצגים — 31 ינואר" },
   { value: "custom", label: "מותאם אישית" },
 ];
 

@@ -47,8 +47,8 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
   });
 
   const detailQ = useQuery({
-    queryKey: annualReportsQK.details(reportId),
-    queryFn: () => annualReportsApi.getReportDetails(reportId),
+    queryKey: annualReportsQK.detail(reportId),
+    queryFn: () => annualReportsApi.getReport(reportId),
     enabled: !!reportId,
   });
 
@@ -57,7 +57,7 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
       annualReportsApi.patchReportDetails(reportId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: annualReportsQK.taxCalc(reportId) });
-      queryClient.invalidateQueries({ queryKey: annualReportsQK.details(reportId) });
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.detail(reportId) });
     },
     onError: (err) => showErrorToast(err, "שגיאה בשמירת נתוני דוח"),
   });

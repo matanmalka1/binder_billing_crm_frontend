@@ -21,20 +21,19 @@ type FlagFieldName =
   | "has_rental_income"
   | "has_capital_gains"
   | "has_foreign_income"
-  | "has_depreciation"
-  | "has_exempt_rental";
+  | "has_depreciation";
 
 export const FLAG_FIELDS: { name: FlagFieldName; label: string }[] = [
   { name: "has_rental_income", label: 'הכנסת שכירות (נספח ב)' },
   { name: "has_capital_gains", label: "רווחי הון (נספח בית)" },
   { name: "has_foreign_income", label: 'הכנסות מחו"ל (נספח ג)' },
   { name: "has_depreciation", label: "פחת (נספח ד)" },
-  { name: "has_exempt_rental", label: "שכר דירה פטור (נספח ה)" },
 ];
 
 export const EMPTY_FORM: TransitionForm = {
   note: "",
   itaRef: "",
+  submissionMethod: "",
   assessmentAmount: "",
   refundDue: "",
   taxDue: "",

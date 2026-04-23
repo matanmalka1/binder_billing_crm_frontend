@@ -48,6 +48,7 @@ export interface AnnualReportDetail extends AnnualReportFull {
 export interface TransitionForm {
   note: string;
   itaRef: string;
+  submissionMethod: string;
   assessmentAmount: string;
   refundDue: string;
   taxDue: string;
@@ -78,7 +79,7 @@ export interface TransitionDetailsFormProps {
   selected: AnnualReportStatus;
   form: TransitionForm;
   isLoading: boolean;
-  onFieldChange: (field: keyof TransitionForm) => (e: ChangeEvent<HTMLInputElement>) => void;
+  onFieldChange: (field: keyof TransitionForm) => (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   onCancel: () => void;
   onSubmit: () => void;
 }

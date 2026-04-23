@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { Controller } from "react-hook-form";
 import {
   ClientPickerField,
   createClientIdPickerHandlers,
   useClientPickerState,
 } from "@/components/shared/client";
-import { DatePicker, Input, Select, Textarea } from "@/components/ui/inputs";
+import { Input, Select, Textarea } from "@/components/ui/inputs";
 import { Modal, ModalFormActions } from "@/components/ui/overlays";
 import { useCreateReport } from "../../hooks/useCreateReport";
 import { FLAG_FIELDS } from "../../utils";
@@ -25,7 +24,6 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
   const { form, onSubmit, isSubmitting, preview } = useCreateReport(onClose);
   const {
     register,
-    control,
     setValue,
     formState: { errors },
   } = form;
@@ -109,24 +107,31 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
           error={errors.deadline_type?.message}
           {...register("deadline_type")}
         >
-          <option value="standard">סטנדרטי — 30 אפריל</option>
+          <option value="standard">סטנדרטי (29.05 ידני / 30.06 מקוון / 31.07 חברה)</option>
           <option value="extended">מורחב מייצגים — 31 ינואר</option>
           <option value="custom">מותאם אישית</option>
         </Select>
 
-        <Controller
-          name="filing_date"
-          control={control}
-          render={({ field }) => (
-            <DatePicker
-              label="תאריך הגשה"
-              error={errors.filing_date?.message}
-              value={field.value ?? ""}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-            />
-          )}
-        />
+        <Select
+          label="שיטת הגשה"
+          {...register("submission_method")}
+        >
+          <option value="">— לא צוין —</option>
+          <option value="online">מקוון (שידור ישיר)</option>
+          <option value="manual">ידני (פיזי לפקיד שומה)</option>
+          <option value="representative">דרך מערכת המייצגים (שע"מ)</option>
+        </Select>
+
+        <Select
+          label="סיבת הארכה"
+          {...register("extension_reason")}
+        >
+          <option value="">— ללא הארכה —</option>
+          <option value="military_service">מילואים</option>
+          <option value="health_reason">סיבה רפואית</option>
+          <option value="general">הארכה כללית של המייצג</option>
+          <option value="war_situation">מצב ביטחוני</option>
+        </Select>
 
         <div>
           <p className="mb-2 text-sm font-medium text-gray-700">נתוני הכנסות ראשוניים (לתצוגה בלבד)</p>

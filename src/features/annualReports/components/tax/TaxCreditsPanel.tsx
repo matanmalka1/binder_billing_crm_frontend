@@ -23,15 +23,15 @@ interface CreditRow {
 
 export const TaxCreditsPanel: React.FC<Props> = ({ reportId, taxYear }) => {
   const { data, isLoading } = useQuery({
-    queryKey: annualReportsQK.details(reportId),
-    queryFn: () => annualReportsApi.getReportDetails(reportId),
+    queryKey: annualReportsQK.detail(reportId),
+    queryFn: () => annualReportsApi.getReport(reportId),
   });
 
   if (isLoading) return <p className="text-sm text-gray-400">טוען זיכויים...</p>;
   if (!data) return null;
 
   const cpv = CREDIT_POINT_VALUE_BY_YEAR[taxYear] ?? 2_904;
-  const creditPoints = data.credit_points ?? 2.25;
+  const creditPoints = data.credit_points ?? 0;
   const lifeInsuranceCredit = data.life_insurance_credit_points
     ? data.life_insurance_credit_points * cpv
     : 0;
