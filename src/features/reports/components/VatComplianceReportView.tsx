@@ -27,7 +27,7 @@ const ComplianceTable = ({ items }: { items: VatComplianceItem[] }) => {
         </thead>
         <tbody className="divide-y divide-gray-100 bg-white">
           {items.map((item) => (
-            <tr key={item.client_id} className="hover:bg-gray-50">
+            <tr key={item.client_record_id} className="hover:bg-gray-50">
               <td className="px-4 py-3 font-semibold text-gray-900 whitespace-nowrap">{item.client_name}</td>
               <td className="px-4 py-3 text-gray-700 tabular-nums">{item.periods_expected}</td>
               <td className="px-4 py-3 text-gray-700 tabular-nums">{item.periods_filed}</td>
@@ -65,7 +65,7 @@ const StalePendingTable = ({ items }: { items: StalePendingItem[] }) => {
           </thead>
           <tbody className="divide-y divide-negative-50 bg-white">
             {items.map((item) => (
-              <tr key={`${item.client_id}-${item.period}`} className="hover:bg-negative-50">
+              <tr key={`${item.client_record_id}-${item.period}`} className="hover:bg-negative-50">
                 <td className="px-4 py-3 font-semibold text-gray-900 whitespace-nowrap">{item.client_name}</td>
                 <td className="px-4 py-3 text-gray-700 tabular-nums">{item.period}</td>
                 <td className="px-4 py-3">

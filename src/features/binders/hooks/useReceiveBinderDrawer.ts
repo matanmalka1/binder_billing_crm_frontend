@@ -194,7 +194,7 @@ export const useReceiveBinderDrawer = (
       }
 
       return bindersApi.receive({
-        client_id: values.client_id,
+        client_record_id: values.client_id,
         received_at: values.received_at,
         received_by: userId!,
         open_new_binder: values.open_new_binder ?? false,

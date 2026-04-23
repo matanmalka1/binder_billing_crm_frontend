@@ -21,7 +21,7 @@ interface TaxDeadlineDrawerProps {
 export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, onClose }) => {
   const navigate = useNavigate();
   const isCompleted = deadline?.status === "completed";
-  const canViewAdvancePayments = deadline?.deadline_type === "advance_payment" && deadline.client_id != null;
+  const canViewAdvancePayments = deadline?.deadline_type === "advance_payment" && deadline.client_record_id != null;
   const { urgency, daysLabel } = deadline
     ? getDeadlineUrgency(deadline.due_date, isCompleted ?? false)
     : { urgency: "green" as const, daysLabel: "—" };
@@ -41,7 +41,7 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  navigate(`/clients/${deadline.client_id}/advance-payments`);
+                  navigate(`/clients/${deadline.client_record_id}/advance-payments`);
                   onClose();
                 }}
               >
