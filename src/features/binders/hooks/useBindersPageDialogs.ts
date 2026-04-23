@@ -62,7 +62,7 @@ export const useBindersPageDialogs = ({
   const confirmBulkReady = async () => {
     const binder = getSelectedBinder();
     if (!binder) return;
-    await markReadyBulk(binder.client_id, bulkReadyYear, bulkReadyMonth);
+    await markReadyBulk(binder.client_record_id, bulkReadyYear, bulkReadyMonth);
     closeBulkReadyDialog();
   };
 
@@ -77,7 +77,7 @@ export const useBindersPageDialogs = ({
     const binder = getSelectedBinder();
     if (!binder) return;
     await handoverBinders(
-      binder.client_id,
+      binder.client_record_id,
       payload.binderIds,
       payload.receivedByName,
       payload.handedOverAt,
