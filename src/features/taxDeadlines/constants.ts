@@ -15,6 +15,7 @@ export const TAX_DEADLINE_STATUS_OPTIONS = [
   { value: "", label: "כל הסטטוסים" },
   { value: "pending", label: "ממתין" },
   { value: "completed", label: "הושלם" },
+  { value: "canceled", label: "בוטל" },
 ];
 
 export const getTaxDeadlineStatusLabel = (value: string) =>

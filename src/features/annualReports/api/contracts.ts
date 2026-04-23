@@ -11,7 +11,8 @@ export type AnnualReportStatus =
   | "assessment_issued"
   | "objection_filed"
   | "closed"
-  | "amended";
+  | "amended"
+  | "canceled";
 
 export type ClientTypeForReport =
   | "individual"

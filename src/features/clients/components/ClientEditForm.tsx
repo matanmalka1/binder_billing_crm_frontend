@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useController, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
+import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import type { ClientResponse, UpdateClientPayload } from "../api";
 import {
   CLIENT_ID_NUMBER_TYPE_LABELS,
@@ -25,6 +27,39 @@ interface ClientEditFormProps {
   formId?: string;
 }
 
+function buildImpactMessage(
+  oldStatus: string,
+  newStatus: string,
+  oldEntityType: string | null | undefined,
+  newEntityType: string | null | undefined,
+): string | null {
+  const statusChangesToDestructive =
+    newStatus !== oldStatus && (newStatus === "frozen" || newStatus === "closed");
+  const entityTypeChanged =
+    newEntityType != null && newEntityType !== "" && newEntityType !== oldEntityType;
+
+  if (!statusChangesToDestructive && !entityTypeChanged) return null;
+
+  const lines: string[] = [];
+
+  if (statusChangesToDestructive) {
+    const label = newStatus === "frozen" ? "מוקפא" : "סגור";
+    lines.push(`שינוי סטטוס ל"${label}" יבטל את כל הפעולות הממתינות הבאות:`);
+    lines.push("• תזכורות ממתינות");
+    lines.push("• מועדי מס ממתינים");
+    lines.push("• דיווחי מע\"מ פתוחים");
+    lines.push("• דוחות שנתיים פתוחים");
+    lines.push("• תיקים במשרד יועברו לארכיון");
+  }
+
+  if (entityTypeChanged) {
+    if (lines.length > 0) lines.push("");
+    lines.push("שינוי סוג ישות יבטל את כל מועדי המס הממתינים.");
+  }
+
+  return lines.join("\n");
+}
+
 export const ClientEditForm: React.FC<ClientEditFormProps> = ({
   client,
   onSave,
@@ -33,6 +68,9 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
   hideFooter = false,
   formId,
 }) => {
+  const [pendingData, setPendingData] = useState<UpdateClientPayload | null>(null);
+  const [impactMessage, setImpactMessage] = useState<string | null>(null);
+
   const {
     control,
     register,
@@ -70,26 +108,64 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
     control,
   });
 
-  const onSubmit = handleSubmit(async (data) => {
-    await onSave({
-      ...data,
-      phone: data.phone || null,
-      email: data.email || null,
-      address_street: data.address_street || null,
-      address_building_number: data.address_building_number || null,
-      address_apartment: data.address_apartment || null,
-      address_city: data.address_city || null,
-      address_zip_code: data.address_zip_code || null,
-      entity_type: data.entity_type || null,
-      vat_reporting_frequency: data.vat_reporting_frequency || null,
-      vat_exempt_ceiling: data.vat_exempt_ceiling || null,
-      advance_rate: data.advance_rate || null,
-      accountant_name: data.accountant_name || null,
-      notes: data.notes || null,
-    });
+  const buildPayload = (data: ClientEditFormValues): UpdateClientPayload => ({
+    ...data,
+    phone: data.phone || null,
+    email: data.email || null,
+    address_street: data.address_street || null,
+    address_building_number: data.address_building_number || null,
+    address_apartment: data.address_apartment || null,
+    address_city: data.address_city || null,
+    address_zip_code: data.address_zip_code || null,
+    entity_type: data.entity_type || null,
+    vat_reporting_frequency: data.vat_reporting_frequency || null,
+    vat_exempt_ceiling: data.vat_exempt_ceiling || null,
+    advance_rate: data.advance_rate || null,
+    accountant_name: data.accountant_name || null,
+    notes: data.notes || null,
   });
 
+  const onSubmit = handleSubmit(async (data) => {
+    const payload = buildPayload(data);
+    const msg = buildImpactMessage(
+      client.status,
+      data.status,
+      client.entity_type,
+      data.entity_type,
+    );
+    if (msg) {
+      setPendingData(payload);
+      setImpactMessage(msg);
+      return;
+    }
+    await onSave(payload);
+  });
+
+  const handleConfirm = async () => {
+    if (!pendingData) return;
+    const data = pendingData;
+    setPendingData(null);
+    setImpactMessage(null);
+    await onSave(data);
+  };
+
+  const handleCancelConfirm = () => {
+    setPendingData(null);
+    setImpactMessage(null);
+  };
+
   return (
+    <>
+    <ConfirmDialog
+      open={!!impactMessage}
+      title="אזהרה: פעולה בלתי הפיכה"
+      message={impactMessage ?? ""}
+      confirmLabel="אישור ושמירה"
+      cancelLabel="ביטול"
+      isLoading={isLoading}
+      onConfirm={handleConfirm}
+      onCancel={handleCancelConfirm}
+    />
     <form id={formId} onSubmit={onSubmit} className="space-y-6">
       {/* Basic info */}
       <div className="space-y-4">
@@ -281,5 +357,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
         </>
       )}
     </form>
+    </>
   );
 };

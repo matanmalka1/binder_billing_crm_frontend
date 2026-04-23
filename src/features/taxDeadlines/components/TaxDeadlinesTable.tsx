@@ -76,8 +76,9 @@ export const TaxDeadlinesTable = ({
           <tbody className="divide-y divide-gray-100">
             {deadlines.map((deadline, index) => {
               const isCompleted = deadline.status === "completed";
-              const { urgency, daysRemaining } = getDeadlineUrgency(deadline.due_date, isCompleted);
-              const daysLabel = getDeadlineDaysLabelShort(daysRemaining, isCompleted);
+              const isCanceled = deadline.status === "canceled";
+              const { urgency, daysRemaining } = getDeadlineUrgency(deadline.due_date, isCompleted || isCanceled);
+              const daysLabel = getDeadlineDaysLabelShort(daysRemaining, isCompleted || isCanceled);
 
               return (
                 <tr
@@ -85,7 +86,8 @@ export const TaxDeadlinesTable = ({
                   className={cn(
                     "transition-colors hover:bg-gray-50 animate-fade-in",
                     onRowClick && "cursor-pointer",
-                    !isCompleted && urgencyRowMap[urgency],
+                    isCanceled && "opacity-50",
+                    !isCompleted && !isCanceled && urgencyRowMap[urgency],
                   )}
                   style={{ animationDelay: staggerDelay(index) }}
                   onClick={() => onRowClick?.(deadline)}
@@ -111,7 +113,7 @@ export const TaxDeadlinesTable = ({
                     />
                   </td>
                   <td className="py-3.5 pr-4">
-                    {isCompleted ? (
+                    {isCompleted || isCanceled ? (
                       <span className="text-sm text-gray-400">—</span>
                     ) : (
                       <Badge className={cn("border font-semibold text-xs", getUrgencyColor(urgency))}>
@@ -128,6 +130,8 @@ export const TaxDeadlinesTable = ({
                         <CheckCircle2 className="h-4 w-4" />
                         <span className="text-xs font-medium">הושלם</span>
                       </div>
+                    ) : isCanceled ? (
+                      <Badge variant="neutral">בוטל</Badge>
                     ) : (
                       <Badge variant="warning">ממתין</Badge>
                     )}

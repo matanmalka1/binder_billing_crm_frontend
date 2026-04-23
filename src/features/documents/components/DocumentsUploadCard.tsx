@@ -108,8 +108,8 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
   });
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <form onSubmit={onSubmit} className="space-y-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Select
           label="סוג מסמך"
           error={errors.document_type?.message}
@@ -142,7 +142,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
             {...register("notes")}
             placeholder="הערות"
             rows={2}
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 resize-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500 focus:outline-none"
+            className="min-h-[42px] w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 resize-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500 focus:outline-none"
           />
         </div>
 
@@ -158,8 +158,8 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         )}
       </div>
 
-      {/* Row 2: full-width drop zone */}
-      <div className="space-y-1.5">
+      {/* Compact file picker */}
+      <div className="w-full space-y-2 sm:ml-auto sm:max-w-3xl">
         <span className="block text-sm font-medium text-gray-700">קובץ</span>
         <div
           role="button"
@@ -170,7 +170,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
           className={[
-            "flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed py-10 text-center transition-colors",
+            "flex min-h-16 cursor-pointer flex-col gap-2 rounded-xl border-2 border-dashed px-3 py-3 text-right transition-colors sm:flex-row sm:items-center sm:justify-between",
             isDragging
               ? "border-primary-400 bg-primary-50"
               : selectedFile
@@ -198,15 +198,23 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-              <span className="text-xs text-gray-400">{formatFileSize(selectedFile.size)}</span>
+              <div className="flex items-center gap-3 text-xs text-gray-500">
+                <span>{formatFileSize(selectedFile.size)}</span>
+                <span className="font-medium text-positive-700">מוכן להעלאה</span>
+              </div>
             </>
           ) : (
             <>
-              <CloudUpload className="h-10 w-10 text-gray-300" />
+              <div className="flex items-center gap-2.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-gray-400 shadow-sm">
+                <CloudUpload className="h-4 w-4" />
+              </div>
               <div className="space-y-0.5">
                 <p className="text-sm font-medium text-gray-700">גרור קובץ לכאן או לחץ לבחירה</p>
-                <p className="text-xs text-gray-400">PDF, Word, Excel, תמונות · עד 10MB</p>
+                <p className="text-[11px] text-gray-400">PDF, Word, Excel, תמונות · עד 10MB</p>
               </div>
+            </div>
+            <span className="text-[11px] font-medium text-primary-700">בחירת קובץ</span>
             </>
           )}
         </div>
@@ -226,7 +234,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         )}
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-3">
         <Button type="submit" isLoading={uploading} className="gap-2 shrink-0">
           העלאה
         </Button>
