@@ -25,7 +25,7 @@ import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from 
 import type { ChargeResponse } from "@/features/charges";
 import type { BinderDetailResponse } from "@/features/binders";
 import { ChargesCreateModal } from "@/features/charges";
-import { BinderDrawer } from "@/features/binders";
+import { ReceiveBinderDrawer } from "@/features/binders";
 import { useClientQuickActions } from "../hooks/useClientQuickActions";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
 import { ClientNotesCard } from "@/features/notes";
@@ -199,11 +199,10 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
         initialClient={{ id: client.id, name: client.full_name }}
       />
 
-      <BinderDrawer
+      <ReceiveBinderDrawer
         open={quickActions.showReceiveBinder}
-        mode="receive"
         onClose={quickActions.closeReceiveBinder}
-        receiveForm={quickActions.receive.form}
+        form={quickActions.receive.form}
         clientQuery={quickActions.receive.clientQuery}
         selectedClient={quickActions.receive.selectedClient}
         businesses={quickActions.receive.businesses}
@@ -212,7 +211,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
         vatType={quickActions.receive.vatType}
         onClientSelect={quickActions.receive.handleClientSelect}
         onClientQueryChange={quickActions.receive.handleClientQueryChange}
-        onReceiveSubmit={quickActions.receive.handleSubmit}
+        onSubmit={quickActions.receive.handleSubmit}
         isSubmitting={quickActions.receive.isSubmitting}
       />
 

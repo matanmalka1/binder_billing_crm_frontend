@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { BinderResponse } from "../types";
 
 interface UseBindersPageDialogsParams {
+  getSelectedBinder: () => BinderResponse | null;
   markReadyBulk: (clientId: number, untilPeriodYear: number, untilPeriodMonth: number) => Promise<unknown>;
   returnBinder: (binderId: number, pickupPersonName: string) => Promise<unknown>;
   deleteBinder: (binderId: number) => Promise<unknown>;
@@ -17,6 +18,7 @@ interface UseBindersPageDialogsParams {
 }
 
 export const useBindersPageDialogs = ({
+  getSelectedBinder,
   markReadyBulk,
   returnBinder,
   deleteBinder,
@@ -57,26 +59,25 @@ export const useBindersPageDialogs = ({
     closeDeleteDialog();
   };
 
-  const confirmBulkReady = async (selectedBinder: BinderResponse | null) => {
-    if (!selectedBinder) return;
-    await markReadyBulk(selectedBinder.client_id, bulkReadyYear, bulkReadyMonth);
+  const confirmBulkReady = async () => {
+    const binder = getSelectedBinder();
+    if (!binder) return;
+    await markReadyBulk(binder.client_id, bulkReadyYear, bulkReadyMonth);
     closeBulkReadyDialog();
   };
 
-  const submitHandover = async (
-    selectedBinder: BinderResponse | null,
-    payload: {
-      binderIds: number[];
-      receivedByName: string;
-      handedOverAt: string;
-      untilPeriodYear: number;
-      untilPeriodMonth: number;
-      notes: string | null;
-    },
-  ) => {
-    if (!selectedBinder) return;
+  const submitHandover = async (payload: {
+    binderIds: number[];
+    receivedByName: string;
+    handedOverAt: string;
+    untilPeriodYear: number;
+    untilPeriodMonth: number;
+    notes: string | null;
+  }) => {
+    const binder = getSelectedBinder();
+    if (!binder) return;
     await handoverBinders(
-      selectedBinder.client_id,
+      binder.client_id,
       payload.binderIds,
       payload.receivedByName,
       payload.handedOverAt,
