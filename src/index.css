@@ -6,6 +6,10 @@
   --font-mono: 'Heebo', sans-serif;
 }
 
+html {
+  font-size: 90%;
+}
+
 input[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
