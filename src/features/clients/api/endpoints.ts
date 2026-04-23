@@ -14,11 +14,15 @@ export const CLIENT_ENDPOINTS = {
 export const CLIENT_ROUTES = {
   list: "/clients",
   detail: (clientId: number | string) => `/clients/${clientId}`,
+  tab: (clientId: number | string, tab: string) =>
+    tab === "details" ? `/clients/${clientId}` : `/clients/${clientId}/${tab}`,
   timeline: (clientId: number | string) => `/clients/${clientId}/timeline`,
   vat: (clientId: number | string) => `/clients/${clientId}/vat`,
   advancePayments: (clientId: number | string) => `/clients/${clientId}/advance-payments`,
   annualReports: (clientId: number | string) => `/clients/${clientId}/annual-reports`,
   documents: (clientId: number | string) => `/clients/${clientId}/documents`,
+  communication: (clientId: number | string) => `/clients/${clientId}/communication`,
+  finance: (clientId: number | string) => `/clients/${clientId}/finance`,
   businessDetail: (clientId: number | string, businessId: number | string) =>
     `/clients/${clientId}/businesses/${businessId}`,
 } as const;

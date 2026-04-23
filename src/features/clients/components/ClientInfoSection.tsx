@@ -62,6 +62,10 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
 
   const identityItems = [
     { label: "מזהה מערכת", value: formatClientOfficeId(client.id) },
+    {
+      label: "מספר לקוח במשרד",
+      value: client.office_client_number != null ? String(client.office_client_number) : "—",
+    },
     { label: "מספר מזהה", value: client.id_number },
     { label: "סוג מזהה", value: idNumberTypeLabel },
     {
@@ -104,6 +108,8 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
     },
   ];
 
+  const notesValue = client.notes?.trim() || null;
+
   const isOsekPatur = client.entity_type === "osek_patur";
 
   const taxItems = [
@@ -126,6 +132,10 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
     {
       label: "אחוז מקדמה",
       value: client.advance_rate != null ? `${client.advance_rate}%` : "—",
+    },
+    {
+      label: "עודכן מקדמה",
+      value: client.advance_rate_updated_at ? formatDate(client.advance_rate_updated_at) : "—",
     },
     { label: "רואה חשבון מלווה", value: client.accountant_name ?? "—" },
     { label: 'סניף מע"מ', value: officeByType("vat_branch") ?? "—" },
@@ -158,6 +168,12 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
           </p>
           <DefinitionList columns={3} items={taxItems} />
         </div>
+        {notesValue && (
+          <div className="border-t border-gray-100 pt-4">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">הערות</p>
+            <p className="whitespace-pre-wrap text-sm text-gray-700">{notesValue}</p>
+          </div>
+        )}
       </div>
     </Card>
   );

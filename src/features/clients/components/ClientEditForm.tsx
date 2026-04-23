@@ -55,6 +55,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       vat_exempt_ceiling: client.vat_exempt_ceiling ?? null,
       advance_rate: client.advance_rate ?? null,
       accountant_name: client.accountant_name ?? null,
+      notes: client.notes ?? null,
     },
   });
   const idNumberType = client.id_number_type ?? "other";
@@ -84,6 +85,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       vat_exempt_ceiling: data.vat_exempt_ceiling || null,
       advance_rate: data.advance_rate || null,
       accountant_name: data.accountant_name || null,
+      notes: data.notes || null,
     });
   });
 
@@ -244,7 +246,17 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
           disabled={isLoading}
           {...register("accountant_name")}
         />
-
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-500">הערות</label>
+          <textarea
+            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:bg-gray-50 disabled:text-gray-500"
+            rows={3}
+            placeholder="הערות חופשיות..."
+            disabled={isLoading}
+            {...register("notes")}
+          />
+          {errors.notes && <p className="text-xs text-negative-600">{errors.notes.message}</p>}
+        </div>
       </div>
 
       {!hideFooter && (

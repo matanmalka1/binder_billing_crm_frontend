@@ -93,6 +93,7 @@ export const clientEditSchema = z.object({
   vat_exempt_ceiling: z.string().optional().nullable(),
   advance_rate: z.string().optional().nullable(),
   accountant_name: z.string().trim().optional().nullable(),
+  notes: z.string().trim().optional().nullable(),
 });
 
 export type CreateClientFormValues = z.infer<typeof createClientSchema>;
