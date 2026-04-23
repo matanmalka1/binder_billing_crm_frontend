@@ -87,14 +87,17 @@ export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
       cancelLabel="ביטול"
       isLoading={isReturning}
       onConfirm={onConfirmReturn}
+      confirmDisabled={!pickupPersonName.trim()}
       onCancel={onCancelReturn}
     >
       <Input
         type="text"
-        placeholder="שם האיש המאסף (אופציונלי)"
+        label="שם האיש המאסף"
+        placeholder="שם חובה"
         value={pickupPersonName}
         onChange={(e) => setPickupPersonName(e.target.value)}
         className="mt-3"
+        required
       />
     </ConfirmDialog>
 

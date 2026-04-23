@@ -11,6 +11,7 @@ export interface ConfirmDialogProps {
   confirmLabel: string;
   cancelLabel: string;
   isLoading?: boolean;
+  confirmDisabled?: boolean;
   inputs?: ActionInputField[];
   onConfirm: (inputValues?: Record<string, string>) => void;
   onCancel: () => void;
@@ -24,6 +25,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   confirmLabel,
   cancelLabel,
   isLoading = false,
+  confirmDisabled = false,
   inputs,
   onConfirm,
   onCancel,
@@ -37,6 +39,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 
   const isConfirmDisabled =
     isLoading ||
+    confirmDisabled ||
     (inputs ?? []).some((f) => f.required && !inputValues[f.name]?.trim());
 
   const handleConfirm = () => {

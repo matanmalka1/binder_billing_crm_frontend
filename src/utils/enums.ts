@@ -10,6 +10,7 @@ import {
 export const BINDER_STATUS_LABELS: Record<string, string> = {
   in_office: "במשרד",
   closed_in_office: "סגור במשרד",
+  archived_in_office: "ארכיון במשרד",
   ready_for_pickup: "מוכן לאיסוף",
   returned: "הוחזר",
 };
