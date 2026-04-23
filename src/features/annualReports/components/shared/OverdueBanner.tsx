@@ -81,7 +81,7 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
               onKeyDown={(e) => e.key === "Enter" && onSelect(report.id)}
             >
               <span className="text-sm font-medium text-gray-900 truncate">
-                {report.client_name ?? `לקוח #${report.client_id}`}
+                {report.client_name ?? `לקוח #${report.client_record_id}`}
               </span>
               <div className="flex items-center gap-3 shrink-0 text-xs text-gray-500">
                 <span className="tabular-nums">{formatDate(report.filing_deadline)}</span>

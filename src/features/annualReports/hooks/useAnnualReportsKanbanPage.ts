@@ -30,7 +30,7 @@ export const useAnnualReportsKanbanPage = () => {
   const filteredReports = useMemo(() => {
     let reports = season.reports;
     if (filters.client_id) {
-      reports = reports.filter((r) => r.client_id === Number(filters.client_id));
+      reports = reports.filter((r) => r.client_record_id === Number(filters.client_id));
     }
     if (filters.status) {
       reports = reports.filter((r) => r.status === filters.status);

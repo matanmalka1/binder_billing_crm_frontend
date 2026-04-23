@@ -27,9 +27,9 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
   const filed = isFiled(workItem.status);
 
   const { data: binderData } = useQuery({
-    queryKey: bindersQK.list({ client_id: workItem.client_id!, page_size: 1 }),
-    queryFn: () => bindersApi.list({ client_id: workItem.client_id!, page_size: 1, status: "in_office" }),
-    enabled: !!workItem.client_id,
+    queryKey: bindersQK.list({ client_record_id: workItem.client_record_id, page_size: 1 }),
+    queryFn: () => bindersApi.list({ client_record_id: workItem.client_record_id, page_size: 1, status: "in_office" }),
+    enabled: !!workItem.client_record_id,
     staleTime: 60_000,
   });
   const activeBinder = binderData?.items?.[0] ?? null;
@@ -50,7 +50,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
           </Link>
           <ChevronLeft className="h-3.5 w-3.5 text-gray-300" />
           <span className="font-semibold text-gray-800">
-            {workItem.client_name ?? `לקוח ${formatClientOfficeId(workItem.client_id)}`}
+            {workItem.client_name ?? `לקוח ${formatClientOfficeId(workItem.client_record_id)}`}
             <span className="mx-1.5 font-normal text-gray-400">—</span>
             <span className="font-mono">{workItem.period}</span>
           </span>
@@ -148,7 +148,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
                 onSendBack={() => setShowSendBack(true)}
               />
               {isAdvisor && (
-                <VatExportButtons clientId={workItem.client_id} period={workItem.period} />
+                <VatExportButtons clientId={workItem.client_record_id} period={workItem.period} />
               )}
             </>
           )}
@@ -158,7 +158,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
       {/* Export only row when filed */}
       {filed && isAdvisor && (
         <div className="flex justify-end border-t border-gray-100 pt-3">
-          <VatExportButtons clientId={workItem.client_id} period={workItem.period} />
+          <VatExportButtons clientId={workItem.client_record_id} period={workItem.period} />
         </div>
       )}
       <VatFileModal

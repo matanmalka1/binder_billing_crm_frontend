@@ -3,17 +3,17 @@ import { Clock } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
-import { Card } from "../../../components/ui/primitives/Card";
-import { Badge } from "../../../components/ui/primitives/Badge";
-import { Timeline, TimelineEntry } from "../../../components/ui/feedback/Timeline";
+import { Card } from "@/components/ui/primitives/Card";
+import { Badge } from "@/components/ui/primitives/Badge";
+import { Timeline, TimelineEntry } from "@/components/ui/feedback/Timeline";
 import { bindersApi, bindersQK } from "../../api";
 import { annualReportsApi, annualReportsQK, getReportStatusLabel } from "@/features/annualReports";
 import { clientsApi, clientsQK } from "@/features/clients";
 import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
-import { staggerDelay } from "../../../utils/animation";
+import { VAT_STATUS_BADGE_VARIANTS } from "@/features/vatReports";
+import { staggerDelay } from "@/utils/animation";
 import { getBinderTypeLabel } from "../../constants";
-import { getVatWorkItemStatusLabel } from "../../../utils/enums";
-import { VAT_STATUS_BADGE_VARIANTS } from "../../vatReports/constants";
+import { getVatWorkItemStatusLabel } from "@/utils/enums";
 import type { BinderIntakeMaterialResponse } from "../../types";
 import { formatStructuredBinderPeriod, toBinderPeriodValue } from "../../utils";
 
@@ -39,11 +39,11 @@ const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse; clientI
     <Badge
       variant={VAT_STATUS_BADGE_VARIANTS[lookup.status] ?? "neutral"}
       className="cursor-pointer mr-1"
-      onClick={(e) => {
+      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         navigate(`/tax/vat/${lookup.id}`);
       }}
-      onKeyDown={(e) => {
+      onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
         if (e.key !== "Enter" && e.key !== " ") return;
         e.preventDefault();
         e.stopPropagation();

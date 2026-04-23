@@ -1,13 +1,13 @@
-import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
-import { Select } from "../../../components/ui/inputs/Select";
-import { Input } from "../../../components/ui/inputs/Input";
-import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
-import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
-import { StatsCard } from "../../../components/ui/layout/StatsCard";
+import { useSearchDebounce } from "@/hooks/useSearchDebounce";
+import { Select } from "@/components/ui/inputs/Select";
+import { Input } from "@/components/ui/inputs/Input";
+import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
+import { ActiveFilterBadges } from "@/components/ui/table/ActiveFilterBadges";
+import { StatsCard } from "@/components/ui/layout/StatsCard";
 import { Archive, CheckCircle2, FolderKanban, Search, Undo2, X, Boxes } from "lucide-react";
-import { BINDER_STATUS_OPTIONS } from "../constants";
-import type { BindersFiltersBarProps } from "../types";
-import { cn, buildYearOptions } from "../../../utils/utils";
+import { BINDER_STATUS_OPTIONS } from "../../constants";
+import type { BindersFiltersBarProps } from "../../types";
+import { cn, buildYearOptions } from "@/utils/utils";
 
 const YEAR_OPTIONS = [
   { value: "", label: "כל התקופות" },
@@ -22,7 +22,7 @@ export const BindersFiltersBar = ({
 }: BindersFiltersBarProps) => {
   const [searchDraft, setSearchDraft] = useSearchDebounce(
     filters.query ?? "",
-    (v) => onFilterChange("query", v),
+    (v: string) => onFilterChange("query", v),
   );
 
   const handleReset = () => {

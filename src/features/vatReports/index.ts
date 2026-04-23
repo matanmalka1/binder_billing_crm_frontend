@@ -15,4 +15,5 @@ export { VatWorkItemDetail } from "./pages/VatWorkItemDetailPage";
 export { VatWorkItems } from "./pages/VatWorkItemsPage";
 export { VatClientSummaryPanel } from "./components/VatClientSummaryPanel";
 export { isFiled } from "./utils";
+export { VAT_STATUS_BADGE_VARIANTS } from "./constants";
 export type { VatWorkItemResponse, VatClientSummaryResponse } from "./api";

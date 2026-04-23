@@ -27,7 +27,7 @@ export const usePendingSignatureRequests = ({ page = 1, pageSize = 50 }: Params 
         request.business_id,
         {
           name: request.business_name ?? `עסק #${request.business_id}`,
-          clientId: request.client_id,
+          clientId: request.client_record_id,
         },
       ]),
   ) as Record<number, { name: string; clientId: number }>;

@@ -66,7 +66,7 @@ export const useTaxDeadlines = () => {
 
   const createMutation = useMutation({
     mutationFn: (payload: {
-      client_id: number;
+      client_record_id: number;
       deadline_type: string;
       due_date: string;
       period?: string | null;
@@ -82,7 +82,7 @@ export const useTaxDeadlines = () => {
   });
 
   const generateMutation = useMutation({
-    mutationFn: (payload: { client_id: number; year: number }) => taxDeadlinesApi.generateDeadlines(payload),
+    mutationFn: (payload: { client_record_id: number; year: number }) => taxDeadlinesApi.generateDeadlines(payload),
     onSuccess: ({ created_count }) => {
       if (created_count > 0) {
         toast.success(`נוצרו ${created_count} מועדים בהצלחה`);
@@ -161,7 +161,7 @@ export const useTaxDeadlines = () => {
 
   const onSubmit = form.handleSubmit(async (values) => {
     await createMutation.mutateAsync({
-      client_id: Number(values.client_id),
+      client_record_id: Number(values.client_id),
       deadline_type: values.deadline_type,
       due_date: values.due_date,
       period: values.period || null,
@@ -180,7 +180,7 @@ export const useTaxDeadlines = () => {
 
   const onGenerateSubmit = generateForm.handleSubmit(async (values) => {
     await generateMutation.mutateAsync({
-      client_id: Number(values.client_id),
+      client_record_id: Number(values.client_id),
       year: Number(values.year),
     });
     generateForm.reset({ client_id: "", year: values.year });

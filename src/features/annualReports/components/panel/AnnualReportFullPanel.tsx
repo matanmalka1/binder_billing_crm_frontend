@@ -52,8 +52,8 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
   }
 
   const clientLabel = report.client_name
-    ? `${report.client_name} (${formatClientOfficeId(report.client_id)})`
-    : `לקוח ${formatClientOfficeId(report.client_id)}`;
+    ? `${report.client_name} (${formatClientOfficeId(report.client_record_id)})`
+    : `לקוח ${formatClientOfficeId(report.client_record_id)}`;
 
   return (
     <>

@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import type { Column } from "../../../components/ui/table/DataTable";
-import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
-import { MonoValue } from "../../../components/ui/primitives/MonoValue";
-import type { BinderResponse } from "../types";
-import { getStatusLabel } from "../../../utils/enums";
-import { formatBinderNumber, formatClientOfficeId, formatMonthYear } from "../../../utils/utils";
-import { BINDER_STATUS_VARIANTS } from "../constants";
+import type { Column } from "@/components/ui/table/DataTable";
+import { StatusBadge } from "@/components/ui/primitives/StatusBadge";
+import { MonoValue } from "@/components/ui/primitives/MonoValue";
+import type { BinderResponse } from "../../types";
+import { getStatusLabel } from "@/utils/enums";
+import { formatBinderNumber, formatClientOfficeId, formatMonthYear } from "@/utils/utils";
+import { BINDER_STATUS_VARIANTS } from "../../constants";
 import { BinderRowActions } from "./BinderRowActions";
 
 /* ─── Client cell ────────────────────────────────────────────── */
@@ -15,11 +15,11 @@ const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => {
   return (
     <div className="flex flex-col gap-0.5">
       <Link
-        to={`/clients/${binder.client_id}`}
+        to={`/clients/${binder.client_record_id}`}
         onClick={(e) => e.stopPropagation()}
         className="text-sm font-semibold text-gray-900 hover:text-primary-700 hover:underline"
       >
-        {binder.client_name ?? `#${binder.client_id}`}
+        {binder.client_name ?? `#${binder.client_record_id}`}
       </Link>
     </div>
   );

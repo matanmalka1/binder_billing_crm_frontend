@@ -45,8 +45,8 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
   const [notes, setNotes] = useState("");
 
   const { data, isLoading } = useQuery({
-    queryKey: bindersQK.list({ client_id: clientId, status: "ready_for_pickup", page_size: 100 }),
-    queryFn: () => bindersApi.list({ client_id: clientId, status: "ready_for_pickup", page_size: 100 }),
+    queryKey: bindersQK.list({ client_record_id: clientId, status: "ready_for_pickup", page_size: 100 }),
+    queryFn: () => bindersApi.list({ client_record_id: clientId, status: "ready_for_pickup", page_size: 100 }),
     enabled: clientId > 0,
     staleTime: 30_000,
   });

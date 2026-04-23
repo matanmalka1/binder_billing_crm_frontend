@@ -1,7 +1,7 @@
 import { Controller, type UseFormReturn } from "react-hook-form";
 import { Select } from "@/components/ui/inputs/Select";
 import { buildYearOptions, MONTH_OPTIONS } from "@/utils/utils";
-import type { ReceiveBinderFormValues } from "../schemas";
+import type { ReceiveBinderFormValues } from "../../schemas";
 
 const PERIODIC_BINDER_TYPES = new Set(["vat", "salary"]);
 

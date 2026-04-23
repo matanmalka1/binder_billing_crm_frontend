@@ -1,6 +1,6 @@
 import type { UseFormReturn } from "react-hook-form";
-import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
-import type { ReceiveBinderFormValues } from "../schemas";
+import { DetailDrawer } from "@/components/ui/overlays/DetailDrawer";
+import type { ReceiveBinderFormValues } from "../../schemas";
 import type { AnnualReportFull } from "@/features/annualReports";
 import { BinderReceivePanel } from "./BinderReceivePanel";
 

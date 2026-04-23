@@ -1,9 +1,9 @@
 import type { ChangeEvent } from "react";
-import { Select } from "../../../components/ui/inputs/Select";
+import { Select } from "@/components/ui/inputs/Select";
 import {
   buildBimonthlyPeriodOptions,
   buildMonthlyPeriodOptions,
-} from "../../../components/ui/inputs/periodOptions";
+} from "@/components/ui/inputs/periodOptions";
 
 interface VatPeriodFieldProps {
   vatType: "monthly" | "bimonthly";

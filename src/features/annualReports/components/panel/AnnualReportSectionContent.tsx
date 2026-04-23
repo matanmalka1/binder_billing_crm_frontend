@@ -49,7 +49,7 @@ export const AnnualReportSectionContent = ({
           onScheduleAdd={addSchedule}
           isScheduleLoading={isCompletingSchedule}
           isScheduleAdding={isAddingSchedule}
-          clientId={report.client_id}
+          clientId={report.client_record_id}
           onDirtyChange={setIsDirty}
           submitRef={submitRef}
         />
@@ -57,7 +57,7 @@ export const AnnualReportSectionContent = ({
     case "financials": return <IncomeExpensePanel reportId={reportId} />;
     case "tax": return <TaxCalculationPanel reportId={reportId} />;
     case "deductions": return <DeductionsTab reportId={reportId} taxYear={report.tax_year} />;
-    case "documents": return <ClientDocumentsTab clientId={report.client_id} />;
+    case "documents": return <ClientDocumentsTab clientId={report.client_record_id} />;
     case "timeline": return <FilingTimelineTab reports={[report]} />;
     case "charges": return <ReportChargesPanel reportId={reportId} />;
   }

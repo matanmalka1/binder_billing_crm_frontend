@@ -65,7 +65,7 @@ export const useCreateReport = (onSuccess?: () => void) => {
   });
 
   const buildPayload = (values: CreateReportFormOutput): CreateAnnualReportPayload => ({
-    client_id: Number(values.client_id),
+    client_record_id: Number(values.client_id),
     tax_year: Number(values.tax_year),
     client_type: values.client_type,
     deadline_type: values.deadline_type,

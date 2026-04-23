@@ -73,7 +73,7 @@ export const AnnualReportStatusTable: React.FC<Props> = ({ statuses }) => (
         <DataTable
           data={group.clients}
           columns={clientColumns}
-          getRowKey={(r) => r.client_id}
+          getRowKey={(r) => r.client_record_id}
           emptyMessage="אין לקוחות בסטטוס זה"
         />
       </div>

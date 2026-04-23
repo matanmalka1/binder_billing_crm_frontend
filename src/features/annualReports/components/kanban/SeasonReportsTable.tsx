@@ -67,7 +67,7 @@ const columns: Column<AnnualReportFull>[] = [
     key: "client_name",
     header: "לקוח",
     render: (r) => (
-      <span className="text-sm font-medium text-gray-900">{r.client_name ?? `לקוח #${r.client_id}`}</span>
+      <span className="text-sm font-medium text-gray-900">{r.client_name ?? `לקוח #${r.client_record_id}`}</span>
     ),
   },
   {

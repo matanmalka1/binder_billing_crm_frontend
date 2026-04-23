@@ -1,14 +1,14 @@
 import {
   DrawerField,
   DrawerSection,
-} from "../../../components/ui/overlays/DetailDrawer";
+} from "@/components/ui/overlays/DetailDrawer";
 import { Link } from "react-router-dom";
-import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
-import { MonoValue } from "../../../components/ui/primitives/MonoValue";
-import type { BinderResponse } from "../types";
-import { getStatusLabel } from "../../../utils/enums";
-import { formatBinderNumber, formatClientOfficeId, formatDate, formatMonthYear } from "../../../utils/utils";
-import { BINDER_STATUS_VARIANTS } from "../constants";
+import { StatusBadge } from "@/components/ui/primitives/StatusBadge";
+import { MonoValue } from "@/components/ui/primitives/MonoValue";
+import type { BinderResponse } from "../../types";
+import { getStatusLabel } from "@/utils/enums";
+import { formatBinderNumber, formatClientOfficeId, formatDate, formatMonthYear } from "@/utils/utils";
+import { BINDER_STATUS_VARIANTS } from "../../constants";
 
 const formatPeriod = (start: string | null, end: string | null): string => {
   if (!start) return "—";
@@ -28,7 +28,7 @@ export const BinderDetailsPanel: React.FC<BinderDetailsPanelProps> = ({
         <DrawerField label="מספר קלסר" value={formatBinderNumber(binder.binder_number)} />
         <DrawerField
           label="לקוח"
-          value={<Link to={`/clients/${binder.client_id}`} className="text-primary-600 hover:underline">{binder.client_name ?? `לקוח #${binder.client_id}`}</Link>}
+          value={<Link to={`/clients/${binder.client_record_id}`} className="text-primary-600 hover:underline">{binder.client_name ?? `לקוח #${binder.client_record_id}`}</Link>}
         />
         <DrawerField
           label="מס' לקוח "

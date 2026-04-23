@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/primitives/Button";
 import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
 import { PageHeader } from "@/components/layout/PageHeader";
 import {
+  BinderDetailDrawer,
   buildBindersColumns,
   BindersFiltersBar,
+  ReceiveBinderDrawer,
   useBindersPage,
   useReceiveBinderDrawer,
 } from "@/features/binders";
-import { BinderDetailDrawer } from "../components/BinderDetailDrawer";
-import { ReceiveBinderDrawer } from "../components/ReceiveBinderDrawer";
-import { BindersPageDialogs } from "../components/BindersPageDialogs";
+import { BindersPageDialogs } from "../components/dialogs/BindersPageDialogs";
 import { useBindersPageDialogs } from "../hooks/useBindersPageDialogs";
 import { useState } from "react";
 

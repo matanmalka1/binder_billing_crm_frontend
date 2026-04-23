@@ -1,11 +1,11 @@
 import { Trash2 } from "lucide-react";
-import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
-import { Button } from "../../../components/ui/primitives/Button";
-import type { BinderResponse } from "../types";
+import { DetailDrawer } from "@/components/ui/overlays/DetailDrawer";
+import { Button } from "@/components/ui/primitives/Button";
+import type { BinderResponse } from "../../types";
 import { BinderActionsPanel } from "./BinderActionsPanel";
 import { BinderDetailsPanel } from "./BinderDetailsPanel";
-import { BinderHistorySection } from "./BinderHistorySection";
-import { BinderIntakesSection } from "./BinderIntakesSection";
+import { BinderHistorySection } from "../sections/BinderHistorySection";
+import { BinderIntakesSection } from "../sections/BinderIntakesSection";
 
 interface BinderDetailDrawerProps {
   open: boolean;
@@ -64,7 +64,7 @@ export const BinderDetailDrawer: React.FC<BinderDetailDrawerProps> = ({
         />
         <BinderIntakesSection
           binderId={binder.id}
-          clientId={binder.client_id}
+          clientId={binder.client_record_id}
           onNavigateToAnnualReport={onClose}
         />
         <BinderHistorySection binderId={binder.id} />

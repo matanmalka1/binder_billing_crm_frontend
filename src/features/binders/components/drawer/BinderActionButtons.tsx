@@ -1,5 +1,5 @@
-import { Button } from "../../../components/ui/primitives/Button";
-import { canMarkReady, canReturn, canRevertReady } from "../utils";
+import { Button } from "@/components/ui/primitives/Button";
+import { canMarkReady, canReturn, canRevertReady } from "../../utils";
 
 interface BinderActionButtonsProps {
   status: string;

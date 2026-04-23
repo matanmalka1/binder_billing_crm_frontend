@@ -60,9 +60,9 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
             header: "לקוח",
             render: (r: Reminder) => (
               <div>
-                {r.client_id != null ? (
+                {r.client_record_id != null ? (
                   <Link
-                    to={`/clients/${r.client_id}`}
+                    to={`/clients/${r.client_record_id}`}
                     className="block truncate text-sm font-medium text-gray-700 hover:underline"
                     onClick={(e) => e.stopPropagation()}
                   >

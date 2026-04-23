@@ -23,14 +23,14 @@ export const AgingReportTable: React.FC<AgingReportTableProps> = ({ items }) => 
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" dir="rtl">
       {items.map((item) => (
         <div
-          key={item.client_id}
-          onClick={() => navigate(`/clients/${item.client_id}`)}
+          key={item.client_record_id}
+          onClick={() => navigate(`/clients/${item.client_record_id}`)}
           className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm animate-fade-in cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
         >
           <div className="mb-4 flex items-start justify-between">
             <div>
               <p className="font-semibold text-gray-900">{item.client_name}</p>
-              <p className="text-xs text-gray-500">לקוח #{item.client_id}</p>
+              <p className="text-xs text-gray-500">לקוח #{item.client_record_id}</p>
             </div>
             {item.days_90_plus > 0 && (
               <Badge variant="error">דורש טיפול</Badge>

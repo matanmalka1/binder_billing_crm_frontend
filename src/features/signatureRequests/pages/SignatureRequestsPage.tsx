@@ -65,11 +65,11 @@ export const SignatureRequestsPage: React.FC = () => {
         render: (req: SignatureRequestResponse) => {
           const bizId = req.business_id;
           const entry = bizId != null ? businessLookup[bizId] : undefined;
-          const displayName = entry?.name ?? (bizId != null ? `עסק #${bizId}` : `לקוח #${req.client_id}`);
+          const displayName = entry?.name ?? (bizId != null ? `עסק #${bizId}` : `לקוח #${req.client_record_id}`);
 
           return (
             <Link
-              to={`/clients/${req.client_id}`}
+              to={`/clients/${req.client_record_id}`}
               onClick={(e) => e.stopPropagation()}
               className="text-sm text-gray-700 hover:text-primary-600 hover:underline"
             >

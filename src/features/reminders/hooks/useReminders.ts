@@ -37,7 +37,7 @@ const buildPayload = (
     return {
       ...scheduling,
       reminder_type: "tax_deadline_approaching",
-      client_id: clientId,
+      client_record_id: clientId,
       tax_deadline_id: Number(values.tax_deadline_id),
     };
   }

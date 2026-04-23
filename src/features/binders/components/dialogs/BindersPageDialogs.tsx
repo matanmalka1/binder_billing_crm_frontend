@@ -2,8 +2,8 @@ import { Input } from "@/components/ui/inputs/Input";
 import { Modal } from "@/components/ui/overlays/Modal";
 import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
 import { Button } from "@/components/ui/primitives/Button";
-import type { BinderResponse } from "../types";
-import { BinderHandoverPanel } from "./BinderHandoverPanel";
+import type { BinderResponse } from "../../types";
+import { BinderHandoverPanel } from "../sections/BinderHandoverPanel";
 import { buildYearOptions } from "@/utils/utils";
 import { Select } from "@/components/ui/inputs/Select";
 
@@ -164,7 +164,7 @@ export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
     >
       {selectedBinder ? (
         <BinderHandoverPanel
-          clientId={selectedBinder.client_id}
+          clientId={selectedBinder.client_record_id}
           initialBinderId={selectedBinder.id}
           isSubmitting={isHandingOver}
           onSubmit={onSubmitHandover}

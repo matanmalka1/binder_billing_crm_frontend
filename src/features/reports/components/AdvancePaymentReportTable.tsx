@@ -12,7 +12,7 @@ const columns: Column<AdvancePaymentReportItem>[] = [
     render: (r) => (
       <div className="min-w-0">
         <div className="text-sm font-medium text-gray-900">{r.client_name}</div>
-        <div className="text-xs text-gray-500">לקוח #{r.client_id}</div>
+        <div className="text-xs text-gray-500">לקוח #{r.client_record_id}</div>
       </div>
     ),
   },
@@ -55,7 +55,7 @@ export const AdvancePaymentReportTable: React.FC<Props> = ({ data }) => (
     <DataTable
       data={data.items}
       columns={columns}
-      getRowKey={(r) => r.client_id}
+      getRowKey={(r) => r.client_record_id}
       emptyMessage="אין נתונים לתצוגה"
     />
     {data.items.length > 0 && (
