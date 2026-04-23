@@ -5,6 +5,9 @@ import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
 
+import { Input } from "@/components/ui/inputs/Input";
+import { Alert } from "@/components/ui/overlays/Alert";
+import { Button } from "@/components/ui/primitives/Button";
 import {
   loginDefaultValues,
   loginSchema,
@@ -76,103 +79,56 @@ export const Login: React.FC = () => {
 
           {/* Form */}
           <form onSubmit={onSubmit} noValidate className="space-y-5">
+            <Input
+              type="email"
+              label="כתובת דוא״ל"
+              placeholder="name@company.co.il"
+              disabled={isLoading}
+              autoComplete="email"
+              error={errors.email?.message}
+              startIcon={<Mail className="h-4 w-4" />}
+              className="rounded-xl border-slate-200 py-3 text-sm text-slate-900 placeholder:text-slate-300 focus:border-slate-400 focus:ring-slate-900/20 disabled:bg-slate-50"
+              {...register("email")}
+            />
 
-            {/* Email */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-widest text-slate-500">
-                כתובת דוא״ל
-              </label>
-              <div className="relative">
-                <Mail className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="email"
-                  placeholder="name@company.co.il"
-                  disabled={isLoading}
-                  autoComplete="email"
-                  className={[
-                    "w-full rounded-xl border bg-white py-3 pr-10 pl-4 text-sm text-slate-900",
-                    "shadow-sm ring-0 transition-all placeholder:text-slate-300",
-                    "focus:outline-none focus:ring-2 focus:ring-slate-900/20 focus:border-slate-400",
-                    "disabled:cursor-not-allowed disabled:bg-slate-50 disabled:opacity-60",
-                    errors.email ? "border-negative-400 bg-negative-50/40" : "border-slate-200",
-                  ].join(" ")}
-                  {...register("email")}
-                />
-              </div>
-              {errors.email && (
-                <p className="text-xs font-medium text-negative-500">{errors.email.message}</p>
-              )}
-            </div>
-
-            {/* Password */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-widest text-slate-500">
-                סיסמה
-              </label>
-              <div className="relative">
-                <Lock className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  disabled={isLoading}
-                  autoComplete="current-password"
-                  className={[
-                    "w-full rounded-xl border bg-white py-3 pr-10 pl-12 text-sm text-slate-900",
-                    "shadow-sm ring-0 transition-all placeholder:text-slate-300",
-                    "focus:outline-none focus:ring-2 focus:ring-slate-900/20 focus:border-slate-400",
-                    "disabled:cursor-not-allowed disabled:bg-slate-50 disabled:opacity-60",
-                    errors.password ? "border-negative-400 bg-negative-50/40" : "border-slate-200",
-                  ].join(" ")}
-                  {...register("password")}
-                />
+            <Input
+              type={showPassword ? "text" : "password"}
+              label="סיסמה"
+              placeholder="••••••••"
+              disabled={isLoading}
+              autoComplete="current-password"
+              error={errors.password?.message}
+              startIcon={<Lock className="h-4 w-4" />}
+              endElement={
                 <button
                   type="button"
                   onClick={handleTogglePassword}
                   disabled={isLoading}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors disabled:cursor-not-allowed"
+                  className="rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 disabled:cursor-not-allowed"
                   aria-label={showPassword ? "הסתר סיסמה" : "הצג סיסמה"}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
-              </div>
-              {errors.password && (
-                <p className="text-xs font-medium text-negative-500">{errors.password.message}</p>
-              )}
-            </div>
+              }
+              className="rounded-xl border-slate-200 py-3 text-sm text-slate-900 placeholder:text-slate-300 focus:border-slate-400 focus:ring-slate-900/20 disabled:bg-slate-50"
+              {...register("password")}
+            />
 
             {/* Server error */}
-            {error && (
-              <div className="rounded-xl border border-negative-200 bg-negative-50 px-4 py-3">
-                <p className="text-sm font-medium text-negative-600">{error}</p>
-              </div>
-            )}
+            {error && <Alert variant="error" message={error} className="rounded-xl" />}
 
             {/* Submit */}
-            <button
+            <Button
               type="submit"
-              disabled={isLoading}
-              className={[
-                "group relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden",
-                "rounded-xl bg-slate-900 px-6 py-3.5 text-sm font-bold text-white",
-                "transition-all duration-200 hover:bg-slate-800 active:scale-[0.98]",
-                "focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2",
-                "disabled:cursor-not-allowed disabled:opacity-60",
-              ].join(" ")}
+              isLoading={isLoading}
+              fullWidth
+              className="group relative mt-2 overflow-hidden rounded-xl bg-slate-900 px-6 py-3.5 text-sm font-bold text-white hover:bg-slate-800 focus:ring-slate-900 active:scale-[0.98]"
             >
-              {isLoading ? (
-                <>
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                  <span>מתחבר...</span>
-                </>
-              ) : (
-                <>
-                  <span>כניסה למערכת</span>
-                  <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
-                </>
-              )}
+              <span>כניסה למערכת</span>
+              <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
               {/* Shimmer on hover */}
               <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
-            </button>
+            </Button>
           </form>
 
           {/* Footer */}
