@@ -92,10 +92,15 @@ export const useClientDetails = ({
       queryClient.invalidateQueries({ queryKey: clientsQK.businessesAll(id) });
       queryClient.invalidateQueries({ queryKey: clientsQK.firstBusiness(id) });
     },
-    onError: (err) => {
+    onError: async (err) => {
       const code = (err as { response?: { data?: { error_code?: string } } })?.response?.data?.error_code;
       if (code === "BUSINESS.SOLE_TRADER_CONFLICT") {
         toast.error("לא ניתן לשלב עוסק פטור ועוסק מורשה תחת אותו לקוח");
+      } else if (code === "BUSINESS.NAME_CONFLICT") {
+        await queryClient.invalidateQueries({ queryKey: clientsQK.businesses(id) });
+        await queryClient.invalidateQueries({ queryKey: clientsQK.businessesAll(id) });
+        await queryClient.invalidateQueries({ queryKey: clientsQK.firstBusiness(id) });
+        toast.error("עסק בשם זה כבר קיים ללקוח. הרשימה רועננה.");
       } else {
         showErrorToast(err, "שגיאה ביצירת עסק");
       }
