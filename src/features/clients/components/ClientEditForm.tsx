@@ -25,12 +25,12 @@ interface ClientEditFormProps {
   formId?: string;
 }
 
-function buildImpactMessage(
+const buildImpactMessage = (
   oldStatus: string,
   newStatus: string,
   oldEntityType: string | null | undefined,
   newEntityType: string | null | undefined,
-): string | null {
+): string | null => {
   const statusChangesToDestructive =
     newStatus !== oldStatus && (newStatus === "frozen" || newStatus === "closed");
   const entityTypeChanged =
@@ -56,7 +56,7 @@ function buildImpactMessage(
   }
 
   return lines.join("\n");
-}
+};
 
 export const ClientEditForm: React.FC<ClientEditFormProps> = ({
   client,

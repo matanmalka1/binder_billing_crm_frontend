@@ -8,7 +8,7 @@ type TailwindColor =
   | "primary" | "emerald" | "sky" | "violet" | "amber"
   | "orange" | "green" | "rose" | "teal" | "indigo" | "slate" | "gray";
 
-function makeColor(color: TailwindColor): EventColorConfig {
+const makeColor = (color: TailwindColor): EventColorConfig => {
   if (color === "gray") {
     return {
       dotBg:           "bg-gray-400",
@@ -36,7 +36,7 @@ function makeColor(color: TailwindColor): EventColorConfig {
     chipActiveBorder: `border-${color}-300`,
     iconColor:        `text-${color}-600`,
   };
-}
+};
 
 // ── Event color map ───────────────────────────────────────────────────────────
 

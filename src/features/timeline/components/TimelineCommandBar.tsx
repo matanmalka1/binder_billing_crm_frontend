@@ -31,14 +31,14 @@ export interface TimelineCommandBarProps {
 // De-duplicate by label so visually identical event types (e.g. invoice_created /
 // invoice_attached → "חשבונית") are merged into a single chip.
 
-function buildFilterChips(stats: EventTypeStat[]) {
+const buildFilterChips = (stats: EventTypeStat[]) => {
   const seen = new Map<string, EventTypeStat & { label: string }>();
   for (const stat of stats) {
     const label = getEventTypeLabel(stat.type);
     if (!seen.has(label)) seen.set(label, { ...stat, label });
   }
   return Array.from(seen.values());
-}
+};
 
 // ── Component ─────────────────────────────────────────────────────────────────
 

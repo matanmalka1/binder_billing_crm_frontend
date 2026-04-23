@@ -14,7 +14,7 @@ interface EventGroup {
 
 // ── Grouping helper ───────────────────────────────────────────────────────────
 
-function groupEventsByDate(events: TimelineEvent[]): EventGroup[] {
+const groupEventsByDate = (events: TimelineEvent[]): EventGroup[] => {
   const groups = new Map<string, TimelineEvent[]>();
   for (const event of events) {
     const key = formatDateHeading(event.timestamp);
@@ -23,7 +23,7 @@ function groupEventsByDate(events: TimelineEvent[]): EventGroup[] {
     else groups.set(key, [event]);
   }
   return Array.from(groups.entries()).map(([date, items]) => ({ date, items }));
-}
+};
 
 // ── Empty state ───────────────────────────────────────────────────────────────
 

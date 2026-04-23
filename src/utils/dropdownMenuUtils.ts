@@ -2,11 +2,11 @@ interface DropdownPos { top: number; left: number; maxHeight?: number }
 
 const VIEWPORT_PAD = 8;
 
-export function computeDropdownPosition(
+export const computeDropdownPosition = (
   trigger: { top: number; bottom: number; right: number },
   menu: { width: number; height: number },
   viewport: { width: number; height: number },
-): DropdownPos {
+): DropdownPos => {
   const spaceBelow = viewport.height - trigger.bottom - VIEWPORT_PAD;
   const spaceAbove = trigger.top - VIEWPORT_PAD;
 
@@ -33,4 +33,4 @@ export function computeDropdownPosition(
   }
 
   return maxHeight ? { top, left, maxHeight } : { top, left };
-}
+};
