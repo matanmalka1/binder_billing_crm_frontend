@@ -16,16 +16,6 @@ export const STAGE_ORDER = [
 
 export type StageKey = (typeof STAGE_ORDER)[number];
 
-export interface KanbanStage {
-  stage: StageKey;
-  reports: {
-    id: number;
-    business_name: string;
-    tax_year: number;
-    days_until_due: number | null;
-  }[];
-}
-
 export type ActiveTab = "season";
 
 export const TAB_LABELS: Record<ActiveTab, string> = {
@@ -33,8 +23,6 @@ export const TAB_LABELS: Record<ActiveTab, string> = {
 };
 
 export const CURRENT_YEAR = new Date().getFullYear();
-
-export const KANBAN_PAGE_SIZE = 6;
 
 export const SECTION_KEYS = [
   "overview",

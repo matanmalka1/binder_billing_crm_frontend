@@ -16,25 +16,19 @@ export {
   getStageColor,
   SEASON_PROGRESS_STAGES,
 } from "./api";
-export { AnnualReportColumn } from "./components/kanban/AnnualReportColumn";
-export { SeasonProgressBar } from "./components/kanban/SeasonProgressBar";
-export { SeasonReportsTable } from "./components/kanban/SeasonReportsTable";
-export { SeasonSummaryCards } from "./components/kanban/SeasonSummaryCards";
-export { YearComparisonModal } from "./components/kanban/YearComparisonModal";
+export { SeasonProgressBar } from "./components/season/SeasonProgressBar";
+export { SeasonReportsTable } from "./components/season/SeasonReportsTable";
+export { SeasonSummaryCards } from "./components/season/SeasonSummaryCards";
 export { AnnualReportFullPanel } from "./components/panel/AnnualReportFullPanel";
 export { ClientAnnualReportsTab } from "./components/shared/ClientAnnualReportsTab";
 export { CreateReportModal } from "./components/shared/CreateReportModal";
 export { OverdueBanner } from "./components/shared/OverdueBanner";
 export { AnnualReportsFiltersBar } from "./components/shared/AnnualReportsFiltersBar";
 export type { AnnualReportsFilters } from "./components/shared/AnnualReportsFiltersBar";
-export { useAnnualReportsKanbanPage } from "./hooks/useAnnualReportsKanbanPage";
+export { useAnnualReportsPage } from "./hooks/useAnnualReportsPage";
 export { AnnualReportDetail } from "./pages/AnnualReportDetailPage";
 export { AnnualReportsPage } from "./pages/AnnualReportsPage";
-export {
-  KANBAN_PAGE_SIZE,
-  STAGE_ORDER,
-  TAB_LABELS,
-} from "./types";
+export { STAGE_ORDER, TAB_LABELS } from "./types";
 export type {
   AnnualReportFull,
   AnnualReportStatus,

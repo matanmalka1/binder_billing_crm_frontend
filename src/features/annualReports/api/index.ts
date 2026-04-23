@@ -31,7 +31,6 @@ export type {
   StatusHistoryEntry,
   SeasonSummary,
   AnnualReportListResponse,
-  KanbanStage,
   CreateAnnualReportPayload,
   StatusTransitionPayload,
   IncomeLineResponse,

@@ -11,7 +11,7 @@ const DEFAULT_FILTERS: AnnualReportsFilters = {
   year: "",
 };
 
-export const useAnnualReportsKanbanPage = () => {
+export const useAnnualReportsPage = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [filters, setFilters] = useState<AnnualReportsFilters>(DEFAULT_FILTERS);
   const navigate = useNavigate();

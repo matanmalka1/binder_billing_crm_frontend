@@ -189,16 +189,6 @@ export interface AnnualReportListResponse {
   total: number;
 }
 
-export interface KanbanStage {
-  stage: StageKey;
-  reports: Array<{
-    id: number;
-    business_name: string;
-    tax_year: number;
-    days_until_due: number | null;
-  }>;
-}
-
 export interface CreateAnnualReportPayload {
   client_record_id: number;
   tax_year: number;

@@ -1,7 +1,7 @@
 import { api } from "@/api/client";
 import { toQueryParams } from "@/api/queryParams";
 import { ANNUAL_REPORT_ENDPOINTS } from "./endpoints";
-import type { AnnualReportFull, AnnualReportListResponse, KanbanStage, SeasonSummary } from "./contracts";
+import type { AnnualReportFull, AnnualReportListResponse, SeasonSummary } from "./contracts";
 
 export const annualReportSeasonApi = {
   getSeasonSummary: async (taxYear: number): Promise<SeasonSummary> => {
@@ -16,11 +16,6 @@ export const annualReportSeasonApi = {
     const response = await api.get<AnnualReportListResponse>(ANNUAL_REPORT_ENDPOINTS.taxYearReports(taxYear), {
       params: toQueryParams(params),
     });
-    return response.data;
-  },
-
-  getKanbanView: async (): Promise<{ stages: KanbanStage[] }> => {
-    const response = await api.get<{ stages: KanbanStage[] }>(ANNUAL_REPORT_ENDPOINTS.annualReportsKanban);
     return response.data;
   },
 

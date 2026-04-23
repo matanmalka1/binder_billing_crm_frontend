@@ -44,7 +44,6 @@ export const StatusTransitionPanel = ({
     onSuccess: () => {
       toast.success("דוח נשלח לתיקון");
       queryClient.invalidateQueries({ queryKey: annualReportsQK.detail(report.id) });
-      queryClient.invalidateQueries({ queryKey: annualReportsQK.kanban });
       queryClient.invalidateQueries({ queryKey: annualReportsQK.all });
       closeAmendModal();
     },

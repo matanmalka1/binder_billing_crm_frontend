@@ -6,11 +6,11 @@ import {
   ClipboardList,
   FileSignature,
   FileSpreadsheet,
-  KanbanSquare,
   LayoutDashboard,
   ReceiptText,
   Search,
   Settings,
+  TableProperties,
   Users,
 } from "lucide-react";
 
@@ -46,7 +46,7 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "מיסים",
     items: [
       { to: "/tax/vat", label: 'דוחות מע"מ (לקוח)', icon: ClipboardList },
-      { to: "/tax/reports", label: "לוח דוחות שנתיים", icon: KanbanSquare, end: true },
+      { to: "/tax/reports", label: "דוחות שנתיים", icon: TableProperties, end: true },
       { to: "/tax/advance-payments", label: "מקדמות", icon: CalendarDays },
       { to: "/tax/deadlines", label: "מועדים", icon: FileSpreadsheet },
       { to: "/tax/vat-compliance", label: 'דוח ציות מע"מ', icon: ClipboardList },

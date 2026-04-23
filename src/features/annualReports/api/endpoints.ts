@@ -30,7 +30,6 @@ export const ANNUAL_REPORT_ENDPOINTS = {
     schedule: string,
     lineId: number | string,
   ) => `/annual-reports/${id}/annex/${schedule}/${lineId}`,
-  annualReportsKanban: "/annual-reports/kanban/view",
   annualReportOverdue: "/annual-reports/overdue",
   clientAnnualReports: (clientId: number | string) => `/clients/${clientId}/annual-reports`,
   taxYearSummary: (taxYear: number | string) => `/tax-year/${taxYear}/summary`,

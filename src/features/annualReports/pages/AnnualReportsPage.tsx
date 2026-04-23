@@ -10,7 +10,7 @@ import {
   SeasonProgressBar,
   SeasonReportsTable,
   SeasonSummaryCards,
-  useAnnualReportsKanbanPage,
+  useAnnualReportsPage,
 } from "@/features/annualReports";
 
 export const AnnualReportsPage: React.FC = () => {
@@ -25,7 +25,7 @@ export const AnnualReportsPage: React.FC = () => {
     handleResetFilters,
     filteredReports,
     season,
-  } = useAnnualReportsKanbanPage();
+  } = useAnnualReportsPage();
 
   return (
     <div className="space-y-6">
