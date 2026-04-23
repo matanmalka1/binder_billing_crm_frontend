@@ -6,12 +6,13 @@ import { useBinderSelection } from "./useBinderSelection";
 import { useBinderMutations } from "./useBinderMutations";
 
 export const useBindersPage = () => {
-  const { filters, setPage, handleFilterChange, handleReset } = useBindersFilters();
+  const { filters, setPage, handleFilterChange, handleReset, handleSort } = useBindersFilters();
 
   const listParams = {
     status: filters.status || undefined,
     client_record_id: filters.client_record_id || undefined,
     query: filters.query || undefined,
+    binder_number: filters.binder_number || undefined,
     year: filters.year ? Number(filters.year) : undefined,
     page: filters.page,
     page_size: filters.page_size,
@@ -41,6 +42,7 @@ export const useBindersPage = () => {
       total: 0,
       in_office: 0,
       closed_in_office: 0,
+      archived_in_office: 0,
       ready_for_pickup: 0,
       returned: 0,
     },
@@ -50,6 +52,7 @@ export const useBindersPage = () => {
     filters,
     handleFilterChange,
     handleReset,
+    handleSort,
     setPage,
     handleSelectBinder,
     handleCloseDrawer,

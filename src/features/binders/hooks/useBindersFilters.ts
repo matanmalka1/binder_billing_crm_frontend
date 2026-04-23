@@ -8,6 +8,7 @@ export const useBindersFilters = () => {
     status: searchParams.get("status") ?? "",
     client_record_id: parsePositiveInt(searchParams.get("client_record_id"), 0) || undefined,
     query: searchParams.get("query") ?? "",
+    binder_number: searchParams.get("binder_number") ?? "",
     year: searchParams.get("year") ?? "",
     page: parsePositiveInt(searchParams.get("page"), 1),
     page_size: parsePositiveInt(searchParams.get("page_size"), 20),
@@ -21,6 +22,7 @@ export const useBindersFilters = () => {
     const next = new URLSearchParams(searchParams);
     next.delete("status");
     next.delete("query");
+    next.delete("binder_number");
     next.delete("year");
     next.set("page", "1");
     setSearchParams(next);

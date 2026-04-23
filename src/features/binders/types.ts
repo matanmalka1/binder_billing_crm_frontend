@@ -29,6 +29,7 @@ export interface BinderListCounters {
   total: number;
   in_office: number;
   closed_in_office: number;
+  archived_in_office: number;
   ready_for_pickup: number;
   returned: number;
 }
@@ -89,7 +90,8 @@ export interface ReturnBinderPayload {
   returned_at?: string;
 }
 
-export type BindersFilters = Omit<ListBindersParams, "client_name" | "binder_number" | "year"> & {
+export type BindersFilters = Omit<ListBindersParams, "client_name" | "year"> & {
+  binder_number?: string;
   year?: string;
 };
 
