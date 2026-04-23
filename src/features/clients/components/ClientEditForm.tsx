@@ -9,9 +9,7 @@ import type { ClientResponse, UpdateClientPayload } from "../api";
 import {
   CLIENT_ID_NUMBER_TYPE_LABELS,
   CLIENT_STATUS_OPTIONS,
-  DEFAULT_VAT_EXEMPT_CEILING,
-  ENTITY_OPTIONS_BY_ID_TYPE,
-  ENTITY_TYPE_LABELS,
+  ENTITY_TYPE_OPTIONS,
   VAT_TYPE_OPTIONS,
 } from "../constants";
 import { clientEditSchema, type ClientEditFormValues } from "../schemas";
@@ -90,15 +88,11 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       address_zip_code: client.address_zip_code ?? "",
       entity_type: client.entity_type ?? null,
       vat_reporting_frequency: client.vat_reporting_frequency ?? null,
-      vat_exempt_ceiling: client.vat_exempt_ceiling ?? null,
       advance_rate: client.advance_rate ?? null,
       accountant_name: client.accountant_name ?? null,
       notes: client.notes ?? null,
     },
   });
-  const idNumberType = client.id_number_type ?? "other";
-  const allowedEntityTypes = ENTITY_OPTIONS_BY_ID_TYPE[idNumberType];
-
   const { field: statusField } = useController({ name: "status", control });
   const { field: entityTypeField } = useController({ name: "entity_type", control });
 
@@ -119,7 +113,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
     address_zip_code: data.address_zip_code || null,
     entity_type: data.entity_type || null,
     vat_reporting_frequency: data.vat_reporting_frequency || null,
-    vat_exempt_ceiling: data.vat_exempt_ceiling || null,
     advance_rate: data.advance_rate || null,
     accountant_name: data.accountant_name || null,
     notes: data.notes || null,
@@ -223,10 +216,10 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
 
         <Select
           label="סוג ישות"
-          disabled={isLoading || allowedEntityTypes.length === 1}
+          disabled={isLoading}
           options={[
             { value: "", label: "לא הוגדר" },
-            ...allowedEntityTypes.map((type) => ({ value: type, label: ENTITY_TYPE_LABELS[type] })),
+            ...ENTITY_TYPE_OPTIONS,
           ]}
           value={entityTypeField.value ?? ""}
           onChange={entityTypeField.onChange}
@@ -300,13 +293,12 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {isOsekPatur && (
-            <Input
-              label='תקרת פטור מע"מ'
-              placeholder={DEFAULT_VAT_EXEMPT_CEILING}
-              error={errors.vat_exempt_ceiling?.message}
-              disabled={isLoading}
-              {...register("vat_exempt_ceiling")}
-            />
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-gray-500">תקרת פטור מע"מ</p>
+              <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500">
+                {client.vat_exempt_ceiling ? `₪${client.vat_exempt_ceiling}` : "נקבע על ידי המערכת"}
+              </p>
+            </div>
           )}
           <Input
             label="אחוז מקדמה %"

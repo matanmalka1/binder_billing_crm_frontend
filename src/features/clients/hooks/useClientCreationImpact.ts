@@ -7,7 +7,9 @@ type ImpactParams = Pick<CreateClientPayload, "entity_type" | "vat_reporting_fre
 export const useClientCreationImpact = (
   params: Partial<ImpactParams> | null,
 ): { data: ClientCreationImpactResponse | undefined; isLoading: boolean } => {
-  const enabled = !!(params?.entity_type && params?.vat_reporting_frequency);
+  const enabled = !!(
+    params?.entity_type && (params.entity_type === "osek_patur" || params?.vat_reporting_frequency)
+  );
 
   return useQuery({
     queryKey: ["client-creation-impact", params?.entity_type, params?.vat_reporting_frequency],

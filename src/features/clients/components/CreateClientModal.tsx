@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useController, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "../../../components/ui/overlays/Modal";
@@ -9,15 +9,11 @@ import { Select } from "../../../components/ui/inputs/Select";
 import type { CreateClientPayload, ISODateString } from "../api";
 import { useClientCreationImpact } from "../hooks/useClientCreationImpact";
 import {
-  CLIENT_ID_NUMBER_INPUT_LABELS,
-  CLIENT_ID_NUMBER_PLACEHOLDERS,
-  CLIENT_ID_NUMBER_TYPE_OPTIONS,
-  DEFAULT_CLIENT_ID_NUMBER_TYPE,
+  CREATE_CLIENT_DEFAULT_VALUES,
+  CREATE_CLIENT_ENTITY_OPTIONS,
+  CREATE_CLIENT_VAT_OPTIONS,
   DEFAULT_VAT_EXEMPT_CEILING,
-  ENTITY_OPTIONS_BY_ID_TYPE,
-  ENTITY_TYPE_LABELS,
-  requiresIsraeliNumericId,
-  VAT_TYPE_OPTIONS,
+  deriveCreateClientIdNumberType,
 } from "../constants";
 import { createClientSchema, type CreateClientFormValues } from "../schemas";
 
@@ -58,74 +54,41 @@ export const CreateClientModal: React.FC<Props> = ({
     handleSubmit,
     watch,
     setValue,
-    resetField,
     formState: { errors },
     reset,
   } = useForm<CreateClientFormValues>({
     resolver: zodResolver(createClientSchema),
     mode: "onBlur",
-    defaultValues: {
-      id_number_type: DEFAULT_CLIENT_ID_NUMBER_TYPE,
-      full_name: "",
-      id_number: "",
-      entity_type: undefined,
-      phone: "",
-      email: "",
-      address_street: "",
-      address_building_number: "",
-      address_apartment: "",
-      address_city: "",
-      address_zip_code: "",
-      vat_reporting_frequency: undefined,
-      vat_exempt_ceiling: null,
-      advance_rate: "",
-      accountant_name: "",
-      business_name: "",
-      business_opened_at: "",
-    },
+    defaultValues: CREATE_CLIENT_DEFAULT_VALUES,
   });
   const { field: businessOpenedAtField } = useController({ name: "business_opened_at", control });
 
-  const idNumberType = watch("id_number_type");
   const currentEntityType = watch("entity_type");
   const currentVatFrequency = watch("vat_reporting_frequency");
+  const isCompany = currentEntityType === "company_ltd";
+  const isExempt = currentEntityType === "osek_patur";
+  const showVatFrequency = currentEntityType != null && !isExempt;
 
   const impactQuery = useClientCreationImpact(
-    currentEntityType && currentVatFrequency
+    currentEntityType && (isExempt || currentVatFrequency)
       ? { entity_type: currentEntityType, vat_reporting_frequency: currentVatFrequency }
       : null,
   );
-  const idNumberLabel = CLIENT_ID_NUMBER_INPUT_LABELS[idNumberType] ?? "מספר מזהה";
-  const idNumberPlaceholder = CLIENT_ID_NUMBER_PLACEHOLDERS[idNumberType] ?? "הזן מספר מזהה";
-  const shouldStripToDigits = requiresIsraeliNumericId(idNumberType);
+  const nameLabel = isCompany ? "שם חברה" : "שם מלא";
+  const idNumberLabel = isCompany ? 'ח.פ' : 'ת.ז';
+  const idNumberPlaceholder = isCompany ? "512345678" : "123456789";
+  const openedAtLabel = isCompany ? "תאריך התאגדות / פתיחה" : "תאריך פתיחת עסק";
 
-  const allowedEntityTypes = ENTITY_OPTIONS_BY_ID_TYPE[idNumberType] ?? [];
-  const isOsekPatur = currentEntityType === "osek_patur";
-  const showVatCeiling = isOsekPatur;
-
-  const [ceilingEditable, setCeilingEditable] = useState(false);
-
-  // אם סוג המזהה השתנה וסוג הישות הנוכחי כבר לא תקין — מאפסים
   useEffect(() => {
-    if (currentEntityType && !allowedEntityTypes.includes(currentEntityType)) {
-      resetField("entity_type", { defaultValue: undefined });
-    }
-    // אם יש רק אופציה אחת — בוחרים אותה אוטומטית
-    if (allowedEntityTypes.length === 1) {
-      setValue("entity_type", allowedEntityTypes[0]);
-    }
-  }, [idNumberType]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // כשנבחר עוסק פטור — ממלאים תקרה ברירת מחדל; כשלא — מנקים
-  useEffect(() => {
-    if (isOsekPatur) {
-      setValue("vat_exempt_ceiling", DEFAULT_VAT_EXEMPT_CEILING, { shouldValidate: false });
-      setCeilingEditable(false);
+    if (isExempt) {
+      setValue("vat_reporting_frequency", null, { shouldValidate: false });
     } else {
-      setValue("vat_exempt_ceiling", null, { shouldValidate: false });
-      setCeilingEditable(false);
+      const currentValue = currentVatFrequency;
+      if (currentValue == null) {
+        setValue("vat_reporting_frequency", "monthly", { shouldValidate: false });
+      }
     }
-  }, [isOsekPatur, setValue]);
+  }, [currentVatFrequency, isExempt, setValue]);
 
   const handleClose = () => {
     if (!isLoading) {
@@ -135,10 +98,13 @@ export const CreateClientModal: React.FC<Props> = ({
   };
 
   const onFormSubmit = handleSubmit(async (data) => {
+    const trimmedIdNumber = data.id_number.trim();
+    const idNumberType = deriveCreateClientIdNumberType(data.entity_type);
+
     const payload: CreateClientPayload = {
-      full_name: data.full_name,
-      id_number: data.id_number,
-      id_number_type: data.id_number_type,
+      full_name: data.full_name.trim(),
+      id_number: trimmedIdNumber,
+      id_number_type: idNumberType,
       entity_type: data.entity_type,
       phone: data.phone,
       email: data.email,
@@ -147,12 +113,11 @@ export const CreateClientModal: React.FC<Props> = ({
       address_apartment: data.address_apartment,
       address_city: data.address_city,
       address_zip_code: data.address_zip_code,
-      vat_reporting_frequency: data.vat_reporting_frequency,
-      vat_exempt_ceiling: data.vat_exempt_ceiling || null,
-      advance_rate: data.advance_rate,
+      vat_reporting_frequency: data.entity_type === "osek_patur" ? undefined : data.vat_reporting_frequency ?? "monthly",
+      advance_rate: data.advance_rate?.trim() ? data.advance_rate.trim() : null,
       accountant_name: data.accountant_name,
-      business_name: data.business_name,
-      business_opened_at: data.business_opened_at as ISODateString,
+      business_name: data.business_name.trim(),
+      business_opened_at: (data.business_opened_at || null) as ISODateString | null,
     };
     await onSubmit(payload);
     reset();
@@ -173,22 +138,19 @@ export const CreateClientModal: React.FC<Props> = ({
       }
     >
       <form onSubmit={onFormSubmit} className="space-y-4">
-        {/* זיהוי */}
         <Select
-          label="סוג מזהה *"
-          error={errors.id_number_type?.message}
+          label="סוג ישות *"
+          error={errors.entity_type?.message}
           disabled={isLoading}
-          {...register("id_number_type")}
-        >
-          {CLIENT_ID_NUMBER_TYPE_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </Select>
+          options={[
+            { value: "", label: "בחר סוג ישות" },
+            ...CREATE_CLIENT_ENTITY_OPTIONS,
+          ]}
+          {...register("entity_type")}
+        />
 
         <Input
-          label="שם מלא *"
+          label={`${nameLabel} *`}
           error={errors.full_name?.message}
           disabled={isLoading}
           {...register("full_name")}
@@ -199,23 +161,24 @@ export const CreateClientModal: React.FC<Props> = ({
           placeholder={idNumberPlaceholder}
           error={errors.id_number?.message}
           disabled={isLoading}
-          onInput={shouldStripToDigits ? stripNonDigits : undefined}
+          onInput={isCompany ? stripNonDigits : undefined}
           {...register("id_number")}
         />
 
-        {/* עסק ראשון */}
         <div className="border-t border-gray-200 pt-4 space-y-4">
-          <p className="text-sm font-medium text-gray-700">פרטי עסק</p>
+          <p className="text-sm font-medium text-gray-700">
+            {isCompany ? "פרטי התאגדות" : "פרטי עסק"}
+          </p>
           <div className="grid grid-cols-2 gap-4">
             <Input
               label="שם עסק *"
-              placeholder="לדוגמה: מסעדת ישראל"
+              placeholder={isCompany ? "לדוגמה: חטיבת פעילות מרכזית" : "לדוגמה: מסעדת ישראל"}
               error={errors.business_name?.message}
               disabled={isLoading}
               {...register("business_name")}
             />
             <DatePicker
-              label="תאריך פתיחת עסק *"
+              label={openedAtLabel}
               error={errors.business_opened_at?.message}
               disabled={isLoading}
               value={businessOpenedAtField.value ?? ""}
@@ -226,21 +189,6 @@ export const CreateClientModal: React.FC<Props> = ({
           </div>
         </div>
 
-        <Select
-          label="סוג ישות *"
-          error={errors.entity_type?.message}
-          disabled={isLoading || allowedEntityTypes.length === 1}
-          options={[
-            { value: "", label: "בחר סוג ישות" },
-            ...allowedEntityTypes.map((type) => ({
-              value: type,
-              label: ENTITY_TYPE_LABELS[type],
-            })),
-          ]}
-          {...register("entity_type")}
-        />
-
-        {/* פרטי התקשרות */}
         <div className="border-t border-gray-200 pt-4 space-y-4">
           <p className="text-sm font-medium text-gray-700">פרטי התקשרות</p>
           <div className="grid grid-cols-2 gap-4">
@@ -312,45 +260,30 @@ export const CreateClientModal: React.FC<Props> = ({
         {/* הגדרות מע״מ ומס */}
         <div className="border-t border-gray-200 pt-4 space-y-4">
           <p className="text-sm font-medium text-gray-700">הגדרות מע״מ ומס</p>
-          <Select
-            label="תדירות דיווח מע״מ *"
-            disabled={isLoading}
-            options={[
-              { value: "", label: "בחר תדירות דיווח" },
-              ...VAT_TYPE_OPTIONS,
-            ]}
-            {...register("vat_reporting_frequency")}
-          />
+          {showVatFrequency && (
+            <Select
+              label="תדירות דיווח מע״מ *"
+              error={errors.vat_reporting_frequency?.message}
+              disabled={isLoading}
+              options={[
+                { value: "", label: "בחר תדירות דיווח" },
+                ...CREATE_CLIENT_VAT_OPTIONS,
+              ]}
+              {...register("vat_reporting_frequency")}
+            />
+          )}
           <div className="grid grid-cols-2 gap-4">
-            {showVatCeiling && (
+            {isExempt && (
               <div>
-                <div className="relative">
-                  <Input
-                    label="תקרת פטור מע״מ (₪) *"
-                    error={errors.vat_exempt_ceiling?.message}
-                    disabled={isLoading || !ceilingEditable}
-                    onInput={stripNonDecimal}
-                    className={!ceilingEditable ? "bg-gray-50 text-gray-600" : undefined}
-                    {...register("vat_exempt_ceiling")}
-                  />
-                  {!ceilingEditable && (
-                    <button
-                      type="button"
-                      onClick={() => setCeilingEditable(true)}
-                      title="עריכה ידנית (למקרים מיוחדים כגון שנה קצרה)"
-                      className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                      </svg>
-                    </button>
-                  )}
+                <p className="mb-2 text-sm font-medium text-gray-700">תקרת פטור מע״מ</p>
+                <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600">
+                  ₪{DEFAULT_VAT_EXEMPT_CEILING}
                 </div>
-                <p className="mt-1 text-xs text-gray-400">ברירת מחדל לפי חוק — לחץ על עריכה לשינוי ידני</p>
+                <p className="mt-1 text-xs text-gray-400">נגזר אוטומטית לפי הגדרת המערכת</p>
               </div>
             )}
             <Input
-              label="אחוז מקדמה (%) *"
+              label="אחוז מקדמה (%)"
               placeholder="לדוגמה: 8.5"
               error={errors.advance_rate?.message}
               disabled={isLoading}

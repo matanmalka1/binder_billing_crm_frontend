@@ -54,6 +54,13 @@ export const ENTITY_TYPES = [
   "employee",
 ] as const satisfies readonly EntityType[];
 
+export const CREATE_ENTITY_TYPES = [
+  "osek_patur",
+  "osek_murshe",
+  "company_ltd",
+] as const;
+export type CreateEntityType = (typeof CREATE_ENTITY_TYPES)[number];
+
 export const CLIENT_ID_NUMBER_TYPE_LABELS: Record<ClientIdNumberType, string> = {
   individual: "יחיד / עוסק",
   corporation: "חברה / תאגיד",
@@ -81,6 +88,10 @@ export const ENTITY_TYPE_LABELS: Record<EntityType, string> = {
   company_ltd: 'חברה בע"מ',
   employee: "שכיר",
 };
+export const ENTITY_TYPE_OPTIONS = ENTITY_TYPES.map((type) => ({
+  value: type,
+  label: ENTITY_TYPE_LABELS[type],
+}));
 
 export const CLIENT_STATUSES = ["active", "frozen", "closed"] as const satisfies readonly ClientStatus[];
 
@@ -104,13 +115,6 @@ export const VAT_TYPE_LABELS: Record<VatType, string> = {
   exempt: "פטור",
 };
 
-export const ENTITY_OPTIONS_BY_ID_TYPE: Record<ClientIdNumberType, EntityType[]> = {
-  individual: ["osek_patur", "osek_murshe", "employee"],
-  corporation: ["company_ltd"],
-  passport: ["osek_patur", "osek_murshe", "employee"],
-  other: ["osek_patur", "osek_murshe", "company_ltd", "employee"],
-};
-
 export const CLIENT_ID_NUMBER_TYPE_OPTIONS = CLIENT_ID_NUMBER_TYPES.map((type) => ({
   value: type,
   label: CLIENT_ID_NUMBER_TYPE_LABELS[type],
@@ -125,6 +129,11 @@ export const VAT_TYPE_OPTIONS = VAT_TYPES.map((type) => ({
   value: type,
   label: VAT_TYPE_LABELS[type],
 }));
+export const CREATE_CLIENT_ENTITY_OPTIONS = CREATE_ENTITY_TYPES.map((type) => ({
+  value: type,
+  label: ENTITY_TYPE_LABELS[type],
+}));
+export const CREATE_CLIENT_VAT_OPTIONS = VAT_TYPE_OPTIONS.filter((option) => option.value !== "exempt");
 
 export const CLIENT_SORT_BY_OPTIONS: { value: ClientSortBy; label: string }[] = [
   { value: "full_name", label: "שם לקוח" },
@@ -152,12 +161,44 @@ export const CLIENT_ID_TYPES_REQUIRING_ISRAELI_ID_CHECKSUM: readonly ClientIdNum
 
 export const DEFAULT_CLIENT_ID_NUMBER_TYPE: ClientIdNumberType = "individual";
 export const DEFAULT_VAT_EXEMPT_CEILING = "120000";
+export const CREATE_CLIENT_DEFAULT_VALUES = {
+  full_name: "",
+  id_number: "",
+  entity_type: undefined,
+  phone: "",
+  email: "",
+  address_street: "",
+  address_building_number: "",
+  address_apartment: "",
+  address_city: "",
+  address_zip_code: "",
+  vat_reporting_frequency: null,
+  advance_rate: null,
+  accountant_name: "",
+  business_name: "",
+  business_opened_at: null,
+} as const;
+
+export const CREATE_CLIENT_VALIDATION_MESSAGES = {
+  vatFrequencyRequired: 'יש לציין תדירות דיווח מע"מ',
+  paturVatFrequencyForbidden: 'אין להזין תדירות דיווח מע"מ עבור עוסק פטור',
+  idDigitsCompany: 'ח.פ חייב להכיל ספרות בלבד',
+  idDigitsIndividual: "מספר תעודת זהות חייב להכיל ספרות בלבד",
+  idLengthCompany: 'ח.פ חייב להכיל בדיוק 9 ספרות',
+  idLengthIndividual: "מספר תעודת זהות חייב להכיל בדיוק 9 ספרות",
+  idChecksumCompany: "מספר ח.פ אינו תקין",
+  idChecksumIndividual: "מספר תעודת זהות אינו תקין",
+} as const;
 
 export const requiresIsraeliNumericId = (idNumberType: ClientIdNumberType): boolean =>
   CLIENT_ID_TYPES_REQUIRING_ISRAELI_NUMERIC_ID.includes(idNumberType);
 
 export const requiresIsraeliIdChecksum = (idNumberType: ClientIdNumberType): boolean =>
   CLIENT_ID_TYPES_REQUIRING_ISRAELI_ID_CHECKSUM.includes(idNumberType);
+
+export const deriveCreateClientIdNumberType = (
+  entityType: CreateEntityType,
+): ClientIdNumberType => (entityType === "company_ltd" ? "corporation" : "individual");
 
 export const getClientIdNumberTypeLabel = makeLabelGetter(CLIENT_ID_NUMBER_TYPE_LABELS);
 

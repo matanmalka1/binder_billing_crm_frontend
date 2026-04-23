@@ -70,7 +70,7 @@ export interface ListClientsParams {
 export interface CreateClientPayload {
   full_name: string;
   id_number: string;
-  id_number_type: "individual" | "corporation" | "passport" | "other";
+  id_number_type?: "individual" | "corporation" | "passport" | "other";
   entity_type: EntityType;
   phone: string;
   email: string;
@@ -79,13 +79,12 @@ export interface CreateClientPayload {
   address_apartment: string;
   address_city: string;
   address_zip_code: string;
-  vat_reporting_frequency: VatType;
-  vat_exempt_ceiling?: string | null;
-  advance_rate: string;
+  vat_reporting_frequency?: VatType | null;
+  advance_rate?: string | null;
   advance_rate_updated_at?: string | null;
   accountant_name: string;
   business_name: string;
-  business_opened_at: ISODateString;
+  business_opened_at?: ISODateString | null;
 }
 
 export interface CreationImpactItem {
@@ -121,7 +120,6 @@ export interface UpdateClientPayload {
   address_zip_code?: string | null;
   entity_type?: EntityType | null;
   vat_reporting_frequency?: VatType | null;
-  vat_exempt_ceiling?: string | null;
   advance_rate?: string | null;
   advance_rate_updated_at?: string | null;
   accountant_name?: string | null;
