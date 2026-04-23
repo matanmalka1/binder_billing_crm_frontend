@@ -43,6 +43,7 @@ export const RemindersPage: React.FC = () => {
     clientTaxDeadlines,
     clientAnnualReports,
     clientAdvancePayments,
+    clientBusinesses,
   } = useReminders();
 
   const header = (
@@ -142,6 +143,7 @@ export const RemindersPage: React.FC = () => {
         clientTaxDeadlines={clientTaxDeadlines}
         clientAnnualReports={clientAnnualReports}
         clientAdvancePayments={clientAdvancePayments}
+        clientBusinesses={clientBusinesses}
       />
 
       <ReminderDrawer

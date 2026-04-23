@@ -35,6 +35,7 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
     clientTaxDeadlines,
     clientAnnualReports,
     clientAdvancePayments,
+    clientBusinesses,
   } = useReminders({ clientId, clientName });
 
   return (
@@ -83,6 +84,7 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
         clientTaxDeadlines={clientTaxDeadlines}
         clientAnnualReports={clientAnnualReports}
         clientAdvancePayments={clientAdvancePayments}
+        clientBusinesses={clientBusinesses}
       />
 
       <ReminderDrawer

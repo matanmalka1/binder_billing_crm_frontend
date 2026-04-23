@@ -122,13 +122,16 @@ export const createReminderRequestSchema = z.discriminatedUnion("reminder_type",
   }),
   businessScopedBase.extend({
     reminder_type: z.literal("unpaid_charge"),
+    client_record_id: positiveIdSchema,
     charge_id: positiveIdSchema,
   }),
   businessScopedBase.extend({
     reminder_type: z.literal("document_missing"),
   }),
-  businessScopedBase.extend({
+  clientScopedBase.extend({
     reminder_type: z.literal("custom"),
+    client_record_id: positiveIdSchema.optional(),
+    business_id: positiveIdSchema.optional(),
     message: z.string().min(1),
   }),
 ]);

@@ -5,6 +5,7 @@ import { chargesApi, chargesQK } from "@/features/charges/api";
 import { taxDeadlinesApi, taxDeadlinesQK } from "@/features/taxDeadlines/api";
 import { annualReportsApi, annualReportsQK } from "@/features/annualReports/api";
 import { advancePaymentsApi, advancedPaymentsQK } from "@/features/advancedPayments/api";
+import { clientsApi, clientsQK } from "@/features/clients/api";
 
 /**
  * Lazily fetches the entities needed to populate linked-entity dropdowns in the
@@ -25,6 +26,11 @@ export const useReminderLinkedEntities = (
   const needsCharges = base && reminderType === "unpaid_charge";
   const needsAnnualReports = base && reminderType === "annual_report_deadline";
   const needsAdvancePayments = base && reminderType === "advance_payment_due";
+  const needsBusinesses =
+    base &&
+    (reminderType === "advance_payment_due" ||
+      reminderType === "document_missing" ||
+      reminderType === "unpaid_charge");
 
   const bindersQuery = useQuery({
     queryKey: bindersQK.forClient(clientId!),
@@ -56,11 +62,18 @@ export const useReminderLinkedEntities = (
     enabled: needsAdvancePayments,
   });
 
+  const businessesQuery = useQuery({
+    queryKey: clientsQK.businessesAll(clientId!),
+    queryFn: () => clientsApi.listAllBusinessesForClient(clientId!),
+    enabled: needsBusinesses,
+  });
+
   return {
     clientBinders: bindersQuery.data?.items,
     clientCharges: chargesQuery.data?.items,
     clientTaxDeadlines: taxDeadlinesQuery.data?.items,
     clientAnnualReports: annualReportsQuery.data,
     clientAdvancePayments: advancePaymentsQuery.data?.items,
+    clientBusinesses: businessesQuery.data?.items,
   };
 };

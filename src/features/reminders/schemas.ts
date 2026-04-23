@@ -11,9 +11,10 @@ const positiveIdString = (fieldLabel: string) =>
     .refine((v) => Number.isInteger(Number(v)) && Number(v) > 0, `נא להזין ${fieldLabel} תקין`);
 
 const baseFields = {
-  // client_id is always a string in the form; required and must be a positive integer.
-  // When fixedClientId is provided the hook pre-populates this before submission.
-  client_id: positiveIdString("מזהה לקוח"),
+  // client_record_id — always required. Fixed on client pages, selected via picker on global pages.
+  client_record_id: positiveIdString("מזהה רשומת לקוח"),
+  // business_id — required for business-scoped types; derived from the linked entity where possible.
+  business_id: z.string().optional(),
   target_date: z.string().min(1, "נא לבחור תאריך יעד"),
   days_before: z
     .number({ error: "נא להזין מספר ימים" })
@@ -71,7 +72,8 @@ export type CreateReminderFormValues = z.infer<typeof createReminderSchema>;
 
 export const createReminderDefaultValues = {
   reminder_type: "custom" as const,
-  client_id: "",
+  client_record_id: "",
+  business_id: "",
   target_date: "",
   days_before: DEFAULT_REMINDER_DAYS_BEFORE,
   message: "",

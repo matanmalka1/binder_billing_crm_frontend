@@ -15,29 +15,30 @@ import {
 import { useReminderLinkedEntities } from "./useReminderLinkedEntities";
 
 const makeDefaultFormValues = (
-  clientId?: number,
+  clientRecordId?: number,
 ): CreateReminderFormValues => ({
   ...createReminderDefaultValues,
-  client_id: clientId ? String(clientId) : "",
+  client_record_id: clientRecordId ? String(clientRecordId) : "",
 });
 
 const buildPayload = (
   values: CreateReminderFormValues,
-  fixedClientId?: number,
+  fixedClientRecordId?: number,
 ): CreateReminderRequest => {
-  const clientId = fixedClientId ?? Number(values.client_id);
+  const clientRecordId = fixedClientRecordId ?? Number(values.client_record_id);
+  const businessId = values.business_id ? Number(values.business_id) : undefined;
   const scheduling = {
     target_date: values.target_date,
     days_before: values.days_before,
     message: values.message || undefined,
   };
 
-  // Client-scoped types — owner derived from the linked entity on the backend.
+  // Client-scoped types — owner resolved from the linked entity on the backend.
   if (values.reminder_type === "tax_deadline_approaching") {
     return {
       ...scheduling,
       reminder_type: "tax_deadline_approaching",
-      client_record_id: clientId,
+      client_record_id: clientRecordId,
       tax_deadline_id: Number(values.tax_deadline_id),
     };
   }
@@ -63,20 +64,35 @@ const buildPayload = (
     };
   }
 
-  // Business-scoped types — must name the business explicitly.
-  const businessId = clientId; // form field "client_id" holds the business_id for these types
-  const businessBase = { ...scheduling, business_id: businessId };
-  if (values.reminder_type === "advance_payment_due") {
-    return { ...businessBase, reminder_type: "advance_payment_due", advance_payment_id: Number(values.advance_payment_id) };
-  }
+  // Business-scoped types — business_id required; resolved from the form field (populated by linked entity selection).
   if (values.reminder_type === "unpaid_charge") {
-    return { ...businessBase, reminder_type: "unpaid_charge", charge_id: Number(values.charge_id) };
+    return {
+      ...scheduling,
+      reminder_type: "unpaid_charge",
+      client_record_id: clientRecordId,
+      business_id: businessId as number,
+      charge_id: Number(values.charge_id),
+    };
+  }
+  if (values.reminder_type === "advance_payment_due") {
+    return {
+      ...scheduling,
+      reminder_type: "advance_payment_due",
+      business_id: businessId as number,
+      advance_payment_id: Number(values.advance_payment_id),
+    };
   }
   if (values.reminder_type === "document_missing") {
-    return { ...businessBase, reminder_type: "document_missing" };
+    return { ...scheduling, reminder_type: "document_missing", business_id: businessId as number };
   }
-  // custom — schema guarantees message is non-empty
-  return { ...businessBase, reminder_type: "custom", message: values.message as string };
+  // custom — backend accepts client_record_id or business_id; prefer client_record_id.
+  return {
+    ...scheduling,
+    reminder_type: "custom",
+    client_record_id: clientRecordId,
+    business_id: businessId,
+    message: values.message as string,
+  };
 };
 
 export const useReminders = (opts?: { clientId?: number; clientName?: string }) => {
@@ -96,10 +112,10 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
     resolver: zodResolver(createReminderSchema),
   });
 
-  const watchedClientId = form.watch("client_id");
+  const watchedClientRecordId = form.watch("client_record_id");
   const watchedReminderType = form.watch("reminder_type");
   // When the hook is used with a fixed clientId, use that; otherwise use the form value.
-  const activeClientId = clientId ?? (watchedClientId ? Number(watchedClientId) : undefined);
+  const activeClientId = clientId ?? (watchedClientRecordId ? Number(watchedClientRecordId) : undefined);
 
   const linkedEntities = useReminderLinkedEntities(
     activeClientId,
@@ -111,7 +127,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
     queryKey: remindersQK.list(clientId, statusFilter),
     queryFn: () =>
       remindersApi.list({
-        ...(clientId ? { client_id: clientId } : {}),
+        ...(clientId ? { client_record_id: clientId } : {}),
         ...(statusFilter ? { status: statusFilter as import("../api/contracts").ReminderStatus } : {}),
       }),
     enabled: clientId !== 0,
@@ -121,7 +137,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
     queryKey: remindersQK.count(clientId, "pending"),
     queryFn: () =>
       remindersApi.list({
-        ...(clientId ? { client_id: clientId } : {}),
+        ...(clientId ? { client_record_id: clientId } : {}),
         status: "pending",
         page_size: 1,
       }),
@@ -132,7 +148,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
     queryKey: remindersQK.count(clientId, "sent"),
     queryFn: () =>
       remindersApi.list({
-        ...(clientId ? { client_id: clientId } : {}),
+        ...(clientId ? { client_record_id: clientId } : {}),
         status: "sent",
         page_size: 1,
       }),

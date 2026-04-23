@@ -21,6 +21,7 @@ import type { TaxDeadlineResponse } from "@/features/taxDeadlines";
 import { getDeadlineTypeLabel } from "@/features/taxDeadlines";
 import type { AnnualReportFull } from "@/features/annualReports";
 import type { AdvancePaymentRow } from "@/features/advancedPayments";
+import type { BusinessResponse } from "@/features/clients/api";
 import { reminderTypeOptions } from "../types";
 
 interface CreateReminderModalProps {
@@ -36,6 +37,7 @@ interface CreateReminderModalProps {
   clientTaxDeadlines?: TaxDeadlineResponse[];
   clientAnnualReports?: AnnualReportFull[];
   clientAdvancePayments?: AdvancePaymentRow[];
+  clientBusinesses?: BusinessResponse[];
 }
 
 // react-hook-form types errors on discriminated unions narrowly; cast once here.
@@ -54,6 +56,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   clientTaxDeadlines = [],
   clientAnnualReports = [],
   clientAdvancePayments = [],
+  clientBusinesses = [],
 }) => {
   const {
     register,
@@ -73,7 +76,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
     resetClientPicker,
   } = useClientPickerState(
     createClientIdPickerHandlers((value, options) =>
-      setValue("client_id", value, options),
+      setValue("client_record_id", value, options),
     ),
   );
 
@@ -108,7 +111,8 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">
-        <input type="hidden" {...register("client_id", { required: "שדה חובה" })} />
+        <input type="hidden" {...register("client_record_id", { required: "שדה חובה" })} />
+        <input type="hidden" {...register("business_id")} />
         {clientDisplay ? (
           <div>
             <p className="mb-1 text-sm font-medium text-gray-700">לקוח</p>
@@ -121,7 +125,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
             onQueryChange={handleClientQueryChange}
             onSelect={handleSelectClient}
             onClear={handleClearClient}
-            error={e.client_id?.message}
+            error={e.client_record_id?.message}
             label="לקוח *"
           />
         )}
@@ -178,7 +182,16 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           ))}
         {reminderType === "unpaid_charge" &&
           (clientCharges.length > 0 ? (
-            <Select label="חשבונית" error={e.charge_id?.message} {...register("charge_id")}>
+            <Select
+              label="חשבונית"
+              error={e.charge_id?.message}
+              {...register("charge_id", {
+                onChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
+                  const charge = clientCharges.find((c) => String(c.id) === e.target.value);
+                  setValue("business_id", charge?.business_id ? String(charge.business_id) : "");
+                },
+              })}
+            >
               <option value="">בחר חשבונית...</option>
               {clientCharges.map((c) => (
                 <option key={c.id} value={String(c.id)}>
@@ -233,6 +246,27 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
               {...register("advance_payment_id")}
             />
           ))}
+
+        {(reminderType === "advance_payment_due" || reminderType === "document_missing") && (
+          clientBusinesses.length > 0 ? (
+            <Select label="עסק *" error={e.business_id?.message} {...register("business_id")}>
+              <option value="">בחר עסק...</option>
+              {clientBusinesses.map((b) => (
+                <option key={b.id} value={String(b.id)}>
+                  {b.business_name ?? `עסק #${b.id}`}
+                </option>
+              ))}
+            </Select>
+          ) : (
+            <Input
+              type="number"
+              min={1}
+              label="מזהה עסק *"
+              error={e.business_id?.message}
+              {...register("business_id")}
+            />
+          )
+        )}
 
         {reminderType === "custom" && (
           <Input
