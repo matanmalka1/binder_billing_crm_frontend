@@ -1,18 +1,17 @@
-import { Calendar, CheckCircle2, Inbox } from "lucide-react";
-import { IconLabel } from "../../../components/ui/primitives/IconLabel";
-import { Card } from "../../../components/ui/primitives/Card";
-import { Badge } from "../../../components/ui/primitives/Badge";
-import { StateCard } from "../../../components/ui/feedback/StateCard";
+import { useMemo } from "react";
+import { Inbox } from "lucide-react";
+import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import { TaxDeadlineRowActions } from "./TaxDeadlineRowActions";
 import type { TaxDeadlineResponse } from "../api";
+import { getDeadlineTypeLabel } from "../api";
+import { formatClientOfficeId } from "../../../utils/utils";
 import {
-  formatCurrency,
-  getDeadlineTypeLabel,
-  getUrgencyColor,
-} from "../api";
-import { getDeadlineUrgency, getDeadlineDaysLabelShort } from "../utils";
-import { staggerDelay } from "../../../utils/animation";
-import { formatClientOfficeId, formatDate, cn } from "../../../utils/utils";
+  DeadlineAmountCell,
+  DeadlineDateCell,
+  DeadlineStatusBadge,
+  DeadlineUrgencyBadge,
+  getDeadlineRowClassName,
+} from "./TaxDeadlineTableParts";
 
 interface TaxDeadlinesTableProps {
   deadlines: TaxDeadlineResponse[];
@@ -26,14 +25,6 @@ interface TaxDeadlinesTableProps {
   deletingId?: number | null;
 }
 
-const urgencyRowMap: Record<string, string> = {
-  overdue: "bg-negative-50/40",
-  red: "bg-negative-50/30",
-  yellow: "bg-warning-50/30",
-};
-
-const TABLE_HEADERS = ["מס' לקוח", "לקוח", "סוג", "מועד", "זמן נותר", "סכום", "סטטוס", ""];
-
 export const TaxDeadlinesTable = ({
   deadlines,
   onComplete,
@@ -45,117 +36,98 @@ export const TaxDeadlinesTable = ({
   onDelete,
   deletingId,
 }: TaxDeadlinesTableProps) => {
-  if (deadlines.length === 0) {
-    return (
-      <StateCard
-        icon={Inbox}
-        title="אין מועדים להצגה"
-        message="לא נמצאו מועדים מסים התואמים לסינון הנוכחי"
-        variant="illustration"
-      />
-    );
-  }
+  const columns = useMemo<Column<TaxDeadlineResponse>[]>(
+    () => [
+      {
+        key: "office_client_number",
+        header: "מס' לקוח",
+        render: (deadline) => (
+          <span className="font-mono text-sm text-gray-500 tabular-nums">
+            {formatClientOfficeId(deadline.office_client_number)}
+          </span>
+        ),
+      },
+      {
+        key: "client_name",
+        header: "לקוח",
+        render: (deadline) => (
+          <span className="block max-w-[220px] truncate text-sm font-semibold text-gray-900">
+            {deadline.client_name ?? `לקוח #${deadline.client_record_id}`}
+          </span>
+        ),
+      },
+      {
+        key: "deadline_type",
+        header: "סוג",
+        render: (deadline) => (
+          <span className="text-sm text-gray-500">{getDeadlineTypeLabel(deadline.deadline_type)}</span>
+        ),
+      },
+      {
+        key: "period",
+        header: "תקופה",
+        render: (deadline) => (
+          <span className="text-sm text-gray-500">{deadline.period || "—"}</span>
+        ),
+      },
+      {
+        key: "due_date",
+        header: "מועד",
+        render: (deadline) => <DeadlineDateCell dueDate={deadline.due_date} />,
+      },
+      {
+        key: "urgency",
+        header: "דחיפות",
+        render: (deadline) => <DeadlineUrgencyBadge deadline={deadline} />,
+      },
+      {
+        key: "payment_amount",
+        header: "סכום",
+        render: (deadline) => <DeadlineAmountCell amount={deadline.payment_amount} />,
+      },
+      {
+        key: "status",
+        header: "סטטוס",
+        render: (deadline) => <DeadlineStatusBadge status={deadline.status} />,
+      },
+      {
+        key: "actions",
+        header: "",
+        headerClassName: "w-10",
+        className: "w-10",
+        render: (deadline) => (
+          <TaxDeadlineRowActions
+            deadline={deadline}
+            completingId={completingId}
+            reopeningId={reopeningId}
+            deletingId={deletingId}
+            onComplete={onComplete}
+            onReopen={onReopen}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        ),
+      },
+    ],
+    [completingId, deletingId, onComplete, onDelete, onEdit, onReopen, reopeningId],
+  );
 
   return (
-    <Card variant="elevated">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px]">
-          <thead>
-            <tr className="border-b border-gray-200 text-right">
-              {TABLE_HEADERS.map((col) => (
-                <th
-                  key={col}
-                  className="pb-3 pr-4 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-500"
-                >
-                  {col}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody className="divide-y divide-gray-100">
-            {deadlines.map((deadline, index) => {
-              const isCompleted = deadline.status === "completed";
-              const isCanceled = deadline.status === "canceled";
-              const { urgency, daysRemaining } = getDeadlineUrgency(deadline.due_date, isCompleted || isCanceled);
-              const daysLabel = getDeadlineDaysLabelShort(daysRemaining, isCompleted || isCanceled);
-
-              return (
-                <tr
-                  key={deadline.id}
-                  className={cn(
-                    "transition-colors hover:bg-gray-50 animate-fade-in",
-                    onRowClick && "cursor-pointer",
-                    isCanceled && "opacity-50",
-                    !isCompleted && !isCanceled && urgencyRowMap[urgency],
-                  )}
-                  style={{ animationDelay: staggerDelay(index) }}
-                  onClick={() => onRowClick?.(deadline)}
-                >
-                  <td className="py-3.5 pr-4">
-                    <span className="font-mono text-sm text-gray-500 tabular-nums">
-                      {formatClientOfficeId(deadline.office_client_number)}
-                    </span>
-                  </td>
-                  <td className="py-3.5 pr-4">
-                    <span className="font-mono text-sm font-semibold text-gray-800">
-                      {deadline.client_name ?? `לקוח #${deadline.client_record_id}`}
-                    </span>
-                  </td>
-                  <td className="py-3.5 pr-4 text-sm text-gray-700">
-                    {getDeadlineTypeLabel(deadline.deadline_type)}
-                  </td>
-                  <td className="py-3.5 pr-4">
-                    <IconLabel
-                      icon={<Calendar className="h-3.5 w-3.5 shrink-0 text-gray-400" />}
-                      label={formatDate(deadline.due_date)}
-                      className="border-transparent bg-transparent font-medium text-gray-800 text-sm px-0 gap-1.5"
-                    />
-                  </td>
-                  <td className="py-3.5 pr-4">
-                    {isCompleted || isCanceled ? (
-                      <span className="text-sm text-gray-400">—</span>
-                    ) : (
-                      <Badge className={cn("border font-semibold text-xs", getUrgencyColor(urgency))}>
-                        {daysLabel}
-                      </Badge>
-                    )}
-                  </td>
-                  <td className="py-3.5 pr-4 text-sm font-medium text-gray-800">
-                    {formatCurrency(deadline.payment_amount)}
-                  </td>
-                  <td className="py-3.5 pr-4">
-                    {isCompleted ? (
-                      <div className="flex items-center gap-1 text-positive-700">
-                        <CheckCircle2 className="h-4 w-4" />
-                        <span className="text-xs font-medium">הושלם</span>
-                      </div>
-                    ) : isCanceled ? (
-                      <Badge variant="neutral">בוטל</Badge>
-                    ) : (
-                      <Badge variant="warning">ממתין</Badge>
-                    )}
-                  </td>
-                  <td className="py-3.5 pr-4">
-                    <TaxDeadlineRowActions
-                      deadline={deadline}
-                      completingId={completingId}
-                      reopeningId={reopeningId}
-                      deletingId={deletingId}
-                      onComplete={onComplete}
-                      onReopen={onReopen}
-                      onEdit={onEdit}
-                      onDelete={onDelete}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </Card>
+    <DataTable
+      data={deadlines}
+      columns={columns}
+      getRowKey={(deadline) => deadline.id}
+      onRowClick={onRowClick}
+      rowClassName={getDeadlineRowClassName}
+      emptyState={{
+        icon: Inbox,
+        title: "אין מועדים להצגה",
+        message: "לא נמצאו מועדי מס התואמים לסינון הנוכחי",
+        variant: "illustration",
+      }}
+    />
   );
 };
 
 TaxDeadlinesTable.displayName = "TaxDeadlinesTable";
+

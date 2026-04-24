@@ -20,4 +20,5 @@ export type {
   TaxDeadlineListResponse,
   TimelineEntry,
   DeadlineUrgentItem,
+  DeadlineUrgencyLevel,
 } from "./api";

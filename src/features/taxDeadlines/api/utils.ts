@@ -3,10 +3,11 @@ import { parseISO, differenceInCalendarDays } from "date-fns";
 export { getDeadlineTypeLabel } from "@/utils/enums";
 
 const urgencyColors = {
-  green: "bg-positive-100 text-positive-800 border-positive-200",
-  yellow: "bg-warning-100 text-warning-800 border-warning-200",
-  red: "bg-negative-100 text-negative-800 border-negative-200",
+  normal: "bg-positive-100 text-positive-800 border-positive-200",
+  warning: "bg-warning-100 text-warning-800 border-warning-200",
+  critical: "bg-negative-100 text-negative-800 border-negative-200",
   overdue: "bg-negative-600 text-white border-negative-700",
+  none: "bg-gray-100 text-gray-800 border-gray-200",
 };
 
 export const getUrgencyColor = makeClassGetter(

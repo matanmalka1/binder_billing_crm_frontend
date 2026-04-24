@@ -11,4 +11,5 @@ export type {
   TaxDeadlineListResponse,
   TimelineEntry,
   DeadlineUrgentItem,
+  DeadlineUrgencyLevel,
 } from "./contracts";

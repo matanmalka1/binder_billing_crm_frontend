@@ -9,7 +9,7 @@ import {
   getDeadlineTypeLabel,
   getUrgencyColor,
 } from "../api";
-import { getDeadlineUrgency } from "../utils";
+import { getDeadlineDaysLabel } from "../utils";
 import { formatDate, cn } from "../../../utils/utils";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
@@ -21,10 +21,11 @@ interface TaxDeadlineDrawerProps {
 export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, onClose }) => {
   const navigate = useNavigate();
   const isCompleted = deadline?.status === "completed";
+  const isCanceled = deadline?.status === "canceled";
   const canViewAdvancePayments = deadline?.deadline_type === "advance_payment" && deadline.client_record_id != null;
-  const { urgency, daysLabel } = deadline
-    ? getDeadlineUrgency(deadline.due_date, isCompleted ?? false)
-    : { urgency: "green" as const, daysLabel: "—" };
+  const { daysLabel } = deadline
+    ? getDeadlineDaysLabel(deadline.due_date, Boolean(isCompleted || isCanceled))
+    : { daysLabel: "—" };
 
   return (
     <DetailDrawer
@@ -76,16 +77,18 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
                     <CheckCircle2 className="h-4 w-4" />
                     הושלם
                   </span>
+                ) : isCanceled ? (
+                  <Badge variant="neutral">בוטל</Badge>
                 ) : (
                   <Badge variant="warning">ממתין</Badge>
                 )
               }
             />
-            {!isCompleted && (
+            {deadline.urgency_level !== "none" && (
               <DrawerField
                 label="זמן נותר"
                 value={
-                  <Badge className={cn("font-semibold", getUrgencyColor(urgency))}>
+                  <Badge className={cn("font-semibold", getUrgencyColor(deadline.urgency_level))}>
                     {daysLabel}
                   </Badge>
                 }

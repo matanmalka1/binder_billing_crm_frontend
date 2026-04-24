@@ -1,107 +1,95 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle, Clock } from "lucide-react";
-import { taxDeadlinesApi, taxDeadlinesQK } from "../api";
+import { Inbox } from "lucide-react";
+import { DataTable, type Column } from "../../../components/ui/table/DataTable";
+import { taxDeadlinesApi, taxDeadlinesQK, getDeadlineTypeLabel } from "../api";
 import type { TimelineEntry } from "../api";
-import { cn } from "../../../utils/utils";
-import { semanticMonoToneClasses, semanticSignalBadgeClasses } from "@/utils/semanticColors";
+import {
+  DeadlineAmountCell,
+  DeadlineDateCell,
+  DeadlineStatusBadge,
+  DeadlineUrgencyBadge,
+  getDeadlineRowClassName,
+} from "./TaxDeadlineTableParts";
 
 interface FilingTimelineProps {
   clientId: number;
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  completed: "הושלם",
-  pending: "ממתין",
-};
-
-const statusVariants: Record<string, string> = {
-  completed: semanticSignalBadgeClasses.positive,
-  pending: "bg-gray-50 text-gray-600 border-gray-200",
-};
-
-const StatusIcon = ({ status }: { status: string }) => {
-  if (status === "completed") return <CheckCircle className="h-4 w-4 text-positive-500" />;
-  return <Clock className="h-4 w-4 text-gray-400" />;
-};
-
-const daysLabel = (entry: TimelineEntry): string => {
-  if (entry.status === "completed") return "הושלם";
-  if (entry.days_remaining < 0) return `פג לפני ${Math.abs(entry.days_remaining)} ימים`;
-  if (entry.days_remaining === 0) return "היום";
-  return `נותרו ${entry.days_remaining} ימים`;
-};
-
-const daysLabelClass = (entry: TimelineEntry): string => {
-  if (entry.status === "completed") return semanticMonoToneClasses.positive;
-  if (entry.days_remaining < 0) return semanticMonoToneClasses.negative;
-  if (entry.days_remaining <= 7) return semanticMonoToneClasses.warning;
-  return "text-gray-500";
-};
-
 const sortByDate = (a: TimelineEntry, b: TimelineEntry) =>
   new Date(a.due_date).getTime() - new Date(b.due_date).getTime();
 
 export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
-  const { data, isLoading } = useQuery({
+  const { data = [], isLoading } = useQuery({
     queryKey: taxDeadlinesQK.timeline(clientId),
     queryFn: () => taxDeadlinesApi.getTimeline(clientId),
   });
 
-  if (isLoading) {
-    return <p className="text-sm text-gray-500 py-6 text-center">טוען מועדים...</p>;
-  }
+  const sorted = useMemo(() => [...data].sort(sortByDate), [data]);
 
-  if (!data || data.length === 0) {
-    return <p className="text-sm text-gray-400 py-6 text-center">אין מועדי הגשה</p>;
-  }
-
-  const sorted = [...data].sort(sortByDate);
+  const columns = useMemo<Column<TimelineEntry>[]>(
+    () => [
+      {
+        key: "deadline_type",
+        header: "סוג",
+        render: (entry) => (
+          <div>
+            <span className="block text-sm font-semibold text-gray-900">
+              {getDeadlineTypeLabel(entry.deadline_type)}
+            </span>
+            <span className="block max-w-[260px] truncate text-xs text-gray-400">
+              {entry.milestone_label}
+            </span>
+          </div>
+        ),
+      },
+      {
+        key: "period",
+        header: "תקופה",
+        render: (entry) => (
+          <span className="text-sm text-gray-500">{entry.period || "—"}</span>
+        ),
+      },
+      {
+        key: "due_date",
+        header: "מועד",
+        render: (entry) => <DeadlineDateCell dueDate={entry.due_date} />,
+      },
+      {
+        key: "urgency",
+        header: "דחיפות",
+        render: (entry) => <DeadlineUrgencyBadge deadline={entry} />,
+      },
+      {
+        key: "payment_amount",
+        header: "סכום",
+        render: (entry) => <DeadlineAmountCell amount={entry.payment_amount} />,
+      },
+      {
+        key: "status",
+        header: "סטטוס",
+        render: (entry) => <DeadlineStatusBadge status={entry.status} />,
+      },
+    ],
+    [],
+  );
 
   return (
-    <div className="rounded-lg border border-gray-200 overflow-hidden">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="bg-gray-50 border-b border-gray-200 text-right">
-            <th className="px-4 py-3 font-medium text-gray-500 w-8" />
-            <th className="px-4 py-3 font-medium text-gray-600">אבן דרך</th>
-            <th className="px-4 py-3 font-medium text-gray-600">תאריך יעד</th>
-            <th className="px-4 py-3 font-medium text-gray-600">סטטוס</th>
-            <th className="px-4 py-3 font-medium text-gray-600">ימים</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {sorted.map((entry) => (
-            <tr
-              key={entry.id}
-              className={cn(
-                "transition-colors",
-                entry.status === "completed" && "bg-positive-50/30",
-              )}
-            >
-              <td className="px-4 py-3">
-                <StatusIcon status={entry.status} />
-              </td>
-              <td className="px-4 py-3 font-medium text-gray-800">{entry.milestone_label}</td>
-              <td className="px-4 py-3 text-gray-600 tabular-nums">
-                {new Date(entry.due_date).toLocaleDateString("he-IL")}
-              </td>
-              <td className="px-4 py-3">
-                <span className={cn(
-                  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium",
-                  statusVariants[entry.status] ?? statusVariants.pending,
-                )}>
-                  {STATUS_LABELS[entry.status] ?? entry.status}
-                </span>
-              </td>
-              <td className={cn("px-4 py-3 tabular-nums text-xs", daysLabelClass(entry))}>
-                {daysLabel(entry)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <DataTable
+      data={sorted}
+      columns={columns}
+      getRowKey={(entry) => entry.id}
+      isLoading={isLoading}
+      rowClassName={getDeadlineRowClassName}
+      emptyState={{
+        icon: Inbox,
+        title: "אין מועדים להצגה",
+        message: "לא נמצאו מועדי מס ללקוח",
+        variant: "illustration",
+      }}
+    />
   );
 };
 
 FilingTimeline.displayName = "FilingTimeline";
+
