@@ -8,7 +8,8 @@ import { Textarea } from "@/components/ui/inputs/Textarea";
 import { Button } from "@/components/ui/primitives/Button";
 import { Checkbox } from "@/components/ui/primitives/Checkbox";
 import { bindersApi, bindersQK } from "../../api";
-import { formatMonthYear, buildYearOptions } from "@/utils/utils";
+import { formatMonthYear } from "@/utils/utils";
+import { MONTH_OPTIONS, YEAR_OPTIONS } from "./binderPeriodOptions";
 
 interface BinderHandoverPanelProps {
   clientId: number;
@@ -23,13 +24,6 @@ interface BinderHandoverPanelProps {
     notes: string | null;
   }) => void;
 }
-
-const YEAR_OPTIONS = buildYearOptions().map((option) => ({ ...option, disabled: false as const }));
-const MONTH_OPTIONS = Array.from({ length: 12 }, (_, index) => ({
-  value: String(index + 1),
-  label: String(index + 1).padStart(2, "0"),
-  disabled: false as const,
-}));
 
 export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
   clientId,

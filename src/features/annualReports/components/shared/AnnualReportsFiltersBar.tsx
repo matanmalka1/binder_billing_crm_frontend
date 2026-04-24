@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ToolbarContainer } from "../../../../components/ui/layout/ToolbarContainer";
 import { Select } from "../../../../components/ui/inputs/Select";
 import { ActiveFilterBadges } from "../../../../components/ui/table/ActiveFilterBadges";
-import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
+import { ClientFilterControl } from "@/components/shared/client/ClientFilterControl";
 import { STATUS_LABELS } from "../../api/utils";
 import type { AnnualReportStatus } from "../../api/contracts";
 import { cn, YEAR_OPTIONS } from "../../../../utils/utils";
@@ -62,24 +62,13 @@ export const AnnualReportsFiltersBar: React.FC<AnnualReportsFiltersBarProps> = (
     <ToolbarContainer>
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div>
-            {selectedClient ? (
-              <SelectedClientDisplay
-                name={selectedClient.name}
-                id={selectedClient.id}
-                onClear={handleClearClient}
-                label="לקוח"
-              />
-            ) : (
-              <ClientSearchInput
-                label="לקוח"
-                value={clientQuery}
-                onChange={setClientQuery}
-                onSelect={handleSelectClient}
-                placeholder="שם, ת.ז. / ח.פ..."
-              />
-            )}
-          </div>
+          <ClientFilterControl
+            selectedClient={selectedClient}
+            clientQuery={clientQuery}
+            onQueryChange={setClientQuery}
+            onSelect={handleSelectClient}
+            onClear={handleClearClient}
+          />
           <Select
             label="סטטוס"
             value={filters.status}

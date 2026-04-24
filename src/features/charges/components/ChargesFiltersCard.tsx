@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Select } from "../../../components/ui/inputs/Select";
 import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
-import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
+import { ClientFilterControl } from "@/components/shared/client/ClientFilterControl";
 import { cn } from "../../../utils/utils";
 import { CHARGE_STATUS_OPTIONS, CHARGE_TYPE_OPTIONS_WITH_ALL } from "../constants";
 import { clientsApi, clientsQK } from "@/features/clients/api";
@@ -64,24 +64,13 @@ export const ChargesFiltersCard = ({
     <ToolbarContainer>
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div>
-            {selectedClient ? (
-              <SelectedClientDisplay
-                name={selectedClient.name}
-                id={selectedClient.id}
-                onClear={handleClearClient}
-                label="לקוח"
-              />
-            ) : (
-              <ClientSearchInput
-                label="לקוח"
-                value={clientQuery}
-                onChange={setClientQuery}
-                onSelect={handleSelectClient}
-                placeholder="שם, ת.ז. / ח.פ..."
-              />
-            )}
-          </div>
+          <ClientFilterControl
+            selectedClient={selectedClient}
+            clientQuery={clientQuery}
+            onQueryChange={setClientQuery}
+            onSelect={handleSelectClient}
+            onClear={handleClearClient}
+          />
           <Select
             label="סטטוס"
             value={filters.status}

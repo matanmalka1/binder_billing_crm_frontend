@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type UseFormReturn } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { bindersApi, bindersQK } from "../api";
 import { annualReportsApi, annualReportsQK, type AnnualReportFull } from "@/features/annualReports";
@@ -30,6 +30,13 @@ const getDefaultValues = (): ReceiveBinderFormValues => ({
   received_at: format(new Date(), "yyyy-MM-dd"),
   notes: null,
 });
+
+const resetBinderPeriodFields = (form: UseFormReturn<ReceiveBinderFormValues>) => {
+  form.setValue("period_year", new Date().getFullYear());
+  form.setValue("period_month_start", null);
+  form.setValue("period_month_end", null);
+  form.setValue("annual_report_id", null);
+};
 
 interface UseReceiveBinderDrawerOptions {
   onSuccess?: () => void;
@@ -67,20 +74,14 @@ export const useReceiveBinderDrawer = (
   const periodMonthStart = form.watch("period_month_start");
 
   useEffect(() => {
-    form.setValue("period_year", new Date().getFullYear());
-    form.setValue("period_month_start", null);
-    form.setValue("period_month_end", null);
-    form.setValue("annual_report_id", null);
+    resetBinderPeriodFields(form);
     if (binderType && binderType !== "vat") {
       form.setValue("business_id", null, { shouldValidate: false });
     }
   }, [binderType, form]);
 
   useEffect(() => {
-    form.setValue("period_year", new Date().getFullYear());
-    form.setValue("period_month_start", null);
-    form.setValue("period_month_end", null);
-    form.setValue("annual_report_id", null);
+    resetBinderPeriodFields(form);
   }, [businessId, form]);
 
   const { data: businessesData } = useQuery({
@@ -257,10 +258,7 @@ export const useReceiveBinderDrawer = (
     setSelectedClient({ id: client.id, name: client.name, client_status: client.client_status });
     setClientQuery(client.name);
     form.setValue("client_record_id", client.id, { shouldValidate: true });
-    form.setValue("annual_report_id", null);
-    form.setValue("period_year", new Date().getFullYear());
-    form.setValue("period_month_start", null);
-    form.setValue("period_month_end", null);
+    resetBinderPeriodFields(form);
     form.setValue("business_id", undefined as unknown as number | null);
   };
 
@@ -269,10 +267,7 @@ export const useReceiveBinderDrawer = (
     if (selectedClient) {
       setSelectedClient(null);
       form.setValue("client_record_id", undefined as unknown as number);
-      form.setValue("annual_report_id", null);
-      form.setValue("period_year", new Date().getFullYear());
-      form.setValue("period_month_start", null);
-      form.setValue("period_month_end", null);
+      resetBinderPeriodFields(form);
       form.setValue("business_id", undefined as unknown as number | null);
     }
   };

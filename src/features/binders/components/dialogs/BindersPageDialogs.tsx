@@ -4,8 +4,8 @@ import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
 import { Button } from "@/components/ui/primitives/Button";
 import type { BinderResponse } from "../../types";
 import { BinderHandoverPanel } from "../sections/BinderHandoverPanel";
-import { buildYearOptions } from "@/utils/utils";
 import { Select } from "@/components/ui/inputs/Select";
+import { MONTH_OPTIONS, YEAR_OPTIONS } from "../sections/binderPeriodOptions";
 
 interface BindersPageDialogsProps {
   confirmReturnForId: number | null;
@@ -40,13 +40,6 @@ interface BindersPageDialogsProps {
   }) => void;
   isHandingOver: boolean;
 }
-
-const YEAR_OPTIONS = buildYearOptions().map((option) => ({ ...option, disabled: false as const }));
-const MONTH_OPTIONS = Array.from({ length: 12 }, (_, index) => ({
-  value: String(index + 1),
-  label: String(index + 1).padStart(2, "0"),
-  disabled: false as const,
-}));
 
 export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
   bulkReadyMonth,

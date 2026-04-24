@@ -3,6 +3,7 @@ import { Button } from "../../../../components/ui/primitives/Button";
 import { Input } from "../../../../components/ui/inputs/Input";
 import { Select } from "../../../../components/ui/inputs/Select";
 import type { TransitionDetailsFormProps } from "../../types";
+import { SUBMISSION_METHOD_OPTIONS } from "../shared/submissionMethodOptions";
 
 export const TransitionDetailsForm = ({
   selected,
@@ -34,10 +35,11 @@ export const TransitionDetailsForm = ({
             value={form.submissionMethod}
             onChange={onFieldChange("submissionMethod")}
           >
-            <option value="">— לא צוין —</option>
-            <option value="online">מקוון (שידור ישיר)</option>
-            <option value="manual">ידני (פיזי לפקיד שומה)</option>
-            <option value="representative">דרך מערכת המייצגים (שע"מ)</option>
+            {SUBMISSION_METHOD_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </Select>
         </>
       )}

@@ -9,6 +9,7 @@ import { Modal, ModalFormActions } from "@/components/ui/overlays";
 import { useCreateReport } from "../../hooks/useCreateReport";
 import { FLAG_FIELDS } from "../../utils";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
+import { SUBMISSION_METHOD_OPTIONS } from "./submissionMethodOptions";
 
 interface CreateReportModalProps {
   open: boolean;
@@ -116,10 +117,11 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
           label="שיטת הגשה"
           {...register("submission_method")}
         >
-          <option value="">— לא צוין —</option>
-          <option value="online">מקוון (שידור ישיר)</option>
-          <option value="manual">ידני (פיזי לפקיד שומה)</option>
-          <option value="representative">דרך מערכת המייצגים (שע"מ)</option>
+          {SUBMISSION_METHOD_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </Select>
 
         <Select

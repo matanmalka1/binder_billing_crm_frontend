@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from "react";
 import { Select } from "../../../components/ui/inputs/Select";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
-import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
+import { ClientFilterControl } from "@/components/shared/client/ClientFilterControl";
 import { cn, MONTH_NAMES } from "../../../utils/utils";
 import { VAT_WORK_ITEMS_STATUS_OPTIONS } from "../constants";
 import type { VatWorkItemsFiltersCardProps } from "../types";
@@ -51,24 +51,13 @@ export const VatWorkItemsFiltersCard = ({
     <ToolbarContainer>
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div>
-            {selectedClient ? (
-              <SelectedClientDisplay
-                name={selectedClient.name}
-                id={selectedClient.id}
-                onClear={handleClearClient}
-                label="לקוח"
-              />
-            ) : (
-              <ClientSearchInput
-                label="לקוח"
-                placeholder="שם, ת.ז. / ח.פ..."
-                value={clientQuery}
-                onChange={setClientQuery}
-                onSelect={handleSelectClient}
-              />
-            )}
-          </div>
+          <ClientFilterControl
+            selectedClient={selectedClient}
+            clientQuery={clientQuery}
+            onQueryChange={setClientQuery}
+            onSelect={handleSelectClient}
+            onClear={handleClearClient}
+          />
           <Select
             label="תקופה"
             value={filters.period}
