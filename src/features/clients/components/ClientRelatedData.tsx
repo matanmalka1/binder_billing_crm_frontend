@@ -1,8 +1,9 @@
 import { type FC } from "react";
-import { ChevronRight, FolderOpen, Plus, Receipt } from "lucide-react";
+import { ChevronLeft, FolderOpen, Plus, Receipt } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
+import { Badge } from "../../../components/ui/primitives/Badge";
 import type { LucideIcon } from "lucide-react";
 import type { ChargeResponse } from "@/features/charges";
 import type { BinderDetailResponse } from "@/features/binders";
@@ -22,13 +23,13 @@ interface StatPillProps {
 
 const StatPill: FC<StatPillProps> = ({ icon: Icon, iconColor, count, label, href }) => {
   const inner = (
-    <div className="flex items-center gap-2.5 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 hover:bg-gray-100 transition-colors">
-      <div className={`shrink-0 rounded-md p-1.5 ${iconColor}`}>
-        <Icon className="h-3.5 w-3.5" />
+    <div className="group flex min-h-[76px] items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm transition-colors hover:border-gray-300 hover:bg-gray-50">
+      <div className={`shrink-0 rounded-lg p-2 ${iconColor}`}>
+        <Icon className="h-4 w-4" />
       </div>
-      <div className="min-w-0">
-        <div className="text-base font-bold text-gray-900 leading-none">{count}</div>
-        <div className="text-xs text-gray-500 mt-0.5 leading-tight">{label}</div>
+      <div className="min-w-0 text-left">
+        <div className="text-xl font-bold leading-none text-gray-900">{count}</div>
+        <div className="mt-1 text-xs font-medium leading-tight text-gray-500">סה״כ {label}</div>
       </div>
     </div>
   );
@@ -45,6 +46,7 @@ interface RelatedItemsSectionProps<T> {
   getKey: (item: T) => number;
   getTitle: (item: T) => React.ReactNode;
   getSubtitle: (item: T) => React.ReactNode;
+  getBadge?: (item: T) => React.ReactNode;
   getItemHref: (item: T) => string;
 }
 
@@ -57,33 +59,36 @@ const RelatedItemsSection = <T,>({
   getKey,
   getTitle,
   getSubtitle,
+  getBadge,
   getItemHref,
 }: RelatedItemsSectionProps<T>) => (
   <div className={className}>
     <div className="mb-2 flex items-center justify-between">
-      <span className="text-sm font-semibold text-gray-700">{title}</span>
+      <span className="text-sm font-bold text-gray-800">{title}</span>
       {total > 5 && (
-        <Link to={allHref} className="text-xs text-primary-600 hover:underline">
+        <Link to={allHref} className="text-xs font-medium text-primary-600 hover:underline">
           הכל ({total})
         </Link>
       )}
     </div>
     <div className="space-y-2">
       {items.slice(0, 5).map((item) => (
-        <div
+        <Link
           key={getKey(item)}
-          className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 transition-colors hover:bg-gray-100"
+          to={getItemHref(item)}
+          className="group flex min-h-[72px] items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm transition-colors hover:border-primary-200 hover:bg-primary-50/40"
         >
-          <div>
-            <div className="text-sm font-medium text-gray-900">{getTitle(item)}</div>
-            <div className="text-xs text-gray-500">{getSubtitle(item)}</div>
+          <div className="min-w-0 text-right">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm font-semibold text-gray-900">{getTitle(item)}</span>
+              {getBadge?.(item)}
+            </div>
+            <div className="mt-1 truncate text-xs font-medium text-gray-500">{getSubtitle(item)}</div>
           </div>
-          <Link to={getItemHref(item)}>
-            <Button variant="ghost" size="sm">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
+          <span className="ms-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-gray-500 transition-colors group-hover:bg-white group-hover:text-primary-700">
+            <ChevronLeft className="h-4 w-4" />
+          </span>
+        </Link>
       ))}
     </div>
   </div>
@@ -118,15 +123,15 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
   const hasChargeList = canViewCharges && charges.length > 0;
 
   const actions = (
-    <div className="flex items-center gap-1.5">
-      <Button variant="ghost" size="sm" onClick={onCreateBinder} className="gap-1 text-xs">
+    <div className="flex items-center gap-2">
+      <Button variant="outline" size="sm" onClick={onCreateBinder} className="text-xs">
         <Plus className="h-3.5 w-3.5" />
-        קלסר
+        הוסף קלסר
       </Button>
       {canCreateCharge && (
-        <Button variant="ghost" size="sm" onClick={onCreateCharge} className="gap-1 text-xs">
+        <Button variant="outline" size="sm" onClick={onCreateCharge} className="text-xs">
           <Plus className="h-3.5 w-3.5" />
-          חיוב
+          הוסף חיוב
         </Button>
       )}
     </div>
@@ -134,7 +139,6 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
 
   return (
     <Card title="נתונים קשורים" actions={actions}>
-      {/* Stat pills — 3-col grid wraps to 2 rows in narrow right column */}
       <div className="grid grid-cols-2 gap-2">
         <StatPill
           icon={FolderOpen}
@@ -179,7 +183,8 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
           className="mt-4"
           getKey={(charge) => charge.id}
           getTitle={(charge) => `חיוב #${charge.id}`}
-          getSubtitle={(charge) => `${getChargeTypeLabel(charge.charge_type)} • ${getChargeStatusLabel(charge.status)}`}
+          getSubtitle={(charge) => getChargeTypeLabel(charge.charge_type)}
+          getBadge={(charge) => <Badge variant="neutral">{getChargeStatusLabel(charge.status)}</Badge>}
           getItemHref={() => `/charges?client_record_id=${clientId}`}
         />
       )}
