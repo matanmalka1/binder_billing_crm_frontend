@@ -1,6 +1,7 @@
 export interface PermanentDocumentResponse {
   id: number;
   client_record_id: number;
+  client_name: string | null;
   business_id: number | null;
   scope: "client" | "business";
   document_type: string;

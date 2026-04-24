@@ -33,11 +33,11 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-right text-xs font-medium text-gray-500">
               <th className="px-4 py-2.5">מס' לקוח</th>
+              <th className="px-4 py-2.5">לקוח</th>
               <th className="px-4 py-2.5">סוג מסמך</th>
               <th className="px-4 py-2.5">שם קובץ</th>
               <th className="px-4 py-2.5">שנת מס</th>
               <th className="px-4 py-2.5">סטטוס</th>
-              <th className="px-4 py-2.5">לקוח</th>
               <th className="px-4 py-2.5" />
             </tr>
           </thead>
@@ -47,6 +47,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
                 <td className="px-4 py-3 font-mono text-sm text-gray-500 tabular-nums">
                   {formatClientOfficeId(doc.office_client_number)}
                 </td>
+                <td className="px-4 py-3 text-gray-700">{doc.client_name}</td>
                 <td className="px-4 py-3 font-medium text-gray-800">
                   {DOC_TYPE_LABELS[doc.document_type] ?? "סוג מסמך לא ידוע"}
                 </td>
@@ -61,7 +62,6 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
                     {STATUS_LABELS[doc.status] ?? "סטטוס לא ידוע"}
                   </Badge>
                 </td>
-                <td className="px-4 py-3 text-gray-700">{doc.client_name}</td>
                 <td className="px-4 py-3">
                   <Link
                     to={`/clients/${doc.client_record_id}/documents`}

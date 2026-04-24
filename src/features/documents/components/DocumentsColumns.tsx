@@ -28,6 +28,24 @@ export const buildDocumentColumns = ({
     ),
   },
   {
+    key: "original_filename",
+    header: "שם קובץ",
+    render: (doc) => (
+      <span className="block max-w-48 truncate font-mono text-xs text-gray-500">
+        {doc.original_filename ?? "—"}
+      </span>
+    ),
+  },
+  {
+    key: "client_name",
+    header: "לקוח משויך",
+    render: (doc) => (
+      <span className="text-sm font-medium text-gray-700">
+        {doc.client_name ?? `לקוח #${doc.client_record_id}`}
+      </span>
+    ),
+  },
+  {
     key: "version" as keyof PermanentDocumentResponse,
     header: "גרסה",
     render: (doc) => (
