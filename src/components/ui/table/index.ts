@@ -1,13 +1,10 @@
 export * from "./ActiveFilterBadges";
 export * from "./BulkSelectionToolbar";
 export * from "./DataTable";
-export * from "./FilterBar";
 export * from "./PaginatedDataTable";
 export * from "./PaginationCard";
 export * from "./RowActions";
-export * from "./SortableHeader";
 export * from "./TableSkeleton";
-export * from "./columnRenderers";
-export * from "./columnTypes";
+export type { StatusVariant } from "./columnTypes";
 export * from "./commonColumns";
 export * from "./tableSelection";

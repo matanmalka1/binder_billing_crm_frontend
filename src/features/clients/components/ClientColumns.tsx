@@ -43,7 +43,7 @@ export const buildClientColumns = ({
     }),
     textColumn({
       key: "full_name",
-      header: "שם",
+      header: "שם לקוח",
       valueClassName: "font-semibold text-gray-900",
       getValue: (client) => client.full_name,
     }),
@@ -61,6 +61,7 @@ export const buildClientColumns = ({
       key: "active_binder_number",
       header: "קלסר פעיל",
       getValue: (client) => client.active_binder_number,
+      emptyValue: <span className="text-gray-400 text-sm">אין קלסר פתוח</span>,
     }),
     textColumn({
       key: "vat_reporting_frequency",

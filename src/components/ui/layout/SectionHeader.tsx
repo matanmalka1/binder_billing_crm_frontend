@@ -6,7 +6,7 @@ interface SectionHeaderProps {
   actions?: React.ReactNode;
   /**
    * xs  — DrawerSection label (uppercase, tracking-wide)
-   * sm  — FilterBar / Card header
+   * sm  — Card header
    * lg  — PageHeader (h1, bold)
    */
   size?: "xs" | "sm" | "lg";

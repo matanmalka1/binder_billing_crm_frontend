@@ -140,6 +140,19 @@ export const CLIENT_SORT_ORDER_OPTIONS: { value: ClientSortOrder; label: string 
   { value: "desc", label: "סדר יורד" },
 ];
 
+const SORT_ORDER_LABELS: Record<ClientSortBy, Record<ClientSortOrder, string>> = {
+  full_name: { asc: "שם לקוח: א׳ → ת׳", desc: "שם לקוח: ת׳ → א׳" },
+  created_at: { asc: "תאריך יצירה: ישן → חדש", desc: "תאריך יצירה: חדש → ישן" },
+  status: { asc: "סדר עולה", desc: "סדר יורד" },
+};
+
+export const getClientSortOrderOptions = (
+  sortBy: ClientSortBy,
+): { value: ClientSortOrder; label: string }[] => [
+  { value: "asc", label: SORT_ORDER_LABELS[sortBy]?.asc ?? "סדר עולה" },
+  { value: "desc", label: SORT_ORDER_LABELS[sortBy]?.desc ?? "סדר יורד" },
+];
+
 export const DEFAULT_CLIENT_SORT_BY: ClientSortBy = "created_at";
 export const DEFAULT_CLIENT_SORT_ORDER: ClientSortOrder = "desc";
 

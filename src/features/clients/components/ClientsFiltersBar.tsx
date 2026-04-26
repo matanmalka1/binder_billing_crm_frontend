@@ -6,9 +6,9 @@ import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import {
   CLIENT_SORT_BY_OPTIONS,
-  CLIENT_SORT_ORDER_OPTIONS,
   CLIENT_STATUS_LABELS,
   CLIENT_STATUS_OPTIONS,
+  getClientSortOrderOptions,
 } from "../constants";
 import type { ClientsFiltersBarProps } from "../types";
 import { useAdvisorOptions } from "@/features/users";
@@ -81,7 +81,7 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
             label="כיוון מיון"
             value={filters.sort_order}
             onChange={(e) => onFilterChange("sort_order", e.target.value)}
-            options={CLIENT_SORT_ORDER_OPTIONS}
+            options={getClientSortOrderOptions(filters.sort_by)}
           />
         </div>
 
