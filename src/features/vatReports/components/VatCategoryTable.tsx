@@ -1,4 +1,3 @@
-import React, { useMemo } from "react";
 import { cn } from "../../../utils/utils";
 import { formatVatAmount, getVatDeductionRateClass, getVatDeductionRateLabel } from "../utils";
 import type { VatCategoryTableProps } from "../types";
@@ -10,10 +9,9 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
   totalGrossVat,
   totalInputVat,
 }) => {
-  // Pre-calculate totals to keep JSX clean
-  const totalGrossAmount = useMemo(() => totalExpenseNet + totalGrossVat, [totalExpenseNet, totalGrossVat]);
-
   if (!rows?.length) return null;
+
+  const totalGrossAmount = totalExpenseNet + totalGrossVat;
 
   return (
     <section dir="rtl" className="space-y-3">

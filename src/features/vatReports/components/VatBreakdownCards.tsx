@@ -1,9 +1,8 @@
 import { ChevronLeft } from "lucide-react";
 import { Button } from "../../../components/ui/primitives/Button";
-import { cn } from "../../../utils/utils";
 import { formatVatAmount } from "../utils";
 import { ISRAEL_VAT_RATE_PERCENT } from "../constants";
-import type { VatInputCardProps, VatNetBannerProps, VatOutputCardProps } from "../types";
+import type { VatInputCardProps, VatOutputCardProps } from "../types";
 
 // ── Output (income) card ──────────────────────────────────────────────────────
 
@@ -91,30 +90,3 @@ export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) 
 );
 
 VatInputCard.displayName = "VatInputCard";
-
-// ── Net VAT banner ────────────────────────────────────────────────────────────
-
-export const VatNetBanner: React.FC<VatNetBannerProps> = ({ outputVat, inputVat, netVat }) => {
-  const isPositive = netVat > 0;
-  const isNegative = netVat < 0;
-  const label = isPositive ? "יתרת מע\"מ לתשלום" : isNegative ? "זיכוי מע\"מ" : "מאוזן";
-  const amountClass = isPositive ? "text-warning-400" : isNegative ? "text-positive-400" : "text-gray-300";
-
-  return (
-    <div className={cn("rounded-xl px-6 py-5 text-white", "bg-primary-900")} dir="rtl">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <p className="text-sm text-primary-200">
-          מע&quot;מ עסקאות ({formatVatAmount(outputVat)}) &minus; מע&quot;מ תשומות ({formatVatAmount(inputVat)})
-        </p>
-        <div className="flex flex-col items-end gap-0.5">
-          <span className="text-xs font-medium text-primary-300">{label}</span>
-          <span className={cn("font-mono text-4xl font-bold tabular-nums", amountClass)}>
-            {formatVatAmount(Math.abs(netVat))}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-VatNetBanner.displayName = "VatNetBanner";

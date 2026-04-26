@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { FileSpreadsheet, FileText, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// Components
 import { Card } from "../../../components/ui/primitives/Card";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Button } from "../../../components/ui/primitives/Button";
@@ -10,7 +9,6 @@ import { Select } from "../../../components/ui/inputs/Select";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
 
-// Logic & Utils
 import { vatReportsApi, type CreateVatWorkItemPayload, type VatAnnualSummary, type VatPeriodRow } from "../api";
 import { FILE_FORMAT_COLORS } from "../../../utils/chartColors";
 import { buildYearOptions, showErrorToast } from "../../../utils/utils";

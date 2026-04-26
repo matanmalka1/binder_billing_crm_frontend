@@ -42,11 +42,6 @@ export interface VatInputCardProps {
   onNavigate?: () => void;
 }
 
-export interface VatNetBannerProps {
-  outputVat: number;
-  inputVat: number;
-  netVat: number;
-}
 
 export interface VatFiledBannerProps {
   filedAt: string;

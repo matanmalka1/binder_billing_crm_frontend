@@ -40,10 +40,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
   );
   const accentBorder = sectionType === "income" ? "border-positive-300" : "border-warning-300";
 
-  // extra cols: counterparty_id, document_type, rate_type, deduction_rate, deductible_vat(expense), category(expense), created_by, created_at, delete(canEdit)
-  const extraCols = (sectionType === "expense" ? 2 : 0) + 4 + 2 + (canEdit ? 1 : 0);
-  const baseDataCols = 3; // number, date, counterparty
-  const totalCols = baseDataCols + extraCols;
+  const totalCols = (sectionType === "expense" ? 2 : 0) + 4 + 2 + (canEdit ? 1 : 0) + 3;
 
   if (invoices.length === 0) {
     return (

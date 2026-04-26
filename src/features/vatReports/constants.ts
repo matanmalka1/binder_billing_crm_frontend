@@ -1,14 +1,11 @@
-/**
- * Single source of truth for VAT expense category keys and labels.
- * Imported by schemas.ts, useVatWorkItemDetail.ts, and enums.ts helpers.
- */
 import {
   VAT_RATE_TYPE_LABELS,
   DOCUMENT_TYPE_LABELS,
   getVatWorkItemStatusLabel,
 } from "../../utils/enums";
-export { VAT_RATE_TYPE_LABELS, DOCUMENT_TYPE_LABELS };
 import { CATEGORY_COLOR_TOKENS } from "../../utils/chartColors";
+
+export { VAT_RATE_TYPE_LABELS, DOCUMENT_TYPE_LABELS };
 
 export const INCOME_KEY = "income";
 
