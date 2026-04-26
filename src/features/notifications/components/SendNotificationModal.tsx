@@ -5,7 +5,7 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { Select } from "../../../components/ui/inputs/Select";
 import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
-import { clientsApi } from "@/features/clients/api";
+import { clientsApi } from "@/features/clients";
 import { useSendNotification } from "../hooks/useSendNotification";
 import type { SendNotificationModalProps } from "../types";
 

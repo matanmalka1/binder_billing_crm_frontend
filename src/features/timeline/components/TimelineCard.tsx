@@ -2,28 +2,10 @@ import { useMemo } from "react";
 import { ChevronDown, Clock, InboxIcon } from "lucide-react";
 import type { NormalizedTimelineEvent } from "../normalize";
 import { TimelineEventItem } from "./TimelineEventItem";
-import { formatDateHeading } from "../utils";
 import { cn } from "../../../utils/utils";
+import { type EventGroup, groupEventsByDate } from "./timelineGrouping";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-export interface EventGroup {
-  date:  string;
-  items: NormalizedTimelineEvent[];
-}
-
-// ── Grouping helper ───────────────────────────────────────────────────────────
-
-export const groupEventsByDate = (events: NormalizedTimelineEvent[]): EventGroup[] => {
-  const groups = new Map<string, NormalizedTimelineEvent[]>();
-  for (const event of events) {
-    const key = formatDateHeading(event.displayTimestamp);
-    const group = groups.get(key);
-    if (group) group.push(event);
-    else groups.set(key, [event]);
-  }
-  return Array.from(groups.entries()).map(([date, items]) => ({ date, items }));
-};
+export type { EventGroup };
 
 // ── Empty state ───────────────────────────────────────────────────────────────
 

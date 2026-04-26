@@ -1,4 +1,4 @@
-import type { AuthorityContactResponse } from "@/features/authorityContacts/api";
+import type { AuthorityContactResponse } from "@/features/authorityContacts";
 import type {
   CorrespondenceEntry,
   CorrespondenceListResponse,

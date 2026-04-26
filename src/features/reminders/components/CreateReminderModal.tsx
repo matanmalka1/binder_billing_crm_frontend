@@ -14,14 +14,14 @@ import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import type { CreateReminderFormValues } from "../types";
 import type { BinderResponse } from "@/features/binders";
-import type { ChargeResponse } from "@/features/charges/api";
+import type { ChargeResponse } from "@/features/charges";
 import { getChargeTypeLabel } from "@/features/charges";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import type { TaxDeadlineResponse } from "@/features/taxDeadlines";
 import { getDeadlineTypeLabel } from "@/features/taxDeadlines";
 import type { AnnualReportFull } from "@/features/annualReports";
 import type { AdvancePaymentRow } from "@/features/advancedPayments";
-import type { BusinessResponse } from "@/features/clients/api";
+import type { BusinessResponse } from "@/features/clients";
 import { reminderTypeOptions } from "../types";
 
 interface CreateReminderModalProps {

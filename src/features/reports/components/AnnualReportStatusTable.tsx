@@ -4,7 +4,7 @@ import type { AnnualReportClientEntry, AnnualReportStatusGroup } from "../api";
 import {
   getStatusLabel,
   getStatusVariant,
-} from "@/features/annualReports/api";
+} from "@/features/annualReports";
 import { formatDate } from "../../../utils/utils";
 
 interface Props {

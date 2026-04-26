@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getYear } from "date-fns";
-import { annualReportSeasonApi, annualReportsQK } from "@/features/annualReports/api";
+import { annualReportSeasonApi, annualReportsQK } from "@/features/annualReports";
 
 export const useSeasonSummary = () => {
   const currentYear = useMemo(() => getYear(new Date()), []);

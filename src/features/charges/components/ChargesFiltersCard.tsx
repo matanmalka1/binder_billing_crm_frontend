@@ -6,7 +6,7 @@ import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBad
 import { ClientFilterControl } from "@/components/shared/client/ClientFilterControl";
 import { cn } from "../../../utils/utils";
 import { CHARGE_STATUS_OPTIONS, CHARGE_TYPE_OPTIONS_WITH_ALL } from "../constants";
-import { clientsApi, clientsQK } from "@/features/clients/api";
+import { clientsApi, clientsQK } from "@/features/clients";
 import type { ChargesFilters } from "../types";
 
 interface ChargesFiltersCardProps {

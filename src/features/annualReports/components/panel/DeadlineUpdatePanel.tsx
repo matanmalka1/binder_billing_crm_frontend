@@ -6,7 +6,7 @@ import { Button } from "../../../../components/ui/primitives/Button";
 import { Input } from "../../../../components/ui/inputs/Input";
 import { toast } from "../../../../utils/toast";
 import { formatDate } from "../../../../utils/utils";
-import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
+import { getDeadlineTypeLabel } from "@/features/taxDeadlines";
 
 interface Props {
   reportId: number;

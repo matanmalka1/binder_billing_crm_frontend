@@ -6,7 +6,7 @@ import {
   getStatusVariant,
   getClientTypeLabel,
 } from "../../api";
-import { getDeadlineTypeLabel } from "@/features/taxDeadlines/api";
+import { getDeadlineTypeLabel } from "@/features/taxDeadlines";
 import { formatClientOfficeId, formatDate } from "../../../../utils/utils";
 import { AlertTriangle, Clock } from "lucide-react";
 import { cn } from "../../../../utils/utils";

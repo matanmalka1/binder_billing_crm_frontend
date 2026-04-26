@@ -9,7 +9,7 @@ import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { correspondenceSchema, correspondenceDefaults, type CorrespondenceFormValues } from "../schemas";
 import type { CorrespondenceEntry } from "../api";
-import type { AuthorityContactResponse } from "@/features/authorityContacts/api";
+import type { AuthorityContactResponse } from "@/features/authorityContacts";
 import { format } from "date-fns";
 
 interface CorrespondenceModalProps {

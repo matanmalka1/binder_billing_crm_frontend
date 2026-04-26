@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Select } from "../../../components/ui/inputs/Select";
 import type { UploadDocumentPayload } from "../api";
-import type { BusinessResponse } from "@/features/clients/api";
+import type { BusinessResponse } from "@/features/clients";
 import {
   documentsUploadDefaultValues,
   documentsUploadSchema,

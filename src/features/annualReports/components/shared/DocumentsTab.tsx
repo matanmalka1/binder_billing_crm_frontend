@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { FileCheck, FileWarning, FileText } from "lucide-react";
-import { documentsApi, documentsQK } from "@/features/documents/api";
+import { documentsApi, documentsQK } from "@/features/documents";
 import { DocumentCard, MissingDocRow } from "./DocumentParts";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
 

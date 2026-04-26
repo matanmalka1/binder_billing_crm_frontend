@@ -4,7 +4,7 @@ import type {
   AdvancePaymentStatus,
   CreateAdvancePaymentPayload,
 } from "../types";
-import { getErrorMessage } from "../../../utils/utils";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 
 interface UpdatePayload {
   id: number;
@@ -46,6 +46,7 @@ export const useAdvancePayments = (
       void queryClient.invalidateQueries({ queryKey: qk });
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all });
     },
+    onError: (err) => showErrorToast(err, "שגיאה בעדכון מקדמה"),
   });
 
   const createMutation = useMutation({
@@ -54,6 +55,7 @@ export const useAdvancePayments = (
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: qk });
     },
+    onError: (err) => showErrorToast(err, "שגיאה ביצירת מקדמה"),
   });
 
   const deleteMutation = useMutation({
@@ -62,6 +64,7 @@ export const useAdvancePayments = (
       void queryClient.invalidateQueries({ queryKey: qk });
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all });
     },
+    onError: (err) => showErrorToast(err, "שגיאה במחיקת מקדמה"),
   });
 
   const rows = enabled ? (listQuery.data?.items ?? []) : [];

@@ -16,7 +16,7 @@ import {
   DeletedClientDialog,
   useClientsPage,
 } from "@/features/clients";
-import type { ClientResponse } from "@/features/clients/api";
+import type { ClientResponse } from "@/features/clients";
 import { CLIENT_ROUTES } from "@/features/clients";
 import { ImportExportModal } from "@/features/importExport";
 

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { vatReportsApi, type CreateVatWorkItemPayload } from "../api";
 import { vatReportsQK } from "../api/queryKeys";
 import { toast } from "../../../utils/toast";
+import { showErrorToast } from "../../../utils/utils";
 
 export const useVatClientSummary = (clientId: number) => {
   const queryClient = useQueryClient();
@@ -18,6 +19,7 @@ export const useVatClientSummary = (clientId: number) => {
       toast.success('תיק מע"מ נוצר בהצלחה');
       queryClient.invalidateQueries({ queryKey: vatReportsQK.clientSummary(clientId) });
     },
+    onError: (err) => showErrorToast(err, 'שגיאה ביצירת תיק מע"מ'),
   });
 
   return {

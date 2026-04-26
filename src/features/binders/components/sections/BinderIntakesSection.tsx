@@ -9,7 +9,7 @@ import { Timeline, TimelineEntry } from "@/components/ui/feedback/Timeline";
 import { bindersApi, bindersQK } from "../../api";
 import { annualReportsApi, annualReportsQK, getStatusLabel } from "@/features/annualReports";
 import { clientsApi, clientsQK } from "@/features/clients";
-import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
+import { vatReportsApi, vatReportsQK } from "@/features/vatReports";
 import { VAT_STATUS_BADGE_VARIANTS } from "@/features/vatReports";
 import { staggerDelay } from "@/utils/animation";
 import { getBinderTypeLabel } from "../../constants";

@@ -11,7 +11,7 @@ import { CreateSignatureRequestModal } from "./CreateSignatureRequestModal";
 import { useClientSignatureRequests } from "../hooks/useClientSignatureRequests";
 import { useSignatureRequestActions } from "../hooks/useSignatureRequestActions";
 import { useSignatureRequestSigningUrls } from "../utils";
-import type { ClientResponse } from "@/features/clients/api";
+import type { ClientResponse } from "@/features/clients";
 
 interface Props {
   client: ClientResponse;

@@ -20,7 +20,7 @@ import type {
 import { useAuthStore } from "../../../store/auth.store";
 import { toast } from "../../../utils/toast";
 import { DOC_TYPE_LABELS } from "../documents.constants";
-import type { BusinessResponse } from "@/features/clients/api";
+import type { BusinessResponse } from "@/features/clients";
 
 const CURRENT_YEAR = new Date().getFullYear();
 const TAX_YEARS = Array.from({ length: 7 }, (_, i) => CURRENT_YEAR - i);

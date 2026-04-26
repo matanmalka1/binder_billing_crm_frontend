@@ -1,5 +1,5 @@
 import { AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
-import type { SignatureRequestStatus } from "@/features/signatureRequests/api";
+import type { SignatureRequestStatus } from "@/features/signatureRequests";
 import type { SigningTerminalState } from "../types";
 
 interface StatusIllustrationProps {
