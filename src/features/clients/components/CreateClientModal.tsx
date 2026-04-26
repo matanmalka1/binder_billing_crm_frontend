@@ -394,27 +394,37 @@ export const CreateClientModal: React.FC<Props> = ({
               {...register("accountant_id")}
             />
 
-            {impactQuery.data && (
-              <div className="rounded-lg border border-blue-200 bg-blue-50 p-4" dir="rtl">
-                <p className="mb-2 text-sm font-semibold text-blue-800">
-                  מה ייווצר אוטומטית עם פתיחת הלקוח
-                </p>
-                <ul className="space-y-1">
-                  {impactQuery.data.items.map((item) => (
-                    <li key={item.label} className="flex justify-between text-sm text-blue-700">
-                      <span>{item.label}</span>
-                      <span className="font-medium">{item.count}</span>
-                    </li>
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4" dir="rtl">
+              <p className="mb-2 text-sm font-semibold text-blue-800">מה ייווצר לאחר שמירה?</p>
+              {impactQuery.isLoading ? (
+                <div className="space-y-2">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-4 animate-pulse rounded bg-blue-100" />
                   ))}
-                </ul>
-                {impactQuery.data.note && (
-                  <p className="mt-2 text-xs text-blue-600">{impactQuery.data.note}</p>
-                )}
-                {impactQuery.data.years_scope === 2 && (
-                  <p className="mt-1 text-xs text-blue-600">ייווצר עבור השנה הנוכחית והשנה הבאה</p>
-                )}
-              </div>
-            )}
+                </div>
+              ) : impactQuery.data ? (
+                <>
+                  <ul className="space-y-1">
+                    {impactQuery.data.items.map((item) => (
+                      <li key={item.label} className="flex justify-between text-sm text-blue-700">
+                        <span>{item.label}</span>
+                        <span className="font-medium">{item.count}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {impactQuery.data.note && (
+                    <p className="mt-2 text-xs text-blue-600">{impactQuery.data.note}</p>
+                  )}
+                  {impactQuery.data.years_scope === 2 && (
+                    <p className="mt-1 text-xs text-blue-600">ייווצר עבור השנה הנוכחית והשנה הבאה</p>
+                  )}
+                </>
+              ) : (
+                <p className="text-sm text-blue-700">
+                  ייתכן שייווצרו קלסר ומועדים בהתאם לסוג הלקוח
+                </p>
+              )}
+            </div>
           </div>
         )}
       </form>

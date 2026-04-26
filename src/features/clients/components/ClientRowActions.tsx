@@ -6,7 +6,7 @@ import { CLIENT_ROUTES } from "../api/endpoints";
 
 interface ClientRowActionsProps {
   clientId: number;
-  officeClientNumber: number;
+  officeClientNumber: number | null;
   onEditClient?: () => void;
 }
 

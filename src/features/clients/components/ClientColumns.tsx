@@ -3,7 +3,7 @@ import { buildSelectionColumn } from "../../../components/ui/table/tableSelectio
 import type { ClientResponse } from "../api";
 import { formatClientOfficeId, formatDate } from "@/utils/utils";
 import { ClientRowActions } from "./ClientRowActions";
-import { getEntityTypeLabel, getClientStatusLabel, getVatTypeLabel } from "../constants";
+import { getEntityTypeLabel, getClientStatusLabel, getClientVatReportingLabel } from "../constants";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 
 const CLIENT_STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
@@ -80,7 +80,7 @@ export const buildClientColumns = ({
       header: "סוג דיווח",
       render: (client) => (
         <span className="text-sm text-gray-500">
-          {client.vat_reporting_frequency ? getVatTypeLabel(client.vat_reporting_frequency) : "—"}
+          {getClientVatReportingLabel(client)}
         </span>
       ),
     },

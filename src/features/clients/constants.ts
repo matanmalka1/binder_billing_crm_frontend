@@ -140,8 +140,8 @@ export const CLIENT_SORT_ORDER_OPTIONS: { value: ClientSortOrder; label: string 
   { value: "desc", label: "סדר יורד" },
 ];
 
-export const DEFAULT_CLIENT_SORT_BY: ClientSortBy = "full_name";
-export const DEFAULT_CLIENT_SORT_ORDER: ClientSortOrder = "asc";
+export const DEFAULT_CLIENT_SORT_BY: ClientSortBy = "created_at";
+export const DEFAULT_CLIENT_SORT_ORDER: ClientSortOrder = "desc";
 
 export const CLIENT_ID_TYPES_REQUIRING_ISRAELI_NUMERIC_ID: readonly ClientIdNumberType[] = [
   "individual",
@@ -199,3 +199,10 @@ export const getClientIdNumberTypeLabel = makeLabelGetter(CLIENT_ID_NUMBER_TYPE_
 export const getEntityTypeLabel = makeLabelGetter(ENTITY_TYPE_LABELS);
 export const getClientStatusLabel = makeLabelGetter(CLIENT_STATUS_LABELS);
 export const getVatTypeLabel = makeLabelGetter(VAT_TYPE_LABELS);
+
+export const getClientVatReportingLabel = (
+  client: Pick<ClientResponse, "entity_type" | "vat_reporting_frequency">,
+): string => {
+  if (client.entity_type === "employee") return "לא רלוונטי";
+  return client.vat_reporting_frequency ? getVatTypeLabel(client.vat_reporting_frequency) : "—";
+};

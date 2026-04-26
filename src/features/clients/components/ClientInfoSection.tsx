@@ -9,8 +9,8 @@ import type { ClientResponse } from "../api";
 import {
   getClientIdNumberTypeLabel,
   getClientStatusLabel,
+  getClientVatReportingLabel,
   getEntityTypeLabel,
-  getVatTypeLabel,
 } from "../constants";
 import { authorityContactsApi, authorityContactsQK } from "../../authorityContacts/api";
 import { useAdvisorOptions } from "@/features/users";
@@ -117,9 +117,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   const taxItems = [
     {
       label: 'תדירות דיווח מע"מ',
-      value: client.vat_reporting_frequency
-        ? getVatTypeLabel(client.vat_reporting_frequency)
-        : "—",
+      value: getClientVatReportingLabel(client),
     },
     ...(isOsekPatur
       ? [
