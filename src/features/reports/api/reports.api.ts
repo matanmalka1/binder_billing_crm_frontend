@@ -69,13 +69,16 @@ export const reportsApi = {
       filenameMatch?.[1] ||
       `aging_report.${format === "excel" ? "xlsx" : "pdf"}`;
 
+    const fallbackMimeType =
+      format === "excel"
+        ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        : "application/pdf";
+    const contentType = response.headers["content-type"];
+
     downloadBlob(
       response.data,
       filename,
-      response.headers["content-type"] ||
-        (format === "excel"
-          ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          : "application/pdf"),
+      typeof contentType === "string" ? contentType : fallbackMimeType,
     );
 
     return { filename };

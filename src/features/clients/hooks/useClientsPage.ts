@@ -144,7 +144,7 @@ export const useClientsPage = () => {
   });
 
   const handleFilterChange = (
-    name: "page_size" | "search" | "status" | "sort_by" | "sort_order",
+    name: "accountant_id" | "page_size" | "search" | "status" | "sort_by" | "sort_order",
     value: string,
   ) => {
     setFilter(name, value);

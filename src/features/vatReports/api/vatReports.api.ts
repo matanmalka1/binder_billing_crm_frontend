@@ -126,6 +126,7 @@ export const vatReportsApi = {
       format === "excel"
         ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         : "application/pdf";
-    downloadBlob(response.data, filename, response.headers["content-type"] || mimeType);
+    const contentType = response.headers["content-type"];
+    downloadBlob(response.data, filename, typeof contentType === "string" ? contentType : mimeType);
   },
 };

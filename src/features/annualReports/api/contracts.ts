@@ -165,7 +165,6 @@ export interface StatusHistoryEntry {
   from_status: AnnualReportStatus | null;
   to_status: AnnualReportStatus;
   changed_by: number;
-  changed_by_name?: string | null;
   note: string | null;
   occurred_at: string;
 }
