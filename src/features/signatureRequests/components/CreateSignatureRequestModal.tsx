@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link2 } from "lucide-react";
 import { Modal } from "../../../components/ui/overlays/Modal";
-import { Button } from "../../../components/ui/primitives/Button";
+import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
@@ -16,6 +16,7 @@ const REQUEST_TYPES: SignatureRequestType[] = [
   "vat_return_approval",
   "custom",
 ];
+const CREATE_SIGNATURE_REQUEST_FORM_ID = "create-signature-request-form";
 
 interface Props {
   open: boolean;
@@ -86,17 +87,17 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
       title="בקשת חתימה חדשה"
       onClose={handleClose}
       footer={
-        <div className="flex justify-end gap-2">
-          <Button variant="outline" size="sm" onClick={handleClose} disabled={isLoading}>
-            ביטול
-          </Button>
-          <Button size="sm" isLoading={isLoading} onClick={handleSubmit} type="submit" disabled={!resolvedClientId || !(overrideName.trim() || resolvedSignerName)}>
-            יצירה
-          </Button>
-        </div>
+        <ModalFormActions
+          onCancel={handleClose}
+          submitForm={CREATE_SIGNATURE_REQUEST_FORM_ID}
+          submitType="submit"
+          submitLabel="יצירה"
+          isLoading={isLoading}
+          submitDisabled={!resolvedClientId || !(overrideName.trim() || resolvedSignerName)}
+        />
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form id={CREATE_SIGNATURE_REQUEST_FORM_ID} onSubmit={handleSubmit} className="space-y-4">
         <div className="flex items-start gap-2 rounded-lg border border-info-100 bg-info-50 px-3 py-2.5 text-xs text-info-700">
           <Link2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span>לאחר יצירה, לחץ <strong>שלח</strong> כדי לקבל קישור חתימה שניתן לשלוח ללקוח (וואטסאפ, אימייל, SMS וכד׳).</span>

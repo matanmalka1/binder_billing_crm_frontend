@@ -40,7 +40,7 @@ const EVENT_REGISTRY: Record<string, EventMeta> = {
   charge_paid:                  { label: "תשלום חיוב",          icon: CheckCircle   },
   notification:                 { label: "התראה",               icon: Bell          },
   notification_sent:            { label: "התראה נשלחה",         icon: Bell          },
-  tax_deadline_due:             { label: "מועד מס",             icon: CalendarClock },
+  tax_deadline_due:             { label: "מועד",                icon: CalendarClock },
   annual_report_status_changed: { label: "דוח שנתי",            icon: FileText      },
   client_created:               { label: "לקוח נוצר",           icon: UserPlus      },
   client_info_updated:          { label: "פרטי לקוח עודכנו",   icon: UserCog       },
@@ -65,6 +65,9 @@ export const getEventIcon = (eventType: string): ReactNode =>
 
 export const formatTimestamp = (timestamp: string): string =>
   format(parseISO(timestamp), "HH:mm", { locale: he });
+
+export const formatTimelineDate = (timestamp: string): string =>
+  format(parseISO(timestamp), "d MMMM yyyy", { locale: he });
 
 export const formatDateHeading = (timestamp: string): string =>
   format(parseISO(timestamp), "EEEE, d MMMM yyyy", { locale: he });

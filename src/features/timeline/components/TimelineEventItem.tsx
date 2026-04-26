@@ -1,11 +1,14 @@
-import { FileText, CreditCard } from "lucide-react";
+import { CreditCard, ExternalLink, FileText } from "lucide-react";
 import { IconLabel } from "../../../components/ui/primitives/IconLabel";
-import type { TimelineEvent, TimelineEventMetadata } from "../api";
+import { Button } from "../../../components/ui/primitives/Button";
+import type { TimelineEventMetadata } from "../api";
+import type { NormalizedTimelineEvent } from "../normalize";
+import type { ActionCommand } from "@/lib/actions/types";
 import { cn } from "../../../utils/utils";
 import { staggerDelay } from "../../../utils/animation";
 import { getEventColor } from "../constants";
 import { getTimelineChannelLabel, getTimelineStatusLabel, getTimelineTriggerLabel } from "../labels";
-import { formatTimestamp, getEventIcon, getEventTypeLabel } from "../utils";
+import { formatTimelineDate, formatTimestamp, getEventIcon } from "../utils";
 
 // ── Metadata sub-components ───────────────────────────────────────────────────
 
@@ -42,12 +45,15 @@ const StatusTransition: React.FC<{ oldStatus: string; newStatus: string }> = ({
 
 // ── Metadata panel ────────────────────────────────────────────────────────────
 
-const EventMetadata: React.FC<{ metadata: TimelineEventMetadata }> = ({ metadata }) => {
+const EventMetadata: React.FC<{ metadata: TimelineEventMetadata; eventType: string }> = ({
+  metadata,
+  eventType,
+}) => {
   const { old_status, new_status, amount, trigger, channel, provider, external_invoice_id } = metadata;
 
   return (
     <>
-      {old_status && new_status && (
+      {eventType !== "binder_status_change" && old_status && new_status && (
         <StatusTransition oldStatus={old_status} newStatus={new_status} />
       )}
 
@@ -76,11 +82,16 @@ const EventMetadata: React.FC<{ metadata: TimelineEventMetadata }> = ({ metadata
 
 // ── Related IDs ───────────────────────────────────────────────────────────────
 
-const RelatedIds: React.FC<{ binderId: number | null; chargeId: number | null }> = ({
+const RelatedIds: React.FC<{
+  binderId: number | null;
+  chargeId: number | null;
+  relatedEntity: string | null;
+}> = ({
   binderId,
   chargeId,
+  relatedEntity,
 }) => {
-  if (!binderId && !chargeId) return null;
+  if (!binderId && !chargeId && !relatedEntity) return null;
   return (
     <div className="flex flex-wrap gap-2">
       {binderId != null && (
@@ -97,6 +108,13 @@ const RelatedIds: React.FC<{ binderId: number | null; chargeId: number | null }>
           className="bg-amber-50 text-amber-700 border-amber-200"
         />
       )}
+      {binderId == null && chargeId == null && relatedEntity && (
+        <IconLabel
+          icon={<FileText className="h-3 w-3" />}
+          label={relatedEntity}
+          className="bg-slate-50 text-slate-600 border-slate-200"
+        />
+      )}
     </div>
   );
 };
@@ -104,15 +122,24 @@ const RelatedIds: React.FC<{ binderId: number | null; chargeId: number | null }>
 // ── Main component ────────────────────────────────────────────────────────────
 
 interface TimelineEventItemProps {
-  timelineEvent: TimelineEvent;
+  timelineEvent: NormalizedTimelineEvent;
   index: number;
+  onAction?: (action: ActionCommand) => void;
+  activeActionKey?: string | null;
 }
 
 export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
   timelineEvent: ev,
   index,
+  onAction,
+  activeActionKey,
 }) => {
   const colors = getEventColor(ev.event_type);
+  const displayDate = ev.isDateOnly
+    ? formatTimelineDate(ev.displayTimestamp)
+    : formatTimestamp(ev.displayTimestamp);
+  const primaryAction = ev.actionsList[0];
+  const isQuiet = ev.importance === "quiet";
 
   return (
     <li
@@ -132,40 +159,67 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
           "flex-1 mb-2 rounded-lg border border-gray-100 bg-white/95 overflow-hidden",
           "border-r-2", colors.cardBorder,
           "transition-all duration-200 hover:shadow-md hover:border-gray-200",
+          isQuiet && "bg-gray-50/70 border-gray-100",
         )}
       >
         {/* Top tint bar */}
         <div className={cn("h-1 w-full bg-gradient-to-l", colors.cardTint, "to-transparent")} />
 
         <div className="px-4 py-3 space-y-3">
-          {/* Header: type badge + timestamp */}
+          {/* Header: title + timestamp */}
           <div className="flex items-center justify-between gap-3">
-            <span className={cn(
-              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold flex-shrink-0",
-              colors.badgeBg, colors.badgeText,
-            )}>
-              <span className={colors.iconColor}>{getEventIcon(ev.event_type)}</span>
-              {getEventTypeLabel(ev.event_type)}
-            </span>
+            <div className="min-w-0 space-y-1">
+              <span className={cn(
+                "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold",
+                isQuiet ? "bg-gray-100 text-gray-600" : cn(colors.badgeBg, colors.badgeText),
+              )}>
+                <span className={isQuiet ? "text-gray-500" : colors.iconColor}>
+                  {getEventIcon(ev.event_type)}
+                </span>
+                {ev.title}
+              </span>
+            </div>
 
             <time
-              dateTime={ev.timestamp}
+              dateTime={ev.displayTimestamp}
               className="text-xs text-gray-400 font-mono tabular-nums flex-shrink-0"
             >
-              {formatTimestamp(ev.timestamp)}
+              {displayDate}
             </time>
           </div>
 
           {/* Description */}
-          {ev.description && (
-            <p className="text-sm leading-relaxed text-gray-700">{ev.description}</p>
+          {ev.secondary && (
+            <p className={cn("text-sm leading-relaxed", isQuiet ? "text-gray-500" : "text-gray-700")}>
+              {ev.secondary}
+            </p>
           )}
 
           {/* Related IDs */}
-          <RelatedIds binderId={ev.binder_id} chargeId={ev.charge_id} />
+          <RelatedIds
+            binderId={ev.binder_id}
+            chargeId={ev.charge_id}
+            relatedEntity={ev.relatedEntity}
+          />
 
           {/* Metadata */}
-          {ev.metadata && <EventMetadata metadata={ev.metadata} />}
+          {ev.metadata && <EventMetadata metadata={ev.metadata} eventType={ev.event_type} />}
+
+          {primaryAction && onAction && (
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => onAction(primaryAction)}
+                isLoading={activeActionKey === primaryAction.uiKey}
+                className="gap-1.5 text-xs"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                פתח
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </li>

@@ -34,6 +34,7 @@ export const CreateClientModal: React.FC<Props> = ({
     watch,
     setValue,
     trigger,
+    clearErrors,
     formState: { errors },
     reset,
   } = useForm<CreateClientFormValues>({
@@ -126,6 +127,7 @@ export const CreateClientModal: React.FC<Props> = ({
           businessOpenedAtField={businessOpenedAtField}
           disabled={isLoading}
           errors={errors}
+          clearErrors={clearErrors}
           impactData={impactQuery.data}
           impactLoading={impactQuery.isLoading}
           isCompany={isCompany}

@@ -39,6 +39,7 @@ export interface TimelineEvent {
   metadata?:   TimelineEventMetadata | null;
   /** Single canonical field – backend may send either name */
   actions?:    BackendAction[] | null;
+  available_actions?: BackendAction[] | null;
 }
 
 // ── API contracts ─────────────────────────────────────────────────────────────

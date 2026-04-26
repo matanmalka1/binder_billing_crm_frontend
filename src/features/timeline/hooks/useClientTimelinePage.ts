@@ -5,13 +5,38 @@ import { timelineApi, timelineQK } from "../api";
 import { getErrorMessage, isPositiveInt, parsePositiveInt } from "../../../utils/utils";
 import { useActionRunner } from "@/features/actions";
 import type { TimelineEvent } from "../api";
+import {
+  normalizeTimelineEvents,
+  type NormalizedTimelineEvent,
+  type TimelineFilterKey,
+} from "../normalize";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface EventTypeStat {
-  type:  string;
+  type:  TimelineFilterKey;
   count: number;
 }
+
+const eventMatchesFilters = (
+  event: NormalizedTimelineEvent,
+  filters: TimelineFilterKey[],
+  hasGroupedFilter: boolean,
+): boolean =>
+  !hasGroupedFilter || event.filterKeys.some((key) => filters.includes(key));
+
+const eventMatchesSearch = (
+  event: NormalizedTimelineEvent,
+  query: string,
+  includeIds = false,
+): boolean =>
+  !query ||
+  event.title.toLowerCase().includes(query) ||
+  event.secondary?.toLowerCase().includes(query) ||
+  event.relatedEntity?.toLowerCase().includes(query) ||
+  event.description?.toLowerCase().includes(query) ||
+  (includeIds && event.binder_id != null && String(event.binder_id).includes(query)) ||
+  (includeIds && event.charge_id  != null && String(event.charge_id).includes(query));
 
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
@@ -26,7 +51,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
   const hasValidClient  = isPositiveInt(clientIdNumber);
 
   const [searchTerm,   setSearchTerm]   = useState("");
-  const [typeFilters,  setTypeFilters]  = useState<string[]>([]);
+  const [typeFilters,  setTypeFilters]  = useState<TimelineFilterKey[]>(["all"]);
 
   // ── Query ──────────────────────────────────────────────────────────────────
 
@@ -46,52 +71,67 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     [timelineQuery.data?.events],
   );
 
-  // ── Derived stats ──────────────────────────────────────────────────────────
+  // ── Derived timeline model ─────────────────────────────────────────────────
+
+  const { historicalEvents, upcomingDeadlines } = useMemo(
+    () => normalizeTimelineEvents(events),
+    [events],
+  );
 
   const eventTypeStats = useMemo<EventTypeStat[]>(() => {
-    const counts: Record<string, number> = {};
-    for (const { event_type } of events) {
-      counts[event_type] = (counts[event_type] ?? 0) + 1;
+    const counts: Partial<Record<TimelineFilterKey, number>> = {
+      all: historicalEvents.length + upcomingDeadlines.length,
+      past: historicalEvents.length,
+      future: upcomingDeadlines.length,
+    };
+    for (const event of [...historicalEvents, ...upcomingDeadlines]) {
+      for (const key of event.filterKeys) {
+        counts[key] = (counts[key] ?? 0) + 1;
+      }
     }
-    return Object.entries(counts).map(([type, count]) => ({ type, count }));
-  }, [events]);
+    return Object.entries(counts).map(([type, count]) => ({
+      type: type as TimelineFilterKey,
+      count: count ?? 0,
+    }));
+  }, [historicalEvents, upcomingDeadlines]);
 
   const lastEventTimestamp = useMemo<string | null>(() => {
-    if (events.length === 0) return null;
-    return events.reduce((latest, { timestamp }) =>
+    if (historicalEvents.length === 0) return null;
+    return historicalEvents.reduce((latest, { timestamp }) =>
       new Date(timestamp) > new Date(latest) ? timestamp : latest,
-      events[0].timestamp,
+      historicalEvents[0].timestamp,
     );
-  }, [events]);
+  }, [historicalEvents]);
 
   // ── Filtering ──────────────────────────────────────────────────────────────
 
-  const hasActiveFilters = typeFilters.length > 0 || searchTerm.trim().length > 0;
+  const hasGroupedFilter = typeFilters.length > 0 && !typeFilters.includes("all");
+  const hasActiveFilters = hasGroupedFilter || searchTerm.trim().length > 0;
 
-  const filteredEvents = useMemo<TimelineEvent[]>(() => {
-    if (!hasActiveFilters) return events;
+  const filteredEvents = useMemo<NormalizedTimelineEvent[]>(() => {
+    if (!hasActiveFilters) return historicalEvents;
 
     const query = searchTerm.trim().toLowerCase();
 
-    return events.filter((event) => {
-      const matchesType =
-        typeFilters.length === 0 || typeFilters.includes(event.event_type);
-
-      const matchesSearch =
-        !query ||
-        event.description?.toLowerCase().includes(query) ||
-        (event.binder_id != null && String(event.binder_id).includes(query)) ||
-        (event.charge_id  != null && String(event.charge_id).includes(query));
-
-      return matchesType && matchesSearch;
+    return historicalEvents.filter((event) => {
+      return eventMatchesFilters(event, typeFilters, hasGroupedFilter) &&
+        eventMatchesSearch(event, query, true);
     });
-  }, [events, searchTerm, typeFilters, hasActiveFilters]);
+  }, [historicalEvents, searchTerm, typeFilters, hasActiveFilters, hasGroupedFilter]);
+
+  const filteredUpcomingDeadlines = useMemo<NormalizedTimelineEvent[]>(() => {
+    const query = searchTerm.trim().toLowerCase();
+
+    return upcomingDeadlines.filter((event) => {
+      return eventMatchesFilters(event, typeFilters, hasGroupedFilter) &&
+        eventMatchesSearch(event, query);
+    });
+  }, [upcomingDeadlines, searchTerm, typeFilters, hasGroupedFilter]);
 
   // ── Actions ────────────────────────────────────────────────────────────────
 
   const {
     activeActionKey,
-    activeActionKeyRef,
     cancelPendingAction,
     confirmPendingAction,
     handleAction,
@@ -123,14 +163,19 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
 
   // ── Filter helpers ─────────────────────────────────────────────────────────
 
-  const toggleTypeFilter = (type: string) =>
-    setTypeFilters((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
-    );
+  const toggleTypeFilter = (type: TimelineFilterKey) =>
+    setTypeFilters((prev) => {
+      if (type === "all") return ["all"];
+      const withoutAll = prev.filter((item) => item !== "all");
+      const next = withoutAll.includes(type)
+        ? withoutAll.filter((item) => item !== type)
+        : [...withoutAll, type];
+      return next.length === 0 ? ["all"] : next;
+    });
 
   const clearFilters = () => {
     setSearchTerm("");
-    setTypeFilters([]);
+    setTypeFilters(["all"]);
   };
 
   // ── Error ──────────────────────────────────────────────────────────────────
@@ -155,12 +200,11 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     setPage,
     setPageSize,
 
-    events,
+    filteredUpcomingDeadlines,
     filteredEvents,
     eventTypeStats,
 
     activeActionKey,
-    activeActionKeyRef,
     handleAction,
     pendingAction,
     confirmPendingAction,

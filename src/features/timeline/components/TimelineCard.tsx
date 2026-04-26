@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Clock, InboxIcon } from "lucide-react";
-import type { TimelineEvent } from "../api";
+import type { NormalizedTimelineEvent } from "../normalize";
 import { TimelineEventItem } from "./TimelineEventItem";
 import { formatDateHeading } from "../utils";
 import { cn } from "../../../utils/utils";
@@ -9,13 +9,13 @@ import { cn } from "../../../utils/utils";
 
 interface EventGroup {
   date:  string;
-  items: TimelineEvent[];
+  items: NormalizedTimelineEvent[];
 }
 
 // ── Grouping helper ───────────────────────────────────────────────────────────
 
-const groupEventsByDate = (events: TimelineEvent[]): EventGroup[] => {
-  const groups = new Map<string, TimelineEvent[]>();
+const groupEventsByDate = (events: NormalizedTimelineEvent[]): EventGroup[] => {
+  const groups = new Map<string, NormalizedTimelineEvent[]>();
   for (const event of events) {
     const key = formatDateHeading(event.timestamp);
     const group = groups.get(key);
@@ -27,13 +27,21 @@ const groupEventsByDate = (events: TimelineEvent[]): EventGroup[] => {
 
 // ── Empty state ───────────────────────────────────────────────────────────────
 
-const EmptyTimeline: React.FC = () => (
+interface EmptyTimelineProps {
+  hasActiveFilters?: boolean;
+}
+
+const EmptyTimeline: React.FC<EmptyTimelineProps> = ({ hasActiveFilters }) => (
   <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 py-16 text-center animate-fade-in">
     <div className="rounded-full bg-gray-100 p-4">
       <InboxIcon className="h-7 w-7 text-gray-400" />
     </div>
-    <p className="text-sm font-medium text-gray-500">אין אירועים להצגה</p>
-    <p className="text-xs text-gray-400">נסה לשנות את הפילטרים או לרענן</p>
+    <p className="text-sm font-medium text-gray-500">
+      {hasActiveFilters ? "לא נמצאו אירועים לפי הסינון" : "אין אירועים בציר הזמן"}
+    </p>
+    <p className="text-xs text-gray-400">
+      {hasActiveFilters ? "נסה לשנות את הפילטרים או את החיפוש" : "אירועים חדשים יופיעו כאן לאחר פעילות לקוח"}
+    </p>
   </div>
 );
 
@@ -61,13 +69,21 @@ const GroupHeader: React.FC<GroupHeaderProps> = ({ date, count, isFirst }) => (
 // ── Main component ────────────────────────────────────────────────────────────
 
 export interface TimelineCardProps {
-  events: TimelineEvent[];
+  events: NormalizedTimelineEvent[];
+  hasActiveFilters?: boolean;
+  onAction?: (action: NormalizedTimelineEvent["actionsList"][number]) => void;
+  activeActionKey?: string | null;
 }
 
-export const TimelineCard: React.FC<TimelineCardProps> = ({ events }) => {
+export const TimelineCard: React.FC<TimelineCardProps> = ({
+  events,
+  hasActiveFilters,
+  onAction,
+  activeActionKey,
+}) => {
   const groups = useMemo(() => groupEventsByDate(events), [events]);
 
-  if (events.length === 0) return <EmptyTimeline />;
+  if (events.length === 0) return <EmptyTimeline hasActiveFilters={hasActiveFilters} />;
 
   return (
     <div className="space-y-2 animate-fade-in">
@@ -85,6 +101,8 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({ events }) => {
                   key={`${event.timestamp}-${event.event_type}-${index}`}
                   timelineEvent={event}
                   index={index + groupIndex * 1000}
+                  onAction={onAction}
+                  activeActionKey={activeActionKey}
                 />
               ))}
             </ul>

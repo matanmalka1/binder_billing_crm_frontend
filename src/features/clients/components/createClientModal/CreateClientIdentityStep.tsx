@@ -1,4 +1,4 @@
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import type { FieldErrors, UseFormClearErrors, UseFormRegister } from "react-hook-form";
 import { Input } from "../../../../components/ui/inputs/Input";
 import { Select } from "../../../../components/ui/inputs/Select";
 import { CREATE_CLIENT_ENTITY_OPTIONS } from "../../constants";
@@ -9,6 +9,7 @@ interface Props {
   disabled: boolean;
   errors: FieldErrors<CreateClientFormValues>;
   isCompany: boolean;
+  clearErrors: UseFormClearErrors<CreateClientFormValues>;
   register: UseFormRegister<CreateClientFormValues>;
 }
 
@@ -16,11 +17,17 @@ export const CreateClientIdentityStep: React.FC<Props> = ({
   disabled,
   errors,
   isCompany,
+  clearErrors,
   register,
 }) => {
   const nameLabel = isCompany ? "שם חברה" : "שם מלא";
   const idNumberLabel = isCompany ? "ח.פ" : "ת.ז";
   const idNumberPlaceholder = isCompany ? "512345678" : "123456789";
+  const entityTypeField = register("entity_type", {
+    onChange: (event) => {
+      if (event.target.value) clearErrors("entity_type");
+    },
+  });
 
   return (
     <div className="space-y-4">
@@ -30,7 +37,7 @@ export const CreateClientIdentityStep: React.FC<Props> = ({
         error={errors.entity_type?.message}
         disabled={disabled}
         options={[{ value: "", label: "בחר סוג ישות" }, ...CREATE_CLIENT_ENTITY_OPTIONS]}
-        {...register("entity_type")}
+        {...entityTypeField}
       />
       <Input
         label={`${nameLabel} *`}

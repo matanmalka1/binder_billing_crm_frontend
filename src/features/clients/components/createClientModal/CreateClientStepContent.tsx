@@ -1,6 +1,7 @@
 import type {
   ControllerRenderProps,
   FieldErrors,
+  UseFormClearErrors,
   UseFormRegister,
 } from "react-hook-form";
 import type { ClientCreationImpactResponse } from "../../api/contracts";
@@ -15,6 +16,7 @@ interface Props {
   businessOpenedAtField: ControllerRenderProps<CreateClientFormValues, "business_opened_at">;
   disabled: boolean;
   errors: FieldErrors<CreateClientFormValues>;
+  clearErrors: UseFormClearErrors<CreateClientFormValues>;
   impactData?: ClientCreationImpactResponse;
   impactLoading: boolean;
   isCompany: boolean;
@@ -30,6 +32,7 @@ export const CreateClientStepContent: React.FC<Props> = ({
   businessOpenedAtField,
   disabled,
   errors,
+  clearErrors,
   impactData,
   impactLoading,
   isCompany,
@@ -44,6 +47,7 @@ export const CreateClientStepContent: React.FC<Props> = ({
         disabled={disabled}
         errors={errors}
         isCompany={isCompany}
+        clearErrors={clearErrors}
         register={register}
       />
     );

@@ -3,6 +3,21 @@ import type { TaxDeadlineResponse } from "./api";
 
 type DeadlinePeriodFields = Pick<TaxDeadlineResponse, "deadline_type" | "period" | "tax_year">;
 
+const HEBREW_SHORT_MONTHS = [
+  "ינו׳",
+  "פבר׳",
+  "מרץ",
+  "אפר׳",
+  "מאי",
+  "יוני",
+  "יולי",
+  "אוג׳",
+  "ספט׳",
+  "אוק׳",
+  "נוב׳",
+  "דצמ׳",
+];
+
 export const getDeadlineDaysLabel = (
   dueDate: string,
   inactive: boolean,
@@ -33,7 +48,16 @@ export const getDeadlineDaysLabelShort = (
 
 export const getTaxDeadlinePeriodLabel = (deadline: DeadlinePeriodFields): string => {
   if (deadline.deadline_type === "annual_report") {
-    return deadline.tax_year != null ? String(deadline.tax_year) : "—";
+    return deadline.tax_year != null ? `שנת ${deadline.tax_year}` : "ללא תקופה";
   }
-  return deadline.period || "—";
+
+  if (!deadline.period) return "ללא תקופה";
+
+  const periodMatch = /^(\d{4})-(\d{2})$/.exec(deadline.period);
+  if (!periodMatch) return deadline.period;
+
+  const year = periodMatch[1];
+  const month = HEBREW_SHORT_MONTHS[Number(periodMatch[2]) - 1];
+
+  return month ? `${month} ${year}` : deadline.period;
 };

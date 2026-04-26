@@ -13,7 +13,7 @@ import {
   ENTITY_TYPE_OPTIONS,
   VAT_REPORTING_FREQUENCY_OPTIONS,
 } from "../../constants";
-import { formatClientOfficeId } from "@/utils/utils";
+import { formatClientOfficeId, formatDate } from "@/utils/utils";
 import type { ClientEditFormValues } from "../../schemas";
 
 type EntityTypeField = ControllerRenderProps<ClientEditFormValues, "entity_type">;
@@ -27,6 +27,9 @@ type SharedSectionProps = {
   isLoading: boolean;
   register: UseFormRegister<ClientEditFormValues>;
 };
+
+const formatSystemMoney = (value: string | null): string =>
+  value ? `₪${Number(value).toLocaleString("he-IL")}` : "נקבע על ידי המערכת";
 
 const ReadonlyField = ({
   label,
@@ -203,7 +206,7 @@ export const ClientTaxProfileSection = ({
         )}
         <ReadonlyField
           label="תקרת פטור מע״מ"
-          value={client.vat_exempt_ceiling ? `₪${client.vat_exempt_ceiling}` : "נקבע על ידי המערכת"}
+          value={formatSystemMoney(client.vat_exempt_ceiling)}
           help="ערך מערכת/תצורה, לא שדה עריכה ידני."
         />
         <Input
@@ -215,7 +218,9 @@ export const ClientTaxProfileSection = ({
         />
         <ReadonlyField
           label="תאריך עדכון מקדמה"
-          value={client.advance_rate_updated_at ?? "לא קיים תאריך עדכון"}
+          value={client.advance_rate_updated_at
+            ? formatDate(client.advance_rate_updated_at)
+            : "לא קיים תאריך עדכון"}
           help="בהיעדר תאריך, אין להניח שהאחוז אומת מול מקור רשמי."
         />
       </div>

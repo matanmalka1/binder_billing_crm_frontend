@@ -26,13 +26,13 @@ const TRIGGER_LABEL_MAP: Record<TimelineNotificationTrigger, string> = {
   manual_payment_reminder:  "תזכורת תשלום",
 };
 
-// ── Typed lookup helpers (fall back to raw value if unknown) ──────────────────
+// ── Typed lookup helpers ──────────────────────────────────────────────────────
 
 export const getTimelineStatusLabel = (status: string): string =>
-  BINDER_STATUS_LABEL_MAP[status as TimelineBinderStatus] ?? status;
+  BINDER_STATUS_LABEL_MAP[status as TimelineBinderStatus] ?? "לא ידוע";
 
 export const getTimelineChannelLabel = (channel: string): string =>
-  CHANNEL_LABEL_MAP[channel as TimelineNotificationChannel] ?? channel;
+  CHANNEL_LABEL_MAP[channel as TimelineNotificationChannel] ?? "לא ידוע";
 
 export const getTimelineTriggerLabel = (trigger: string): string =>
-  TRIGGER_LABEL_MAP[trigger as TimelineNotificationTrigger] ?? trigger;
+  TRIGGER_LABEL_MAP[trigger as TimelineNotificationTrigger] ?? "לא ידוע";

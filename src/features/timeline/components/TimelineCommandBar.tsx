@@ -4,10 +4,9 @@ import { ChevronDown, Filter, RefreshCw, Search, X } from "lucide-react";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
-import { getEventColor } from "../constants";
-import { getEventTypeLabel } from "../utils";
 import { cn } from "../../../utils/utils";
 import type { EventTypeStat } from "../hooks/useClientTimelinePage";
+import type { TimelineFilterKey } from "../normalize";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -19,26 +18,38 @@ export interface TimelineCommandBarProps {
   onRefresh:           () => void;
   searchTerm:          string;
   onSearchChange:      (value: string) => void;
-  typeFilters:         string[];
-  onToggleTypeFilter:  (type: string) => void;
+  typeFilters:         TimelineFilterKey[];
+  onToggleTypeFilter:  (type: TimelineFilterKey) => void;
   onClearFilters:      () => void;
   pageSize:            number;
   onPageSizeChange:    (value: string) => void;
   eventTypeStats:      EventTypeStat[];
 }
 
-// ── Filter chips ──────────────────────────────────────────────────────────────
-// De-duplicate by label so visually identical event types (e.g. invoice_created /
-// invoice_attached → "חשבונית") are merged into a single chip.
-
-const buildFilterChips = (stats: EventTypeStat[]) => {
-  const seen = new Map<string, EventTypeStat & { label: string }>();
-  for (const stat of stats) {
-    const label = getEventTypeLabel(stat.type);
-    if (!seen.has(label)) seen.set(label, { ...stat, label });
-  }
-  return Array.from(seen.values());
+const FILTER_LABELS: Record<TimelineFilterKey, string> = {
+  all: "הכל",
+  past: "עבר",
+  future: "עתידי",
+  finance: "כספים",
+  binders: "קלסרים",
+  documents: "מסמכים",
+  tax: "מיסים",
+  communication: "תקשורת",
 };
+
+const FILTER_ORDER: TimelineFilterKey[] = [
+  "all",
+  "past",
+  "future",
+  "finance",
+  "binders",
+  "documents",
+  "tax",
+  "communication",
+];
+
+const getFilterCount = (stats: EventTypeStat[], key: TimelineFilterKey): number =>
+  stats.find((stat) => stat.type === key)?.count ?? 0;
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -60,8 +71,6 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
   const lastUpdated = lastEventTimestamp
     ? format(parseISO(lastEventTimestamp), "d MMM HH:mm", { locale: he })
     : null;
-
-  const filterChips = buildFilterChips(eventTypeStats);
 
   return (
     <div className="rounded-2xl border border-gray-200/60 bg-white/95 shadow-sm backdrop-blur-sm overflow-hidden">
@@ -99,7 +108,7 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
 
           {lastUpdated && (
             <span className="hidden md:block text-xs text-gray-400 whitespace-nowrap">
-              עדכון: {lastUpdated}
+              עודכן לאחרונה: {lastUpdated}
             </span>
           )}
 
@@ -141,22 +150,22 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
           סנן:
         </span>
 
-        {filterChips.map(({ type, label, count }) => {
+        {FILTER_ORDER.map((type) => {
+          const count = getFilterCount(eventTypeStats, type);
           const isActive = typeFilters.includes(type);
-          const colors   = getEventColor(type);
           return (
             <button
-              key={label}
+              key={type}
               onClick={() => onToggleTypeFilter(type)}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium",
                 "transition-all duration-150 border",
                 isActive
-                  ? cn(colors.chipActiveBg, colors.chipActiveText, colors.chipActiveBorder, "shadow-sm")
+                  ? "bg-primary-100 text-primary-800 border-primary-300 shadow-sm"
                   : "bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-100",
               )}
             >
-              {label}
+              {FILTER_LABELS[type]}
               {count > 0 && (
                 <span className={cn(
                   "rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none",

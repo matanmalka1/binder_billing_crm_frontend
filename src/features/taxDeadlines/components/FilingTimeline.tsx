@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Inbox } from "lucide-react";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
+import { Button } from "../../../components/ui/primitives/Button";
 import { Select } from "../../../components/ui/inputs/Select";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { taxDeadlinesApi, taxDeadlinesQK, getDeadlineTypeLabel } from "../api";
@@ -24,6 +25,7 @@ import {
   DeadlineUrgencyBadge,
 } from "./TaxDeadlineTableParts";
 import { getDeadlineRowClassName } from "./taxDeadlineTableUtils";
+import { cn } from "../../../utils/utils";
 
 interface FilingTimelineProps {
   clientId: number;
@@ -96,15 +98,19 @@ const TimelineToolbar = ({
             onChange={(e) => onChange({ year: e.target.value })}
             options={yearOptions}
           />
-          <label className="flex h-10 items-center gap-2 text-sm font-medium text-gray-700">
-            <input
-              type="checkbox"
-              checked={filters.overdueOnly}
-              onChange={(e) => onChange({ overdueOnly: e.target.checked })}
-              className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-            />
+          <Button
+            type="button"
+            variant="outline"
+            size="md"
+            aria-pressed={filters.overdueOnly}
+            onClick={() => onChange({ overdueOnly: !filters.overdueOnly })}
+            className={cn(
+              "h-10 whitespace-nowrap",
+              filters.overdueOnly && "border-negative-200 bg-negative-50 text-negative-700 ring-1 ring-negative-200",
+            )}
+          >
             באיחור בלבד
-          </label>
+          </Button>
         </div>
         {hasFilters && (
           <ActiveFilterBadges
