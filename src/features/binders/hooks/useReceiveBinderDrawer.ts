@@ -11,12 +11,13 @@ import { taxProfileApi, taxProfileQK } from "@/features/taxProfile";
 import { vatReportsApi } from "@/features/vatReports";
 import { useAuthStore } from "../../../store/auth.store";
 import { toast } from "../../../utils/toast";
-import { showErrorToast } from "../../../utils/utils";
+import { getHttpStatus, showErrorToast } from "../../../utils/utils";
 import { receiveBinderSchema, type ReceiveBinderFormValues } from "../schemas";
 import { toBinderPeriodValue } from "../utils";
 
 const ANNUAL_BINDER_TYPES = new Set(["annual_report", "capital_declaration"]);
 const PERIODIC_BINDER_TYPES = new Set(["vat", "salary"]);
+const DUPLICATE_BINDER_NUMBER_MESSAGE = "קיים כבר קלסר עם מספר זה ללקוח";
 
 const getDefaultValues = (): ReceiveBinderFormValues => ({
   client_record_id: undefined as unknown as number,
@@ -250,6 +251,10 @@ export const useReceiveBinderDrawer = (
       onSuccess?.();
     },
     onError: (err) => {
+      if (getHttpStatus(err) === 409) {
+        toast.error(DUPLICATE_BINDER_NUMBER_MESSAGE);
+        return;
+      }
       showErrorToast(err, "שגיאה בקליטת חומר");
     },
   });

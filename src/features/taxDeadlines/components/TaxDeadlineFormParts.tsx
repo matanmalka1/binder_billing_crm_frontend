@@ -71,6 +71,14 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
     typedForm.setValue("due_date", dueDate, { shouldDirty: true, shouldValidate: true });
   }, [deadlineType, period, typedForm, vatType]);
 
+  useEffect(() => {
+    if (deadlineType !== "annual_report" || period) return;
+    typedForm.setValue("period", String(new Date().getFullYear()), {
+      shouldDirty: false,
+      shouldValidate: true,
+    });
+  }, [deadlineType, period, typedForm]);
+
   return (
     <>
       <Select

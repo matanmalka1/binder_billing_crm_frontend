@@ -12,6 +12,7 @@ import {
   DeadlineUrgencyBadge,
   getDeadlineRowClassName,
 } from "./TaxDeadlineTableParts";
+import { getTaxDeadlinePeriodLabel } from "../utils";
 
 interface TaxDeadlinesTableProps {
   deadlines: TaxDeadlineResponse[];
@@ -67,7 +68,7 @@ export const TaxDeadlinesTable = ({
         key: "period",
         header: "תקופה",
         render: (deadline) => (
-          <span className="text-sm text-gray-500">{deadline.period || "—"}</span>
+          <span className="text-sm text-gray-500">{getTaxDeadlinePeriodLabel(deadline)}</span>
         ),
       },
       {
@@ -130,4 +131,3 @@ export const TaxDeadlinesTable = ({
 };
 
 TaxDeadlinesTable.displayName = "TaxDeadlinesTable";
-

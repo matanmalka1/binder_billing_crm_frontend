@@ -19,6 +19,16 @@ import { getErrorMessage } from "../../../utils/utils";
 
 const DUPLICATE_TAX_DEADLINE_MESSAGE = "קיים כבר מועד פעיל לאותו לקוח, סוג ותקופה";
 
+const isAnnualReportDeadline = (deadlineType: string) => deadlineType === "annual_report";
+
+const getSelectedTaxYear = (period: string) => Number(period || new Date().getFullYear());
+
+const toDeadlinePayloadPeriod = (values: Pick<CreateTaxDeadlineForm, "deadline_type" | "period">) =>
+  isAnnualReportDeadline(values.deadline_type) ? null : values.period || null;
+
+const toDeadlinePayloadTaxYear = (values: Pick<CreateTaxDeadlineForm, "deadline_type" | "period">) =>
+  isAnnualReportDeadline(values.deadline_type) ? getSelectedTaxYear(values.period) : null;
+
 export const useTaxDeadlines = () => {
   const queryClient = useQueryClient();
 
@@ -72,6 +82,7 @@ export const useTaxDeadlines = () => {
       deadline_type: string;
       due_date: string;
       period?: string | null;
+      tax_year?: number | null;
       payment_amount?: string | null;
       description?: string | null;
     }) => taxDeadlinesApi.createTaxDeadline(payload),
@@ -110,6 +121,7 @@ export const useTaxDeadlines = () => {
         deadline_type?: string;
         due_date?: string;
         period?: string | null;
+        tax_year?: number | null;
         payment_amount?: string | null;
         description?: string | null;
       };
@@ -177,15 +189,19 @@ export const useTaxDeadlines = () => {
     values: Pick<CreateTaxDeadlineForm, "client_id" | "deadline_type" | "period">,
     excludeId?: number,
   ): Promise<TaxDeadlineResponse | null> => {
-    if (!values.period) return null;
+    if (!isAnnualReportDeadline(values.deadline_type) && !values.period) return null;
     const response = await taxDeadlinesApi.listTaxDeadlines({
       client_record_id: Number(values.client_id),
       deadline_type: values.deadline_type,
-      period: values.period,
+      period: isAnnualReportDeadline(values.deadline_type) ? undefined : values.period,
       page: 1,
       page_size: 5,
     });
-    return response.items.find((deadline) => deadline.id !== excludeId) ?? null;
+    return response.items.find((deadline) => {
+      if (deadline.id === excludeId) return false;
+      if (!isAnnualReportDeadline(values.deadline_type)) return deadline.period === values.period;
+      return deadline.tax_year === getSelectedTaxYear(values.period);
+    }) ?? null;
   };
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -199,7 +215,8 @@ export const useTaxDeadlines = () => {
       client_record_id: Number(values.client_id),
       deadline_type: values.deadline_type,
       due_date: values.due_date,
-      period: values.period || null,
+      period: toDeadlinePayloadPeriod(values),
+      tax_year: toDeadlinePayloadTaxYear(values),
       payment_amount: values.payment_amount ? values.payment_amount : null,
       description: values.description || null,
     });
@@ -237,7 +254,8 @@ export const useTaxDeadlines = () => {
       payload: {
         deadline_type: values.deadline_type || undefined,
         due_date: values.due_date || undefined,
-        period: values.period || null,
+        period: toDeadlinePayloadPeriod(values),
+        tax_year: toDeadlinePayloadTaxYear(values),
         payment_amount: values.payment_amount ? values.payment_amount : null,
         description: values.description || null,
       },
@@ -267,7 +285,7 @@ export const useTaxDeadlines = () => {
     editForm.reset({
       deadline_type: deadline.deadline_type,
       due_date: deadline.due_date,
-      period: deadline.period ?? "",
+      period: deadline.deadline_type === "annual_report" ? String(deadline.tax_year ?? "") : deadline.period ?? "",
       payment_amount: deadline.payment_amount != null ? String(deadline.payment_amount) : "",
       description: deadline.description ?? "",
     });

@@ -15,6 +15,7 @@ export const taxDeadlinesApi = {
     deadline_type: string;
     due_date: string;
     period?: string | null;
+    tax_year?: number | null;
     payment_amount?: string | null;
     description?: string | null;
   }): Promise<TaxDeadlineResponse> => {
@@ -61,6 +62,7 @@ export const taxDeadlinesApi = {
       deadline_type?: string;
       due_date?: string;
       period?: string | null;
+      tax_year?: number | null;
       payment_amount?: string | null;
       description?: string | null;
     },

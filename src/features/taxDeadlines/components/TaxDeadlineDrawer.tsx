@@ -9,7 +9,7 @@ import {
   getDeadlineTypeLabel,
   getUrgencyColor,
 } from "../api";
-import { getDeadlineDaysLabel } from "../utils";
+import { getDeadlineDaysLabel, getTaxDeadlinePeriodLabel } from "../utils";
 import { formatDate, cn } from "../../../utils/utils";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
@@ -54,6 +54,7 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
           <DrawerSection title="פרטי מועד">
             <DrawerField label="לקוח" value={deadline.client_name ?? `#${deadline.client_record_id}`} />
             <DrawerField label="סוג מועד" value={getDeadlineTypeLabel(deadline.deadline_type)} />
+            <DrawerField label="תקופה" value={getTaxDeadlinePeriodLabel(deadline)} />
             <DrawerField label="תאריך יעד" value={formatDate(deadline.due_date)} />
             <DrawerField
               label="סכום לתשלום"

@@ -10,6 +10,7 @@ export interface TaxDeadlineResponse {
   client_name: string | null;
   deadline_type: string;
   period: string | null;
+  tax_year: number | null;
   due_date: string;
   status: string;
   payment_amount: string | null;
