@@ -33,7 +33,7 @@ export interface VatHistoryTabProps {
 export interface VatExportButtonsProps {
   clientId: number;
   period?: string;
-  showYearSelector?: boolean;
+  year?: number;
 }
 
 export interface VatCategoryTableProps {

@@ -115,8 +115,8 @@ export const VAT_CLIENT_SUMMARY_STATUS_VARIANTS: Record<string, "success" | "war
   filed: "success",
   ready_for_review: "warning",
   data_entry_in_progress: "info",
-  material_received: "neutral",
-  pending_materials: "neutral",
+  material_received: "info",
+  pending_materials: "warning",
 };
 
 export const VAT_WORKFLOW_STEPS = [

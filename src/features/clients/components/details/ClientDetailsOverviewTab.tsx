@@ -58,6 +58,12 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
     };
   }, [isEditing]);
 
+  useEffect(() => {
+    if (activeTab !== "details") {
+      setIsEditing(false);
+    }
+  }, [activeTab]);
+
   return (
     <div className="space-y-6">
       {activeTab === "details" && (

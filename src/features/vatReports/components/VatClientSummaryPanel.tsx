@@ -1,12 +1,14 @@
 import { useState, useMemo } from "react";
-import { Plus, ExternalLink } from "lucide-react";
+import { CheckCircle2, ExternalLink, MinusCircle, Plus, ReceiptText, WalletCards } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Button } from "../../../components/ui/primitives/Button";
+import { Select } from "../../../components/ui/inputs/Select";
+import { StatsCard } from "../../../components/ui/layout/StatsCard";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
 import { VatExportButtons } from "./VatExportButtons";
 import type { CreateVatWorkItemPayload, VatAnnualSummary, VatPeriodRow } from "../api";
-import { showErrorToast } from "../../../utils/utils";
+import { getReportingPeriodMonthLabel, showErrorToast } from "../../../utils/utils";
 import { useAuthStore } from "../../../store/auth.store";
 import { VAT_CLIENT_SUMMARY_STATUS_VARIANTS } from "../constants";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
@@ -21,17 +23,23 @@ const getNetVatTone = (value: string | number | null | undefined) =>
   Number(value) >= 0 ? semanticMonoToneClasses.negative : semanticMonoToneClasses.positive;
 
 const AmountCell = ({ value, bold }: { value: string | number | null | undefined; bold?: boolean }) => (
-  <span dir="ltr" className={`tabular-nums ${bold ? "font-bold" : ""} ${getNetVatTone(value)}`}>
+  <span
+    dir="ltr"
+    className={`inline-block min-w-24 text-left font-mono tabular-nums ${bold ? "font-bold" : ""} ${getNetVatTone(value)}`}
+  >
     {fmt(value)}
   </span>
 );
 
 const NeutralAmount = ({ value }: { value: string | number | null | undefined }) => (
-  <span dir="ltr" className="tabular-nums text-gray-700">{fmt(value)}</span>
+  <span dir="ltr" className="inline-block min-w-24 text-left font-mono tabular-nums text-gray-700">
+    {fmt(value)}
+  </span>
 );
 
-const thCls = "px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-gray-500";
-const tdCls = "px-4 py-3 text-sm";
+const thCls = "px-5 py-3 text-right text-xs font-semibold text-gray-500";
+const tdCls = "px-5 py-4 text-sm";
+const currencyTdCls = `${tdCls} text-left align-middle tabular-nums`;
 
 interface YearGroupProps {
   annual: VatAnnualSummary;
@@ -39,49 +47,81 @@ interface YearGroupProps {
   onRowClick: (row: VatPeriodRow) => void;
 }
 
+const formatPeriodLabel = (period: string, isBimonthly: boolean) => {
+  const [year, month] = period.split("-");
+  const yearNumber = Number(year);
+  if (!month || !Number.isInteger(yearNumber)) return period;
+  const monthLabel = getReportingPeriodMonthLabel(period, isBimonthly ? 2 : 1).replace("-", "–");
+  return monthLabel === period ? period : `${monthLabel} ${yearNumber}`;
+};
+
+const YearSummary = ({ annual }: { annual: VatAnnualSummary }) => (
+  <section className="space-y-3">
+    <div className="mb-3">
+      <div>
+        <h3 className="text-sm font-semibold text-gray-900">סיכום מע״מ לשנת {annual.year}</h3>
+        <p className="mt-0.5 text-xs text-gray-500">נתוני התקופות שהוקלדו והוגשו עבור הלקוח</p>
+      </div>
+    </div>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <StatsCard
+        title="תקופות שהוגשו"
+        value={`${annual.filed_count} מתוך ${annual.periods_count}`}
+        icon={CheckCircle2}
+        variant="green"
+      />
+      <StatsCard
+        title="מע״מ עסקאות"
+        value={fmt(annual.total_output_vat)}
+        icon={ReceiptText}
+        variant="neutral"
+      />
+      <StatsCard
+        title="מע״מ תשומות"
+        value={fmt(annual.total_input_vat)}
+        icon={MinusCircle}
+        variant="neutral"
+      />
+      <StatsCard
+        title="מע״מ נטו לתשלום"
+        value={fmt(annual.net_vat)}
+        icon={WalletCards}
+        variant={Number(annual.net_vat) >= 0 ? "red" : "green"}
+      />
+    </div>
+  </section>
+);
+
 const YearGroup: React.FC<YearGroupProps> = ({ annual, rows, onRowClick }) => {
-  const allFiled = annual.filed_count === annual.periods_count && annual.periods_count > 0;
+  const isBimonthly = annual.periods_count <= 6;
 
   return (
     <>
-      {/* Year header row */}
-      <tr className="bg-gray-50/80 border-t-2 border-gray-200">
-        <td className="px-4 py-2 font-bold text-gray-800 text-sm">{annual.year}</td>
-        <td className="px-4 py-2">
-          <Badge variant={allFiled ? "success" : "neutral"} className="text-xs">
-            {annual.filed_count}/{annual.periods_count} הוגשו
-          </Badge>
-        </td>
-        <td className={`${tdCls} font-semibold`}>
-          <NeutralAmount value={annual.total_output_vat} />
-        </td>
-        <td className={`${tdCls} font-semibold`}>
-          <NeutralAmount value={annual.total_input_vat} />
-        </td>
-        <td className={`${tdCls} font-bold`}>
-          <AmountCell value={annual.net_vat} bold />
-        </td>
-        <td />
-      </tr>
-
-      {/* Period rows */}
       {rows.map((row) => (
         <tr
           key={row.period}
           onClick={() => onRowClick(row)}
-          className="group cursor-pointer border-t border-gray-100 transition-colors hover:bg-primary-50/30"
+          className="group cursor-pointer border-t border-gray-100 transition-colors hover:bg-gray-50"
         >
-          <td className={`${tdCls} pl-8 font-mono font-medium text-gray-700`}>{row.period}</td>
           <td className={tdCls}>
-            <Badge variant={VAT_CLIENT_SUMMARY_STATUS_VARIANTS[row.status] ?? "neutral"}>
+            <div className="font-semibold text-gray-900">{formatPeriodLabel(row.period, isBimonthly)}</div>
+          </td>
+          <td className={tdCls}>
+            <Badge
+              variant={VAT_CLIENT_SUMMARY_STATUS_VARIANTS[row.status] ?? "neutral"}
+              className="inline-flex min-w-28 items-center justify-center px-3 py-1 text-center"
+            >
               {getVatWorkItemStatusLabel(row.status)}
             </Badge>
           </td>
-          <td className={tdCls}><NeutralAmount value={row.total_output_vat} /></td>
-          <td className={tdCls}><NeutralAmount value={row.total_input_vat} /></td>
-          <td className={tdCls}><AmountCell value={row.net_vat} /></td>
-          <td className="px-3 py-3 w-8">
-            <ExternalLink className="h-3.5 w-3.5 text-gray-300 transition-colors group-hover:text-primary-500" />
+          <td className={currencyTdCls}><NeutralAmount value={row.total_output_vat} /></td>
+          <td className={currencyTdCls}><NeutralAmount value={row.total_input_vat} /></td>
+          <td className={currencyTdCls}><AmountCell value={row.net_vat} /></td>
+          <td className="w-28 px-5 py-4 text-left">
+            <Button variant="ghost" size="sm" className="text-gray-500 group-hover:text-primary-600">
+              <ExternalLink className="h-3.5 w-3.5" />
+              פתח דוח
+            </Button>
           </td>
         </tr>
       ))}
@@ -95,16 +135,23 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
 
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const { data, isLoading, error, createMutation } = useVatClientSummary(clientId);
 
-  const grouped = useMemo(() => {
-    const periods = data?.periods ?? [];
+  const yearOptions = useMemo(() => {
+    const years = data?.annual.map((a) => a.year) ?? [selectedYear];
+    return years.map((year) => ({ value: String(year), label: String(year) }));
+  }, [data, selectedYear]);
+
+  const selectedAnnual = useMemo(() => {
     const annual = data?.annual ?? [];
-    return annual.map((a) => ({
-      annual: a,
-      rows: periods.filter((p) => p.period.startsWith(String(a.year))),
-    }));
-  }, [data]);
+    return annual.find((a) => a.year === selectedYear) ?? annual[0] ?? null;
+  }, [data, selectedYear]);
+
+  const rows = useMemo(() => {
+    if (!selectedAnnual) return [];
+    return (data?.periods ?? []).filter((p) => p.period.startsWith(String(selectedAnnual.year)));
+  }, [data, selectedAnnual]);
 
   const handleCreate = async (payload: CreateVatWorkItemPayload) => {
     setCreateError(null);
@@ -126,12 +173,20 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
   return (
     <div className="space-y-4" dir="rtl">
       {/* Action bar */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <Button onClick={() => setCreateOpen(true)} size="sm">
           <Plus className="h-4 w-4" />
           פתיחת תיק מע״מ
         </Button>
-        {role === "advisor" && <VatExportButtons clientId={clientId} showYearSelector />}
+        <div className="flex flex-wrap items-center gap-2">
+          <Select
+            value={String(selectedAnnual?.year ?? selectedYear)}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            options={yearOptions}
+            className="w-28 py-1.5"
+          />
+          {role === "advisor" && <VatExportButtons clientId={clientId} year={selectedAnnual?.year ?? selectedYear} />}
+        </div>
       </div>
 
       {/* Error */}
@@ -140,6 +195,8 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
           שגיאה בטעינת נתוני מע״מ. אנא נסה שוב מאוחר יותר.
         </div>
       )}
+
+      {!error && selectedAnnual && <YearSummary annual={selectedAnnual} />}
 
       {/* Table */}
       {!error && (
@@ -162,21 +219,14 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
                     טוען...
                   </td>
                 </tr>
-              ) : grouped.length === 0 ? (
+              ) : !selectedAnnual || rows.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-10 text-center text-sm text-gray-400">
                     אין תקופות מע״מ ללקוח זה
                   </td>
                 </tr>
               ) : (
-                grouped.map(({ annual, rows }) => (
-                  <YearGroup
-                    key={annual.year}
-                    annual={annual}
-                    rows={rows}
-                    onRowClick={handleRowClick}
-                  />
-                ))
+                <YearGroup annual={selectedAnnual} rows={rows} onRowClick={handleRowClick} />
               )}
             </tbody>
           </table>
