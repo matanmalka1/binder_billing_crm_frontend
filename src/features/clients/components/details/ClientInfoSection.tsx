@@ -1,10 +1,11 @@
-import { type FC } from "react";
+import { type FC, type ReactNode } from "react";
 import { Edit2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "../../../../components/ui/primitives/Card";
 import { Button } from "../../../../components/ui/primitives/Button";
+import { Badge, type BadgeVariant } from "../../../../components/ui/primitives/Badge";
 import { DefinitionList } from "../../../../components/ui/layout/DefinitionList";
-import { formatClientOfficeId, formatDate } from "@/utils/utils";
+import { cn, formatClientOfficeId, formatDate } from "@/utils/utils";
 import type { ClientResponse } from "../../api";
 import {
   getClientIdNumberTypeLabel,
@@ -47,6 +48,43 @@ const formatMoney = (value: string | null): string =>
   value ? `₪${Number(value).toLocaleString("he-IL")}` : EMPTY_VALUE;
 
 const getTaxBranchValue = (value: string | null): string => value ?? EMPTY_VALUE;
+
+const statusVariantMap: Record<ClientResponse["status"], BadgeVariant> = {
+  active: "success",
+  frozen: "warning",
+  closed: "neutral",
+};
+
+const SectionCard = ({
+  title,
+  children,
+  className,
+}: {
+  title: string;
+  children: ReactNode;
+  className?: string;
+}) => (
+  <section className={cn("rounded-xl border border-gray-200 bg-white p-5", className)}>
+    <h3 className="mb-4 text-sm font-semibold text-gray-900">{title}</h3>
+    {children}
+  </section>
+);
+
+const SummaryCard = ({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: ReactNode;
+  hint?: string;
+}) => (
+  <div className="rounded-xl border border-gray-200 bg-white px-4 py-3">
+    <p className="text-xs font-medium text-gray-500">{label}</p>
+    <div className="mt-2 text-base font-semibold text-gray-950">{value}</div>
+    {hint ? <p className="mt-1 text-xs text-gray-500">{hint}</p> : null}
+  </div>
+);
 
 export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   client,
@@ -114,6 +152,13 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   const vatReportingLabel = isOsekPatur
     ? "פטור - לא רלוונטי לדיווח תקופתי"
     : getClientVatReportingLabel(client).replace("—", EMPTY_VALUE);
+  const entityTypeLabel = client.entity_type
+    ? getEntityTypeLabel(client.entity_type)
+    : EMPTY_VALUE;
+  const officeClientNumber = client.office_client_number != null
+    ? formatClientOfficeId(client.office_client_number)
+    : EMPTY_VALUE;
+  const statusLabel = getClientStatusLabel(client.status);
 
   const taxItems = [
     {
@@ -158,55 +203,72 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   ];
 
   return (
-    <Card
-      title="פרטי לקוח"
-      actions={
-        canEdit ? (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onEditStart}
-            className="gap-2"
-          >
-            <Edit2 className="h-4 w-4" />
-            ערוך פרטים
-          </Button>
-        ) : undefined
-      }
-    >
+    <div className="space-y-5">
+      <Card>
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0 space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="truncate text-2xl font-semibold text-gray-950">
+                {client.full_name}
+              </h2>
+              <Badge variant={statusVariantMap[client.status]}>{statusLabel}</Badge>
+            </div>
+            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-600">
+              <span>מספר לקוח במשרד: {officeClientNumber}</span>
+              <span>סוג ישות: {entityTypeLabel}</span>
+              <span>מזהה מערכת: #{client.id}</span>
+            </div>
+          </div>
+          {canEdit ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onEditStart}
+              className="gap-2 self-start"
+            >
+              <Edit2 className="h-4 w-4" />
+              ערוך פרטים
+            </Button>
+          ) : null}
+        </div>
+      </Card>
+
       <div className="space-y-6">
-        <div className="rounded-lg border border-primary-100 bg-primary-50 px-4 py-3">
-          <p className="text-xs font-medium text-primary-700">מספר לקוח במשרד</p>
-          <p className="mt-1 text-2xl font-semibold text-primary-950">
-            {client.office_client_number != null
-              ? formatClientOfficeId(client.office_client_number)
-              : EMPTY_VALUE}
-          </p>
-          <p className="mt-1 text-xs text-primary-700">מזהה מערכת משני: #{client.id}</p>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <SummaryCard
+            label="סטטוס"
+            value={<Badge variant={statusVariantMap[client.status]}>{statusLabel}</Badge>}
+          />
+          <SummaryCard label="סוג ישות" value={entityTypeLabel} />
+          <SummaryCard
+            label="אחוז מקדמה"
+            value={client.advance_rate != null ? `${client.advance_rate}%` : "לא אומת"}
+            hint={client.advance_rate_updated_at ? `עודכן ${formatDate(client.advance_rate_updated_at)}` : undefined}
+          />
+          <SummaryCard label='דיווח מע"מ' value={vatReportingLabel} />
         </div>
-        <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-gray-900">זהות משפטית</h3>
-          <DefinitionList columns={4} items={identityItems} />
-        </section>
-        <section className="space-y-3 border-t border-gray-100 pt-4">
-          <h3 className="text-sm font-semibold text-gray-900">פרטי קשר</h3>
-          <DefinitionList columns={3} items={contactItems} />
-        </section>
-        <div className="border-t border-gray-100 pt-4">
-          <h3 className="mb-3 text-sm font-semibold text-gray-900">פרופיל מס</h3>
-          <DefinitionList columns={3} items={taxItems} />
+
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <SectionCard title="זהות משפטית">
+            <DefinitionList columns={2} items={identityItems} />
+          </SectionCard>
+          <SectionCard title="פרטי קשר">
+            <DefinitionList columns={2} items={contactItems} />
+          </SectionCard>
+          <SectionCard title="פרופיל מס">
+            <DefinitionList columns={2} items={taxItems} />
+          </SectionCard>
+          <SectionCard title="פרטי משרד">
+            <DefinitionList columns={2} items={officeItems} />
+          </SectionCard>
         </div>
-        <section className="space-y-3 border-t border-gray-100 pt-4">
-          <h3 className="text-sm font-semibold text-gray-900">פרטי משרד</h3>
-          <DefinitionList columns={3} items={officeItems} />
-        </section>
-        <section className="space-y-2 border-t border-gray-100 pt-4">
-          <h3 className="text-sm font-semibold text-gray-900">הערות פנימיות</h3>
+
+        <SectionCard title="הערות פנימיות">
           <p className="whitespace-pre-wrap rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-sm text-gray-700">
             {notesValue || EMPTY_VALUE}
           </p>
-        </section>
+        </SectionCard>
       </div>
-    </Card>
+    </div>
   );
 };
