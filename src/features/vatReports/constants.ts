@@ -4,6 +4,7 @@ import {
   getVatWorkItemStatusLabel,
 } from "../../utils/enums";
 import { CATEGORY_COLOR_TOKENS } from "../../utils/chartColors";
+import { ALL_STATUSES_OPTION, ALL_CATEGORIES_OPTION } from "@/constants/filterOptions.constants";
 
 export { VAT_RATE_TYPE_LABELS, DOCUMENT_TYPE_LABELS };
 
@@ -127,7 +128,7 @@ export const VAT_WORKFLOW_STEPS = [
 ] as const;
 
 export const VAT_WORK_ITEMS_STATUS_OPTIONS: Array<{ value: string; label: string }> = [
-  { value: "", label: "כל הסטטוסים" },
+  ALL_STATUSES_OPTION,
   ...VAT_WORKFLOW_STEPS.map((status) => ({
     value: status,
     label: getVatWorkItemStatusLabel(status),
@@ -135,7 +136,7 @@ export const VAT_WORK_ITEMS_STATUS_OPTIONS: Array<{ value: string; label: string
 ];
 
 export const VAT_EXPENSE_CATEGORY_FILTER_OPTIONS = [
-  { value: "", label: "כל הקטגוריות" },
+  ALL_CATEGORIES_OPTION,
   ...EXPENSE_CATEGORIES.map((c) => ({ value: c, label: CATEGORY_LABELS[c] ?? c })),
 ];
 

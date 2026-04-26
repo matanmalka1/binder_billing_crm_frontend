@@ -6,6 +6,7 @@ import { ClientFilterControl } from "@/components/shared/client/ClientFilterCont
 import { STATUS_LABELS } from "../../api/utils";
 import type { AnnualReportStatus } from "../../api/contracts";
 import { cn, YEAR_OPTIONS } from "../../../../utils/utils";
+import { ALL_STATUSES_OPTION, ALL_YEARS_OPTION } from "@/constants/filterOptions.constants";
 
 export interface AnnualReportsFilters {
   client_id: string;
@@ -21,16 +22,13 @@ interface AnnualReportsFiltersBarProps {
 }
 
 const STATUS_OPTIONS = [
-  { value: "", label: "כל הסטטוסים" },
+  ALL_STATUSES_OPTION,
   ...(Object.entries(STATUS_LABELS) as [AnnualReportStatus, string][]).map(
     ([value, label]) => ({ value, label }),
   ),
 ];
 
-const YEAR_FILTER_OPTIONS = [
-  { value: "", label: "כל השנים" },
-  ...YEAR_OPTIONS,
-];
+const YEAR_FILTER_OPTIONS = [ALL_YEARS_OPTION, ...YEAR_OPTIONS];
 
 export const AnnualReportsFiltersBar: React.FC<AnnualReportsFiltersBarProps> = ({
   filters,

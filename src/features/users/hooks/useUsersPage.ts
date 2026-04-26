@@ -7,8 +7,7 @@ import { showErrorToast } from "../../../utils/utils";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { parsePositiveInt } from "../../../utils/utils";
 import { useRole } from "../../../hooks/useRole";
-
-const PAGE_SIZE = 20;
+import { PAGE_SIZE_SM as PAGE_SIZE } from "@/constants/pagination.constants";
 
 const invalidateUsers = (queryClient: ReturnType<typeof useQueryClient>) =>
   queryClient.invalidateQueries({ queryKey: usersQK.all });

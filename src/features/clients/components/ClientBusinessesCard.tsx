@@ -11,7 +11,7 @@ import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActio
 import { Input } from "../../../components/ui/inputs/Input";
 import { clientsApi, clientsQK } from "../api";
 import type { BusinessResponse, UpdateBusinessPayload } from "../api";
-import { BUSINESS_STATUS_LABELS } from "../constants";
+import { BUSINESS_STATUS_LABELS } from "../../businesses/constants";
 import { CLIENT_ROUTES } from "../api/endpoints";
 import { formatDate } from "@/utils/utils";
 import { useBusinessActions } from "../hooks/useBusinessActions";

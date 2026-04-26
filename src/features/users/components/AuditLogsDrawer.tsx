@@ -5,6 +5,7 @@ import { Badge } from "../../../components/ui/primitives/Badge";
 import { Button } from "../../../components/ui/primitives/Button";
 import { usersApi, usersQK } from "../api";
 import { formatDateTime } from "../../../utils/utils";
+import { PAGE_SIZE_SM as PAGE_SIZE } from "@/constants/pagination.constants";
 
 const auditActionLabel: Record<string, string> = {
   login_success: "כניסה למערכת",
@@ -21,8 +22,6 @@ interface AuditLogsDrawerProps {
   open: boolean;
   onClose: () => void;
 }
-
-const PAGE_SIZE = 20;
 
 export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({
   open,

@@ -1,4 +1,5 @@
 import { BINDER_TYPE_LABELS, BINDER_STATUS_LABELS } from "../../utils/enums";
+import { ALL_STATUSES_OPTION } from "@/constants/filterOptions.constants";
 export { getBinderTypeLabel } from "../../utils/enums";
 
 export const BINDER_STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
@@ -15,6 +16,6 @@ export const BINDER_TYPE_OPTIONS: { value: string; label: string; disabled?: tru
 ];
 
 export const BINDER_STATUS_OPTIONS: { value: string; label: string }[] = [
-  { value: "", label: "כל הסטטוסים" },
+  ALL_STATUSES_OPTION,
   ...Object.entries(BINDER_STATUS_LABELS).map(([value, label]) => ({ value, label })),
 ];

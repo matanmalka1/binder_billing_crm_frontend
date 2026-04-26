@@ -3,8 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authorityContactsApi, authorityContactsQK } from "../api";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
-
-const PAGE_SIZE = 20;
+import { PAGE_SIZE_SM as PAGE_SIZE } from "@/constants/pagination.constants";
 
 export const useAuthorityContacts = (clientId: number) => {
   const queryClient = useQueryClient();

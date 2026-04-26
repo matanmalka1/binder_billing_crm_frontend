@@ -3,7 +3,7 @@ import { getYear } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ArrowLeft, LoaderCircle } from "lucide-react";
 
 import { Input } from "@/components/ui/inputs/Input";
 import { Alert } from "@/components/ui/overlays/Alert";
@@ -114,13 +114,29 @@ export const Login: React.FC = () => {
               {...register("password")}
             />
 
-            {/* Server error */}
-            {error && <Alert variant="error" message={error} className="rounded-xl" />}
+            <div className="min-h-[4.5rem]" aria-live="polite">
+              {isLoading ? (
+                <div
+                  className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm"
+                  role="status"
+                >
+                  <LoaderCircle className="h-4 w-4 animate-spin text-slate-500" />
+                  <span>בודקים את פרטי ההתחברות...</span>
+                </div>
+              ) : error ? (
+                <Alert
+                  variant="error"
+                  message={error}
+                  className="rounded-xl"
+                />
+              ) : null}
+            </div>
 
             {/* Submit */}
             <Button
               type="submit"
               isLoading={isLoading}
+              loadingLabel="מתחברים..."
               fullWidth
               className="group relative mt-2 overflow-hidden rounded-xl bg-slate-900 px-6 py-3.5 text-sm font-bold text-white hover:bg-slate-800 focus:ring-slate-900 active:scale-[0.98]"
             >

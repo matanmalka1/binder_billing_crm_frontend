@@ -4,6 +4,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
   size?: "sm" | "md";
   isLoading?: boolean;
+  loadingLabel?: string;
   fullWidth?: boolean;
 }
 
@@ -13,6 +14,7 @@ export const Button: React.FC<ButtonProps> = ({
   variant = "primary",
   size = "md",
   isLoading,
+  loadingLabel,
   disabled,
   fullWidth = false,
   ...props
@@ -45,14 +47,19 @@ export const Button: React.FC<ButtonProps> = ({
         className,
       )}
       disabled={disabled || isLoading}
+      aria-busy={isLoading || undefined}
       {...props}
     >
       {isLoading && (
         <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
       )}
-      <span className={cn("inline-flex items-center gap-2", isLoading && "opacity-0")}>
-        {children}
-      </span>
+      {isLoading && loadingLabel ? (
+        <span>{loadingLabel}</span>
+      ) : (
+        <span className={cn("inline-flex items-center gap-2", isLoading && "opacity-0")}>
+          {children}
+        </span>
+      )}
     </button>
   );
 };

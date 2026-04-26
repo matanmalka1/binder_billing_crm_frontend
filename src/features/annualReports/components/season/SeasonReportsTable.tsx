@@ -110,7 +110,7 @@ const columns: Column<AnnualReportFull>[] = [
   },
   {
     key: "submitted_at",
-    header: "הוגש",
+    header: "הוגש ב",
     render: (r) => (
       <span className="text-sm text-gray-500 tabular-nums">{formatDate(r.submitted_at)}</span>
     ),

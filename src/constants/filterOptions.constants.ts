@@ -4,3 +4,9 @@ export const getResultTypeLabel = (resultType: string) => {
   if (resultType === "client") return "לקוח";
   return "—";
 };
+
+export const ALL_STATUSES_OPTION = { value: "", label: "כל הסטטוסים" } as const;
+export const ALL_TYPES_OPTION = { value: "", label: "כל הסוגים" } as const;
+export const ALL_MONTHS_OPTION = { value: "", label: "כל החודשים" } as const;
+export const ALL_YEARS_OPTION = { value: "", label: "כל השנים" } as const;
+export const ALL_CATEGORIES_OPTION = { value: "", label: "כל הקטגוריות" } as const;

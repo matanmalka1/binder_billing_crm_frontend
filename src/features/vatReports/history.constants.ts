@@ -16,4 +16,4 @@ export const INVOICE_TYPE_LABELS: Record<string, string> = {
 
 export const AUTO_TRANSITION_NOTE = "Auto-transitioned on first invoice entry";
 
-export const PAGE_SIZE = 20;
+export { PAGE_SIZE_SM as PAGE_SIZE } from "@/constants/pagination.constants";

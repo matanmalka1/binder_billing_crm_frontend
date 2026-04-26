@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getErrorMessage, showErrorToast } from "@/utils/utils";
 import { toast } from "@/utils/toast";
+import { PAGE_SIZE_MD } from "@/constants/pagination.constants";
 
-const PAGE_SIZE = 50;
-const PAGE_PARAMS = { page: 1, page_size: PAGE_SIZE };
+const PAGE_PARAMS = { page: 1, page_size: PAGE_SIZE_MD };
 
 interface UseNotesResourceOptions<TNote> {
   enabled: boolean;

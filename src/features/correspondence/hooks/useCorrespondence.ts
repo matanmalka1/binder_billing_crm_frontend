@@ -5,8 +5,7 @@ import { authorityContactsApi, authorityContactsQK } from "@/features/authorityC
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { CorrespondenceFormValues } from "../schemas";
 import { toast } from "../../../utils/toast";
-
-const PAGE_SIZE = 50;
+import { PAGE_SIZE_MD as PAGE_SIZE } from "@/constants/pagination.constants";
 
 export const useCorrespondence = (businessId: number | undefined, clientId?: number) => {
   const queryClient = useQueryClient();

@@ -1,4 +1,5 @@
 import { TAX_DEADLINE_TYPE_LABELS, getDeadlineTypeLabel } from "../../utils/enums";
+import { ALL_STATUSES_OPTION, ALL_TYPES_OPTION } from "@/constants/filterOptions.constants";
 
 export { getDeadlineTypeLabel as getTaxDeadlineTypeLabel };
 
@@ -7,12 +8,12 @@ export const TAX_DEADLINE_TYPE_OPTIONS = Object.entries(TAX_DEADLINE_TYPE_LABELS
   .map(([value, label]) => ({ value, label }));
 
 export const TAX_DEADLINE_FILTER_TYPE_OPTIONS = [
-  { value: "", label: "כל הסוגים" },
+  ALL_TYPES_OPTION,
   ...TAX_DEADLINE_TYPE_OPTIONS,
 ];
 
 export const TAX_DEADLINE_STATUS_OPTIONS = [
-  { value: "", label: "כל הסטטוסים" },
+  ALL_STATUSES_OPTION,
   { value: "pending", label: "ממתין" },
   { value: "completed", label: "הושלם" },
   { value: "canceled", label: "בוטל" },

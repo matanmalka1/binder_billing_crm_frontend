@@ -1,5 +1,5 @@
 import { makeLabelGetter } from "../../utils/labels";
-import type { BusinessStatus, ClientResponse, ClientStatus, EntityType, VatType } from "./api";
+import type { ClientResponse, ClientStatus, EntityType, VatType } from "./api";
 
 export type ActiveClientDetailsTab =
   | "details"
@@ -96,12 +96,6 @@ export const ENTITY_TYPE_OPTIONS = ENTITY_TYPES.map((type) => ({
 export const CLIENT_STATUSES = ["active", "frozen", "closed"] as const satisfies readonly ClientStatus[];
 
 export const CLIENT_STATUS_LABELS: Record<ClientStatus, string> = {
-  active: "פעיל",
-  frozen: "מוקפא",
-  closed: "סגור",
-};
-
-export const BUSINESS_STATUS_LABELS: Record<BusinessStatus, string> = {
   active: "פעיל",
   frozen: "מוקפא",
   closed: "סגור",

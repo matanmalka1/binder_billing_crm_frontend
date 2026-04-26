@@ -5,9 +5,10 @@ import { Select } from "../../../components/ui/inputs/Select";
 import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { reminderTypeLabels, type ReminderType } from "../types";
+import { ALL_TYPES_OPTION } from "@/constants/filterOptions.constants";
 
 const TYPE_OPTIONS = [
-  { value: "", label: "כל הסוגים" },
+  ALL_TYPES_OPTION,
   ...(Object.entries(reminderTypeLabels) as [ReminderType, string][]).map(([value, label]) => ({
     value,
     label,

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "../../../../components/ui/primitives/Button";
 import { getChargeStatusLabel } from "../../../../utils/enums";
 import { annualReportChargesApi, annualReportsQK } from "../../api";
+import { PAGE_SIZE_SM } from "@/constants/pagination.constants";
 
 interface Props { reportId: number; }
 
@@ -11,11 +12,10 @@ const fmt = (n: string | number) =>
 
 export const ReportChargesPanel: React.FC<Props> = ({ reportId }) => {
   const [page, setPage] = useState(1);
-  const PAGE_SIZE = 20;
 
   const { data, isLoading } = useQuery({
-    queryKey: annualReportsQK.reportCharges(reportId, page, PAGE_SIZE),
-    queryFn: () => annualReportChargesApi.listCharges(reportId, page, PAGE_SIZE),
+    queryKey: annualReportsQK.reportCharges(reportId, page, PAGE_SIZE_SM),
+    queryFn: () => annualReportChargesApi.listCharges(reportId, page, PAGE_SIZE_SM),
     enabled: !!reportId,
   });
 

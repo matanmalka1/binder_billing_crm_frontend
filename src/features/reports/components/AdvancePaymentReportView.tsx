@@ -4,8 +4,9 @@ import { AdvancePaymentReportTable } from "./AdvancePaymentReportTable";
 import { useAdvancePaymentReport } from "../hooks/useAdvancePaymentReport";
 import { MONTH_OPTIONS as BASE_MONTH_OPTIONS, YEAR_OPTIONS } from "../../../utils/utils";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
+import { ALL_MONTHS_OPTION } from "@/constants/filterOptions.constants";
 
-const MONTH_OPTIONS = [{ value: "", label: "כל החודשים" }, ...BASE_MONTH_OPTIONS];
+const MONTH_OPTIONS = [ALL_MONTHS_OPTION, ...BASE_MONTH_OPTIONS];
 
 export const AdvancePaymentReportView: React.FC = () => {
   const { year, setYear, month, setMonth, data, isLoading, error } =

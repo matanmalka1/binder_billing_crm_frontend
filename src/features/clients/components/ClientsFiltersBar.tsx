@@ -9,15 +9,12 @@ import {
   CLIENT_SORT_ORDER_OPTIONS,
   CLIENT_STATUS_LABELS,
   CLIENT_STATUS_OPTIONS,
-
 } from "../constants";
 import type { ClientsFiltersBarProps } from "../types";
 import { useAdvisorOptions } from "@/features/users";
+import { ALL_STATUSES_OPTION } from "@/constants/filterOptions.constants";
 
-const STATUS_OPTIONS = [
-  { value: "", label: "כל הסטטוסים" },
-  ...CLIENT_STATUS_OPTIONS,
-];
+const STATUS_OPTIONS = [ALL_STATUSES_OPTION, ...CLIENT_STATUS_OPTIONS];
 
 export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
   filters,
