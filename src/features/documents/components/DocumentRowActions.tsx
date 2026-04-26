@@ -27,7 +27,7 @@ export const DocumentRowActions: React.FC<DocumentRowActionsProps> = ({
   onDelete,
   handleExpandVersions,
 }) => (
-  <RowActionsMenu ariaLabel={`פעולות למסמך ${doc.id}`}>
+  <RowActionsMenu ariaLabel={`פעולות למסמך ${doc.id}`} title="פעולות">
       <RowActionItem
         label="תצוגה מקדימה"
         onClick={() => onPreview(doc)}

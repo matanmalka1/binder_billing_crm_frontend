@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
-import { FileText } from "lucide-react";
+import { FileText, Search } from "lucide-react";
 import { Card } from "../../../components/ui/primitives/Card";
 import { DataTable } from "../../../components/ui/table/DataTable";
 import { Alert } from "../../../components/ui/overlays/Alert";
 import { Select } from "../../../components/ui/inputs/Select";
+import { Input } from "../../../components/ui/inputs/Input";
 import { DocumentsUploadCard } from "./DocumentsUploadCard";
 import { DocumentVersionsPanel } from "./DocumentVersionsPanel";
 import { DocumentPreviewModal } from "./DocumentPreviewModal";
@@ -20,12 +21,13 @@ import { toast } from "../../../utils/toast";
 import { DOC_TYPE_LABELS } from "../documents.constants";
 import type { BusinessResponse } from "@/features/clients/api";
 
+const TAX_YEARS = [2020, 2021, 2022, 2023, 2024, 2025];
+
 interface DocumentsDataCardsProps {
   documents: PermanentDocumentResponse[];
   signals: OperationalSignalsResponse;
   taxYear: number | null;
   onTaxYearChange: (year: number | null) => void;
-  taxYears: number[];
   businesses: BusinessResponse[];
   businessesLoading: boolean;
   submitUpload: (payload: {
@@ -46,7 +48,6 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
   signals,
   taxYear,
   onTaxYearChange,
-  taxYears,
   businesses,
   businessesLoading,
   submitUpload,
@@ -66,6 +67,9 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
 
   const [previewDoc, setPreviewDoc] = useState<PermanentDocumentResponse | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const [search, setSearch] = useState("");
+  const [filterType, setFilterType] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pendingReplaceId = useRef<number | null>(null);
@@ -140,6 +144,15 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     handleExpandVersions,
   });
 
+  const filteredDocuments = documents.filter((doc) => {
+    if (filterType && doc.document_type !== filterType) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      if (!(doc.original_filename ?? "").toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+
   const expandedDoc =
     expandedVersionsId !== null
       ? documents.find((d) => d.id === expandedVersionsId)
@@ -155,18 +168,35 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
       )}
 
       <Card
-        title={`מסמכים (${documents.length})`}
+        title={`מסמכים (${filteredDocuments.length}${filteredDocuments.length !== documents.length ? `/${documents.length}` : ""})`}
         actions={
-          <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-500 whitespace-nowrap">שנת מס:</label>
+          <div className="flex flex-wrap items-center gap-2">
+            <Input
+              placeholder="חיפוש לפי שם קובץ"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              startIcon={<Search className="h-3.5 w-3.5" />}
+              className="h-8 w-44 text-sm"
+            />
+            <Select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              options={[
+                { value: "", label: "כל הסוגים" },
+                ...Object.entries(DOC_TYPE_LABELS).map(([value, label]) => ({
+                  value,
+                  label,
+                })),
+              ]}
+            />
             <Select
               value={taxYear ?? ""}
               onChange={(e) =>
                 onTaxYearChange(e.target.value ? Number(e.target.value) : null)
               }
               options={[
-                { value: "", label: "הכל" },
-                ...taxYears.map((y) => ({
+                { value: "", label: "כל השנים" },
+                ...TAX_YEARS.map((y) => ({
                   value: String(y),
                   label: String(y),
                 })),
@@ -176,7 +206,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         }
       >
         <DataTable
-          data={documents}
+          data={filteredDocuments}
           columns={columns}
           getRowKey={(doc) => doc.id}
           emptyState={{ icon: FileText, message: "לא נמצאו מסמכים ללקוח זה" }}
@@ -197,10 +227,11 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
           submitUpload={submitUpload}
           uploadError={uploadError}
           uploading={uploading}
-          selectedTaxYear={taxYear}
+          initialTaxYear={taxYear}
         />
       </Card>
 
+      {/* Hidden file input exclusively for the replace flow */}
       <input
         ref={fileInputRef}
         type="file"

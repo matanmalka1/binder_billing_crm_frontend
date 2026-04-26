@@ -4,8 +4,6 @@ import { TableSkeleton } from "../../../components/ui/table/TableSkeleton";
 import { DocumentsDataCards } from "./DocumentsDataCards";
 import { useClientDocumentsTab } from "../hooks/useClientDocumentsTab";
 
-const TAX_YEARS = [2020, 2021, 2022, 2023, 2024, 2025];
-
 interface ClientDocumentsTabProps {
   clientId: number;
 }
@@ -36,7 +34,6 @@ export const ClientDocumentsTab: React.FC<ClientDocumentsTabProps> = ({ clientId
       signals={signals}
       taxYear={taxYear}
       onTaxYearChange={setTaxYear}
-      taxYears={TAX_YEARS}
       businesses={businesses}
       businessesLoading={businessesLoading}
       submitUpload={submitUpload}

@@ -24,7 +24,7 @@ export const documentsUploadSchema = z.object({
     "withholding_certificate",
     "nii_approval",
     "other",
-  ]),
+  ], { message: "יש לבחור סוג מסמך" }),
   business_id: z.number().nullable(),
   file: z
     .custom<File | null>((value) => value === null || value instanceof File)
@@ -40,7 +40,7 @@ export const documentsUploadSchema = z.object({
 });
 
 export const documentsUploadDefaultValues: DocumentsUploadFormValues = {
-  document_type: "id_copy",
+  document_type: "" as DocumentsUploadFormValues["document_type"],
   business_id: null,
   file: null,
   tax_year: null,
