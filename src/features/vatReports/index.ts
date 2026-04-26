@@ -1,9 +1,8 @@
 // Public surface of the vatReports feature — only import from this barrel externally
 export { vatReportsApi, vatReportsQK } from "./api";
-export { VatExpenseTab } from "./components/VatExpenseTab";
+export { VatInvoiceTab } from "./components/VatInvoiceTab";
 export { VatFiledBanner } from "./components/VatFiledBanner";
 export { VatHistoryTab } from "./components/VatHistoryTab";
-export { VatIncomeTab } from "./components/VatIncomeTab";
 export { VatSummaryTab } from "./components/VatSummaryTab";
 export { buildVatWorkItemColumns } from "./components/VatWorkItemColumns";
 export { VatWorkItemSummaryBar } from "./components/VatWorkItemSummaryBar";

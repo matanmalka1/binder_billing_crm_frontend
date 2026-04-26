@@ -48,15 +48,8 @@ export interface VatClientSummaryPanelProps {
   clientId: number;
 }
 
-export interface VatExpenseTabProps {
-  workItemId: number;
-  status: string;
-  invoices: VatInvoiceResponse[];
-  clientStatus?: string | null;
-  isFilingPending?: boolean;
-}
-
-export interface VatIncomeTabProps {
+export interface VatInvoiceTabProps {
+  invoiceType: "income" | "expense";
   workItemId: number;
   status: string;
   invoices: VatInvoiceResponse[];

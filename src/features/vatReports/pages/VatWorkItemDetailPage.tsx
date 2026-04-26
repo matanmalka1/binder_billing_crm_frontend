@@ -3,19 +3,17 @@ import { useSearchParams, useParams, Navigate } from "react-router-dom";
 import { LayoutDashboard, ClipboardList, ArrowUpCircle, Clock } from "lucide-react";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { Badge } from "@/components/ui/primitives/Badge";
-import { Button } from "@/components/ui/primitives/Button";
 import { TableSkeleton } from "@/components/ui/table/TableSkeleton";
 import { cn } from "@/utils/utils";
 import {
   isFiled,
   useVatWorkItemPage,
-  VatExpenseTab,
   VatFiledBanner,
   VatHistoryTab,
-  VatIncomeTab,
   VatSummaryTab,
   VatWorkItemSummaryBar,
 } from "@/features/vatReports";
+import { VatInvoiceTab } from "@/features/vatReports/components/VatInvoiceTab";
 
 type TabKey = "summary" | "income" | "expense" | "history";
 
@@ -45,6 +43,7 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
 
   const incomeCount = invoices.filter((i) => i.invoice_type === "income").length;
   const expenseCount = invoices.filter((i) => i.invoice_type === "expense").length;
+
   const tabs: { key: TabKey; label: string; icon: React.ElementType; badge?: number }[] = [
     { key: "summary", label: "סיכום", icon: LayoutDashboard },
     { key: "income", label: "עסקאות", icon: ClipboardList, badge: incomeCount },
@@ -70,26 +69,24 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
 
       <div
         role="tablist"
-        className="flex gap-0 border-b border-gray-200 bg-white/95 backdrop-blur-sm"
         dir="rtl"
+        className="flex border-b border-gray-200 bg-white/95 backdrop-blur-sm"
       >
         {tabs.map(({ key, label, icon: Icon, badge }) => (
-          <Button
+          <button
             key={key}
             type="button"
             role="tab"
             aria-selected={activeTab === key}
             onClick={() => setTab(key)}
-            variant="ghost"
-            size="sm"
             className={cn(
-              "rounded-none border-b-2 px-5 py-3 focus:ring-0 focus:ring-offset-0",
+              "inline-flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-colors focus:outline-none",
               activeTab === key
-                ? "border-primary-600 bg-primary-50/40 text-primary-700"
-                : "border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-800",
+                ? "border-primary-600 text-primary-700 bg-primary-50/40"
+                : "border-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-50",
             )}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="h-4 w-4 shrink-0" />
             {label}
             {badge !== undefined && badge > 0 && (
               <Badge
@@ -99,14 +96,15 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
                 {badge}
               </Badge>
             )}
-          </Button>
+          </button>
         ))}
       </div>
 
       <div>
         {activeTab === "summary" && <VatSummaryTab workItem={workItem} invoices={invoices} />}
         {activeTab === "income" && (
-          <VatIncomeTab
+          <VatInvoiceTab
+            invoiceType="income"
             workItemId={workItem.id}
             status={workItem.status}
             invoices={invoices}
@@ -115,7 +113,8 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
           />
         )}
         {activeTab === "expense" && (
-          <VatExpenseTab
+          <VatInvoiceTab
+            invoiceType="expense"
             workItemId={workItem.id}
             status={workItem.status}
             invoices={invoices}

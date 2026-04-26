@@ -20,11 +20,15 @@ import {
   DEFAULT_RATE_TYPE,
 } from "../constants";
 import { getVatInvoiceDefaultValues } from "../utils";
-import {
-  getVatRateTypeLabel,
-  getDocumentTypeLabel,
-} from "../../../utils/enums";
+import { getVatRateTypeLabel, getDocumentTypeLabel } from "../../../utils/enums";
 import type { VatInvoiceAddFormProps } from "../types";
+
+const NUMERIC_KEYS = ["ArrowLeft", "ArrowRight", "Delete", "Backspace", "Enter", "Tab"];
+
+const blockNonNumeric = (e: React.KeyboardEvent, allowDot = false) => {
+  const pattern = allowDot ? /[\d.]/ : /[\d]/;
+  if (!pattern.test(e.key) && !NUMERIC_KEYS.includes(e.key)) e.preventDefault();
+};
 
 export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
   invoiceType,
@@ -47,57 +51,48 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
     },
   });
 
+  const isExpense = invoiceType === "expense";
   const selectedCategory = watch("expense_category");
   const selectedDocumentType = watch("document_type");
   const deductionRate =
-    selectedCategory !== undefined
-      ? (DEDUCTION_RATES[selectedCategory] ?? null)
-      : null;
-  const requiresCounterpartyId =
-    invoiceType === "expense" && selectedDocumentType === "tax_invoice";
+    selectedCategory !== undefined ? (DEDUCTION_RATES[selectedCategory] ?? null) : null;
+  const requiresCounterpartyId = isExpense && selectedDocumentType === "tax_invoice";
 
   const onSubmit = async (values: VatInvoiceRowValues) => {
     const ok = await addInvoice(toInvoiceRowPayload(values));
-    if (ok) {
-      reset({
-        ...getVatInvoiceDefaultValues(invoiceType),
-        rate_type: DEFAULT_RATE_TYPE,
-      });
-    }
+    if (ok) reset({ ...getVatInvoiceDefaultValues(invoiceType), rate_type: DEFAULT_RATE_TYPE });
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       dir="rtl"
-      className="rounded-lg border border-dashed border-gray-300 bg-gray-50/70 p-4 space-y-3"
+      className="rounded-lg border border-dashed border-gray-300 bg-gray-50/70 p-4 space-y-4"
     >
+      {/* Row 1: classification fields */}
       <div className="flex flex-wrap items-end gap-3">
-        {invoiceType === "expense" && (
+        {isExpense && (
           <FormField
             label="קטגוריה"
             error={errors.expense_category?.message}
             className="min-w-[180px]"
           >
-            <div className="relative flex items-center gap-2">
-              <Controller
-                control={control}
-                name="expense_category"
-                render={({ field }) => (
-                  <SelectDropdown
-                    name={field.name}
-                    value={field.value}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                    className="flex-1"
-                    options={EXPENSE_CATEGORIES.map((cat) => ({
-                      value: cat,
-                      label: CATEGORY_LABELS[cat],
-                    }))}
-                  />
-                )}
-              />
-            </div>
+            <Controller
+              control={control}
+              name="expense_category"
+              render={({ field }) => (
+                <SelectDropdown
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  options={EXPENSE_CATEGORIES.map((cat) => ({
+                    value: cat,
+                    label: CATEGORY_LABELS[cat],
+                  }))}
+                />
+              )}
+            />
           </FormField>
         )}
 
@@ -120,7 +115,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
           />
         </FormField>
 
-        {invoiceType === "expense" && (
+        {isExpense && (
           <FormField
             label="סוג מסמך"
             error={errors.document_type?.message}
@@ -148,78 +143,36 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
           </FormField>
         )}
 
-        {requiresCounterpartyId && (
-          <FormField
-            label="מספר עוסק של הספק"
-            error={errors.counterparty_id?.message}
-            className="w-40"
-          >
-            <Input
-              {...register("counterparty_id")}
-              placeholder="9 ספרות"
-              dir="rtl"
-              inputMode="numeric"
-              onKeyDown={(e) => {
-                if (
-                  !/[\d]/.test(e.key) &&
-                  ![
-                    "ArrowLeft",
-                    "ArrowRight",
-                    "Delete",
-                    "Backspace",
-                    "Enter",
-                    "Tab",
-                  ].includes(e.key)
-                )
-                  e.preventDefault();
-              }}
-            />
-          </FormField>
+        {isExpense && deductionRate !== null && (
+          <div className={`self-end pb-2 text-xs font-medium ${deductionRate === 0 ? "text-negative-600" : "text-gray-500"}`}>
+            {deductionRate === 0
+              ? "⚠️ ניכוי אסור"
+              : deductionRate < 1
+                ? `שיעור ניכוי: ${(deductionRate * 100).toFixed(2)}%`
+                : null}
+          </div>
         )}
+      </div>
 
-        <FormField
-          label="סכום נטו ₪"
-          error={errors.net_amount?.message}
-          className="w-36"
-        >
+      {/* Row 2: amounts, date, identifiers + submit */}
+      <div className="flex flex-wrap items-end gap-3">
+        <FormField label="סכום נטו ₪" error={errors.net_amount?.message} className="w-36">
           <Input
             {...register("net_amount")}
             placeholder="0.00"
             dir="rtl"
             inputMode="decimal"
-            autoFocus={invoiceType === "income"}
-            onKeyDown={(e) => {
-              if (
-                !/[\d.]/.test(e.key) &&
-                ![
-                  "ArrowLeft",
-                  "ArrowRight",
-                  "Delete",
-                  "Backspace",
-                  "Enter",
-                  "Tab",
-                ].includes(e.key)
-              )
-                e.preventDefault();
-            }}
+            autoFocus={!isExpense}
+            onKeyDown={(e) => blockNonNumeric(e, true)}
           />
         </FormField>
 
-        <FormField
-          label="תאריך חשבונית"
-          error={errors.invoice_date?.message}
-          className="w-40"
-        >
+        <FormField label="תאריך חשבונית" error={errors.invoice_date?.message} className="w-40">
           <Controller
             control={control}
             name="invoice_date"
             render={({ field }) => (
-              <DatePicker
-                value={field.value}
-                onChange={field.onChange}
-                onBlur={field.onBlur}
-                noWrapper
-              />
+              <DatePicker value={field.value} onChange={field.onChange} onBlur={field.onBlur} noWrapper />
             )}
           />
         </FormField>
@@ -232,13 +185,24 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
           <Input {...register("counterparty_name")} placeholder="לא חובה" />
         </FormField>
 
-        <div className="flex items-end gap-2 pb-0.5">
-          <Button
-            type="submit"
-            variant="primary"
-            size="sm"
-            isLoading={isAdding}
+        {requiresCounterpartyId && (
+          <FormField
+            label="מספר עוסק של הספק"
+            error={errors.counterparty_id?.message}
+            className="w-40"
           >
+            <Input
+              {...register("counterparty_id")}
+              placeholder="9 ספרות"
+              dir="rtl"
+              inputMode="numeric"
+              onKeyDown={(e) => blockNonNumeric(e, false)}
+            />
+          </FormField>
+        )}
+
+        <div className="flex items-end gap-2 pb-0.5">
+          <Button type="submit" variant="primary" size="sm" isLoading={isAdding}>
             <Plus className="h-3.5 w-3.5" />
             הוסף
           </Button>
@@ -249,19 +213,6 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
           )}
         </div>
       </div>
-
-      {/* Deduction rate info for expense */}
-      {invoiceType === "expense" && deductionRate !== null && (
-        <div
-          className={`text-xs font-medium ${deductionRate === 0 ? "text-negative-600" : "text-gray-500"}`}
-        >
-          {deductionRate === 0
-            ? "⚠️ ניכוי אסור"
-            : deductionRate < 1
-              ? `שיעור ניכוי: ${(deductionRate * 100).toFixed(2)}%`
-              : null}
-        </div>
-      )}
     </form>
   );
 };
