@@ -21,12 +21,25 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     header: "מס' לקוח",
     getValue: (item) => formatClientOfficeId(item.office_client_number),
   }),
-  textColumn({
+  {
     key: "client_id",
     header: "לקוח",
-    valueClassName: "font-semibold text-gray-900",
-    getValue: (item) => item.client_name ?? formatClientOfficeId(item.office_client_number),
-  }),
+    render: (item) => {
+      const name = item.client_name ?? formatClientOfficeId(item.office_client_number);
+      const showPeriod = opts.duplicateClientIds?.has(item.client_record_id);
+
+      return (
+        <span className="block max-w-[220px]">
+          <span className="block truncate font-semibold text-gray-900">{name}</span>
+          {showPeriod && (
+            <span className="block text-xs font-medium text-gray-500">
+              תיק #{item.id}
+            </span>
+          )}
+        </span>
+      );
+    },
+  },
   monoColumn({
     key: "client_id_number",
     header: "ת.ז / ח.פ",

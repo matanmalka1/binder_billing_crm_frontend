@@ -10,6 +10,8 @@ import { Modal } from "../../../components/ui/overlays/Modal";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import type { GenerateTaxDeadlinesForm } from "../types";
 
+const GENERATE_TAX_DEADLINES_FORM_ID = "generate-tax-deadlines-form";
+
 interface GenerateTaxDeadlinesModalProps {
   open: boolean;
   onClose: () => void;
@@ -63,13 +65,14 @@ export const GenerateTaxDeadlinesModal: React.FC<GenerateTaxDeadlinesModalProps>
       footer={(
         <ModalFormActions
           onCancel={handleClose}
-          onSubmit={onSubmit}
           isLoading={isSubmitting}
+          submitForm={GENERATE_TAX_DEADLINES_FORM_ID}
           submitLabel="צור מועדים"
+          submitType="submit"
         />
       )}
     >
-      <div className="space-y-4">
+      <form id={GENERATE_TAX_DEADLINES_FORM_ID} onSubmit={onSubmit} className="space-y-4">
         <input type="hidden" {...register("client_id", { required: "שדה חובה" })} />
         <ClientPickerField
           selectedClient={selectedClient}
@@ -92,7 +95,7 @@ export const GenerateTaxDeadlinesModal: React.FC<GenerateTaxDeadlinesModalProps>
           })}
           error={errors.year?.message}
         />
-      </div>
+      </form>
     </Modal>
   );
 };

@@ -41,6 +41,17 @@ export const VatWorkItems: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const createClientId = urlParams.get("client_id");
   const createPeriod = urlParams.get("period");
+  const duplicateClientIds = useMemo(() => {
+    const counts = new Map<number, number>();
+    workItems.forEach((item) => {
+      counts.set(item.client_record_id, (counts.get(item.client_record_id) ?? 0) + 1);
+    });
+    return new Set(
+      [...counts.entries()]
+        .filter(([, count]) => count > 1)
+        .map(([clientId]) => clientId),
+    );
+  }, [workItems]);
 
   useEffect(() => {
     if (urlParams.get("create") === "1") {
@@ -56,9 +67,10 @@ export const VatWorkItems: React.FC = () => {
       buildVatWorkItemColumns({
         isLoading: loading,
         isDisabled: actionLoadingId !== null,
+        duplicateClientIds,
         runAction,
       }),
-    [loading, actionLoadingId, runAction],
+    [loading, actionLoadingId, duplicateClientIds, runAction],
   );
 
   return (

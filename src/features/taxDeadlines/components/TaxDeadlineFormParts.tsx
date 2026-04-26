@@ -25,6 +25,7 @@ type SharedTaxDeadlineForm = UseFormReturn<CreateTaxDeadlineForm> | UseFormRetur
 const currencySuffix = <span className="text-sm text-gray-400">₪</span>;
 
 const VAT_FILING_DUE_DAY = 19;
+const REQUIRED_FIELD_MESSAGE = "שדה חובה";
 
 const computeVatDueDate = (period: string, vatType: VatType | null) => {
   if (!period || vatType === "exempt") return "";
@@ -55,6 +56,7 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
   const register = typedForm.register as UseFormRegister<TaxDeadlineFormValues>;
   const control = typedForm.control as Control<TaxDeadlineFormValues>;
   const errors = typedForm.formState.errors as FieldErrors<TaxDeadlineFormValues>;
+  const shouldValidateDerivedFields = typedForm.formState.submitCount > 0;
   const deadlineType = typedForm.watch("deadline_type");
   const period = typedForm.watch("period");
 
@@ -68,22 +70,25 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
   useEffect(() => {
     if (deadlineType !== "vat") return;
     const dueDate = computeVatDueDate(period, vatType);
-    typedForm.setValue("due_date", dueDate, { shouldDirty: true, shouldValidate: true });
-  }, [deadlineType, period, typedForm, vatType]);
+    typedForm.setValue("due_date", dueDate, {
+      shouldDirty: true,
+      shouldValidate: shouldValidateDerivedFields,
+    });
+  }, [deadlineType, period, shouldValidateDerivedFields, typedForm, vatType]);
 
   useEffect(() => {
     if (deadlineType !== "annual_report" || period) return;
     typedForm.setValue("period", String(new Date().getFullYear()), {
       shouldDirty: false,
-      shouldValidate: true,
+      shouldValidate: shouldValidateDerivedFields,
     });
-  }, [deadlineType, period, typedForm]);
+  }, [deadlineType, period, shouldValidateDerivedFields, typedForm]);
 
   return (
     <>
       <Select
         label="סוג מועד *"
-        {...register("deadline_type", { required: "שדה חובה" })}
+        {...register("deadline_type", { required: REQUIRED_FIELD_MESSAGE })}
         error={errors.deadline_type?.message}
         options={TAX_DEADLINE_TYPE_OPTIONS}
       />
@@ -91,6 +96,7 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
       <Controller
         name="due_date"
         control={control}
+        rules={{ required: REQUIRED_FIELD_MESSAGE }}
         render={({ field }) => (
           <DatePicker
             label="תאריך מועד *"
@@ -110,6 +116,7 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
         onChange={(value) => typedForm.setValue("period", value, { shouldDirty: true, shouldValidate: true })}
         error={errors.period?.message}
       />
+      <input type="hidden" {...register("period", { required: REQUIRED_FIELD_MESSAGE })} />
 
       <Input
         label="סכום לתשלום"
@@ -137,6 +144,8 @@ interface TaxDeadlineModalFooterProps {
   submitLabel: string;
   onCancel: () => void;
   onSubmit: () => void;
+  submitForm?: string;
+  submitType?: "button" | "submit";
 }
 
 export const TaxDeadlineModalFooter: React.FC<TaxDeadlineModalFooterProps> = ({
@@ -144,12 +153,19 @@ export const TaxDeadlineModalFooter: React.FC<TaxDeadlineModalFooterProps> = ({
   submitLabel,
   onCancel,
   onSubmit,
+  submitForm,
+  submitType = "button",
 }) => (
   <div className="flex items-center justify-end gap-2">
     <Button type="button" variant="outline" disabled={isSubmitting} onClick={onCancel}>
       ביטול
     </Button>
-    <Button type="button" onClick={onSubmit} isLoading={isSubmitting}>
+    <Button
+      type={submitType}
+      form={submitForm}
+      onClick={submitType === "button" ? onSubmit : undefined}
+      isLoading={isSubmitting}
+    >
       {submitLabel}
     </Button>
   </div>

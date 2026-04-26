@@ -14,6 +14,8 @@ import {
 import type { CreateTaxDeadlineForm } from "../types";
 import { clientsApi, clientsQK } from "@/features/clients";
 
+const TAX_DEADLINE_CREATE_FORM_ID = "tax-deadline-create-form";
+
 interface TaxDeadlineFormProps {
   open: boolean;
   onClose: () => void;
@@ -73,9 +75,18 @@ export const TaxDeadlineForm = ({
       open={open}
       title="יצירת מועד מס חדש"
       onClose={handleClose}
-      footer={<TaxDeadlineModalFooter isSubmitting={isSubmitting} submitLabel="צור מועד" onCancel={handleClose} onSubmit={onSubmit} />}
+      footer={
+        <TaxDeadlineModalFooter
+          isSubmitting={isSubmitting}
+          submitLabel="צור מועד"
+          onCancel={handleClose}
+          onSubmit={onSubmit}
+          submitForm={TAX_DEADLINE_CREATE_FORM_ID}
+          submitType="submit"
+        />
+      }
     >
-      <div className="space-y-4">
+      <form id={TAX_DEADLINE_CREATE_FORM_ID} onSubmit={onSubmit} className="space-y-4">
         <input type="hidden" {...register("client_id", { required: "שדה חובה" })} />
         <ClientPickerField
           selectedClient={selectedClient}
@@ -90,7 +101,7 @@ export const TaxDeadlineForm = ({
           form={form}
           vatType={selectedClientQuery.data?.vat_reporting_frequency ?? null}
         />
-      </div>
+      </form>
     </Modal>
   );
 };

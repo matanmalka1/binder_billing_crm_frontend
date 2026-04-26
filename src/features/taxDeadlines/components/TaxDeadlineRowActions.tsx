@@ -32,6 +32,10 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
   const canEdit = Boolean(onEdit) && actionKeys.has("edit");
   const canDelete = Boolean(onDelete) && actionKeys.has("delete");
   const hasMenu = canComplete || canReopen || canEdit || canDelete;
+  const isCompleting = completingId === deadline.id;
+  const isReopening = reopeningId === deadline.id;
+  const isDeleting = deletingId === deadline.id;
+  const isMutating = completingId !== null || reopeningId !== null || deletingId !== null;
   if (!hasMenu) return null;
 
   return (
@@ -39,32 +43,37 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
       <RowActionsMenu ariaLabel={`פעולות למועד ${deadline.id}`}>
         {canComplete && (
           <RowActionItem
-            label="סמן הושלם"
+            label={isCompleting ? "מסמן..." : "סמן הושלם"}
             onClick={() => onComplete?.(deadline.id)}
             icon={<CheckCircle2 className="h-4 w-4 text-positive-600" />}
-            disabled={completingId !== null}
+            disabled={isMutating}
           />
         )}
         {canReopen && (
           <RowActionItem
-            label="החזר לממתין"
+            label={isReopening ? "מחזיר..." : "החזר לממתין"}
             onClick={() => onReopen?.(deadline.id)}
             icon={<RotateCcw className="h-4 w-4 text-warning-600" />}
-            disabled={reopeningId !== null}
+            disabled={isMutating}
           />
         )}
         {canEdit && (
-          <RowActionItem label="עריכה" onClick={() => onEdit?.(deadline)} icon={<Edit2 className="h-4 w-4" />} />
+          <RowActionItem
+            label="עריכה"
+            onClick={() => onEdit?.(deadline)}
+            icon={<Edit2 className="h-4 w-4" />}
+            disabled={isMutating}
+          />
         )}
         {canDelete && (
           <>
             {(canComplete || canReopen || canEdit) && <RowActionSeparator />}
             <RowActionItem
-              label="מחק"
+              label={isDeleting ? "מוחק..." : "מחק"}
               onClick={() => setConfirmDelete(true)}
               icon={<Trash2 className="h-4 w-4" />}
               danger
-              disabled={deletingId === deadline.id}
+              disabled={isMutating}
             />
           </>
         )}
@@ -76,7 +85,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
         message="האם למחוק את המועד? פעולה זו אינה הפיכה."
         confirmLabel="מחק"
         cancelLabel="ביטול"
-        isLoading={deletingId === deadline.id}
+        isLoading={isDeleting}
         onConfirm={() => { setConfirmDelete(false); onDelete?.(deadline.id); }}
         onCancel={() => setConfirmDelete(false)}
       />

@@ -6,6 +6,8 @@ import {
 } from "./TaxDeadlineFormParts";
 import type { EditTaxDeadlineForm } from "../types";
 
+const EDIT_TAX_DEADLINE_FORM_ID = "edit-tax-deadline-form";
+
 interface EditTaxDeadlineFormProps {
   open: boolean;
   onClose: () => void;
@@ -33,11 +35,20 @@ export const EditTaxDeadlineFormModal = ({
       open={open}
       title="עריכת מועד מס"
       onClose={handleClose}
-      footer={<TaxDeadlineModalFooter isSubmitting={isSubmitting} submitLabel="עדכן מועד" onCancel={handleClose} onSubmit={onSubmit} />}
+      footer={(
+        <TaxDeadlineModalFooter
+          isSubmitting={isSubmitting}
+          submitLabel="עדכן מועד"
+          onCancel={handleClose}
+          onSubmit={onSubmit}
+          submitForm={EDIT_TAX_DEADLINE_FORM_ID}
+          submitType="submit"
+        />
+      )}
     >
-      <div className="space-y-4">
+      <form id={EDIT_TAX_DEADLINE_FORM_ID} onSubmit={onSubmit} className="space-y-4">
         <TaxDeadlineCommonFields form={form} />
-      </div>
+      </form>
     </Modal>
   );
 };

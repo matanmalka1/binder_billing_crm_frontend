@@ -48,6 +48,7 @@ export interface AnnualReportStatusReportResponse {
 
 export interface AdvancePaymentReportItem {
   client_record_id: number;
+  office_client_number?: number | null;
   client_name: string;
   total_expected: number;
   total_paid: number;

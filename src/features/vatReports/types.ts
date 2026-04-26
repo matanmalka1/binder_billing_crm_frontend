@@ -156,5 +156,6 @@ export interface VatWorkItemSummaryBarProps {
 export interface ColumnOpts {
   isLoading: boolean;
   isDisabled: boolean;
+  duplicateClientIds?: Set<number>;
   runAction: (itemId: number, action: VatWorkItemAction) => Promise<void>;
 }

@@ -28,25 +28,28 @@ export const VatWorkItemsCreateModal: React.FC<
   initialPeriod,
 }) => {
   const {
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, submitCount, touchedFields },
     handleSubmit,
     register,
     reset,
     watch,
     setValue,
+    clearErrors,
   } = useForm<VatWorkItemCreateFormValues>({
     defaultValues: vatWorkItemCreateDefaultValues,
     resolver: zodResolver(vatWorkItemCreateSchema),
   });
 
   const resetPeriodField = useCallback(() => {
-    setValue("period", "", { shouldDirty: true, shouldValidate: true });
-  }, [setValue]);
+    setValue("period", "", { shouldDirty: true, shouldValidate: false });
+    clearErrors("period");
+  }, [clearErrors, setValue]);
 
   const resetClientSelection = useCallback(() => {
-    setValue("client_id", "", { shouldDirty: true, shouldValidate: true });
+    setValue("client_id", "", { shouldDirty: true, shouldValidate: false });
+    clearErrors("client_id");
     resetPeriodField();
-  }, [resetPeriodField, setValue]);
+  }, [clearErrors, resetPeriodField, setValue]);
 
   const {
     clientQuery,
@@ -67,9 +70,10 @@ export const VatWorkItemsCreateModal: React.FC<
   // When a client is selected via picker, sync client_id
   useEffect(() => {
     if (selectedClient) {
-      setValue("client_id", String(selectedClient.id), { shouldValidate: true });
+      setValue("client_id", String(selectedClient.id), { shouldValidate: false });
+      clearErrors("client_id");
     }
-  }, [selectedClient, setValue]);
+  }, [clearErrors, selectedClient, setValue]);
 
   useEffect(() => {
     if (open && initialClientId !== undefined) {
@@ -104,6 +108,8 @@ export const VatWorkItemsCreateModal: React.FC<
   });
 
   const colSpanClass = initialClientId !== undefined ? "col-span-2" : "";
+  const showClientError = submitCount > 0 || Boolean(touchedFields.client_id);
+  const showPeriodError = submitCount > 0 || Boolean(touchedFields.period);
 
   return (
     <Modal
@@ -137,7 +143,7 @@ export const VatWorkItemsCreateModal: React.FC<
                 onSelect={handleSelectClient}
                 onClear={handleClearClient}
                 label="לקוח *"
-                error={errors.client_id?.message}
+                error={showClientError ? errors.client_id?.message : undefined}
               />
               <input type="hidden" {...register("client_id")} />
             </div>
@@ -146,14 +152,15 @@ export const VatWorkItemsCreateModal: React.FC<
             clientId={clientId}
             year={periodYear}
             value={periodValue}
-            onChange={(value) =>
+            onChange={(value) => {
               setValue("period", value, {
                 shouldDirty: true,
-                shouldValidate: true,
+                shouldValidate: submitCount > 0,
                 shouldTouch: true,
-              })
-            }
-            error={errors.period?.message}
+              });
+              if (value) clearErrors("period");
+            }}
+            error={showPeriodError ? errors.period?.message : undefined}
             className={colSpanClass}
             enabled={open}
           />

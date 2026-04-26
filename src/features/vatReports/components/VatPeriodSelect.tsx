@@ -32,7 +32,7 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
       {
         value: "",
         label: !isValidClient
-          ? "יש לבחור לקוח"
+          ? "בחר לקוח תחילה"
           : isLoading
             ? "טוען תקופות..."
             : "בחר תקופה...",

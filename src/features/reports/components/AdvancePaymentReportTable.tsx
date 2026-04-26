@@ -1,4 +1,5 @@
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
+import { formatClientOfficeId } from "../../../utils/utils";
 import type { AdvancePaymentReportItem, AdvancePaymentReportResponse } from "../api";
 
 interface Props {
@@ -12,7 +13,11 @@ const columns: Column<AdvancePaymentReportItem>[] = [
     render: (r) => (
       <div className="min-w-0">
         <div className="text-sm font-medium text-gray-900">{r.client_name}</div>
-        <div className="text-xs text-gray-500">לקוח #{r.client_record_id}</div>
+        <div className="text-xs text-gray-500">
+          {r.office_client_number != null
+            ? `לקוח ${formatClientOfficeId(r.office_client_number)}`
+            : `לקוח #${r.client_record_id}`}
+        </div>
       </div>
     ),
   },
