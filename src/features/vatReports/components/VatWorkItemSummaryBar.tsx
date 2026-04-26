@@ -17,6 +17,36 @@ import { VatFileModal } from "./VatFileModal";
 import { isFiled } from "../utils";
 import type { VatWorkItemSummaryBarProps } from "../types";
 
+type AlertTone = "warning" | "error";
+
+const ALERT_CLASSES: Record<AlertTone, { wrap: string; icon: string; Icon: typeof AlertTriangle }> = {
+  warning: {
+    wrap: "border-warning-200 bg-warning-50 text-warning-800",
+    icon: "text-warning-500",
+    Icon: AlertTriangle,
+  },
+  error: {
+    wrap: "border-negative-200 bg-negative-50 text-negative-800",
+    icon: "text-negative-500",
+    Icon: AlertTriangle,
+  },
+};
+
+const AlertBanner: React.FC<{ tone: AlertTone; icon?: typeof AlertTriangle; children: React.ReactNode }> = ({
+  tone,
+  icon: IconOverride,
+  children,
+}) => {
+  const { wrap, icon, Icon } = ALERT_CLASSES[tone];
+  const FinalIcon = IconOverride ?? Icon;
+  return (
+    <div className={`flex items-start gap-2 rounded-lg border px-3 py-2 text-sm ${wrap}`}>
+      <FinalIcon className={`mt-0.5 h-4 w-4 shrink-0 ${icon}`} />
+      <span>{children}</span>
+    </div>
+  );
+};
+
 export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem, onFilingPendingChange }) => {
   const { isAdvisor } = useRole();
   const { handleMaterialsComplete, handleReadyForReview, handleSendBack, isLoading } =
@@ -24,21 +54,14 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
   const [showSendBack, setShowSendBack] = useState(false);
   const [showFileModal, setShowFileModal] = useState(false);
   const filed = isFiled(workItem.status);
-
   const { activeBinder } = useActiveVatBinder(workItem.client_record_id);
 
   return (
-    <div
-      className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm space-y-3"
-      dir="rtl"
-    >
-      {/* Row 1: breadcrumb + title + assigned_to + status */}
+    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm space-y-3" dir="rtl">
+      {/* Row 1: breadcrumb + title + badges */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1 text-sm">
-          <Link
-            to="/tax/vat"
-            className="text-gray-400 hover:text-primary-600 transition-colors"
-          >
+          <Link to="/tax/vat" className="text-gray-400 hover:text-primary-600 transition-colors">
             דוחות מע&quot;מ
           </Link>
           <ChevronLeft className="h-3.5 w-3.5 text-gray-300" />
@@ -73,32 +96,26 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
         </div>
       </div>
 
-      {/* Pending materials note */}
       {workItem.status === "pending_materials" && workItem.pending_materials_note && (
-        <div className="flex items-start gap-2 rounded-lg border border-warning-200 bg-warning-50 px-3 py-2 text-sm text-warning-800">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-warning-500" />
-          <span>{workItem.pending_materials_note}</span>
-        </div>
+        <AlertBanner tone="warning" icon={Info}>
+          {workItem.pending_materials_note}
+        </AlertBanner>
       )}
 
-      {/* Submission deadline banners */}
       {workItem.is_overdue && (workItem.extended_deadline ?? workItem.submission_deadline) && (
-        <div className="flex items-center gap-2 rounded-lg border border-negative-200 bg-negative-50 px-3 py-2 text-sm text-negative-800">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-negative-500" />
-          <span>⚠️ תאריך הגשה חלף — {formatDate(workItem.extended_deadline ?? workItem.submission_deadline)}</span>
-        </div>
-      )}
-      {!workItem.is_overdue && workItem.days_until_deadline != null && workItem.days_until_deadline <= 3 && (
-        <div className="flex items-center gap-2 rounded-lg border border-warning-200 bg-warning-50 px-3 py-2 text-sm text-warning-800">
-          <Clock className="mt-0.5 h-4 w-4 shrink-0 text-warning-500" />
-          <span>נותרו {workItem.days_until_deadline} ימים להגשה</span>
-        </div>
+        <AlertBanner tone="error">
+          ⚠️ תאריך הגשה חלף — {formatDate(workItem.extended_deadline ?? workItem.submission_deadline)}
+        </AlertBanner>
       )}
 
-      {/* Override warning */}
+      {!workItem.is_overdue && workItem.days_until_deadline != null && workItem.days_until_deadline <= 3 && (
+        <AlertBanner tone="warning" icon={Clock}>
+          נותרו {workItem.days_until_deadline} ימים להגשה
+        </AlertBanner>
+      )}
+
       {workItem.is_overridden && (
-        <div className="flex items-start gap-2 rounded-lg border border-warning-200 bg-warning-50 px-3 py-2 text-sm">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning-500" />
+        <AlertBanner tone="warning">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="warning" className="px-1.5 py-0.5 text-xs font-semibold">
               סכום מע&quot;מ עוקף
@@ -107,13 +124,11 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
               <span className="text-warning-700">{workItem.override_justification}</span>
             )}
           </div>
-        </div>
+        </AlertBanner>
       )}
 
-      {/* Row 2: progress bar */}
       <VatProgressBar currentStatus={workItem.status} />
 
-      {/* Row 3: actions + export (hidden when filed) */}
       {!filed && (
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-3">
           {showSendBack ? (
@@ -148,12 +163,12 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
         </div>
       )}
 
-      {/* Export only row when filed */}
       {filed && isAdvisor && (
         <div className="flex justify-end border-t border-gray-100 pt-3">
           <VatExportButtons clientId={workItem.client_record_id} period={workItem.period} />
         </div>
       )}
+
       <VatFileModal
         open={showFileModal}
         workItemId={workItem.id}

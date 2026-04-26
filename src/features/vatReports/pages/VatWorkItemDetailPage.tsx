@@ -12,8 +12,8 @@ import {
   VatHistoryTab,
   VatSummaryTab,
   VatWorkItemSummaryBar,
+  VatInvoiceTab,
 } from "@/features/vatReports";
-import { VatInvoiceTab } from "@/features/vatReports/components/VatInvoiceTab";
 
 type TabKey = "summary" | "income" | "expense" | "history";
 

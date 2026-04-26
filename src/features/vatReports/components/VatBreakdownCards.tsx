@@ -1,8 +1,10 @@
 import { ChevronLeft } from "lucide-react";
-import { Button } from "../../../components/ui/primitives/Button";
 import { formatVatAmount } from "../utils";
 import { ISRAEL_VAT_RATE_PERCENT } from "../constants";
-import type { VatInputCardProps, VatOutputCardProps } from "../types";
+import type { VatBreakdownData } from "../vatBreakdown.utils";
+
+interface VatOutputCardProps { data: VatBreakdownData; onNavigate?: () => void }
+interface VatInputCardProps { data: VatBreakdownData; onNavigate?: () => void }
 
 type VatCardTone = "positive" | "warning";
 
@@ -33,15 +35,14 @@ const VatCard: React.FC<VatCardProps> = ({ title, tone, onNavigate, children }) 
       <div className="mb-3 flex items-center justify-between">
         <p className={`text-xs font-semibold uppercase tracking-wide ${classes.title}`}>{title}</p>
         {onNavigate && (
-          <Button
+          <button
             type="button"
-            variant="ghost"
-            size="sm"
             onClick={onNavigate}
-            className={`p-0.5 ${classes.button} hover:bg-transparent`}
+            className={`rounded p-0.5 transition-colors ${classes.button}`}
+            aria-label="עבור לפרטים"
           >
             <ChevronLeft className="h-4 w-4" />
-          </Button>
+          </button>
         )}
       </div>
       {children}

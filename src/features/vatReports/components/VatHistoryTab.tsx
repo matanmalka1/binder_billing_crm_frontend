@@ -1,10 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../../../components/ui/primitives/Button";
 import { formatDateTime } from "../../../utils/utils";
-import {
-  ACTION_LABELS,
-  PAGE_SIZE,
-} from "../history.constants";
+import { ACTION_LABELS, PAGE_SIZE } from "../history.constants";
 import { formatVatHistoryDetails } from "../history.utils";
 import { useVatHistory } from "../hooks/useVatHistory";
 import type { VatHistoryTabProps } from "../types";
@@ -12,20 +9,12 @@ import type { VatHistoryTabProps } from "../types";
 export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
   const [page, setPage] = useState(0);
   const { items, total, isFetching, isPending } = useVatHistory(workItemId, page, PAGE_SIZE);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-  const maxPageIndex = Math.max(0, totalPages - 1);
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const maxPage = totalPages - 1;
+  const safePage = Math.min(page, maxPage);
 
-  useEffect(() => {
-    setPage((prev) => Math.min(Math.max(prev, 0), maxPageIndex));
-  }, [maxPageIndex]);
-
-  if (isPending) {
-    return <p className="py-8 text-center text-sm text-gray-400">טוען...</p>;
-  }
-
-  if (total === 0) {
-    return <p className="py-8 text-center text-sm text-gray-400">אין היסטוריה</p>;
-  }
+  if (isPending) return <p className="py-8 text-center text-sm text-gray-400">טוען...</p>;
+  if (total === 0) return <p className="py-8 text-center text-sm text-gray-400">אין היסטוריה</p>;
 
   return (
     <div className="space-y-3">
@@ -67,19 +56,17 @@ export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
             variant="ghost"
             size="sm"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page === 0 || isFetching}
+            disabled={safePage === 0 || isFetching}
           >
             הקודם
           </Button>
-          <span>
-            {isFetching ? "טוען..." : `עמוד ${page + 1} מתוך ${totalPages}`}
-          </span>
+          <span>{isFetching ? "טוען..." : `עמוד ${safePage + 1} מתוך ${totalPages}`}</span>
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            onClick={() => setPage((p) => Math.min(maxPageIndex, Math.max(0, p + 1)))}
-            disabled={page >= maxPageIndex || isFetching}
+            onClick={() => setPage((p) => Math.min(maxPage, p + 1))}
+            disabled={safePage >= maxPage || isFetching}
           >
             הבא
           </Button>

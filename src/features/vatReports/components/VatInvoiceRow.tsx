@@ -1,5 +1,6 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "../../../components/ui/primitives/Button";
+import { Badge } from "../../../components/ui/primitives/Badge";
 import { formatVatAmount, getVatDeductionRateClass, getVatDeductionRateLabel } from "../utils";
 import {
   CATEGORY_COLORS,
@@ -10,33 +11,17 @@ import {
 } from "../constants";
 import { formatDate, formatDateTime } from "../../../utils/utils";
 import { semanticMonoToneClasses } from "../../../utils/semanticColors";
-import type { VatInvoiceResponse } from "../api";
+import type { VatInvoiceRowProps } from "../types";
 
 const TD = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
   <td className={`px-4 py-2.5 ${className}`}>{children}</td>
 );
-
-const Badge = ({ color, children }: { color: string; children: React.ReactNode }) => (
-  <span className={`inline-block rounded px-1.5 py-0.5 text-xs ${color}`}>{children}</span>
-);
-
-interface VatInvoiceRowProps {
-  inv: VatInvoiceResponse;
-  sectionType: "income" | "expense";
-  accentBorder: string;
-  canEdit: boolean;
-  isEditing: boolean;
-  editingAny: boolean;
-  onEdit: () => void;
-  onDelete: () => void;
-}
 
 export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
   inv,
   sectionType,
   accentBorder,
   canEdit,
-  isEditing: _isEditing,
   editingAny,
   onEdit,
   onDelete,
@@ -64,14 +49,14 @@ export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
       </TD>
       <TD>
         {inv.document_type ? (
-          <Badge color="bg-gray-100 text-gray-600">
+          <Badge variant="neutral">
             {DOCUMENT_TYPE_LABELS[inv.document_type] ?? inv.document_type}
           </Badge>
         ) : "—"}
       </TD>
       <TD>
         {inv.rate_type && inv.rate_type !== "standard" ? (
-          <Badge color="bg-info-50 text-info-700">
+          <Badge variant="info">
             {VAT_RATE_TYPE_LABELS[inv.rate_type] ?? inv.rate_type}
           </Badge>
         ) : "—"}

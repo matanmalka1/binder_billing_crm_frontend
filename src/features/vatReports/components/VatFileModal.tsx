@@ -12,7 +12,6 @@ import { showErrorToast } from "../../../utils/utils";
 import { vatReportsQK } from "../api/queryKeys";
 import { invalidateVatWorkItem } from "../hooks/useVatInvalidation";
 import {
-  DEFAULT_VAT_FILING_METHOD,
   VAT_FILE_MODAL_MESSAGES,
   VAT_FILING_METHOD_LABELS,
   VAT_FILING_METHODS,
@@ -32,7 +31,13 @@ interface VatFileModalProps {
   onFilingEnd?: () => void;
 }
 
-export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, onClose, onFilingStart, onFilingEnd }) => {
+export const VatFileModal: React.FC<VatFileModalProps> = ({
+  open,
+  workItemId,
+  onClose,
+  onFilingStart,
+  onFilingEnd,
+}) => {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -47,21 +52,17 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
     resolver: zodResolver(vatFileModalSchema),
   });
 
-  const filingMethod = watch("submission_method") || DEFAULT_VAT_FILING_METHOD;
-  const submissionReference = watch("submission_reference") ?? "";
+  const filingMethod = watch("submission_method");
   const isAmendment = watch("is_amendment");
-  const amendsItemId = watch("amends_item_id") ?? "";
+
+  useEffect(() => {
+    if (open) reset(vatFileModalDefaultValues);
+  }, [open, reset]);
 
   const handleClose = () => {
     reset(vatFileModalDefaultValues);
     onClose();
   };
-
-  useEffect(() => {
-    if (open) {
-      reset(vatFileModalDefaultValues);
-    }
-  }, [open, reset]);
 
   const submitForm = handleSubmit(async (values) => {
     setIsLoading(true);
@@ -69,7 +70,6 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
     try {
       const workItem = await vatReportsApi.fileVatReturn(workItemId, toFileVatReturnPayload(values));
       toast.success(VAT_FILE_MODAL_MESSAGES.filingSuccess);
-      // Optimistic cache update — set status to "filed" before background refetch
       queryClient.setQueryData(vatReportsQK.detail(workItemId), (prev: unknown) => {
         if (!prev || typeof prev !== "object") return prev;
         return { ...(prev as object), status: "filed" };
@@ -125,7 +125,6 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
         <Input
           label="מספר אסמכתא (לא חובה)"
           placeholder="מספר אסמכתא מרשות המסים"
-          value={submissionReference}
           {...register("submission_reference")}
         />
 
@@ -133,7 +132,6 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
           <input
             type="checkbox"
             className="h-4 w-4 rounded border-gray-300 text-primary-600"
-            checked={isAmendment}
             {...register("is_amendment")}
           />
           <span className="text-sm font-medium text-gray-700">תיקון להגשה קודמת</span>
@@ -146,7 +144,6 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
             min={1}
             placeholder="מזהה תיק מע״מ מקורי"
             error={errors.amends_item_id?.message}
-            value={amendsItemId}
             {...register("amends_item_id")}
           />
         )}

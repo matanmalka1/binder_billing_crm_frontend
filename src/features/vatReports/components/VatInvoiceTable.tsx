@@ -88,7 +88,6 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                   sectionType={sectionType}
                   accentBorder={accentBorder}
                   canEdit={canEdit}
-                  isEditing={editingId === inv.id}
                   editingAny={editingId !== null}
                   onEdit={() => setEditingId(inv.id)}
                   onDelete={() => setConfirmId(inv.id)}
