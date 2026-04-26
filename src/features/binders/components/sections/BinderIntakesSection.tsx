@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/primitives/Card";
 import { Badge } from "@/components/ui/primitives/Badge";
 import { Timeline, TimelineEntry } from "@/components/ui/feedback/Timeline";
 import { bindersApi, bindersQK } from "../../api";
-import { annualReportsApi, annualReportsQK, getReportStatusLabel } from "@/features/annualReports";
+import { annualReportsApi, annualReportsQK, getStatusLabel } from "@/features/annualReports";
 import { clientsApi, clientsQK } from "@/features/clients";
 import { vatReportsApi, vatReportsQK } from "@/features/vatReports/api";
 import { VAT_STATUS_BADGE_VARIANTS } from "@/features/vatReports";
@@ -140,7 +140,7 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({
                               }}
                             >
                               {annualReport
-                                ? `${annualReport.tax_year} — ${getReportStatusLabel(annualReport.status)}`
+                                ? `${annualReport.tax_year} — ${getStatusLabel(annualReport.status)}`
                                 : `דוח #${m.annual_report_id}`}
                             </button>
                           </div>

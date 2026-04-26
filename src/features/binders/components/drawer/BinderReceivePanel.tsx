@@ -8,7 +8,7 @@ import { DatePicker } from "@/components/ui";
 import { Select } from "@/components/ui/inputs/Select";
 import { Textarea } from "@/components/ui";
 import { isClientLockedForCreate } from "@/utils/clientStatus";
-import { getReportStatusLabel, type AnnualReportFull } from "@/features/annualReports";
+import { getStatusLabel, type AnnualReportFull } from "@/features/annualReports";
 import { BINDER_TYPE_OPTIONS } from "../../constants";
 import type { ReceiveBinderFormValues } from "../../schemas";
 import { BinderPeriodFields } from "./BinderPeriodFields";
@@ -61,7 +61,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
     { value: "", label: annualReports.length > 0 ? "ללא קישור לדוח שנתי" : "אין דוחות שנתיים לעסק זה" },
     ...annualReports.map((report) => ({
       value: String(report.id),
-      label: `${report.tax_year} — ${getReportStatusLabel(report.status)}`,
+      label: `${report.tax_year} — ${getStatusLabel(report.status)}`,
     })),
   ];
 

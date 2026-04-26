@@ -12,7 +12,6 @@ export {
   getClientTypeLabel,
   getScheduleLabel,
   getReportStageLabel,
-  getReportStatusLabel,
   getStageColor,
   SEASON_PROGRESS_STAGES,
 } from "./api";

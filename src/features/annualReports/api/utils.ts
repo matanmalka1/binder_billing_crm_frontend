@@ -131,6 +131,4 @@ const stageColors = {
 };
 
 export const getReportStageLabel = makeLabelGetter(stageLabels);
-/** @deprecated Use getStatusLabel instead — same underlying data. */
-export const getReportStatusLabel = getStatusLabel;
 export const getStageColor = makeClassGetter(stageColors, "material_collection");
