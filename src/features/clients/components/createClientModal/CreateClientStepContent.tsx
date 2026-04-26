@@ -3,7 +3,7 @@ import type {
   FieldErrors,
   UseFormRegister,
 } from "react-hook-form";
-import type { ClientCreationImpactResponse } from "../../api";
+import type { ClientCreationImpactResponse } from "../../api/contracts";
 import type { CreateClientFormValues } from "../../schemas";
 import { CreateClientBusinessStep } from "./CreateClientBusinessStep";
 import { CreateClientIdentityStep } from "./CreateClientIdentityStep";

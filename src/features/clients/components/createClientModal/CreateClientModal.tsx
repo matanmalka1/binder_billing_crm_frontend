@@ -64,14 +64,14 @@ export const CreateClientModal: React.FC<Props> = ({
     } else if (currentVatFrequency == null) {
       setValue("vat_reporting_frequency", "monthly", { shouldValidate: false });
     }
-  }, [isExempt, setValue]);
+  }, [currentVatFrequency, isExempt, setValue]);
 
   useEffect(() => {
     if (!open) {
       reset();
       setStepIndex(0);
     }
-  }, [open]);
+  }, [open, reset]);
 
   const handleClose = () => {
     if (!isLoading) {

@@ -13,15 +13,6 @@ interface DeadlineDisplayFields {
   urgency_level: DeadlineUrgencyLevel;
 }
 
-export const getDeadlineRowClassName = (deadline: DeadlineDisplayFields) => {
-  return cn(
-    deadline.status === "canceled" && "opacity-50",
-    deadline.urgency_level === "overdue" && "border-r-4 border-negative-500 bg-negative-50/50",
-    deadline.urgency_level === "critical" && "border-r-4 border-negative-400 bg-negative-50/35",
-    deadline.urgency_level === "warning" && "border-r-4 border-warning-400 bg-warning-50/35",
-  );
-};
-
 export const DeadlineStatusBadge = ({ status }: { status: string }) => {
   if (status === "completed") return <Badge variant="success">הושלם</Badge>;
   if (status === "canceled") return <Badge variant="neutral">בוטל</Badge>;
@@ -53,6 +44,15 @@ export const DeadlineUrgencyBadge = ({ deadline }: { deadline: DeadlineDisplayFi
   );
 };
 
-export const DeadlineAmountCell = ({ amount }: { amount: string | null }) => (
-  <span className="text-sm font-medium text-gray-700">{formatCurrency(amount)}</span>
-);
+export const DeadlineAmountCell = ({
+  amount,
+  status,
+}: {
+  amount: string | null;
+  status: string;
+}) => {
+  if (amount === null && status === "pending") {
+    return <span className="text-sm italic text-gray-400">טרם חושב</span>;
+  }
+  return <span className="text-sm font-medium text-gray-700">{formatCurrency(amount)}</span>;
+};

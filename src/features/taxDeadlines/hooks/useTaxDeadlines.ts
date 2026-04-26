@@ -5,29 +5,21 @@ import { useRole } from "../../../hooks/useRole";
 import { useForm } from "react-hook-form";
 import { taxDeadlinesApi, taxDeadlinesQK } from "../api";
 import { timelineQK } from "@/features/timeline";
-import type { TaxDeadlineResponse } from "../api";
 import { getHttpStatus, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toOptionalString } from "../../../utils/filters";
 import type {
   TaxDeadlineFilters,
   CreateTaxDeadlineForm,
-  EditTaxDeadlineForm,
   GenerateTaxDeadlinesForm,
 } from "../types";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
-
-const DUPLICATE_TAX_DEADLINE_MESSAGE = "קיים כבר מועד פעיל לאותו לקוח, סוג ותקופה";
-
-const isAnnualReportDeadline = (deadlineType: string) => deadlineType === "annual_report";
-
-const getSelectedTaxYear = (period: string) => Number(period || new Date().getFullYear());
-
-const toDeadlinePayloadPeriod = (values: Pick<CreateTaxDeadlineForm, "deadline_type" | "period">) =>
-  isAnnualReportDeadline(values.deadline_type) ? null : values.period || null;
-
-const toDeadlinePayloadTaxYear = (values: Pick<CreateTaxDeadlineForm, "deadline_type" | "period">) =>
-  isAnnualReportDeadline(values.deadline_type) ? getSelectedTaxYear(values.period) : null;
+import {
+  DUPLICATE_TAX_DEADLINE_MESSAGE,
+  toDeadlinePayloadPeriod,
+  toDeadlinePayloadTaxYear,
+  useTaxDeadlineActions,
+} from "./useTaxDeadlineActions";
 
 export const useTaxDeadlines = () => {
   const queryClient = useQueryClient();
@@ -40,10 +32,7 @@ export const useTaxDeadlines = () => {
   const { searchParams, setFilter } = useSearchParamFilters();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
-  const [completingId, setCompletingId] = useState<number | null>(null);
-  const [reopeningId, setReopeningId] = useState<number | null>(null);
-  const [editingDeadline, setEditingDeadline] = useState<TaxDeadlineResponse | null>(null);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const deadlineActions = useTaxDeadlineActions({ invalidateAfterMutation });
 
   const filters: TaxDeadlineFilters = useMemo(
     () => ({
@@ -114,66 +103,6 @@ export const useTaxDeadlines = () => {
     onError: (error) => showErrorToast(error, "שגיאה ביצירת מועדים אוטומטית"),
   });
 
-  const updateMutation = useMutation({
-    mutationFn: ({ id, payload }: {
-      id: number;
-      payload: {
-        deadline_type?: string;
-        due_date?: string;
-        period?: string | null;
-        tax_year?: number | null;
-        payment_amount?: string | null;
-        description?: string | null;
-      };
-    }) => taxDeadlinesApi.updateTaxDeadline(id, payload),
-    onSuccess: () => {
-      toast.success("מועד עודכן בהצלחה");
-      invalidateAfterMutation();
-      setEditingDeadline(null);
-    },
-    onError: (error) => {
-      if (getHttpStatus(error) === 409) {
-        toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE);
-        return;
-      }
-      showErrorToast(error, "שגיאה בעדכון מועד");
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (deadlineId: number) => taxDeadlinesApi.deleteTaxDeadline(deadlineId),
-    onSuccess: () => {
-      toast.success("מועד נמחק בהצלחה");
-      invalidateAfterMutation();
-    },
-    onError: (error) => showErrorToast(error, "שגיאה במחיקת מועד"),
-    onSettled: () => setDeletingId(null),
-  });
-
-  const completeMutation = useMutation({
-    mutationFn: (deadlineId: number) => taxDeadlinesApi.completeTaxDeadline(deadlineId),
-    onSuccess: () => {
-      toast.success("מועד סומן כהושלם");
-      invalidateAfterMutation();
-    },
-    onError: (error) => showErrorToast(error, "שגיאה בסימון מועד"),
-    onSettled: () => setCompletingId(null),
-  });
-
-  const reopenMutation = useMutation({
-    mutationFn: (deadlineId: number) => taxDeadlinesApi.reopenTaxDeadline(deadlineId),
-    onSuccess: () => {
-      toast.success("מועד הוחזר לממתין");
-      invalidateAfterMutation();
-    },
-    onError: (error) => showErrorToast(error, "שגיאה בהחזרת המועד"),
-    onSettled: () => setReopeningId(null),
-  });
-
-  const editForm = useForm<EditTaxDeadlineForm>({
-    defaultValues: { deadline_type: "", due_date: "", period: "", payment_amount: "", description: "" },
-  });
-
   const form = useForm<CreateTaxDeadlineForm>({
     defaultValues: {
       client_id: "",
@@ -185,27 +114,8 @@ export const useTaxDeadlines = () => {
     },
   });
 
-  const findDuplicateDeadline = async (
-    values: Pick<CreateTaxDeadlineForm, "client_id" | "deadline_type" | "period">,
-    excludeId?: number,
-  ): Promise<TaxDeadlineResponse | null> => {
-    if (!isAnnualReportDeadline(values.deadline_type) && !values.period) return null;
-    const response = await taxDeadlinesApi.listTaxDeadlines({
-      client_record_id: Number(values.client_id),
-      deadline_type: values.deadline_type,
-      period: isAnnualReportDeadline(values.deadline_type) ? undefined : values.period,
-      page: 1,
-      page_size: 5,
-    });
-    return response.items.find((deadline) => {
-      if (deadline.id === excludeId) return false;
-      if (!isAnnualReportDeadline(values.deadline_type)) return deadline.period === values.period;
-      return deadline.tax_year === getSelectedTaxYear(values.period);
-    }) ?? null;
-  };
-
   const onSubmit = form.handleSubmit(async (values) => {
-    const duplicate = await findDuplicateDeadline(values);
+    const duplicate = await deadlineActions.findDuplicateDeadline(values);
     if (duplicate) {
       form.setError("period", { type: "manual", message: DUPLICATE_TAX_DEADLINE_MESSAGE });
       toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE);
@@ -238,62 +148,11 @@ export const useTaxDeadlines = () => {
     generateForm.reset({ client_id: "", year: values.year });
   });
 
-  const onEditSubmit = editForm.handleSubmit(async (values) => {
-    if (!editingDeadline) return;
-    const duplicate = await findDuplicateDeadline(
-      { ...values, client_id: String(editingDeadline.client_record_id) },
-      editingDeadline.id,
-    );
-    if (duplicate) {
-      editForm.setError("period", { type: "manual", message: DUPLICATE_TAX_DEADLINE_MESSAGE });
-      toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE);
-      return;
-    }
-    await updateMutation.mutateAsync({
-      id: editingDeadline.id,
-      payload: {
-        deadline_type: values.deadline_type || undefined,
-        due_date: values.due_date || undefined,
-        period: toDeadlinePayloadPeriod(values),
-        tax_year: toDeadlinePayloadTaxYear(values),
-        payment_amount: values.payment_amount ? values.payment_amount : null,
-        description: values.description || null,
-      },
-    });
-    editForm.reset();
-  });
-
   const handleFilterChange = (key: string, value: string) => {
     if (key === "client_name") {
       setFilter("business_name", "");
     }
     setFilter(key, value);
-  };
-
-  const handleComplete = async (deadlineId: number) => {
-    setCompletingId(deadlineId);
-    await completeMutation.mutateAsync(deadlineId);
-  };
-
-  const handleReopen = async (deadlineId: number) => {
-    setReopeningId(deadlineId);
-    await reopenMutation.mutateAsync(deadlineId);
-  };
-
-  const handleEdit = (deadline: TaxDeadlineResponse) => {
-    setEditingDeadline(deadline);
-    editForm.reset({
-      deadline_type: deadline.deadline_type,
-      due_date: deadline.due_date,
-      period: deadline.deadline_type === "annual_report" ? String(deadline.tax_year ?? "") : deadline.period ?? "",
-      payment_amount: deadline.payment_amount != null ? String(deadline.payment_amount) : "",
-      description: deadline.description ?? "",
-    });
-  };
-
-  const handleDelete = (deadlineId: number) => {
-    setDeletingId(deadlineId);
-    deleteMutation.mutate(deadlineId);
   };
 
   const deadlines = deadlinesQuery.data?.items ?? [];
@@ -312,29 +171,29 @@ export const useTaxDeadlines = () => {
       ? getErrorMessage(deadlinesQuery.error, "שגיאה בטעינת מועדים")
       : null,
     isCreating: createMutation.isPending,
-    isUpdating: updateMutation.isPending,
-    completingId,
-    reopeningId,
-    deletingId,
+    isUpdating: deadlineActions.isUpdating,
+    completingId: deadlineActions.completingId,
+    reopeningId: deadlineActions.reopeningId,
+    deletingId: deadlineActions.deletingId,
     showCreateModal,
     showGenerateModal,
-    editingDeadline,
+    editingDeadline: deadlineActions.editingDeadline,
     // Actions
     setShowCreateModal,
     setShowGenerateModal,
-    setEditingDeadline,
+    setEditingDeadline: deadlineActions.setEditingDeadline,
     handleFilterChange,
-    handleComplete,
-    handleReopen,
-    handleEdit,
-    handleDelete,
+    handleComplete: deadlineActions.handleComplete,
+    handleReopen: deadlineActions.handleReopen,
+    handleEdit: deadlineActions.handleEdit,
+    handleDelete: deadlineActions.handleDelete,
     // Forms
     form,
     onSubmit,
     generateForm,
     onGenerateSubmit,
-    editForm,
-    onEditSubmit,
+    editForm: deadlineActions.editForm,
+    onEditSubmit: deadlineActions.onEditSubmit,
 
     // Permissions
     isAdvisor,

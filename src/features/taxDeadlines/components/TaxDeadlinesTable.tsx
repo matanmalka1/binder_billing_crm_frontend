@@ -10,8 +10,8 @@ import {
   DeadlineDateCell,
   DeadlineStatusBadge,
   DeadlineUrgencyBadge,
-  getDeadlineRowClassName,
 } from "./TaxDeadlineTableParts";
+import { getDeadlineRowClassName } from "./taxDeadlineTableUtils";
 import { getTaxDeadlinePeriodLabel } from "../utils";
 
 interface TaxDeadlinesTableProps {
@@ -84,7 +84,7 @@ export const TaxDeadlinesTable = ({
       {
         key: "payment_amount",
         header: "סכום",
-        render: (deadline) => <DeadlineAmountCell amount={deadline.payment_amount} />,
+        render: (deadline) => <DeadlineAmountCell amount={deadline.payment_amount} status={deadline.status} />,
       },
       {
         key: "status",

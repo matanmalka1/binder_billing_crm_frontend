@@ -12,9 +12,10 @@ export const getDeadlineDaysLabel = (
   if (inactive) return { daysRemaining, daysLabel: "—" };
 
   const daysLabel =
-    daysRemaining < 0 ? `איחור של ${Math.abs(daysRemaining)} ימים`
+    daysRemaining < 0 ? `באיחור ${Math.abs(daysRemaining)} ימים`
     : daysRemaining === 0 ? "היום"
-    : `${daysRemaining} ימים`;
+    : daysRemaining === 1 ? "מחר"
+    : `בעוד ${daysRemaining} ימים`;
 
   return { daysRemaining, daysLabel };
 };
@@ -24,9 +25,10 @@ export const getDeadlineDaysLabelShort = (
   inactive: boolean,
 ): string => {
   if (inactive) return "—";
-  if (daysRemaining < 0) return `איחור ${Math.abs(daysRemaining)}י׳`;
+  if (daysRemaining < 0) return `באיחור ${Math.abs(daysRemaining)} ימים`;
   if (daysRemaining === 0) return "היום";
-  return `${daysRemaining} ימים`;
+  if (daysRemaining === 1) return "מחר";
+  return `בעוד ${daysRemaining} ימים`;
 };
 
 export const getTaxDeadlinePeriodLabel = (deadline: DeadlinePeriodFields): string => {
