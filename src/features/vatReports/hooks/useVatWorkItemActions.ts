@@ -3,23 +3,25 @@ import { useQueryClient } from "@tanstack/react-query";
 import { vatReportsApi } from "../api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
-import { vatReportsQK } from "../api/queryKeys";
+import { invalidateVatWorkItem } from "./useVatInvalidation";
 
 export const useVatWorkItemActions = (workItemId: number) => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
-  const invalidate = async () => {
-    await queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) });
-    await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
-  };
-
-  const run = async (fn: () => Promise<unknown>, successMsg: string, errMsg: string) => {
+  const run = async (
+    fn: () => ReturnType<typeof vatReportsApi.markMaterialsComplete>,
+    successMsg: string,
+    errMsg: string,
+  ) => {
     setLoading(true);
     try {
-      await fn();
+      const workItem = await fn();
       toast.success(successMsg);
-      await invalidate();
+      await invalidateVatWorkItem(queryClient, {
+        workItemId: workItem.id,
+        clientRecordId: workItem.client_record_id,
+      });
     } catch (err) {
       showErrorToast(err, errMsg);
     } finally {

@@ -45,8 +45,9 @@ export const VatWorkItems: React.FC = () => {
   useEffect(() => {
     if (urlParams.get("create") === "1") {
       setShowCreateModal(true);
-      urlParams.delete("create");
-      setUrlParams(urlParams, { replace: true });
+      const nextParams = new URLSearchParams(urlParams);
+      nextParams.delete("create");
+      setUrlParams(nextParams, { replace: true });
     }
   }, [urlParams, setUrlParams]);
 

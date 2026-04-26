@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, Clock, FolderOpen, Info, AlertTriangle, User } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { formatClientOfficeId, formatDate } from "@/utils/utils";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { useRole } from "../../../hooks/useRole";
 import { useVatWorkItemActions } from "../hooks/useVatWorkItemActions";
-import { bindersApi, bindersQK } from "@/features/binders";
+import { useActiveVatBinder } from "../hooks/useActiveVatBinder";
 import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { VatProgressBar } from "./VatProgressBar";
 import { VatActionButtons } from "./VatActionButtons";
@@ -26,13 +25,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
   const [showFileModal, setShowFileModal] = useState(false);
   const filed = isFiled(workItem.status);
 
-  const { data: binderData } = useQuery({
-    queryKey: bindersQK.list({ client_record_id: workItem.client_record_id, page_size: 1 }),
-    queryFn: () => bindersApi.list({ client_record_id: workItem.client_record_id, page_size: 1, status: "in_office" }),
-    enabled: !!workItem.client_record_id,
-    staleTime: 60_000,
-  });
-  const activeBinder = binderData?.items?.[0] ?? null;
+  const { activeBinder } = useActiveVatBinder(workItem.client_record_id);
 
   return (
     <div

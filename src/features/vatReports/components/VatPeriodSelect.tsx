@@ -1,9 +1,7 @@
 import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { FormField } from "../../../components/ui/inputs/FormField";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
-import { vatReportsApi } from "../api";
-import { vatReportsQK } from "../api/queryKeys";
+import { useVatPeriodOptions } from "../hooks/useVatPeriodOptions";
 
 interface VatPeriodSelectProps {
   clientId: number;
@@ -24,18 +22,8 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
   className,
   enabled = true,
 }) => {
-  const isValidClient = Number.isInteger(clientId) && (clientId as number) > 0;
-
-  const { data, isLoading } = useQuery({
-    queryKey: vatReportsQK.periodOptions(clientId, year),
-    queryFn: () => vatReportsApi.getPeriodOptions(clientId, year),
-    enabled: enabled && isValidClient,
-    staleTime: 30_000,
-    retry: 1,
-    refetchOnWindowFocus: false,
-  });
-
-  const periodOptions = useMemo(() => data?.options ?? [], [data]);
+  const { isValidClient, periodOptions, periodType, isLoading } =
+    useVatPeriodOptions(clientId, year, enabled);
   const selectedPeriodExists = !value || periodOptions.some((opt) => opt.period === value);
 
   const options = useMemo(
@@ -69,7 +57,7 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
           disabled={!isValidClient || isLoading}
         />
       </FormField>
-      {data?.period_type === "bimonthly" && (
+      {periodType === "bimonthly" && (
         <p className={`text-xs text-gray-500 ${className ?? ""}`}>
           הלקוח מוגדר לדיווח דו-חודשי
         </p>

@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { FileSpreadsheet, FileText, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // Components
 import { Card } from "../../../components/ui/primitives/Card";
@@ -13,7 +12,6 @@ import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
 
 // Logic & Utils
 import { vatReportsApi, type CreateVatWorkItemPayload, type VatAnnualSummary, type VatPeriodRow } from "../api";
-import { vatReportsQK } from "../api/queryKeys";
 import { FILE_FORMAT_COLORS } from "../../../utils/chartColors";
 import { buildYearOptions, showErrorToast } from "../../../utils/utils";
 import { useAuthStore } from "../../../store/auth.store";
@@ -21,7 +19,7 @@ import { VAT_CLIENT_SUMMARY_STATUS_VARIANTS } from "../constants";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatVatAmountLtrSafe } from "../utils";
 import { semanticMonoToneClasses } from "../../../utils/semanticColors";
-import { toast } from "../../../utils/toast";
+import { useVatClientSummary } from "../hooks/useVatClientSummary";
 import type { VatClientSummaryPanelProps } from "../types";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -124,25 +122,10 @@ const ExportControls = ({ clientId }: { clientId: number }) => {
 export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) => {
   const role = useAuthStore((s) => s.user?.role);
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: vatReportsQK.clientSummary(clientId),
-    queryFn: () => vatReportsApi.getClientSummary(clientId),
-    staleTime: 30_000,
-  });
-
-  const createMutation = useMutation({
-    mutationFn: (payload: CreateVatWorkItemPayload) => vatReportsApi.create(payload),
-    onSuccess: () => {
-      toast.success('תיק מע"מ נוצר בהצלחה');
-      queryClient.invalidateQueries({ queryKey: vatReportsQK.clientSummary(clientId) });
-      setCreateOpen(false);
-    },
-  });
+  const { data, isLoading, error, createMutation } = useVatClientSummary(clientId);
 
   const columns = useMemo((): Column<VatPeriodRow>[] => [
     {
@@ -194,11 +177,17 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
     setCreateError(null);
     try {
       await createMutation.mutateAsync(payload);
+      setCreateOpen(false);
       return true;
     } catch (err) {
       setCreateError(showErrorToast(err, "שגיאה ביצירת תיק המע״מ"));
       return false;
     }
+  };
+
+  const handleRowClick = (row: VatPeriodRow) => {
+    if (!Number.isInteger(row.work_item_id) || row.work_item_id <= 0) return;
+    navigate(`/tax/vat/${row.work_item_id}`);
   };
 
   if (error) {
@@ -227,7 +216,7 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
         getRowKey={(r) => r.period}
         isLoading={isLoading}
         emptyMessage='אין תקופות מע״מ ללקוח זה'
-        onRowClick={(r) => navigate(`/tax/vat/${r.work_item_id}`)}
+        onRowClick={handleRowClick}
       />
 
       {annualData.length > 0 && (

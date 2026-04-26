@@ -10,6 +10,7 @@ import { vatReportsApi } from "../api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
 import { vatReportsQK } from "../api/queryKeys";
+import { invalidateVatWorkItem } from "../hooks/useVatInvalidation";
 import {
   DEFAULT_VAT_FILING_METHOD,
   VAT_FILE_MODAL_MESSAGES,
@@ -66,15 +67,18 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({ open, workItemId, on
     setIsLoading(true);
     onFilingStart?.();
     try {
-      await vatReportsApi.fileVatReturn(workItemId, toFileVatReturnPayload(values));
+      const workItem = await vatReportsApi.fileVatReturn(workItemId, toFileVatReturnPayload(values));
       toast.success(VAT_FILE_MODAL_MESSAGES.filingSuccess);
       // Optimistic cache update — set status to "filed" before background refetch
       queryClient.setQueryData(vatReportsQK.detail(workItemId), (prev: unknown) => {
         if (!prev || typeof prev !== "object") return prev;
         return { ...(prev as object), status: "filed" };
       });
-      await queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) });
-      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
+      await invalidateVatWorkItem(queryClient, {
+        workItemId,
+        clientRecordId: workItem.client_record_id,
+        includeAudit: true,
+      });
       handleClose();
     } catch (err) {
       showErrorToast(err, VAT_FILE_MODAL_MESSAGES.filingError);

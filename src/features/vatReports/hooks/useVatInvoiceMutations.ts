@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { vatReportsApi, type CreateVatInvoicePayload, type UpdateVatInvoicePayload } from "../api";
-import { vatReportsQK } from "../api/queryKeys";
 import { showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
+import { invalidateVatWorkItem } from "./useVatInvalidation";
 
 const invalidateVatInvoiceQueries = async (queryClient: QueryClient, workItemId: number) => {
-  await queryClient.invalidateQueries({ queryKey: vatReportsQK.invoices(workItemId) });
-  await queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) });
-  await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
+  await invalidateVatWorkItem(queryClient, {
+    workItemId,
+    includeInvoices: true,
+  });
 };
 
 const runMutationWithFeedback = async (

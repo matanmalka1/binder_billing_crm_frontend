@@ -1,5 +1,6 @@
 export const vatReportsQK = {
   all: ["tax", "vat-work-items"] as const,
+  lists: ["tax", "vat-work-items", "list"] as const,
   list: (params: object) => ["tax", "vat-work-items", "list", params] as const,
   lookup: (clientId: number, period: string) =>
     ["tax", "vat-work-items", "lookup", clientId, period] as const,

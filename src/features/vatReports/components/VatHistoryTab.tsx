@@ -1,24 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { Button } from "../../../components/ui/primitives/Button";
-import { vatReportsApi } from "../api";
-import { vatReportsQK } from "../api/queryKeys";
 import { formatDateTime } from "../../../utils/utils";
 import {
   ACTION_LABELS,
   PAGE_SIZE,
 } from "../history.constants";
 import { formatVatHistoryDetails } from "../history.utils";
+import { useVatHistory } from "../hooks/useVatHistory";
 import type { VatHistoryTabProps } from "../types";
 
 export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
   const [page, setPage] = useState(0);
-  const { data, isPending } = useQuery({
-    queryKey: vatReportsQK.audit(workItemId),
-    queryFn: () => vatReportsApi.getAuditTrail(workItemId),
-  });
-
-  const items = useMemo(() => [...(data?.items ?? [])].reverse(), [data?.items]);
+  const { items, isPending } = useVatHistory(workItemId);
   const totalPages = Math.ceil(items.length / PAGE_SIZE);
   const maxPageIndex = Math.max(0, totalPages - 1);
 

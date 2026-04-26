@@ -39,10 +39,14 @@ export const VatWorkItemsCreateModal: React.FC<
     resolver: zodResolver(vatWorkItemCreateSchema),
   });
 
-  const resetClientDependentFields = useCallback(() => {
-    setValue("client_id", "", { shouldDirty: true, shouldValidate: true });
+  const resetPeriodField = useCallback(() => {
     setValue("period", "", { shouldDirty: true, shouldValidate: true });
   }, [setValue]);
+
+  const resetClientSelection = useCallback(() => {
+    setValue("client_id", "", { shouldDirty: true, shouldValidate: true });
+    resetPeriodField();
+  }, [resetPeriodField, setValue]);
 
   const {
     clientQuery,
@@ -52,8 +56,8 @@ export const VatWorkItemsCreateModal: React.FC<
     handleClientQueryChange,
     resetClientPicker,
   } = useClientPickerState({
-    onSelect: resetClientDependentFields,
-    onClear: resetClientDependentFields,
+    onSelect: resetPeriodField,
+    onClear: resetClientSelection,
   });
 
   const clientIdValue = watch("client_id");

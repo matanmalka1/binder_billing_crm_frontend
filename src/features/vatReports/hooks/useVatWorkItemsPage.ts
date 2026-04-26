@@ -12,6 +12,7 @@ import { toast } from "../../../utils/toast";
 import { toOptionalString } from "../../../utils/filters";
 import { useRole } from "../../../hooks/useRole";
 import { vatReportsQK } from "../api/queryKeys";
+import { invalidateVatWorkItem } from "./useVatInvalidation";
 import type { VatWorkItemAction } from "../types";
 
 export const useVatWorkItemsPage = () => {
@@ -81,9 +82,13 @@ export const useVatWorkItemsPage = () => {
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateVatWorkItemPayload) => vatReportsApi.create(payload),
-    onSuccess: async () => {
+    onSuccess: async (workItem) => {
       toast.success('תיק מע"מ נוצר בהצלחה');
-      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
+      await invalidateVatWorkItem(queryClient, {
+        workItemId: workItem.id,
+        clientRecordId: workItem.client_record_id,
+        includeAudit: false,
+      });
     },
   });
 
@@ -94,18 +99,24 @@ export const useVatWorkItemsPage = () => {
       if (action === "materialsComplete") return vatReportsApi.markMaterialsComplete(itemId);
       return vatReportsApi.markReadyForReview(itemId);
     },
-    onSuccess: async () => {
+    onSuccess: async (workItem) => {
       toast.success("הפעולה בוצעה בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
+      await invalidateVatWorkItem(queryClient, {
+        workItemId: workItem.id,
+        clientRecordId: workItem.client_record_id,
+      });
     },
   });
 
   const sendBackMutation = useMutation({
     mutationFn: ({ itemId, note }: { itemId: number; note: string }) =>
       vatReportsApi.sendBack(itemId, note),
-    onSuccess: async () => {
+    onSuccess: async (workItem) => {
       toast.success("התיק הוחזר לתיקון");
-      await queryClient.invalidateQueries({ queryKey: vatReportsQK.all });
+      await invalidateVatWorkItem(queryClient, {
+        workItemId: workItem.id,
+        clientRecordId: workItem.client_record_id,
+      });
     },
   });
 
