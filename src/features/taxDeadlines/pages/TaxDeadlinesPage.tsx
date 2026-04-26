@@ -15,6 +15,7 @@ import {
   useTaxDeadlines,
   type TaxDeadlineResponse,
 } from "@/features/taxDeadlines";
+import { DeadlineSummaryCards } from "../components/DeadlineSummaryCards";
 import { TaxSubmissionStats, useTaxDashboard } from "@/features/taxDashboard";
 
 export const TaxDeadlines: React.FC = () => {
@@ -104,6 +105,8 @@ export const TaxDeadlines: React.FC = () => {
         activeFilter={filters.status}
         onFilter={(status) => handleFilterChange("status", status)}
       />
+
+      <DeadlineSummaryCards deadlines={deadlines} />
 
       <TaxDeadlinesFilters filters={filters} onChange={handleFilterChange} />
 

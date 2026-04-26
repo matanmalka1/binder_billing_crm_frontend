@@ -5,6 +5,7 @@ import { Modal } from "../../../components/ui/overlays/Modal";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Button } from "../../../components/ui/primitives/Button";
+import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { DocumentCard } from "./DocumentCard";
 import { DocumentsUploadCard } from "./DocumentsUploadCard";
 import { DocumentVersionsPanel } from "./DocumentVersionsPanel";
@@ -144,8 +145,6 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     return true;
   });
 
-  const isFiltered = Boolean(search || filterType || taxYear);
-
   const expandedDoc =
     expandedVersionsId !== null
       ? documents.find((d) => d.id === expandedVersionsId)
@@ -177,39 +176,52 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2">
-        <Input
-          placeholder="חיפוש לפי שם קובץ או סוג מסמך"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          startIcon={<Search className="h-3.5 w-3.5" />}
-          className="h-8 w-56 text-sm"
+      <div className="space-y-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Input
+            placeholder="חיפוש לפי שם קובץ או סוג מסמך"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            startIcon={<Search className="h-3.5 w-3.5" />}
+            className="h-8 w-56 text-sm"
+          />
+          <Select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            options={[
+              { value: "", label: "כל הסוגים" },
+              ...Object.entries(DOC_TYPE_LABELS).map(([value, label]) => ({ value, label })),
+            ]}
+          />
+          <Select
+            value={taxYear ?? ""}
+            onChange={(e) => onTaxYearChange(e.target.value ? Number(e.target.value) : null)}
+            options={[
+              { value: "", label: "כל השנים" },
+              ...TAX_YEARS.map((y) => ({ value: String(y), label: String(y) })),
+            ]}
+          />
+        </div>
+        <ActiveFilterBadges
+          badges={[
+            search ? { key: "search", label: `חיפוש: ${search}`, onRemove: () => setSearch("") } : null,
+            filterType
+              ? {
+                  key: "filterType",
+                  label: DOC_TYPE_LABELS[filterType] ?? filterType,
+                  onRemove: () => setFilterType(""),
+                }
+              : null,
+            taxYear
+              ? {
+                  key: "taxYear",
+                  label: `שנה: ${taxYear}`,
+                  onRemove: () => onTaxYearChange(null),
+                }
+              : null,
+          ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}
+          onReset={() => { setSearch(""); setFilterType(""); onTaxYearChange(null); }}
         />
-        <Select
-          value={filterType}
-          onChange={(e) => setFilterType(e.target.value)}
-          options={[
-            { value: "", label: "כל הסוגים" },
-            ...Object.entries(DOC_TYPE_LABELS).map(([value, label]) => ({ value, label })),
-          ]}
-        />
-        <Select
-          value={taxYear ?? ""}
-          onChange={(e) => onTaxYearChange(e.target.value ? Number(e.target.value) : null)}
-          options={[
-            { value: "", label: "כל השנים" },
-            ...TAX_YEARS.map((y) => ({ value: String(y), label: String(y) })),
-          ]}
-        />
-        {isFiltered && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => { setSearch(""); setFilterType(""); onTaxYearChange(null); }}
-          >
-            נקה סינון
-          </Button>
-        )}
       </div>
 
       {/* Card grid */}
@@ -227,13 +239,6 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
           ) : (
             <>
               <p className="text-sm font-medium text-gray-500">לא נמצאו מסמכים מתאימים לחיפוש</p>
-              <button
-                type="button"
-                onClick={() => { setSearch(""); setFilterType(""); onTaxYearChange(null); }}
-                className="text-xs text-primary-600 hover:underline"
-              >
-                נקה סינון
-              </button>
             </>
           )}
         </div>

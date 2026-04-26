@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/primitives/Button";
+import { ActiveFilterBadges } from "@/components/ui/table/ActiveFilterBadges";
 import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
 import {
   CreateReminderModal,
@@ -67,13 +68,20 @@ export const RemindersPage: React.FC = () => {
   const renderBody = () => {
     if (reminders.length === 0) {
       if (hasFilters) {
+        const statusLabel = statusFilter === "pending" ? "ממתינות" : statusFilter === "sent" ? "נשלחו" : statusFilter;
+
         return (
-          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center text-gray-500">
+          <div className="flex flex-col items-center rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center text-gray-500">
             <p className="text-lg font-medium mb-2">לא נמצאו תזכורות</p>
             <p className="text-sm mb-4">אין תוצאות התואמות את הסינון הנוכחי.</p>
-            <Button variant="secondary" onClick={clearFilters}>
-              נקה סינון
-            </Button>
+            <ActiveFilterBadges
+              badges={[
+                search ? { key: "search", label: `חיפוש: ${search}`, onRemove: () => setSearch("") } : null,
+                typeFilter ? { key: "typeFilter", label: `סוג: ${typeFilter}`, onRemove: () => setTypeFilter("") } : null,
+                statusFilter ? { key: "statusFilter", label: `סטטוס: ${statusLabel}`, onRemove: () => setStatusFilter("") } : null,
+              ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}
+              onReset={clearFilters}
+            />
           </div>
         );
       }

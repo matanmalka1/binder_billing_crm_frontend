@@ -1,22 +1,22 @@
 import { useMemo, useState } from "react";
-import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, CheckCircle2, Inbox, ListChecks, RotateCcw, X } from "lucide-react";
+import { Inbox } from "lucide-react";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
-import { Button } from "../../../components/ui/primitives/Button";
 import { Select } from "../../../components/ui/inputs/Select";
+import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
 import { taxDeadlinesApi, taxDeadlinesQK, getDeadlineTypeLabel } from "../api";
 import type { TaxDeadlineResponse } from "../api";
 import {
   TAX_DEADLINE_FILTER_TYPE_OPTIONS,
   TAX_DEADLINE_STATUS_OPTIONS,
+  getTaxDeadlineStatusLabel,
+  getTaxDeadlineTypeLabel,
 } from "../constants";
 import { getTaxDeadlinePeriodLabel } from "../utils";
-import { formatCurrency } from "../api";
-import { cn } from "../../../utils/utils";
 import { useClientDeadlineActions } from "../hooks/useClientDeadlineActions";
 import { TaxDeadlineRowActions } from "./TaxDeadlineRowActions";
 import { EditTaxDeadlineFormModal } from "./EditTaxDeadlineForm";
+import { DeadlineSummaryCards } from "./DeadlineSummaryCards";
 import {
   DeadlineAmountCell,
   DeadlineDateCell,
@@ -61,57 +61,6 @@ const getYearOptions = (deadlines: TaxDeadlineResponse[]) => {
   return [{ value: "", label: "כל השנים" }, ...years.map((year) => ({ value: String(year), label: String(year) }))];
 };
 
-const getSummary = (deadlines: TaxDeadlineResponse[]) => ({
-  overdue: deadlines.filter((deadline) => deadline.status === "pending" && deadline.urgency_level === "overdue").length,
-  pending: deadlines.filter((deadline) => deadline.status === "pending").length,
-  completed: deadlines.filter((deadline) => deadline.status === "completed").length,
-  totalOpen: deadlines
-    .filter((deadline) => deadline.status === "pending" && deadline.payment_amount !== null)
-    .reduce((sum, deadline) => sum + Number(deadline.payment_amount), 0),
-});
-
-const SummaryCard = ({
-  label,
-  value,
-  icon,
-  tone,
-}: {
-  label: string;
-  value: string | number;
-  icon: ReactNode;
-  tone: "negative" | "warning" | "positive" | "neutral";
-}) => {
-  const tones = {
-    negative: "border-negative-100 bg-negative-50 text-negative-700",
-    warning: "border-warning-100 bg-warning-50 text-warning-700",
-    positive: "border-positive-100 bg-positive-50 text-positive-700",
-    neutral: "border-gray-100 bg-gray-50 text-gray-700",
-  };
-
-  return (
-    <div className="rounded-lg border border-gray-100 bg-white p-3">
-      <div className={cn("mb-2 inline-flex h-8 w-8 items-center justify-center rounded-md border", tones[tone])}>
-        {icon}
-      </div>
-      <div className="text-xl font-semibold text-gray-900">{value}</div>
-      <div className="text-xs text-gray-500">{label}</div>
-    </div>
-  );
-};
-
-const DeadlineSummaryCards = ({ deadlines }: { deadlines: TaxDeadlineResponse[] }) => {
-  const summary = useMemo(() => getSummary(deadlines), [deadlines]);
-
-  return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      <SummaryCard label="באיחור" value={summary.overdue} icon={<AlertTriangle className="h-4 w-4" />} tone="negative" />
-      <SummaryCard label="ממתינים" value={summary.pending} icon={<RotateCcw className="h-4 w-4" />} tone="warning" />
-      <SummaryCard label="הושלמו" value={summary.completed} icon={<CheckCircle2 className="h-4 w-4" />} tone="positive" />
-      <SummaryCard label="סכום פתוח" value={formatCurrency(String(summary.totalOpen))} icon={<ListChecks className="h-4 w-4" />} tone="neutral" />
-    </div>
-  );
-};
-
 const TimelineToolbar = ({
   filters,
   yearOptions,
@@ -127,38 +76,55 @@ const TimelineToolbar = ({
 
   return (
     <div className="rounded-lg border border-gray-100 bg-white p-3">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_1fr_1fr_auto_auto] md:items-end">
-        <Select
-          label="סטטוס"
-          value={filters.status}
-          onChange={(e) => onChange({ status: e.target.value })}
-          options={TAX_DEADLINE_STATUS_OPTIONS}
-        />
-        <Select
-          label="סוג"
-          value={filters.type}
-          onChange={(e) => onChange({ type: e.target.value })}
-          options={TAX_DEADLINE_FILTER_TYPE_OPTIONS}
-        />
-        <Select
-          label="שנה"
-          value={filters.year}
-          onChange={(e) => onChange({ year: e.target.value })}
-          options={yearOptions}
-        />
-        <label className="flex h-10 items-center gap-2 text-sm font-medium text-gray-700">
-          <input
-            type="checkbox"
-            checked={filters.overdueOnly}
-            onChange={(e) => onChange({ overdueOnly: e.target.checked })}
-            className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end">
+          <Select
+            label="סטטוס"
+            value={filters.status}
+            onChange={(e) => onChange({ status: e.target.value })}
+            options={TAX_DEADLINE_STATUS_OPTIONS}
           />
-          באיחור בלבד
-        </label>
-        <Button type="button" variant="outline" size="sm" onClick={onReset} disabled={!hasFilters}>
-          <X className="h-4 w-4" />
-          ניקוי
-        </Button>
+          <Select
+            label="סוג"
+            value={filters.type}
+            onChange={(e) => onChange({ type: e.target.value })}
+            options={TAX_DEADLINE_FILTER_TYPE_OPTIONS}
+          />
+          <Select
+            label="שנה"
+            value={filters.year}
+            onChange={(e) => onChange({ year: e.target.value })}
+            options={yearOptions}
+          />
+          <label className="flex h-10 items-center gap-2 text-sm font-medium text-gray-700">
+            <input
+              type="checkbox"
+              checked={filters.overdueOnly}
+              onChange={(e) => onChange({ overdueOnly: e.target.checked })}
+              className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+            />
+            באיחור בלבד
+          </label>
+        </div>
+        {hasFilters && (
+          <ActiveFilterBadges
+            badges={[
+              filters.status
+                ? { key: "status", label: getTaxDeadlineStatusLabel(filters.status), onRemove: () => onChange({ status: "" }) }
+                : null,
+              filters.type
+                ? { key: "type", label: getTaxDeadlineTypeLabel(filters.type), onRemove: () => onChange({ type: "" }) }
+                : null,
+              filters.year
+                ? { key: "year", label: `שנה: ${filters.year}`, onRemove: () => onChange({ year: "" }) }
+                : null,
+              filters.overdueOnly
+                ? { key: "overdueOnly", label: "באיחור בלבד", onRemove: () => onChange({ overdueOnly: false }) }
+                : null,
+            ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}
+            onReset={onReset}
+          />
+        )}
       </div>
     </div>
   );
