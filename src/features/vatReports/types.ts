@@ -6,7 +6,7 @@ import type {
   VatInvoiceResponse,
   VatWorkItemResponse,
 } from "./api";
-import type { ExpenseCategoryRow, VatBreakdownData } from "./vatBreakdown.utils";
+import type { ExpenseCategoryRow } from "./vatBreakdown.utils";
 
 export type VatWorkItemsFilters = PagedFilters<{
   status: string;
@@ -31,16 +31,6 @@ export interface VatCategoryTableProps {
   totalExpenseNet: number;
   totalGrossVat: number;
   totalInputVat: number;
-}
-
-export interface VatOutputCardProps {
-  data: VatBreakdownData;
-  onNavigate?: () => void;
-}
-
-export interface VatInputCardProps {
-  data: VatBreakdownData;
-  onNavigate?: () => void;
 }
 
 

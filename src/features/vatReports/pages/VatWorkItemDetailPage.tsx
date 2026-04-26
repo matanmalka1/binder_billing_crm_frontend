@@ -19,10 +19,16 @@ import {
 
 type TabKey = "summary" | "income" | "expense" | "history";
 
+const TAB_KEYS = ["summary", "income", "expense", "history"] as const;
+
+const isTabKey = (tab: string | null): tab is TabKey =>
+  TAB_KEYS.some((tabKey) => tabKey === tab);
+
 const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFilingPending, setIsFilingPending] = useState(false);
-  const activeTab = (searchParams.get("tab") as TabKey) ?? "summary";
+  const requestedTab = searchParams.get("tab");
+  const activeTab = isTabKey(requestedTab) ? requestedTab : "summary";
   const { workItem, invoices, isLoading, isError } = useVatWorkItemPage(workItemId);
 
   const setTab = (tab: TabKey) => setSearchParams(tab === "summary" ? {} : { tab });
@@ -39,7 +45,6 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
 
   const incomeCount = invoices.filter((i) => i.invoice_type === "income").length;
   const expenseCount = invoices.filter((i) => i.invoice_type === "expense").length;
-
   const tabs: { key: TabKey; label: string; icon: React.ElementType; badge?: number }[] = [
     { key: "summary", label: "סיכום", icon: LayoutDashboard },
     { key: "income", label: "עסקאות", icon: ClipboardList, badge: incomeCount },
@@ -63,7 +68,6 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
         />
       )}
 
-      {/* Tab bar */}
       <div
         role="tablist"
         className="flex gap-0 border-b border-gray-200 bg-white/95 backdrop-blur-sm"
@@ -88,7 +92,10 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
             <Icon className="h-4 w-4" />
             {label}
             {badge !== undefined && badge > 0 && (
-              <Badge variant="neutral" className="text-xs px-1.5 py-0.5 rounded-full min-w-[1.25rem] text-center">
+              <Badge
+                variant="neutral"
+                className="text-xs px-1.5 py-0.5 rounded-full min-w-[1.25rem] text-center"
+              >
                 {badge}
               </Badge>
             )}
@@ -96,14 +103,25 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
         ))}
       </div>
 
-      {/* Tab content */}
       <div>
         {activeTab === "summary" && <VatSummaryTab workItem={workItem} invoices={invoices} />}
         {activeTab === "income" && (
-          <VatIncomeTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.client_status} isFilingPending={isFilingPending} />
+          <VatIncomeTab
+            workItemId={workItem.id}
+            status={workItem.status}
+            invoices={invoices}
+            clientStatus={workItem.client_status}
+            isFilingPending={isFilingPending}
+          />
         )}
         {activeTab === "expense" && (
-          <VatExpenseTab workItemId={workItem.id} status={workItem.status} invoices={invoices} clientStatus={workItem.client_status} isFilingPending={isFilingPending} />
+          <VatExpenseTab
+            workItemId={workItem.id}
+            status={workItem.status}
+            invoices={invoices}
+            clientStatus={workItem.client_status}
+            isFilingPending={isFilingPending}
+          />
         )}
         {activeTab === "history" && <VatHistoryTab workItemId={workItem.id} />}
       </div>
