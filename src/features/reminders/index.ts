@@ -1,5 +1,6 @@
 // Public surface of the reminders feature
 export { remindersApi, remindersQK } from "./api";
+export { ClientRemindersCard } from "./components/ClientRemindersCard";
 export { CreateReminderModal } from "./components/CreateReminderModal";
 export { ReminderDrawer } from "./components/ReminderDrawer";
 export { RemindersFiltersBar } from "./components/RemindersFiltersBar";

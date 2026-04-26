@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { correspondenceApi, correspondenceQK } from "../api";
 import type { UpdateCorrespondencePayload } from "../api";
-import { authorityContactsApi, authorityContactsQK } from "@/features/authorityContacts/api";
+import { authorityContactsApi, authorityContactsQK } from "@/features/authorityContacts";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { CorrespondenceFormValues } from "../schemas";
 import { toast } from "../../../utils/toast";

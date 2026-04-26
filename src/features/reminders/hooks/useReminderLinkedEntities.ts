@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import type { ReminderType } from "../api";
-import { bindersApi, bindersQK } from "@/features/binders/api";
-import { chargesApi, chargesQK } from "@/features/charges/api";
-import { taxDeadlinesApi, taxDeadlinesQK } from "@/features/taxDeadlines/api";
-import { annualReportsApi, annualReportsQK } from "@/features/annualReports/api";
-import { advancePaymentsApi, advancedPaymentsQK } from "@/features/advancedPayments/api";
-import { clientsApi, clientsQK } from "@/features/clients/api";
+import { bindersApi, bindersQK } from "@/features/binders";
+import { chargesApi, chargesQK } from "@/features/charges";
+import { taxDeadlinesApi, taxDeadlinesQK } from "@/features/taxDeadlines";
+import { annualReportsApi, annualReportsQK } from "@/features/annualReports";
+import { advancePaymentsApi, advancedPaymentsQK } from "@/features/advancedPayments";
+import { clientsApi, clientsQK } from "@/features/clients";
 
 /**
  * Lazily fetches the entities needed to populate linked-entity dropdowns in the

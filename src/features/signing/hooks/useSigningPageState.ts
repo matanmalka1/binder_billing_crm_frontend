@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { signerApi, signatureRequestsQK } from "@/features/signatureRequests/api";
-import type { SignerViewResponse, SignatureRequestStatus } from "@/features/signatureRequests/api";
+import { signerApi, signatureRequestsQK } from "@/features/signatureRequests";
+import type { SignerViewResponse, SignatureRequestStatus } from "@/features/signatureRequests";
 import type { SigningPageState } from "../types";
 
 interface UseSigningPageStateResult {

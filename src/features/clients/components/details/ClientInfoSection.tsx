@@ -13,7 +13,7 @@ import {
   getClientVatReportingLabel,
   getEntityTypeLabel,
 } from "../../constants";
-import { authorityContactsApi, authorityContactsQK } from "../../../authorityContacts/api";
+import { authorityContactsApi, authorityContactsQK } from "@/features/authorityContacts";
 import { useAdvisorOptions } from "@/features/users";
 
 type ClientInfoSectionProps = {
