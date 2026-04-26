@@ -1,5 +1,5 @@
 import { Download, Eye, History, RefreshCw, Trash2 } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { RowActionItem, RowActionSeparator, RowActionsMenu } from "@/components/ui/table";
 import type { PermanentDocumentResponse } from "../api";
 
 export interface DocumentRowActionsProps {
@@ -27,20 +27,19 @@ export const DocumentRowActions: React.FC<DocumentRowActionsProps> = ({
   onDelete,
   handleExpandVersions,
 }) => (
-  <div onClick={(e) => e.stopPropagation()}>
-    <DropdownMenu ariaLabel={`פעולות למסמך ${doc.id}`}>
-      <DropdownMenuItem
+  <RowActionsMenu ariaLabel={`פעולות למסמך ${doc.id}`}>
+      <RowActionItem
         label="תצוגה מקדימה"
         onClick={() => onPreview(doc)}
         icon={<Eye className="h-4 w-4" />}
       />
-      <DropdownMenuItem
+      <RowActionItem
         label={downloadingId === doc.id ? "מוריד..." : "הורד"}
         onClick={() => onDownload(doc.id)}
         icon={<Download className="h-4 w-4" />}
         disabled={downloadingId === doc.id}
       />
-      <DropdownMenuItem
+      <RowActionItem
         label="היסטוריית גרסאות"
         onClick={() => handleExpandVersions(doc.id)}
         icon={<History className="h-4 w-4" />}
@@ -48,14 +47,14 @@ export const DocumentRowActions: React.FC<DocumentRowActionsProps> = ({
 
       {isAdvisor && (
         <>
-          <div className="my-1 border-t border-gray-100" />
-          <DropdownMenuItem
+          <RowActionSeparator />
+          <RowActionItem
             label={replacingId === doc.id ? "מחליף..." : "החלף"}
             onClick={() => onReplace(doc.id)}
             icon={<RefreshCw className="h-4 w-4" />}
             disabled={replacingId === doc.id}
           />
-          <DropdownMenuItem
+          <RowActionItem
             label={deletingId === doc.id ? "מוחק..." : "מחק"}
             onClick={() => onDelete(doc.id)}
             icon={<Trash2 className="h-4 w-4" />}
@@ -64,8 +63,7 @@ export const DocumentRowActions: React.FC<DocumentRowActionsProps> = ({
           />
         </>
       )}
-    </DropdownMenu>
-  </div>
+    </RowActionsMenu>
 );
 
 DocumentRowActions.displayName = "DocumentRowActions";

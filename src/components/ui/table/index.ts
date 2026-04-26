@@ -4,6 +4,7 @@ export * from "./DataTable";
 export * from "./FilterBar";
 export * from "./PaginatedDataTable";
 export * from "./PaginationCard";
+export * from "./RowActions";
 export * from "./SortableHeader";
 export * from "./TableSkeleton";
 export * from "./tableSelection";

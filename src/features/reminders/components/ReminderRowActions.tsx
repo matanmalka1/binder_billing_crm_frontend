@@ -1,5 +1,5 @@
 import { X, CheckCheck, Eye } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { RowActionItem, RowActionsMenu } from "@/components/ui/table";
 import type { Reminder } from "../types";
 
 interface ReminderRowActionsProps {
@@ -23,18 +23,17 @@ export const ReminderRowActions: React.FC<ReminderRowActionsProps> = ({
   const isBusy = cancelingId !== null || markingSentId !== null;
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <DropdownMenu ariaLabel={`פעולות לתזכורת ${reminder.id}`}>
-        <DropdownMenuItem label="פרטים" onClick={() => onViewDetails(reminder)} icon={<Eye className="h-4 w-4" />} />
+    <RowActionsMenu ariaLabel={`פעולות לתזכורת ${reminder.id}`}>
+        <RowActionItem label="פרטים" onClick={() => onViewDetails(reminder)} icon={<Eye className="h-4 w-4" />} />
         {isPending && (
           <>
-            <DropdownMenuItem
+            <RowActionItem
               label="סמן כנשלח"
               onClick={() => onMarkSent(reminder.id)}
               icon={<CheckCheck className="h-4 w-4" />}
               disabled={isBusy}
             />
-            <DropdownMenuItem
+            <RowActionItem
               label="ביטול"
               onClick={() => onCancel(reminder.id)}
               icon={<X className="h-4 w-4" />}
@@ -43,8 +42,7 @@ export const ReminderRowActions: React.FC<ReminderRowActionsProps> = ({
             />
           </>
         )}
-      </DropdownMenu>
-    </div>
+      </RowActionsMenu>
   );
 };
 

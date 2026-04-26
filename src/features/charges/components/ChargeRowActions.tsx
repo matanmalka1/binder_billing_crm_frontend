@@ -1,5 +1,5 @@
 import { CheckCircle2, Eye, FileText, Trash2 } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { RowActionItem, RowActionSeparator, RowActionsMenu } from "@/components/ui/table";
 import { canCancel, canIssue, canMarkPaid } from "../utils";
 
 interface ChargeRowActionsProps {
@@ -26,21 +26,19 @@ export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
   const hasActions = showActions && (canIssue(status) || canMarkPaid(status) || canCancel(status));
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <DropdownMenu ariaLabel={`פעולות לחיוב ${chargeId}`}>
-        <DropdownMenuItem label="צפייה בפרטים" onClick={onOpenDetail} icon={<Eye className="h-4 w-4" />} disabled={disabled} />
-        {hasActions && <div className="my-1 border-t border-gray-100" />}
+    <RowActionsMenu ariaLabel={`פעולות לחיוב ${chargeId}`}>
+        <RowActionItem label="צפייה בפרטים" onClick={onOpenDetail} icon={<Eye className="h-4 w-4" />} disabled={disabled} />
+        {hasActions && <RowActionSeparator />}
         {showActions && canIssue(status) && (
-          <DropdownMenuItem label="הנפקה" onClick={onIssue} icon={<FileText className="h-4 w-4" />} disabled={disabled} />
+          <RowActionItem label="הנפקה" onClick={onIssue} icon={<FileText className="h-4 w-4" />} disabled={disabled} />
         )}
         {showActions && canMarkPaid(status) && (
-          <DropdownMenuItem label="סימון שולם" onClick={onMarkPaid} icon={<CheckCircle2 className="h-4 w-4" />} disabled={disabled} />
+          <RowActionItem label="סימון שולם" onClick={onMarkPaid} icon={<CheckCircle2 className="h-4 w-4" />} disabled={disabled} />
         )}
         {showActions && canCancel(status) && (
-          <DropdownMenuItem label="ביטול" onClick={onCancel} icon={<Trash2 className="h-4 w-4" />} danger disabled={disabled} />
+          <RowActionItem label="ביטול" onClick={onCancel} icon={<Trash2 className="h-4 w-4" />} danger disabled={disabled} />
         )}
-      </DropdownMenu>
-    </div>
+      </RowActionsMenu>
   );
 };
 

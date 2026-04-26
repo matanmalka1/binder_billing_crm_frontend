@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CheckCircle2, Edit2, RotateCcw, Trash2 } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { RowActionItem, RowActionSeparator, RowActionsMenu } from "@/components/ui/table";
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import type { TaxDeadlineResponse } from "../api";
 
@@ -35,10 +35,10 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
   if (!hasMenu) return null;
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <DropdownMenu ariaLabel={`פעולות למועד ${deadline.id}`}>
+    <>
+      <RowActionsMenu ariaLabel={`פעולות למועד ${deadline.id}`}>
         {canComplete && (
-          <DropdownMenuItem
+          <RowActionItem
             label="סמן הושלם"
             onClick={() => onComplete?.(deadline.id)}
             icon={<CheckCircle2 className="h-4 w-4 text-positive-600" />}
@@ -46,7 +46,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
           />
         )}
         {canReopen && (
-          <DropdownMenuItem
+          <RowActionItem
             label="החזר לממתין"
             onClick={() => onReopen?.(deadline.id)}
             icon={<RotateCcw className="h-4 w-4 text-warning-600" />}
@@ -54,12 +54,12 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
           />
         )}
         {canEdit && (
-          <DropdownMenuItem label="עריכה" onClick={() => onEdit?.(deadline)} icon={<Edit2 className="h-4 w-4" />} />
+          <RowActionItem label="עריכה" onClick={() => onEdit?.(deadline)} icon={<Edit2 className="h-4 w-4" />} />
         )}
         {canDelete && (
           <>
-            {(canComplete || canReopen || canEdit) && <div className="my-1 border-t border-gray-100" />}
-            <DropdownMenuItem
+            {(canComplete || canReopen || canEdit) && <RowActionSeparator />}
+            <RowActionItem
               label="מחק"
               onClick={() => setConfirmDelete(true)}
               icon={<Trash2 className="h-4 w-4" />}
@@ -68,7 +68,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
             />
           </>
         )}
-      </DropdownMenu>
+      </RowActionsMenu>
 
       <ConfirmDialog
         open={confirmDelete}
@@ -80,7 +80,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
         onConfirm={() => { setConfirmDelete(false); onDelete?.(deadline.id); }}
         onCancel={() => setConfirmDelete(false)}
       />
-    </div>
+    </>
   );
 };
 

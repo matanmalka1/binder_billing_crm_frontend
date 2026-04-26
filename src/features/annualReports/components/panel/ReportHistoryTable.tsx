@@ -3,7 +3,7 @@ import { Eye } from "lucide-react";
 import { annualReportsApi, annualReportsQK, type AnnualReportFull } from "../../api";
 import { DataTable } from "../../../../components/ui/table/DataTable";
 import { Badge } from "../../../../components/ui/primitives/Badge";
-import { Button } from "../../../../components/ui/primitives/Button";
+import { RowActionItem, RowActionsMenu } from "@/components/ui/table";
 import {
   getStatusLabel,
   getStatusVariant,
@@ -113,17 +113,13 @@ export const ReportHistoryTable: React.FC<Props> = ({
           key: "actions",
           header: "",
           render: (r) => (
-            <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="sm"
+            <RowActionsMenu ariaLabel={`פעולות לדוח ${r.id}`}>
+              <RowActionItem
+                label="צפה"
                 onClick={() => onSelect?.(r.id)}
-                className="h-7 w-7 p-0"
-                title="צפה"
-              >
-                <Eye className="h-3.5 w-3.5" />
-              </Button>
-            </div>
+                icon={<Eye className="h-4 w-4" />}
+              />
+            </RowActionsMenu>
           ),
         },
       ]}

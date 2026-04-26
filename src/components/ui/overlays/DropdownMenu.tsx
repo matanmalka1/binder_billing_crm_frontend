@@ -114,7 +114,7 @@ export const DropdownMenu = ({ ariaLabel, children }: DropdownMenuProps) => {
         type="button"
         onClick={toggle}
         onKeyDown={handleTriggerKeyDown}
-        className="flex h-7 w-7 items-center justify-center rounded-md border border-transparent text-gray-400 transition-colors hover:border-gray-200 hover:bg-gray-100 hover:text-gray-600"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-500 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
         aria-label={ariaLabel ?? "פעולות"}
         aria-haspopup="menu"
         aria-expanded={open}
@@ -139,7 +139,7 @@ export const DropdownMenu = ({ ariaLabel, children }: DropdownMenuProps) => {
             left: -9999,
             zIndex: 9999,
           }}
-          className="rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
+          className="min-w-40 rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
           onClick={(e) => e.stopPropagation()}
           onKeyDown={handleMenuKeyDown}
           role="menu"
@@ -165,7 +165,7 @@ export const DropdownMenuItem = ({
     disabled={disabled}
     onClick={(e) => { e.stopPropagation(); onClick(); }}
     className={cn(
-      "w-full px-3 py-2 text-right text-sm transition-colors hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed",
+      "w-full px-3 py-2 text-right text-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40",
       danger ? "text-negative-600 hover:bg-negative-50" : "text-gray-700",
     )}
   >

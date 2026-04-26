@@ -1,6 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { RowActionItem, RowActionsMenu } from "@/components/ui/table";
 import type { SearchResult } from "../api";
 import { toQueryParams } from "../../../api/queryParams";
 
@@ -24,15 +24,13 @@ export const SearchRowActions: React.FC<SearchRowActionsProps> = ({ result }) =>
   if (!url) return <span className="text-sm text-gray-300">—</span>;
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <DropdownMenu ariaLabel="פעולות">
-        <DropdownMenuItem
+    <RowActionsMenu ariaLabel="פעולות">
+        <RowActionItem
           label="פירוט"
           onClick={() => navigate(url)}
           icon={<ExternalLink className="h-4 w-4" />}
         />
-      </DropdownMenu>
-    </div>
+    </RowActionsMenu>
   );
 };
 

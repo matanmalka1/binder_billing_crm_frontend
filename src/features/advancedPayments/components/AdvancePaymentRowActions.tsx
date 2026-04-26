@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { RowActionItem, RowActionSeparator, RowActionsMenu } from "@/components/ui/table";
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { EditAdvancePaymentInline } from "./EditAdvancePaymentInline";
@@ -46,21 +46,21 @@ export const AdvancePaymentRowActions: React.FC<AdvancePaymentRowActionsProps> =
           onCancel={() => setEditing(false)}
         />
       ) : (
-        <DropdownMenu ariaLabel={`פעולות למקדמה ${row.id}`}>
-          <DropdownMenuItem
+        <RowActionsMenu ariaLabel={`פעולות למקדמה ${row.id}`}>
+          <RowActionItem
             label="עריכה"
             onClick={() => setEditing(true)}
             icon={<Pencil className="h-4 w-4" />}
           />
-          <div className="my-1 border-t border-gray-100" />
-          <DropdownMenuItem
+          <RowActionSeparator />
+          <RowActionItem
             label={deletingId === row.id ? "מוחק..." : "מחק"}
             onClick={() => setConfirmDelete(true)}
             icon={<Trash2 className="h-4 w-4" />}
             danger
             disabled={deletingId === row.id}
           />
-        </DropdownMenu>
+        </RowActionsMenu>
       )}
 
       <ConfirmDialog

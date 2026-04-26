@@ -1,6 +1,6 @@
 import { Pencil, Trash2 } from "lucide-react";
-import { Button } from "../../../components/ui/primitives/Button";
 import { Badge } from "../../../components/ui/primitives/Badge";
+import { RowActionItem, RowActionSeparator, RowActionsMenu } from "@/components/ui/table";
 import { formatVatAmount, getVatDeductionRateClass, getVatDeductionRateLabel } from "../utils";
 import {
   CATEGORY_COLORS,
@@ -87,30 +87,22 @@ export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
       <TD className="whitespace-nowrap text-xs tabular-nums text-gray-400">{formatDateTime(inv.created_at)}</TD>
       {canEdit && (
         <td className="px-2 py-2">
-          <div className="flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
+          <RowActionsMenu ariaLabel={`פעולות לחשבונית ${inv.id}`}>
+            <RowActionItem
+              label="עריכה"
               onClick={onEdit}
               disabled={editingAny}
-              className="p-1 text-gray-300 hover:bg-info-50 hover:text-info-500"
-              aria-label="ערוך חשבונית"
-            >
-              <Pencil className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
+              icon={<Pencil className="h-4 w-4" />}
+            />
+            <RowActionSeparator />
+            <RowActionItem
+              label="מחק"
               onClick={onDelete}
               disabled={editingAny}
-              className="p-1 text-gray-300 hover:bg-negative-50 hover:text-negative-500"
-              aria-label="מחק חשבונית"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-            </Button>
-          </div>
+              icon={<Trash2 className="h-4 w-4" />}
+              danger
+            />
+          </RowActionsMenu>
         </td>
       )}
     </tr>

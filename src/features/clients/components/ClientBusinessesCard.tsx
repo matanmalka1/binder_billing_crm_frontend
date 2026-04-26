@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Pencil, Plus, Snowflake, Trash2, Undo2 } from "lucide-react";
 import { Button } from "../../../components/ui/primitives/Button";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { RowActionItem, RowActionsMenu } from "@/components/ui/table";
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import { Modal } from "../../../components/ui/overlays/Modal";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
@@ -128,42 +128,40 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                   </div>
 
                   {canEdit && (
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <DropdownMenu ariaLabel={`פעולות לעסק ${biz.business_name ?? biz.id}`}>
-                        <DropdownMenuItem
+                    <RowActionsMenu ariaLabel={`פעולות לעסק ${biz.business_name ?? biz.id}`}>
+                        <RowActionItem
                           label="עריכה"
                           icon={<Pencil className="h-4 w-4" />}
                           onClick={() => openEdit(biz)}
                         />
                         {biz.status !== "active" && (
-                          <DropdownMenuItem
+                          <RowActionItem
                             label="העבר לפעיל"
                             icon={<Undo2 className="h-4 w-4" />}
                             onClick={() => void updateBusinessStatus(biz.id, "active")}
                           />
                         )}
                         {biz.status !== "frozen" && (
-                          <DropdownMenuItem
+                          <RowActionItem
                             label="הקפא עסק"
                             icon={<Snowflake className="h-4 w-4" />}
                             onClick={() => void updateBusinessStatus(biz.id, "frozen")}
                           />
                         )}
                         {biz.status !== "closed" && (
-                          <DropdownMenuItem
+                          <RowActionItem
                             label="סגור עסק"
                             icon={<Trash2 className="h-4 w-4" />}
                             onClick={() => void updateBusinessStatus(biz.id, "closed")}
                           />
                         )}
-                        <DropdownMenuItem
+                        <RowActionItem
                           label="מחק"
                           icon={<Trash2 className="h-4 w-4" />}
                           danger
                           onClick={() => setDeleteTarget(biz)}
                         />
-                      </DropdownMenu>
-                    </div>
+                      </RowActionsMenu>
                   )}
                 </li>
               );

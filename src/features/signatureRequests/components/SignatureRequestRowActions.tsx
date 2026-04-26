@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Send, Link2, Copy, Check, X, History } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { RowActionItem, RowActionLink, RowActionSeparator, RowActionsMenu } from "@/components/ui/table";
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import { toast } from "../../../utils/toast";
 import type { SignatureRequestResponse } from "../api";
@@ -58,10 +58,10 @@ export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProp
   };
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <DropdownMenu ariaLabel={`פעולות לבקשת חתימה ${request.id}`}>
+    <>
+      <RowActionsMenu ariaLabel={`פעולות לבקשת חתימה ${request.id}`}>
         {canManage && isDraft && (
-          <DropdownMenuItem
+          <RowActionItem
             label="שלח"
             onClick={() => void onSend(request.id)}
             icon={<Send className="h-4 w-4" />}
@@ -71,37 +71,31 @@ export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProp
         {isPending && signingUrl && (
           <>
             {showOpenLink && (
-              <a
+              <RowActionLink
                 href={signingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center px-3 py-2 text-right text-sm text-gray-700 transition-colors hover:bg-gray-50"
-              >
-                <span className="grid w-full grid-cols-[minmax(0,1fr)_1rem] items-center gap-2">
-                  <span className="truncate">פתח קישור</span>
-                  <span className="flex h-4 w-4 items-center justify-center">
-                    <Link2 className="h-4 w-4" />
-                  </span>
-                </span>
-              </a>
+                label="פתח קישור"
+                icon={<Link2 className="h-4 w-4" />}
+              />
             )}
-            <DropdownMenuItem
+            <RowActionItem
               label={copied ? "הועתק!" : "העתק קישור"}
               onClick={() => void handleCopy()}
               icon={copied ? <Check className="h-4 w-4 text-positive-700" /> : <Copy className="h-4 w-4" />}
             />
           </>
         )}
-        {separateHistory && <div className="my-1 border-t border-gray-100" />}
-        <DropdownMenuItem
+        {separateHistory && <RowActionSeparator />}
+        <RowActionItem
           label="היסטוריית פעילות"
           onClick={() => onAudit(request.id)}
           icon={<History className="h-4 w-4" />}
         />
         {canManage && !isTerminal && (
           <>
-            <div className="my-1 border-t border-gray-100" />
-            <DropdownMenuItem
+            <RowActionSeparator />
+            <RowActionItem
               label="בטל בקשה"
               onClick={() => setConfirmCancel(true)}
               icon={<X className="h-4 w-4" />}
@@ -110,7 +104,7 @@ export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProp
             />
           </>
         )}
-      </DropdownMenu>
+      </RowActionsMenu>
 
       <ConfirmDialog
         open={confirmCancel}
@@ -125,7 +119,7 @@ export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProp
         }}
         onCancel={() => setConfirmCancel(false)}
       />
-    </div>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import { PackageCheck, SendHorizontal } from "lucide-react";
-import { DropdownMenu, DropdownMenuItem } from "../../../components/ui/overlays/DropdownMenu";
+import { RowActionItem, RowActionsMenu } from "@/components/ui/table";
 import { canMarkMaterialsComplete, canMarkReadyForReview, isFiled } from "../utils";
 import type { VatWorkItemRowActionsProps } from "../types";
 
@@ -20,10 +20,9 @@ export const VatWorkItemRowActions: React.FC<VatWorkItemRowActionsProps> = ({
   if (!hasAny) return null;
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <DropdownMenu ariaLabel={`פעולות לפריט ${item.id}`}>
+    <RowActionsMenu ariaLabel={`פעולות לפריט ${item.id}`}>
         {canMarkMaterialsComplete(item.status) && (
-          <DropdownMenuItem
+          <RowActionItem
             label="אישור קבלה"
             onClick={() => void runAction(item.id, "materialsComplete")}
             icon={<PackageCheck className="h-4 w-4" />}
@@ -31,7 +30,7 @@ export const VatWorkItemRowActions: React.FC<VatWorkItemRowActionsProps> = ({
           />
         )}
         {canMarkReadyForReview(item.status) && (
-          <DropdownMenuItem
+          <RowActionItem
             label="שלח לבדיקה"
             onClick={() => void runAction(item.id, "readyForReview")}
             icon={<SendHorizontal className="h-4 w-4" />}
@@ -39,8 +38,7 @@ export const VatWorkItemRowActions: React.FC<VatWorkItemRowActionsProps> = ({
           />
         )}
 
-      </DropdownMenu>
-    </div>
+      </RowActionsMenu>
   );
 };
 
