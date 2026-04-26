@@ -10,6 +10,4 @@ export const advancedPaymentsQK = {
     ["tax", "advance-payments", "overview", params] as const,
   kpi: (clientId: number, year: number) =>
     ["tax", "advance-payments", "client", clientId, year, "kpi"] as const,
-  chart: (clientId: number, year: number) =>
-    ["tax", "advance-payments", "client", clientId, year, "chart"] as const,
 } as const;

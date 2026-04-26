@@ -10,7 +10,6 @@ import { getHttpStatus, showErrorToast } from "../../../utils/utils";
 import { ClientAdvancePaymentsHeader } from "./ClientAdvancePaymentsHeader";
 import { AdvancePaymentTable } from "./AdvancePaymentTable";
 import { AdvancePaymentsKPICards } from "./AdvancePaymentsKPICards";
-import { AdvancePaymentsChart } from "./AdvancePaymentsChart";
 import { CreateAdvancePaymentModal } from "./CreateAdvancePaymentModal";
 import { PaginationCard } from "../../../components/ui/table/PaginationCard";
 
@@ -108,7 +107,6 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         isGenerating={generateMutation.isPending}
       />
       <AdvancePaymentsKPICards clientId={clientId} year={year} />
-      <AdvancePaymentsChart clientId={clientId} year={year} />
       <AdvancePaymentTable
         rows={rows}
         isLoading={isLoading}

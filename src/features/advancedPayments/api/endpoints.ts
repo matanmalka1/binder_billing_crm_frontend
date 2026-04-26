@@ -7,8 +7,6 @@ export const ADVANCE_PAYMENT_ENDPOINTS = {
     `/clients/${clientId}/advance-payments/suggest`,
   clientAdvancePaymentsKPI: (clientId: number | string) =>
     `/clients/${clientId}/advance-payments/kpi`,
-  clientAdvancePaymentsChart: (clientId: number | string) =>
-    `/clients/${clientId}/advance-payments/chart`,
   clientAdvancePaymentsGenerate: (clientId: number | string) =>
     `/clients/${clientId}/advance-payments/generate`,
   advancePaymentsOverview: "/advance-payments/overview",

@@ -102,17 +102,3 @@ export interface AnnualKPIResponse {
   overdue_count: number;
   on_time_count: number;
 }
-
-export interface MonthlyChartRow {
-  period: string;
-  period_months_count: 1 | 2;
-  expected_amount: string;
-  paid_amount: string;
-  overdue_amount: string;
-}
-
-export interface ChartDataResponse {
-  client_record_id: number;
-  year: number;
-  months: MonthlyChartRow[];
-}

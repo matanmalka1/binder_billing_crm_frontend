@@ -11,7 +11,6 @@ import type {
   AdvancePaymentOverviewResponse,
   AdvancePaymentSuggestionResponse,
   AnnualKPIResponse,
-  ChartDataResponse,
 } from "../types";
 
 export const advancePaymentsApi = {
@@ -96,17 +95,6 @@ export const advancePaymentsApi = {
   ): Promise<AnnualKPIResponse> => {
     const response = await api.get<AnnualKPIResponse>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentsKPI(clientId),
-      { params: toQueryParams({ year }) },
-    );
-    return response.data;
-  },
-
-  getChartData: async (
-    clientId: number,
-    year: number,
-  ): Promise<ChartDataResponse> => {
-    const response = await api.get<ChartDataResponse>(
-      ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentsChart(clientId),
       { params: toQueryParams({ year }) },
     );
     return response.data;
