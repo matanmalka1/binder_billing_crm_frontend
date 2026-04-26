@@ -4,11 +4,12 @@ import { DropdownMenu, DropdownMenuItem } from "../overlays/DropdownMenu";
 interface RowActionsMenuProps {
   ariaLabel?: string;
   children: React.ReactNode;
+  title?: string;
 }
 
-export const RowActionsMenu: React.FC<RowActionsMenuProps> = ({ ariaLabel, children }) => (
+export const RowActionsMenu: React.FC<RowActionsMenuProps> = ({ ariaLabel, children, title }) => (
   <div className="flex justify-center" onClick={(event) => event.stopPropagation()}>
-    <DropdownMenu ariaLabel={ariaLabel ?? "פעולות"}>
+    <DropdownMenu ariaLabel={ariaLabel ?? "פעולות"} title={title}>
       {children}
     </DropdownMenu>
   </div>

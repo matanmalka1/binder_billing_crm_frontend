@@ -174,9 +174,7 @@ export const useClientsPage = () => {
     cancelPendingAction,
     confirmPendingAction,
     createClient: async (payload: CreateClientPayload): Promise<void> => {
-      await createMutation.mutateAsync(payload).catch(() => {
-        // onError handles all error cases (409 → deleted dialog, others → toast)
-      });
+      await createMutation.mutateAsync(payload);
     },
     createLoading: createMutation.isPending,
     deletedClientInfo,

@@ -10,9 +10,10 @@ interface DropdownPos { top: number; left: number; maxHeight?: number }
 interface DropdownMenuProps {
   ariaLabel?: string;
   children: React.ReactNode;
+  title?: string;
 }
 
-export const DropdownMenu = ({ ariaLabel, children }: DropdownMenuProps) => {
+export const DropdownMenu = ({ ariaLabel, children, title }: DropdownMenuProps) => {
   const [open, setOpen] = useState(false);
   const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null);
   const [pos, setPos] = useState<DropdownPos | null>(null);
@@ -118,6 +119,7 @@ export const DropdownMenu = ({ ariaLabel, children }: DropdownMenuProps) => {
         aria-label={ariaLabel ?? "פעולות"}
         aria-haspopup="menu"
         aria-expanded={open}
+        title={title}
       >
         <MoreHorizontal className="h-4 w-4" />
       </button>

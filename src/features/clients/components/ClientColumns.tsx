@@ -122,12 +122,13 @@ export const buildClientColumns = ({
     },
     {
       key: "actions",
-      header: "",
+      header: "פעולות",
       headerClassName: "w-10",
       className: "w-10",
       render: (client) => (
         <ClientRowActions
           clientId={client.id}
+          officeClientNumber={client.office_client_number}
           onEditClient={onEditClient ? () => onEditClient(client) : undefined}
         />
       ),
@@ -145,7 +146,7 @@ export const buildClientColumns = ({
       onToggleSelect,
       onToggleAll,
       getId: (client) => client.id,
-      getItemAriaLabel: (client) => `בחר לקוח ${formatClientOfficeId(client.id)}`,
+      getItemAriaLabel: (client) => `בחר לקוח ${formatClientOfficeId(client.office_client_number)}`,
     }),
     ...dataColumns,
   ];

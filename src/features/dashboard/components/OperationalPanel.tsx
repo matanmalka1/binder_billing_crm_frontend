@@ -1,6 +1,6 @@
-import { CheckCircle, Info, Zap, ArrowLeft } from "lucide-react";
+import { CheckCircle, Info, Zap, ArrowLeft, CheckSquare } from "lucide-react";
 import { mapActions } from "../../../lib/actions/mapActions";
-import type { BackendAction, ActionCommand } from "../../../lib/actions/types";
+import type { ActionMethod, BackendAction, ActionCommand } from "../../../lib/actions/types";
 import { cn } from "../../../utils/utils";
 import { staggerAnimationDelayVars } from "../../../utils/animation";
 
@@ -18,6 +18,22 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const CATEGORY_ORDER = ["binders", "vat", "annual_reports", "charges"];
+
+const ACTION_EFFECT_LABELS: Record<ActionMethod, string> = {
+  get: "פתיחת פריט",
+  post: "שינוי סטטוס",
+  patch: "שינוי סטטוס",
+  put: "עדכון פריט",
+  delete: "מחיקת פריט",
+};
+
+const ACTION_EFFECT_DESCRIPTIONS: Record<ActionMethod, string> = {
+  get: "פותח את הפריט הרלוונטי ללא שינוי נתונים",
+  post: "מבצע פעולה במערכת ועשוי לשנות סטטוס",
+  patch: "מעדכן את הפריט ועשוי לשנות סטטוס",
+  put: "מעדכן את הפריט ועשוי לשנות נתונים",
+  delete: "מוחק או מבטל פריט לאחר אישור",
+};
 
 const groupByCategory = (actions: ActionCommand[]): [string, ActionCommand[]][] => {
   const map = new Map<string, ActionCommand[]>();
@@ -40,28 +56,56 @@ interface ActionButtonProps {
 }
 
 const ActionButton = ({ action, isLoading, isDisabled, index, onQuickAction }: ActionButtonProps) => {
+  const categoryLabel = CATEGORY_LABELS[action.category ?? ""] ?? "כללי";
+  const effectLabel = ACTION_EFFECT_LABELS[action.method] ?? "פעולה";
+  const effectDescription = ACTION_EFFECT_DESCRIPTIONS[action.method] ?? "מבצע פעולה במערכת";
+  const requiresConfirmation = Boolean(action.confirm);
+  const isReadOnly = action.method === "get";
+  const title = `${effectLabel}: ${effectDescription}`;
+
   const content = (
     <>
       <div className="min-w-0 flex-1">
+        <div className="mb-1.5 flex flex-wrap items-center gap-1">
+          <span className="rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold text-gray-600">
+            {categoryLabel}
+          </span>
+          <span
+            className={cn(
+              "rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
+              isReadOnly
+                ? "bg-info-50 text-info-700"
+                : "bg-warning-50 text-warning-700",
+            )}
+          >
+            {effectLabel}
+          </span>
+        </div>
         <p className={cn(
-          "truncate text-sm font-semibold transition-colors",
+          "truncate text-[13px] font-semibold transition-colors",
           isLoading ? "text-info-700" : "text-gray-800 group-hover:text-info-700"
         )}>
           {action.label || "—"}
         </p>
         {action.clientName && (
-          <p className="mt-0.5 truncate text-xs text-gray-500">
+          <p className="mt-0.5 truncate text-[11px] text-gray-500">
             {action.clientName}
             {action.binderNumber && ` · ${action.binderNumber}`}
           </p>
         )}
         {action.dueLabel && (
-          <p className="mt-0.5 truncate text-xs text-warning-600 font-medium">
+          <p className="mt-0.5 truncate text-[11px] text-warning-600 font-medium">
             {action.dueLabel}
           </p>
         )}
-        {!action.dueLabel && action.confirm && (
-          <p className="mt-0.5 text-xs text-warning-600 font-medium">דורש אישור</p>
+        {!action.dueLabel && requiresConfirmation && (
+          <p className="mt-0.5 text-[11px] text-warning-600 font-medium">דורש אישור</p>
+        )}
+        <p className="mt-0.5 truncate text-[11px] leading-snug text-gray-400">
+          {effectDescription}
+        </p>
+        {isLoading && (
+          <p className="mt-0.5 text-[11px] font-semibold text-info-700">מבצע פעולה...</p>
         )}
       </div>
       <div className={cn(
@@ -71,7 +115,11 @@ const ActionButton = ({ action, isLoading, isDisabled, index, onQuickAction }: A
         {isLoading ? (
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-info-600 border-t-transparent" />
         ) : (
-          <ArrowLeft className={cn("h-4 w-4 transition-colors", "text-gray-400 group-hover:text-info-600")} />
+          isReadOnly ? (
+            <ArrowLeft className="h-4 w-4 text-gray-400 transition-colors group-hover:text-info-600" />
+          ) : (
+            <CheckSquare className="h-4 w-4 text-gray-400 transition-colors group-hover:text-info-600" />
+          )
         )}
       </div>
       <div className="absolute bottom-0 right-0 h-0.5 w-0 rounded-full bg-gradient-to-l from-info-500 to-primary-500 transition-all duration-300 group-hover:w-full" />
@@ -79,7 +127,7 @@ const ActionButton = ({ action, isLoading, isDisabled, index, onQuickAction }: A
   );
 
   const baseClass = cn(
-    "group relative flex items-center justify-between gap-3 rounded-xl border-2 p-4 text-right",
+    "group relative flex items-center justify-between gap-2 rounded-xl border-2 p-2.5 text-right",
     "transition-all duration-200 focus:outline-none",
     "focus-visible:ring-2 focus-visible:ring-info-500 focus-visible:ring-offset-2",
     "animate-fade-in",
@@ -98,6 +146,8 @@ const ActionButton = ({ action, isLoading, isDisabled, index, onQuickAction }: A
       disabled={isDisabled}
       className={`${baseClass} [animation-delay:var(--enter-delay)]`}
       style={staggerAnimationDelayVars(index, 50)}
+      title={title}
+      aria-label={`${action.label}. ${title}${requiresConfirmation ? ". דורש אישור" : ""}`}
     >
       {content}
     </button>
@@ -150,7 +200,7 @@ export const OperationalPanel = ({
                     {catActions.length}
                   </span>
                 </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
                   {catActions.map((action) => {
                     const isLoading = activeActionKey === action.uiKey;
                     const isDisabled = activeActionKey !== null && !isLoading;
@@ -176,7 +226,7 @@ export const OperationalPanel = ({
       {totalCount > 0 && (
         <div className="flex items-start gap-2 border-t border-gray-100 bg-primary-50/40 px-5 py-3 text-xs text-primary-700">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          <span>פעולות המסומנות "דורש אישור" יציגו חלון אישור לפני הביצוע</span>
+          <span>תג "פתיחת פריט" רק מנווט לפריט. תגי שינוי/עדכון מבצעים פעולה במערכת, ופעולות המסומנות "דורש אישור" יציגו חלון אישור לפני הביצוע.</span>
         </div>
       )}
     </div>
