@@ -1,14 +1,10 @@
 import { useState, useMemo } from "react";
-import { Plus } from "lucide-react";
+import { Plus, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-import { Card } from "../../../components/ui/primitives/Card";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Button } from "../../../components/ui/primitives/Button";
-import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
 import { VatExportButtons } from "./VatExportButtons";
-
 import type { CreateVatWorkItemPayload, VatAnnualSummary, VatPeriodRow } from "../api";
 import { showErrorToast } from "../../../utils/utils";
 import { useAuthStore } from "../../../store/auth.store";
@@ -19,53 +15,79 @@ import { semanticMonoToneClasses } from "../../../utils/semanticColors";
 import { useVatClientSummary } from "../hooks/useVatClientSummary";
 import type { VatClientSummaryPanelProps } from "../types";
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
 const fmt = formatVatAmountLtrSafe;
 
 const getNetVatTone = (value: string | number | null | undefined) =>
-  Number(value) >= 0
-    ? semanticMonoToneClasses.negative
-    : semanticMonoToneClasses.positive;
+  Number(value) >= 0 ? semanticMonoToneClasses.negative : semanticMonoToneClasses.positive;
 
-// ── Sub-Components ───────────────────────────────────────────────────────────
+const AmountCell = ({ value, bold }: { value: string | number | null | undefined; bold?: boolean }) => (
+  <span dir="ltr" className={`tabular-nums ${bold ? "font-bold" : ""} ${getNetVatTone(value)}`}>
+    {fmt(value)}
+  </span>
+);
 
-const AnnualCard = ({ row }: { row: VatAnnualSummary }) => {
-  const allFiled = row.filed_count === row.periods_count && row.periods_count > 0;
-  const tone = getNetVatTone(row.net_vat);
+const NeutralAmount = ({ value }: { value: string | number | null | undefined }) => (
+  <span dir="ltr" className="tabular-nums text-gray-700">{fmt(value)}</span>
+);
+
+const thCls = "px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-gray-500";
+const tdCls = "px-4 py-3 text-sm";
+
+interface YearGroupProps {
+  annual: VatAnnualSummary;
+  rows: VatPeriodRow[];
+  onRowClick: (row: VatPeriodRow) => void;
+}
+
+const YearGroup: React.FC<YearGroupProps> = ({ annual, rows, onRowClick }) => {
+  const allFiled = annual.filed_count === annual.periods_count && annual.periods_count > 0;
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-hover hover:border-gray-300">
-      <div className="mb-4 flex items-center justify-between">
-        <span className="text-lg font-bold text-gray-900">{row.year}</span>
-        <Badge variant={allFiled ? "success" : "neutral"}>
-          {row.filed_count}/{row.periods_count} הוגשו
-        </Badge>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        {[
-          { label: "מע״מ עסקאות", val: row.total_output_vat },
-          { label: "מע״מ תשומות", val: row.total_input_vat },
-        ].map((item) => (
-          <div key={item.label} className="rounded-lg bg-gray-50 p-3">
-            <div className="mb-1 text-xs font-medium text-gray-500">{item.label}</div>
-            <div dir="ltr" className="text-sm font-semibold tabular-nums text-gray-900">
-              {fmt(item.val)}
-            </div>
-          </div>
-        ))}
-        <div className="col-span-2 rounded-lg bg-gray-50 p-3">
-          <div className="mb-1 text-xs font-medium text-gray-500">נטו לתשלום</div>
-          <div dir="ltr" className={`text-sm font-bold tabular-nums ${tone}`}>
-            {fmt(row.net_vat)}
-          </div>
-        </div>
-      </div>
-    </div>
+    <>
+      {/* Year header row */}
+      <tr className="bg-gray-50/80 border-t-2 border-gray-200">
+        <td className="px-4 py-2 font-bold text-gray-800 text-sm">{annual.year}</td>
+        <td className="px-4 py-2">
+          <Badge variant={allFiled ? "success" : "neutral"} className="text-xs">
+            {annual.filed_count}/{annual.periods_count} הוגשו
+          </Badge>
+        </td>
+        <td className={`${tdCls} font-semibold`}>
+          <NeutralAmount value={annual.total_output_vat} />
+        </td>
+        <td className={`${tdCls} font-semibold`}>
+          <NeutralAmount value={annual.total_input_vat} />
+        </td>
+        <td className={`${tdCls} font-bold`}>
+          <AmountCell value={annual.net_vat} bold />
+        </td>
+        <td />
+      </tr>
+
+      {/* Period rows */}
+      {rows.map((row) => (
+        <tr
+          key={row.period}
+          onClick={() => onRowClick(row)}
+          className="group cursor-pointer border-t border-gray-100 transition-colors hover:bg-primary-50/30"
+        >
+          <td className={`${tdCls} pl-8 font-mono font-medium text-gray-700`}>{row.period}</td>
+          <td className={tdCls}>
+            <Badge variant={VAT_CLIENT_SUMMARY_STATUS_VARIANTS[row.status] ?? "neutral"}>
+              {getVatWorkItemStatusLabel(row.status)}
+            </Badge>
+          </td>
+          <td className={tdCls}><NeutralAmount value={row.total_output_vat} /></td>
+          <td className={tdCls}><NeutralAmount value={row.total_input_vat} /></td>
+          <td className={tdCls}><AmountCell value={row.net_vat} /></td>
+          <td className="px-3 py-3 w-8">
+            <ExternalLink className="h-3.5 w-3.5 text-gray-300 transition-colors group-hover:text-primary-500" />
+          </td>
+        </tr>
+      ))}
+    </>
   );
 };
-
-// ── Main Component ───────────────────────────────────────────────────────────
 
 export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) => {
   const role = useAuthStore((s) => s.user?.role);
@@ -75,51 +97,14 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
   const [createError, setCreateError] = useState<string | null>(null);
   const { data, isLoading, error, createMutation } = useVatClientSummary(clientId);
 
-  const columns = useMemo((): Column<VatPeriodRow>[] => [
-    {
-      key: "period",
-      header: "תקופה",
-      render: (r) => <span className="font-mono text-sm font-semibold text-gray-800">{r.period}</span>,
-    },
-    {
-      key: "status",
-      header: "סטטוס",
-      render: (r) => (
-        <Badge variant={VAT_CLIENT_SUMMARY_STATUS_VARIANTS[r.status] ?? "neutral"}>
-          {getVatWorkItemStatusLabel(r.status)}
-        </Badge>
-      ),
-    },
-    {
-      key: "total_output_net",
-      header: "נטו הכנסות",
-      render: (r) => <span dir="ltr" className="tabular-nums text-gray-700">{fmt(r.total_output_net)}</span>,
-    },
-    {
-      key: "total_output_vat",
-      header: "מע״מ עסקאות",
-      render: (r) => <span dir="ltr" className="tabular-nums text-gray-700">{fmt(r.total_output_vat)}</span>,
-    },
-    {
-      key: "total_input_vat",
-      header: "מע״מ תשומות",
-      render: (r) => <span dir="ltr" className="tabular-nums text-gray-700">{fmt(r.total_input_vat)}</span>,
-    },
-    {
-      key: "net_vat",
-      header: "נטו לתשלום",
-      render: (r) => (
-        <span dir="ltr" className={`tabular-nums font-semibold ${getNetVatTone(r.net_vat)}`}>
-          {fmt(r.net_vat)}
-        </span>
-      ),
-    },
-    {
-      key: "filed_at",
-      header: "הוגש",
-      render: (r) => r.filed_at ? new Date(r.filed_at).toLocaleDateString("he-IL") : "—",
-    },
-  ], []);
+  const grouped = useMemo(() => {
+    const periods = data?.periods ?? [];
+    const annual = data?.annual ?? [];
+    return annual.map((a) => ({
+      annual: a,
+      rows: periods.filter((p) => p.period.startsWith(String(a.year))),
+    }));
+  }, [data]);
 
   const handleCreate = async (payload: CreateVatWorkItemPayload) => {
     setCreateError(null);
@@ -138,46 +123,64 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
     navigate(`/tax/vat/${row.work_item_id}`);
   };
 
-  if (error) {
-    return (
-      <Card className="flex h-32 items-center justify-center border-negative-200 bg-negative-50">
-        <p className="text-sm font-medium text-negative-700">שגיאה בטעינת נתוני מע״מ. אנא נסה שוב מאוחר יותר.</p>
-      </Card>
-    );
-  }
-
-  const annualData = data?.annual ?? [];
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-4" dir="rtl">
+      {/* Action bar */}
       <div className="flex items-center justify-between">
-        <Button onClick={() => setCreateOpen(true)} size="sm" className="gap-2">
+        <Button onClick={() => setCreateOpen(true)} size="sm">
           <Plus className="h-4 w-4" />
           פתיחת תיק מע״מ
         </Button>
         {role === "advisor" && <VatExportButtons clientId={clientId} showYearSelector />}
       </div>
 
-      <DataTable
-        data={data?.periods ?? []}
-        columns={columns}
-        getRowKey={(r) => r.period}
-        isLoading={isLoading}
-        emptyMessage='אין תקופות מע״מ ללקוח זה'
-        onRowClick={handleRowClick}
-      />
+      {/* Error */}
+      {error && (
+        <div className="rounded-lg border border-negative-200 bg-negative-50 px-4 py-3 text-sm text-negative-700">
+          שגיאה בטעינת נתוני מע״מ. אנא נסה שוב מאוחר יותר.
+        </div>
+      )}
 
-      {annualData.length > 0 && (
-        <Card title="סיכום שנתי">
-          <div 
-            className="grid gap-4" 
-            style={{ gridTemplateColumns: `repeat(auto-fill, minmax(280px, 1fr))` }}
-          >
-            {annualData.map((row) => (
-              <AnnualCard key={row.year} row={row} />
-            ))}
-          </div>
-        </Card>
+      {/* Table */}
+      {!error && (
+        <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
+          <table className="w-full border-collapse text-sm" dir="rtl">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className={thCls}>תקופה</th>
+                <th className={thCls}>סטטוס</th>
+                <th className={thCls}>מע״מ עסקאות</th>
+                <th className={thCls}>מע״מ תשומות</th>
+                <th className={thCls}>נטו לתשלום</th>
+                <th className="w-8" />
+              </tr>
+            </thead>
+            <tbody className="bg-white">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-10 text-center text-sm text-gray-400">
+                    טוען...
+                  </td>
+                </tr>
+              ) : grouped.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-10 text-center text-sm text-gray-400">
+                    אין תקופות מע״מ ללקוח זה
+                  </td>
+                </tr>
+              ) : (
+                grouped.map(({ annual, rows }) => (
+                  <YearGroup
+                    key={annual.year}
+                    annual={annual}
+                    rows={rows}
+                    onRowClick={handleRowClick}
+                  />
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
 
       <VatWorkItemsCreateModal
@@ -191,3 +194,5 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
     </div>
   );
 };
+
+VatClientSummaryPanel.displayName = "VatClientSummaryPanel";
