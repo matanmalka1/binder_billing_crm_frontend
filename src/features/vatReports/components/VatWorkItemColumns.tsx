@@ -13,13 +13,6 @@ import { semanticMonoToneClasses } from "../../../utils/semanticColors";
 
 export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemResponse>[] => [
   {
-    key: "id",
-    header: "מזהה",
-    render: (item) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">#{item.id}</span>
-    ),
-  },
-  {
     key: "office_client_number",
     header: "מס' לקוח",
     render: (item) => (

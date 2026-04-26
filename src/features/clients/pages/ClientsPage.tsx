@@ -118,11 +118,6 @@ export const Clients: React.FC = () => {
         onRowClick={(client) => navigate(CLIENT_ROUTES.detail(client.id))}
         isLoading={loading}
         error={error}
-        summary={
-          !loading && total > 0 ? (
-            <p className="text-sm text-gray-500">סה&quot;כ {total} לקוחות</p>
-          ) : undefined
-        }
         page={filters.page}
         pageSize={filters.page_size}
         total={total}

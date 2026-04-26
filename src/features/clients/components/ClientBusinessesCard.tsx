@@ -22,6 +22,7 @@ const BUSINESS_STATUS_VARIANTS: Record<string, "success" | "warning" | "error" |
   closed: "neutral",
 };
 
+
 interface Props {
   clientId: number;
   canEdit: boolean;
@@ -102,67 +103,71 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
           <p className="text-xs text-gray-400">אין עסקים רשומים</p>
         ) : (
           <ul className="divide-y divide-gray-100">
-            {businesses.map((biz) => (
-              <li key={biz.id} className="flex items-center gap-2 py-2">
-                <Link
-                  to={CLIENT_ROUTES.businessDetail(clientId, biz.id)}
-                  className="flex min-w-0 flex-1 items-center justify-between rounded-lg px-1 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-gray-900">
-                      {biz.business_name ?? "—"}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      נפתח בתאריך {formatDate(biz.opened_at)}
-                    </p>
+            {businesses.map((biz) => {
+              return (
+                <li key={biz.id} className="flex items-start gap-2 py-2">
+                  <div className="min-w-0 flex-1">
+                    <Link
+                      to={CLIENT_ROUTES.businessDetail(clientId, biz.id)}
+                      className="flex min-w-0 items-center justify-between rounded-lg px-1 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-gray-900">
+                          {biz.business_name ?? "—"}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          נפתח בתאריך {formatDate(biz.opened_at)}
+                        </p>
+                      </div>
+                      <StatusBadge
+                        status={biz.status}
+                        getLabel={(s) => BUSINESS_STATUS_LABELS[s as keyof typeof BUSINESS_STATUS_LABELS] ?? s}
+                        variantMap={BUSINESS_STATUS_VARIANTS}
+                      />
+                    </Link>
                   </div>
-                  <StatusBadge
-                    status={biz.status}
-                    getLabel={(s) => BUSINESS_STATUS_LABELS[s as keyof typeof BUSINESS_STATUS_LABELS] ?? s}
-                    variantMap={BUSINESS_STATUS_VARIANTS}
-                  />
-                </Link>
 
-                {canEdit && (
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <DropdownMenu ariaLabel={`פעולות לעסק ${biz.business_name ?? biz.id}`}>
-                      <DropdownMenuItem
-                        label="עריכה"
-                        icon={<Pencil className="h-4 w-4" />}
-                        onClick={() => openEdit(biz)}
-                      />
-                      {biz.status !== "active" && (
+                  {canEdit && (
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <DropdownMenu ariaLabel={`פעולות לעסק ${biz.business_name ?? biz.id}`}>
                         <DropdownMenuItem
-                          label="העבר לפעיל"
-                          icon={<Undo2 className="h-4 w-4" />}
-                          onClick={() => void updateBusinessStatus(biz.id, "active")}
+                          label="עריכה"
+                          icon={<Pencil className="h-4 w-4" />}
+                          onClick={() => openEdit(biz)}
                         />
-                      )}
-                      {biz.status !== "frozen" && (
+                        {biz.status !== "active" && (
+                          <DropdownMenuItem
+                            label="העבר לפעיל"
+                            icon={<Undo2 className="h-4 w-4" />}
+                            onClick={() => void updateBusinessStatus(biz.id, "active")}
+                          />
+                        )}
+                        {biz.status !== "frozen" && (
+                          <DropdownMenuItem
+                            label="הקפא עסק"
+                            icon={<Snowflake className="h-4 w-4" />}
+                            onClick={() => void updateBusinessStatus(biz.id, "frozen")}
+                          />
+                        )}
+                        {biz.status !== "closed" && (
+                          <DropdownMenuItem
+                            label="סגור עסק"
+                            icon={<Trash2 className="h-4 w-4" />}
+                            onClick={() => void updateBusinessStatus(biz.id, "closed")}
+                          />
+                        )}
                         <DropdownMenuItem
-                          label="הקפא עסק"
-                          icon={<Snowflake className="h-4 w-4" />}
-                          onClick={() => void updateBusinessStatus(biz.id, "frozen")}
-                        />
-                      )}
-                      {biz.status !== "closed" && (
-                        <DropdownMenuItem
-                          label="סגור עסק"
+                          label="מחק"
                           icon={<Trash2 className="h-4 w-4" />}
-                          onClick={() => void updateBusinessStatus(biz.id, "closed")}
+                          danger
+                          onClick={() => setDeleteTarget(biz)}
                         />
-                      )}
-                      <DropdownMenuItem
-                        label="מחק"
-                        icon={<Trash2 className="h-4 w-4" />}
-                        danger
-                        onClick={() => setDeleteTarget(biz)}
-                      />
-                    </DropdownMenu>
-                  </div>
-                )}
-              </li>
-            ))}
+                      </DropdownMenu>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

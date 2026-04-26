@@ -54,7 +54,7 @@ export const buildBindersColumns = ({
   },
   {
     key: "client_name",
-    header: "לקוח",
+    header: "שם",
     render: (binder) => <ClientCell binder={binder} />,
   },
   {
