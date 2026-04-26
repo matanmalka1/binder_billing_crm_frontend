@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueries, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { remindersApi, remindersQK } from "../api";
-import { getErrorMessage, showErrorToast } from "../../../utils/utils";
+import { getErrorMessage, getHttpStatus, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import type { Reminder } from "../api";
-import type { CreateReminderRequest } from "../types";
+import type { CreateReminderRequest, ReminderStatus } from "../types";
 import {
   createReminderSchema,
   createReminderDefaultValues,
@@ -20,6 +20,9 @@ const makeDefaultFormValues = (
   ...createReminderDefaultValues,
   client_record_id: clientRecordId ? String(clientRecordId) : "",
 });
+
+const ACTIVE_REMINDER_STATUSES: ReminderStatus[] = ["pending", "processing", "sent"];
+const DUPLICATE_REMINDER_MESSAGE = "קיימת כבר תזכורת פעילה לאותו לקוח, סוג ותאריך יעד";
 
 const buildPayload = (
   values: CreateReminderFormValues,
@@ -165,6 +168,24 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
       ? (remindersQuery.data?.total ?? 0)
       : (sentCountQuery.data?.total ?? 0);
 
+  const activeReminderQueries = useQueries({
+    queries: ACTIVE_REMINDER_STATUSES.map((status) => ({
+      queryKey: remindersQK.list(activeClientId, status),
+      queryFn: () =>
+        remindersApi.list({
+          client_record_id: activeClientId,
+          status,
+          page_size: 500,
+        }),
+      enabled: showCreateModal && activeClientId != null && activeClientId > 0,
+    })),
+  });
+
+  const activeReminders = useMemo(
+    () => activeReminderQueries.flatMap((query) => query.data?.items ?? []),
+    [activeReminderQueries],
+  );
+
   const reminders = useMemo(() => {
     let items = remindersQuery.data?.items ?? [];
     if (search.trim()) {
@@ -192,7 +213,13 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
       setShowCreateModal(false);
       form.reset(makeDefaultFormValues(clientId));
     },
-    onError: (err) => showErrorToast(err, "שגיאה ביצירת תזכורת"),
+    onError: (err) => {
+      if (getHttpStatus(err) === 409) {
+        toast.error(DUPLICATE_REMINDER_MESSAGE);
+        return;
+      }
+      showErrorToast(err, "שגיאה ביצירת תזכורת");
+    },
   });
 
   const cancelMutation = useMutation({
@@ -216,6 +243,18 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   });
 
   const onSubmit = form.handleSubmit((values) => {
+    const duplicateClientId = clientId ?? Number(values.client_record_id);
+    const hasDuplicate = activeReminders.some(
+      (reminder) =>
+        reminder.client_record_id === duplicateClientId &&
+        reminder.reminder_type === values.reminder_type &&
+        reminder.target_date === values.target_date,
+    );
+    if (hasDuplicate) {
+      form.setError("target_date", { type: "manual", message: DUPLICATE_REMINDER_MESSAGE });
+      toast.error(DUPLICATE_REMINDER_MESSAGE);
+      return;
+    }
     void createMutation.mutateAsync(buildPayload(values, clientId));
   });
 

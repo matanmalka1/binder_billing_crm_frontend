@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { taxDeadlinesApi, taxDeadlinesQK } from "../api";
 import { timelineQK } from "@/features/timeline";
 import type { TaxDeadlineResponse } from "../api";
-import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
+import { getHttpStatus, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toOptionalString } from "../../../utils/filters";
 import type {
   TaxDeadlineFilters,
@@ -16,6 +16,8 @@ import type {
 } from "../types";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
+
+const DUPLICATE_TAX_DEADLINE_MESSAGE = "קיים כבר מועד פעיל לאותו לקוח, סוג ותקופה";
 
 export const useTaxDeadlines = () => {
   const queryClient = useQueryClient();
@@ -78,7 +80,13 @@ export const useTaxDeadlines = () => {
       invalidateAfterMutation();
       setShowCreateModal(false);
     },
-    onError: (error) => showErrorToast(error, "שגיאה ביצירת מועד"),
+    onError: (error) => {
+      if (getHttpStatus(error) === 409) {
+        toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE);
+        return;
+      }
+      showErrorToast(error, "שגיאה ביצירת מועד");
+    },
   });
 
   const generateMutation = useMutation({
@@ -111,7 +119,13 @@ export const useTaxDeadlines = () => {
       invalidateAfterMutation();
       setEditingDeadline(null);
     },
-    onError: (error) => showErrorToast(error, "שגיאה בעדכון מועד"),
+    onError: (error) => {
+      if (getHttpStatus(error) === 409) {
+        toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE);
+        return;
+      }
+      showErrorToast(error, "שגיאה בעדכון מועד");
+    },
   });
 
   const deleteMutation = useMutation({
@@ -159,7 +173,28 @@ export const useTaxDeadlines = () => {
     },
   });
 
+  const findDuplicateDeadline = async (
+    values: Pick<CreateTaxDeadlineForm, "client_id" | "deadline_type" | "period">,
+    excludeId?: number,
+  ): Promise<TaxDeadlineResponse | null> => {
+    if (!values.period) return null;
+    const response = await taxDeadlinesApi.listTaxDeadlines({
+      client_record_id: Number(values.client_id),
+      deadline_type: values.deadline_type,
+      period: values.period,
+      page: 1,
+      page_size: 5,
+    });
+    return response.items.find((deadline) => deadline.id !== excludeId) ?? null;
+  };
+
   const onSubmit = form.handleSubmit(async (values) => {
+    const duplicate = await findDuplicateDeadline(values);
+    if (duplicate) {
+      form.setError("period", { type: "manual", message: DUPLICATE_TAX_DEADLINE_MESSAGE });
+      toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE);
+      return;
+    }
     await createMutation.mutateAsync({
       client_record_id: Number(values.client_id),
       deadline_type: values.deadline_type,
@@ -188,6 +223,15 @@ export const useTaxDeadlines = () => {
 
   const onEditSubmit = editForm.handleSubmit(async (values) => {
     if (!editingDeadline) return;
+    const duplicate = await findDuplicateDeadline(
+      { ...values, client_id: String(editingDeadline.client_record_id) },
+      editingDeadline.id,
+    );
+    if (duplicate) {
+      editForm.setError("period", { type: "manual", message: DUPLICATE_TAX_DEADLINE_MESSAGE });
+      toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE);
+      return;
+    }
     await updateMutation.mutateAsync({
       id: editingDeadline.id,
       payload: {

@@ -27,6 +27,7 @@ export const taxDeadlinesApi = {
     client_name?: string;
     deadline_type?: string;
     status?: string;
+    period?: string;
     due_from?: string;
     due_to?: string;
     page?: number;
