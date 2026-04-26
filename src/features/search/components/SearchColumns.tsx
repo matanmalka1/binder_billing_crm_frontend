@@ -1,17 +1,21 @@
-import type { Column } from "../../../components/ui/table/DataTable";
+import {
+  actionsColumn,
+  monoColumn,
+  textColumn,
+  type Column,
+} from "../../../components/ui/table";
 import type { SearchResult } from "../api";
 import { getResultColor, getResultIcon, getResultLabel } from "./SearchResultMeta";
 import { SearchRowActions } from "./SearchRowActions";
 import { cn, formatBinderNumber, formatClientOfficeId } from "@/utils/utils";
 
 export const searchColumns: Column<SearchResult>[] = [
-  {
+  monoColumn({
     key: "office_client_number",
     header: "מס' לקוח",
-    render: (result) => (
-      <span className="font-mono text-xs text-gray-400">{formatClientOfficeId(result.office_client_number)}</span>
-    ),
-  },
+    valueClassName: "text-xs text-gray-400",
+    getValue: (result) => formatClientOfficeId(result.office_client_number),
+  }),
   {
     key: "type",
     header: "סוג",
@@ -25,38 +29,28 @@ export const searchColumns: Column<SearchResult>[] = [
       </div>
     ),
   },
-  {
+  textColumn({
     key: "client",
     header: "לקוח",
-    render: (result) => (
-      <p className="text-sm font-semibold text-gray-900">{result.client_name ?? "—"}</p>
-    ),
-  },
-  {
+    valueClassName: "font-semibold text-gray-900",
+    getValue: (result) => result.client_name,
+  }),
+  monoColumn({
     key: "id_number",
     header: "מספר ת.ז. / ח.פ",
-    render: (result) =>
-      result.id_number ? (
-        <span className="font-mono text-sm text-gray-700">{result.id_number}</span>
-      ) : (
-        <span className="text-sm text-gray-300">—</span>
-      ),
-  },
-  {
+    valueClassName: "text-gray-700",
+    emptyValue: <span className="text-gray-300">—</span>,
+    getValue: (result) => result.id_number,
+  }),
+  monoColumn({
     key: "binder_number",
     header: "מספר קלסר",
-    render: (result) =>
-      result.binder_number ? (
-        <span className="font-mono text-sm font-semibold text-gray-800">{formatBinderNumber(result.binder_number)}</span>
-      ) : (
-        <span className="text-sm text-gray-300">—</span>
-      ),
-  },
-  {
-    key: "actions",
+    valueClassName: "font-semibold text-gray-800",
+    emptyValue: <span className="text-gray-300">—</span>,
+    getValue: (result) => result.binder_number ? formatBinderNumber(result.binder_number) : null,
+  }),
+  actionsColumn({
     header: "",
-    headerClassName: "w-10",
-    className: "w-10",
     render: (result) => <SearchRowActions result={result} />,
-  },
+  }),
 ];

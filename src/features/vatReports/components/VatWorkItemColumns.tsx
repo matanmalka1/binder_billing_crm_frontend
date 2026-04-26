@@ -1,6 +1,10 @@
 import { AlertTriangle } from "lucide-react";
-import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
-import type { Column } from "../../../components/ui/table/DataTable";
+import {
+  monoColumn,
+  statusColumn,
+  textColumn,
+  type Column,
+} from "../../../components/ui/table";
 import type { VatWorkItemResponse } from "../api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatClientOfficeId, formatDate, formatDateTime } from "@/utils/utils";
@@ -12,33 +16,22 @@ import { Badge } from "../../../components/ui/primitives/Badge";
 import { semanticMonoToneClasses } from "../../../utils/semanticColors";
 
 export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemResponse>[] => [
-  {
+  monoColumn({
     key: "office_client_number",
     header: "מס' לקוח",
-    render: (item) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {formatClientOfficeId(item.office_client_number)}
-      </span>
-    ),
-  },
-  {
+    getValue: (item) => formatClientOfficeId(item.office_client_number),
+  }),
+  textColumn({
     key: "client_id",
     header: "לקוח",
-    render: (item) => (
-      <span className="text-sm font-semibold text-gray-900">
-        {item.client_name ?? formatClientOfficeId(item.office_client_number)}
-      </span>
-    ),
-  },
-  {
+    valueClassName: "font-semibold text-gray-900",
+    getValue: (item) => item.client_name ?? formatClientOfficeId(item.office_client_number),
+  }),
+  monoColumn({
     key: "client_id_number",
     header: "ת.ז / ח.פ",
-    render: (item) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {item.client_id_number ?? "—"}
-      </span>
-    ),
-  },
+    getValue: (item) => item.client_id_number,
+  }),
   {
     key: "period",
     header: "תקופה",
@@ -46,17 +39,13 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
       <span className="font-mono text-sm font-medium text-gray-700">{item.period}</span>
     ),
   },
-  {
+  statusColumn({
     key: "status",
     header: "סטטוס",
-    render: (item) => (
-      <StatusBadge
-        status={item.status}
-        getLabel={getVatWorkItemStatusLabel}
-        variantMap={VAT_STATUS_BADGE_VARIANTS}
-      />
-    ),
-  },
+    getStatus: (item) => item.status,
+    getLabel: getVatWorkItemStatusLabel,
+    variantMap: VAT_STATUS_BADGE_VARIANTS,
+  }),
   {
     key: "net_vat",
     header: 'מע"מ נטו',
@@ -102,22 +91,18 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
       );
     },
   },
-  {
+  textColumn({
     key: "updated_at",
     header: "עדכון אחרון",
-    render: (item) => (
-      <span className="text-sm text-gray-400 tabular-nums">{formatDateTime(item.updated_at)}</span>
-    ),
-  },
-  {
+    valueClassName: "text-gray-400 tabular-nums",
+    getValue: (item) => formatDateTime(item.updated_at),
+  }),
+  textColumn({
     key: "filed_at",
     header: "הוגש ב",
-    render: (item) => (
-      <span className="text-sm text-gray-500 tabular-nums">
-        {item.filed_at ? formatDateTime(item.filed_at) : "—"}
-      </span>
-    ),
-  },
+    valueClassName: "tabular-nums",
+    getValue: (item) => item.filed_at ? formatDateTime(item.filed_at) : null,
+  }),
   {
     key: "actions",
     header: "",

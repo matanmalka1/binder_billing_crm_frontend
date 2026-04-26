@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
-import type { Column } from "@/components/ui/table/DataTable";
-import { StatusBadge } from "@/components/ui/primitives/StatusBadge";
+import {
+  actionsColumn,
+  monoColumn,
+  statusColumn,
+  textColumn,
+  type Column,
+} from "@/components/ui/table";
 import { MonoValue } from "@/components/ui/primitives/MonoValue";
 import type { BinderResponse } from "../../types";
 import { getStatusLabel } from "@/utils/enums";
@@ -10,7 +15,7 @@ import { BinderRowActions } from "./BinderRowActions";
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => (
-  <div className="flex flex-col gap-0.5">
+  <span className="flex flex-col gap-0.5">
     <Link
       to={`/clients/${binder.client_record_id}`}
       onClick={(e) => e.stopPropagation()}
@@ -18,7 +23,7 @@ const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => (
     >
       {binder.client_name ?? `#${binder.client_record_id}`}
     </Link>
-  </div>
+  </span>
 );
 ClientCell.displayName = "ClientCell";
 
@@ -43,65 +48,47 @@ export const buildBindersColumns = ({
   onBulkReady,
   onHandover,
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
-  {
+  monoColumn({
     key: "office_client_number",
     header: "מס' לקוח",
-    render: (binder) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {formatClientOfficeId(binder.office_client_number)}
-      </span>
-    ),
-  },
-  {
+    getValue: (binder) => formatClientOfficeId(binder.office_client_number),
+  }),
+  textColumn({
     key: "client_name",
-    header: "שם",
-    render: (binder) => <ClientCell binder={binder} />,
-  },
-  {
+    header: "לקוח",
+    getValue: (binder) => <ClientCell binder={binder} />,
+  }),
+  monoColumn({
     key: "client_id_number",
     header: "ת.ז / ח.פ",
-    render: (binder) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {binder.client_id_number ?? "—"}
-      </span>
-    ),
-  },
-  {
+    getValue: (binder) => binder.client_id_number,
+  }),
+  monoColumn({
     key: "binder_number",
     header: "מספר קלסר",
-    render: (binder) => (
-      <span className="font-mono text-sm font-semibold text-gray-700">
-        {formatBinderNumber(binder.binder_number)}
-      </span>
-    ),
-  },
-  {
+    valueClassName: "font-semibold text-gray-700",
+    getValue: (binder) => formatBinderNumber(binder.binder_number),
+  }),
+  statusColumn({
     key: "status",
     header: "סטטוס",
-    render: (binder) => (
-      <StatusBadge
-        status={binder.status}
-        getLabel={getStatusLabel}
-        variantMap={BINDER_STATUS_VARIANTS}
-      />
-    ),
-  },
-  {
+    getStatus: (binder) => binder.status,
+    getLabel: getStatusLabel,
+    variantMap: BINDER_STATUS_VARIANTS,
+  }),
+  textColumn({
     key: "period_start",
     header: "תקופה",
-    render: (binder) => {
+    valueClassName: "text-gray-600 tabular-nums",
+    getValue: (binder) => {
       if (!binder.period_start && !binder.period_end) {
-        return <span className="text-sm text-gray-400">—</span>;
+        return <span className="text-gray-400">—</span>;
       }
       const start = formatMonthYear(binder.period_start);
       const end = binder.period_end ? formatMonthYear(binder.period_end) : "פעיל";
-      return (
-        <span className="text-sm text-gray-600 tabular-nums">
-          {`${start} - ${end}`}
-        </span>
-      );
+      return `${start} - ${end}`;
     },
-  },
+  }),
   {
     key: "days_in_office",
     header: "ימים במשרד",
@@ -113,11 +100,9 @@ export const buildBindersColumns = ({
       />
     ),
   },
-  {
+  actionsColumn({
     key: "actions",
     header: "",
-    headerClassName: "w-10",
-    className: "w-10",
     render: (binder) => (
       <BinderRowActions
         binder={binder}
@@ -131,5 +116,5 @@ export const buildBindersColumns = ({
         onHandover={onHandover ? () => onHandover(binder) : undefined}
       />
     ),
-  },
+  }),
 ];

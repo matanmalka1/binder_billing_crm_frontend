@@ -23,7 +23,7 @@ export const ReportChargesPanel: React.FC<Props> = ({ reportId }) => {
 
   const items = data?.items ?? [];
   const total = data?.total ?? 0;
-  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const totalPages = Math.ceil(total / PAGE_SIZE_SM);
 
   if (items.length === 0)
     return <p className="py-10 text-center text-sm text-gray-400">לא נמצאו חיובים המקושרים לדוח זה</p>;

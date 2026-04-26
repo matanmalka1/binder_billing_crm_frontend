@@ -1,5 +1,9 @@
 import { Badge } from "../../../components/ui/primitives/Badge";
-import type { Column } from "../../../components/ui/table/DataTable";
+import {
+  actionsColumn,
+  textColumn,
+  type Column,
+} from "../../../components/ui/table";
 import type { UserResponse } from "../api";
 import { getRoleLabel } from "../../../utils/enums";
 import { formatDateTime } from "../../../utils/utils";
@@ -18,18 +22,17 @@ export const buildUserColumns = ({
   onResetPassword,
   currentUserId,
 }: BuildUserColumnsParams): Column<UserResponse>[] => [
-  {
+  textColumn({
     key: "full_name",
     header: "שם מלא",
-    render: (user) => (
-      <span className="text-sm font-semibold text-gray-900">{user.full_name}</span>
-    ),
-  },
-  {
+    valueClassName: "font-semibold text-gray-900",
+    getValue: (user) => user.full_name,
+  }),
+  textColumn({
     key: "email",
     header: "אימייל",
-    render: (user) => <span className="text-sm text-gray-500">{user.email}</span>,
-  },
+    getValue: (user) => user.email,
+  }),
   {
     key: "role",
     header: "תפקיד",
@@ -48,29 +51,20 @@ export const buildUserColumns = ({
       </Badge>
     ),
   },
-  {
+  textColumn({
     key: "last_login_at",
     header: "כניסה אחרונה",
-    render: (user) => (
-      <span className="text-sm text-gray-500 tabular-nums">
-        {formatDateTime(user.last_login_at)}
-      </span>
-    ),
-  },
-  {
+    valueClassName: "tabular-nums",
+    getValue: (user) => formatDateTime(user.last_login_at),
+  }),
+  textColumn({
     key: "created_at",
     header: "נוצר בתאריך",
-    render: (user) => (
-      <span className="text-sm text-gray-500 tabular-nums">
-        {formatDateTime(user.created_at)}
-      </span>
-    ),
-  },
-  {
-    key: "actions",
+    valueClassName: "tabular-nums",
+    getValue: (user) => formatDateTime(user.created_at),
+  }),
+  actionsColumn({
     header: "",
-    headerClassName: "w-10",
-    className: "w-10",
     render: (user) => (
       <UserRowActions
         user={user}
@@ -80,5 +74,5 @@ export const buildUserColumns = ({
         onToggleActive={onToggleActive}
       />
     ),
-  },
+  }),
 ];

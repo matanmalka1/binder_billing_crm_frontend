@@ -1,16 +1,24 @@
-import type { Column } from "../../../components/ui/table/DataTable";
-import { buildSelectionColumn } from "../../../components/ui/table/tableSelection";
+import {
+  actionsColumn,
+  buildSelectionColumn,
+  dateColumn,
+  monoColumn,
+  statusColumn,
+  textColumn,
+  type Column,
+  type StatusVariant,
+} from "../../../components/ui/table";
 import type { ClientResponse } from "../api";
-import { formatClientOfficeId, formatDate } from "@/utils/utils";
+import { formatClientOfficeId } from "@/utils/utils";
 import { ClientRowActions } from "./ClientRowActions";
 import { getEntityTypeLabel, getClientStatusLabel, getClientVatReportingLabel } from "../constants";
-import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
+import type { ClientStatus } from "../api";
 
-const CLIENT_STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+const CLIENT_STATUS_VARIANTS = {
   active: "success",
   frozen: "warning",
   closed: "neutral",
-};
+} satisfies Record<ClientStatus, StatusVariant>;
 
 interface BuildClientColumnsParams {
   selectedIds?: Set<number>;
@@ -28,103 +36,60 @@ export const buildClientColumns = ({
   onEditClient,
 }: BuildClientColumnsParams = {}): Column<ClientResponse>[] => {
   const dataColumns: Column<ClientResponse>[] = [
-    {
+    monoColumn({
       key: "office_client_number",
       header: "מס' לקוח",
-      render: (client) => (
-        <span className="font-mono text-sm text-gray-500 tabular-nums">
-          {formatClientOfficeId(client.office_client_number)}
-        </span>
-      ),
-    },
-    {
+      getValue: (client) => formatClientOfficeId(client.office_client_number),
+    }),
+    textColumn({
       key: "full_name",
       header: "שם",
-      render: (client) => (
-        <span className="text-sm font-semibold text-gray-900">
-          {client.full_name}
-        </span>
-      ),
-    },
-    {
+      valueClassName: "font-semibold text-gray-900",
+      getValue: (client) => client.full_name,
+    }),
+    monoColumn({
       key: "id_number",
       header: "ת.ז / ח.פ",
-      render: (client) => (
-        <span className="font-mono text-sm text-gray-500 tabular-nums">
-          {client.id_number}
-        </span>
-      ),
-    },
-    {
+      getValue: (client) => client.id_number,
+    }),
+    textColumn({
       key: "entity_type",
       header: "סוג ישות",
-      render: (client) => (
-        <span className="text-sm text-gray-500">
-          {client.entity_type
-            ? getEntityTypeLabel(client.entity_type)
-            : "—"}
-        </span>
-      ),
-    },
-    {
+      getValue: (client) => client.entity_type ? getEntityTypeLabel(client.entity_type) : null,
+    }),
+    monoColumn({
       key: "active_binder_number",
       header: "קלסר פעיל",
-      render: (client) => (
-        <span className="font-mono text-sm text-gray-500 tabular-nums">
-          {client.active_binder_number ?? "—"}
-        </span>
-      ),
-    },
-    {
+      getValue: (client) => client.active_binder_number,
+    }),
+    textColumn({
       key: "vat_reporting_frequency",
       header: "סוג דיווח",
-      render: (client) => (
-        <span className="text-sm text-gray-500">
-          {getClientVatReportingLabel(client)}
-        </span>
-      ),
-    },
-    {
+      getValue: (client) => getClientVatReportingLabel(client),
+    }),
+    statusColumn({
       key: "status",
       header: "סטטוס",
-      render: (client) => (
-        <StatusBadge
-          status={client.status}
-          getLabel={getClientStatusLabel}
-          variantMap={CLIENT_STATUS_VARIANTS}
-        />
-      ),
-    },
-    {
+      getStatus: (client) => client.status,
+      getLabel: getClientStatusLabel,
+      variantMap: CLIENT_STATUS_VARIANTS,
+    }),
+    monoColumn({
       key: "phone",
       header: "טלפון",
-      render: (client) => (
-        <span className="font-mono text-sm text-gray-500 tabular-nums">
-          {client.phone || "—"}
-        </span>
-      ),
-    },
-    {
+      getValue: (client) => client.phone,
+    }),
+    textColumn({
       key: "email",
       header: "אימייל",
-      render: (client) => (
-        <span className="text-sm text-gray-500">{client.email || "—"}</span>
-      ),
-    },
-    {
+      getValue: (client) => client.email,
+    }),
+    dateColumn({
       key: "created_at",
       header: "נוצר בתאריך",
-      render: (client) => (
-        <span className="text-sm text-gray-500 tabular-nums">
-          {formatDate(client.created_at)}
-        </span>
-      ),
-    },
-    {
-      key: "actions",
-      header: "פעולות",
-      headerClassName: "w-10",
-      className: "w-10",
+      getValue: (client) => client.created_at,
+    }),
+    actionsColumn({
       render: (client) => (
         <ClientRowActions
           clientId={client.id}
@@ -132,7 +97,7 @@ export const buildClientColumns = ({
           onEditClient={onEditClient ? () => onEditClient(client) : undefined}
         />
       ),
-    },
+    }),
   ];
 
   if (!onToggleSelect) {

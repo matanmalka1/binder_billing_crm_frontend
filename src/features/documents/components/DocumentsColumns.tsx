@@ -1,7 +1,12 @@
-import type { Column } from "../../../components/ui/table/DataTable";
+import {
+  actionsColumn,
+  dateColumn,
+  monoColumn,
+  textColumn,
+  type Column,
+} from "../../../components/ui/table";
 import type { PermanentDocumentResponse } from "../api";
 import { Badge } from "../../../components/ui/primitives/Badge";
-import { formatDate } from "../../../utils/utils";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "../documents.constants";
 import { DocumentRowActions, type DocumentRowActionsProps } from "./DocumentRowActions";
 
@@ -18,33 +23,24 @@ export const buildDocumentColumns = ({
   onDelete,
   handleExpandVersions,
 }: BuildDocColumnsOptions): Column<PermanentDocumentResponse>[] => [
-  {
+  textColumn({
     key: "document_type",
     header: "סוג מסמך",
-    render: (doc) => (
-      <span className="font-medium text-gray-900">
-        {DOC_TYPE_LABELS[doc.document_type] ?? doc.document_type}
-      </span>
-    ),
-  },
-  {
+    valueClassName: "font-medium text-gray-900",
+    getValue: (doc) => DOC_TYPE_LABELS[doc.document_type] ?? doc.document_type,
+  }),
+  monoColumn({
     key: "original_filename",
     header: "שם קובץ",
-    render: (doc) => (
-      <span className="block max-w-48 truncate font-mono text-xs text-gray-500">
-        {doc.original_filename ?? "—"}
-      </span>
-    ),
-  },
-  {
+    valueClassName: "block max-w-48 truncate text-xs",
+    getValue: (doc) => doc.original_filename,
+  }),
+  textColumn({
     key: "client_name",
     header: "לקוח משויך",
-    render: (doc) => (
-      <span className="text-sm font-medium text-gray-700">
-        {doc.client_name ?? `לקוח #${doc.client_record_id}`}
-      </span>
-    ),
-  },
+    valueClassName: "font-medium text-gray-700",
+    getValue: (doc) => doc.client_name ?? `לקוח #${doc.client_record_id}`,
+  }),
   {
     key: "version" as keyof PermanentDocumentResponse,
     header: "גרסה",
@@ -63,25 +59,19 @@ export const buildDocumentColumns = ({
       </Badge>
     ),
   },
-  {
+  textColumn({
     key: "notes",
     header: "הערות",
-    render: (doc) => (
-      <span className="text-gray-500 text-sm">{doc.notes ?? "—"}</span>
-    ),
-  },
-  {
+    getValue: (doc) => doc.notes,
+  }),
+  dateColumn({
     key: "uploaded_at",
     header: "תאריך העלאה",
-    render: (doc) => (
-      <span className="text-gray-500 tabular-nums">{formatDate(doc.uploaded_at)}</span>
-    ),
-  },
-  {
+    getValue: (doc) => doc.uploaded_at,
+  }),
+  actionsColumn({
     key: "actions" as keyof PermanentDocumentResponse,
     header: "",
-    headerClassName: "w-10",
-    className: "w-10",
     render: (doc) => (
       <DocumentRowActions
         doc={doc}
@@ -96,5 +86,5 @@ export const buildDocumentColumns = ({
         handleExpandVersions={handleExpandVersions}
       />
     ),
-  },
+  }),
 ];

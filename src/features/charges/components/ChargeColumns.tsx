@@ -1,9 +1,15 @@
-import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
-import type { Column } from "../../../components/ui/table/DataTable";
-import { buildSelectionColumn } from "../../../components/ui/table/tableSelection";
+import {
+  actionsColumn,
+  buildSelectionColumn,
+  dateColumn,
+  monoColumn,
+  statusColumn,
+  textColumn,
+  type Column,
+} from "../../../components/ui/table";
 import type { ChargeResponse } from "../api";
 import { getChargeAmountText, getChargePeriodLabel, getChargeTypeLabel } from "../utils";
-import { formatClientOfficeId, formatDate } from "../../../utils/utils";
+import { formatClientOfficeId } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { ChargeRowActions } from "./ChargeRowActions";
 import { chargeStatusVariants } from "../constants";
@@ -32,95 +38,70 @@ export const buildChargeColumns = ({
   allIds = [],
 }: BuildChargeColumnsParams): Column<ChargeResponse>[] => {
   const dataColumns: Column<ChargeResponse>[] = [
-    {
+    monoColumn({
       key: "office_client_number",
       header: "מס' לקוח",
       headerClassName: "w-28",
       className: "w-28",
-      render: (charge) => (
-        <span className="font-mono text-sm text-gray-500 tabular-nums">
-          {formatClientOfficeId(charge.office_client_number)}
-        </span>
-      ),
-    },
-    {
+      getValue: (charge) => formatClientOfficeId(charge.office_client_number),
+    }),
+    monoColumn({
       key: "id",
       header: "#",
       headerClassName: "w-10 text-center",
       className: "w-10 text-center",
-      render: (charge) => (
-        <span className="font-mono text-xs text-gray-400 tabular-nums">{charge.id}</span>
-      ),
-    },
-    {
+      valueClassName: "text-xs text-gray-400",
+      getValue: (charge) => charge.id,
+    }),
+    textColumn({
       key: "client_record_id",
       header: "לקוח",
       headerClassName: "w-48",
       className: "w-48 max-w-[12rem]",
-      render: (charge) => (
-        <span className="text-sm font-semibold text-gray-900">
-          {charge.business_name ?? `לקוח #${charge.client_record_id}`}
-        </span>
-      ),
-    },
-    {
+      valueClassName: "font-semibold text-gray-900",
+      getValue: (charge) => charge.business_name ?? `לקוח #${charge.client_record_id}`,
+    }),
+    textColumn({
       key: "charge_type",
       header: "סוג",
       headerClassName: "w-24",
       className: "w-24",
-      render: (charge) => (
-        <span className="text-sm text-gray-500">{getChargeTypeLabel(charge.charge_type)}</span>
-      ),
-    },
-    {
+      getValue: (charge) => getChargeTypeLabel(charge.charge_type),
+    }),
+    textColumn({
       key: "period",
       header: "תקופה",
       headerClassName: "w-40",
       className: "w-40",
-      render: (charge) => (
-        <span className="text-sm text-gray-500">
-          {getChargePeriodLabel(charge.period, charge.months_covered)}
-        </span>
-      ),
-    },
-    {
+      getValue: (charge) => getChargePeriodLabel(charge.period, charge.months_covered),
+    }),
+    statusColumn({
       key: "status",
       header: "סטטוס",
       headerClassName: "w-28",
       className: "w-28",
-      render: (charge) => (
-        <StatusBadge
-          status={charge.status}
-          getLabel={getChargeStatusLabel}
-          variantMap={chargeStatusVariants}
-        />
-      ),
-    },
-    {
+      getStatus: (charge) => charge.status,
+      getLabel: getChargeStatusLabel,
+      variantMap: chargeStatusVariants,
+    }),
+    monoColumn({
       key: "amount",
       header: "סכום",
       headerClassName: "w-36",
       className: "w-36",
-      render: (charge) => (
-        <span className="font-mono text-sm font-semibold text-gray-900 tabular-nums">
-          {getChargeAmountText(charge)}
-        </span>
-      ),
-    },
-    {
+      valueClassName: "font-semibold text-gray-900",
+      getValue: (charge) => getChargeAmountText(charge),
+    }),
+    dateColumn({
       key: "created_at",
       header: "תאריך",
       headerClassName: "w-24",
       className: "w-24",
-      render: (charge) => (
-        <span className="text-sm text-gray-400 tabular-nums">{formatDate(charge.created_at)}</span>
-      ),
-    },
-    {
-      key: "actions",
+      valueClassName: "text-gray-400",
+      getValue: (charge) => charge.created_at,
+    }),
+    actionsColumn({
       header: "",
-      headerClassName: "w-10",
-      className: "w-10",
       render: (charge) => (
         <ChargeRowActions
           chargeId={charge.id}
@@ -133,7 +114,7 @@ export const buildChargeColumns = ({
           showActions={isAdvisor}
         />
       ),
-    },
+    }),
   ];
 
   if (isAdvisor && onToggleSelect) {
