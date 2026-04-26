@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
+import { useAdvisorOptions } from "@/features/users";
 import { getVatTypeLabel } from "../../../utils/enums";
 import type { TaxProfileData } from "../hooks/useTaxProfile";
 import type { TaxProfileUpdatePayload } from "../types";
@@ -35,7 +36,7 @@ export const TaxProfileForm: React.FC<Props> = ({
     defaultValues: profile
       ? {
           vat_reporting_frequency: profile.vat_reporting_frequency ?? taxProfileDefaults.vat_reporting_frequency,
-          accountant_name: profile.accountant_name ?? "",
+          accountant_id: profile.accountant_id != null ? String(profile.accountant_id) : "",
           advance_rate: profile.advance_rate != null ? String(profile.advance_rate) : "",
         }
       : taxProfileDefaults,
@@ -44,11 +45,12 @@ export const TaxProfileForm: React.FC<Props> = ({
     name: "vat_reporting_frequency",
     control,
   });
+  const { options: advisorOptions, isLoading: advisorsLoading } = useAdvisorOptions();
 
   const onSubmit = handleSubmit((values) => {
     onSave({
       vat_reporting_frequency: values.vat_reporting_frequency,
-      accountant_name: values.accountant_name || null,
+      accountant_id: values.accountant_id ? Number(values.accountant_id) : null,
       advance_rate: values.advance_rate || null,
     });
   });
@@ -70,7 +72,16 @@ export const TaxProfileForm: React.FC<Props> = ({
           onBlur={vatReportingFrequencyField.onBlur}
           name={vatReportingFrequencyField.name}
         />
-        <Input label="רואה חשבון מלווה" error={errors.accountant_name?.message} {...register("accountant_name")} />
+        <Select
+          label="רואה חשבון מלווה"
+          error={errors.accountant_id?.message}
+          disabled={isSaving || advisorsLoading}
+          options={[
+            { value: "", label: advisorsLoading ? "טוען רואי חשבון..." : "לא הוגדר" },
+            ...advisorOptions,
+          ]}
+          {...register("accountant_id")}
+        />
         <Input
           label="אחוז מקדמה (%)"
           type="number"

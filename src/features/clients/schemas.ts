@@ -29,7 +29,7 @@ export const createClientSchema = z
     address_zip_code: z.string().trim().min(1, "יש להזין מיקוד"),
     vat_reporting_frequency: z.enum(VAT_TYPES, { message: 'יש לציין תדירות דיווח מע"מ' }).optional().nullable(),
     advance_rate: z.string().trim().optional().nullable(),
-    accountant_name: z.string().trim().min(1, "יש להזין רואה חשבון מלווה"),
+    accountant_id: z.string().trim().min(1, "יש להזין רואה חשבון מלווה"),
     business_name: z.string().trim().min(1, "יש להזין שם עסק").max(100, "שם עסק ארוך מדי"),
     business_opened_at: z.string().optional().nullable(),
   })
@@ -99,7 +99,7 @@ export const clientEditSchema = z.object({
   entity_type: z.enum(ENTITY_TYPES).nullable().optional(),
   vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
   advance_rate: z.string().optional().nullable(),
-  accountant_name: z.string().trim().optional().nullable(),
+  accountant_id: z.string().trim().optional().nullable(),
   notes: z.string().trim().optional().nullable(),
 });
 

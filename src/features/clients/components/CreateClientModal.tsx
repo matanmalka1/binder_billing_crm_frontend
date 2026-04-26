@@ -6,6 +6,7 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import { Select } from "../../../components/ui/inputs/Select";
+import { useAdvisorOptions } from "@/features/users";
 import type { CreateClientPayload, ISODateString } from "../api";
 import { useClientCreationImpact } from "../hooks/useClientCreationImpact";
 import {
@@ -65,6 +66,7 @@ export const CreateClientModal: React.FC<Props> = ({
 
   const currentEntityType = watch("entity_type");
   const currentVatFrequency = watch("vat_reporting_frequency");
+  const { options: advisorOptions, isLoading: advisorsLoading } = useAdvisorOptions();
   const isCompany = currentEntityType === "company_ltd";
   const isExempt = currentEntityType === "osek_patur";
   const showVatFrequency = currentEntityType != null && !isExempt;
@@ -115,7 +117,7 @@ export const CreateClientModal: React.FC<Props> = ({
       address_zip_code: data.address_zip_code,
       vat_reporting_frequency: data.entity_type === "osek_patur" ? undefined : data.vat_reporting_frequency ?? "monthly",
       advance_rate: data.advance_rate?.trim() ? data.advance_rate.trim() : null,
-      accountant_name: data.accountant_name,
+      accountant_id: Number(data.accountant_id),
       business_name: data.business_name.trim(),
       business_opened_at: (data.business_opened_at || null) as ISODateString | null,
     };
@@ -291,11 +293,15 @@ export const CreateClientModal: React.FC<Props> = ({
               {...register("advance_rate")}
             />
           </div>
-          <Input
+          <Select
             label="רואה חשבון מלווה *"
-            error={errors.accountant_name?.message}
-            disabled={isLoading}
-            {...register("accountant_name")}
+            error={errors.accountant_id?.message}
+            disabled={isLoading || advisorsLoading}
+            options={[
+              { value: "", label: advisorsLoading ? "טוען רואי חשבון..." : "בחר רואה חשבון" },
+              ...advisorOptions,
+            ]}
+            {...register("accountant_id")}
           />
         </div>
 

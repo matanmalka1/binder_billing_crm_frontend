@@ -13,6 +13,7 @@ import {
   getVatTypeLabel,
 } from "../constants";
 import { authorityContactsApi, authorityContactsQK } from "../../authorityContacts/api";
+import { useAdvisorOptions } from "@/features/users";
 
 type ClientInfoSectionProps = {
   client: ClientResponse;
@@ -46,6 +47,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   canEdit,
   onEditStart,
 }) => {
+  const { nameById } = useAdvisorOptions(canEdit);
   const { data: contactsData } = useQuery({
     queryKey: [...authorityContactsQK.forClient(client.id), { page: 1, page_size: 20 }],
     queryFn: () => authorityContactsApi.listAuthorityContacts(client.id, undefined, 1, 20),
@@ -137,7 +139,10 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
       label: "עודכן מקדמה",
       value: client.advance_rate_updated_at ? formatDate(client.advance_rate_updated_at) : "—",
     },
-    { label: "רואה חשבון מלווה", value: client.accountant_name ?? "—" },
+    {
+      label: "רואה חשבון מלווה",
+      value: client.accountant_id ? nameById.get(client.accountant_id) ?? `#${client.accountant_id}` : "—",
+    },
     { label: 'סניף מע"מ', value: officeByType("vat_branch") ?? "—" },
     { label: "סניף ביטוח לאומי", value: officeByType("national_insurance") ?? "—" },
     { label: "סניף מס הכנסה", value: officeByType("assessing_officer") ?? "—" },

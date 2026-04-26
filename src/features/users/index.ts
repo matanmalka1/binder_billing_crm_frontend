@@ -7,6 +7,7 @@ export { ResetPasswordModal } from "./components/ResetPasswordModal";
 export { buildUserColumns } from "./components/UsersColumns";
 export { UsersFiltersBar } from "./components/UsersFiltersBar";
 export { useUsersPage } from "./hooks/useUsersPage";
+export { useAdvisorOptions } from "./hooks/useAdvisorOptions";
 export { Users } from "./pages/UsersPage";
 export type {
   UserResponse,

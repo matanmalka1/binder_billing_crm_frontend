@@ -174,7 +174,7 @@ export const CREATE_CLIENT_DEFAULT_VALUES = {
   address_zip_code: "",
   vat_reporting_frequency: null,
   advance_rate: null,
-  accountant_name: "",
+  accountant_id: "",
   business_name: "",
   business_opened_at: null,
 } as const;

@@ -46,6 +46,9 @@ export const useClientsPage = () => {
   const filters = {
     search: searchParams.get("search") ?? "",
     status: (searchParams.get("status") as ListClientsParams["status"]) ?? undefined,
+    accountant_id: can.editClients
+      ? parsePositiveInt(searchParams.get("accountant_id"), 0) || undefined
+      : undefined,
     sort_by: (searchParams.get("sort_by") as ClientSortBy) || DEFAULT_CLIENT_SORT_BY,
     sort_order: (searchParams.get("sort_order") as ClientSortOrder) || DEFAULT_CLIENT_SORT_ORDER,
     page: parsePositiveInt(searchParams.get("page"), 1),
@@ -55,6 +58,7 @@ export const useClientsPage = () => {
   const apiParams: ListClientsParams = {
     search: filters.search || undefined,
     status: filters.status,
+    accountant_id: filters.accountant_id,
     sort_by: filters.sort_by,
     sort_order: filters.sort_order,
     page: filters.page,

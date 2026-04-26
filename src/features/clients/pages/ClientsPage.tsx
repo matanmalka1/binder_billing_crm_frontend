@@ -105,7 +105,12 @@ export const Clients: React.FC = () => {
           onClick={() => handleFilterChange("status", filters.status === "closed" ? "" : "closed")}
         />
       </div>
-      <ClientsFiltersBar filters={filters} onFilterChange={handleFilterChange} onReset={handleReset} />
+      <ClientsFiltersBar
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onReset={handleReset}
+        showAccountantFilter={can.editClients}
+      />
       <PaginatedDataTable
         data={clients}
         columns={columns}

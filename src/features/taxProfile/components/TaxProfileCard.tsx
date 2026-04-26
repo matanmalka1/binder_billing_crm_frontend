@@ -7,6 +7,7 @@ import { Alert } from "../../../components/ui/overlays/Alert";
 import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
 import { getVatTypeLabel } from "../../../utils/enums";
 import { useTaxProfile } from "../hooks/useTaxProfile";
+import { useAdvisorOptions } from "@/features/users";
 import { TaxProfileForm } from "./TaxProfileForm";
 
 interface Props { clientId: number | null; readOnly?: boolean }
@@ -15,11 +16,12 @@ const TAX_PROFILE_FORM_ID = "tax-profile-form";
 
 export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) => {
   const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(clientId ?? 0);
+  const { nameById } = useAdvisorOptions(!readOnly);
   const [isEditing, setIsEditing] = useState(false);
 
   const items = [
     { label: "תדירות דיווח מע\"מ", value: profile?.vat_reporting_frequency ? getVatTypeLabel(profile.vat_reporting_frequency) : "—" },
-    { label: "רואה חשבון מלווה", value: profile?.accountant_name ?? "—" },
+    { label: "רואה חשבון מלווה", value: profile?.accountant_id ? nameById.get(profile.accountant_id) ?? `#${profile.accountant_id}` : "—" },
     {
       label: "אחוז מקדמה",
       value: profile?.advance_rate != null ? `${profile.advance_rate}%` : "—",

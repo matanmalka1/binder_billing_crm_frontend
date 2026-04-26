@@ -25,7 +25,7 @@ export interface ClientResponse {
   vat_exempt_ceiling: string | null;
   advance_rate: string | null;
   advance_rate_updated_at: string | null;
-  accountant_name: string | null;
+  accountant_id: number | null;
   created_at: string;
   updated_at: string | null;
   active_binder_number: string | null;
@@ -61,6 +61,7 @@ export type ClientListResponse = PaginatedResponse<ClientResponse> & { stats: Cl
 export interface ListClientsParams {
   search?: string;
   status?: ClientStatus;
+  accountant_id?: number;
   sort_by?: "full_name" | "created_at" | "status";
   sort_order?: "asc" | "desc";
   page?: number;
@@ -82,7 +83,7 @@ export interface CreateClientPayload {
   vat_reporting_frequency?: VatType | null;
   advance_rate?: string | null;
   advance_rate_updated_at?: string | null;
-  accountant_name: string;
+  accountant_id: number;
   business_name: string;
   business_opened_at?: ISODateString | null;
 }
@@ -122,7 +123,7 @@ export interface UpdateClientPayload {
   vat_reporting_frequency?: VatType | null;
   advance_rate?: string | null;
   advance_rate_updated_at?: string | null;
-  accountant_name?: string | null;
+  accountant_id?: number | null;
 }
 
 export type EntityType = "osek_patur" | "osek_murshe" | "company_ltd" | "employee";

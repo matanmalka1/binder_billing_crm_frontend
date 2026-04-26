@@ -12,6 +12,7 @@ import {
 
 } from "../constants";
 import type { ClientsFiltersBarProps } from "../types";
+import { useAdvisorOptions } from "@/features/users";
 
 const STATUS_OPTIONS = [
   { value: "", label: "כל הסטטוסים" },
@@ -22,11 +23,13 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
   filters,
   onFilterChange,
   onReset,
+  showAccountantFilter = false,
 }) => {
   const [searchDraft, setSearchDraft] = useSearchDebounce(
     filters.search,
     (v) => onFilterChange("search", v),
   );
+  const { options: advisorOptions, nameById } = useAdvisorOptions(showAccountantFilter);
 
   const handleReset = () => {
     setSearchDraft("");
@@ -34,11 +37,12 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
   };
 
   const activeStatus = filters.status ?? "";
+  const activeAccountantId = filters.accountant_id ? String(filters.accountant_id) : "";
 
   return (
     <ToolbarContainer>
       <div className="space-y-3">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <Input
             label="חיפוש לקוח"
             value={searchDraft}
@@ -59,6 +63,17 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
             onChange={(e) => onFilterChange("status", e.target.value)}
             options={STATUS_OPTIONS}
           />
+          {showAccountantFilter && (
+            <Select
+              label="רואה חשבון"
+              value={activeAccountantId}
+              onChange={(e) => onFilterChange("accountant_id", e.target.value)}
+              options={[
+                { value: "", label: "כל רואי החשבון" },
+                ...advisorOptions,
+              ]}
+            />
+          )}
           <Select
             label="מיון לפי"
             value={filters.sort_by}
@@ -80,6 +95,13 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
               : null,
             activeStatus
               ? { key: "status", label: `סטטוס: ${CLIENT_STATUS_LABELS[activeStatus as keyof typeof CLIENT_STATUS_LABELS]}`, onRemove: () => onFilterChange("status", "") }
+              : null,
+            activeAccountantId
+              ? {
+                  key: "accountant_id",
+                  label: `רואה חשבון: ${nameById.get(Number(activeAccountantId)) ?? activeAccountantId}`,
+                  onRemove: () => onFilterChange("accountant_id", ""),
+                }
               : null,
           ].filter((b): b is NonNullable<typeof b> => b !== null)}
           onReset={handleReset}

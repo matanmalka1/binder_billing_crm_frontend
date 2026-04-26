@@ -5,6 +5,7 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
+import { useAdvisorOptions } from "@/features/users";
 import type { ClientResponse, UpdateClientPayload } from "../api";
 import {
   CLIENT_ID_NUMBER_TYPE_LABELS,
@@ -68,6 +69,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
 }) => {
   const [pendingData, setPendingData] = useState<UpdateClientPayload | null>(null);
   const [impactMessage, setImpactMessage] = useState<string | null>(null);
+  const { options: advisorOptions, isLoading: advisorsLoading } = useAdvisorOptions();
 
   const {
     control,
@@ -89,7 +91,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       entity_type: client.entity_type ?? null,
       vat_reporting_frequency: client.vat_reporting_frequency ?? null,
       advance_rate: client.advance_rate ?? null,
-      accountant_name: client.accountant_name ?? null,
+      accountant_id: client.accountant_id != null ? String(client.accountant_id) : "",
       notes: client.notes ?? null,
     },
   });
@@ -114,7 +116,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
     entity_type: data.entity_type || null,
     vat_reporting_frequency: data.vat_reporting_frequency || null,
     advance_rate: data.advance_rate || null,
-    accountant_name: data.accountant_name || null,
+    accountant_id: data.accountant_id ? Number(data.accountant_id) : null,
     notes: data.notes || null,
   });
 
@@ -308,11 +310,15 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
             {...register("advance_rate")}
           />
         </div>
-        <Input
+        <Select
           label="רואה חשבון מלווה"
-          error={errors.accountant_name?.message}
-          disabled={isLoading}
-          {...register("accountant_name")}
+          error={errors.accountant_id?.message}
+          disabled={isLoading || advisorsLoading}
+          options={[
+            { value: "", label: advisorsLoading ? "טוען רואי חשבון..." : "לא הוגדר" },
+            ...advisorOptions,
+          ]}
+          {...register("accountant_id")}
         />
         <div className="space-y-1">
           <label className="text-xs font-medium text-gray-500">הערות</label>
