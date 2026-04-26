@@ -119,7 +119,7 @@ export const CLIENT_STATUS_OPTIONS = CLIENT_STATUSES.map((status) => ({
   label: CLIENT_STATUS_LABELS[status],
 }));
 
-export const VAT_TYPE_OPTIONS = VAT_TYPES.map((type) => ({
+export const VAT_REPORTING_FREQUENCY_OPTIONS = VAT_TYPES.map((type) => ({
   value: type,
   label: VAT_TYPE_LABELS[type],
 }));
@@ -127,7 +127,7 @@ export const CREATE_CLIENT_ENTITY_OPTIONS = CREATE_ENTITY_TYPES.map((type) => ({
   value: type,
   label: ENTITY_TYPE_LABELS[type],
 }));
-export const CREATE_CLIENT_VAT_OPTIONS = VAT_TYPE_OPTIONS.filter((option) => option.value !== "exempt");
+export const CREATE_CLIENT_VAT_OPTIONS = VAT_REPORTING_FREQUENCY_OPTIONS.filter((option) => option.value !== "exempt");
 
 export const CLIENT_SORT_BY_OPTIONS: { value: ClientSortBy; label: string }[] = [
   { value: "full_name", label: "שם לקוח" },
