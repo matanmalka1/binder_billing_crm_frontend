@@ -4,20 +4,55 @@ import { formatVatAmount } from "../utils";
 import { ISRAEL_VAT_RATE_PERCENT } from "../constants";
 import type { VatInputCardProps, VatOutputCardProps } from "../types";
 
+type VatCardTone = "positive" | "warning";
+
+interface VatCardProps {
+  title: string;
+  tone: VatCardTone;
+  onNavigate?: () => void;
+  children: React.ReactNode;
+}
+
+const VAT_CARD_CLASSES: Record<VatCardTone, { border: string; title: string; button: string }> = {
+  positive: {
+    border: "border-r-positive-400",
+    title: "text-positive-700",
+    button: "text-positive-600 hover:text-positive-800",
+  },
+  warning: {
+    border: "border-r-warning-400",
+    title: "text-warning-700",
+    button: "text-warning-600 hover:text-warning-800",
+  },
+};
+
+const VatCard: React.FC<VatCardProps> = ({ title, tone, onNavigate, children }) => {
+  const classes = VAT_CARD_CLASSES[tone];
+  return (
+    <div className={`rounded-xl border border-gray-100 border-r-4 ${classes.border} bg-white p-4 shadow-sm`} dir="rtl">
+      <div className="mb-3 flex items-center justify-between">
+        <p className={`text-xs font-semibold uppercase tracking-wide ${classes.title}`}>{title}</p>
+        {onNavigate && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onNavigate}
+            className={`p-0.5 ${classes.button} hover:bg-transparent`}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+      {children}
+    </div>
+  );
+};
+
 // ── Output (income) card ──────────────────────────────────────────────────────
 
 export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }) => (
-  <div className="rounded-xl border border-gray-100 border-r-4 border-r-positive-400 bg-white p-4 shadow-sm" dir="rtl">
-    <div className="mb-3 flex items-center justify-between">
-      <p className="text-xs font-semibold uppercase tracking-wide text-positive-700">
-        מע&quot;מ עסקאות – מכירות
-      </p>
-      {onNavigate && (
-        <Button type="button" variant="ghost" size="sm" onClick={onNavigate} className="p-0.5 text-positive-600 hover:text-positive-800 hover:bg-transparent">
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-      )}
-    </div>
+  <VatCard title="מע&quot;מ עסקאות – מכירות" tone="positive" onNavigate={onNavigate}>
     <div className="space-y-2 text-sm">
       <div className="flex justify-between text-gray-500">
         <span>סה&quot;כ מכירות (ללא מע&quot;מ)</span>
@@ -34,7 +69,7 @@ export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }
         {formatVatAmount(data.totalOutputVat)}
       </span>
     </div>
-  </div>
+  </VatCard>
 );
 
 VatOutputCard.displayName = "VatOutputCard";
@@ -42,17 +77,7 @@ VatOutputCard.displayName = "VatOutputCard";
 // ── Input (expense) card ──────────────────────────────────────────────────────
 
 export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) => (
-  <div className="rounded-xl border border-gray-100 border-r-4 border-r-warning-400 bg-white p-4 shadow-sm" dir="rtl">
-    <div className="mb-3 flex items-center justify-between">
-      <p className="text-xs font-semibold uppercase tracking-wide text-warning-700">
-        מע&quot;מ תשומות – הוצאות
-      </p>
-      {onNavigate && (
-        <Button type="button" variant="ghost" size="sm" onClick={onNavigate} className="p-0.5 text-warning-600 hover:text-warning-800 hover:bg-transparent">
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-      )}
-    </div>
+  <VatCard title="מע&quot;מ תשומות – הוצאות" tone="warning" onNavigate={onNavigate}>
     <div className="space-y-1.5 text-sm">
       {data.expenseRows.map((row) => (
         <div key={row.categoryKey} className="flex justify-between">
@@ -86,7 +111,7 @@ export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) 
         {formatVatAmount(data.totalInputVat)}
       </span>
     </div>
-  </div>
+  </VatCard>
 );
 
 VatInputCard.displayName = "VatInputCard";

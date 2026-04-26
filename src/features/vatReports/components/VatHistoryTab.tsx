@@ -11,21 +11,19 @@ import type { VatHistoryTabProps } from "../types";
 
 export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
   const [page, setPage] = useState(0);
-  const { items, isPending } = useVatHistory(workItemId);
-  const totalPages = Math.ceil(items.length / PAGE_SIZE);
+  const { items, total, isFetching, isPending } = useVatHistory(workItemId, page, PAGE_SIZE);
+  const totalPages = Math.ceil(total / PAGE_SIZE);
   const maxPageIndex = Math.max(0, totalPages - 1);
 
   useEffect(() => {
     setPage((prev) => Math.min(Math.max(prev, 0), maxPageIndex));
   }, [maxPageIndex]);
 
-  const pageItems = items.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-
   if (isPending) {
     return <p className="py-8 text-center text-sm text-gray-400">טוען...</p>;
   }
 
-  if (items.length === 0) {
+  if (total === 0) {
     return <p className="py-8 text-center text-sm text-gray-400">אין היסטוריה</p>;
   }
 
@@ -42,7 +40,7 @@ export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
-            {pageItems.map((entry) => (
+            {items.map((entry) => (
               <tr key={entry.id} className="hover:bg-gray-50/60">
                 <td className="px-4 py-3 text-gray-500 tabular-nums whitespace-nowrap">
                   {formatDateTime(entry.performed_at)}
@@ -69,19 +67,19 @@ export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
             variant="ghost"
             size="sm"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page === 0}
+            disabled={page === 0 || isFetching}
           >
             הקודם
           </Button>
           <span>
-            עמוד {page + 1} מתוך {totalPages}
+            {isFetching ? "טוען..." : `עמוד ${page + 1} מתוך ${totalPages}`}
           </span>
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={() => setPage((p) => Math.min(maxPageIndex, Math.max(0, p + 1)))}
-            disabled={page >= maxPageIndex}
+            disabled={page >= maxPageIndex || isFetching}
           >
             הבא
           </Button>

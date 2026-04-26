@@ -1,17 +1,16 @@
 import { useState, useMemo } from "react";
-import { FileSpreadsheet, FileText, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { Card } from "../../../components/ui/primitives/Card";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Button } from "../../../components/ui/primitives/Button";
-import { Select } from "../../../components/ui/inputs/Select";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
+import { VatExportButtons } from "./VatExportButtons";
 
-import { vatReportsApi, type CreateVatWorkItemPayload, type VatAnnualSummary, type VatPeriodRow } from "../api";
-import { FILE_FORMAT_COLORS } from "../../../utils/chartColors";
-import { buildYearOptions, showErrorToast } from "../../../utils/utils";
+import type { CreateVatWorkItemPayload, VatAnnualSummary, VatPeriodRow } from "../api";
+import { showErrorToast } from "../../../utils/utils";
 import { useAuthStore } from "../../../store/auth.store";
 import { VAT_CLIENT_SUMMARY_STATUS_VARIANTS } from "../constants";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
@@ -62,55 +61,6 @@ const AnnualCard = ({ row }: { row: VatAnnualSummary }) => {
           </div>
         </div>
       </div>
-    </div>
-  );
-};
-
-const ExportControls = ({ clientId }: { clientId: number }) => {
-  const [year, setYear] = useState(() => new Date().getFullYear());
-  const [loadingType, setLoadingType] = useState<"excel" | "pdf" | null>(null);
-
-  const handleExport = async (format: "excel" | "pdf") => {
-    setLoadingType(format);
-    try {
-      await vatReportsApi.exportClientVat(clientId, format, year);
-    } catch (err) {
-      showErrorToast(err, "ייצוא נכשל, נסה שוב");
-    } finally {
-      setLoadingType(null);
-    }
-  };
-
-  const yearOptions = useMemo(() => 
-    buildYearOptions().map((o) => ({ value: o.value, label: o.value })), 
-  []);
-
-  return (
-    <div className="flex items-center gap-2">
-      <Select
-        value={String(year)}
-        onChange={(e) => setYear(Number(e.target.value))}
-        options={yearOptions}
-        className="w-28 py-1.5"
-      />
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        isLoading={loadingType === "excel"} 
-        onClick={() => handleExport("excel")}
-      >
-        <FileSpreadsheet className={`h-4 w-4 ${FILE_FORMAT_COLORS.excel}`} />
-        Excel
-      </Button>
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        isLoading={loadingType === "pdf"} 
-        onClick={() => handleExport("pdf")}
-      >
-        <FileText className={`h-4 w-4 ${FILE_FORMAT_COLORS.pdf}`} />
-        PDF
-      </Button>
     </div>
   );
 };
@@ -205,7 +155,7 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
           <Plus className="h-4 w-4" />
           פתיחת תיק מע״מ
         </Button>
-        {role === "advisor" && <ExportControls clientId={clientId} />}
+        {role === "advisor" && <VatExportButtons clientId={clientId} showYearSelector />}
       </div>
 
       <DataTable

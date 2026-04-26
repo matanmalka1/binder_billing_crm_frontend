@@ -98,8 +98,13 @@ export const vatReportsApi = {
     await api.delete(VAT_ENDPOINTS.vatWorkItemInvoiceById(id, invoiceId));
   },
 
-  getAuditTrail: async (id: number): Promise<VatAuditTrailResponse> => {
-    const response = await api.get<VatAuditTrailResponse>(VAT_ENDPOINTS.vatWorkItemAudit(id));
+  getAuditTrail: async (
+    id: number,
+    params: { limit?: number; offset?: number } = {},
+  ): Promise<VatAuditTrailResponse> => {
+    const response = await api.get<VatAuditTrailResponse>(VAT_ENDPOINTS.vatWorkItemAudit(id), {
+      params: toQueryParams(params),
+    });
     return response.data;
   },
 

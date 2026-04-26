@@ -22,7 +22,8 @@ export interface VatHistoryTabProps {
 
 export interface VatExportButtonsProps {
   clientId: number;
-  period: string;
+  period?: string;
+  showYearSelector?: boolean;
 }
 
 export interface VatCategoryTableProps {

@@ -1,21 +1,18 @@
-import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { vatReportsApi } from "../api";
 import { vatReportsQK } from "../api/queryKeys";
 
-export const useVatHistory = (workItemId: number) => {
+export const useVatHistory = (workItemId: number, page: number, pageSize: number) => {
+  const params = { limit: pageSize, offset: page * pageSize };
   const query = useQuery({
-    queryKey: vatReportsQK.audit(workItemId),
-    queryFn: () => vatReportsApi.getAuditTrail(workItemId),
+    queryKey: vatReportsQK.audit(workItemId, params),
+    queryFn: () => vatReportsApi.getAuditTrail(workItemId, params),
+    placeholderData: (previousData) => previousData,
   });
-
-  const items = useMemo(
-    () => [...(query.data?.items ?? [])].reverse(),
-    [query.data?.items],
-  );
 
   return {
     ...query,
-    items,
+    items: query.data?.items ?? [],
+    total: query.data?.total ?? 0,
   };
 };
