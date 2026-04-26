@@ -1,15 +1,15 @@
 import { useRef, useState } from "react";
-import { FileText, Search } from "lucide-react";
-import { Card } from "../../../components/ui/primitives/Card";
-import { DataTable } from "../../../components/ui/table/DataTable";
+import { FileText, Plus, Search } from "lucide-react";
 import { Alert } from "../../../components/ui/overlays/Alert";
+import { Modal } from "../../../components/ui/overlays/Modal";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Input } from "../../../components/ui/inputs/Input";
+import { Button } from "../../../components/ui/primitives/Button";
+import { DocumentCard } from "./DocumentCard";
 import { DocumentsUploadCard } from "./DocumentsUploadCard";
 import { DocumentVersionsPanel } from "./DocumentVersionsPanel";
 import { DocumentPreviewModal } from "./DocumentPreviewModal";
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
-import { buildDocumentColumns } from "./DocumentsColumns";
 import { documentsApi } from "../api";
 import type {
   OperationalSignalsResponse,
@@ -21,7 +21,9 @@ import { toast } from "../../../utils/toast";
 import { DOC_TYPE_LABELS } from "../documents.constants";
 import type { BusinessResponse } from "@/features/clients/api";
 
-const TAX_YEARS = [2020, 2021, 2022, 2023, 2024, 2025];
+const CURRENT_YEAR = new Date().getFullYear();
+const TAX_YEARS = Array.from({ length: 7 }, (_, i) => CURRENT_YEAR - i);
+const UPLOAD_FORM_ID = "documents-upload-form";
 
 interface DocumentsDataCardsProps {
   documents: PermanentDocumentResponse[];
@@ -59,15 +61,14 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
   const role = useAuthStore((s) => s.user?.role);
   const isAdvisor = role === "advisor";
 
+  const [uploadOpen, setUploadOpen] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [replacingId, setReplacingId] = useState<number | null>(null);
   const [downloadingId, setDownloadingId] = useState<number | null>(null);
   const [expandedVersionsId, setExpandedVersionsId] = useState<number | null>(null);
-
   const [previewDoc, setPreviewDoc] = useState<PermanentDocumentResponse | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("");
 
@@ -132,31 +133,28 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     setExpandedVersionsId((prev) => (prev === id ? null : id));
   };
 
-  const columns = buildDocumentColumns({
-    isAdvisor,
-    downloadingId,
-    replacingId,
-    deletingId,
-    onDownload: handleDownloadClick,
-    onPreview: handlePreviewClick,
-    onReplace: handleReplaceClick,
-    onDelete: (id) => setConfirmDeleteId(id),
-    handleExpandVersions,
-  });
-
   const filteredDocuments = documents.filter((doc) => {
     if (filterType && doc.document_type !== filterType) return false;
     if (search) {
       const q = search.toLowerCase();
-      if (!(doc.original_filename ?? "").toLowerCase().includes(q)) return false;
+      const matchesFilename = (doc.original_filename ?? "").toLowerCase().includes(q);
+      const matchesType = (DOC_TYPE_LABELS[doc.document_type] ?? doc.document_type).toLowerCase().includes(q);
+      if (!matchesFilename && !matchesType) return false;
     }
     return true;
   });
+
+  const isFiltered = Boolean(search || filterType || taxYear);
 
   const expandedDoc =
     expandedVersionsId !== null
       ? documents.find((d) => d.id === expandedVersionsId)
       : null;
+
+  const countLabel =
+    filteredDocuments.length !== documents.length
+      ? `${filteredDocuments.length}/${documents.length}`
+      : String(documents.length);
 
   return (
     <div className="space-y-4">
@@ -167,71 +165,131 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         />
       )}
 
-      <Card
-        title={`מסמכים (${filteredDocuments.length}${filteredDocuments.length !== documents.length ? `/${documents.length}` : ""})`}
-        actions={
-          <div className="flex flex-wrap items-center gap-2">
-            <Input
-              placeholder="חיפוש לפי שם קובץ"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              startIcon={<Search className="h-3.5 w-3.5" />}
-              className="h-8 w-44 text-sm"
+      {/* Header */}
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="text-base font-semibold text-gray-900">
+          מסמכים ({countLabel})
+        </h3>
+        <Button size="sm" onClick={() => setUploadOpen(true)} className="gap-1.5 shrink-0">
+          <Plus className="h-4 w-4" />
+          העלאת מסמך
+        </Button>
+      </div>
+
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-2">
+        <Input
+          placeholder="חיפוש לפי שם קובץ או סוג מסמך"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          startIcon={<Search className="h-3.5 w-3.5" />}
+          className="h-8 w-56 text-sm"
+        />
+        <Select
+          value={filterType}
+          onChange={(e) => setFilterType(e.target.value)}
+          options={[
+            { value: "", label: "כל הסוגים" },
+            ...Object.entries(DOC_TYPE_LABELS).map(([value, label]) => ({ value, label })),
+          ]}
+        />
+        <Select
+          value={taxYear ?? ""}
+          onChange={(e) => onTaxYearChange(e.target.value ? Number(e.target.value) : null)}
+          options={[
+            { value: "", label: "כל השנים" },
+            ...TAX_YEARS.map((y) => ({ value: String(y), label: String(y) })),
+          ]}
+        />
+        {isFiltered && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => { setSearch(""); setFilterType(""); onTaxYearChange(null); }}
+          >
+            נקה סינון
+          </Button>
+        )}
+      </div>
+
+      {/* Card grid */}
+      {filteredDocuments.length === 0 ? (
+        <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-gray-200 py-14 text-center">
+          <FileText className="h-9 w-9 text-gray-300" />
+          {documents.length === 0 ? (
+            <>
+              <p className="text-sm font-medium text-gray-500">עדיין לא הועלו מסמכים ללקוח זה</p>
+              <Button size="sm" onClick={() => setUploadOpen(true)} className="gap-1.5 mt-1">
+                <Plus className="h-4 w-4" />
+                העלאת מסמך ראשון
+              </Button>
+            </>
+          ) : (
+            <>
+              <p className="text-sm font-medium text-gray-500">לא נמצאו מסמכים מתאימים לחיפוש</p>
+              <button
+                type="button"
+                onClick={() => { setSearch(""); setFilterType(""); onTaxYearChange(null); }}
+                className="text-xs text-primary-600 hover:underline"
+              >
+                נקה סינון
+              </button>
+            </>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredDocuments.map((doc) => (
+            <DocumentCard
+              key={doc.id}
+              doc={doc}
+              isAdvisor={isAdvisor}
+              downloadingId={downloadingId}
+              replacingId={replacingId}
+              deletingId={deletingId}
+              onDownload={handleDownloadClick}
+              onPreview={handlePreviewClick}
+              onReplace={handleReplaceClick}
+              onDelete={(id) => setConfirmDeleteId(id)}
+              handleExpandVersions={handleExpandVersions}
             />
-            <Select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              options={[
-                { value: "", label: "כל הסוגים" },
-                ...Object.entries(DOC_TYPE_LABELS).map(([value, label]) => ({
-                  value,
-                  label,
-                })),
-              ]}
-            />
-            <Select
-              value={taxYear ?? ""}
-              onChange={(e) =>
-                onTaxYearChange(e.target.value ? Number(e.target.value) : null)
-              }
-              options={[
-                { value: "", label: "כל השנים" },
-                ...TAX_YEARS.map((y) => ({
-                  value: String(y),
-                  label: String(y),
-                })),
-              ]}
-            />
-          </div>
+          ))}
+        </div>
+      )}
+
+      {/* Version history panel */}
+      {expandedDoc && (
+        <DocumentVersionsPanel
+          clientId={expandedDoc.client_record_id}
+          documentType={expandedDoc.document_type}
+          taxYear={expandedDoc.tax_year ?? undefined}
+        />
+      )}
+
+      {/* Upload modal */}
+      <Modal
+        open={uploadOpen}
+        title="העלאת מסמך חדש"
+        onClose={() => setUploadOpen(false)}
+        footer={
+          <Button variant="outline" onClick={() => setUploadOpen(false)}>
+            ביטול
+          </Button>
         }
       >
-        <DataTable
-          data={filteredDocuments}
-          columns={columns}
-          getRowKey={(doc) => doc.id}
-          emptyState={{ icon: FileText, message: "לא נמצאו מסמכים ללקוח זה" }}
-        />
-        {expandedDoc && (
-          <DocumentVersionsPanel
-            clientId={expandedDoc.client_record_id}
-            documentType={expandedDoc.document_type}
-            taxYear={expandedDoc.tax_year ?? undefined}
-          />
-        )}
-      </Card>
-
-      <Card title="העלאת מסמך">
         <DocumentsUploadCard
+          formId={UPLOAD_FORM_ID}
           businesses={businesses}
           businessesLoading={businessesLoading}
           submitUpload={submitUpload}
           uploadError={uploadError}
           uploading={uploading}
           initialTaxYear={taxYear}
+          onSuccess={() => setUploadOpen(false)}
         />
-      </Card>
+      </Modal>
 
-      {/* Hidden file input exclusively for the replace flow */}
+      {/* Hidden input for replace flow */}
       <input
         ref={fileInputRef}
         type="file"
@@ -241,10 +299,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
 
       <DocumentPreviewModal
         open={previewDoc !== null}
-        onClose={() => {
-          setPreviewDoc(null);
-          setPreviewUrl(null);
-        }}
+        onClose={() => { setPreviewDoc(null); setPreviewUrl(null); }}
         url={previewUrl}
         filename={previewDoc?.original_filename ?? null}
         mimeType={previewDoc?.mime_type ?? null}

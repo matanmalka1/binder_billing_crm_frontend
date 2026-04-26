@@ -1,9 +1,10 @@
 import { type FC, useEffect, useState } from "react";
 import { type ActiveClientDetailsTab } from "../constants";
-import { Trash2 } from "lucide-react";
+import { AlertTriangle, Trash2 } from "lucide-react";
 import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
 import { Modal } from "../../../components/ui/overlays/Modal";
 import { Button } from "../../../components/ui/primitives/Button";
+import { Input } from "../../../components/ui/inputs/Input";
 import { AuthorityContactsCard } from "../../authorityContacts/components/AuthorityContactsCard";
 import { CorrespondenceCard } from "../../correspondence/components/CorrespondenceCard";
 import { SignatureRequestsCard } from "../../signatureRequests/components/SignatureRequestsCard";
@@ -11,24 +12,15 @@ import { ClientRemindersCard } from "../../reminders/components/ClientRemindersC
 import { NotificationsTab } from "../../notifications/components/NotificationsTab";
 import { ClientStatusCard } from "./ClientStatusCard";
 import { ClientInfoSection } from "./ClientInfoSection";
-import { ClientRelatedData } from "./ClientRelatedData";
 import { ClientEditForm } from "./ClientEditForm";
-import { ClientBusinessesCard } from "./ClientBusinessesCard";
-import { CreateBusinessModal } from "./CreateBusinessModal";
 import { ClientTimelineTab } from "@/features/timeline";
 import { ClientAnnualReportsTab } from "@/features/annualReports";
 import { ClientAdvancePaymentsTab } from "@/features/advancedPayments";
 import { ClientDocumentsTab } from "@/features/documents";
 import { FilingTimeline } from "@/features/taxDeadlines";
 import { VatClientSummaryPanel } from "@/features/vatReports";
-import type { UpdateClientPayload, ClientResponse, CreateBusinessPayload } from "../api";
-import type { ChargeResponse } from "@/features/charges";
-import type { BinderDetailResponse } from "@/features/binders";
-import { ChargesCreateModal } from "@/features/charges";
-import { ReceiveBinderDrawer } from "@/features/binders";
-import { useClientQuickActions } from "../hooks/useClientQuickActions";
+import type { UpdateClientPayload, ClientResponse } from "../api";
 import { useFirstBusinessId } from "../hooks/useFirstBusinessId";
-import { ClientNotesCard } from "@/features/notes";
 
 const EDIT_FORM_ID = "client-edit-form";
 
@@ -36,34 +28,20 @@ export type ClientDetailsOverviewTabProps = {
   client: ClientResponse;
   clientId: number;
   canEditClients: boolean;
-  canViewCharges: boolean;
-  binders: BinderDetailResponse[];
-  bindersTotal: number;
-  charges: ChargeResponse[];
-  chargesTotal: number;
   updateClient: (payload: UpdateClientPayload) => Promise<void>;
   isUpdating: boolean;
   deleteClient: () => Promise<void>;
   isDeleting: boolean;
-  createBusiness: (payload: CreateBusinessPayload) => Promise<void>;
-  isCreatingBusiness: boolean;
   activeTab: ActiveClientDetailsTab;
 };
 
 export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   client,
   canEditClients,
-  canViewCharges,
-  binders,
-  bindersTotal,
-  charges,
-  chargesTotal,
   updateClient,
   isUpdating,
   deleteClient,
   isDeleting,
-  createBusiness,
-  isCreatingBusiness,
   activeTab,
 }) => {
   const { id: firstBusinessIdOrNull } = useFirstBusinessId(client.id);
@@ -71,9 +49,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
 
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
-  const [showBusinessModal, setShowBusinessModal] = useState(false);
-
-  const quickActions = useClientQuickActions({ id: client.id, name: client.full_name });
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
 
   useEffect(() => {
     document.body.style.overflow = isEditing ? "hidden" : "";
@@ -85,36 +61,11 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   return (
     <div className="space-y-6">
       {activeTab === "details" && (
-        <>
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            <div className="space-y-6 lg:col-span-2">
-              <ClientInfoSection
-                client={client}
-                canEdit={canEditClients}
-                onEditStart={() => setIsEditing(true)}
-              />
-              <ClientBusinessesCard
-                clientId={client.id}
-                canEdit={canEditClients}
-                onAddBusiness={() => setShowBusinessModal(true)}
-              />
-            </div>
-            <div className="space-y-6">
-              <ClientRelatedData
-                clientId={client.id}
-                binders={binders}
-                bindersTotal={bindersTotal}
-                charges={charges}
-                chargesTotal={chargesTotal}
-                canViewCharges={canViewCharges}
-                canCreateCharge={canEditClients}
-                onCreateCharge={quickActions.openCreateCharge}
-                onCreateBinder={quickActions.openReceiveBinder}
-              />
-              <ClientNotesCard clientId={client.id} canEdit={canEditClients} />
-            </div>
-          </div>
-        </>
+        <ClientInfoSection
+          client={client}
+          canEdit={canEditClients}
+          onEditStart={() => setIsEditing(true)}
+        />
       )}
 
       {activeTab === "communication" && (
@@ -148,13 +99,19 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
       <Modal
         open={isConfirmingDelete}
         title="מחיקת לקוח"
-        onClose={() => setIsConfirmingDelete(false)}
+        onClose={() => {
+          setIsConfirmingDelete(false);
+          setDeleteConfirmation("");
+        }}
         footer={(
           <div className="flex items-center justify-end gap-3">
             <Button
               type="button"
               variant="outline"
-              onClick={() => setIsConfirmingDelete(false)}
+              onClick={() => {
+                setIsConfirmingDelete(false);
+                setDeleteConfirmation("");
+              }}
               disabled={isDeleting}
             >
               ביטול
@@ -163,10 +120,11 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
               type="button"
               variant="primary"
               isLoading={isDeleting}
-              disabled={isDeleting}
+              disabled={isDeleting || deleteConfirmation !== client.full_name}
               onClick={async () => {
                 await deleteClient();
                 setIsConfirmingDelete(false);
+                setDeleteConfirmation("");
               }}
               className="bg-negative-600 hover:bg-negative-700 focus:ring-negative-500"
             >
@@ -175,45 +133,27 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
           </div>
         )}
       >
-        <p className="text-sm text-gray-600">
-          האם למחוק את הלקוח <span className="font-semibold">{client.full_name}</span>? פעולה זו אינה ניתנת לביטול.
-        </p>
+        <div className="space-y-4">
+          <div className="flex gap-3 rounded-lg border border-negative-200 bg-negative-50 p-4 text-negative-900">
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+            <div className="space-y-2 text-sm">
+              <p className="font-semibold">
+                מחיקת הלקוח {client.full_name} היא פעולה בלתי הפיכה.
+              </p>
+              <p>
+                המחיקה תסיר את רשומת הלקוח מהעבודה השוטפת ועלולה להשפיע על תצוגת מסמכים,
+                מועדים, חיובים, קלסרים והיסטוריית פעילות המקושרים ללקוח.
+              </p>
+            </div>
+          </div>
+          <Input
+            label="כדי למחוק, יש להקליד את שם הלקוח במדויק"
+            value={deleteConfirmation}
+            onChange={(event) => setDeleteConfirmation(event.target.value)}
+            disabled={isDeleting}
+          />
+        </div>
       </Modal>
-
-      <CreateBusinessModal
-        open={showBusinessModal}
-        onClose={() => setShowBusinessModal(false)}
-        onSubmit={async (data) => {
-          await createBusiness(data);
-          setShowBusinessModal(false);
-        }}
-        isLoading={isCreatingBusiness}
-      />
-
-      <ChargesCreateModal
-        open={quickActions.showCreateCharge}
-        createError={quickActions.createChargeError}
-        createLoading={quickActions.createChargeLoading}
-        onClose={quickActions.closeCreateCharge}
-        onSubmit={quickActions.submitCreateCharge}
-        initialClient={{ id: client.id, name: client.full_name }}
-      />
-
-      <ReceiveBinderDrawer
-        open={quickActions.showReceiveBinder}
-        onClose={quickActions.closeReceiveBinder}
-        form={quickActions.receive.form}
-        clientQuery={quickActions.receive.clientQuery}
-        selectedClient={quickActions.receive.selectedClient}
-        businesses={quickActions.receive.businesses}
-        annualReports={quickActions.receive.annualReports}
-        hasActiveBinder={quickActions.receive.hasActiveBinder}
-        vatType={quickActions.receive.vatType}
-        onClientSelect={quickActions.receive.handleClientSelect}
-        onClientQueryChange={quickActions.receive.handleClientQueryChange}
-        onSubmit={quickActions.receive.handleSubmit}
-        isSubmitting={quickActions.receive.isSubmitting}
-      />
 
       {canEditClients && (
         <DetailDrawer

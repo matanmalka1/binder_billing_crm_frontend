@@ -21,7 +21,8 @@ type ClientInfoSectionProps = {
   onEditStart: () => void;
 };
 
-/** Formats the five structured address fields into a single human-readable string. */
+const EMPTY_VALUE = "לא הוגדר";
+
 const formatStructuredAddress = (client: ClientResponse): string => {
   const {
     address_street,
@@ -31,7 +32,7 @@ const formatStructuredAddress = (client: ClientResponse): string => {
     address_zip_code,
   } = client;
 
-  if (!address_street && !address_city) return "—";
+  if (!address_street && !address_city) return EMPTY_VALUE;
 
   const streetPart = [address_street, address_building_number]
     .filter(Boolean)
@@ -42,12 +43,17 @@ const formatStructuredAddress = (client: ClientResponse): string => {
   return [streetPart, aptPart, cityPart].filter(Boolean).join(", ");
 };
 
+const formatMoney = (value: string | null): string =>
+  value ? `₪${Number(value).toLocaleString("he-IL")}` : EMPTY_VALUE;
+
+const getTaxBranchValue = (value: string | null): string => value ?? EMPTY_VALUE;
+
 export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   client,
   canEdit,
   onEditStart,
 }) => {
-  const { nameById } = useAdvisorOptions(canEdit);
+  const { nameById } = useAdvisorOptions();
   const { data: contactsData } = useQuery({
     queryKey: [...authorityContactsQK.forClient(client.id), { page: 1, page_size: 20 }],
     queryFn: () => authorityContactsApi.listAuthorityContacts(client.id, undefined, 1, 20),
@@ -60,22 +66,19 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
 
   const idNumberTypeLabel = client.id_number_type
     ? getClientIdNumberTypeLabel(client.id_number_type)
-    : "—";
+    : EMPTY_VALUE;
 
   const identityItems = [
-    { label: "מזהה מערכת", value: formatClientOfficeId(client.id) },
-    {
-      label: "מספר לקוח במשרד",
-      value: client.office_client_number != null ? String(client.office_client_number) : "—",
-    },
-    { label: "מספר מזהה", value: client.id_number },
+    { label: "שם מלא / שם משפטי", value: client.full_name },
+    { label: "מספר מזהה", value: client.id_number || EMPTY_VALUE },
     { label: "סוג מזהה", value: idNumberTypeLabel },
     {
       label: "סוג ישות",
-      value: client.entity_type ? getEntityTypeLabel(client.entity_type) : "—",
+      value: client.entity_type ? getEntityTypeLabel(client.entity_type) : EMPTY_VALUE,
     },
-    { label: "קלסר פעיל", value: client.active_binder_number ?? "—" },
-    { label: "סטטוס", value: getClientStatusLabel(client.status) },
+  ];
+
+  const contactItems = [
     {
       label: "טלפון",
       value: client.phone ? (
@@ -86,7 +89,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
           {client.phone}
         </a>
       ) : (
-        "—"
+        EMPTY_VALUE
       ),
     },
     {
@@ -99,51 +102,59 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
           {client.email}
         </a>
       ) : (
-        "—"
+        EMPTY_VALUE
       ),
     },
     { label: "כתובת", value: formatStructuredAddress(client) },
-    { label: "נוצר בתאריך", value: formatDate(client.created_at) },
-    {
-      label: "עודכן בתאריך",
-      value: client.updated_at ? formatDate(client.updated_at) : "—",
-    },
   ];
 
   const notesValue = client.notes?.trim() || null;
 
   const isOsekPatur = client.entity_type === "osek_patur";
+  const vatReportingLabel = isOsekPatur
+    ? "פטור - לא רלוונטי לדיווח תקופתי"
+    : getClientVatReportingLabel(client).replace("—", EMPTY_VALUE);
 
   const taxItems = [
     {
       label: 'תדירות דיווח מע"מ',
-      value: getClientVatReportingLabel(client),
+      value: vatReportingLabel,
     },
-    ...(isOsekPatur
-      ? [
-          {
-            label: 'תקרת פטור מע"מ',
-            value: client.vat_exempt_ceiling
-              ? `₪${client.vat_exempt_ceiling}`
-              : "—",
-          },
-        ]
-      : []),
+    {
+      label: 'תקרת פטור מע"מ',
+      value: isOsekPatur ? `${formatMoney(client.vat_exempt_ceiling)} (ערך מערכת)` : "לא רלוונטי",
+    },
     {
       label: "אחוז מקדמה",
-      value: client.advance_rate != null ? `${client.advance_rate}%` : "—",
+      value: client.advance_rate != null ? `${client.advance_rate}%` : "לא אומת",
     },
     {
-      label: "עודכן מקדמה",
-      value: client.advance_rate_updated_at ? formatDate(client.advance_rate_updated_at) : "—",
+      label: "מקור / תאריך עדכון מקדמה",
+      value: client.advance_rate_updated_at
+        ? `עודכן בתאריך ${formatDate(client.advance_rate_updated_at)}`
+        : "לא קיים תאריך עדכון",
     },
+    { label: 'סניף מע"מ', value: getTaxBranchValue(officeByType("vat_branch")) },
+    { label: "סניף ביטוח לאומי", value: getTaxBranchValue(officeByType("national_insurance")) },
+    { label: "סניף מס הכנסה", value: getTaxBranchValue(officeByType("assessing_officer")) },
+  ];
+
+  const officeItems = [
+    {
+      label: "מספר לקוח במשרד",
+      value: client.office_client_number != null ? formatClientOfficeId(client.office_client_number) : EMPTY_VALUE,
+    },
+    { label: "סטטוס לקוח", value: getClientStatusLabel(client.status) },
     {
       label: "רואה חשבון מלווה",
-      value: client.accountant_id ? nameById.get(client.accountant_id) ?? `#${client.accountant_id}` : "—",
+      value: client.accountant_id ? nameById.get(client.accountant_id) ?? "לא נמצא שם משתמש" : EMPTY_VALUE,
     },
-    { label: 'סניף מע"מ', value: officeByType("vat_branch") ?? "—" },
-    { label: "סניף ביטוח לאומי", value: officeByType("national_insurance") ?? "—" },
-    { label: "סניף מס הכנסה", value: officeByType("assessing_officer") ?? "—" },
+    { label: "נוצר בתאריך", value: formatDate(client.created_at) },
+    {
+      label: "עודכן בתאריך",
+      value: client.updated_at ? formatDate(client.updated_at) : EMPTY_VALUE,
+    },
+    { label: "מזהה מערכת", value: `#${client.id}` },
   ];
 
   return (
@@ -164,19 +175,37 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
       }
     >
       <div className="space-y-6">
-        <DefinitionList columns={4} items={identityItems} />
-        <div className="border-t border-gray-100 pt-4">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
-            נתוני מס
+        <div className="rounded-lg border border-primary-100 bg-primary-50 px-4 py-3">
+          <p className="text-xs font-medium text-primary-700">מספר לקוח במשרד</p>
+          <p className="mt-1 text-2xl font-semibold text-primary-950">
+            {client.office_client_number != null
+              ? formatClientOfficeId(client.office_client_number)
+              : EMPTY_VALUE}
           </p>
+          <p className="mt-1 text-xs text-primary-700">מזהה מערכת משני: #{client.id}</p>
+        </div>
+        <section className="space-y-3">
+          <h3 className="text-sm font-semibold text-gray-900">זהות משפטית</h3>
+          <DefinitionList columns={4} items={identityItems} />
+        </section>
+        <section className="space-y-3 border-t border-gray-100 pt-4">
+          <h3 className="text-sm font-semibold text-gray-900">פרטי קשר</h3>
+          <DefinitionList columns={3} items={contactItems} />
+        </section>
+        <div className="border-t border-gray-100 pt-4">
+          <h3 className="mb-3 text-sm font-semibold text-gray-900">פרופיל מס</h3>
           <DefinitionList columns={3} items={taxItems} />
         </div>
-        {notesValue && (
-          <div className="border-t border-gray-100 pt-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">הערות</p>
-            <p className="whitespace-pre-wrap text-sm text-gray-700">{notesValue}</p>
-          </div>
-        )}
+        <section className="space-y-3 border-t border-gray-100 pt-4">
+          <h3 className="text-sm font-semibold text-gray-900">פרטי משרד</h3>
+          <DefinitionList columns={3} items={officeItems} />
+        </section>
+        <section className="space-y-2 border-t border-gray-100 pt-4">
+          <h3 className="text-sm font-semibold text-gray-900">הערות פנימיות</h3>
+          <p className="whitespace-pre-wrap rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-sm text-gray-700">
+            {notesValue || EMPTY_VALUE}
+          </p>
+        </section>
       </div>
     </Card>
   );

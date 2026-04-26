@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import { CloudUpload, X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button } from "../../../components/ui/primitives/Button";
 import { Select } from "../../../components/ui/inputs/Select";
 import type { UploadDocumentPayload } from "../api";
 import type { BusinessResponse } from "@/features/clients/api";
@@ -13,6 +12,7 @@ import {
 } from "../schemas";
 import { DOC_TYPE_LABELS } from "../documents.constants";
 import { formatFileSize } from "../../../utils/utils";
+import { Button } from "../../../components/ui/primitives/Button";
 
 const ACCEPTED_MIME_TYPES = [
   "application/pdf",
@@ -41,6 +41,8 @@ interface DocumentsUploadCardProps {
   uploadError: string | null;
   uploading: boolean;
   initialTaxYear?: number | null;
+  formId: string;
+  onSuccess?: () => void;
 }
 
 export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
@@ -50,6 +52,8 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
   uploadError,
   uploading,
   initialTaxYear,
+  formId,
+  onSuccess,
 }) => {
   const {
     formState: { errors },
@@ -73,6 +77,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
   const selectedDocType = watch("document_type");
   const selectedBusinessId = watch("business_id");
   const selectedTaxYear = watch("tax_year");
+  const canSubmit = Boolean(selectedDocType && selectedFile);
 
   const applyFile = (file: File) => {
     setFileError(null);
@@ -104,19 +109,17 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
       notes: values.notes ?? null,
     });
     if (uploaded) {
-      reset({
-        ...documentsUploadDefaultValues,
-        tax_year: initialTaxYear ?? null,
-      });
+      reset({ ...documentsUploadDefaultValues, tax_year: initialTaxYear ?? null });
       setFileError(null);
+      onSuccess?.();
     }
   });
 
   const showBusinessSelect = businesses.length > 1;
 
   return (
-    <form onSubmit={onSubmit} className="space-y-3">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <form id={formId} onSubmit={onSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Select
           label="סוג מסמך"
           error={errors.document_type?.message}
@@ -151,9 +154,9 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
             disabled={businessesLoading}
           >
             <option value="">מסמך כללי ללקוח</option>
-            {businesses.map((business) => (
-              <option key={business.id} value={business.id}>
-                {business.business_name ?? `עסק #${business.id}`}
+            {businesses.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.business_name ?? `עסק #${b.id}`}
               </option>
             ))}
           </Select>
@@ -170,7 +173,8 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         </div>
       </div>
 
-      <div className="w-full space-y-2 sm:ml-auto sm:max-w-3xl">
+      {/* File picker */}
+      <div className="space-y-2">
         <span className="block text-sm font-medium text-gray-700">קובץ</span>
         <div
           role="button"
@@ -250,10 +254,10 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
           type="submit"
           isLoading={uploading}
           loadingLabel="מעלה..."
-          disabled={!selectedDocType || !selectedFile}
+          disabled={!canSubmit}
           className="gap-2 shrink-0"
         >
-          העלאה
+          העלה
         </Button>
         {uploadError && <p className="text-sm text-negative-600">{uploadError}</p>}
       </div>

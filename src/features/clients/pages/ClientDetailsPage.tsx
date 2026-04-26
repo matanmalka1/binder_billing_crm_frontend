@@ -22,16 +22,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = "details" }
     isValidId,
     isLoading,
     error,
-    binders,
-    bindersTotal,
-    charges,
-    chargesTotal,
     updateClient,
     isUpdating,
     deleteClient,
     isDeleting,
-    createBusiness,
-    isCreatingBusiness,
     can,
   } = useClientDetails({ clientId: clientIdNum });
 
@@ -67,17 +61,10 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = "details" }
             client,
             clientId: client.id,
             canEditClients: can.editClients,
-            canViewCharges: can.viewChargeAmounts,
-            binders,
-            bindersTotal,
-            charges,
-            chargesTotal,
             updateClient,
             isUpdating,
             deleteClient,
             isDeleting,
-            createBusiness,
-            isCreatingBusiness,
           }}
         />
       ) : null}
