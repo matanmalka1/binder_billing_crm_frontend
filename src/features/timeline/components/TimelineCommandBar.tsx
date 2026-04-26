@@ -21,6 +21,8 @@ export interface TimelineCommandBarProps {
   typeFilters:         TimelineFilterKey[];
   onToggleTypeFilter:  (type: TimelineFilterKey) => void;
   onClearFilters:      () => void;
+  onExpandAll:         () => void;
+  onCollapseAll:       () => void;
   pageSize:            number;
   onPageSizeChange:    (value: string) => void;
   eventTypeStats:      EventTypeStat[];
@@ -64,6 +66,8 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
   typeFilters,
   onToggleTypeFilter,
   onClearFilters,
+  onExpandAll,
+  onCollapseAll,
   pageSize,
   onPageSizeChange,
   eventTypeStats,
@@ -190,6 +194,27 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
             נקה
           </Button>
         )}
+
+        <div className="mr-auto flex items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onExpandAll}
+            className="text-xs text-gray-600 hover:bg-gray-100 px-2.5 py-1 rounded-full"
+          >
+            פתח הכל
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onCollapseAll}
+            className="text-xs text-gray-600 hover:bg-gray-100 px-2.5 py-1 rounded-full"
+          >
+            כווץ הכל
+          </Button>
+        </div>
       </div>
     </div>
   );
