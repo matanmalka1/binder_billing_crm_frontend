@@ -100,7 +100,6 @@ export const clientEditSchema = z.object({
   vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
   advance_rate: z.string().optional().nullable(),
   accountant_id: z.string().trim().optional().nullable(),
-  notes: z.string().trim().optional().nullable(),
 });
 
 export type CreateClientFormValues = z.infer<typeof createClientSchema>;

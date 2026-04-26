@@ -92,7 +92,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
       vat_reporting_frequency: client.vat_reporting_frequency ?? null,
       advance_rate: client.advance_rate ?? null,
       accountant_id: client.accountant_id != null ? String(client.accountant_id) : "",
-      notes: client.notes ?? null,
     },
   });
   const { field: statusField } = useController({ name: "status", control });
@@ -117,7 +116,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
     vat_reporting_frequency: data.vat_reporting_frequency || null,
     advance_rate: data.advance_rate || null,
     accountant_id: data.accountant_id ? Number(data.accountant_id) : null,
-    notes: data.notes || null,
   });
 
   const onSubmit = handleSubmit(async (data) => {
@@ -320,17 +318,6 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
           ]}
           {...register("accountant_id")}
         />
-        <div className="space-y-1">
-          <label className="text-xs font-medium text-gray-500">הערות</label>
-          <textarea
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:bg-gray-50 disabled:text-gray-500"
-            rows={3}
-            placeholder="הערות חופשיות..."
-            disabled={isLoading}
-            {...register("notes")}
-          />
-          {errors.notes && <p className="text-xs text-negative-600">{errors.notes.message}</p>}
-        </div>
       </div>
 
       {!hideFooter && (

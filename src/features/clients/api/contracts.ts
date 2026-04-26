@@ -113,7 +113,6 @@ export interface UpdateClientPayload {
   status?: ClientStatus;
   phone?: string | null;
   email?: string | null;
-  notes?: string | null;
   address_street?: string | null;
   address_building_number?: string | null;
   address_apartment?: string | null;
