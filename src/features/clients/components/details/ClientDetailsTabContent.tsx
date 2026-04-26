@@ -2,8 +2,8 @@ import { type FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ClientDetailsOverviewTab, type ClientDetailsOverviewTabProps } from "./ClientDetailsOverviewTab";
 import { ClientDetailsTabBar } from "./ClientDetailsTabBar";
-import { CLIENT_DETAILS_TABS, type ActiveClientDetailsTab } from "../constants";
-import { CLIENT_ROUTES } from "../api/endpoints";
+import { CLIENT_DETAILS_TABS, type ActiveClientDetailsTab } from "../../constants";
+import { CLIENT_ROUTES } from "../../api/endpoints";
 
 type ClientDetailsTabContentProps = {
   initialTab?: ActiveClientDetailsTab;

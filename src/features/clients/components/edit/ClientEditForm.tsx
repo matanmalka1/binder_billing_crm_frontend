@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useController, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../../../components/ui/primitives/Button";
-import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
-import type { ClientResponse, UpdateClientPayload } from "../api";
-import { clientEditSchema, type ClientEditFormValues } from "../schemas";
-import { buildClientEditImpactMessage } from "../utils/clientEditImpact";
+import { Button } from "../../../../components/ui/primitives/Button";
+import { ConfirmDialog } from "../../../../components/ui/overlays/ConfirmDialog";
+import type { ClientResponse, UpdateClientPayload } from "../../api";
+import { clientEditSchema, type ClientEditFormValues } from "../../schemas";
+import { buildClientEditImpactMessage } from "../../utils/clientEditImpact";
 import {
   buildClientUpdatePayload,
   hasClientUpdatePayload,
-} from "../utils/buildClientUpdatePayload";
+} from "../../utils/buildClientUpdatePayload";
 import {
   ClientContactSection,
   ClientIdentitySection,

@@ -1,18 +1,18 @@
 import { type FC } from "react";
 import { Edit2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { Card } from "../../../components/ui/primitives/Card";
-import { Button } from "../../../components/ui/primitives/Button";
-import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
+import { Card } from "../../../../components/ui/primitives/Card";
+import { Button } from "../../../../components/ui/primitives/Button";
+import { DefinitionList } from "../../../../components/ui/layout/DefinitionList";
 import { formatClientOfficeId, formatDate } from "@/utils/utils";
-import type { ClientResponse } from "../api";
+import type { ClientResponse } from "../../api";
 import {
   getClientIdNumberTypeLabel,
   getClientStatusLabel,
   getClientVatReportingLabel,
   getEntityTypeLabel,
-} from "../constants";
-import { authorityContactsApi, authorityContactsQK } from "../../authorityContacts/api";
+} from "../../constants";
+import { authorityContactsApi, authorityContactsQK } from "../../../authorityContacts/api";
 import { useAdvisorOptions } from "@/features/users";
 
 type ClientInfoSectionProps = {

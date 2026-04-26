@@ -3,18 +3,18 @@ import type {
   FieldErrors,
   UseFormRegister,
 } from "react-hook-form";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Select } from "../../../components/ui/inputs/Select";
+import { Input } from "../../../../components/ui/inputs/Input";
+import { Select } from "../../../../components/ui/inputs/Select";
 import { useAdvisorOptions } from "@/features/users";
-import type { ClientResponse } from "../api";
+import type { ClientResponse } from "../../api";
 import {
   CLIENT_ID_NUMBER_TYPE_LABELS,
   CLIENT_STATUS_OPTIONS,
   ENTITY_TYPE_OPTIONS,
   VAT_REPORTING_FREQUENCY_OPTIONS,
-} from "../constants";
+} from "../../constants";
 import { formatClientOfficeId } from "@/utils/utils";
-import type { ClientEditFormValues } from "../schemas";
+import type { ClientEditFormValues } from "../../schemas";
 
 type EntityTypeField = ControllerRenderProps<ClientEditFormValues, "entity_type">;
 type VatReportingFrequencyField = ControllerRenderProps<ClientEditFormValues, "vat_reporting_frequency">;

@@ -2,19 +2,19 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { Pencil, Plus, Snowflake, Trash2, Undo2 } from "lucide-react";
-import { Button } from "../../../components/ui/primitives/Button";
-import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
+import { Button } from "../../../../components/ui/primitives/Button";
+import { StatusBadge } from "../../../../components/ui/primitives/StatusBadge";
 import { RowActionItem, RowActionsMenu } from "@/components/ui/table";
-import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
-import { Input } from "../../../components/ui/inputs/Input";
-import { clientsApi, clientsQK } from "../api";
-import type { BusinessResponse, UpdateBusinessPayload } from "../api";
-import { BUSINESS_STATUS_LABELS } from "../../businesses/constants";
-import { CLIENT_ROUTES } from "../api/endpoints";
+import { ConfirmDialog } from "../../../../components/ui/overlays/ConfirmDialog";
+import { Modal } from "../../../../components/ui/overlays/Modal";
+import { ModalFormActions } from "../../../../components/ui/overlays/ModalFormActions";
+import { Input } from "../../../../components/ui/inputs/Input";
+import { clientsApi, clientsQK } from "../../api";
+import type { BusinessResponse, UpdateBusinessPayload } from "../../api";
+import { BUSINESS_STATUS_LABELS } from "../../../businesses/constants";
+import { CLIENT_ROUTES } from "../../api/endpoints";
 import { formatDate } from "@/utils/utils";
-import { useBusinessActions } from "../hooks/useBusinessActions";
+import { useBusinessActions } from "../../hooks/useBusinessActions";
 
 const BUSINESS_STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
   active: "success",

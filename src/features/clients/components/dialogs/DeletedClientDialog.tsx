@@ -1,8 +1,8 @@
 import { AlertTriangle } from "lucide-react";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { Button } from "../../../components/ui/primitives/Button";
-import { formatDate } from "../../../utils/utils";
-import type { DeletedClientSummary } from "../api";
+import { Modal } from "../../../../components/ui/overlays/Modal";
+import { Button } from "../../../../components/ui/primitives/Button";
+import { formatDate } from "../../../../utils/utils";
+import type { DeletedClientSummary } from "../../api";
 
 interface Props {
   open: boolean;

@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { vatReportsApi, vatReportsQK } from "@/features/vatReports";
-import { Card } from "../../../components/ui/primitives/Card";
-import { Badge } from "../../../components/ui/primitives/Badge";
+import { Card } from "../../../../components/ui/primitives/Card";
+import { Badge } from "../../../../components/ui/primitives/Badge";
 
 const fmt = (n: string | number | null | undefined) =>
   n != null ? `₪${Number(n).toLocaleString("he-IL", { maximumFractionDigits: 0 })}` : "—";

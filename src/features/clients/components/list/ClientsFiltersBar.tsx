@@ -1,16 +1,16 @@
-import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
+import { useSearchDebounce } from "../../../../hooks/useSearchDebounce";
 import { Search, X } from "lucide-react";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Select } from "../../../components/ui/inputs/Select";
-import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
-import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
+import { Input } from "../../../../components/ui/inputs/Input";
+import { Select } from "../../../../components/ui/inputs/Select";
+import { ToolbarContainer } from "../../../../components/ui/layout/ToolbarContainer";
+import { ActiveFilterBadges } from "../../../../components/ui/table/ActiveFilterBadges";
 import {
   CLIENT_SORT_BY_OPTIONS,
   CLIENT_STATUS_LABELS,
   CLIENT_STATUS_OPTIONS,
   getClientSortOrderOptions,
-} from "../constants";
-import type { ClientsFiltersBarProps } from "../types";
+} from "../../constants";
+import type { ClientsFiltersBarProps } from "../../types";
 import { useAdvisorOptions } from "@/features/users";
 import { ALL_STATUSES_OPTION } from "@/constants/filterOptions.constants";
 

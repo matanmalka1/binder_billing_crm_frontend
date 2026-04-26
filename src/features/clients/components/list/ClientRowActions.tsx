@@ -2,7 +2,7 @@ import { Clock, Pencil, UserCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { RowActionItem, RowActionsMenu } from "@/components/ui/table";
 import { formatClientOfficeId } from "@/utils/utils";
-import { CLIENT_ROUTES } from "../api/endpoints";
+import { CLIENT_ROUTES } from "../../api/endpoints";
 
 interface ClientRowActionsProps {
   clientId: number;

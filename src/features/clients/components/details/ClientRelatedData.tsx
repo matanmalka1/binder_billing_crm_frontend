@@ -1,14 +1,14 @@
 import { type FC } from "react";
 import { ChevronLeft, FolderOpen, Plus, Receipt } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Card } from "../../../components/ui/primitives/Card";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Badge } from "../../../components/ui/primitives/Badge";
+import { Card } from "../../../../components/ui/primitives/Card";
+import { Button } from "../../../../components/ui/primitives/Button";
+import { Badge } from "../../../../components/ui/primitives/Badge";
 import type { LucideIcon } from "lucide-react";
 import type { ChargeResponse } from "@/features/charges";
 import type { BinderDetailResponse } from "@/features/binders";
-import { getChargeStatusLabel, getStatusLabel as getBinderStatusLabel } from "../../../utils/enums";
-import { formatBinderNumber } from "../../../utils/utils";
+import { getChargeStatusLabel, getStatusLabel as getBinderStatusLabel } from "../../../../utils/enums";
+import { formatBinderNumber } from "../../../../utils/utils";
 import { getChargeTypeLabel } from "@/features/charges";
 
 // ── Stat pill ───────────────────────────────────────────────────────────────

@@ -7,12 +7,12 @@ import {
   textColumn,
   type Column,
   type StatusVariant,
-} from "../../../components/ui/table";
-import type { ClientResponse } from "../api";
+} from "../../../../components/ui/table";
+import type { ClientResponse } from "../../api";
 import { formatClientOfficeId } from "@/utils/utils";
 import { ClientRowActions } from "./ClientRowActions";
-import { getEntityTypeLabel, getClientStatusLabel, getClientVatReportingLabel } from "../constants";
-import type { ClientStatus } from "../api";
+import { getEntityTypeLabel, getClientStatusLabel, getClientVatReportingLabel } from "../../constants";
+import type { ClientStatus } from "../../api";
 
 const CLIENT_STATUS_VARIANTS = {
   active: "success",
