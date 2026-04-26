@@ -93,7 +93,7 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
           submitType="submit"
           submitLabel="יצירה"
           isLoading={isLoading}
-          submitDisabled={!resolvedClientId || !(overrideName.trim() || resolvedSignerName)}
+          submitDisabled={isLoading}
         />
       }
     >
@@ -125,6 +125,7 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
             value: t,
             label: getSignatureRequestTypeLabel(t),
           }))}
+          required
         />
         <Input
           label="כותרת"
@@ -148,6 +149,7 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
               value={overrideName}
               onChange={(e) => setOverrideName(e.target.value)}
               placeholder={resolvedSignerName}
+              required
             />
             <Input
               label='דוא"ל חותם'

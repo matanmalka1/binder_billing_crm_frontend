@@ -6,6 +6,11 @@ interface Props {
   data: AdvancePaymentReportResponse;
 }
 
+const getClientNumberLabel = (r: AdvancePaymentReportItem) => {
+  const number = r.office_client_number ?? r.client_record_id;
+  return `לקוח ${formatClientOfficeId(number)}`;
+};
+
 const columns: Column<AdvancePaymentReportItem>[] = [
   {
     key: "client_name",
@@ -13,11 +18,7 @@ const columns: Column<AdvancePaymentReportItem>[] = [
     render: (r) => (
       <div className="min-w-0">
         <div className="text-sm font-medium text-gray-900">{r.client_name}</div>
-        <div className="text-xs text-gray-500">
-          {r.office_client_number != null
-            ? `לקוח ${formatClientOfficeId(r.office_client_number)}`
-            : `לקוח #${r.client_record_id}`}
-        </div>
+        <div className="text-xs text-gray-500">{getClientNumberLabel(r)}</div>
       </div>
     ),
   },

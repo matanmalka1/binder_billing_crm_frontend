@@ -69,6 +69,10 @@ export interface AdvancePaymentReportResponse {
 export interface VatComplianceItem {
   client_record_id: number;
   client_name: string;
+  year?: number | null;
+  period_type?: string | null;
+  reporting_frequency?: string | null;
+  grouping_key?: string | null;
   periods_expected: number;
   periods_filed: number;
   periods_open: number;

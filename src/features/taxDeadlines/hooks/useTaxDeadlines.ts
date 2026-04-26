@@ -106,7 +106,7 @@ export const useTaxDeadlines = () => {
   const form = useForm<CreateTaxDeadlineForm>({
     defaultValues: {
       client_id: "",
-      deadline_type: "vat",
+      deadline_type: "",
       due_date: "",
       period: "",
       payment_amount: "",
