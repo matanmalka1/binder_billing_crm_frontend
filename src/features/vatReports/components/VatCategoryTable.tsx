@@ -12,7 +12,7 @@ const TABLE_COLUMNS = [
 ];
 
 const headerCellClass = "px-4 py-3 text-right";
-const amountCellClass = "px-4 py-3 font-mono tabular-nums";
+const amountCellClass = "px-4 py-3 text-right font-mono tabular-nums";
 const mutedAmountCellClass = `${amountCellClass} text-gray-600`;
 
 export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
@@ -24,12 +24,20 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
   if (!rows?.length) return null;
 
   const totalGrossAmount = totalExpenseNet + totalGrossVat;
+  const showNonDeductibleNote = totalExpenseNet > 0 && totalInputVat === 0;
 
   return (
     <section dir="rtl" className="space-y-3">
-      <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">
-        פירוט לפי קטגוריה
-      </h3>
+      <div className="space-y-1">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+          פירוט לפי קטגוריה
+        </h3>
+        {showNonDeductibleNote && (
+          <p className="text-xs text-gray-500">
+            קטגוריות אלו אינן מזכות בניכוי מע&quot;מ לפי הנתונים שהוזנו.
+          </p>
+        )}
+      </div>
 
       <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
         <table className="w-full border-collapse text-sm">
@@ -63,7 +71,7 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
                     {formatVatAmount(row.grossVat)}
                   </td>
                   <td className={cn(
-                    "px-4 py-3 font-mono font-bold tabular-nums",
+                    "px-4 py-3 text-right font-mono font-bold tabular-nums",
                     VAT_DEDUCTIBLE_ACCENT
                   )}>
                     {formatVatAmount(row.deductibleVat)}
@@ -73,7 +81,7 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
             })}
           </tbody>
 
-          <tfoot className="border-t-2 border-gray-200 bg-gray-50 text-gray-900">
+          <tfoot className="border-t-2 border-gray-300 bg-gray-100/80 text-gray-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
             <tr className="font-bold">
               <td className="px-4 py-3">סה"כ</td>
               <td />

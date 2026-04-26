@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, Clock, FolderOpen, Info, AlertTriangle, User } from "lucide-react";
-import { formatClientOfficeId, formatDate } from "@/utils/utils";
+import { formatClientOfficeId, formatDate, getReportingPeriodMonthLabel } from "@/utils/utils";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
@@ -47,6 +47,14 @@ const AlertBanner: React.FC<{ tone: AlertTone; icon?: typeof AlertTriangle; chil
   );
 };
 
+const formatPeriodTitle = (period: string, periodType: string | null): string => {
+  const [year] = period.split("-");
+  const yearNumber = Number(year);
+  const monthsCount = periodType === "bimonthly" ? 2 : 1;
+  const monthLabel = getReportingPeriodMonthLabel(period, monthsCount).replace("-", "–");
+  return Number.isInteger(yearNumber) && monthLabel !== period ? `${monthLabel} ${yearNumber}` : period;
+};
+
 export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem, onFilingPendingChange }) => {
   const { isAdvisor } = useRole();
   const { handleMaterialsComplete, handleReadyForReview, handleSendBack, isLoading } =
@@ -55,23 +63,26 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
   const [showFileModal, setShowFileModal] = useState(false);
   const filed = isFiled(workItem.status);
   const { activeBinder } = useActiveVatBinder(workItem.client_record_id);
+  const titleClient = workItem.client_name ?? `לקוח ${formatClientOfficeId(workItem.client_record_id)}`;
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm space-y-3" dir="rtl">
-      {/* Row 1: breadcrumb + title + badges */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-1 text-sm">
-          <Link to="/tax/vat" className="text-gray-400 hover:text-primary-600 transition-colors">
-            דוחות מע&quot;מ
-          </Link>
-          <ChevronLeft className="h-3.5 w-3.5 text-gray-300" />
-          <span className="font-semibold text-gray-800">
-            {workItem.client_name ?? `לקוח ${formatClientOfficeId(workItem.client_record_id)}`}
-            <span className="mx-1.5 font-normal text-gray-400">—</span>
-            <span className="font-mono">{workItem.period}</span>
-          </span>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          <div className="flex items-center gap-1 text-xs">
+            <Link to="/tax/vat" className="text-gray-400 hover:text-primary-600 transition-colors">
+              דוחות מע&quot;מ
+            </Link>
+            <ChevronLeft className="h-3.5 w-3.5 text-gray-300" />
+            <span className="text-gray-500">תיק תקופתי</span>
+          </div>
+          <h1 className="truncate text-xl font-bold text-gray-950">
+            {titleClient}
+            <span className="mx-2 font-normal text-gray-300">·</span>
+            <span>{formatPeriodTitle(workItem.period, workItem.period_type)}</span>
+          </h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           {activeBinder && (
             <Link
               to={`/binders?binder_number=${activeBinder.binder_number}`}
@@ -93,6 +104,9 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
             getLabel={getVatWorkItemStatusLabel}
             variantMap={VAT_STATUS_BADGE_VARIANTS}
           />
+          {isAdvisor && (
+            <VatExportButtons clientId={workItem.client_record_id} period={workItem.period} />
+          )}
         </div>
       </div>
 
@@ -104,7 +118,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
 
       {workItem.is_overdue && (workItem.extended_deadline ?? workItem.submission_deadline) && (
         <AlertBanner tone="error">
-          ⚠️ תאריך הגשה חלף — {formatDate(workItem.extended_deadline ?? workItem.submission_deadline)}
+          תאריך הגשה חלף — {formatDate(workItem.extended_deadline ?? workItem.submission_deadline)}
         </AlertBanner>
       )}
 
@@ -155,17 +169,8 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
                 onFile={() => setShowFileModal(true)}
                 onSendBack={() => setShowSendBack(true)}
               />
-              {isAdvisor && (
-                <VatExportButtons clientId={workItem.client_record_id} period={workItem.period} />
-              )}
             </>
           )}
-        </div>
-      )}
-
-      {filed && isAdvisor && (
-        <div className="flex justify-end border-t border-gray-100 pt-3">
-          <VatExportButtons clientId={workItem.client_record_id} period={workItem.period} />
         </div>
       )}
 

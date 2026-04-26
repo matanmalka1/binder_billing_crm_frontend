@@ -38,9 +38,10 @@ const VatCard: React.FC<VatCardProps> = ({ title, tone, onNavigate, children }) 
           <button
             type="button"
             onClick={onNavigate}
-            className={`rounded p-0.5 transition-colors ${classes.button}`}
+            className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold transition-colors hover:bg-gray-50 ${classes.button}`}
             aria-label="עבור לפרטים"
           >
+            צפה בפירוט
             <ChevronLeft className="h-4 w-4" />
           </button>
         )}
@@ -79,6 +80,11 @@ VatOutputCard.displayName = "VatOutputCard";
 
 export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) => (
   <VatCard title="מע&quot;מ תשומות – הוצאות" tone="warning" onNavigate={onNavigate}>
+    {data.totalExpenseNet > 0 && data.totalInputVat === 0 && (
+      <div className="mb-3 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs text-gray-500">
+        הוצאות אלו אינן מזכות בניכוי מע&quot;מ לפי הקטגוריות שהוזנו.
+      </div>
+    )}
     <div className="space-y-1.5 text-sm">
       {data.expenseRows.map((row) => (
         <div key={row.categoryKey} className="flex justify-between">

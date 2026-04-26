@@ -10,8 +10,11 @@ export const VatProgressBar: React.FC<VatProgressBarProps> = ({ currentStatus })
   const isFiled = currentStatus === "filed";
 
   return (
-    <div className="flex items-center gap-3" dir="rtl">
-      <div className="relative flex-1 overflow-hidden rounded-full bg-gray-100 h-2">
+    <div className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2" dir="rtl">
+      <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-gray-700 shadow-sm ring-1 ring-gray-200 tabular-nums">
+        שלב {step}/{total}
+      </span>
+      <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-gray-200">
         <div
           className={cn(
             "absolute inset-y-0 right-0 rounded-full transition-all duration-500",
@@ -20,8 +23,8 @@ export const VatProgressBar: React.FC<VatProgressBarProps> = ({ currentStatus })
           style={{ width: `${percent}%` }}
         />
       </div>
-      <span className="shrink-0 text-xs font-medium text-gray-500 tabular-nums">
-        שלב {step}/{total}
+      <span className="shrink-0 text-xs font-medium text-gray-500 tabular-nums" dir="ltr">
+        {percent}%
       </span>
     </div>
   );

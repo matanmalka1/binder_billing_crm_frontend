@@ -22,11 +22,11 @@ export const VatExportButtons: React.FC<VatExportButtonsProps> = ({ clientId, pe
   };
 
   return (
-    <div className="inline-flex items-center overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm" dir="rtl">
+    <div className="inline-flex items-center overflow-hidden rounded-md border border-gray-200 bg-gray-50 shadow-sm" dir="rtl">
       <Button
-        variant="ghost"
+        variant="secondary"
         size="sm"
-        className="rounded-none border-l border-gray-200"
+        className="rounded-none border-l border-gray-200 bg-gray-50 shadow-none"
         isLoading={loadingType === "excel"}
         onClick={() => handleExport("excel")}
       >
@@ -34,9 +34,9 @@ export const VatExportButtons: React.FC<VatExportButtonsProps> = ({ clientId, pe
         Excel
       </Button>
       <Button
-        variant="ghost"
+        variant="secondary"
         size="sm"
-        className="rounded-none"
+        className="rounded-none bg-gray-50 shadow-none"
         isLoading={loadingType === "pdf"}
         onClick={() => handleExport("pdf")}
       >

@@ -70,7 +70,7 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
       <div
         role="tablist"
         dir="rtl"
-        className="flex border-b border-gray-200 bg-white/95 backdrop-blur-sm"
+        className="flex gap-1 border-b border-gray-200 bg-white/95 px-1 backdrop-blur-sm"
       >
         {tabs.map(({ key, label, icon: Icon, badge }) => (
           <button
@@ -80,18 +80,21 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
             aria-selected={activeTab === key}
             onClick={() => setTab(key)}
             className={cn(
-              "inline-flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-colors focus:outline-none",
+              "inline-flex items-center gap-2 rounded-t-lg border-b-2 px-5 py-3 text-sm font-medium transition-colors focus:outline-none",
               activeTab === key
-                ? "border-primary-600 text-primary-700 bg-primary-50/40"
+                ? "border-primary-600 bg-primary-50 text-primary-800 shadow-sm"
                 : "border-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-50",
             )}
           >
             <Icon className="h-4 w-4 shrink-0" />
             {label}
-            {badge !== undefined && badge > 0 && (
+            {badge !== undefined && (
               <Badge
                 variant="neutral"
-                className="text-xs px-1.5 py-0.5 rounded-full min-w-[1.25rem] text-center"
+                className={cn(
+                  "min-w-[1.35rem] rounded-full px-1.5 py-0.5 text-center text-xs tabular-nums",
+                  activeTab === key && "bg-white text-primary-800 ring-1 ring-primary-200",
+                )}
               >
                 {badge}
               </Badge>
