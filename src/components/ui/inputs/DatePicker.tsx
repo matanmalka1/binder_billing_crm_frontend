@@ -122,7 +122,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         onKeyDown={onKeyDown}
         className={cn(
           "w-full flex items-center justify-between rounded-lg border shadow-sm text-sm transition-all bg-white text-right",
-          compact ? "px-2 py-1 h-7 text-xs" : "px-3 py-3",
+          compact ? "px-2 py-1 h-7 text-xs" : "h-9 px-3 py-2",
           error ? "border-negative-500" : "border-gray-300",
           open && "border-primary-500 ring-2 ring-primary-500",
           disabled && "bg-gray-50 cursor-not-allowed text-gray-400",
@@ -132,7 +132,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         <span className={cn("flex-1 text-right", !displayValue && "text-gray-400")}>
           {displayValue || "בחר תאריך"}
         </span>
-        <CalendarIcon className="h-4 w-4 text-gray-400 flex-shrink-0 ms-2" />
+        <CalendarIcon className="h-4 w-4 text-gray-400 flex-shrink-0" />
       </button>
 
       {open && (usePortal ? createPortal(calendar, document.body) : calendar)}
@@ -140,7 +140,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   );
 
   if (noWrapper) return picker;
-  return <FormField label={label} error={error}>{picker}</FormField>;
+  return <FormField label={label} error={error} className="w-full">{picker}</FormField>;
 };
 
 DatePicker.displayName = "DatePicker";

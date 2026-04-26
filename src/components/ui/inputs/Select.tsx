@@ -42,7 +42,7 @@ export const Select: React.FC<SelectProps> = ({
   name,
   ...props
 }) => (
-  <FormField label={label} error={error}>
+  <FormField label={label} error={error} className="w-full">
     {Array.isArray(options) ? (
       <SelectDropdown
         value={value}

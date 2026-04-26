@@ -156,7 +156,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
             control={control}
             name="charge_type"
             render={({ field }) => (
-              <FormField label="סוג חיוב *" error={errors.charge_type?.message}>
+              <FormField label="סוג חיוב *" error={errors.charge_type?.message} className="w-full">
                 <SelectDropdown
                   value={field.value}
                   onChange={field.onChange}
@@ -172,7 +172,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
             control={control}
             name="months_covered"
             render={({ field }) => (
-              <FormField label="תדירות" error={errors.months_covered?.message}>
+              <FormField label="תדירות" error={errors.months_covered?.message} className="w-full">
                 <SelectDropdown
                   value={String(field.value ?? 1)}
                   onChange={(e) =>
@@ -189,7 +189,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
             control={control}
             name="period"
             render={({ field }) => (
-              <FormField label="תקופה" error={errors.period?.message}>
+              <FormField label="תקופה" error={errors.period?.message} className="w-full">
                 <SelectDropdown
                   value={field.value ?? ""}
                   onChange={(e) => field.onChange(e.target.value)}

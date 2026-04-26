@@ -8,7 +8,7 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 }
 
 export const Textarea: React.FC<TextareaProps> = ({ label, error, className, ...props }) => (
-  <FormField label={label} error={error} className={cn("text-sm", className)}>
+  <FormField label={label} error={error} className={cn("w-full text-sm", className)}>
     <textarea
       className={cn(
         "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm transition-all",

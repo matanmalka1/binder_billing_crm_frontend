@@ -165,7 +165,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
   };
 
   const triggerClass = cn(
-    "flex w-full items-center justify-between gap-2 px-3 py-2.5 bg-white border rounded-lg text-sm text-right transition-colors",
+    "flex h-9 w-full items-center gap-2 px-3 py-2 bg-white border rounded-lg text-sm transition-colors",
     "hover:border-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:border-primary-500",
     "disabled:opacity-50 disabled:cursor-not-allowed",
     open ? "border-primary-500 ring-2 ring-primary-500" : "border-gray-200",
@@ -181,10 +181,11 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
         onKeyDown={handleTriggerKeyDown}
         disabled={disabled}
         className={triggerClass}
+        dir="rtl"
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span className={cn("truncate", !currentValue ? "text-gray-400" : "text-gray-800")}>
+        <span className={cn("flex-1 truncate text-right", !currentValue ? "text-gray-400" : "text-gray-800")}>
           {selectedLabel}
         </span>
         {CHEVRON}

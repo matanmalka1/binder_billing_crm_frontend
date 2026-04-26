@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { cn } from "../../../utils/utils";
 import { FormField } from "../../../components/ui/inputs/FormField";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
 import { useVatPeriodOptions } from "../hooks/useVatPeriodOptions";
@@ -49,7 +50,7 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
 
   return (
     <>
-      <FormField label="תקופת דיווח *" error={combinedError} className={className}>
+      <FormField label="תקופת דיווח *" error={combinedError} className={cn("w-full", className)}>
         <SelectDropdown
           value={value}
           onChange={(e) => onChange(e.target.value)}
