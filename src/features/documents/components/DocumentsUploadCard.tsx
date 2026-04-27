@@ -114,6 +114,22 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
   });
 
   const showBusinessSelect = businesses.length > 1;
+  const documentTypeField = register("document_type");
+  const documentTypeOptions = [
+    { value: "", label: "בחר סוג מסמך", disabled: true },
+    ...Object.entries(DOC_TYPE_LABELS).map(([value, label]) => ({ value, label })),
+  ];
+  const taxYearOptions = [
+    { value: "", label: "ללא שנה" },
+    ...TAX_YEARS.map((y) => ({ value: String(y), label: String(y) })),
+  ];
+  const businessOptions = [
+    { value: "", label: "מסמך כללי ללקוח" },
+    ...businesses.map((b) => ({
+      value: String(b.id),
+      label: b.business_name ?? `עסק #${b.id}`,
+    })),
+  ];
 
   return (
     <form id={formId} onSubmit={onSubmit} className="space-y-4">
@@ -121,43 +137,40 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         <Select
           label="סוג מסמך"
           error={errors.document_type?.message}
-          {...register("document_type")}
-        >
-          <option value="" disabled>בחר סוג מסמך</option>
-          {Object.entries(DOC_TYPE_LABELS).map(([value, label]) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </Select>
+          value={selectedDocType}
+          name={documentTypeField.name}
+          onBlur={documentTypeField.onBlur}
+          onChange={(e) =>
+            setValue("document_type", e.target.value as UploadDocumentPayload["document_type"], {
+              shouldValidate: true,
+            })
+          }
+          options={documentTypeOptions}
+        />
 
         <Select
           label="שנת מס (אופציונלי)"
           value={selectedTaxYear ?? ""}
           onChange={(e) =>
-            setValue("tax_year", e.target.value ? Number(e.target.value) : null)
+            setValue("tax_year", e.target.value ? Number(e.target.value) : null, {
+              shouldValidate: true,
+            })
           }
-        >
-          <option value="">ללא שנה</option>
-          {TAX_YEARS.map((y) => (
-            <option key={y} value={y}>{y}</option>
-          ))}
-        </Select>
+          options={taxYearOptions}
+        />
 
         {showBusinessSelect && (
           <Select
             label="שיוך עסקי"
             value={selectedBusinessId ?? ""}
             onChange={(e) =>
-              setValue("business_id", e.target.value ? Number(e.target.value) : null)
+              setValue("business_id", e.target.value ? Number(e.target.value) : null, {
+                shouldValidate: true,
+              })
             }
             disabled={businessesLoading}
-          >
-            <option value="">מסמך כללי ללקוח</option>
-            {businesses.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.business_name ?? `עסק #${b.id}`}
-              </option>
-            ))}
-          </Select>
+            options={businessOptions}
+          />
         )}
       </div>
 
