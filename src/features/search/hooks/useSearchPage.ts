@@ -20,14 +20,11 @@ export const useSearchPage = () => {
     [searchParams],
   );
 
-  const hasAnyFilter = useMemo(
-    () =>
-      Boolean(filters.query) ||
-      Boolean(filters.client_name) ||
-      Boolean(filters.id_number) ||
-      Boolean(filters.binder_number),
-    [filters],
-  );
+  const hasAnyFilter =
+    Boolean(filters.query) ||
+    Boolean(filters.client_name) ||
+    Boolean(filters.id_number) ||
+    Boolean(filters.binder_number);
 
   const searchQuery = useQuery({
     queryKey: searchQK.results(filters),
@@ -63,10 +60,9 @@ export const useSearchPage = () => {
   }, [setSearchParams]);
 
   return {
-    error: searchQuery.error
-      ? getErrorMessage(searchQuery.error, "שגיאה בטעינת תוצאות חיפוש")
-      : null,
+    error: searchQuery.error ? getErrorMessage(searchQuery.error, "שגיאה בטעינת תוצאות חיפוש") : null,
     filters,
+    hasAnyFilter,
     handleFilterChange,
     handleReset,
     loading: hasAnyFilter ? searchQuery.isPending : false,

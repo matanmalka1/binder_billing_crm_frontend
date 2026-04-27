@@ -3,12 +3,7 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { Button } from "../../../components/ui/primitives/Button";
 import type { SearchFiltersBarProps } from "../types";
 
-interface SearchFiltersBarExtendedProps extends SearchFiltersBarProps {
-  isOpen: boolean;
-  onToggle: () => void;
-}
-
-export const SearchFiltersBar: React.FC<SearchFiltersBarExtendedProps> = ({
+export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
   filters,
   onFilterChange,
   onReset,
@@ -20,7 +15,6 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarExtendedProps> = ({
 
   return (
     <div>
-      {/* Toggle row */}
       <Button
         type="button"
         variant="ghost"
@@ -38,7 +32,6 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarExtendedProps> = ({
         {isOpen ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
       </Button>
 
-      {/* Collapsible panel */}
       {isOpen && (
         <div className="mt-3 space-y-4 border-t border-gray-100 pt-4">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">

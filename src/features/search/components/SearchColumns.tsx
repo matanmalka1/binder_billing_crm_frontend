@@ -5,7 +5,7 @@ import {
   type Column,
 } from "../../../components/ui/table";
 import type { SearchResult } from "../api";
-import { getResultColor, getResultIcon, getResultLabel } from "./SearchResultMeta";
+import { getResultColor, getResultIcon, getResultLabel } from "../utils/searchResultMeta";
 import { SearchRowActions } from "./SearchRowActions";
 import { cn, formatBinderNumber, formatClientOfficeId } from "@/utils/utils";
 

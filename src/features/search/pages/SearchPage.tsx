@@ -16,19 +16,18 @@ import {
   type SearchResult,
 } from "@/features/search";
 
+const PAGE_SIZE = 20;
+
 export const Search: React.FC = () => {
-  const { error, filters, handleFilterChange, handleReset, loading, results, documents, total } = useSearchPage();
+  const { error, filters, hasAnyFilter, handleFilterChange, handleReset, loading, results, documents, total } =
+    useSearchPage();
   const inputRef = useRef<HTMLInputElement>(null);
   const [queryDraft, setQueryDraft] = useSearchDebounce(filters.query, (v) => handleFilterChange("query", v));
 
-  const hasAdvancedFilter = Boolean(
-    filters.client_name || filters.id_number || filters.binder_number,
-  );
-
+  const hasAdvancedFilter = Boolean(filters.client_name || filters.id_number || filters.binder_number);
   const [filtersOpen, setFiltersOpen] = useState(hasAdvancedFilter);
 
-  const hasAnyFilter = Boolean(filters.query) || hasAdvancedFilter;
-  const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / filters.page_size));
+  const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / PAGE_SIZE));
 
   const handleResetAll = () => {
     handleReset();
@@ -38,12 +37,8 @@ export const Search: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="חיפוש"
-        description="חיפוש גלובלי על פני לקוחות, קלסרים ומסמכים"
-      />
+      <PageHeader title="חיפוש" description="חיפוש גלובלי על פני לקוחות, קלסרים ומסמכים" />
 
-      {/* Hero search bar */}
       <ToolbarContainer>
         <Input
           ref={inputRef}
@@ -56,7 +51,6 @@ export const Search: React.FC = () => {
         />
       </ToolbarContainer>
 
-      {/* Advanced filters */}
       <ToolbarContainer>
         <SearchFiltersBar
           filters={filters}
@@ -69,7 +63,6 @@ export const Search: React.FC = () => {
 
       {error && <Alert variant="error" message={error} />}
 
-      {/* No filter active */}
       {!loading && !error && !hasAnyFilter && (
         <StateCard
           icon={SearchIcon}
@@ -79,7 +72,6 @@ export const Search: React.FC = () => {
         />
       )}
 
-      {/* Filter active, no results */}
       {!loading && !error && hasAnyFilter && results.length === 0 && documents.length === 0 && (
         <StateCard
           icon={FileSearch}
@@ -89,7 +81,6 @@ export const Search: React.FC = () => {
         />
       )}
 
-      {/* Results */}
       {(loading || results.length > 0) && (
         <>
           {!loading && (
@@ -119,7 +110,6 @@ export const Search: React.FC = () => {
         </>
       )}
 
-      {/* Document results */}
       {!loading && <DocumentResultsSection documents={documents} />}
     </div>
   );
