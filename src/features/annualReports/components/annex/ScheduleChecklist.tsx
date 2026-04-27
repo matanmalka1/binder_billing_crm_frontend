@@ -8,6 +8,8 @@ import { cn, formatDate } from "../../../../utils/utils";
 import { AnnexDataPanel } from "./AnnexDataPanel";
 import { ScheduleAddForm } from "./ScheduleAddForm";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
+import { ANNEX_TEXT } from "./annex.constants";
+import { getCompletedCount, toggleExpandedSchedule } from "./annex.helpers";
 
 interface ScheduleChecklistProps {
   reportId: number;
@@ -32,8 +34,8 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
 
   if (schedules.length === 0) {
     return (
-      <Card title="נספחים">
-        <p className="text-sm text-gray-500">אין נספחים נדרשים לדוח זה</p>
+      <Card title={ANNEX_TEXT.schedules}>
+        <p className="text-sm text-gray-500">{ANNEX_TEXT.empty}</p>
         <div className="mt-3">
           <ScheduleAddForm schedules={schedules} onAdd={onAdd} isAdding={isAdding} />
         </div>
@@ -41,16 +43,16 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
     );
   }
 
-  const completed = schedules.filter((s) => s.is_complete).length;
+  const completed = getCompletedCount(schedules);
   const allDone = completed === schedules.length;
 
   const toggle = (key: string) =>
-    setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+    setExpanded((prev) => toggleExpandedSchedule(prev, key as AnnualReportScheduleKey));
 
   return (
     <Card
-      title="נספחים נדרשים"
-      subtitle={allDone ? "✅ כל הנספחים הושלמו" : `${completed}/${schedules.length} הושלמו`}
+      title={ANNEX_TEXT.requiredSchedules}
+      subtitle={allDone ? ANNEX_TEXT.allSchedulesComplete : `${completed}/${schedules.length} הושלמו`}
     >
       <ul className="space-y-2">
         {schedules.map((entry) => {
@@ -99,7 +101,7 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
                     size="sm"
                     onClick={() => toggle(entry.schedule)}
                     className="p-0.5 text-gray-400 hover:text-gray-600 hover:bg-transparent"
-                    title={isExpanded ? "סגור" : "פרוס נתונים"}
+                    title={isExpanded ? ANNEX_TEXT.close : ANNEX_TEXT.expandData}
                   >
                     {isExpanded ? (
                       <ChevronUp className="h-4 w-4" />
@@ -117,7 +119,7 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
                       isLoading={isLoading && completingKey === entry.schedule}
                       disabled={isLoading}
                     >
-                      סמן הושלם
+                      {ANNEX_TEXT.complete}
                     </Button>
                   )}
                 </div>

@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { AnnualReportScheduleKey, ScheduleEntry } from "../../api";
-import { getScheduleLabel } from "../../api";
 import { Button } from "../../../../components/ui/primitives/Button";
 import { Input } from "../../../../components/ui/inputs/Input";
 import { Select } from "../../../../components/ui/inputs/Select";
-import { ALL_SCHEDULES } from "../../annex.constants";
+import { ANNEX_TEXT } from "./annex.constants";
+import { buildScheduleOptions, getAvailableSchedules, normalizeNotes } from "./annex.helpers";
 
 interface ScheduleAddFormProps {
   schedules: ScheduleEntry[];
@@ -17,64 +17,61 @@ export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onA
   const [selected, setSelected] = useState<AnnualReportScheduleKey | "">("");
   const [notes, setNotes] = useState("");
 
-  const available = useMemo(() => {
-    const existing = new Set(schedules.map((entry) => entry.schedule));
-    return ALL_SCHEDULES.filter((key) => !existing.has(key));
-  }, [schedules]);
+  const available = getAvailableSchedules(schedules);
 
-  const handleOpen = () => {
-    setOpen(true);
+  const resetFields = () => {
     setSelected("");
     setNotes("");
   };
 
+  const handleOpen = () => {
+    resetFields();
+    setOpen(true);
+  };
+
   const handleCancel = () => {
+    resetFields();
     setOpen(false);
-    setSelected("");
-    setNotes("");
   };
 
   const handleAdd = () => {
     if (!selected) return;
-    onAdd(selected, notes.trim() || undefined);
+    onAdd(selected, normalizeNotes(notes));
     handleCancel();
   };
 
   if (available.length === 0) {
-    return <p className="text-xs text-gray-500">כל סוגי הנספחים כבר קיימים בדוח</p>;
+    return <p className="text-xs text-gray-500">{ANNEX_TEXT.allSchedulesExist}</p>;
   }
 
   if (!open) {
     return (
       <Button type="button" variant="outline" size="sm" onClick={handleOpen}>
-        הוסף נספח
+        {ANNEX_TEXT.addAnnex}
       </Button>
     );
   }
 
   return (
     <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 space-y-2">
-      <p className="text-xs font-medium text-gray-600">הוספת נספח ידנית</p>
+      <p className="text-xs font-medium text-gray-600">{ANNEX_TEXT.addAnnexManual}</p>
       <Select
         value={selected}
         onChange={(event) => setSelected(event.target.value as AnnualReportScheduleKey | "")}
-        options={[
-          { value: "", label: "בחר נספח...", disabled: true },
-          ...available.map((key) => ({ value: key, label: getScheduleLabel(key) })),
-        ]}
+        options={buildScheduleOptions(available, ANNEX_TEXT.chooseSchedule)}
       />
       <Input
         value={notes}
         onChange={(event) => setNotes(event.target.value)}
         type="text"
-        placeholder="הערות (אופציונלי)"
+        placeholder={ANNEX_TEXT.notesPlaceholder}
       />
       <div className="flex items-center justify-end gap-2">
         <Button type="button" variant="ghost" size="sm" onClick={handleCancel}>
-          ביטול
+          {ANNEX_TEXT.cancel}
         </Button>
         <Button type="button" size="sm" onClick={handleAdd} isLoading={isAdding} disabled={!selected}>
-          הוסף
+          {ANNEX_TEXT.addAnnex}
         </Button>
       </div>
     </div>
