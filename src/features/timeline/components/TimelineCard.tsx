@@ -6,6 +6,7 @@ import { cn } from "../../../utils/utils";
 import { type EventGroup, groupEventsByDate } from "./timelineGrouping";
 
 export type { EventGroup };
+export { groupEventsByDate };
 
 // ── Empty state ───────────────────────────────────────────────────────────────
 
