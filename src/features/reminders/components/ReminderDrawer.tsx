@@ -5,7 +5,8 @@ import {
 } from "../../../components/ui/overlays/DetailDrawer";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import type { Reminder } from "../api";
-import { reminderTypeLabels, statusLabels, reminderStatusVariants } from "../types";
+import { statusLabels, reminderStatusVariants } from "../types";
+import { getReminderDisplayLabel } from "../utils";
 import { formatClientOfficeId, formatDate, formatDateTime } from "../../../utils/utils";
 
 interface ReminderDrawerProps {
@@ -19,11 +20,7 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
 }) => (
   <DetailDrawer
     open={reminder !== null}
-    title={
-      reminder
-        ? (reminder.display_label ?? reminderTypeLabels[reminder.reminder_type] ?? reminder.reminder_type)
-        : ""
-    }
+    title={reminder ? getReminderDisplayLabel(reminder) : ""}
     onClose={onClose}
   >
     {reminder && (
@@ -37,11 +34,7 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({
           <DrawerField label="ת.ז / ח.פ" value={reminder.client_id_number ?? "—"} />
           <DrawerField
             label="סוג"
-            value={
-              reminder.display_label ??
-              reminderTypeLabels[reminder.reminder_type] ??
-              reminder.reminder_type
-            }
+            value={getReminderDisplayLabel(reminder)}
           />
           <DrawerField
             label="סטטוס"

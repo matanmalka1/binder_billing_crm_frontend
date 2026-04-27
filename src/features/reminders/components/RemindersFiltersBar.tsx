@@ -10,23 +10,11 @@ import {
   type ReminderStatus,
   type ReminderType,
 } from "../types";
-import { ALL_TYPES_OPTION } from "@/constants/filterOptions.constants";
-
-const TYPE_OPTIONS = [
-  ALL_TYPES_OPTION,
-  ...(Object.entries(reminderTypeLabels) as [ReminderType, string][]).map(([value, label]) => ({
-    value,
-    label,
-  })),
-];
-
-const STATUS_OPTIONS = [
-  { value: "", label: "כל הסטטוסים" },
-  ...(Object.entries(statusLabels) as [ReminderStatus, string][]).map(([value, label]) => ({
-    value,
-    label,
-  })),
-];
+import {
+  DEFAULT_REMINDER_STATUS_FILTER,
+  REMINDER_STATUS_OPTIONS,
+  REMINDER_TYPE_OPTIONS,
+} from "../constants";
 
 interface RemindersFiltersBarProps {
   search: string;
@@ -82,13 +70,13 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
             label="סוג תזכורת"
             value={typeFilter}
             onChange={(e) => onTypeChange(e.target.value)}
-            options={TYPE_OPTIONS}
+            options={REMINDER_TYPE_OPTIONS}
           />
           <Select
             label="סטטוס"
             value={statusFilter}
             onChange={(e) => onStatusChange(e.target.value)}
-            options={STATUS_OPTIONS}
+            options={REMINDER_STATUS_OPTIONS}
           />
         </div>
         {hasFilters && (
@@ -111,7 +99,7 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
                     onRemove: () => onTypeChange(""),
                   }
                 : null,
-              statusFilter !== "pending"
+              statusFilter !== DEFAULT_REMINDER_STATUS_FILTER
                 ? {
                     key: "statusFilter",
                     label: `סטטוס: ${
@@ -119,7 +107,7 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
                         ? statusLabels[statusFilter as ReminderStatus] ?? statusFilter
                         : "כל הסטטוסים"
                     }`,
-                    onRemove: () => onStatusChange("pending"),
+                    onRemove: () => onStatusChange(DEFAULT_REMINDER_STATUS_FILTER),
                   }
                 : null,
             ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}

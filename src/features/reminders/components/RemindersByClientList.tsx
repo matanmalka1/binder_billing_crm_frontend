@@ -3,16 +3,8 @@ import { ChevronDown, ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatClientOfficeId } from "@/utils/utils";
 import type { Reminder } from "../types";
+import { groupRemindersByClient } from "../utils";
 import { RemindersTable } from "./RemindersTable";
-
-type ReminderClientGroup = {
-  key: string;
-  clientRecordId: number | null;
-  clientName: string;
-  officeClientNumber: number | null;
-  clientIdNumber: string | null;
-  reminders: Reminder[];
-};
 
 interface RemindersByClientListProps {
   reminders: Reminder[];
@@ -23,38 +15,6 @@ interface RemindersByClientListProps {
   onViewDetails: (reminder: Reminder) => void;
   onRowClick?: (reminder: Reminder) => void;
 }
-
-const buildReminderClientKey = (reminder: Reminder) => {
-  if (reminder.client_record_id != null) return `client:${reminder.client_record_id}`;
-  if (reminder.office_client_number != null) return `office:${reminder.office_client_number}`;
-  if (reminder.client_id_number) return `id:${reminder.client_id_number}`;
-  return `unknown:${reminder.client_name ?? "no-client"}`;
-};
-
-const groupRemindersByClient = (reminders: Reminder[]) => {
-  const groups = new Map<string, ReminderClientGroup>();
-
-  reminders.forEach((reminder) => {
-    const key = buildReminderClientKey(reminder);
-    const current = groups.get(key);
-
-    if (current) {
-      current.reminders.push(reminder);
-      return;
-    }
-
-    groups.set(key, {
-      key,
-      clientRecordId: reminder.client_record_id,
-      clientName: reminder.client_name ?? "ללא שם לקוח",
-      officeClientNumber: reminder.office_client_number,
-      clientIdNumber: reminder.client_id_number,
-      reminders: [reminder],
-    });
-  });
-
-  return Array.from(groups.values());
-};
 
 export const RemindersByClientList: React.FC<RemindersByClientListProps> = ({
   reminders,

@@ -5,7 +5,8 @@ import { Badge } from "../../../components/ui/primitives/Badge";
 import { TruncateText } from "../../../components/ui/primitives/TruncateText";
 import { formatClientOfficeId, formatDate } from "../../../utils/utils";
 import type { Reminder } from "../types";
-import { reminderTypeLabels, statusLabels, reminderStatusVariants } from "../types";
+import { statusLabels, reminderStatusVariants } from "../types";
+import { getReminderDisplayLabel } from "../utils";
 import { ReminderRowActions } from "./ReminderRowActions";
 
 interface RemindersTableProps {
@@ -19,6 +20,52 @@ interface RemindersTableProps {
   showClient?: boolean;
 }
 
+const clientColumns: Column<Reminder>[] = [
+  {
+    key: "office_client_number",
+    header: "מס' לקוח",
+    render: (reminder) => (
+      <span className="font-mono text-sm text-gray-500 tabular-nums">
+        {formatClientOfficeId(reminder.office_client_number)}
+      </span>
+    ),
+  },
+  {
+    key: "client",
+    header: "לקוח",
+    render: (reminder) => (
+      <div>
+        {reminder.client_record_id != null ? (
+          <Link
+            to={`/clients/${reminder.client_record_id}`}
+            className="block truncate text-sm font-medium text-gray-700 hover:underline"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {reminder.client_name ?? "ללא שם לקוח"}
+          </Link>
+        ) : (
+          <span className="block truncate text-sm font-medium text-gray-700">
+            {reminder.client_name ?? "ללא שם לקוח"}
+          </span>
+        )}
+        {(reminder.business_name || reminder.business_id != null) && (
+          <span className="block truncate text-xs text-gray-400">
+            {reminder.business_name ?? `עסק #${reminder.business_id}`}
+          </span>
+        )}
+      </div>
+    ),
+  },
+  {
+    key: "client_id_number",
+    header: "ת.ז / ח.פ",
+    render: (reminder) => (
+      <span className="font-mono text-sm text-gray-500 tabular-nums">
+        {reminder.client_id_number ?? "—"}
+      </span>
+    ),
+  },
+];
 
 export const RemindersTable: React.FC<RemindersTableProps> = ({
   reminders,
@@ -36,66 +83,11 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
       header: "סוג",
       render: (r) => (
         <Badge variant="info">
-          {r.display_label ?? reminderTypeLabels[r.reminder_type] ?? r.reminder_type}
+          {getReminderDisplayLabel(r)}
         </Badge>
       ),
     },
-    ...(showClient
-      ? [
-          {
-            key: "office_client_number",
-            header: "מס' לקוח",
-            render: (r: Reminder) => (
-              <span className="font-mono text-sm text-gray-500 tabular-nums">
-                {formatClientOfficeId(r.office_client_number)}
-              </span>
-            ),
-          },
-        ]
-      : []),
-    ...(showClient
-      ? [
-          {
-            key: "client",
-            header: "לקוח",
-            render: (r: Reminder) => (
-              <div>
-                {r.client_record_id != null ? (
-                  <Link
-                    to={`/clients/${r.client_record_id}`}
-                    className="block truncate text-sm font-medium text-gray-700 hover:underline"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {r.client_name ?? "ללא שם לקוח"}
-                  </Link>
-                ) : (
-                  <span className="block truncate text-sm font-medium text-gray-700">
-                    {r.client_name ?? "ללא שם לקוח"}
-                  </span>
-                )}
-                {(r.business_name || r.business_id != null) && (
-                  <span className="block truncate text-xs text-gray-400">
-                    {r.business_name ?? `עסק #${r.business_id}`}
-                  </span>
-                )}
-              </div>
-            ),
-          },
-        ]
-      : []),
-    ...(showClient
-      ? [
-          {
-            key: "client_id_number",
-            header: "ת.ז / ח.פ",
-            render: (r: Reminder) => (
-              <span className="font-mono text-sm text-gray-500 tabular-nums">
-                {r.client_id_number ?? "—"}
-              </span>
-            ),
-          },
-        ]
-      : []),
+    ...(showClient ? clientColumns : []),
     {
       key: "message",
       header: "הודעה",

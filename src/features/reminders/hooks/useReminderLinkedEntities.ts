@@ -4,8 +4,12 @@ import { bindersApi, bindersQK } from "@/features/binders";
 import { chargesApi, chargesQK } from "@/features/charges";
 import { taxDeadlinesApi, taxDeadlinesQK } from "@/features/taxDeadlines";
 import { annualReportsApi, annualReportsQK } from "@/features/annualReports";
-import { advancePaymentsApi, advancedPaymentsQK } from "@/features/advancedPayments";
+import {
+  advancePaymentsApi,
+  advancedPaymentsQK,
+} from "@/features/advancedPayments";
 import { clientsApi, clientsQK } from "@/features/clients";
+import { LINKED_ENTITY_PAGE_SIZE } from "../constants";
 
 /**
  * Lazily fetches the entities needed to populate linked-entity dropdowns in the
@@ -21,7 +25,8 @@ export const useReminderLinkedEntities = (
 
   const needsTaxDeadlines =
     base &&
-    (reminderType === "tax_deadline_approaching" || reminderType === "vat_filing");
+    (reminderType === "tax_deadline_approaching" ||
+      reminderType === "vat_filing");
   const needsBinders = base && reminderType === "binder_idle";
   const needsCharges = base && reminderType === "unpaid_charge";
   const needsAnnualReports = base && reminderType === "annual_report_deadline";
@@ -34,19 +39,37 @@ export const useReminderLinkedEntities = (
 
   const bindersQuery = useQuery({
     queryKey: bindersQK.forClient(clientId!),
-    queryFn: () => bindersApi.list({ client_record_id: clientId!, page_size: 100 }),
+    queryFn: () =>
+      bindersApi.list({
+        client_record_id: clientId!,
+        page_size: LINKED_ENTITY_PAGE_SIZE,
+      }),
     enabled: needsBinders,
   });
 
   const chargesQuery = useQuery({
-    queryKey: chargesQK.list({ client_record_id: clientId!, page_size: 100 }),
-    queryFn: () => chargesApi.list({ client_record_id: clientId!, page_size: 100 }),
+    queryKey: chargesQK.list({
+      client_record_id: clientId!,
+      page_size: LINKED_ENTITY_PAGE_SIZE,
+    }),
+    queryFn: () =>
+      chargesApi.list({
+        client_record_id: clientId!,
+        page_size: LINKED_ENTITY_PAGE_SIZE,
+      }),
     enabled: needsCharges,
   });
 
   const taxDeadlinesQuery = useQuery({
-    queryKey: taxDeadlinesQK.list({ client_record_id: clientId!, page_size: 100 }),
-    queryFn: () => taxDeadlinesApi.listTaxDeadlines({ client_record_id: clientId!, page_size: 100 }),
+    queryKey: taxDeadlinesQK.list({
+      client_record_id: clientId!,
+      page_size: LINKED_ENTITY_PAGE_SIZE,
+    }),
+    queryFn: () =>
+      taxDeadlinesApi.listTaxDeadlines({
+        client_record_id: clientId!,
+        page_size: LINKED_ENTITY_PAGE_SIZE,
+      }),
     enabled: needsTaxDeadlines,
   });
 

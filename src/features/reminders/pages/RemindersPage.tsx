@@ -13,6 +13,7 @@ import {
   useReminders,
 } from "@/features/reminders";
 import { statusLabels, type ReminderStatus } from "../types";
+import { DEFAULT_REMINDER_STATUS_FILTER } from "../constants";
 
 export const RemindersPage: React.FC = () => {
   const {
@@ -86,7 +87,13 @@ export const RemindersPage: React.FC = () => {
               badges={[
                 search ? { key: "search", label: `חיפוש: ${search}`, onRemove: () => setSearch("") } : null,
                 typeFilter ? { key: "typeFilter", label: `סוג: ${typeFilter}`, onRemove: () => setTypeFilter("") } : null,
-                statusFilter ? { key: "statusFilter", label: `סטטוס: ${statusLabel}`, onRemove: () => setStatusFilter("") } : null,
+                statusFilter !== DEFAULT_REMINDER_STATUS_FILTER
+                  ? {
+                      key: "statusFilter",
+                      label: `סטטוס: ${statusLabel}`,
+                      onRemove: () => setStatusFilter(DEFAULT_REMINDER_STATUS_FILTER),
+                    }
+                  : null,
               ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}
               onReset={clearFilters}
             />
