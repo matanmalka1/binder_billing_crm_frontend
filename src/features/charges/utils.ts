@@ -1,4 +1,4 @@
-import { MONTH_NAMES } from "../../utils/utils";
+import { formatCompactCurrencyILS, MONTH_NAMES } from "../../utils/utils";
 import type { ChargeResponse } from "./api";
 export { CHARGE_TYPE_LABELS, getChargeTypeLabel } from "../../utils/enums";
 
@@ -42,21 +42,8 @@ export const getChargePeriodLabel = (
 
 export const getChargeAmountText = (charge: ChargeResponse): string => {
   if (!charge.amount) return "—";
-  const amount = Number(charge.amount);
-  if (Number.isNaN(amount)) return "—";
-  return amount.toLocaleString("he-IL", {
-    style: "currency",
-    currency: "ILS",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).replace(/\s/g, "");
+  return formatCompactCurrencyILS(charge.amount);
 };
 
 export const formatILS = (amount: number): string =>
-  amount.toLocaleString("he-IL", {
-    style: "currency",
-    currency: "ILS",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).replace(/\s/g, "");
-
+  formatCompactCurrencyILS(amount);

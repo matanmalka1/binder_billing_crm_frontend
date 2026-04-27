@@ -6,19 +6,12 @@ import {
   statusColumn,
   textColumn,
   type Column,
-  type StatusVariant,
+
 } from "../../../../components/ui/table";
 import type { ClientResponse } from "../../api";
 import { formatClientOfficeId } from "@/utils/utils";
 import { ClientRowActions } from "./ClientRowActions";
-import { getEntityTypeLabel, getClientStatusLabel, getClientVatReportingLabel } from "../../constants";
-import type { ClientStatus } from "../../api";
-
-const CLIENT_STATUS_VARIANTS = {
-  active: "success",
-  frozen: "warning",
-  closed: "neutral",
-} satisfies Record<ClientStatus, StatusVariant>;
+import { CLIENT_STATUS_BADGE_VARIANTS, getEntityTypeLabel, getClientStatusLabel, getClientVatReportingLabel } from "../../constants";
 
 interface BuildClientColumnsParams {
   selectedIds?: Set<number>;
@@ -73,7 +66,7 @@ export const buildClientColumns = ({
       header: "סטטוס",
       getStatus: (client) => client.status,
       getLabel: getClientStatusLabel,
-      variantMap: CLIENT_STATUS_VARIANTS,
+      variantMap: CLIENT_STATUS_BADGE_VARIANTS,
     }),
     monoColumn({
       key: "phone",

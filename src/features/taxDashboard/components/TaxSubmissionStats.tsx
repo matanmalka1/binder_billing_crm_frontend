@@ -1,5 +1,6 @@
 import { CheckCircle2, Clock, Users, XCircle, TrendingUp, Banknote } from "lucide-react";
 import { StatsCard } from "@/components/ui/layout/StatsCard";
+import { formatCurrencyILS } from "@/utils/utils";
 import type { TaxSubmissionWidgetResponse } from "../api";
 
 interface TaxSubmissionStatsProps {
@@ -7,9 +8,6 @@ interface TaxSubmissionStatsProps {
   activeFilter?: string;
   onFilter?: (status: string) => void;
 }
-
-const formatCurrency = (value: number) =>
-  `₪${value.toLocaleString("he-IL", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
 export const TaxSubmissionStats = ({ data, activeFilter, onFilter }: TaxSubmissionStatsProps) => {
   if (!data) return null;
@@ -61,10 +59,10 @@ export const TaxSubmissionStats = ({ data, activeFilter, onFilter }: TaxSubmissi
       filterValue: null,
     },
     ...(data.total_refund_due > 0
-      ? [{ key: "refund", title: "החזרי מס", value: formatCurrency(data.total_refund_due), icon: Banknote, variant: "green" as const, filterValue: null }]
+      ? [{ key: "refund", title: "החזרי מס", value: formatCurrencyILS(data.total_refund_due), icon: Banknote, variant: "green" as const, filterValue: null }]
       : []),
     ...(data.total_tax_due > 0
-      ? [{ key: "tax_due", title: "תשלומי מס", value: formatCurrency(data.total_tax_due), icon: Banknote, variant: "red" as const, filterValue: null }]
+      ? [{ key: "tax_due", title: "תשלומי מס", value: formatCurrencyILS(data.total_tax_due), icon: Banknote, variant: "red" as const, filterValue: null }]
       : []),
   ];
 

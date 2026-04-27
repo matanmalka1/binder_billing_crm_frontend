@@ -9,6 +9,8 @@ import { ConfirmDialog } from "../../../../components/ui/overlays/ConfirmDialog"
 import { Modal } from "../../../../components/ui/overlays/Modal";
 import { ModalFormActions } from "../../../../components/ui/overlays/ModalFormActions";
 import { Input } from "../../../../components/ui/inputs/Input";
+import { Select } from "../../../../components/ui/inputs/Select";
+import { Textarea } from "../../../../components/ui/inputs/Textarea";
 import { clientsApi, clientsQK } from "../../api";
 import type { BusinessResponse, UpdateBusinessPayload } from "../../api";
 import { BUSINESS_STATUS_LABELS } from "../../../businesses/constants";
@@ -16,11 +18,17 @@ import { CLIENT_ROUTES } from "../../api/endpoints";
 import { formatDate } from "@/utils/utils";
 import { useBusinessActions } from "../../hooks/useBusinessActions";
 
-const BUSINESS_STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+const BUSINESS_STATUS_VARIANTS: Record<BusinessResponse["status"], "success" | "warning" | "neutral"> = {
   active: "success",
   frozen: "warning",
   closed: "neutral",
 };
+
+const BUSINESS_STATUS_OPTIONS = [
+  { value: "active", label: BUSINESS_STATUS_LABELS.active },
+  { value: "frozen", label: BUSINESS_STATUS_LABELS.frozen },
+  { value: "closed", label: BUSINESS_STATUS_LABELS.closed },
+];
 
 
 interface Props {
@@ -192,32 +200,26 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
               onChange={(e) => setEditState((s) => s && { ...s, name: e.target.value })}
               disabled={isUpdating}
             />
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500">סטטוס</label>
-              <select
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:bg-gray-50 disabled:text-gray-500"
-                value={editState.status}
-                onChange={(e) =>
-                  setEditState((s) =>
-                    s
-                      ? {
-                          ...s,
-                          status: e.target.value as BusinessResponse["status"],
-                          closedAt:
-                            e.target.value === "closed"
-                              ? s.closedAt || new Date().toISOString().slice(0, 10)
-                              : "",
-                        }
-                      : s,
-                  )
-                }
-                disabled={isUpdating}
-              >
-                <option value="active">פעיל</option>
-                <option value="frozen">מוקפא</option>
-                <option value="closed">סגור</option>
-              </select>
-            </div>
+            <Select
+              label="סטטוס"
+              options={BUSINESS_STATUS_OPTIONS}
+              value={editState.status}
+              onChange={(e) =>
+                setEditState((s) =>
+                  s
+                    ? {
+                        ...s,
+                        status: e.target.value as BusinessResponse["status"],
+                        closedAt:
+                          e.target.value === "closed"
+                            ? s.closedAt || new Date().toISOString().slice(0, 10)
+                            : "",
+                      }
+                    : s,
+                )
+              }
+              disabled={isUpdating}
+            />
             {editState.status === "closed" && (
               <Input
                 label="תאריך סגירה"
@@ -227,17 +229,14 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                 disabled={isUpdating}
               />
             )}
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500">הערות</label>
-              <textarea
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:bg-gray-50 disabled:text-gray-500"
-                rows={3}
-                placeholder="הערות חופשיות..."
-                disabled={isUpdating}
-                value={editState.notes}
-                onChange={(e) => setEditState((s) => s && { ...s, notes: e.target.value })}
-              />
-            </div>
+            <Textarea
+              label="הערות"
+              rows={3}
+              placeholder="הערות חופשיות..."
+              disabled={isUpdating}
+              value={editState.notes}
+              onChange={(e) => setEditState((s) => s && { ...s, notes: e.target.value })}
+            />
           </div>
         )}
       </Modal>

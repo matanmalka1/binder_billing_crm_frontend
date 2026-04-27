@@ -2,6 +2,13 @@ import { isAxiosError } from "axios";
 import { toast } from "./toast";
 import { format, parseISO } from "date-fns";
 import { he } from "date-fns/locale";
+export {
+  buildYearOptions,
+  getReportingPeriodMonthLabel,
+  MONTH_NAMES,
+  MONTH_OPTIONS,
+  YEAR_OPTIONS,
+} from "@/constants/periodOptions.constants";
 // ============================================================================
 // STRING & TYPE UTILITIES
 // ============================================================================
@@ -74,70 +81,40 @@ export const formatDateTime = (value: string | null): string => {
   return format(parseISO(value), "dd/MM/yyyy HH:mm", { locale: he });
 };
 
-/** Last 5 years descending, for year-filter dropdowns. */
-export const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => ({
-  value: String(new Date().getFullYear() - i),
-  label: String(new Date().getFullYear() - i),
-}));
-
-/**
- * Build a year options array from `from` up to current year + 1, newest first.
- * Default start: 2000.
- */
-
-export const buildYearOptions = (
-  from = 2000,
-): { value: string; label: string }[] => {
-  const end = new Date().getFullYear() + 1;
-  return Array.from({ length: end - from + 1 }, (_, i) => ({
-    value: String(end - i),
-    label: String(end - i),
-  }));
-};
-
-// ============================================================================
-// LOCALE / DISPLAY CONSTANTS
-// ============================================================================
-
-export const MONTH_NAMES = [
-  "ינואר",
-  "פברואר",
-  "מרץ",
-  "אפריל",
-  "מאי",
-  "יוני",
-  "יולי",
-  "אוגוסט",
-  "ספטמבר",
-  "אוקטובר",
-  "נובמבר",
-  "דצמבר",
-] as const;
-
-export const MONTH_OPTIONS = MONTH_NAMES.map((label, index) => ({
-  value: String(index + 1),
-  label,
-}));
-
-export const getReportingPeriodMonthLabel = (
-  period: string,
-  periodMonthsCount: 1 | 2 = 1,
-): string => {
-  const month = Number(period.split("-")[1]);
-  const monthIndex = Number.isInteger(month) && month >= 1 && month <= 12 ? month - 1 : null;
-  if (monthIndex === null) return period;
-  if (periodMonthsCount === 1) return MONTH_NAMES[monthIndex];
-
-  const endMonthIndex = monthIndex + periodMonthsCount - 1;
-  if (endMonthIndex >= MONTH_NAMES.length) return period;
-  return `${MONTH_NAMES[monthIndex]}-${MONTH_NAMES[endMonthIndex]}`;
-};
-
 export const fmtCurrency = (n: string | number | null): string => {
   if (n == null) return "—";
   const numeric = Number(n);
   if (Number.isNaN(numeric)) return "—";
   return `₪${numeric.toLocaleString("he-IL", { minimumFractionDigits: 0 })}`;
+};
+
+export const formatCurrencyILS = (
+  value: string | number | null | undefined,
+  maximumFractionDigits = 0,
+): string => {
+  if (value == null || value === "") return "—";
+  const numeric = Number(value);
+  if (Number.isNaN(numeric)) return "—";
+  return numeric.toLocaleString("he-IL", {
+    style: "currency",
+    currency: "ILS",
+    maximumFractionDigits,
+  });
+};
+
+export const formatCompactCurrencyILS = (
+  value: string | number | null | undefined,
+  fractionDigits = 2,
+): string => {
+  if (value == null || value === "") return "—";
+  const numeric = Number(value);
+  if (Number.isNaN(numeric)) return "—";
+  return numeric.toLocaleString("he-IL", {
+    style: "currency",
+    currency: "ILS",
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  }).replace(/\s/g, "");
 };
 
 export const formatFileSize = (bytes: number | null | undefined): string => {

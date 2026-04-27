@@ -1,19 +1,19 @@
 import { type FC, type ReactNode } from "react";
 import { Edit2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { Card } from "../../../../components/ui/primitives/Card";
 import { Button } from "../../../../components/ui/primitives/Button";
-import { Badge, type BadgeVariant } from "../../../../components/ui/primitives/Badge";
+import { Badge } from "../../../../components/ui/primitives/Badge";
 import { DefinitionList } from "../../../../components/ui/layout/DefinitionList";
 import { cn, formatDate, formatPlainIdentifier, formatShekelAmount } from "@/utils/utils";
 import type { ClientResponse } from "../../api";
 import {
+  CLIENT_STATUS_BADGE_VARIANTS,
   getClientIdNumberTypeLabel,
   getClientStatusLabel,
   getClientVatReportingLabel,
   getEntityTypeLabel,
 } from "../../constants";
-import { authorityContactsApi, authorityContactsQK } from "@/features/authorityContacts";
+import { useClientAuthorityContacts } from "../../hooks/useClientAuthorityContacts";
 import { useAdvisorOptions } from "@/features/users";
 
 type ClientInfoSectionProps = {
@@ -46,11 +46,6 @@ const formatStructuredAddress = (client: ClientResponse): string => {
 
 const getTaxBranchValue = (value: string | null): string => value ?? EMPTY_VALUE;
 
-const statusVariantMap: Record<ClientResponse["status"], BadgeVariant> = {
-  active: "success",
-  frozen: "warning",
-  closed: "neutral",
-};
 
 const SectionCard = ({
   title,
@@ -89,15 +84,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   onEditStart,
 }) => {
   const { nameById } = useAdvisorOptions();
-  const { data: contactsData } = useQuery({
-    queryKey: [...authorityContactsQK.forClient(client.id), { page: 1, page_size: 20 }],
-    queryFn: () => authorityContactsApi.listAuthorityContacts(client.id, undefined, 1, 20),
-    enabled: client.id > 0,
-    staleTime: 60_000,
-  });
-  const contacts = contactsData?.items ?? [];
-  const officeByType = (type: string) =>
-    contacts.find((c) => c.contact_type === type)?.office ?? null;
+  const { officeByType } = useClientAuthorityContacts(client.id);
 
   const idNumberTypeLabel = client.id_number_type
     ? getClientIdNumberTypeLabel(client.id_number_type)
@@ -208,7 +195,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
               <h2 className="truncate text-2xl font-semibold text-gray-950">
                 {client.full_name}
               </h2>
-              <Badge variant={statusVariantMap[client.status]}>{statusLabel}</Badge>
+              <Badge variant={CLIENT_STATUS_BADGE_VARIANTS[client.status]}>{statusLabel}</Badge>
             </div>
             {lastUpdatedLabel ? (
               <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-600">
@@ -234,7 +221,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <SummaryCard
             label="סטטוס"
-            value={<Badge variant={statusVariantMap[client.status]}>{statusLabel}</Badge>}
+            value={<Badge variant={CLIENT_STATUS_BADGE_VARIANTS[client.status]}>{statusLabel}</Badge>}
           />
           <SummaryCard
             label="אחוז מקדמה"

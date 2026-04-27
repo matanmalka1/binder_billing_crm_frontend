@@ -1,10 +1,9 @@
 import { type FC, useEffect, useState } from "react";
 import { type ActiveClientDetailsTab } from "../../constants";
-import { AlertTriangle, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { DetailDrawer } from "../../../../components/ui/overlays/DetailDrawer";
-import { Modal } from "../../../../components/ui/overlays/Modal";
 import { Button } from "../../../../components/ui/primitives/Button";
-import { Input } from "../../../../components/ui/inputs/Input";
+import { DeleteClientModal } from "./DeleteClientModal";
 import { AuthorityContactsCard } from "@/features/authorityContacts";
 import { CorrespondenceCard } from "@/features/correspondence";
 import { SignatureRequestsCard } from "@/features/signatureRequests";
@@ -49,7 +48,6 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
 
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
-  const [deleteConfirmation, setDeleteConfirmation] = useState("");
 
   useEffect(() => {
     document.body.style.overflow = isEditing ? "hidden" : "";
@@ -102,64 +100,16 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
         </div>
       )}
 
-      <Modal
+      <DeleteClientModal
         open={isConfirmingDelete}
-        title="מחיקת לקוח"
-        onClose={() => {
+        clientName={client.full_name}
+        isDeleting={isDeleting}
+        onConfirm={async () => {
+          await deleteClient();
           setIsConfirmingDelete(false);
-          setDeleteConfirmation("");
         }}
-        footer={(
-          <div className="flex items-center justify-end gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                setIsConfirmingDelete(false);
-                setDeleteConfirmation("");
-              }}
-              disabled={isDeleting}
-            >
-              ביטול
-            </Button>
-            <Button
-              type="button"
-              variant="primary"
-              isLoading={isDeleting}
-              disabled={isDeleting || deleteConfirmation !== client.full_name}
-              onClick={async () => {
-                await deleteClient();
-                setIsConfirmingDelete(false);
-                setDeleteConfirmation("");
-              }}
-              className="bg-negative-600 hover:bg-negative-700 focus:ring-negative-500"
-            >
-              מחק לקוח
-            </Button>
-          </div>
-        )}
-      >
-        <div className="space-y-4">
-          <div className="flex gap-3 rounded-lg border border-negative-200 bg-negative-50 p-4 text-negative-900">
-            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
-            <div className="space-y-2 text-sm">
-              <p className="font-semibold">
-                מחיקת הלקוח {client.full_name} היא פעולה בלתי הפיכה.
-              </p>
-              <p>
-                המחיקה תסיר את רשומת הלקוח מהעבודה השוטפת ועלולה להשפיע על תצוגת מסמכים,
-                מועדים, חיובים, קלסרים והיסטוריית פעילות המקושרים ללקוח.
-              </p>
-            </div>
-          </div>
-          <Input
-            label="כדי למחוק, יש להקליד את שם הלקוח במדויק"
-            value={deleteConfirmation}
-            onChange={(event) => setDeleteConfirmation(event.target.value)}
-            disabled={isDeleting}
-          />
-        </div>
-      </Modal>
+        onCancel={() => setIsConfirmingDelete(false)}
+      />
 
       {canEditClients && (
         <DetailDrawer

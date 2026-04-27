@@ -101,6 +101,12 @@ export const CLIENT_STATUS_LABELS: Record<ClientStatus, string> = {
   closed: "סגור",
 };
 
+export const CLIENT_STATUS_BADGE_VARIANTS = {
+  active: "success",
+  frozen: "warning",
+  closed: "neutral",
+} as const satisfies Record<ClientStatus, "success" | "warning" | "neutral">;
+
 export const VAT_TYPES = ["monthly", "bimonthly", "exempt"] as const satisfies readonly VatType[];
 
 export const VAT_TYPE_LABELS: Record<VatType, string> = {

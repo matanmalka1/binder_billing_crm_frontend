@@ -1,13 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { annualReportTaxApi, annualReportsQK } from "../../api";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
+import { formatCurrencyILS } from "@/utils/utils";
 
 interface Props {
   reportId: number;
 }
-
-const fmt = (n: string | number) =>
-  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 const BALANCE_STYLES = {
   due: { label: "עוד לתשלום", className: `${semanticMonoToneClasses.negative} font-semibold` },
@@ -44,16 +42,16 @@ export const FinalBalancePanel: React.FC<Props> = ({ reportId }) => {
       <dl className="divide-y divide-gray-100">
         <div className="flex justify-between py-1.5 text-sm">
           <dt className="text-gray-500">חבות מס</dt>
-          <dd className="font-medium text-gray-900">{fmt(tax.tax_after_credits)}</dd>
+          <dd className="font-medium text-gray-900">{formatCurrencyILS(tax.tax_after_credits)}</dd>
         </div>
         <div className="flex justify-between py-1.5 text-sm">
           <dt className="text-gray-500">סה"כ מקדמות ששולמו ({adv.advances_count})</dt>
-          <dd className="font-medium text-gray-900">{fmt(adv.total_advances_paid)}</dd>
+          <dd className="font-medium text-gray-900">{formatCurrencyILS(adv.total_advances_paid)}</dd>
         </div>
         <div className="flex justify-between py-1.5 text-sm">
           <dt className="text-gray-500">יתרה סופית</dt>
           <dd className={style.className}>
-            {fmt(absBalance)} — {style.label}
+            {formatCurrencyILS(absBalance)} — {style.label}
           </dd>
         </div>
       </dl>
