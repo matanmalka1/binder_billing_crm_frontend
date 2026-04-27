@@ -127,6 +127,13 @@ export const VAT_WORKFLOW_STEPS = [
   "filed",
 ] as const;
 
+export const VAT_WORK_ITEMS_STATS_STATUS_GROUPS = {
+  pending: ["pending_materials"],
+  typing: ["material_received", "data_entry_in_progress"],
+  review: ["ready_for_review"],
+  filed: ["filed"],
+} as const;
+
 export const VAT_WORK_ITEMS_STATUS_OPTIONS: Array<{ value: string; label: string }> = [
   ALL_STATUSES_OPTION,
   ...VAT_WORKFLOW_STEPS.map((status) => ({
@@ -139,6 +146,11 @@ export const VAT_EXPENSE_CATEGORY_FILTER_OPTIONS = [
   ALL_CATEGORIES_OPTION,
   ...EXPENSE_CATEGORIES.map((c) => ({ value: c, label: CATEGORY_LABELS[c] ?? c })),
 ];
+
+export const VAT_EXPENSE_CATEGORY_OPTIONS = EXPENSE_CATEGORIES.map((category) => ({
+  value: category,
+  label: CATEGORY_LABELS[category],
+}));
 
 export const VAT_FILING_METHOD_LABELS: Record<string, string> = {
   manual: "ידנית",
@@ -167,6 +179,11 @@ export const ISRAEL_VAT_RATE_PERCENT = 18;
 
 // Any field backed by a backend enum MUST use a Zod enum in the frontend schema.
 export const VAT_RATE_TYPES = ["standard", "exempt", "zero_rate"] as const;
+export const VAT_RATE_TYPE_OPTIONS = VAT_RATE_TYPES.map((rateType) => ({
+  value: rateType,
+  label: VAT_RATE_TYPE_LABELS[rateType],
+}));
+
 export const DOCUMENT_TYPES = [
   "tax_invoice",
   "transaction_invoice",
@@ -175,3 +192,19 @@ export const DOCUMENT_TYPES = [
   "self_invoice",
   "credit_note",
 ] as const;
+
+export const DOCUMENT_TYPE_OPTIONS = DOCUMENT_TYPES.map((documentType) => ({
+  value: documentType,
+  label: DOCUMENT_TYPE_LABELS[documentType],
+}));
+
+export const VAT_DEADLINE_WARNING_DAYS = 3;
+
+export const VAT_NUMERIC_KEYS = [
+  "ArrowLeft",
+  "ArrowRight",
+  "Delete",
+  "Backspace",
+  "Enter",
+  "Tab",
+];

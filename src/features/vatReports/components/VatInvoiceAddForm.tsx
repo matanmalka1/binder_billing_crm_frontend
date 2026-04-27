@@ -12,23 +12,18 @@ import {
   type VatInvoiceRowValues,
 } from "../schemas/invoice.schema";
 import {
-  EXPENSE_CATEGORIES,
-  CATEGORY_LABELS,
-  DEDUCTION_RATES,
-  VAT_RATE_TYPES,
-  DOCUMENT_TYPES,
   DEFAULT_RATE_TYPE,
+  DOCUMENT_TYPE_OPTIONS,
+  VAT_EXPENSE_CATEGORY_OPTIONS,
+  VAT_RATE_TYPE_OPTIONS,
 } from "../constants";
 import { getVatInvoiceDefaultValues } from "../utils";
-import { getVatRateTypeLabel, getDocumentTypeLabel } from "../../../utils/enums";
 import type { VatInvoiceAddFormProps } from "../types";
-
-const NUMERIC_KEYS = ["ArrowLeft", "ArrowRight", "Delete", "Backspace", "Enter", "Tab"];
-
-const blockNonNumeric = (e: React.KeyboardEvent, allowDot = false) => {
-  const pattern = allowDot ? /[\d.]/ : /[\d]/;
-  if (!pattern.test(e.key) && !NUMERIC_KEYS.includes(e.key)) e.preventDefault();
-};
+import {
+  blockNonNumericKey,
+  getDeductionRateHint,
+  shouldRequireCounterpartyId,
+} from "../view.helpers";
 
 export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
   invoiceType,
@@ -54,9 +49,8 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
   const isExpense = invoiceType === "expense";
   const selectedCategory = watch("expense_category");
   const selectedDocumentType = watch("document_type");
-  const deductionRate =
-    selectedCategory !== undefined ? (DEDUCTION_RATES[selectedCategory] ?? null) : null;
-  const requiresCounterpartyId = isExpense && selectedDocumentType === "tax_invoice";
+  const deductionRateHint = getDeductionRateHint(selectedCategory);
+  const requiresCounterpartyId = shouldRequireCounterpartyId(invoiceType, selectedDocumentType);
 
   const onSubmit = async (values: VatInvoiceRowValues) => {
     const ok = await addInvoice(toInvoiceRowPayload(values));
@@ -78,7 +72,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
             dir="ltr"
             inputMode="decimal"
             autoFocus={!isExpense}
-            onKeyDown={(e) => blockNonNumeric(e, true)}
+            onKeyDown={(e) => blockNonNumericKey(e, true)}
           />
         </FormField>
 
@@ -104,10 +98,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
                 value={field.value}
                 onChange={field.onChange}
                 onBlur={field.onBlur}
-                options={VAT_RATE_TYPES.map((rt) => ({
-                  value: rt,
-                  label: getVatRateTypeLabel(rt),
-                }))}
+                options={VAT_RATE_TYPE_OPTIONS}
               />
             )}
           />
@@ -129,10 +120,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
                   value={field.value}
                   onChange={field.onChange}
                   onBlur={field.onBlur}
-                  options={EXPENSE_CATEGORIES.map((cat) => ({
-                    value: cat,
-                    label: CATEGORY_LABELS[cat],
-                  }))}
+                  options={VAT_EXPENSE_CATEGORY_OPTIONS}
                 />
               )}
             />
@@ -157,10 +145,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
                   onBlur={field.onBlur}
                   options={[
                     { value: "", label: "— בחר —" },
-                    ...DOCUMENT_TYPES.map((dt) => ({
-                      value: dt,
-                      label: getDocumentTypeLabel(dt),
-                    })),
+                    ...DOCUMENT_TYPE_OPTIONS,
                   ]}
                 />
               )}
@@ -190,16 +175,16 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
               placeholder="9 ספרות"
               dir="ltr"
               inputMode="numeric"
-              onKeyDown={(e) => blockNonNumeric(e, false)}
+              onKeyDown={(e) => blockNonNumericKey(e)}
             />
           </FormField>
         )}
 
         {/* Deduction rate hint inline with submit */}
         <div className="flex items-end gap-3 pb-0.5">
-          {isExpense && deductionRate !== null && deductionRate < 1 && (
-            <span className={`text-xs font-medium ${deductionRate === 0 ? "text-negative-600" : "text-warning-600"}`}>
-              {deductionRate === 0 ? "⚠️ ניכוי אסור" : `ניכוי ${(deductionRate * 100).toFixed(0)}%`}
+          {isExpense && deductionRateHint && (
+            <span className={`text-xs font-medium ${deductionRateHint.className}`}>
+              {deductionRateHint.label}
             </span>
           )}
           <Button type="submit" variant="primary" size="sm" isLoading={isAdding}>

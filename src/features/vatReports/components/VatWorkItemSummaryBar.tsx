@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, Clock, FolderOpen, Info, AlertTriangle, User } from "lucide-react";
-import { formatClientOfficeId, formatDate, getReportingPeriodMonthLabel } from "@/utils/utils";
+import { formatDate } from "@/utils/utils";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { useRole } from "../../../hooks/useRole";
 import { useVatWorkItemActions } from "../hooks/useVatWorkItemActions";
 import { useActiveVatBinder } from "../hooks/useActiveVatBinder";
-import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
+import { VAT_DEADLINE_WARNING_DAYS, VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { VatProgressBar } from "./VatProgressBar";
 import { VatActionButtons } from "./VatActionButtons";
 import { VatExportButtons } from "./VatExportButtons";
@@ -16,6 +16,7 @@ import { VatSendBackForm } from "./VatSendBackForm";
 import { VatFileModal } from "./VatFileModal";
 import { isFiled } from "../utils";
 import type { VatWorkItemSummaryBarProps } from "../types";
+import { formatVatPeriodTitle, getVatClientTitle } from "../view.helpers";
 
 type AlertTone = "warning" | "error";
 
@@ -47,14 +48,6 @@ const AlertBanner: React.FC<{ tone: AlertTone; icon?: typeof AlertTriangle; chil
   );
 };
 
-const formatPeriodTitle = (period: string, periodType: string | null): string => {
-  const [year] = period.split("-");
-  const yearNumber = Number(year);
-  const monthsCount = periodType === "bimonthly" ? 2 : 1;
-  const monthLabel = getReportingPeriodMonthLabel(period, monthsCount).replace("-", "–");
-  return Number.isInteger(yearNumber) && monthLabel !== period ? `${monthLabel} ${yearNumber}` : period;
-};
-
 export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem, onFilingPendingChange }) => {
   const { isAdvisor } = useRole();
   const { handleMaterialsComplete, handleReadyForReview, handleSendBack, isLoading } =
@@ -63,7 +56,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
   const [showFileModal, setShowFileModal] = useState(false);
   const filed = isFiled(workItem.status);
   const { activeBinder } = useActiveVatBinder(workItem.client_record_id);
-  const titleClient = workItem.client_name ?? `לקוח ${formatClientOfficeId(workItem.client_record_id)}`;
+  const titleClient = getVatClientTitle(workItem.client_name, workItem.client_record_id);
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm space-y-3" dir="rtl">
@@ -79,7 +72,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
           <h1 className="truncate text-xl font-bold text-gray-950">
             {titleClient}
             <span className="mx-2 font-normal text-gray-300">·</span>
-            <span>{formatPeriodTitle(workItem.period, workItem.period_type)}</span>
+            <span>{formatVatPeriodTitle(workItem.period, workItem.period_type)}</span>
           </h1>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2">
@@ -122,7 +115,9 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
         </AlertBanner>
       )}
 
-      {!workItem.is_overdue && workItem.days_until_deadline != null && workItem.days_until_deadline <= 3 && (
+      {!workItem.is_overdue &&
+        workItem.days_until_deadline != null &&
+        workItem.days_until_deadline <= VAT_DEADLINE_WARNING_DAYS && (
         <AlertBanner tone="warning" icon={Clock}>
           נותרו {workItem.days_until_deadline} ימים להגשה
         </AlertBanner>
@@ -158,18 +153,16 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
               />
             </div>
           ) : (
-            <>
-              <VatActionButtons
-                status={workItem.status}
-                isAdvisor={isAdvisor}
-                isLoading={isLoading}
-                clientStatus={workItem.client_status}
-                onMaterialsComplete={handleMaterialsComplete}
-                onReadyForReview={handleReadyForReview}
-                onFile={() => setShowFileModal(true)}
-                onSendBack={() => setShowSendBack(true)}
-              />
-            </>
+            <VatActionButtons
+              status={workItem.status}
+              isAdvisor={isAdvisor}
+              isLoading={isLoading}
+              clientStatus={workItem.client_status}
+              onMaterialsComplete={handleMaterialsComplete}
+              onReadyForReview={handleReadyForReview}
+              onFile={() => setShowFileModal(true)}
+              onSendBack={() => setShowSendBack(true)}
+            />
           )}
         </div>
       )}

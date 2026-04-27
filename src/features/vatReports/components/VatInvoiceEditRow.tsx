@@ -13,8 +13,8 @@ import {
 } from "../schemas/invoice.schema";
 import {
   EXPENSE_CATEGORIES,
-  CATEGORY_LABELS,
   CATEGORY_COLORS,
+  VAT_EXPENSE_CATEGORY_OPTIONS,
 } from "../constants";
 import {
   formatVatAmount,
@@ -24,6 +24,7 @@ import {
 } from "../utils";
 import type { VatInvoiceEditRowProps } from "../types";
 import { semanticMonoToneClasses } from "../../../utils/semanticColors";
+import { blockNonNumericKey } from "../view.helpers";
 
 export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
   invoice,
@@ -125,10 +126,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
                   onBlur={field.onBlur}
                   onKeyDown={handleEscapeKeyDown}
                   className="h-7 text-xs flex-1"
-                  options={EXPENSE_CATEGORIES.map((cat) => ({
-                    value: cat,
-                    label: CATEGORY_LABELS[cat],
-                  }))}
+                  options={VAT_EXPENSE_CATEGORY_OPTIONS}
                 />
               )}
             />
@@ -152,17 +150,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
               onCancel();
               return;
             }
-            if (
-              !/[\d.]/.test(e.key) &&
-              ![
-                "ArrowLeft",
-                "ArrowRight",
-                "Delete",
-                "Backspace",
-                "Tab",
-              ].includes(e.key)
-            )
-              e.preventDefault();
+            blockNonNumericKey(e, true);
           }}
         />
       </td>

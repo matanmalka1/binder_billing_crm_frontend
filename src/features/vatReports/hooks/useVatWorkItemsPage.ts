@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { usePaginatedList } from "../../../hooks/usePaginatedList";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import { vatReportsApi } from "../api";
@@ -14,6 +14,16 @@ import { useRole } from "../../../hooks/useRole";
 import { vatReportsQK } from "../api/queryKeys";
 import { invalidateVatWorkItem } from "./useVatInvalidation";
 import type { VatWorkItemAction } from "../types";
+import { VAT_WORK_ITEMS_STATS_STATUS_GROUPS } from "../constants";
+
+const statsStatuses = [
+  ...VAT_WORK_ITEMS_STATS_STATUS_GROUPS.pending,
+  ...VAT_WORK_ITEMS_STATS_STATUS_GROUPS.typing,
+  ...VAT_WORK_ITEMS_STATS_STATUS_GROUPS.review,
+  ...VAT_WORK_ITEMS_STATS_STATUS_GROUPS.filed,
+] as const;
+
+type VatStatsStatus = (typeof statsStatuses)[number];
 
 export const useVatWorkItemsPage = () => {
   const queryClient = useQueryClient();
@@ -43,34 +53,24 @@ export const useVatWorkItemsPage = () => {
     page_size: 1,
   };
 
-  const { data: statsPendingData } = useQuery({
-    queryKey: vatReportsQK.list({ ...statsBase, status: "pending_materials" }),
-    queryFn: () => vatReportsApi.list({ ...statsBase, status: "pending_materials" }),
-  });
-  const { data: statsMaterialData } = useQuery({
-    queryKey: vatReportsQK.list({ ...statsBase, status: "material_received" }),
-    queryFn: () => vatReportsApi.list({ ...statsBase, status: "material_received" }),
-  });
-  const { data: statsDataEntryData } = useQuery({
-    queryKey: vatReportsQK.list({ ...statsBase, status: "data_entry_in_progress" }),
-    queryFn: () => vatReportsApi.list({ ...statsBase, status: "data_entry_in_progress" }),
-  });
-  const { data: statsReviewData } = useQuery({
-    queryKey: vatReportsQK.list({ ...statsBase, status: "ready_for_review" }),
-    queryFn: () => vatReportsApi.list({ ...statsBase, status: "ready_for_review" }),
-  });
-  const { data: statsFiledData } = useQuery({
-    queryKey: vatReportsQK.list({ ...statsBase, status: "filed" }),
-    queryFn: () => vatReportsApi.list({ ...statsBase, status: "filed" }),
+  const statsQueries = useQueries({
+    queries: statsStatuses.map((status) => ({
+      queryKey: vatReportsQK.list({ ...statsBase, status }),
+      queryFn: () => vatReportsApi.list({ ...statsBase, status }),
+    })),
   });
 
-  const statsPending = statsPendingData?.total ?? undefined;
-  const statsTyping =
-    statsMaterialData !== undefined && statsDataEntryData !== undefined
-      ? statsMaterialData.total + statsDataEntryData.total
-      : undefined;
-  const statsReview = statsReviewData?.total ?? undefined;
-  const statsFiled = statsFiledData?.total ?? undefined;
+  const getStatsTotal = (statuses: readonly VatStatsStatus[]) =>
+    statuses.reduce<number | undefined>((sum, status) => {
+      const index = statsStatuses.indexOf(status);
+      const totalForStatus = statsQueries[index]?.data?.total;
+      return totalForStatus === undefined || sum === undefined ? undefined : sum + totalForStatus;
+    }, 0);
+
+  const statsPending = getStatsTotal(VAT_WORK_ITEMS_STATS_STATUS_GROUPS.pending);
+  const statsTyping = getStatsTotal(VAT_WORK_ITEMS_STATS_STATUS_GROUPS.typing);
+  const statsReview = getStatsTotal(VAT_WORK_ITEMS_STATS_STATUS_GROUPS.review);
+  const statsFiled = getStatsTotal(VAT_WORK_ITEMS_STATS_STATUS_GROUPS.filed);
 
   const { items: rawItems, total, loading, error } = usePaginatedList({
     queryKey: vatReportsQK.list(apiParams),

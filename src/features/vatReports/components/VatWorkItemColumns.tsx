@@ -8,7 +8,7 @@ import {
 import type { VatWorkItemResponse } from "../api";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatClientOfficeId, formatDate, formatDateTime } from "@/utils/utils";
-import { VAT_STATUS_BADGE_VARIANTS } from "../constants";
+import { VAT_DEADLINE_WARNING_DAYS, VAT_STATUS_BADGE_VARIANTS } from "../constants";
 import { formatVatAmount } from "../utils";
 import { VatWorkItemRowActions } from "./VatWorkItemRowActions";
 import type { ColumnOpts } from "../types";
@@ -93,7 +93,7 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
       if (!displayDeadline) return <span className="text-gray-400 text-sm">—</span>;
       const cls = item.is_overdue
         ? `${semanticMonoToneClasses.negative} font-semibold`
-        : item.days_until_deadline != null && item.days_until_deadline <= 3
+        : item.days_until_deadline != null && item.days_until_deadline <= VAT_DEADLINE_WARNING_DAYS
           ? `${semanticMonoToneClasses.warning} font-medium`
           : "text-gray-600";
       return (

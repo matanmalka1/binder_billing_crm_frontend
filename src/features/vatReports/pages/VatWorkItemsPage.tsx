@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/primitives/Badge";
 import { Button } from "@/components/ui/primitives/Button";
 import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
 import { StatsCard } from "@/components/ui/layout/StatsCard";
+import { VAT_DEADLINE_WARNING_DAYS } from "../constants";
+import { getDuplicateClientIds, getVatDeadlineCounts } from "../view.helpers";
 
 export const VatWorkItems: React.FC = () => {
   const [urlParams, setUrlParams] = useSearchParams();
@@ -41,17 +43,8 @@ export const VatWorkItems: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const createClientId = urlParams.get("client_id");
   const createPeriod = urlParams.get("period");
-  const duplicateClientIds = useMemo(() => {
-    const counts = new Map<number, number>();
-    workItems.forEach((item) => {
-      counts.set(item.client_record_id, (counts.get(item.client_record_id) ?? 0) + 1);
-    });
-    return new Set(
-      [...counts.entries()]
-        .filter(([, count]) => count > 1)
-        .map(([clientId]) => clientId),
-    );
-  }, [workItems]);
+  const duplicateClientIds = useMemo(() => getDuplicateClientIds(workItems), [workItems]);
+  const deadlineCounts = useMemo(() => getVatDeadlineCounts(workItems), [workItems]);
 
   useEffect(() => {
     if (urlParams.get("create") === "1") {
@@ -103,31 +96,22 @@ export const VatWorkItems: React.FC = () => {
         </div>
       )}
 
-      {!loading && workItems.length > 0 && (() => {
-        const overdueCount = workItems.filter((item) => item.is_overdue).length;
-        const urgentCount = workItems.filter(
-          (item) =>
-            !item.is_overdue &&
-            item.days_until_deadline != null &&
-            item.days_until_deadline <= 3,
-        ).length;
-        return overdueCount > 0 || urgentCount > 0 ? (
+      {!loading && workItems.length > 0 && (deadlineCounts.overdue > 0 || deadlineCounts.urgent > 0) && (
           <div className="flex flex-wrap gap-2" dir="rtl">
-            {overdueCount > 0 && (
+            {deadlineCounts.overdue > 0 && (
               <Badge variant="error" className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium">
                 <AlertTriangle className="h-3.5 w-3.5" />
-                {overdueCount} תיקים בחריגת מועד
+                {deadlineCounts.overdue} תיקים בחריגת מועד
               </Badge>
             )}
-            {urgentCount > 0 && (
+            {deadlineCounts.urgent > 0 && (
               <Badge variant="warning" className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium">
                 <Clock className="h-3.5 w-3.5" />
-                {urgentCount} תיקים — נותרו עד 3 ימים
+                {deadlineCounts.urgent} תיקים — נותרו עד {VAT_DEADLINE_WARNING_DAYS} ימים
               </Badge>
             )}
           </div>
-        ) : null;
-      })()}
+      )}
 
       <VatWorkItemsFiltersCard
         filters={filters}

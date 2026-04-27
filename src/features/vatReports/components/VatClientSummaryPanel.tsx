@@ -8,19 +8,21 @@ import { StatsCard } from "../../../components/ui/layout/StatsCard";
 import { VatWorkItemsCreateModal } from "./VatWorkItemsCreateModal";
 import { VatExportButtons } from "./VatExportButtons";
 import type { CreateVatWorkItemPayload, VatAnnualSummary, VatPeriodRow } from "../api";
-import { getReportingPeriodMonthLabel, showErrorToast } from "../../../utils/utils";
+import { showErrorToast } from "../../../utils/utils";
 import { useAuthStore } from "../../../store/auth.store";
 import { VAT_CLIENT_SUMMARY_STATUS_VARIANTS } from "../constants";
 import { getVatWorkItemStatusLabel } from "../../../utils/enums";
 import { formatVatAmountLtrSafe } from "../utils";
-import { semanticMonoToneClasses } from "../../../utils/semanticColors";
 import { useVatClientSummary } from "../hooks/useVatClientSummary";
 import type { VatClientSummaryPanelProps } from "../types";
+import {
+  canOpenVatPeriodRow,
+  formatVatPeriodLabel,
+  getClientSummaryRowsForYear,
+  getNetVatTone,
+} from "../view.helpers";
 
 const fmt = formatVatAmountLtrSafe;
-
-const getNetVatTone = (value: string | number | null | undefined) =>
-  Number(value) >= 0 ? semanticMonoToneClasses.negative : semanticMonoToneClasses.positive;
 
 const AmountCell = ({ value, bold }: { value: string | number | null | undefined; bold?: boolean }) => (
   <span
@@ -46,14 +48,6 @@ interface YearGroupProps {
   rows: VatPeriodRow[];
   onRowClick: (row: VatPeriodRow) => void;
 }
-
-const formatPeriodLabel = (period: string, isBimonthly: boolean) => {
-  const [year, month] = period.split("-");
-  const yearNumber = Number(year);
-  if (!month || !Number.isInteger(yearNumber)) return period;
-  const monthLabel = getReportingPeriodMonthLabel(period, isBimonthly ? 2 : 1).replace("-", "–");
-  return monthLabel === period ? period : `${monthLabel} ${yearNumber}`;
-};
 
 const YearSummary = ({ annual }: { annual: VatAnnualSummary }) => (
   <section className="space-y-3">
@@ -104,7 +98,7 @@ const YearGroup: React.FC<YearGroupProps> = ({ annual, rows, onRowClick }) => {
           className="group cursor-pointer border-t border-gray-100 transition-colors hover:bg-gray-50"
         >
           <td className={tdCls}>
-            <div className="font-semibold text-gray-900">{formatPeriodLabel(row.period, isBimonthly)}</div>
+            <div className="font-semibold text-gray-900">{formatVatPeriodLabel(row.period, isBimonthly)}</div>
           </td>
           <td className={tdCls}>
             <Badge
@@ -149,8 +143,7 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
   }, [data, selectedYear]);
 
   const rows = useMemo(() => {
-    if (!selectedAnnual) return [];
-    return (data?.periods ?? []).filter((p) => p.period.startsWith(String(selectedAnnual.year)));
+    return getClientSummaryRowsForYear(data?.periods, selectedAnnual?.year);
   }, [data, selectedAnnual]);
 
   const handleCreate = async (payload: CreateVatWorkItemPayload) => {
@@ -166,7 +159,7 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
   };
 
   const handleRowClick = (row: VatPeriodRow) => {
-    if (!Number.isInteger(row.work_item_id) || row.work_item_id <= 0) return;
+    if (!canOpenVatPeriodRow(row)) return;
     navigate(`/tax/vat/${row.work_item_id}`);
   };
 
