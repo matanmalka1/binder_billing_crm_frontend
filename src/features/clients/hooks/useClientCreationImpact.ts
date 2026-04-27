@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { clientsApi, type CreateClientPayload } from "../api";
+import { clientsApi, clientsQK, type CreateClientPayload } from "../api";
 import type { ClientCreationImpactResponse } from "../api/contracts";
 
 type ImpactParams = Pick<CreateClientPayload, "entity_type" | "vat_reporting_frequency">;
@@ -12,7 +12,7 @@ export const useClientCreationImpact = (
   );
 
   return useQuery({
-    queryKey: ["client-creation-impact", params?.entity_type, params?.vat_reporting_frequency],
+    queryKey: clientsQK.creationImpact(params?.entity_type, params?.vat_reporting_frequency),
     queryFn: () =>
       clientsApi.previewImpact({
         entity_type: params!.entity_type!,

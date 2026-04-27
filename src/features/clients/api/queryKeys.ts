@@ -12,4 +12,6 @@ export const clientsQK = {
   businessesAllFallback: () => ["clients", "businesses", "all", "none"] as const,
   firstBusiness: (clientId: number) => ["clients", "businesses", "first", clientId] as const,
   auditTrail: (clientId: number) => ["clients", "audit", clientId] as const,
+  creationImpact: (entityType?: string | null, vatFrequency?: string | null) =>
+    ["clients", "creation-impact", entityType ?? null, vatFrequency ?? null] as const,
 };

@@ -31,7 +31,6 @@ const BUSINESS_STATUS_OPTIONS = [
   { value: "closed", label: BUSINESS_STATUS_LABELS.closed },
 ];
 
-
 interface Props {
   clientId: number;
   canEdit: boolean;
@@ -94,13 +93,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
         className="shadow-sm"
         actions={
           canEdit ? (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onAddBusiness}
-              className="gap-2"
-            >
+            <Button type="button" variant="outline" size="sm" onClick={onAddBusiness} className="gap-2">
               <Plus className="h-4 w-4" />
               הוסף עסק
             </Button>
@@ -117,77 +110,70 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
           </p>
         ) : (
           <ul className="space-y-3">
-            {businesses.map((biz) => {
-              return (
-                <li
-                  key={biz.id}
-                  className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm transition-colors hover:border-primary-200 hover:bg-primary-50/30"
-                >
-                  <div className="min-w-0 flex-1">
-                    <Link
-                      to={CLIENT_ROUTES.businessDetail(clientId, biz.id)}
-                      className="flex min-w-0 items-center justify-between gap-4"
-                    >
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-gray-900">
-                          {biz.business_name ?? "לא הוגדר"}
-                        </p>
-                        <p className="mt-1 text-xs font-medium text-gray-500">
-                          נפתח בתאריך {formatDate(biz.opened_at)}
-                        </p>
-                      </div>
-                      <StatusBadge
-                        status={biz.status}
-                        getLabel={(s) => BUSINESS_STATUS_LABELS[s as keyof typeof BUSINESS_STATUS_LABELS] ?? s}
-                        variantMap={BUSINESS_STATUS_VARIANTS}
-                      />
-                    </Link>
-                  </div>
+            {businesses.map((biz) => (
+              <li
+                key={biz.id}
+                className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm transition-colors hover:border-primary-200 hover:bg-primary-50/30"
+              >
+                <div className="min-w-0 flex-1">
+                  <Link
+                    to={CLIENT_ROUTES.businessDetail(clientId, biz.id)}
+                    className="flex min-w-0 items-center justify-between gap-4"
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-gray-900">
+                        {biz.business_name ?? "לא הוגדר"}
+                      </p>
+                      <p className="mt-1 text-xs font-medium text-gray-500">
+                        נפתח בתאריך {formatDate(biz.opened_at)}
+                      </p>
+                    </div>
+                    <StatusBadge
+                      status={biz.status}
+                      getLabel={(s) => BUSINESS_STATUS_LABELS[s as keyof typeof BUSINESS_STATUS_LABELS] ?? s}
+                      variantMap={BUSINESS_STATUS_VARIANTS}
+                    />
+                  </Link>
+                </div>
 
-                  {canEdit && (
-                    <RowActionsMenu ariaLabel={`פעולות לעסק ${biz.business_name ?? biz.id}`}>
-                        <RowActionItem
-                          label="עריכה"
-                          icon={<Pencil className="h-4 w-4" />}
-                          onClick={() => openEdit(biz)}
-                        />
-                        {biz.status !== "active" && (
-                          <RowActionItem
-                            label="העבר לפעיל"
-                            icon={<Undo2 className="h-4 w-4" />}
-                            onClick={() => void updateBusinessStatus(biz.id, "active")}
-                          />
-                        )}
-                        {biz.status !== "frozen" && (
-                          <RowActionItem
-                            label="הקפא עסק"
-                            icon={<Snowflake className="h-4 w-4" />}
-                            onClick={() => void updateBusinessStatus(biz.id, "frozen")}
-                          />
-                        )}
-                        {biz.status !== "closed" && (
-                          <RowActionItem
-                            label="סגור עסק"
-                            icon={<Trash2 className="h-4 w-4" />}
-                            onClick={() => void updateBusinessStatus(biz.id, "closed")}
-                          />
-                        )}
-                        <RowActionItem
-                          label="מחק"
-                          icon={<Trash2 className="h-4 w-4" />}
-                          danger
-                          onClick={() => setDeleteTarget(biz)}
-                        />
-                      </RowActionsMenu>
-                  )}
-                </li>
-              );
-            })}
+                {canEdit && (
+                  <RowActionsMenu ariaLabel={`פעולות לעסק ${biz.business_name ?? biz.id}`}>
+                    <RowActionItem label="עריכה" icon={<Pencil className="h-4 w-4" />} onClick={() => openEdit(biz)} />
+                    {biz.status !== "active" && (
+                      <RowActionItem
+                        label="העבר לפעיל"
+                        icon={<Undo2 className="h-4 w-4" />}
+                        onClick={() => void updateBusinessStatus(biz.id, "active")}
+                      />
+                    )}
+                    {biz.status !== "frozen" && (
+                      <RowActionItem
+                        label="הקפא עסק"
+                        icon={<Snowflake className="h-4 w-4" />}
+                        onClick={() => void updateBusinessStatus(biz.id, "frozen")}
+                      />
+                    )}
+                    {biz.status !== "closed" && (
+                      <RowActionItem
+                        label="סגור עסק"
+                        icon={<Trash2 className="h-4 w-4" />}
+                        onClick={() => void updateBusinessStatus(biz.id, "closed")}
+                      />
+                    )}
+                    <RowActionItem
+                      label="מחק"
+                      icon={<Trash2 className="h-4 w-4" />}
+                      danger
+                      onClick={() => setDeleteTarget(biz)}
+                    />
+                  </RowActionsMenu>
+                )}
+              </li>
+            ))}
           </ul>
         )}
       </Card>
 
-      {/* Edit modal */}
       <Modal
         open={!!editState}
         title="עריכת עסק"
@@ -250,7 +236,6 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
         )}
       </Modal>
 
-      {/* Delete confirm */}
       <ConfirmDialog
         open={!!deleteTarget}
         title="מחיקת עסק"

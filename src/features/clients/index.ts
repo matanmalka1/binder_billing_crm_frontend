@@ -10,7 +10,7 @@ export { DeletedClientDialog } from "./components/dialogs/DeletedClientDialog";
 export { useClientDetails } from "./hooks/useClientDetails";
 export { useClientsPage } from "./hooks/useClientsPage";
 export { useFirstBusinessId } from "./hooks/useFirstBusinessId";
-export { BUSINESS_STATUS_LABELS } from "../businesses/constants";
+export { useClientDetailsActions } from "./hooks/useClientDetailsActions";
 export { ClientDetails } from "./pages/ClientDetailsPage";
 export { Clients } from "./pages/ClientsPage";
 export type {

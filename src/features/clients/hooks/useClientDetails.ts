@@ -1,11 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { clientsApi, clientsQK, type UpdateClientPayload, type ClientResponse } from "../api";
-import {
-  getErrorMessage,
-  isPositiveInt,
-  showErrorToast,
-} from "../../../utils/utils";
+import { getErrorMessage, isPositiveInt, showErrorToast } from "../../../utils/utils";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
 
@@ -39,15 +35,13 @@ export const useClientDetails = ({
   });
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdateClientPayload) =>
-      clientsApi.update(id, payload),
+    mutationFn: (payload: UpdateClientPayload) => clientsApi.update(id, payload),
     onSuccess: async (updated) => {
       toast.success("פרטי הלקוח עודכנו");
       queryClient.setQueryData(clientsQK.detail(id), updated);
       await queryClient.invalidateQueries({ queryKey: clientsQK.all });
     },
-    onError: (err) =>
-      showErrorToast(err, "שגיאה בעדכון פרטי לקוח"),
+    onError: (err) => showErrorToast(err, "שגיאה בעדכון פרטי לקוח"),
   });
 
   const deleteMutation = useMutation({
@@ -60,10 +54,6 @@ export const useClientDetails = ({
     onError: (err) => showErrorToast(err, "שגיאה במחיקת לקוח"),
   });
 
-  const updateClient = async (payload: UpdateClientPayload) => {
-    await updateMutation.mutateAsync(payload);
-  };
-
   return {
     client: clientQuery.data ?? null,
     isValidId,
@@ -71,7 +61,7 @@ export const useClientDetails = ({
     error: clientQuery.error
       ? getErrorMessage(clientQuery.error, "שגיאה בטעינת פרטי לקוח")
       : null,
-    updateClient,
+    updateClient: async (payload) => { await updateMutation.mutateAsync(payload); },
     isUpdating: updateMutation.isPending,
     deleteClient: () => deleteMutation.mutateAsync(),
     isDeleting: deleteMutation.isPending,

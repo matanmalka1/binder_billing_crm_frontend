@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMutationWithToast } from "../../../hooks/useMutationWithToast";
-import { getErrorMessage } from "../../../utils/utils";
+import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
   clientsApi,
@@ -16,13 +16,11 @@ import {
   type ClientSortBy,
   type ClientSortOrder,
 } from "../constants";
-import { parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { useActionRunner } from "@/features/actions";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
 import { isAxiosError } from "axios";
 
-/** Extract the application-level error code from an Axios error response. */
 const extractErrorCode = (err: unknown): string | null => {
   if (isAxiosError(err)) {
     return (
@@ -40,7 +38,6 @@ export const useClientsPage = () => {
   const { searchParams, setFilter, setPage, resetFilters } = useSearchParamFilters();
   const { isAdvisor, can } = useRole();
 
-  // Pending payload held while the "deleted client" dialog is open.
   const [deletedClientInfo, setDeletedClientInfo] =
     useState<{ id: number; full_name: string; id_number: string; deleted_at: string } | null>(null);
 
@@ -88,9 +85,7 @@ export const useClientsPage = () => {
       const code = extractErrorCode(err);
       if (code === "CLIENT.DELETED_EXISTS") {
         try {
-          const deleted = await clientsApi.getConflictByIdNumber(
-            payload.id_number,
-          );
+          const deleted = await clientsApi.getConflictByIdNumber(payload.id_number);
           setDeletedClientInfo(deleted.deleted_clients[0] ?? null);
         } catch {
           showErrorToast(err, "שגיאה ביצירת לקוח");
@@ -133,14 +128,12 @@ export const useClientsPage = () => {
 
   const {
     activeActionKey,
-    activeActionKeyRef,
     cancelPendingAction,
     confirmPendingAction,
     handleAction: onAction,
     pendingAction,
   } = useActionRunner({
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: clientsQK.all }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: clientsQK.all }),
     errorFallback: "שגיאה בביצוע פעולת לקוח",
     canonicalAction: true,
   });
@@ -148,20 +141,16 @@ export const useClientsPage = () => {
   const handleFilterChange = (
     name: "accountant_id" | "page_size" | "search" | "status" | "sort_by" | "sort_order",
     value: string,
-  ) => {
-    setFilter(name, value);
-  };
+  ) => setFilter(name, value);
 
-  const handleReset = () => {
+  const handleReset = () =>
     resetFilters({
       sort_by: DEFAULT_CLIENT_SORT_BY,
       sort_order: DEFAULT_CLIENT_SORT_ORDER,
     });
-  };
 
   return {
     activeActionKey,
-    activeActionKeyRef,
     clients: clientItems,
     error,
     filters,
@@ -175,18 +164,15 @@ export const useClientsPage = () => {
     total,
     cancelPendingAction,
     confirmPendingAction,
-    createClient: async (payload: CreateClientPayload): Promise<void> => {
-      await createMutation.mutateAsync(payload);
-    },
+    createClient: async (payload: CreateClientPayload): Promise<void> => { await createMutation.mutateAsync(payload); },
     createLoading: createMutation.isPending,
     deletedClientInfo,
     deletedClientDialogOpen: deletedClientInfo !== null,
     handleRestoreClient,
     handleDismissDeletedDialog,
     restoreLoading: restoreMutation.isPending,
-    updateClient: async (clientId: number, payload: UpdateClientPayload): Promise<void> => {
-      await updateMutation.mutateAsync({ clientId, payload });
-    },
+    updateClient: (clientId: number, payload: UpdateClientPayload) =>
+      updateMutation.mutateAsync({ clientId, payload }),
     updateLoading: updateMutation.isPending,
     isAdvisor,
     can,
