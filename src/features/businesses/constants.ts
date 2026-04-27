@@ -1,5 +1,5 @@
 import { makeLabelGetter } from "@/utils/labels";
-import type { BusinessResponse, BusinessStatus } from "@/features/clients";
+import type { BusinessStatus } from "@/features/clients";
 
 export const BUSINESS_STATUS_LABELS: Record<BusinessStatus, string> = {
   active: "פעיל",
@@ -19,15 +19,9 @@ export const BUSINESS_DETAILS_COPY = {
   systemIdLabel: "מזהה מערכת",
   clientLabel: "לקוח",
   businessNameLabel: "שם עסק",
-  businessTypeLabel: "סוג עסק",
   statusLabel: "סטטוס",
   openedAtLabel: "נפתח בתאריך",
   closedAtLabel: "נסגר בתאריך",
   createdAtLabel: "נוצר בתאריך",
   emptyValue: "—",
-  notesTitle: "הערות",
-  noNotes: "אין הערות",
 } as const;
-
-export const formatBusinessDisplayName = (business: Pick<BusinessResponse, "business_name">) =>
-  business.business_name ?? "—";

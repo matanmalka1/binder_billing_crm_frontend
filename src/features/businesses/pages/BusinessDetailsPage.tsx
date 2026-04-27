@@ -3,24 +3,27 @@ import { useParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
-import { CLIENT_ROUTES } from "@/features/clients";
 import { useRole } from "@/hooks/useRole";
 import { useBusinessDetails } from "../hooks/useBusinessDetails";
 import { BusinessDetailsCard } from "../components/BusinessDetailsCard";
-import { BUSINESS_DETAILS_COPY, formatBusinessDisplayName } from "../constants";
+import { BUSINESS_DETAILS_COPY } from "../constants";
+import {
+  buildBusinessBreadcrumbs,
+  formatBusinessDisplayName,
+  getBusinessRouteParams,
+} from "../utils";
 
 export const BusinessDetails: FC = () => {
   const { clientId, businessId } = useParams<{
     clientId: string;
     businessId: string;
   }>();
-  const clientIdNum = clientId ? Number(clientId) : null;
-  const businessIdNum = businessId ? Number(businessId) : null;
+  const routeParams = getBusinessRouteParams(clientId, businessId);
 
   const { can } = useRole();
   const { client, business, isLoading, error, isValidId } = useBusinessDetails({
-    clientId: clientIdNum,
-    businessId: businessIdNum,
+    clientId: routeParams ? Number(routeParams.clientId) : null,
+    businessId: routeParams ? Number(routeParams.businessId) : null,
   });
 
   if (!isValidId) {
@@ -32,8 +35,7 @@ export const BusinessDetails: FC = () => {
     );
   }
 
-  const businessDisplayName = business ? formatBusinessDisplayName(business) : BUSINESS_DETAILS_COPY.title;
-
+  const businessDisplayName = formatBusinessDisplayName(business);
   const clientName = client?.full_name ?? BUSINESS_DETAILS_COPY.clientFallback;
 
   return (
@@ -43,11 +45,15 @@ export const BusinessDetails: FC = () => {
       header={
         <PageHeader
           title={businessDisplayName}
-          breadcrumbs={[
-            { label: BUSINESS_DETAILS_COPY.clientsListLabel, to: CLIENT_ROUTES.list },
-            { label: clientName, to: CLIENT_ROUTES.detail(clientId!) },
-            { label: businessDisplayName, to: CLIENT_ROUTES.businessDetail(clientId!, businessId!) },
-          ]}
+          breadcrumbs={
+            routeParams
+              ? buildBusinessBreadcrumbs({
+                  ...routeParams,
+                  clientName,
+                  businessName: businessDisplayName,
+                })
+              : undefined
+          }
         />
       }
       loadingMessage={BUSINESS_DETAILS_COPY.loading}

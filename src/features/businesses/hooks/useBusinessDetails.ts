@@ -11,16 +11,18 @@ export const useBusinessDetails = ({ clientId, businessId }: UseBusinessDetailsP
   const clientIdValid = isPositiveInt(clientId);
   const businessIdValid = isPositiveInt(businessId);
   const isValidId = clientIdValid && businessIdValid;
+  const validClientId = clientIdValid ? clientId : null;
+  const validBusinessId = businessIdValid ? businessId : null;
 
   const clientQuery = useQuery({
-    queryKey: clientsQK.detail(clientId!),
-    queryFn: () => clientsApi.getById(clientId!),
+    queryKey: clientsQK.detail(validClientId ?? 0),
+    queryFn: () => clientsApi.getById(validClientId ?? 0),
     enabled: isValidId,
   });
 
   const businessQuery = useQuery({
-    queryKey: clientsQK.businessDetail(clientId ?? "none", businessId ?? "none"),
-    queryFn: () => clientsApi.getBusinessById(clientId!, businessId!),
+    queryKey: clientsQK.businessDetail(validClientId ?? "none", validBusinessId ?? "none"),
+    queryFn: () => clientsApi.getBusinessById(validClientId ?? 0, validBusinessId ?? 0),
     enabled: isValidId,
   });
 
