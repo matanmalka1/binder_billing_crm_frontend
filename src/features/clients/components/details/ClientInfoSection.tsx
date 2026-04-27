@@ -20,7 +20,7 @@ const EMPTY_VALUE = "לא הוגדר";
 
 export const ClientInfoSection: FC<ClientInfoSectionProps> = ({ client, sideContent }) => {
   const { nameById } = useAdvisorOptions();
-  const { officeByType } = useClientAuthorityContacts(client.id);
+  const { officeByType } = useClientAuthorityContacts(client.id, client.address_city);
 
   const idNumberTypeLabel = client.id_number_type
     ? getClientIdNumberTypeLabel(client.id_number_type)

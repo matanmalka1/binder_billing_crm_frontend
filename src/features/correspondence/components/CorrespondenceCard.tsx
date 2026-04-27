@@ -83,6 +83,7 @@ export const CorrespondenceCard = ({ businessId, clientId }: CorrespondenceCardP
           <StateCard
             icon={MessageSquare}
             message="אין רשומות תקשורת עדיין — הוסף את הרשומה הראשונה"
+            size="compact"
             variant="minimal"
           />
         )}

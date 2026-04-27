@@ -56,6 +56,7 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, businessId, can
               icon={FileSignature}
               message="אין בקשות חתימה עבור לקוח זה"
               action={canManage ? { label: "יצירת בקשה ראשונה", onClick: () => setShowCreate(true) } : undefined}
+              size="compact"
             />
           )}
 

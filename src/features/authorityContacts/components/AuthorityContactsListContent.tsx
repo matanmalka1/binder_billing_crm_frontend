@@ -29,6 +29,7 @@ export const AuthorityContactsListContent: React.FC<AuthorityContactsListContent
       <StateCard
         icon={Users}
         message="לא נוספו עדיין אנשי קשר ברשויות"
+        size="compact"
         variant="minimal"
       />
     );
