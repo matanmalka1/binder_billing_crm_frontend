@@ -1,39 +1,44 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { correspondenceApi, correspondenceQK } from "../api";
-import type { UpdateCorrespondencePayload } from "../api";
 import { authorityContactsApi, authorityContactsQK } from "@/features/authorityContacts";
 import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import type { CorrespondenceFormValues } from "../schemas";
 import { toast } from "../../../utils/toast";
-import { PAGE_SIZE_MD as PAGE_SIZE } from "@/constants/pagination.constants";
+import { CORRESPONDENCE_CONTACTS_PARAMS, CORRESPONDENCE_LIST_PARAMS } from "../constants";
+import { toCreateCorrespondencePayload, toUpdateCorrespondencePayload } from "../utils";
 
 export const useCorrespondence = (businessId: number | undefined, clientId?: number) => {
   const queryClient = useQueryClient();
   const resolvedClientId = clientId ?? 0;
-  const queryKey = [...correspondenceQK.forClient(resolvedClientId), { page: 1, page_size: PAGE_SIZE, business_id: businessId }];
+  const listParams = { ...CORRESPONDENCE_LIST_PARAMS, business_id: businessId };
+  const queryKey = [...correspondenceQK.forClient(resolvedClientId), listParams];
 
   const listQuery = useQuery({
     enabled: resolvedClientId > 0,
     queryKey,
-    queryFn: () => correspondenceApi.list(resolvedClientId, { page: 1, page_size: PAGE_SIZE, business_id: businessId }),
+    queryFn: () => correspondenceApi.list(resolvedClientId, listParams),
     retry: false,
   });
 
   const contactsQuery = useQuery({
     enabled: resolvedClientId > 0,
-    queryKey: [...authorityContactsQK.forClient(resolvedClientId), { page: 1, page_size: 100 }],
-    queryFn: () => authorityContactsApi.listAuthorityContacts(resolvedClientId, undefined, 1, 100),
+    queryKey: [
+      ...authorityContactsQK.forClient(resolvedClientId),
+      CORRESPONDENCE_CONTACTS_PARAMS,
+    ],
+    queryFn: () =>
+      authorityContactsApi.listAuthorityContacts(
+        resolvedClientId,
+        undefined,
+        CORRESPONDENCE_CONTACTS_PARAMS.page,
+        CORRESPONDENCE_CONTACTS_PARAMS.pageSize,
+      ),
     staleTime: 60_000,
   });
 
   const createMutation = useMutation({
     mutationFn: (values: CorrespondenceFormValues) =>
-      correspondenceApi.create(resolvedClientId, {
-        ...values,
-        business_id: businessId ?? null,
-        notes: values.notes || null,
-        contact_id: values.contact_id ?? null,
-      }),
+      correspondenceApi.create(resolvedClientId, toCreateCorrespondencePayload(values, businessId)),
     onSuccess: () => {
       toast.success("רשומת התכתבות נוספה בהצלחה");
       void queryClient.invalidateQueries({ queryKey });
@@ -42,8 +47,8 @@ export const useCorrespondence = (businessId: number | undefined, clientId?: num
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, payload }: { id: number; payload: UpdateCorrespondencePayload }) =>
-      correspondenceApi.update(resolvedClientId, id, payload),
+    mutationFn: ({ id, values }: { id: number; values: CorrespondenceFormValues }) =>
+      correspondenceApi.update(resolvedClientId, id, toUpdateCorrespondencePayload(values)),
     onSuccess: () => {
       toast.success("רשומת התכתבות עודכנה בהצלחה");
       void queryClient.invalidateQueries({ queryKey });
@@ -72,8 +77,8 @@ export const useCorrespondence = (businessId: number | undefined, clientId?: num
     contacts: contactsQuery.data?.items ?? [],
     createEntry: (values: CorrespondenceFormValues) => createMutation.mutateAsync(values),
     isCreating: createMutation.isPending,
-    updateEntry: (id: number, payload: UpdateCorrespondencePayload) =>
-      updateMutation.mutateAsync({ id, payload }),
+    updateEntry: (id: number, values: CorrespondenceFormValues) =>
+      updateMutation.mutateAsync({ id, values }),
     isUpdating: updateMutation.isPending,
     deleteEntry: (id: number) => deleteMutation.mutate(id),
     deletingId,

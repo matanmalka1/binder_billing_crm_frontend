@@ -90,7 +90,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     setUploadCanSubmit(false);
   };
 
-  const handleExpandVersions = (id: number) => {
+  const handleToggleVersions = (id: number) => {
     setExpandedVersionsId((prev) => (prev === id ? null : id));
   };
 
@@ -118,7 +118,6 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         />
       )}
 
-      {/* Header */}
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-base font-semibold text-gray-900">
           מסמכים ({countLabel})
@@ -142,7 +141,6 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         onTaxYearChange={onTaxYearChange}
       />
 
-      {/* Card grid */}
       {filteredDocuments.length === 0 ? (
         <DocumentsEmptyState
           hasDocuments={documents.length > 0}
@@ -162,13 +160,12 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
               onPreview={handlePreviewClick}
               onReplace={handleReplaceClick}
               onDelete={(id) => setConfirmDeleteId(id)}
-              handleExpandVersions={handleExpandVersions}
+              onToggleVersions={handleToggleVersions}
             />
           ))}
         </div>
       )}
 
-      {/* Version history panel */}
       {expandedDoc && (
         <DocumentVersionsPanel
           clientId={expandedDoc.client_record_id}
@@ -177,7 +174,6 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         />
       )}
 
-      {/* Upload modal */}
       <Modal
         open={uploadOpen}
         title="העלאת מסמך חדש"
@@ -217,7 +213,6 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         />
       </Modal>
 
-      {/* Hidden input for replace flow */}
       <input
         ref={fileInputRef}
         type="file"

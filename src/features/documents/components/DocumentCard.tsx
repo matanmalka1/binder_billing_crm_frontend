@@ -16,7 +16,7 @@ interface DocumentCardProps {
   onDownload: (id: number) => void;
   onReplace: (id: number) => void;
   onDelete: (id: number) => void;
-  handleExpandVersions: (id: number) => void;
+  onToggleVersions: (id: number) => void;
 }
 
 export const DocumentCard: React.FC<DocumentCardProps> = ({
@@ -29,10 +29,9 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   onDownload,
   onReplace,
   onDelete,
-  handleExpandVersions,
+  onToggleVersions,
 }) => (
   <div className="flex flex-col gap-3 rounded-xl border border-gray-200/80 bg-white p-4 transition-all duration-200 hover:shadow-md animate-fade-in">
-    {/* Doc type + overflow menu */}
     <div className="flex items-start justify-between gap-2">
       <span className="text-sm font-semibold text-gray-900 leading-snug">
         {DOC_TYPE_LABELS[doc.document_type] ?? doc.document_type}
@@ -40,7 +39,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
       <RowActionsMenu ariaLabel={`פעולות נוספות למסמך ${doc.id}`} title="פעולות נוספות">
         <RowActionItem
           label="היסטוריית גרסאות"
-          onClick={() => handleExpandVersions(doc.id)}
+          onClick={() => onToggleVersions(doc.id)}
           icon={<History className="h-4 w-4" />}
         />
         {isAdvisor && (
@@ -64,7 +63,6 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
       </RowActionsMenu>
     </div>
 
-    {/* Filename */}
     <button
       type="button"
       onClick={() => onPreview(doc)}
@@ -75,7 +73,6 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
       <span className="truncate">{doc.original_filename ?? "—"}</span>
     </button>
 
-    {/* Year + date */}
     <div className="flex items-center justify-between gap-2 border-t border-gray-100 pt-2">
       {doc.tax_year ? (
         <Badge variant="info">{doc.tax_year}</Badge>
@@ -88,7 +85,6 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
       </div>
     </div>
 
-    {/* Primary actions */}
     <div className="flex items-center gap-2 border-t border-gray-100 pt-2">
       <Button
         type="button"

@@ -7,7 +7,7 @@ import {
   SEARCH_PLACEHOLDER,
   TAX_YEAR_OPTIONS,
 } from "./DocumentsDataCards.constants";
-import { getDocumentTypeLabel } from "./DocumentsDataCards.utils";
+import { getDocumentFilterBadges } from "./DocumentsDataCards.utils";
 
 interface DocumentsDataCardsToolbarProps {
   search: string;
@@ -28,30 +28,14 @@ export const DocumentsDataCardsToolbar: React.FC<
   taxYear,
   onTaxYearChange,
 }) => {
-  const activeFilterBadges = [
-    search
-      ? {
-          key: "search",
-          label: `חיפוש: ${search}`,
-          onRemove: () => onSearchChange(""),
-        }
-      : null,
-    filterType
-      ? {
-          key: "filterType",
-          label: getDocumentTypeLabel(filterType),
-          onRemove: () => onFilterTypeChange(""),
-        }
-      : null,
-    taxYear
-      ? {
-          key: "taxYear",
-          label: `שנה: ${taxYear}`,
-          onRemove: () => onTaxYearChange(null),
-        }
-      : null,
-  ].filter((badge): badge is NonNullable<typeof badge> => badge !== null);
-
+  const activeFilterBadges = getDocumentFilterBadges({
+    search,
+    filterType,
+    taxYear,
+    onSearchChange,
+    onFilterTypeChange,
+    onTaxYearChange,
+  });
   const resetFilters = () => {
     onSearchChange("");
     onFilterTypeChange("");

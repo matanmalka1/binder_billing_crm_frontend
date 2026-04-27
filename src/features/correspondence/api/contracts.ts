@@ -1,11 +1,12 @@
 import type { PaginatedResponse } from "@/types";
+import type { CorrespondenceType } from "../constants";
 
 export interface CorrespondenceEntry {
   id: number;
   client_record_id: number;
   business_id: number | null;
   contact_id: number | null;
-  correspondence_type: "call" | "letter" | "email" | "meeting" | "fax";
+  correspondence_type: CorrespondenceType;
   subject: string;
   notes: string | null;
   occurred_at: string;

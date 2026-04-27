@@ -37,7 +37,7 @@ export const CorrespondenceCard = ({ businessId, clientId }: CorrespondenceCardP
 
   const handleSubmit = async (data: CorrespondenceFormValues) => {
     if (editing) {
-      await updateEntry(editing.id, { ...data, notes: data.notes || null });
+      await updateEntry(editing.id, data);
     } else {
       await createEntry(data);
     }
@@ -122,7 +122,12 @@ export const CorrespondenceCard = ({ businessId, clientId }: CorrespondenceCardP
         confirmLabel="מחק"
         cancelLabel="ביטול"
         isLoading={deletingId === confirmDeleteId}
-        onConfirm={() => { if (confirmDeleteId !== null) deleteEntry(confirmDeleteId); setConfirmDeleteId(null); }}
+        onConfirm={() => {
+          if (confirmDeleteId !== null) {
+            deleteEntry(confirmDeleteId);
+            setConfirmDeleteId(null);
+          }
+        }}
         onCancel={() => setConfirmDeleteId(null)}
       />
     </>

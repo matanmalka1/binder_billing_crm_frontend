@@ -10,23 +10,15 @@ import {
   documentsUploadSchema,
   type DocumentsUploadFormValues,
 } from "../schemas";
-import { DOC_TYPE_LABELS } from "../documents.constants";
+import { DOCUMENT_FILE_ACCEPT } from "../documents.constants";
 import { formatFileSize } from "../../../utils/utils";
 import { Button } from "../../../components/ui/primitives/Button";
-
-const ACCEPTED_MIME_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/vnd.ms-excel",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  "image/jpeg",
-  "image/png",
-];
-const MAX_SIZE_BYTES = 10 * 1024 * 1024;
-
-const CURRENT_YEAR = new Date().getFullYear();
-const TAX_YEARS = Array.from({ length: 7 }, (_, i) => CURRENT_YEAR - i);
+import {
+  UPLOAD_DOCUMENT_TYPE_OPTIONS,
+  UPLOAD_TAX_YEAR_OPTIONS,
+} from "./DocumentsDataCards.constants";
+import { getBusinessOptions } from "./DocumentsDataCards.utils";
+import { validateDocumentFile } from "./DocumentsUploadCard.helpers";
 
 interface DocumentsUploadCardProps {
   businesses: BusinessResponse[];
@@ -84,15 +76,12 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
   }, [canSubmit, onCanSubmitChange]);
 
   const applyFile = (file: File) => {
-    setFileError(null);
-    if (file.size > MAX_SIZE_BYTES) {
-      setFileError(`הקובץ גדול מדי: ${formatFileSize(file.size)}. המקסימום הוא 10MB`);
+    const error = validateDocumentFile(file);
+    setFileError(error);
+    if (error) {
       return;
     }
-    if (!ACCEPTED_MIME_TYPES.includes(file.type)) {
-      setFileError("סוג הקובץ אינו נתמך. מותרים: PDF, Word, Excel, JPEG, PNG");
-      return;
-    }
+
     setValue("file", file, { shouldValidate: true });
   };
 
@@ -120,21 +109,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
 
   const showBusinessSelect = businesses.length > 1;
   const documentTypeField = register("document_type");
-  const documentTypeOptions = [
-    { value: "", label: "בחר סוג מסמך", disabled: true },
-    ...Object.entries(DOC_TYPE_LABELS).map(([value, label]) => ({ value, label })),
-  ];
-  const taxYearOptions = [
-    { value: "", label: "ללא שנה" },
-    ...TAX_YEARS.map((y) => ({ value: String(y), label: String(y) })),
-  ];
-  const businessOptions = [
-    { value: "", label: "מסמך כללי ללקוח" },
-    ...businesses.map((b) => ({
-      value: String(b.id),
-      label: b.business_name ?? `עסק #${b.id}`,
-    })),
-  ];
+  const businessOptions = getBusinessOptions(businesses);
 
   return (
     <form id={formId} onSubmit={onSubmit} className="space-y-4">
@@ -150,7 +125,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
               shouldValidate: true,
             })
           }
-          options={documentTypeOptions}
+          options={UPLOAD_DOCUMENT_TYPE_OPTIONS}
         />
 
         <Select
@@ -161,7 +136,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
               shouldValidate: true,
             })
           }
-          options={taxYearOptions}
+          options={UPLOAD_TAX_YEAR_OPTIONS}
         />
 
         {showBusinessSelect && (
@@ -179,7 +154,6 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         )}
       </div>
 
-      {/* File picker */}
       <div className="space-y-2">
         <span className="block text-sm font-medium text-gray-700">קובץ</span>
         <div
@@ -242,7 +216,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         <input
           ref={fileInputRef}
           type="file"
-          accept=".pdf,.doc,.docx,.xlsx,.xls,.jpg,.jpeg,.png"
+          accept={DOCUMENT_FILE_ACCEPT}
           className="hidden"
           onChange={(e) => {
             const file = e.target.files?.[0];

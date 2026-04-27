@@ -7,10 +7,11 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
-import { correspondenceSchema, correspondenceDefaults, type CorrespondenceFormValues } from "../schemas";
+import { correspondenceSchema, type CorrespondenceFormValues } from "../schemas";
 import type { CorrespondenceEntry } from "../api";
 import type { AuthorityContactResponse } from "@/features/authorityContacts";
-import { format } from "date-fns";
+import { CORRESPONDENCE_TYPE_OPTIONS } from "../constants";
+import { getCorrespondenceDefaults, getCorrespondenceFormValues } from "../utils";
 
 interface CorrespondenceModalProps {
   open: boolean;
@@ -37,36 +38,23 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
     formState: { errors },
   } = useForm<CorrespondenceFormValues>({
     resolver: zodResolver(correspondenceSchema),
-    defaultValues: correspondenceDefaults,
+    defaultValues: getCorrespondenceDefaults(),
   });
 
   useEffect(() => {
     if (open) {
-      if (existing) {
-        reset({
-          correspondence_type: existing.correspondence_type,
-          subject: existing.subject,
-          notes: existing.notes ?? "",
-          occurred_at: format(new Date(existing.occurred_at), "yyyy-MM-dd"),
-          contact_id: existing.contact_id ?? null,
-        });
-      } else {
-        reset({
-          ...correspondenceDefaults,
-          contact_id: contacts.length === 1 ? contacts[0].id : null,
-        });
-      }
+      reset(existing ? getCorrespondenceFormValues(existing) : getCorrespondenceDefaults(contacts));
     }
   }, [open, existing, contacts, reset]);
 
   const handleClose = () => {
-    reset(correspondenceDefaults);
+    reset(getCorrespondenceDefaults());
     onClose();
   };
 
   const submit = handleSubmit(async (values) => {
     await onSubmit(values);
-    reset(correspondenceDefaults);
+    reset(getCorrespondenceDefaults());
   });
 
   const title = existing ? "עריכת רשומת התכתבות" : "הוספת רשומת התכתבות";
@@ -93,11 +81,11 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
           error={errors.correspondence_type?.message}
           {...register("correspondence_type")}
         >
-          <option value="call">שיחה</option>
-          <option value="letter">מכתב</option>
-          <option value="email">אימייל</option>
-          <option value="meeting">פגישה</option>
-          <option value="fax">פקס</option>
+          {CORRESPONDENCE_TYPE_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </Select>
 
         <Input label="נושא *" error={errors.subject?.message} {...register("subject")} />

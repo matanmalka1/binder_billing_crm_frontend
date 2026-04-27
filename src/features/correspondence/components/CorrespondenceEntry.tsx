@@ -1,50 +1,9 @@
-import { Phone, Mail, FileText, Users, Printer, Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { Button } from "../../../components/ui/primitives/Button";
 import type { CorrespondenceEntry as CorrespondenceEntryType } from "../api";
 import { formatDate } from "../../../utils/utils";
-
-interface TypeConfig {
-  label: string;
-  icon: React.ReactNode;
-  variant: "info" | "success" | "warning" | "neutral";
-  dotColor: string;
-}
-
-const TYPE_CONFIG: Record<string, TypeConfig> = {
-  call: {
-    label: "שיחה",
-    icon: <Phone className="h-3.5 w-3.5" />,
-    variant: "info",
-    dotColor: "bg-primary-500",
-  },
-  letter: {
-    label: "מכתב",
-    icon: <FileText className="h-3.5 w-3.5" />,
-    variant: "neutral",
-    dotColor: "bg-gray-400",
-  },
-  email: {
-    label: "אימייל",
-    icon: <Mail className="h-3.5 w-3.5" />,
-    variant: "warning",
-    dotColor: "bg-orange-400",
-  },
-  meeting: {
-    label: "פגישה",
-    icon: <Users className="h-3.5 w-3.5" />,
-    variant: "success",
-    dotColor: "bg-positive-500",
-  },
-  fax: {
-    label: "פקס",
-    icon: <Printer className="h-3.5 w-3.5" />,
-    variant: "neutral",
-    dotColor: "bg-gray-500",
-  },
-};
-
-const DEFAULT_CONFIG: TypeConfig = TYPE_CONFIG.call;
+import { CORRESPONDENCE_TYPE_CONFIG } from "../constants";
 
 interface CorrespondenceEntryItemProps {
   entry: CorrespondenceEntryType;
@@ -59,7 +18,8 @@ export const CorrespondenceEntryItem = ({
   onEdit,
   onDelete,
 }: CorrespondenceEntryItemProps) => {
-  const config = TYPE_CONFIG[entry.correspondence_type] ?? DEFAULT_CONFIG;
+  const config = CORRESPONDENCE_TYPE_CONFIG[entry.correspondence_type];
+  const Icon = config.icon;
 
   return (
     <li className="flex gap-4 py-3 pl-2">
@@ -71,7 +31,7 @@ export const CorrespondenceEntryItem = ({
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <Badge variant={config.variant} className="inline-flex items-center gap-1 shrink-0">
-              {config.icon}
+              <Icon className="h-3.5 w-3.5" />
               {config.label}
             </Badge>
             <p className="truncate text-sm font-semibold text-gray-900">{entry.subject}</p>

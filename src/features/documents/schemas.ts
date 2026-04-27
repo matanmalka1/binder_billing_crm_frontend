@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { UploadDocumentPayload } from "./api";
+import { DOCUMENT_TYPES } from "./documents.constants";
 
 export type DocumentStatus = "pending" | "received" | "approved" | "rejected";
 
@@ -12,18 +13,7 @@ export interface DocumentsUploadFormValues {
 }
 
 export const documentsUploadSchema = z.object({
-  document_type: z.enum([
-    "id_copy",
-    "power_of_attorney",
-    "engagement_agreement",
-    "tax_form",
-    "receipt",
-    "invoice_doc",
-    "bank_approval",
-    "withholding_certificate",
-    "nii_approval",
-    "other",
-  ], { message: "יש לבחור סוג מסמך" }),
+  document_type: z.enum(DOCUMENT_TYPES, { message: "יש לבחור סוג מסמך" }),
   business_id: z.number().nullable(),
   file: z
     .custom<File | null>((value) => value === null || value instanceof File)
