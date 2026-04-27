@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { useQueries, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { remindersApi, remindersQK } from "../api";
-import { getErrorMessage, getHttpStatus, showErrorToast } from "../../../utils/utils";
+import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
+import { getErrorMessage, getHttpStatus, parsePositiveInt, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
 import type { Reminder } from "../api";
 import type { CreateReminderRequest, ReminderStatus } from "../types";
@@ -101,6 +102,7 @@ const buildPayload = (
 export const useReminders = (opts?: { clientId?: number; clientName?: string }) => {
   const clientId = opts?.clientId;
   const queryClient = useQueryClient();
+  const { searchParams, setFilter } = useSearchParamFilters();
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const [cancelingId, setCancelingId] = useState<number | null>(null);
@@ -109,6 +111,8 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   const [statusFilter, setStatusFilter] = useState<string>("pending");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("");
+  const page = clientId ? 1 : parsePositiveInt(searchParams.get("page"), 1);
+  const pageSize = clientId ? 20 : parsePositiveInt(searchParams.get("page_size"), 20);
 
   const form = useForm<CreateReminderFormValues>({
     defaultValues: makeDefaultFormValues(clientId),
@@ -127,11 +131,13 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   );
 
   const remindersQuery = useQuery({
-    queryKey: remindersQK.list(clientId, statusFilter),
+    queryKey: remindersQK.list(clientId, statusFilter, page, pageSize),
     queryFn: () =>
       remindersApi.list({
         ...(clientId ? { client_record_id: clientId } : {}),
         ...(statusFilter ? { status: statusFilter as import("../api/contracts").ReminderStatus } : {}),
+        page,
+        page_size: pageSize,
       }),
     enabled: clientId !== 0,
   });
@@ -190,7 +196,15 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
     let items = remindersQuery.data?.items ?? [];
     if (search.trim()) {
       const q = search.trim().toLowerCase();
-      items = items.filter((r) => r.client_name?.toLowerCase().includes(q));
+      items = items.filter((r) =>
+        [
+          r.client_name,
+          r.business_name,
+          r.client_id_number,
+          r.office_client_number?.toString(),
+          r.message,
+        ].some((value) => value?.toLowerCase().includes(q)),
+      );
     }
     if (typeFilter) {
       items = items.filter((r) => r.reminder_type === typeFilter);
@@ -198,11 +212,32 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
     return items;
   }, [remindersQuery.data?.items, search, typeFilter]);
 
-  const hasFilters = !!search || !!typeFilter;
+  const hasFilters = !!search || !!typeFilter || statusFilter !== "pending";
+
+  const setPage = useCallback((nextPage: number) => {
+    setFilter("page", String(nextPage), false);
+  }, [setFilter]);
+
+  const setReminderSearch = useCallback((value: string) => {
+    setSearch(value);
+    setPage(1);
+  }, [setPage]);
+
+  const setReminderTypeFilter = useCallback((value: string) => {
+    setTypeFilter(value);
+    setPage(1);
+  }, [setPage]);
+
+  const setReminderStatusFilter = useCallback((value: string) => {
+    setStatusFilter(value);
+    setPage(1);
+  }, [setPage]);
 
   const clearFilters = () => {
     setSearch("");
     setTypeFilter("");
+    setStatusFilter("pending");
+    setPage(1);
   };
 
   const createMutation = useMutation({
@@ -270,17 +305,20 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
 
   return {
     reminders,
+    page,
+    pageSize,
     rawTotal: remindersQuery.data?.total ?? 0,
     isLoading: remindersQuery.isLoading,
     error: remindersQuery.error
       ? getErrorMessage(remindersQuery.error, "שגיאה בטעינת תזכורות")
       : null,
     statusFilter,
-    setStatusFilter,
+    setStatusFilter: setReminderStatusFilter,
     search,
-    setSearch,
+    setSearch: setReminderSearch,
     typeFilter,
-    setTypeFilter,
+    setTypeFilter: setReminderTypeFilter,
+    setPage,
     hasFilters,
     clearFilters,
     pendingCount,

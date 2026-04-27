@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { FileText, Plus, Search } from "lucide-react";
 import { Alert } from "../../../components/ui/overlays/Alert";
 import { Modal } from "../../../components/ui/overlays/Modal";
@@ -23,8 +23,68 @@ import { DOC_TYPE_LABELS } from "../documents.constants";
 import type { BusinessResponse } from "@/features/clients";
 
 const CURRENT_YEAR = new Date().getFullYear();
-const TAX_YEARS = Array.from({ length: 7 }, (_, i) => CURRENT_YEAR - i);
+const TAX_YEAR_RANGE = 7;
+const TAX_YEARS = Array.from(
+  { length: TAX_YEAR_RANGE },
+  (_, i) => CURRENT_YEAR - i,
+);
 const UPLOAD_FORM_ID = "documents-upload-form";
+const ALL_DOCUMENT_TYPES_OPTION = { value: "", label: "כל הסוגים" };
+const ALL_TAX_YEARS_OPTION = { value: "", label: "כל השנים" };
+const SEARCH_PLACEHOLDER = "חיפוש לפי שם קובץ או סוג מסמך";
+const DOWNLOAD_ERROR_MESSAGE = "שגיאה בהורדת המסמך";
+const PREVIEW_ERROR_MESSAGE = "שגיאה בטעינת המסמך";
+
+const DOCUMENT_TYPE_OPTIONS = [
+  ALL_DOCUMENT_TYPES_OPTION,
+  ...Object.entries(DOC_TYPE_LABELS).map(([value, label]) => ({
+    value,
+    label,
+  })),
+];
+
+const TAX_YEAR_OPTIONS = [
+  ALL_TAX_YEARS_OPTION,
+  ...TAX_YEARS.map((year) => ({
+    value: String(year),
+    label: String(year),
+  })),
+];
+
+const getDocumentTypeLabel = (
+  documentType: PermanentDocumentResponse["document_type"] | string,
+) => DOC_TYPE_LABELS[documentType] ?? documentType;
+
+const getMissingDocumentsMessage = (
+  missingDocuments: OperationalSignalsResponse["missing_documents"],
+) => `מסמכים חסרים: ${missingDocuments.map(getDocumentTypeLabel).join(", ")}`;
+
+const matchesDocumentSearch = (
+  doc: PermanentDocumentResponse,
+  searchTerm: string,
+) => {
+  if (!searchTerm) return true;
+  const query = searchTerm.toLowerCase();
+  const filename = (doc.original_filename ?? "").toLowerCase();
+  const documentType = getDocumentTypeLabel(doc.document_type).toLowerCase();
+
+  return filename.includes(query) || documentType.includes(query);
+};
+
+const filterDocuments = (
+  documents: PermanentDocumentResponse[],
+  searchTerm: string,
+  documentType: string,
+) =>
+  documents.filter((doc) => {
+    if (documentType && doc.document_type !== documentType) return false;
+    return matchesDocumentSearch(doc, searchTerm);
+  });
+
+const getCountLabel = (filteredCount: number, totalCount: number) =>
+  filteredCount !== totalCount
+    ? `${filteredCount}/${totalCount}`
+    : `${totalCount}`;
 
 interface DocumentsDataCardsProps {
   documents: PermanentDocumentResponse[];
@@ -62,18 +122,27 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
   const isAdvisor = role === "advisor";
 
   const [uploadOpen, setUploadOpen] = useState(false);
+  const [uploadCanSubmit, setUploadCanSubmit] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [replacingId, setReplacingId] = useState<number | null>(null);
   const [downloadingId, setDownloadingId] = useState<number | null>(null);
-  const [expandedVersionsId, setExpandedVersionsId] = useState<number | null>(null);
-  const [previewDoc, setPreviewDoc] = useState<PermanentDocumentResponse | null>(null);
+  const [expandedVersionsId, setExpandedVersionsId] = useState<number | null>(
+    null,
+  );
+  const [previewDoc, setPreviewDoc] =
+    useState<PermanentDocumentResponse | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pendingReplaceId = useRef<number | null>(null);
+
+  const closeUploadModal = () => {
+    setUploadOpen(false);
+    setUploadCanSubmit(false);
+  };
 
   const handleConfirmDelete = async () => {
     if (confirmDeleteId === null) return;
@@ -111,7 +180,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
       const { url } = await documentsApi.getDownloadUrl(id);
       window.open(url, "_blank");
     } catch {
-      toast.error("שגיאה בהורדת המסמך");
+      toast.error(DOWNLOAD_ERROR_MESSAGE);
     } finally {
       setDownloadingId(null);
     }
@@ -124,7 +193,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
       const { url } = await documentsApi.getDownloadUrl(doc.id);
       setPreviewUrl(url);
     } catch {
-      toast.error("שגיאה בטעינת המסמך");
+      toast.error(PREVIEW_ERROR_MESSAGE);
       setPreviewDoc(null);
     }
   };
@@ -133,33 +202,57 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     setExpandedVersionsId((prev) => (prev === id ? null : id));
   };
 
-  const filteredDocuments = documents.filter((doc) => {
-    if (filterType && doc.document_type !== filterType) return false;
-    if (search) {
-      const q = search.toLowerCase();
-      const matchesFilename = (doc.original_filename ?? "").toLowerCase().includes(q);
-      const matchesType = (DOC_TYPE_LABELS[doc.document_type] ?? doc.document_type).toLowerCase().includes(q);
-      if (!matchesFilename && !matchesType) return false;
-    }
-    return true;
-  });
+  const filteredDocuments = useMemo(
+    () => filterDocuments(documents, search, filterType),
+    [documents, filterType, search],
+  );
 
-  const expandedDoc =
-    expandedVersionsId !== null
-      ? documents.find((d) => d.id === expandedVersionsId)
-      : null;
+  const expandedDoc = useMemo(
+    () =>
+      expandedVersionsId !== null
+        ? documents.find((d) => d.id === expandedVersionsId)
+        : null,
+    [documents, expandedVersionsId],
+  );
 
-  const countLabel =
-    filteredDocuments.length !== documents.length
-      ? `${filteredDocuments.length}/${documents.length}`
-      : String(documents.length);
+  const countLabel = getCountLabel(filteredDocuments.length, documents.length);
+
+  const activeFilterBadges = [
+    search
+      ? {
+          key: "search",
+          label: `חיפוש: ${search}`,
+          onRemove: () => setSearch(""),
+        }
+      : null,
+    filterType
+      ? {
+          key: "filterType",
+          label: getDocumentTypeLabel(filterType),
+          onRemove: () => setFilterType(""),
+        }
+      : null,
+    taxYear
+      ? {
+          key: "taxYear",
+          label: `שנה: ${taxYear}`,
+          onRemove: () => onTaxYearChange(null),
+        }
+      : null,
+  ].filter((badge): badge is NonNullable<typeof badge> => badge !== null);
+
+  const resetFilters = () => {
+    setSearch("");
+    setFilterType("");
+    onTaxYearChange(null);
+  };
 
   return (
     <div className="space-y-4">
       {signals.missing_documents.length > 0 && (
         <Alert
           variant="warning"
-          message={`מסמכים חסרים: ${signals.missing_documents.map((d) => DOC_TYPE_LABELS[d] ?? d).join(", ")}`}
+          message={getMissingDocumentsMessage(signals.missing_documents)}
         />
       )}
 
@@ -168,7 +261,11 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         <h3 className="text-base font-semibold text-gray-900">
           מסמכים ({countLabel})
         </h3>
-        <Button size="sm" onClick={() => setUploadOpen(true)} className="gap-1.5 shrink-0">
+        <Button
+          size="sm"
+          onClick={() => setUploadOpen(true)}
+          className="gap-1.5 shrink-0"
+        >
           <Plus className="h-4 w-4" />
           העלאת מסמך
         </Button>
@@ -178,7 +275,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <Input
-            placeholder="חיפוש לפי שם קובץ או סוג מסמך"
+            placeholder={SEARCH_PLACEHOLDER}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             startIcon={<Search className="h-3.5 w-3.5" />}
@@ -187,39 +284,19 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
           <Select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            options={[
-              { value: "", label: "כל הסוגים" },
-              ...Object.entries(DOC_TYPE_LABELS).map(([value, label]) => ({ value, label })),
-            ]}
+            options={DOCUMENT_TYPE_OPTIONS}
           />
           <Select
             value={taxYear ?? ""}
-            onChange={(e) => onTaxYearChange(e.target.value ? Number(e.target.value) : null)}
-            options={[
-              { value: "", label: "כל השנים" },
-              ...TAX_YEARS.map((y) => ({ value: String(y), label: String(y) })),
-            ]}
+            onChange={(e) =>
+              onTaxYearChange(e.target.value ? Number(e.target.value) : null)
+            }
+            options={TAX_YEAR_OPTIONS}
           />
         </div>
         <ActiveFilterBadges
-          badges={[
-            search ? { key: "search", label: `חיפוש: ${search}`, onRemove: () => setSearch("") } : null,
-            filterType
-              ? {
-                  key: "filterType",
-                  label: DOC_TYPE_LABELS[filterType] ?? filterType,
-                  onRemove: () => setFilterType(""),
-                }
-              : null,
-            taxYear
-              ? {
-                  key: "taxYear",
-                  label: `שנה: ${taxYear}`,
-                  onRemove: () => onTaxYearChange(null),
-                }
-              : null,
-          ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}
-          onReset={() => { setSearch(""); setFilterType(""); onTaxYearChange(null); }}
+          badges={activeFilterBadges}
+          onReset={resetFilters}
         />
       </div>
 
@@ -229,15 +306,23 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
           <FileText className="h-9 w-9 text-gray-300" />
           {documents.length === 0 ? (
             <>
-              <p className="text-sm font-medium text-gray-500">עדיין לא הועלו מסמכים ללקוח זה</p>
-              <Button size="sm" onClick={() => setUploadOpen(true)} className="gap-1.5 mt-1">
+              <p className="text-sm font-medium text-gray-500">
+                עדיין לא הועלו מסמכים ללקוח זה
+              </p>
+              <Button
+                size="sm"
+                onClick={() => setUploadOpen(true)}
+                className="gap-1.5 mt-1"
+              >
                 <Plus className="h-4 w-4" />
                 העלאת מסמך ראשון
               </Button>
             </>
           ) : (
             <>
-              <p className="text-sm font-medium text-gray-500">לא נמצאו מסמכים מתאימים לחיפוש</p>
+              <p className="text-sm font-medium text-gray-500">
+                לא נמצאו מסמכים מתאימים לחיפוש
+              </p>
             </>
           )}
         </div>
@@ -274,11 +359,27 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
       <Modal
         open={uploadOpen}
         title="העלאת מסמך חדש"
-        onClose={() => setUploadOpen(false)}
+        onClose={closeUploadModal}
         footer={
-          <Button variant="outline" onClick={() => setUploadOpen(false)}>
-            ביטול
-          </Button>
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={closeUploadModal}
+              disabled={uploading}
+            >
+              ביטול
+            </Button>
+            <Button
+              type="submit"
+              form={UPLOAD_FORM_ID}
+              isLoading={uploading}
+              loadingLabel="מעלה..."
+              disabled={!uploadCanSubmit}
+              className="gap-2 shrink-0"
+            >
+              העלה מסמך
+            </Button>
+          </div>
         }
       >
         <DocumentsUploadCard
@@ -289,7 +390,8 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
           uploadError={uploadError}
           uploading={uploading}
           initialTaxYear={taxYear}
-          onSuccess={() => setUploadOpen(false)}
+          onCanSubmitChange={setUploadCanSubmit}
+          onSuccess={closeUploadModal}
         />
       </Modal>
 
@@ -303,7 +405,10 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
 
       <DocumentPreviewModal
         open={previewDoc !== null}
-        onClose={() => { setPreviewDoc(null); setPreviewUrl(null); }}
+        onClose={() => {
+          setPreviewDoc(null);
+          setPreviewUrl(null);
+        }}
         url={previewUrl}
         filename={previewDoc?.original_filename ?? null}
         mimeType={previewDoc?.mime_type ?? null}

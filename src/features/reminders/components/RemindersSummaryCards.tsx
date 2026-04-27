@@ -32,9 +32,9 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
       {stats.map(({ icon, variant, count, label, filterValue }) => {
-        const isActive = activeFilter === filterValue && filterValue !== "";
+        const isActive = activeFilter === filterValue;
         return (
           <StatsCard
             key={label}

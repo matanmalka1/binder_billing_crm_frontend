@@ -4,7 +4,12 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
 import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
-import { reminderTypeLabels, type ReminderType } from "../types";
+import {
+  reminderTypeLabels,
+  statusLabels,
+  type ReminderStatus,
+  type ReminderType,
+} from "../types";
 import { ALL_TYPES_OPTION } from "@/constants/filterOptions.constants";
 
 const TYPE_OPTIONS = [
@@ -15,11 +20,21 @@ const TYPE_OPTIONS = [
   })),
 ];
 
+const STATUS_OPTIONS = [
+  { value: "", label: "כל הסטטוסים" },
+  ...(Object.entries(statusLabels) as [ReminderStatus, string][]).map(([value, label]) => ({
+    value,
+    label,
+  })),
+];
+
 interface RemindersFiltersBarProps {
   search: string;
   onSearchChange: (value: string) => void;
   typeFilter: string;
   onTypeChange: (value: string) => void;
+  statusFilter: string;
+  onStatusChange: (value: string) => void;
   hasFilters: boolean;
   onClear: () => void;
 }
@@ -29,6 +44,8 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
   onSearchChange,
   typeFilter,
   onTypeChange,
+  statusFilter,
+  onStatusChange,
   hasFilters,
   onClear,
 }) => {
@@ -42,12 +59,12 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
   return (
     <ToolbarContainer>
       <div className="space-y-3">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
           <Input
-            label="חיפוש לקוח"
+            label="חיפוש"
             value={searchDraft}
             onChange={(e) => setSearchDraft(e.target.value)}
-            placeholder="שם, ת.ז. / ח.פ..."
+            placeholder="שם, עסק, ת.ז. / ח.פ או הודעה..."
             startIcon={<Search className="h-4 w-4" />}
             endElement={
               searchDraft ? (
@@ -66,6 +83,12 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
             value={typeFilter}
             onChange={(e) => onTypeChange(e.target.value)}
             options={TYPE_OPTIONS}
+          />
+          <Select
+            label="סטטוס"
+            value={statusFilter}
+            onChange={(e) => onStatusChange(e.target.value)}
+            options={STATUS_OPTIONS}
           />
         </div>
         {hasFilters && (
@@ -86,6 +109,17 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
                     key: "typeFilter",
                     label: `סוג: ${reminderTypeLabels[typeFilter as ReminderType] ?? typeFilter}`,
                     onRemove: () => onTypeChange(""),
+                  }
+                : null,
+              statusFilter !== "pending"
+                ? {
+                    key: "statusFilter",
+                    label: `סטטוס: ${
+                      statusFilter
+                        ? statusLabels[statusFilter as ReminderStatus] ?? statusFilter
+                        : "כל הסטטוסים"
+                    }`,
+                    onRemove: () => onStatusChange("pending"),
                   }
                 : null,
             ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}

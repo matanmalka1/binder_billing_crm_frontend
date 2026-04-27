@@ -2,19 +2,23 @@ import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/primitives/Button";
 import { ActiveFilterBadges } from "@/components/ui/table/ActiveFilterBadges";
+import { PaginationCard } from "@/components/ui/table/PaginationCard";
 import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
 import {
   CreateReminderModal,
   ReminderDrawer,
+  RemindersByClientList,
   RemindersFiltersBar,
   RemindersSummaryCards,
-  RemindersTable,
   useReminders,
 } from "@/features/reminders";
+import { statusLabels, type ReminderStatus } from "../types";
 
 export const RemindersPage: React.FC = () => {
   const {
     reminders,
+    page,
+    pageSize,
     rawTotal,
     isLoading,
     error,
@@ -45,6 +49,7 @@ export const RemindersPage: React.FC = () => {
     clientAnnualReports,
     clientAdvancePayments,
     clientBusinesses,
+    setPage,
   } = useReminders();
 
   const header = (
@@ -68,7 +73,10 @@ export const RemindersPage: React.FC = () => {
   const renderBody = () => {
     if (reminders.length === 0) {
       if (hasFilters) {
-        const statusLabel = statusFilter === "pending" ? "ממתינות" : statusFilter === "sent" ? "נשלחו" : statusFilter;
+        const statusLabel =
+          statusFilter
+            ? statusLabels[statusFilter as ReminderStatus] ?? statusFilter
+            : "כל הסטטוסים";
 
         return (
           <div className="flex flex-col items-center rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center text-gray-500">
@@ -100,7 +108,7 @@ export const RemindersPage: React.FC = () => {
     }
 
     return (
-      <RemindersTable
+      <RemindersByClientList
         reminders={reminders}
         cancelingId={cancelingId}
         markingSentId={markingSentId}
@@ -131,11 +139,23 @@ export const RemindersPage: React.FC = () => {
         onSearchChange={setSearch}
         typeFilter={typeFilter}
         onTypeChange={setTypeFilter}
+        statusFilter={statusFilter}
+        onStatusChange={setStatusFilter}
         hasFilters={hasFilters}
         onClear={clearFilters}
       />
 
       {renderBody()}
+
+      {rawTotal > 0 && reminders.length > 0 && (
+        <PaginationCard
+          page={page}
+          totalPages={Math.max(1, Math.ceil(rawTotal / pageSize))}
+          total={rawTotal}
+          label="תזכורות"
+          onPageChange={setPage}
+        />
+      )}
 
       <CreateReminderModal
         open={showCreateModal}

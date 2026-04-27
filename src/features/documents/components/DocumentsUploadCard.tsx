@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CloudUpload, X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -42,6 +42,7 @@ interface DocumentsUploadCardProps {
   initialTaxYear?: number | null;
   formId: string;
   onSuccess?: () => void;
+  onCanSubmitChange?: (canSubmit: boolean) => void;
 }
 
 export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
@@ -49,10 +50,10 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
   businessesLoading,
   submitUpload,
   uploadError,
-  uploading,
   initialTaxYear,
   formId,
   onSuccess,
+  onCanSubmitChange,
 }) => {
   const {
     formState: { errors },
@@ -77,6 +78,10 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
   const selectedBusinessId = watch("business_id");
   const selectedTaxYear = watch("tax_year");
   const canSubmit = Boolean(selectedDocType && selectedFile);
+
+  useEffect(() => {
+    onCanSubmitChange?.(canSubmit);
+  }, [canSubmit, onCanSubmitChange]);
 
   const applyFile = (file: File) => {
     setFileError(null);
@@ -250,18 +255,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <Button
-          type="submit"
-          isLoading={uploading}
-          loadingLabel="מעלה..."
-          disabled={!canSubmit}
-          className="gap-2 shrink-0"
-        >
-          העלה
-        </Button>
-        {uploadError && <p className="text-sm text-negative-600">{uploadError}</p>}
-      </div>
+      {uploadError && <p className="text-sm text-negative-600">{uploadError}</p>}
     </form>
   );
 };
