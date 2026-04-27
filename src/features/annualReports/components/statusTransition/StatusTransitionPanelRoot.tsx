@@ -13,12 +13,16 @@ import { Button } from "../../../../components/ui/primitives/Button";
 import { Card } from "../../../../components/ui/primitives/Card";
 import { toast } from "../../../../utils/toast";
 import { showErrorToast } from "../../../../utils/utils";
-import { EMPTY_FORM } from "../../utils";
 import type { StatusTransitionPanelProps, TransitionForm } from "../../types";
 import { AmendReportModal } from "./AmendReportModal";
 import { TransitionDetailsForm } from "./TransitionDetailsForm";
 import { TransitionTargetSelector } from "./TransitionTargetSelector";
 import { ReadinessCheckPanel } from "../panel/ReadinessCheckPanel";
+import {
+  buildTransitionPayload,
+  getEmptyTransitionForm,
+  isValidAmendReason,
+} from "./helpers";
 
 export const StatusTransitionPanel = ({
   report,
@@ -30,7 +34,7 @@ export const StatusTransitionPanel = ({
   const [selected, setSelected] = useState<(typeof allowed)[number] | null>(
     null,
   );
-  const [form, setForm] = useState<TransitionForm>(EMPTY_FORM);
+  const [form, setForm] = useState<TransitionForm>(getEmptyTransitionForm);
   const [amendOpen, setAmendOpen] = useState(false);
   const [amendReason, setAmendReason] = useState("");
 
@@ -60,28 +64,20 @@ export const StatusTransitionPanel = ({
 
   const handleSelect = (status: (typeof allowed)[number]) => {
     setSelected((prev) => (prev === status ? null : status));
-    setForm(EMPTY_FORM);
+    setForm(getEmptyTransitionForm());
   };
 
   const handleAmendSubmit = () => {
     const trimmedReason = amendReason.trim();
-    if (trimmedReason.length < 10) return;
+    if (!isValidAmendReason(trimmedReason)) return;
     amendMutation.mutate(trimmedReason);
   };
 
   const handleSubmit = () => {
     if (!selected) return;
-    onTransition({
-      status: selected,
-      note: form.note || null,
-      ita_reference: form.itaRef || null,
-      submission_method: form.submissionMethod || null,
-      assessment_amount: form.assessmentAmount || null,
-      refund_due: form.refundDue || null,
-      tax_due: form.taxDue || null,
-    });
+    onTransition(buildTransitionPayload(selected, form));
     setSelected(null);
-    setForm(EMPTY_FORM);
+    setForm(getEmptyTransitionForm());
   };
 
   if (allowed.length === 0) {
@@ -156,7 +152,10 @@ export const StatusTransitionPanel = ({
               form={form}
               isLoading={isLoading}
               onFieldChange={setField}
-              onCancel={() => setSelected(null)}
+              onCancel={() => {
+                setSelected(null);
+                setForm(getEmptyTransitionForm());
+              }}
               onSubmit={handleSubmit}
             />
           )}

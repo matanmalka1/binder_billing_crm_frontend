@@ -3,8 +3,7 @@ import { FileCheck, FileWarning, FileText } from "lucide-react";
 import { documentsApi, documentsQK } from "@/features/documents";
 import { DocumentCard, MissingDocRow } from "./DocumentParts";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
-
-const ALL_REQUIRED_TYPES = ["id_copy", "power_of_attorney", "engagement_agreement"] as const;
+import { getMissingDocumentTypes } from "./annualReports.helpers";
 
 interface DocumentsTabProps { clientId: number; reportId?: number; }
 
@@ -31,10 +30,7 @@ export const DocumentsTab = ({ clientId, reportId }: DocumentsTabProps) => {
   const docs = activeQuery.data?.items ?? [];
   const uploadedTypes = new Set(docs.map((d) => d.document_type));
 
-  const missingTypes =
-    (signals?.missing_documents?.length ?? 0) > 0
-      ? (signals?.missing_documents ?? [])
-      : ALL_REQUIRED_TYPES.filter((t) => !uploadedTypes.has(t));
+  const missingTypes = getMissingDocumentTypes(uploadedTypes, signals?.missing_documents);
 
   if (activeQuery.isPending) {
     return <div className="flex items-center justify-center py-16 text-sm text-gray-400">טוען מסמכים...</div>;

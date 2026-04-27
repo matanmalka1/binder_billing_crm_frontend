@@ -2,11 +2,9 @@ import React from "react";
 import { CalendarCheck } from "lucide-react";
 import type { AnnualReportFull } from "../../api";
 import { TimelineEvent } from "../statusTransition/TimelineEvent";
-import type { TimelineEventStatus } from "../statusTransition/TimelineEvent";
 import { cn } from "../../../../utils/utils";
 import { UpcomingDeadlinesList } from "./UpcomingDeadlinesList";
-import { STATUS_LABELS } from "../../api";
-import { formatAnnualReportDate } from "./annualReports.constants";
+import { buildTimelineEvents, getFilingStats } from "./annualReports.helpers";
 
 interface Props { reports: AnnualReportFull[]; }
 
@@ -25,36 +23,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ label, count, pct, color }) =
 );
 
 export const FilingTimelineTab: React.FC<Props> = ({ reports }) => {
-  const now = new Date();
-  const total = reports.length;
-  const submittedOnTime = reports.filter(
-    (r) => r.submitted_at && r.filing_deadline && new Date(r.submitted_at) <= new Date(r.filing_deadline)
-  ).length;
-  const pending = reports.filter((r) => !r.submitted_at).length;
-  const amended = reports.filter((r) => r.status === "amended").length;
-  const pct = (n: number) => (total > 0 ? Math.round((n / total) * 100) : 0);
-
-  interface TEvent { title: string; description: string; date: string; status: TimelineEventStatus; }
-  const timelineEvents: TEvent[] = [];
-
-  reports.forEach((r) => {
-    const name = r.client_name ?? `דוח #${r.id}`;
-    if (r.submitted_at) {
-      const onTime = r.filing_deadline && new Date(r.submitted_at) <= new Date(r.filing_deadline);
-      timelineEvents.push({ title: `הוגש — ${name} (${r.tax_year})`,
-        description: `סטטוס: ${STATUS_LABELS[r.status]}`, date: formatAnnualReportDate(r.submitted_at), status: onTime ? "done" : "warning" });
-    }
-    if (r.filing_deadline && !r.submitted_at) {
-      timelineEvents.push({ title: `מועד הגשה — ${name} (${r.tax_year})`,
-        description: `סטטוס: ${STATUS_LABELS[r.status]}`, date: formatAnnualReportDate(r.filing_deadline),
-        status: new Date(r.filing_deadline) < now ? "overdue" : "pending" });
-    }
-  });
-
-  timelineEvents.sort((a, b) => {
-    const parse = (d: string) => { const p = d.split("."); return p.length === 3 ? new Date(`${p[2]}-${p[1]}-${p[0]}`).getTime() : 0; };
-    return parse(b.date) - parse(a.date);
-  });
+  const timelineEvents = buildTimelineEvents(reports);
+  const filingStats = getFilingStats(reports);
 
   return (
     <div dir="rtl" className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -63,9 +33,9 @@ export const FilingTimelineTab: React.FC<Props> = ({ reports }) => {
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <h3 className="mb-4 text-sm font-semibold text-gray-700">סטטוס הגשות</h3>
           <div className="space-y-4">
-            <ProgressBar label="הוגשו בזמן" count={submittedOnTime} pct={pct(submittedOnTime)} color="bg-positive-500" />
-            <ProgressBar label="ממתין להגשה" count={pending} pct={pct(pending)} color="bg-info-400" />
-            <ProgressBar label="עם תיקונים" count={amended} pct={pct(amended)} color="bg-warning-400" />
+            {filingStats.map((stat) => (
+              <ProgressBar key={stat.label} {...stat} />
+            ))}
           </div>
         </div>
       </div>
@@ -79,8 +49,8 @@ export const FilingTimelineTab: React.FC<Props> = ({ reports }) => {
           {timelineEvents.length === 0 ? (
             <p className="py-4 text-center text-sm text-gray-400">אין אירועים להצגה</p>
           ) : (
-            <div>{timelineEvents.map((ev, i) => (
-              <TimelineEvent key={i} title={ev.title} description={ev.description} date={ev.date} status={ev.status} />
+            <div>{timelineEvents.map((ev) => (
+              <TimelineEvent key={`${ev.title}-${ev.date}`} title={ev.title} description={ev.description} date={ev.date} status={ev.status} />
             ))}</div>
           )}
         </div>

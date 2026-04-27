@@ -1,14 +1,10 @@
 import type { BracketBreakdownItem } from "../../api";
 import { formatCurrencyILS as fmt } from "@/utils/utils";
+import { fmtRange, fmtRate } from "./helpers";
 
 interface Props {
   brackets: BracketBreakdownItem[];
 }
-
-const fmtRate = (rate: string | number) => `${(Number(rate) * 100).toFixed(0)}%`;
-
-const fmtRange = (from: string | number, to: string | number | null) =>
-  to === null ? `מעל ${fmt(from)}` : `${fmt(from)} – ${fmt(to)}`;
 
 export const TaxBracketsTable: React.FC<Props> = ({ brackets }) => {
   if (brackets.length === 0) return null;

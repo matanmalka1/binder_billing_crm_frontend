@@ -1,28 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { Scissors, Building2, Briefcase, Users, TrendingDown, Car, Megaphone, Shield, Smartphone, Plane, GraduationCap, Landmark, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Scissors } from "lucide-react";
 import { annualReportFinancialsApi, annualReportsQK } from "../../api";
 import { TaxCreditsPanel } from "./TaxCreditsPanel";
 import { EXPENSE_LABELS } from "../../report.constants";
-import type { ComponentType } from "react";
 import { cn, formatCurrencyILS as fmt } from "../../../../utils/utils";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
+import { CATEGORY_ICONS } from "./constants";
+import { getRecognitionTone } from "./helpers";
 
 interface Props { reportId: number; taxYear: number; }
-
-const CATEGORY_ICONS: Record<string, ComponentType<{ className?: string }>> = {
-  office_rent:           Building2,
-  professional_services: Briefcase,
-  salaries:              Users,
-  depreciation:          TrendingDown,
-  vehicle:               Car,
-  marketing:             Megaphone,
-  insurance:             Shield,
-  communication:         Smartphone,
-  travel:                Plane,
-  training:              GraduationCap,
-  bank_fees:             Landmark,
-  other:                 MoreHorizontal,
-};
 
 export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
   const { data, isLoading } = useQuery({
@@ -67,7 +53,9 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
                         {EXPENSE_LABELS[e.category] ?? e.category}
                       </p>
                       {Number(e.recognition_rate) < 100 && (
-                        <p className={cn("text-xs", semanticMonoToneClasses.warning)}>{Number(e.recognition_rate)}% מוכר</p>
+                        <p className={cn("text-xs", getRecognitionTone(e.recognition_rate))}>
+                          {Number(e.recognition_rate)}% מוכר
+                        </p>
                       )}
                     </div>
                   </div>

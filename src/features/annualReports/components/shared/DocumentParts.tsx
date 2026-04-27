@@ -10,6 +10,7 @@ import { toast } from "../../../../utils/toast";
 import { Badge } from "../../../../components/ui/primitives/Badge";
 import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from "@/features/documents";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
+import { formatAnnualReportMonthDate } from "./annualReports.constants";
 
 const DOC_TYPE_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   id_copy:                 CreditCard,
@@ -23,9 +24,6 @@ const DOC_TYPE_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   nii_approval:            FileText,
   other:                   FileText,
 };
-
-const formatDate = (dateStr: string): string =>
-  new Date(dateStr).toLocaleDateString("he-IL", { year: "numeric", month: "short", day: "numeric" });
 
 interface DocumentCardProps { doc: PermanentDocumentResponse; }
 
@@ -46,7 +44,7 @@ export const DocumentCard = ({ doc }: DocumentCardProps) => {
         <p className="text-sm font-semibold text-gray-800 leading-tight">{label}</p>
         {doc.tax_year != null && <p className="mt-0.5 text-xs text-info-600">שנת מס {doc.tax_year}</p>}
       </div>
-      <p className="mt-auto text-xs text-gray-400">{formatDate(doc.uploaded_at)}</p>
+      <p className="mt-auto text-xs text-gray-400">{formatAnnualReportMonthDate(doc.uploaded_at)}</p>
     </div>
   );
 };

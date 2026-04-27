@@ -5,18 +5,9 @@ import type { TimelineEventStatus } from "../statusTransition/TimelineEvent";
 import { cn } from "../../../../utils/utils";
 import { STATUS_LABELS } from "../../api";
 import { formatAnnualReportDate } from "./annualReports.constants";
+import { getAnnualReportName, getDeadlineStatus } from "./annualReports.helpers";
 
 interface Props { reports: AnnualReportFull[]; }
-
-const deadlineStatus = (report: AnnualReportFull): TimelineEventStatus => {
-  if (!report.filing_deadline) return "pending";
-  const now = new Date();
-  const deadline = new Date(report.filing_deadline);
-  if (report.submitted_at) return "done";
-  if (deadline < now) return "overdue";
-  if ((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24) < 14) return "warning";
-  return "pending";
-};
 
 const STATUS_COLORS: Record<TimelineEventStatus, string> = {
   done:    "border-positive-200 bg-positive-50",
@@ -49,13 +40,13 @@ export const UpcomingDeadlinesList: React.FC<Props> = ({ reports }) => {
         ) : (
           <ul className="space-y-2">
             {upcoming.map((r) => {
-              const st = deadlineStatus(r);
+              const st = getDeadlineStatus(r);
               return (
                 <li key={r.id} className={cn("flex items-center gap-3 rounded-lg border px-4 py-3", STATUS_COLORS[st])}>
                   {STATUS_ICONS[st]}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-800 truncate">
-                      {r.client_name ?? `דוח #${r.id}`} — {r.tax_year}
+                      {getAnnualReportName(r)} — {r.tax_year}
                     </p>
                     <p className="text-xs text-gray-500">{STATUS_LABELS[r.status]}</p>
                   </div>

@@ -2,6 +2,8 @@ import { Button } from "../../../../components/ui/primitives/Button";
 import { Modal } from "../../../../components/ui/overlays/Modal";
 import { Textarea } from "../../../../components/ui/inputs/Textarea";
 import type { AmendReportModalProps } from "../../types";
+import { AMEND_REASON_MIN_LENGTH } from "./constants";
+import { isValidAmendReason } from "./helpers";
 
 export const AmendReportModal = ({
   open,
@@ -12,7 +14,8 @@ export const AmendReportModal = ({
   onSubmit,
 }: AmendReportModalProps) => {
   const trimmedReason = reason.trim();
-  const showValidation = trimmedReason.length > 0 && trimmedReason.length < 10;
+  const isReasonValid = isValidAmendReason(trimmedReason);
+  const showValidation = trimmedReason.length > 0 && !isReasonValid;
 
   return (
     <Modal
@@ -29,7 +32,7 @@ export const AmendReportModal = ({
             variant="primary"
             onClick={onSubmit}
             isLoading={isPending}
-            disabled={trimmedReason.length < 10}
+            disabled={!isReasonValid}
           >
             שלח
           </Button>
@@ -41,9 +44,13 @@ export const AmendReportModal = ({
         rows={4}
         value={reason}
         onChange={(e) => onReasonChange(e.target.value)}
-        placeholder="תאר את סיבת התיקון (לפחות 10 תווים)..."
+        placeholder={`תאר את סיבת התיקון (לפחות ${AMEND_REASON_MIN_LENGTH} תווים)...`}
       />
-      {showValidation && <p className="mt-1 text-xs text-negative-500">נדרשים לפחות 10 תווים</p>}
+      {showValidation && (
+        <p className="mt-1 text-xs text-negative-500">
+          נדרשים לפחות {AMEND_REASON_MIN_LENGTH} תווים
+        </p>
+      )}
     </Modal>
   );
 };

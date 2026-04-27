@@ -3,27 +3,22 @@ import { AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "../../../../components/ui/primitives/Button";
 import type { AnnualReportFull } from "../../api";
 import { formatDate, cn } from "../../../../utils/utils";
+import { getClientReportName, getDaysOverdue } from "./annualReports.helpers";
+import { OVERDUE_PREVIEW_LIMIT } from "./annualReports.constants";
 
 interface OverdueBannerProps {
   overdue: AnnualReportFull[];
   onSelect: (id: number) => void;
 }
 
-const daysOverdue = (deadline: string | null): number | null => {
-  if (!deadline) return null;
-  const diff = Math.floor(
-    (Date.now() - new Date(deadline).getTime()) / (1000 * 60 * 60 * 24),
-  );
-  return diff > 0 ? diff : null;
-};
-
 export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect }) => {
   const [expanded, setExpanded] = useState(false);
 
   if (overdue.length === 0) return null;
 
-  const visible = expanded ? overdue : overdue.slice(0, 3);
-  const hasMore = overdue.length > 3;
+  const visible = expanded ? overdue : overdue.slice(0, OVERDUE_PREVIEW_LIMIT);
+  const remaining = overdue.length - OVERDUE_PREVIEW_LIMIT;
+  const hasMore = remaining > 0;
 
   return (
     <div
@@ -67,7 +62,7 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
       {/* Report list */}
       <div className="border-t border-negative-200/60 px-4 pb-3 pt-2 space-y-1.5">
         {visible.map((report) => {
-          const days = daysOverdue(report.filing_deadline);
+          const days = getDaysOverdue(report.filing_deadline);
           return (
             <div
               key={report.id}
@@ -81,7 +76,7 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
               onKeyDown={(e) => e.key === "Enter" && onSelect(report.id)}
             >
               <span className="text-sm font-medium text-gray-900 truncate">
-                {report.client_name ?? `לקוח #${report.client_record_id}`}
+                {getClientReportName(report)}
               </span>
               <div className="flex items-center gap-3 shrink-0 text-xs text-gray-500">
                 <span className="tabular-nums">{formatDate(report.filing_deadline)}</span>
@@ -103,9 +98,9 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
             onClick={() => setExpanded((v) => !v)}
             className="w-full pt-1 text-xs font-medium text-negative-700 hover:text-negative-900 hover:bg-transparent"
             aria-expanded={expanded}
-            aria-label={expanded ? "הצג פחות דוחות" : `הצג ${overdue.length - 3} דוחות נוספים שחרגו ממועד ההגשה`}
+            aria-label={expanded ? "הצג פחות דוחות" : `הצג ${remaining} דוחות נוספים שחרגו ממועד ההגשה`}
           >
-            {expanded ? "הצג פחות" : `+ עוד ${overdue.length - 3} דוחות`}
+            {expanded ? "הצג פחות" : `+ עוד ${remaining} דוחות`}
           </Button>
         )}
       </div>

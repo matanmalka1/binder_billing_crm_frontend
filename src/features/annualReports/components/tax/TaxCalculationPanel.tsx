@@ -9,6 +9,13 @@ import { showErrorToast } from "../../../../utils/utils";
 import { useRole } from "../../../../hooks/useRole";
 import { TaxBracketsTable } from "./TaxBracketsTable";
 import { TaxCalculatorInputs } from "./TaxCalculatorInputs";
+import {
+  getLiabilityTone,
+  getTotalCredits,
+  toReportDetailsPayload,
+  toTaxInputValues,
+  toTaxResultPayload,
+} from "./helpers";
 
 interface Props { reportId: number; }
 
@@ -75,30 +82,20 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
   });
 
   const handleEditInit = () => {
-    const d = detailQ.data;
-    if (d) {
-      setCreditPoints(d.credit_points != null ? String(d.credit_points) : "");
-      setPension(d.pension_contribution != null ? String(d.pension_contribution) : "");
-      setOtherCredits(d.other_credits != null ? String(d.other_credits) : "");
-    }
+    const values = toTaxInputValues(detailQ.data);
+    setCreditPoints(values.creditPoints);
+    setPension(values.pension);
+    setOtherCredits(values.otherCredits);
   };
 
   const handleSave = () => {
-    updateMutation.mutate({
-      credit_points: creditPoints !== "" ? Number(creditPoints) : undefined,
-      pension_contribution: pension !== "" ? pension : undefined,
-      other_credits: otherCredits !== "" ? otherCredits : undefined,
-    });
+    updateMutation.mutate(toReportDetailsPayload(creditPoints, pension, otherCredits));
   };
 
   const handleSaveTaxResult = () => {
     if (!data?.total_liability) return;
     const liability = Number(data.total_liability);
-    saveTaxMutation.mutate(
-      liability > 0
-        ? { tax_due: String(liability), refund_due: null }
-        : { tax_due: null, refund_due: String(Math.abs(liability)) },
-    );
+    saveTaxMutation.mutate(toTaxResultPayload(liability));
   };
 
   if (isLoading || detailQ.isLoading)
@@ -107,10 +104,7 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
     return <p className="py-8 text-center text-sm text-negative-500">שגיאה בטעינת חישוב מס</p>;
 
   const totalLiability = data.total_liability == null ? null : Number(data.total_liability);
-  const liabilityColor = totalLiability == null ? ""
-    : totalLiability > 0 ? "text-negative-600" : "text-positive-600";
-  const totalCredits =
-    Number(data.credit_points_value) + Number(data.donation_credit) + Number(data.other_credits ?? 0);
+  const totalCredits = getTotalCredits(data);
 
   return (
     <div className="space-y-5">
@@ -157,7 +151,7 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
         <dl className="divide-y divide-gray-100">
           <Row label="רווח נקי" value={formatCurrencyILS(data.net_profit)} />
           {totalLiability !== null && (
-            <Row label='חבות כוללת (מס + בל + מע"מ − מקדמות)' value={formatCurrencyILS(totalLiability)} className={liabilityColor} />
+            <Row label='חבות כוללת (מס + בל + מע"מ − מקדמות)' value={formatCurrencyILS(totalLiability)} className={getLiabilityTone(totalLiability)} />
           )}
         </dl>
       </div>
