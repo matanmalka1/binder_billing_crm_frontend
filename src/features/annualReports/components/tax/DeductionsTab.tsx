@@ -4,13 +4,10 @@ import { annualReportFinancialsApi, annualReportsQK } from "../../api";
 import { TaxCreditsPanel } from "./TaxCreditsPanel";
 import { EXPENSE_LABELS } from "../../report.constants";
 import type { ComponentType } from "react";
-import { cn } from "../../../../utils/utils";
+import { cn, formatCurrencyILS as fmt } from "../../../../utils/utils";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface Props { reportId: number; taxYear: number; }
-
-const fmt = (n: string | number) =>
-  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 const CATEGORY_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   office_rent:           Building2,

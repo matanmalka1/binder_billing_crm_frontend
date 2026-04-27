@@ -14,6 +14,22 @@ import {
 import { getDeadlineRowClassName } from "./taxDeadlineTableUtils";
 import { getTaxDeadlinePeriodLabel } from "../utils";
 
+const HEBREW_MONTHS = [
+  "ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני",
+  "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר",
+];
+
+const getMonthGroupKey = (dueDate: string): string => {
+  const [year, month] = dueDate.split("-");
+  return `${year}-${month}`;
+};
+
+const getMonthGroupLabel = (key: string): string => {
+  const [year, month] = key.split("-");
+  const monthName = HEBREW_MONTHS[Number(month) - 1] ?? month;
+  return `${monthName} ${year}`;
+};
+
 interface TaxDeadlinesTableProps {
   deadlines: TaxDeadlineResponse[];
   onComplete?: (id: number) => void;
@@ -113,20 +129,60 @@ export const TaxDeadlinesTable = ({
     [completingId, deletingId, onComplete, onDelete, onEdit, onReopen, reopeningId],
   );
 
+  const groups = useMemo(() => {
+    const map = new Map<string, TaxDeadlineResponse[]>();
+    for (const d of deadlines) {
+      const key = getMonthGroupKey(d.due_date);
+      const existing = map.get(key);
+      if (existing) {
+        existing.push(d);
+      } else {
+        map.set(key, [d]);
+      }
+    }
+    return Array.from(map.entries()).map(([key, items]) => ({
+      key,
+      label: getMonthGroupLabel(key),
+      items,
+    }));
+  }, [deadlines]);
+
+  if (deadlines.length === 0) {
+    return (
+      <DataTable
+        data={[]}
+        columns={columns}
+        getRowKey={(d) => d.id}
+        emptyState={{
+          icon: Inbox,
+          title: "אין מועדים להצגה",
+          message: "לא נמצאו מועדי מס התואמים לסינון הנוכחי",
+          variant: "illustration",
+        }}
+      />
+    );
+  }
+
   return (
-    <DataTable
-      data={deadlines}
-      columns={columns}
-      getRowKey={(deadline) => deadline.id}
-      onRowClick={onRowClick}
-      rowClassName={getDeadlineRowClassName}
-      emptyState={{
-        icon: Inbox,
-        title: "אין מועדים להצגה",
-        message: "לא נמצאו מועדי מס התואמים לסינון הנוכחי",
-        variant: "illustration",
-      }}
-    />
+    <div className="space-y-4">
+      {groups.map((group) => (
+        <div key={group.key}>
+          <div className="mb-2 flex items-center gap-2 px-1">
+            <span className="text-sm font-semibold text-gray-600">{group.label}</span>
+            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
+              {group.items.length}
+            </span>
+          </div>
+          <DataTable
+            data={group.items}
+            columns={columns}
+            getRowKey={(d) => d.id}
+            onRowClick={onRowClick}
+            rowClassName={getDeadlineRowClassName}
+          />
+        </div>
+      ))}
+    </div>
   );
 };
 

@@ -13,14 +13,12 @@ import { annualReportTaxApi } from "../../api";
 import { annualReportsApi, annualReportsQK } from "../../api";
 import { DrawerSection } from "../../../../components/ui/overlays/DetailDrawer";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
+import { formatCurrencyILS as fmt } from "@/utils/utils";
 
 interface Props {
   reportId: number;
   clientId: number;
 }
-
-const fmt = (n: string | number) =>
-  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
 

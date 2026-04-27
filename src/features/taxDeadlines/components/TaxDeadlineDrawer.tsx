@@ -23,6 +23,9 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
   const isCompleted = deadline?.status === "completed";
   const isCanceled = deadline?.status === "canceled";
   const canViewAdvancePayments = deadline?.deadline_type === "advance_payment" && deadline.client_record_id != null;
+  const canViewVat = deadline?.deadline_type === "vat" && deadline.client_record_id != null;
+  const canViewAnnualReport = deadline?.deadline_type === "annual_report" && deadline.client_record_id != null;
+  const hasSourceLink = canViewAdvancePayments || canViewVat || canViewAnnualReport;
   const { daysLabel } = deadline
     ? getDeadlineDaysLabel(deadline.due_date, Boolean(isCompleted || isCanceled))
     : { daysLabel: "—" };
@@ -36,18 +39,35 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
     >
       {deadline && (
         <>
-          {canViewAdvancePayments && (
-            <DrawerSection title="פעולות">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  navigate(`/clients/${deadline.client_record_id}/advance-payments`);
-                  onClose();
-                }}
-              >
-                ראה תשלומי מקדמה
-              </Button>
+          {hasSourceLink && (
+            <DrawerSection title="קישור למקור">
+              {canViewAdvancePayments && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => { navigate(`/clients/${deadline.client_record_id}/advance-payments`); onClose(); }}
+                >
+                  פתח מקדמות
+                </Button>
+              )}
+              {canViewVat && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => { navigate(`/clients/${deadline.client_record_id}/vat`); onClose(); }}
+                >
+                  פתח דוח מע״מ
+                </Button>
+              )}
+              {canViewAnnualReport && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => { navigate(`/clients/${deadline.client_record_id}/annual-reports`); onClose(); }}
+                >
+                  פתח דוח שנתי
+                </Button>
+              )}
             </DrawerSection>
           )}
 

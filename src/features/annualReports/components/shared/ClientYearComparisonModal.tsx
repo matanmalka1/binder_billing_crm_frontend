@@ -1,15 +1,13 @@
 import { Modal } from "../../../../components/ui/overlays/Modal";
 import { getStatusLabel } from "../../api/utils";
 import type { AnnualReportFull } from "../../api/contracts";
+import { fmtCurrency as fmt } from "@/utils/utils";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   reports: AnnualReportFull[];
 }
-
-const fmt = (val: string | null | undefined) =>
-  val ? `₪${Number(val).toLocaleString("he-IL")}` : "—";
 
 const ROWS: { label: string; render: (r: AnnualReportFull) => string }[] = [
   { label: "סטטוס", render: (r) => getStatusLabel(r.status) },

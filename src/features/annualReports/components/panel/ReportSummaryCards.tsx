@@ -3,13 +3,11 @@ import { TrendingUp, TrendingDown, Banknote, Receipt, PiggyBank } from "lucide-r
 import { annualReportFinancialsApi } from "../../api";
 import { annualReportTaxApi, annualReportsQK } from "../../api";
 import { StatsCard } from "../../../../components/ui/layout/StatsCard";
+import { formatCurrencyILS as fmt } from "@/utils/utils";
 
 interface Props {
   reportId: number;
 }
-
-const fmt = (n: string | number) =>
-  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
   const financialsQ = useQuery({

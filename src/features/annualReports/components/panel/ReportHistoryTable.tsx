@@ -8,7 +8,7 @@ import {
   getStatusLabel,
   getStatusVariant,
 } from "../../api";
-import { formatDate } from "../../../../utils/utils";
+import { formatCurrencyILS as fmt, formatDate } from "../../../../utils/utils";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
 
 interface Props {
@@ -16,11 +16,6 @@ interface Props {
   currentReportId: number;
   onSelect?: (reportId: number) => void;
 }
-
-const fmt = (n: string | number | null | undefined) =>
-  n == null
-    ? "—"
-    : Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 export const ReportHistoryTable: React.FC<Props> = ({
   clientId,

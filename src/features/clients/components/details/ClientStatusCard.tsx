@@ -7,6 +7,7 @@ import { CLIENT_ROUTES } from "../../api/endpoints";
 import { vatReportsApi, vatReportsQK } from "@/features/vatReports";
 import { Card } from "../../../../components/ui/primitives/Card";
 import { useFirstBusinessId } from "../../hooks/useFirstBusinessId";
+import { fmtCurrency as fmt } from "@/utils/utils";
 interface Props {
   clientId: number;
 }
@@ -33,9 +34,6 @@ const Tile: React.FC<TileProps> = ({ icon, title, primary, secondary, onClick })
     {onClick && <ChevronLeft className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-300" />}
   </div>
 );
-
-const fmt = (n: string | number | null | undefined) =>
-  n != null ? `₪${Number(n).toLocaleString("he-IL", { maximumFractionDigits: 0 })}` : "—";
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_OPTIONS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2];

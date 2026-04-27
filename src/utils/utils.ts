@@ -81,7 +81,7 @@ export const formatDateTime = (value: string | null): string => {
   return format(parseISO(value), "dd/MM/yyyy HH:mm", { locale: he });
 };
 
-export const fmtCurrency = (n: string | number | null): string => {
+export const fmtCurrency = (n: string | number | null | undefined): string => {
   if (n == null) return "—";
   const numeric = Number(n);
   if (Number.isNaN(numeric)) return "—";

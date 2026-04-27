@@ -4,11 +4,9 @@ import { Button } from "../../../../components/ui/primitives/Button";
 import { getChargeStatusLabel } from "../../../../utils/enums";
 import { annualReportChargesApi, annualReportsQK } from "../../api";
 import { PAGE_SIZE_SM } from "@/constants/pagination.constants";
+import { formatCurrencyILS as fmt } from "@/utils/utils";
 
 interface Props { reportId: number; }
-
-const fmt = (n: string | number) =>
-  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 export const ReportChargesPanel: React.FC<Props> = ({ reportId }) => {
   const [page, setPage] = useState(1);

@@ -52,7 +52,11 @@ export const DeadlineAmountCell = ({
   status: string;
 }) => {
   if (amount === null && status === "pending") {
-    return <span className="text-sm italic text-gray-400">טרם חושב</span>;
+    return (
+      <span className="text-sm italic text-gray-400" title="הסכום יעודכן לאחר הגשת הדוח">
+        סכום לא מחושב
+      </span>
+    );
   }
   return <span className="text-sm font-medium text-gray-700">{formatCurrency(amount)}</span>;
 };

@@ -4,7 +4,7 @@ import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 import { Button } from "../../../../components/ui/primitives/Button";
 import { annualReportFinancialsApi, annualReportsQK } from "../../api";
 import type { IncomeLineResponse, ExpenseLineResponse } from "../../api";
-import { cn } from "../../../../utils/utils";
+import { cn, formatCurrencyILS as fmt } from "../../../../utils/utils";
 import { toast } from "../../../../utils/toast";
 import { useRole } from "../../../../hooks/useRole";
 import { AddLineForm } from "./IncomeExpensePanelParts";
@@ -15,9 +15,6 @@ import { EditIncomeLineForm } from "./EditIncomeLineForm";
 import { EditExpenseLineForm } from "./EditExpenseLineForm";
 
 interface IncomeExpensePanelProps { reportId: number; }
-
-const fmt = (n: string | number) =>
-  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId }) => {
   const [editingIncomeId, setEditingIncomeId] = useState<number | null>(null);

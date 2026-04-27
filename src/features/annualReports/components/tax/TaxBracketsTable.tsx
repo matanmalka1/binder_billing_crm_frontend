@@ -1,11 +1,9 @@
 import type { BracketBreakdownItem } from "../../api";
+import { formatCurrencyILS as fmt } from "@/utils/utils";
 
 interface Props {
   brackets: BracketBreakdownItem[];
 }
-
-const fmt = (n: string | number) =>
-  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 const fmtRate = (rate: string | number) => `${(Number(rate) * 100).toFixed(0)}%`;
 

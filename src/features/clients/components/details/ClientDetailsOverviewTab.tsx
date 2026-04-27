@@ -1,4 +1,9 @@
-import { type FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState, useCallback } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { clientsApi, clientsQK } from "../../api";
+import type { CreateBusinessPayload } from "../../api";
+import { showErrorToast } from "@/utils/utils";
+import { toast } from "@/utils/toast";
 import { type ActiveClientDetailsTab } from "../../constants";
 import { Trash2 } from "lucide-react";
 import { DetailDrawer } from "../../../../components/ui/overlays/DetailDrawer";
@@ -11,6 +16,8 @@ import { ClientRemindersCard } from "@/features/reminders";
 import { NotificationsTab } from "@/features/notifications";
 import { ClientStatusCard } from "./ClientStatusCard";
 import { ClientInfoSection } from "./ClientInfoSection";
+import { ClientBusinessesCard } from "./ClientBusinessesCard";
+import { CreateBusinessModal } from "../business/CreateBusinessModal";
 import { ClientEditForm } from "../edit/ClientEditForm";
 import { ClientTimelineTab } from "@/features/timeline";
 import { ClientAnnualReportsTab } from "@/features/annualReports";
@@ -46,8 +53,25 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   const { id: firstBusinessIdOrNull } = useFirstBusinessId(client.id);
   const firstBusinessId = firstBusinessIdOrNull ?? undefined;
 
+  const queryClient = useQueryClient();
+  const createBusinessMutation = useMutation({
+    mutationFn: (payload: CreateBusinessPayload) => clientsApi.createBusiness(client.id, payload),
+    onSuccess: () => {
+      toast.success("העסק נוצר בהצלחה");
+      void queryClient.invalidateQueries({ queryKey: clientsQK.businessesAll(client.id) });
+      void queryClient.invalidateQueries({ queryKey: clientsQK.businesses(client.id) });
+      setIsAddingBusiness(false);
+    },
+    onError: (err) => showErrorToast(err, "שגיאה ביצירת עסק"),
+  });
+  const handleCreateBusiness = useCallback(
+    async (payload: CreateBusinessPayload) => { await createBusinessMutation.mutateAsync(payload); },
+    [createBusinessMutation],
+  );
+
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isAddingBusiness, setIsAddingBusiness] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = isEditing ? "hidden" : "";
@@ -65,11 +89,24 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   return (
     <div className="space-y-6">
       {activeTab === "details" && (
-        <ClientInfoSection
-          client={client}
-          canEdit={canEditClients}
-          onEditStart={() => setIsEditing(true)}
-        />
+        <>
+          <ClientInfoSection
+            client={client}
+            canEdit={canEditClients}
+            onEditStart={() => setIsEditing(true)}
+          />
+          <ClientBusinessesCard
+            clientId={client.id}
+            canEdit={canEditClients}
+            onAddBusiness={() => setIsAddingBusiness(true)}
+          />
+          <CreateBusinessModal
+            open={isAddingBusiness}
+            onClose={() => setIsAddingBusiness(false)}
+            onSubmit={handleCreateBusiness}
+            isLoading={createBusinessMutation.isPending}
+          />
+        </>
       )}
 
       {activeTab === "communication" && (

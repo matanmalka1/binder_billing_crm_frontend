@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { annualReportsApi, annualReportsQK } from "../../api";
+import { formatCurrencyILS as fmt } from "@/utils/utils";
 
 interface Props {
   reportId: number;
@@ -11,9 +12,6 @@ const CREDIT_POINT_VALUE_BY_YEAR: Record<number, number> = {
   2025: 3_003,
   2026: 3_003,
 };
-
-const fmt = (n: string | number) =>
-  Number(n).toLocaleString("he-IL", { style: "currency", currency: "ILS", maximumFractionDigits: 0 });
 
 interface CreditRow {
   label: string;

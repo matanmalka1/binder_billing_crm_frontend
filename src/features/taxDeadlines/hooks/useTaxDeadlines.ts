@@ -34,17 +34,23 @@ export const useTaxDeadlines = () => {
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const deadlineActions = useTaxDeadlineActions({ invalidateAfterMutation });
 
+  const defaultDueTo = useMemo(() => {
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    return lastDay.toISOString().slice(0, 10);
+  }, []);
+
   const filters: TaxDeadlineFilters = useMemo(
     () => ({
       client_name: searchParams.get("client_name") || searchParams.get("business_name") || "",
       deadline_type: searchParams.get("deadline_type") || "",
-      status: searchParams.get("status") || "",
+      status: searchParams.get("status") ?? "pending",
       due_from: searchParams.get("due_from") || "",
-      due_to: searchParams.get("due_to") || "",
+      due_to: searchParams.get("due_to") || defaultDueTo,
       page: parsePositiveInt(searchParams.get("page"), 1),
       page_size: parsePositiveInt(searchParams.get("page_size"), 20),
     }),
-    [searchParams],
+    [searchParams, defaultDueTo],
   );
 
   const apiParams = useMemo(
