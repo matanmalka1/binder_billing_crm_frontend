@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { TrendingUp, TrendingDown, Banknote, Receipt, PiggyBank } from "lucide-react";
 import { annualReportFinancialsApi } from "../../api";
 import { annualReportTaxApi, annualReportsQK } from "../../api";
 import { StatsCard } from "../../../../components/ui/layout/StatsCard";
 import { formatCurrencyILS as fmt } from "@/utils/utils";
+import { SKELETON_CARD_COUNT, SUMMARY_CARD_META } from "./constants";
+import { getBalanceDescription, getBalanceVariant } from "./helpers";
 
 interface Props {
   reportId: number;
@@ -34,7 +35,7 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {Array.from({ length: 5 }).map((_, i) => (
+        {Array.from({ length: SKELETON_CARD_COUNT }).map((_, i) => (
           <div key={i} className="h-24 rounded-xl border bg-white animate-pulse" />
         ))}
       </div>
@@ -46,15 +47,6 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
   const adv = advancesQ.data;
 
   if (!fin || !tax || !adv) return null;
-
-  const balanceIsDue = adv.balance_type === "due";
-  const balanceIsRefund = adv.balance_type === "refund";
-  const absBalance = Math.abs(Number(adv.final_balance));
-  const balanceSub = balanceIsDue
-    ? `יתרה: ₪${absBalance.toLocaleString("he-IL")} לתשלום`
-    : balanceIsRefund
-      ? `יתרה: ₪${absBalance.toLocaleString("he-IL")} החזר`
-      : "מאוזן";
 
   const totalIncome = Number(fin.total_income);
   const recognizedExpenses = Number(fin.recognized_expenses);
@@ -68,43 +60,43 @@ export const ReportSummaryCards: React.FC<Props> = ({ reportId }) => {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
       <StatsCard
-        title="ניכויים מוכרים"
+        title={SUMMARY_CARD_META.recognizedExpenses.title}
         value={fmt(recognizedExpenses)}
         description={`מתוך ${fmt(grossExpenses)} הוצאות`}
-        icon={Receipt}
-        variant="purple"
+        icon={SUMMARY_CARD_META.recognizedExpenses.icon}
+        variant={SUMMARY_CARD_META.recognizedExpenses.variant}
         trend={{ value: expenseRatio, label: "% מהכנסות" }}
       />
 
       <StatsCard
-        title="מקדמות ששולמו"
+        title={SUMMARY_CARD_META.advancesPaid.title}
         value={fmt(totalAdvancesPaid)}
-        description={balanceSub}
-        icon={PiggyBank}
-        variant={balanceIsDue ? "red" : balanceIsRefund ? "green" : "neutral"}
+        description={getBalanceDescription(adv)}
+        icon={SUMMARY_CARD_META.advancesPaid.icon}
+        variant={getBalanceVariant(adv.balance_type)}
       />
 
       <StatsCard
-        title="חבות מס שנתית"
+        title={SUMMARY_CARD_META.annualTax.title}
         value={fmt(taxAfterCredits)}
-        icon={TrendingDown}
-        variant="red"
+        icon={SUMMARY_CARD_META.annualTax.icon}
+        variant={SUMMARY_CARD_META.annualTax.variant}
         trend={{ value: -(tax.effective_rate * 100), label: `${(tax.effective_rate * 100).toFixed(2)}% שיעור אפקטיבי` }}
       />
 
       <StatsCard
-        title="רווח נקי"
+        title={SUMMARY_CARD_META.netProfit.title}
         value={fmt(netProfit)}
-        icon={TrendingUp}
-        variant="green"
+        icon={SUMMARY_CARD_META.netProfit.icon}
+        variant={SUMMARY_CARD_META.netProfit.variant}
         trend={{ value: profitMargin, label: `${profitMargin.toFixed(1)}% שיעור רווח` }}
       />
 
       <StatsCard
-        title="הכנסות ברוטו"
+        title={SUMMARY_CARD_META.grossIncome.title}
         value={fmt(totalIncome)}
-        icon={Banknote}
-        variant="neutral"
+        icon={SUMMARY_CARD_META.grossIncome.icon}
+        variant={SUMMARY_CARD_META.grossIncome.variant}
       />
     </div>
   );

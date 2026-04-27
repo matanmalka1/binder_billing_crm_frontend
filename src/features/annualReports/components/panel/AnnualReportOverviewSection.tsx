@@ -47,7 +47,7 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
 
   return (
     <div className="space-y-6">
-      <ReportAlertBanners report={detail ?? ({} as AnnualReportDetail)} advances={advances} />
+      <ReportAlertBanners report={report} advances={advances} />
 
       <ReportSummaryCards reportId={report.id} />
 

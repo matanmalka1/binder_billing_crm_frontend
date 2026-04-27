@@ -7,18 +7,13 @@ import { Input } from "../../../../components/ui/inputs/Input";
 import { toast } from "../../../../utils/toast";
 import { formatDate } from "../../../../utils/utils";
 import { getDeadlineTypeLabel } from "@/features/taxDeadlines";
+import { DEADLINE_OPTIONS } from "./constants";
 
 interface Props {
   reportId: number;
   deadlineType: DeadlineType;
   filingDeadline: string | null;
 }
-
-const DEADLINE_OPTIONS: { value: DeadlineType; label: string }[] = [
-  { value: "standard", label: "סטנדרטי (29.05 ידני / 30.06 מקוון / 31.07 חברה)" },
-  { value: "extended", label: "מורחב מייצגים — 31 ינואר" },
-  { value: "custom", label: "מותאם אישית" },
-];
 
 export const DeadlineUpdatePanel: React.FC<Props> = ({
   reportId,

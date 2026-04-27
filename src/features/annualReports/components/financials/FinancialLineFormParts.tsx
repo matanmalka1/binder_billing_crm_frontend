@@ -3,10 +3,13 @@ import { Plus } from "lucide-react";
 import { Button } from "../../../../components/ui/primitives/Button";
 import { Input } from "../../../../components/ui/inputs/Input";
 import { Select } from "../../../../components/ui/inputs/Select";
-
-export const FINANCIAL_FIELD_CLASS = "w-full rounded border border-gray-200 px-2 py-1 text-sm";
-export const INLINE_ADD_FORM_CLASS = "mt-2 flex flex-col gap-2";
-export const INLINE_EDIT_FORM_CLASS = "mt-2 mb-2 space-y-2 rounded-md border border-info-100 bg-info-50/30 p-2";
+import {
+  FIELD_PLACEHOLDERS,
+  INLINE_ADD_FORM_CLASS,
+  INLINE_EDIT_FORM_CLASS,
+  MONEY_INPUT_PROPS,
+  PERCENTAGE_INPUT_PROPS,
+} from "./financialConstants";
 
 interface AddLineTriggerButtonProps {
   label: string;
@@ -100,15 +103,13 @@ export const FinancialAmountDescriptionFields: React.FC<FinancialAmountDescripti
     <FinancialInputField
       value={amount}
       onChange={onAmountChange}
-      type="number"
-      min="0"
-      step="0.01"
-      placeholder="סכום ₪"
+      {...MONEY_INPUT_PROPS}
+      placeholder={FIELD_PLACEHOLDERS.amount}
     />
     <FinancialInputField
       value={description}
       onChange={onDescriptionChange}
-      placeholder="תיאור (אופציונלי)"
+      placeholder={FIELD_PLACEHOLDERS.description}
     />
   </>
 );
@@ -130,16 +131,13 @@ export const ExpenseSupplementaryFields: React.FC<ExpenseSupplementaryFieldsProp
     <FinancialInputField
       value={recognitionRate}
       onChange={onRecognitionRateChange}
-      type="number"
-      min="0"
-      max="100"
-      step="1"
-      placeholder="שיעור הכרה (%)"
+      {...PERCENTAGE_INPUT_PROPS}
+      placeholder={FIELD_PLACEHOLDERS.recognitionRate}
     />
     <FinancialInputField
       value={documentReference}
       onChange={onDocumentReferenceChange}
-      placeholder="אסמכתא (אופציונלי)"
+      placeholder={FIELD_PLACEHOLDERS.documentReference}
     />
   </>
 );
@@ -172,16 +170,6 @@ interface FinancialFormErrorProps {
 export const FinancialFormError: React.FC<FinancialFormErrorProps> = ({ error }) =>
   error ? <p className="text-xs text-negative-500">{error}</p> : null;
 
-interface FinancialFormLayoutProps {
-  className: string;
-  children: ReactNode;
-}
-
-export const FinancialFormLayout: React.FC<FinancialFormLayoutProps> = ({
-  className,
-  children,
-}) => <div className={className}>{children}</div>;
-
 interface FinancialAddFormShellProps {
   open: boolean;
   label: string;
@@ -209,7 +197,7 @@ export const FinancialAddFormShell: React.FC<FinancialAddFormShellProps> = ({
 
   return (
     <form onSubmit={onSubmit}>
-      <FinancialFormLayout className={INLINE_ADD_FORM_CLASS}>
+      <div className={INLINE_ADD_FORM_CLASS}>
         {children}
         <FinancialFormError error={error} />
         <FinancialFormActions
@@ -217,7 +205,7 @@ export const FinancialAddFormShell: React.FC<FinancialAddFormShellProps> = ({
           submitLabel="הוסף"
           onCancel={onCancel}
         />
-      </FinancialFormLayout>
+      </div>
     </form>
   );
 };
@@ -240,7 +228,7 @@ export const FinancialEditFormShell: React.FC<FinancialEditFormShellProps> = ({
   children,
 }) => (
   <form onSubmit={onSubmit}>
-    <FinancialFormLayout className={INLINE_EDIT_FORM_CLASS}>
+    <div className={INLINE_EDIT_FORM_CLASS}>
       {children}
       <FinancialFormError error={error} />
       <FinancialFormActions
@@ -248,6 +236,6 @@ export const FinancialEditFormShell: React.FC<FinancialEditFormShellProps> = ({
         submitLabel={submitLabel}
         onCancel={onCancel}
       />
-    </FinancialFormLayout>
+    </div>
   </form>
 );

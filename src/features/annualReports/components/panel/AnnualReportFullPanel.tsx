@@ -1,33 +1,18 @@
-import type { ComponentType } from "react";
-import { cn, formatClientOfficeId } from "@/utils/utils";
-import { Download, LayoutDashboard, TrendingUp, Scale, Scissors, FileText, CalendarClock, Trash2, Save, CreditCard } from "lucide-react";
+import { cn } from "@/utils/utils";
+import { Download, Trash2, Save } from "lucide-react";
 import { useAnnualReportDetailPage } from "../../hooks/useAnnualReportDetailPage";
 import { DeleteReportConfirmDialog } from "./DeleteReportConfirmDialog";
-import type { SectionKey } from "../../types";
 import { AnnualReportSidebarStatus } from "./AnnualReportSidebarStatus";
 import { AnnualReportSectionContent } from "./AnnualReportSectionContent";
 import { PageHeader } from "../../../../components/layout/PageHeader";
 import { Button } from "../../../../components/ui/primitives/Button";
+import { PANEL_NAV_ITEMS, PANEL_TAB_VARIANTS } from "./constants";
+import { getClientLabel } from "./helpers";
 
 interface AnnualReportFullPanelProps {
   reportId: number;
   backPath?: string;
 }
-
-const NAV_ITEMS: { key: SectionKey; icon: ComponentType<{ size?: number; className?: string }>; label: string }[] = [
-  { key: "overview",   icon: LayoutDashboard, label: "סקירה" },
-  { key: "financials", icon: TrendingUp,      label: "הכנסות והוצאות" },
-  { key: "tax",        icon: Scale,           label: "חישוב מס" },
-  { key: "deductions", icon: Scissors,        label: "ניכויים" },
-  { key: "documents",  icon: FileText,        label: "מסמכים" },
-  { key: "timeline",   icon: CalendarClock,   label: "ציר זמן" },
-  { key: "charges",    icon: CreditCard,      label: "חיובים" },
-];
-
-const tabVariants: Record<"active" | "inactive", string> = {
-  active:   "border-b-2 border-info-600 text-info-700 font-semibold bg-info-50/40",
-  inactive: "text-gray-500 hover:text-gray-800 hover:bg-gray-50",
-};
 
 export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: AnnualReportFullPanelProps) => {
   const {
@@ -51,16 +36,12 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
     return <div className="flex flex-1 items-center justify-center py-24 text-sm text-negative-500">{error ?? "שגיאה בטעינת הדוח"}</div>;
   }
 
-  const clientLabel = report.client_name
-    ? `${report.client_name} (${formatClientOfficeId(report.client_record_id)})`
-    : `לקוח ${formatClientOfficeId(report.client_record_id)}`;
-
   return (
     <>
       <div dir="rtl">
         <PageHeader
           title={`דוח שנתי ${report.tax_year}`}
-          description={clientLabel}
+          description={getClientLabel(report)}
           breadcrumbs={[
             { label: "דוחות שנתיים", to: backPath },
             { label: `דוח ${report.tax_year}`, to: "#" },
@@ -92,7 +73,7 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
         {/* Navbar tabs */}
         <div className="mt-6 overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
           <div className="flex" role="tablist">
-            {NAV_ITEMS.map(({ key, icon: Icon, label }) => (
+            {PANEL_NAV_ITEMS.map(({ key, icon: Icon, label }) => (
               <button
                 key={key}
                 type="button"
@@ -101,7 +82,7 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
                 onClick={() => setActiveSection(key)}
                 className={cn(
                   "flex items-center gap-2 px-5 py-3 text-sm whitespace-nowrap transition-colors first:rounded-r-xl last:rounded-l-xl",
-                  tabVariants[activeSection === key ? "active" : "inactive"],
+                  PANEL_TAB_VARIANTS[activeSection === key ? "active" : "inactive"],
                 )}
               >
                 <Icon size={15} />

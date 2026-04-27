@@ -1,13 +1,14 @@
 import { useState } from "react";
 import type { ExpenseLineResponse, ExpenseCategoryType } from "../../api";
 import { EXPENSE_LABELS } from "../../report.constants";
+import { DEFAULT_RECOGNITION_RATE } from "./financialConstants";
 import {
   ExpenseSupplementaryFields,
   FinancialAmountDescriptionFields,
   FinancialEditFormShell,
   FinancialSelectField,
 } from "./FinancialLineFormParts";
-import { validatePercentage, validatePositiveAmount } from "./financialValidators";
+import { buildExpensePayload } from "./financialHelpers";
 
 interface EditExpenseLineFormProps {
   line: ExpenseLineResponse;
@@ -31,29 +32,25 @@ export const EditExpenseLineForm: React.FC<EditExpenseLineFormProps> = ({
   const [category, setCategory] = useState<ExpenseCategoryType>(line.category);
   const [amount, setAmount] = useState(String(line.amount));
   const [description, setDescription] = useState(line.description ?? "");
-  const [recognitionRate, setRecognitionRate] = useState(String(line.recognition_rate ?? 100));
+  const [recognitionRate, setRecognitionRate] = useState(
+    String(line.recognition_rate ?? DEFAULT_RECOGNITION_RATE),
+  );
   const [docRef, setDocRef] = useState(line.supporting_document_ref ?? "");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const parsed = validatePositiveAmount(amount);
-    if (parsed == null) {
-      setError("יש להזין סכום חיובי");
-      return;
-    }
-    const rate = validatePercentage(recognitionRate);
-    if (rate == null) {
-      setError("שיעור הכרה חייב להיות בין 0 ל-100");
-      return;
-    }
-    onSave({
-      category: category as ExpenseCategoryType,
-      amount: String(parsed),
-      description: description || undefined,
-      recognition_rate: String(rate),
-      supporting_document_ref: docRef || undefined,
-    });
+    const { payload, error: validationError } = buildExpensePayload(
+      category,
+      amount,
+      description,
+      recognitionRate,
+      docRef,
+    );
+
+    if (!payload) return setError(validationError ?? null);
+
+    onSave(payload);
   };
 
   return (

@@ -1,16 +1,17 @@
 import { AlertTriangle, CheckCircle, Info, XCircle, Send } from "lucide-react";
 import { Button } from "../../../../components/ui/primitives/Button";
 import { cn } from "../../../../utils/utils";
-import type { AnnualReportDetail } from "../../types";
+import type { AnnualReportFull } from "../../api";
+import { getAlertBanners, type AlertIcon, type AlertVariant } from "./helpers";
 
 interface Props {
-  report: AnnualReportDetail;
-  advances?: { balance_type: "due" | "refund" | "zero"; final_balance: number };
+  report: AnnualReportFull;
+  advances?: { balance_type: "due" | "refund" | "zero"; final_balance: number | string };
 }
 
 interface BannerItem {
-  variant: "error" | "warning" | "info" | "success";
-  icon: React.ReactNode;
+  variant: AlertVariant;
+  icon: AlertIcon;
   message: string;
   cta?: { label: string; onClick: () => void };
 }
@@ -29,6 +30,13 @@ const ICON_STYLES = {
   success: "text-positive-500",
 };
 
+const ICONS: Record<AlertIcon, React.ReactNode> = {
+  alert: <AlertTriangle className="h-4 w-4" />,
+  check: <CheckCircle className="h-4 w-4" />,
+  info: <Info className="h-4 w-4" />,
+  x: <XCircle className="h-4 w-4" />,
+};
+
 const Banner: React.FC<BannerItem> = ({ variant, icon, message, cta }) => (
   <div
     className={cn(
@@ -37,7 +45,7 @@ const Banner: React.FC<BannerItem> = ({ variant, icon, message, cta }) => (
     )}
   >
     <div className="flex items-start gap-2">
-      <span className={cn("mt-0.5 shrink-0", ICON_STYLES[variant])}>{icon}</span>
+      <span className={cn("mt-0.5 shrink-0", ICON_STYLES[variant])}>{ICONS[icon]}</span>
       <p className="text-sm leading-snug">{message}</p>
     </div>
     {cta && (
@@ -55,77 +63,7 @@ const Banner: React.FC<BannerItem> = ({ variant, icon, message, cta }) => (
 );
 
 export const ReportAlertBanners: React.FC<Props> = ({ report, advances }) => {
-  const banners: BannerItem[] = [];
-
-  // Balance due alert
-  if (advances?.balance_type === "due" && advances.final_balance > 0) {
-    const formatted = advances.final_balance.toLocaleString("he-IL", {
-      style: "currency",
-      currency: "ILS",
-      maximumFractionDigits: 0,
-    });
-    banners.push({
-      variant: "error",
-      icon: <XCircle className="h-4 w-4" />,
-      message: `יתרת מס לתשלום — ${formatted}. לאחר קיזוז מקדמות ששולמו.`,
-      cta: { label: "שלח הודעה", onClick: () => {} },
-    });
-  }
-
-  // Deadline warning
-  const now = new Date();
-  if (report.filing_deadline) {
-    const deadline = new Date(report.filing_deadline);
-    const daysLeft = Math.ceil(
-      (deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
-    );
-    if (daysLeft > 0 && daysLeft <= 60) {
-      banners.push({
-        variant: "warning",
-        icon: <AlertTriangle className="h-4 w-4" />,
-        message: `מועד הגשת הדוח לשנת מס ${report.tax_year} הוא ${deadline.toLocaleDateString("he-IL")} — נותרו ${daysLeft} ימים.`,
-      });
-    } else if (daysLeft < 0) {
-      banners.push({
-        variant: "error",
-        icon: <XCircle className="h-4 w-4" />,
-        message: `מועד הגשת הדוח לשנת מס ${report.tax_year} חלף לפני ${Math.abs(daysLeft)} ימים.`,
-      });
-    }
-  }
-
-  // Submitted info
-  if (report.status === "submitted" && report.submitted_at) {
-    const d = new Date(report.submitted_at).toLocaleDateString("he-IL");
-    banners.push({
-      variant: "info",
-      icon: <Info className="h-4 w-4" />,
-      message: `הדוח הוגש ב-${d} ממתין לאישור רשות המסים.`,
-    });
-  }
-
-  // Accepted / completed
-  if (report.status === "accepted" || report.status === "closed") {
-    banners.push({
-      variant: "success",
-      icon: <CheckCircle className="h-4 w-4" />,
-      message: `דוח שנת מס ${report.tax_year} אושר וסגור בהצלחה.`,
-    });
-  }
-
-  // Refund
-  if (advances?.balance_type === "refund" && advances.final_balance < 0) {
-    const formatted = Math.abs(advances.final_balance).toLocaleString("he-IL", {
-      style: "currency",
-      currency: "ILS",
-      maximumFractionDigits: 0,
-    });
-    banners.push({
-      variant: "success",
-      icon: <CheckCircle className="h-4 w-4" />,
-      message: `צפוי החזר מס בסך ${formatted} לשנת מס ${report.tax_year}.`,
-    });
-  }
+  const banners = getAlertBanners(report, advances);
 
   if (banners.length === 0) return null;
 

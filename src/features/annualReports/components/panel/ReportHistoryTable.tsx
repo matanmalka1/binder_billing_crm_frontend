@@ -10,6 +10,7 @@ import {
 } from "../../api";
 import { formatCurrencyILS as fmt, formatDate } from "../../../../utils/utils";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
+import { getFinalBalanceText, sortReportsByTaxYearDesc } from "./helpers";
 
 interface Props {
   clientId: number;
@@ -29,7 +30,7 @@ export const ReportHistoryTable: React.FC<Props> = ({
     enabled: !!clientId,
   });
 
-  const sorted = [...reports].sort((a, b) => b.tax_year - a.tax_year);
+  const sorted = sortReportsByTaxYearDesc(reports);
 
   return (
     <DataTable<AnnualReportFull>
@@ -85,7 +86,7 @@ export const ReportHistoryTable: React.FC<Props> = ({
             if (r.final_balance == null) return <span className="text-gray-400">—</span>;
             return (
               <span className={Number(r.final_balance) > 0 ? semanticMonoToneClasses.negative : semanticMonoToneClasses.positive}>
-                {Number(r.final_balance) > 0 ? `${fmt(r.final_balance)} לתשלום` : `${fmt(Math.abs(Number(r.final_balance)))} החזר`}
+                {getFinalBalanceText(r.final_balance)}
               </span>
             );
           },

@@ -3,6 +3,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 import { annualReportTaxApi, annualReportsQK } from "../../api";
 import { cn } from "../../../../utils/utils";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
+import { clampPercent } from "./helpers";
 
 interface ReadinessCheckPanelProps {
   reportId: number;
@@ -18,7 +19,7 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
   if (isLoading) return <p className="text-sm text-gray-400 py-2">בודק מוכנות...</p>;
   if (!data) return null;
 
-  const completion = Math.max(0, Math.min(100, data.completion_pct));
+  const completion = clampPercent(data.completion_pct);
 
   return (
     <div className="space-y-2">

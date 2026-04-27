@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { annualReportTaxApi, annualReportsQK } from "../../api";
 import { semanticMonoToneClasses } from "@/utils/semanticColors";
 import { formatCurrencyILS } from "@/utils/utils";
+import { formatAbsCurrency } from "./helpers";
 
 interface Props {
   reportId: number;
@@ -35,7 +36,6 @@ export const FinalBalancePanel: React.FC<Props> = ({ reportId }) => {
   const tax = taxQuery.data;
   const adv = advancesQuery.data;
   const style = BALANCE_STYLES[adv.balance_type];
-  const absBalance = Math.abs(Number(adv.final_balance));
 
   return (
     <div className="space-y-2">
@@ -51,7 +51,7 @@ export const FinalBalancePanel: React.FC<Props> = ({ reportId }) => {
         <div className="flex justify-between py-1.5 text-sm">
           <dt className="text-gray-500">יתרה סופית</dt>
           <dd className={style.className}>
-            {formatCurrencyILS(absBalance)} — {style.label}
+            {formatAbsCurrency(adv.final_balance)} — {style.label}
           </dd>
         </div>
       </dl>

@@ -3,7 +3,6 @@ import { annualReportFinancialsApi, annualReportsQK } from "../api";
 import type { ExpenseLinePayload, IncomeLinePayload, IncomeSourceType } from "../api";
 import { toast } from "../../../utils/toast";
 import { showErrorToast } from "../../../utils/utils";
-import type { AddExpensePayload } from "../components/financials/AddExpenseLineForm";
 
 export const useIncomeExpenseMutations = (reportId: number) => {
   const queryClient = useQueryClient();
@@ -32,7 +31,7 @@ export const useIncomeExpenseMutations = (reportId: number) => {
   });
 
   const addExpense = useMutation({
-    mutationFn: (payload: AddExpensePayload) =>
+    mutationFn: (payload: ExpenseLinePayload) =>
       annualReportFinancialsApi.addExpenseLine(reportId, {
         category: payload.category,
         amount: String(payload.amount),

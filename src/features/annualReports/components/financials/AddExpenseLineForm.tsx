@@ -1,21 +1,16 @@
 import { useState } from "react";
-import type { ExpenseCategoryType } from "../../api";
 import { EXPENSE_LABELS } from "../../report.constants";
+import {
+  DEFAULT_RECOGNITION_RATE,
+  FIELD_PLACEHOLDERS,
+} from "./financialConstants";
 import {
   ExpenseSupplementaryFields,
   FinancialAddFormShell,
   FinancialAmountDescriptionFields,
   FinancialSelectField,
 } from "./FinancialLineFormParts";
-import { validatePercentage, validatePositiveAmount } from "./financialValidators";
-
-export interface AddExpensePayload {
-  category: ExpenseCategoryType;
-  amount: string;
-  description?: string;
-  recognition_rate?: string;
-  supporting_document_ref?: string;
-}
+import { buildExpensePayload, type AddExpensePayload } from "./financialHelpers";
 
 interface AddExpenseLineFormProps {
   onAdd: (payload: AddExpensePayload) => void;
@@ -30,7 +25,7 @@ export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
-  const [recognitionRate, setRecognitionRate] = useState("100");
+  const [recognitionRate, setRecognitionRate] = useState(DEFAULT_RECOGNITION_RATE);
   const [docRef, setDocRef] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -38,34 +33,24 @@ export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({
     setCategory("");
     setAmount("");
     setDescription("");
-    setRecognitionRate("100");
+    setRecognitionRate(DEFAULT_RECOGNITION_RATE);
     setDocRef("");
     setError(null);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!category) {
-      setError("יש לבחור קטגוריה");
-      return;
-    }
-    const parsed = validatePositiveAmount(amount);
-    if (parsed == null) {
-      setError("יש להזין סכום חיובי");
-      return;
-    }
-    const rate = validatePercentage(recognitionRate);
-    if (rate == null) {
-      setError("שיעור הכרה חייב להיות בין 0 ל-100");
-      return;
-    }
-    onAdd({
-      category: category as ExpenseCategoryType,
-      amount: String(parsed),
-      description: description || undefined,
-      recognition_rate: String(rate),
-      supporting_document_ref: docRef || undefined,
-    });
+    const { payload, error: validationError } = buildExpensePayload(
+      category,
+      amount,
+      description,
+      recognitionRate,
+      docRef,
+    );
+
+    if (!payload) return setError(validationError ?? null);
+
+    onAdd(payload);
     reset();
     setOpen(false);
   };
@@ -87,7 +72,7 @@ export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({
         value={category}
         onChange={setCategory}
         options={EXPENSE_LABELS}
-        placeholder="בחר קטגוריה..."
+        placeholder={FIELD_PLACEHOLDERS.expenseCategory}
       />
       <FinancialAmountDescriptionFields
         amount={amount}

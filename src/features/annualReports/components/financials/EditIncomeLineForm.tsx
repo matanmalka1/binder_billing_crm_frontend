@@ -5,13 +5,13 @@ import {
   FinancialEditFormShell,
   FinancialSelectField,
 } from "./FinancialLineFormParts";
-import { validatePositiveAmount } from "./financialValidators";
+import { buildIncomePayload, type IncomeFormPayload } from "./financialHelpers";
 
 interface EditIncomeLineFormProps {
   line: IncomeLineResponse;
   typeOptions: Record<string, string>;
   isSaving: boolean;
-  onSave: (payload: { source_type: IncomeSourceType; amount: string; description?: string }) => void;
+  onSave: (payload: IncomeFormPayload) => void;
   onCancel: () => void;
 }
 
@@ -29,16 +29,15 @@ export const EditIncomeLineForm: React.FC<EditIncomeLineFormProps> = ({
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!typeKey) {
-      setError("יש לבחור סוג");
-      return;
-    }
-    const parsed = validatePositiveAmount(amount);
-    if (parsed == null) {
-      setError("יש להזין סכום חיובי");
-      return;
-    }
-    onSave({ source_type: typeKey, amount: String(parsed), description: description || undefined });
+    const { payload, error: validationError } = buildIncomePayload(
+      typeKey,
+      amount,
+      description,
+    );
+
+    if (!payload) return setError(validationError ?? null);
+
+    onSave(payload);
   };
 
   return (
