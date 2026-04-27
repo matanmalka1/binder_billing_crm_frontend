@@ -20,7 +20,7 @@ const getCachedClientRecordId = (
 };
 
 export const invalidateVatLists = (queryClient: QueryClient) =>
-  queryClient.invalidateQueries({ queryKey: vatReportsQK.lists });
+  queryClient.invalidateQueries({ queryKey: vatReportsQK.lists() });
 
 export const invalidateVatWorkItem = async (
   queryClient: QueryClient,

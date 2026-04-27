@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutationWithToast } from "../../../hooks/useMutationWithToast";
 import { getErrorMessage } from "../../../utils/utils";
 import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
 import {
@@ -100,24 +101,25 @@ export const useClientsPage = () => {
     },
   });
 
-  const updateMutation = useMutation({
-    mutationFn: ({ clientId, payload }: { clientId: number; payload: UpdateClientPayload }) =>
-      clientsApi.update(clientId, payload),
-    onSuccess: () => {
-      toast.success("הלקוח עודכן בהצלחה");
-      queryClient.invalidateQueries({ queryKey: clientsQK.all });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בעדכון לקוח"),
+  const updateMutation = useMutationWithToast<
+    Awaited<ReturnType<typeof clientsApi.update>>,
+    { clientId: number; payload: UpdateClientPayload }
+  >({
+    mutationFn: ({ clientId, payload }) => clientsApi.update(clientId, payload),
+    successMessage: "הלקוח עודכן בהצלחה",
+    errorMessage: "שגיאה בעדכון לקוח",
+    invalidateKeys: [clientsQK.all],
   });
 
-  const restoreMutation = useMutation({
-    mutationFn: (clientId: number) => clientsApi.restore(clientId),
-    onSuccess: () => {
-      toast.success("הלקוח שוחזר בהצלחה");
-      queryClient.invalidateQueries({ queryKey: clientsQK.all });
-      setDeletedClientInfo(null);
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בשחזור לקוח"),
+  const restoreMutation = useMutationWithToast<
+    Awaited<ReturnType<typeof clientsApi.restore>>,
+    number
+  >({
+    mutationFn: (clientId) => clientsApi.restore(clientId),
+    successMessage: "הלקוח שוחזר בהצלחה",
+    errorMessage: "שגיאה בשחזור לקוח",
+    invalidateKeys: [clientsQK.all],
+    onSuccess: () => setDeletedClientInfo(null),
   });
 
   const handleRestoreClient = useCallback(() => {

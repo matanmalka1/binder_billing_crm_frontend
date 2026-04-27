@@ -1,77 +1,67 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bindersApi, bindersQK } from "../api";
-import { showErrorToast } from "../../../utils/utils";
-import { toast } from "../../../utils/toast";
+import { useMutationWithToast } from "../../../hooks/useMutationWithToast";
 
 export const useBinderMutations = (onDeleteSuccess: () => void) => {
-  const queryClient = useQueryClient();
-
-  const deleteMutation = useMutation({
-    mutationFn: (binderId: number) => bindersApi.delete(binderId),
-    onSuccess: () => {
-      toast.success("הקלסר נמחק בהצלחה");
-      onDeleteSuccess();
-      void queryClient.invalidateQueries({ queryKey: bindersQK.all });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה במחיקת קלסר"),
+  const deleteMutation = useMutationWithToast<void, number>({
+    mutationFn: (binderId) => bindersApi.delete(binderId),
+    successMessage: "הקלסר נמחק בהצלחה",
+    errorMessage: "שגיאה במחיקת קלסר",
+    invalidateKeys: [bindersQK.all],
+    onSuccess: onDeleteSuccess,
   });
 
-  const markReadyMutation = useMutation({
-    mutationFn: (binderId: number) => bindersApi.ready(binderId),
-    onSuccess: () => {
-      toast.success("הקלסר סומן כמוכן לאיסוף");
-      void queryClient.invalidateQueries({ queryKey: bindersQK.all });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בסימון קלסר כמוכן"),
+  const markReadyMutation = useMutationWithToast<
+    Awaited<ReturnType<typeof bindersApi.ready>>,
+    number
+  >({
+    mutationFn: (binderId) => bindersApi.ready(binderId),
+    successMessage: "הקלסר סומן כמוכן לאיסוף",
+    errorMessage: "שגיאה בסימון קלסר כמוכן",
+    invalidateKeys: [bindersQK.all],
   });
 
-  const markReadyBulkMutation = useMutation({
-    mutationFn: ({
-      clientId,
-      untilPeriodYear,
-      untilPeriodMonth,
-    }: {
-      clientId: number;
-      untilPeriodYear: number;
-      untilPeriodMonth: number;
-    }) =>
+  const markReadyBulkMutation = useMutationWithToast<
+    Awaited<ReturnType<typeof bindersApi.markReadyBulk>>,
+    { clientId: number; untilPeriodYear: number; untilPeriodMonth: number }
+  >({
+    mutationFn: ({ clientId, untilPeriodYear, untilPeriodMonth }) =>
       bindersApi.markReadyBulk({
         client_record_id: clientId,
         until_period_year: untilPeriodYear,
         until_period_month: untilPeriodMonth,
       }),
-    onSuccess: (updatedBinders) => {
-      toast.success(
-        updatedBinders.length > 0
-          ? `${updatedBinders.length} קלסרים סומנו כמוכנים לאיסוף`
-          : "לא נמצאו קלסרים מתאימים לסימון",
-      );
-      void queryClient.invalidateQueries({ queryKey: bindersQK.all });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בסימון קבוצתי כמוכן"),
+    successMessage: (updatedBinders) =>
+      updatedBinders.length > 0
+        ? `${updatedBinders.length} קלסרים סומנו כמוכנים לאיסוף`
+        : "לא נמצאו קלסרים מתאימים לסימון",
+    errorMessage: "שגיאה בסימון קבוצתי כמוכן",
+    invalidateKeys: [bindersQK.all],
   });
 
-  const revertReadyMutation = useMutation({
-    mutationFn: (binderId: number) => bindersApi.revertReady(binderId),
-    onSuccess: () => {
-      toast.success("סטטוס מוכן לאיסוף בוטל");
-      void queryClient.invalidateQueries({ queryKey: bindersQK.all });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בביטול סטטוס מוכן"),
+  const revertReadyMutation = useMutationWithToast<
+    Awaited<ReturnType<typeof bindersApi.revertReady>>,
+    number
+  >({
+    mutationFn: (binderId) => bindersApi.revertReady(binderId),
+    successMessage: "סטטוס מוכן לאיסוף בוטל",
+    errorMessage: "שגיאה בביטול סטטוס מוכן",
+    invalidateKeys: [bindersQK.all],
   });
 
-  const returnBinderMutation = useMutation({
-    mutationFn: ({ binderId, pickupPersonName }: { binderId: number; pickupPersonName: string }) =>
+  const returnBinderMutation = useMutationWithToast<
+    Awaited<ReturnType<typeof bindersApi.returnBinder>>,
+    { binderId: number; pickupPersonName: string }
+  >({
+    mutationFn: ({ binderId, pickupPersonName }) =>
       bindersApi.returnBinder(binderId, { pickup_person_name: pickupPersonName }),
-    onSuccess: () => {
-      toast.success("הקלסר הוחזר בהצלחה");
-      void queryClient.invalidateQueries({ queryKey: bindersQK.all });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה בהחזרת קלסר"),
+    successMessage: "הקלסר הוחזר בהצלחה",
+    errorMessage: "שגיאה בהחזרת קלסר",
+    invalidateKeys: [bindersQK.all],
   });
 
-  const handoverMutation = useMutation({
-    mutationFn: (payload: {
+  const handoverMutation = useMutationWithToast<
+    Awaited<ReturnType<typeof bindersApi.handover>>,
+    {
       clientId: number;
       binderIds: number[];
       receivedByName: string;
@@ -79,7 +69,9 @@ export const useBinderMutations = (onDeleteSuccess: () => void) => {
       untilPeriodYear: number;
       untilPeriodMonth: number;
       notes?: string | null;
-    }) =>
+    }
+  >({
+    mutationFn: (payload) =>
       bindersApi.handover({
         client_record_id: payload.clientId,
         binder_ids: payload.binderIds,
@@ -89,11 +81,9 @@ export const useBinderMutations = (onDeleteSuccess: () => void) => {
         until_period_month: payload.untilPeriodMonth,
         notes: payload.notes ?? null,
       }),
-    onSuccess: (handover) => {
-      toast.success(`בוצעה מסירה של ${handover.binder_ids.length} קלסרים`);
-      void queryClient.invalidateQueries({ queryKey: bindersQK.all });
-    },
-    onError: (err) => showErrorToast(err, "שגיאה במסירת קלסרים"),
+    successMessage: (handover) => `בוצעה מסירה של ${handover.binder_ids.length} קלסרים`,
+    errorMessage: "שגיאה במסירת קלסרים",
+    invalidateKeys: [bindersQK.all],
   });
 
   const actionLoadingId =

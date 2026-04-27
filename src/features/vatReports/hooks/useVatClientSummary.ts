@@ -1,25 +1,23 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { vatReportsApi, type CreateVatWorkItemPayload } from "../api";
 import { vatReportsQK } from "../api/queryKeys";
-import { toast } from "../../../utils/toast";
-import { showErrorToast } from "../../../utils/utils";
+import { useMutationWithToast } from "../../../hooks/useMutationWithToast";
 
 export const useVatClientSummary = (clientId: number) => {
-  const queryClient = useQueryClient();
-
   const summaryQuery = useQuery({
     queryKey: vatReportsQK.clientSummary(clientId),
     queryFn: () => vatReportsApi.getClientSummary(clientId),
     staleTime: 30_000,
   });
 
-  const createMutation = useMutation({
-    mutationFn: (payload: CreateVatWorkItemPayload) => vatReportsApi.create(payload),
-    onSuccess: () => {
-      toast.success('תיק מע"מ נוצר בהצלחה');
-      queryClient.invalidateQueries({ queryKey: vatReportsQK.clientSummary(clientId) });
-    },
-    onError: (err) => showErrorToast(err, 'שגיאה ביצירת תיק מע"מ'),
+  const createMutation = useMutationWithToast<
+    Awaited<ReturnType<typeof vatReportsApi.create>>,
+    CreateVatWorkItemPayload
+  >({
+    mutationFn: (payload) => vatReportsApi.create(payload),
+    successMessage: 'תיק מע"מ נוצר בהצלחה',
+    errorMessage: 'שגיאה ביצירת תיק מע"מ',
+    invalidateKeys: [vatReportsQK.clientSummary(clientId)],
   });
 
   return {

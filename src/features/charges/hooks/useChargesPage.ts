@@ -12,6 +12,7 @@ import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../util
 import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
+import { useMutationWithToast } from "../../../hooks/useMutationWithToast";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
@@ -45,12 +46,14 @@ export const useChargesPage = () => {
   const error = listError ? getErrorMessage(listError, "שגיאה בטעינת רשימת חיובים") : null;
   const { isAdvisor } = useRole();
 
-  const createMutation = useMutation({
-    mutationFn: (payload: CreateChargePayload) => chargesApi.create(payload),
-    onSuccess: async () => {
-      toast.success("חיוב נוצר בהצלחה");
-      await queryClient.invalidateQueries({ queryKey: chargesQK.all });
-    },
+  const createMutation = useMutationWithToast<
+    Awaited<ReturnType<typeof chargesApi.create>>,
+    CreateChargePayload
+  >({
+    mutationFn: (payload) => chargesApi.create(payload),
+    successMessage: "חיוב נוצר בהצלחה",
+    errorMessage: "שגיאה ביצירת חיוב",
+    invalidateKeys: [chargesQK.all],
   });
 
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());

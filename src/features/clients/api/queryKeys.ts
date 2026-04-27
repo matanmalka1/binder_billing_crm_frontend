@@ -1,7 +1,7 @@
+import { createQueryKeys } from "@/lib/queryKeys";
+
 export const clientsQK = {
-  all: ["clients"] as const,
-  list: (params: object) => ["clients", "list", params] as const,
-  detail: (id: number) => ["clients", "detail", id] as const,
+  ...createQueryKeys("clients"),
   businessDetail: (clientId: number | "none", businessId: number | "none") =>
     ["clients", "businesses", "detail", clientId, businessId] as const,
   taxProfile: (id: number) => ["clients", "tax-profile", id] as const,
@@ -12,4 +12,4 @@ export const clientsQK = {
   businessesAllFallback: () => ["clients", "businesses", "all", "none"] as const,
   firstBusiness: (clientId: number) => ["clients", "businesses", "first", clientId] as const,
   auditTrail: (clientId: number) => ["clients", "audit", clientId] as const,
-} as const;
+};
