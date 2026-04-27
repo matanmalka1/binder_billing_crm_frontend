@@ -189,12 +189,7 @@ export interface SeasonSummary {
   overdue_count: number;
 }
 
-export interface AnnualReportListResponse {
-  items: AnnualReportFull[];
-  page: number;
-  page_size: number;
-  total: number;
-}
+export type AnnualReportListResponse = PaginatedResponse<AnnualReportFull>;
 
 export interface CreateAnnualReportPayload {
   client_record_id: number;
@@ -364,9 +359,4 @@ export interface ChargeItem {
   created_at: string;
 }
 
-export interface ChargesListResponse {
-  items: ChargeItem[];
-  page: number;
-  page_size: number;
-  total: number;
-}
+export type ChargesListResponse = PaginatedResponse<ChargeItem>;

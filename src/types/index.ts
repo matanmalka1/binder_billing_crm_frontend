@@ -1,3 +1,6 @@
+/** ISO-8601 calendar date string `YYYY-MM-DD`. */
+export type ISODateString = `${number}${number}${number}${number}-${number}${number}-${number}${number}`;
+
 export interface PaginatedResponse<T> {
   items: T[];
   page: number;

@@ -13,12 +13,9 @@ export interface BinderDetailResponse {
   days_in_office: number | null;
 }
 
-export interface BinderListResponseExtended {
-  items: BinderDetailResponse[];
-  page: number;
-  page_size: number;
-  total: number;
-}
+import type { PaginatedResponse } from "@/types";
+
+export type BinderListResponseExtended = PaginatedResponse<BinderDetailResponse>;
 
 export interface BinderMarkReadyBulkPayload {
   client_record_id: number;

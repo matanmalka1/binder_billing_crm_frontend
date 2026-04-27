@@ -1,8 +1,5 @@
 import type { BackendAction } from "@/lib/actions/types";
-import type { PaginatedResponse } from "@/types";
-
-/** ISO-8601 calendar date string `YYYY-MM-DD`. */
-export type ISODateString = `${number}${number}${number}${number}-${number}${number}-${number}${number}`;
+import type { ISODateString, PaginatedResponse } from "@/types";
 
 export interface ClientResponse {
   id: number;

@@ -1,7 +1,7 @@
 export { clientsApi } from "./clients.api";
 export { clientsQK } from "./queryKeys";
+export type { ISODateString } from "@/types";
 export type {
-  ISODateString,
   ClientResponse,
   ActiveClientSummary,
   DeletedClientSummary,
