@@ -104,14 +104,6 @@ export interface VatProgressBarProps {
   currentStatus: string;
 }
 
-export interface VatInvoiceAddModalProps {
-  open: boolean;
-  invoiceType: "income" | "expense";
-  addInvoice: (payload: CreateVatInvoicePayload) => Promise<boolean>;
-  isAdding: boolean;
-  onClose: () => void;
-}
-
 export interface VatSummaryTabProps {
   workItem: VatWorkItemResponse;
   invoices: VatInvoiceResponse[];
