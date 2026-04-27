@@ -23,9 +23,8 @@ export const useNotifications = (clientId?: number) => {
 
   const unreadCount = unreadData?.unread_count ?? 0;
 
-  const invalidate = () => {
+  const invalidate = () =>
     void queryClient.invalidateQueries({ queryKey: notificationsQK.all });
-  };
 
   const markReadMutation = useMutation({
     mutationFn: (ids: number[]) => notificationsApi.markRead(ids),

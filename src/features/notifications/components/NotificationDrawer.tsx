@@ -24,10 +24,6 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
     }
   };
 
-  const handleMarkAllRead = () => {
-    markAllRead();
-  };
-
   return (
     <>
       <SendNotificationModal
@@ -72,7 +68,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
               type="button"
               variant="ghost"
               size="sm"
-              onClick={handleMarkAllRead}
+              onClick={() => markAllRead()}
               disabled={unreadCount === 0}
               className="text-xs text-primary-600 hover:text-primary-700 font-medium px-0 hover:bg-transparent"
             >
@@ -124,8 +120,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
                   <span className="text-xs text-gray-500">נשלח ל: {item.recipient}</span>
                 )}
                 <span className="text-xs text-gray-400">
-                  {new Date(item.created_at).toLocaleDateString("he-IL")}{" "}
-                  {new Date(item.created_at).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" })}
+                  {new Date(item.created_at).toLocaleString("he-IL", { dateStyle: "short", timeStyle: "short" })}
                 </span>
               </div>
             </Button>

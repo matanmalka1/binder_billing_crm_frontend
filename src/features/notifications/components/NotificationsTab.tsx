@@ -7,8 +7,6 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ businessId }
   const { notifications, unreadCount, markAllRead, isLoading } = useNotifications(businessId);
   const limited = notifications.slice(0, 50);
 
-  const handleMarkAllRead = () => markAllRead(businessId);
-
   if (isLoading) {
     return <p className="text-sm text-gray-400 py-8 text-center">טוען התראות...</p>;
   }
@@ -20,7 +18,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ businessId }
         <Button
           type="button"
           variant="outline"
-          onClick={handleMarkAllRead}
+          onClick={() => markAllRead(businessId)}
           disabled={unreadCount === 0}
         >
           סמן הכל כנקרא

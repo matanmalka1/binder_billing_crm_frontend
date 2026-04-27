@@ -5,12 +5,12 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { Select } from "../../../components/ui/inputs/Select";
 import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
-import { clientsApi } from "@/features/clients";
 import { useSendNotification } from "../hooks/useSendNotification";
+import { useClientForNotification } from "../hooks/useClientForNotification";
 import type { SendNotificationModalProps } from "../types";
 
 interface FormValues {
-  channel: "WHATSAPP" | "EMAIL";
+  channel: "whatsapp" | "email";
   message: string;
 }
 
@@ -19,13 +19,17 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
   onClose,
   clientId,
 }) => {
-  const [selectedClient, setSelectedClient] = useState<{ id: number; name: string } | null>(
-    clientId != null ? { id: clientId, name: "" } : null
-  );
-  const [selectedBusinessId, setSelectedBusinessId] = useState<number | null>(null);
   const [clientQuery, setClientQuery] = useState("");
   const [clientError, setClientError] = useState<string | undefined>();
-  const [clientContact, setClientContact] = useState<{ phone: string | null; email: string | null } | null>(null);
+
+  const {
+    selectedClient,
+    selectedBusinessId,
+    clientContact,
+    selectClient,
+    clearClient,
+    reset: resetClient,
+  } = useClientForNotification(clientId);
 
   const {
     register,
@@ -34,34 +38,19 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
     control,
     formState: { errors, isDirty },
   } = useForm<FormValues>({
-    defaultValues: {
-      channel: "EMAIL",
-      message: "",
-    },
+    defaultValues: { channel: "email", message: "" },
   });
 
   const channel = useWatch({ control, name: "channel" });
 
   useEffect(() => {
     if (open) {
-      reset({ channel: "EMAIL", message: "" });
-      setSelectedClient(clientId != null ? { id: clientId, name: "" } : null);
-      setSelectedBusinessId(null);
+      reset({ channel: "email", message: "" });
       setClientQuery("");
       setClientError(undefined);
-      setClientContact(null);
-
-      if (clientId != null) {
-        clientsApi.getById(clientId).then((data) => {
-          setClientContact({ phone: data.phone, email: data.email });
-        }).catch(() => setClientContact(null));
-        clientsApi.listAllBusinessesForClient(clientId).then((data) => {
-          const active = data.items.find((b) => b.status === "active") ?? data.items[0];
-          setSelectedBusinessId(active?.id ?? null);
-        }).catch(() => setSelectedBusinessId(null));
-      }
+      resetClient(clientId);
     }
-  }, [open, clientId, reset]);
+  }, [open, clientId, reset, resetClient]);
 
   const { sendNotification, isSending } = useSendNotification(onClose);
 
@@ -118,7 +107,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
               label="לקוח"
               name={selectedClient.name}
               id={selectedClient.id}
-              onClear={() => { setSelectedClient(null); setClientQuery(""); setClientContact(null); }}
+              onClear={() => { clearClient(); setClientQuery(""); }}
             />
           ) : (
             <ClientSearchInput
@@ -126,21 +115,8 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
               value={clientQuery}
               onChange={setClientQuery}
               onSelect={async (c) => {
-                setSelectedClient({ id: c.id, name: c.name });
-                setSelectedBusinessId(null);
                 setClientError(undefined);
-                try {
-                  const [clientData, bizData] = await Promise.all([
-                    clientsApi.getById(c.id),
-                    clientsApi.listAllBusinessesForClient(c.id),
-                  ]);
-                  setClientContact({ phone: clientData.phone, email: clientData.email });
-                  const active = bizData.items.find((b) => b.status === "active") ?? bizData.items[0];
-                  setSelectedBusinessId(active?.id ?? null);
-                } catch {
-                  setClientContact(null);
-                  setSelectedBusinessId(null);
-                }
+                await selectClient({ id: c.id, name: c.name });
               }}
               error={clientError}
               placeholder="חפש לפי שם, ת.ז. / ח.פ..."
@@ -148,7 +124,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
           )}
           {selectedClient && clientContact && (
             <p className="text-xs text-gray-500 pe-1">
-              {channel === "WHATSAPP"
+              {channel === "whatsapp"
                 ? (clientContact.phone ?? "אין מספר טלפון ללקוח")
                 : (clientContact.email ?? "אין כתובת אימייל ללקוח")}
             </p>
@@ -158,8 +134,8 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">ערוץ שליחה</label>
           <Select {...register("channel", { required: true })}>
-            <option value="EMAIL">אימייל</option>
-            <option value="WHATSAPP">וואטסאפ</option>
+            <option value="email">אימייל</option>
+            <option value="whatsapp">וואטסאפ</option>
           </Select>
         </div>
 
