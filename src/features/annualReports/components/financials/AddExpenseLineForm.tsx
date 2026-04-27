@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { EXPENSE_LABELS } from "../../report.constants";
-import {
-  DEFAULT_RECOGNITION_RATE,
-  FIELD_PLACEHOLDERS,
-} from "./financialConstants";
+import { FIELD_PLACEHOLDERS } from "./financialConstants";
 import {
   ExpenseSupplementaryFields,
   FinancialAddFormShell,
   FinancialAmountDescriptionFields,
   FinancialSelectField,
 } from "./FinancialLineFormParts";
-import { buildExpensePayload, type AddExpensePayload } from "./financialHelpers";
+import type { AddExpensePayload } from "./financialHelpers";
+import { useExpenseLineForm } from "./useFinancialLineForm";
 
 interface AddExpenseLineFormProps {
   onAdd: (payload: AddExpensePayload) => void;
@@ -22,36 +20,14 @@ export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({
   isAdding,
 }) => {
   const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState("");
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [recognitionRate, setRecognitionRate] = useState(DEFAULT_RECOGNITION_RATE);
-  const [docRef, setDocRef] = useState("");
-  const [error, setError] = useState<string | null>(null);
-
-  const reset = () => {
-    setCategory("");
-    setAmount("");
-    setDescription("");
-    setRecognitionRate(DEFAULT_RECOGNITION_RATE);
-    setDocRef("");
-    setError(null);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const { payload, error: validationError } = buildExpensePayload(
-      category,
-      amount,
-      description,
-      recognitionRate,
-      docRef,
-    );
-
-    if (!payload) return setError(validationError ?? null);
-
+  const form = useExpenseLineForm(undefined, (payload) => {
     onAdd(payload);
-    reset();
+    form.reset();
+    setOpen(false);
+  });
+
+  const close = () => {
+    form.reset();
     setOpen(false);
   };
 
@@ -59,32 +35,29 @@ export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({
     <FinancialAddFormShell
       open={open}
       label="הוסף הוצאה"
-      error={error}
+      error={form.error}
       isSubmitting={isAdding}
       onOpen={() => setOpen(true)}
-      onSubmit={handleSubmit}
-      onCancel={() => {
-        reset();
-        setOpen(false);
-      }}
+      onSubmit={form.submit}
+      onCancel={close}
     >
       <FinancialSelectField
-        value={category}
-        onChange={setCategory}
+        value={form.category}
+        onChange={form.setCategory}
         options={EXPENSE_LABELS}
         placeholder={FIELD_PLACEHOLDERS.expenseCategory}
       />
       <FinancialAmountDescriptionFields
-        amount={amount}
-        onAmountChange={setAmount}
-        description={description}
-        onDescriptionChange={setDescription}
+        amount={form.amount}
+        onAmountChange={form.setAmount}
+        description={form.description}
+        onDescriptionChange={form.setDescription}
       />
       <ExpenseSupplementaryFields
-        recognitionRate={recognitionRate}
-        onRecognitionRateChange={setRecognitionRate}
-        documentReference={docRef}
-        onDocumentReferenceChange={setDocRef}
+        recognitionRate={form.recognitionRate}
+        onRecognitionRateChange={form.setRecognitionRate}
+        documentReference={form.documentReference}
+        onDocumentReferenceChange={form.setDocumentReference}
       />
     </FinancialAddFormShell>
   );

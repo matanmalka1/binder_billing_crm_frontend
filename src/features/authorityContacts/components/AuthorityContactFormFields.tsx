@@ -3,30 +3,16 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { Textarea } from "../../../components/ui/inputs/Textarea";
 import { AUTHORITY_CONTACT_TYPE_OPTIONS } from "../api";
+import {
+  AUTHORITY_CONTACT_FIELD_LABELS,
+  AUTHORITY_CONTACT_PLACEHOLDERS,
+  AUTHORITY_CONTACT_STATIC_PLACEHOLDERS,
+} from "../constants";
 import type { AuthorityContactFormValues } from "../schemas";
 
 interface AuthorityContactFormFieldsProps {
   form: UseFormReturn<AuthorityContactFormValues>;
 }
-
-const AUTHORITY_CONTACT_PLACEHOLDERS = {
-  assessing_officer: {
-    name: "לדוגמה: פקיד שומה אילת",
-    office: "לדוגמה: אילת",
-  },
-  vat_branch: {
-    name: 'לדוגמה: מע"מ אילת',
-    office: "לדוגמה: אילת",
-  },
-  national_insurance: {
-    name: "לדוגמה: ביטוח לאומי אילת",
-    office: "לדוגמה: אילת",
-  },
-  other: {
-    name: "לדוגמה: רשות / גורם מטפל",
-    office: "לדוגמה: מחוז דרום",
-  },
-} as const satisfies Record<AuthorityContactFormValues["contact_type"], { name: string; office: string }>;
 
 export const AuthorityContactFormFields: React.FC<AuthorityContactFormFieldsProps> = ({
   form,
@@ -42,7 +28,7 @@ export const AuthorityContactFormFields: React.FC<AuthorityContactFormFieldsProp
   return (
     <>
       <Select
-        label="סוג גורם *"
+        label={AUTHORITY_CONTACT_FIELD_LABELS.contactType}
         error={errors.contact_type?.message}
         {...register("contact_type")}
       >
@@ -53,36 +39,36 @@ export const AuthorityContactFormFields: React.FC<AuthorityContactFormFieldsProp
         ))}
       </Select>
       <Input
-        label="שם *"
+        label={AUTHORITY_CONTACT_FIELD_LABELS.name}
         placeholder={placeholders.name}
         error={errors.name?.message}
         {...register("name")}
       />
       <Input
-        label="משרד / סניף"
+        label={AUTHORITY_CONTACT_FIELD_LABELS.office}
         placeholder={placeholders.office}
         error={errors.office?.message}
         {...register("office")}
       />
       <Input
-        label="טלפון"
+        label={AUTHORITY_CONTACT_FIELD_LABELS.phone}
         type="tel"
         dir="rtl"
-        placeholder="לדוגמה: 08-1234567"
+        placeholder={AUTHORITY_CONTACT_STATIC_PLACEHOLDERS.phone}
         error={errors.phone?.message}
         {...register("phone")}
       />
       <Input
-        label="אימייל"
+        label={AUTHORITY_CONTACT_FIELD_LABELS.email}
         type="email"
-        placeholder="לדוגמה: office@example.gov.il"
+        placeholder={AUTHORITY_CONTACT_STATIC_PLACEHOLDERS.email}
         error={errors.email?.message}
         {...register("email")}
       />
       <Textarea
-        label="הערות"
+        label={AUTHORITY_CONTACT_FIELD_LABELS.notes}
         rows={3}
-        placeholder="הערות פנימיות לצוות"
+        placeholder={AUTHORITY_CONTACT_STATIC_PLACEHOLDERS.notes}
         error={errors.notes?.message}
         {...register("notes")}
       />

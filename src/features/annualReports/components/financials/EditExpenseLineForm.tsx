@@ -1,14 +1,12 @@
-import { useState } from "react";
 import type { ExpenseLineResponse, ExpenseCategoryType } from "../../api";
 import { EXPENSE_LABELS } from "../../report.constants";
-import { DEFAULT_RECOGNITION_RATE } from "./financialConstants";
 import {
   ExpenseSupplementaryFields,
   FinancialAmountDescriptionFields,
   FinancialEditFormShell,
   FinancialSelectField,
 } from "./FinancialLineFormParts";
-import { buildExpensePayload } from "./financialHelpers";
+import { useExpenseLineForm } from "./useFinancialLineForm";
 
 interface EditExpenseLineFormProps {
   line: ExpenseLineResponse;
@@ -29,53 +27,31 @@ export const EditExpenseLineForm: React.FC<EditExpenseLineFormProps> = ({
   onSave,
   onCancel,
 }) => {
-  const [category, setCategory] = useState<ExpenseCategoryType>(line.category);
-  const [amount, setAmount] = useState(String(line.amount));
-  const [description, setDescription] = useState(line.description ?? "");
-  const [recognitionRate, setRecognitionRate] = useState(
-    String(line.recognition_rate ?? DEFAULT_RECOGNITION_RATE),
-  );
-  const [docRef, setDocRef] = useState(line.supporting_document_ref ?? "");
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const { payload, error: validationError } = buildExpensePayload(
-      category,
-      amount,
-      description,
-      recognitionRate,
-      docRef,
-    );
-
-    if (!payload) return setError(validationError ?? null);
-
-    onSave(payload);
-  };
+  const form = useExpenseLineForm(line, onSave);
 
   return (
     <FinancialEditFormShell
-      error={error}
+      error={form.error}
       isSubmitting={isSaving}
-      onSubmit={handleSubmit}
+      onSubmit={form.submit}
       onCancel={onCancel}
     >
       <FinancialSelectField
-        value={category}
-        onChange={(value) => setCategory(value as ExpenseCategoryType)}
+        value={form.category}
+        onChange={form.setCategory}
         options={EXPENSE_LABELS}
       />
       <FinancialAmountDescriptionFields
-        amount={amount}
-        onAmountChange={setAmount}
-        description={description}
-        onDescriptionChange={setDescription}
+        amount={form.amount}
+        onAmountChange={form.setAmount}
+        description={form.description}
+        onDescriptionChange={form.setDescription}
       />
       <ExpenseSupplementaryFields
-        recognitionRate={recognitionRate}
-        onRecognitionRateChange={setRecognitionRate}
-        documentReference={docRef}
-        onDocumentReferenceChange={setDocRef}
+        recognitionRate={form.recognitionRate}
+        onRecognitionRateChange={form.setRecognitionRate}
+        documentReference={form.documentReference}
+        onDocumentReferenceChange={form.setDocumentReference}
       />
     </FinancialEditFormShell>
   );

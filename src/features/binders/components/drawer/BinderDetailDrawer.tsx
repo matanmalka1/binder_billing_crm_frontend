@@ -56,11 +56,11 @@ export const BinderDetailDrawer: React.FC<BinderDetailDrawerProps> = ({
         <BinderActionsPanel
           status={binder.status}
           disabled={actionLoading}
-          onMarkReady={() => onMarkReady?.()}
-          onRevertReady={() => onRevertReady?.()}
-          onReturn={() => onReturn?.()}
-          onBulkReady={onBulkReady ? () => onBulkReady() : undefined}
-          onOpenHandover={onOpenHandover ? () => onOpenHandover() : undefined}
+          onMarkReady={onMarkReady ?? (() => undefined)}
+          onRevertReady={onRevertReady}
+          onReturn={onReturn}
+          onBulkReady={onBulkReady}
+          onOpenHandover={onOpenHandover}
         />
         <BinderIntakesSection
           binderId={binder.id}

@@ -3,6 +3,8 @@ import { Card } from "../../../components/ui/primitives/Card";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Alert } from "../../../components/ui/overlays/Alert";
 import type { AuthorityContactResponse } from "../api";
+import { AUTHORITY_CONTACT_TEXT } from "../constants";
+import { getAuthorityContactsSubtitle } from "../helpers";
 import { AuthorityContactsListContent } from "./AuthorityContactsListContent";
 
 interface AuthorityContactsListCardProps {
@@ -27,8 +29,8 @@ export const AuthorityContactsListCard: React.FC<AuthorityContactsListCardProps>
   onDelete,
 }) => (
   <Card
-    title="אנשי קשר ברשויות"
-    subtitle={total > 0 ? `${total} אנשי קשר` : "גורמי קשר ממשלתיים ורגולטוריים"}
+    title={AUTHORITY_CONTACT_TEXT.cardTitle}
+    subtitle={getAuthorityContactsSubtitle(total)}
     actions={
       <Button
         type="button"
@@ -38,18 +40,19 @@ export const AuthorityContactsListCard: React.FC<AuthorityContactsListCardProps>
         onClick={onCreate}
       >
         <Plus className="h-4 w-4" />
-        הוסף
+        {AUTHORITY_CONTACT_TEXT.addButton}
       </Button>
     }
   >
     {error && <Alert variant="error" message={error} />}
-    <AuthorityContactsListContent
-      contacts={contacts}
-      deletingId={deletingId}
-      error={error}
-      isLoading={isLoading}
-      onEdit={onEdit}
-      onDelete={onDelete}
-    />
+    {!error && (
+      <AuthorityContactsListContent
+        contacts={contacts}
+        deletingId={deletingId}
+        isLoading={isLoading}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+    )}
   </Card>
 );

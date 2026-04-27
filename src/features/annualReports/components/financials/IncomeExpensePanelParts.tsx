@@ -7,7 +7,7 @@ import {
   FinancialSelectField,
 } from "./FinancialLineFormParts";
 import { FIELD_PLACEHOLDERS } from "./financialConstants";
-import { buildIncomePayload } from "./financialHelpers";
+import { useIncomeLineForm } from "./useFinancialLineForm";
 
 export interface AddLineFormProps {
   typeOptions: Record<string, string>;
@@ -23,26 +23,14 @@ export const AddLineForm: React.FC<AddLineFormProps> = ({
   label,
 }) => {
   const [open, setOpen] = useState(false);
-  const [typeKey, setTypeKey] = useState("");
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const form = useIncomeLineForm(undefined, (payload) => {
+    onAdd(payload.source_type, payload.amount, payload.description);
+    form.reset();
+    setOpen(false);
+  });
 
-  const reset = () => {
-    setTypeKey("");
-    setAmount("");
-    setDescription("");
-    setError(null);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const { payload, error: validationError } = buildIncomePayload(typeKey, amount, description);
-
-    if (!payload) return setError(validationError ?? null);
-
-    onAdd(payload.source_type, payload.amount, payload.description ?? undefined);
-    reset();
+  const close = () => {
+    form.reset();
     setOpen(false);
   };
 
@@ -50,26 +38,23 @@ export const AddLineForm: React.FC<AddLineFormProps> = ({
     <FinancialAddFormShell
       open={open}
       label={label}
-      error={error}
+      error={form.error}
       isSubmitting={isAdding}
       onOpen={() => setOpen(true)}
-      onSubmit={handleSubmit}
-      onCancel={() => {
-        reset();
-        setOpen(false);
-      }}
+      onSubmit={form.submit}
+      onCancel={close}
     >
       <FinancialSelectField
-        value={typeKey}
-        onChange={setTypeKey}
+        value={form.typeKey}
+        onChange={form.setTypeKey}
         options={typeOptions}
         placeholder={FIELD_PLACEHOLDERS.incomeType}
       />
       <FinancialAmountDescriptionFields
-        amount={amount}
-        onAmountChange={setAmount}
-        description={description}
-        onDescriptionChange={setDescription}
+        amount={form.amount}
+        onAmountChange={form.setAmount}
+        description={form.description}
+        onDescriptionChange={form.setDescription}
       />
     </FinancialAddFormShell>
   );

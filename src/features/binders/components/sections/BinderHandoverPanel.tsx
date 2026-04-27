@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { DatePicker } from "@/components/ui/inputs/DatePicker";
@@ -48,7 +48,7 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
     staleTime: 30_000,
   });
 
-  const readyBinders = useMemo(() => data?.items ?? [], [data?.items]);
+  const readyBinders = data?.items ?? [];
 
   useEffect(() => {
     if (readyBinders.length === 0) {
@@ -65,18 +65,6 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
 
   const selectedCount = selectedIds.length;
   const canSubmit = selectedCount > 0 && receivedByName.trim().length > 0 && !!handedOverAt;
-
-  const submitPayload = useMemo(
-    () => ({
-      binderIds: selectedIds,
-      receivedByName: receivedByName.trim(),
-      handedOverAt,
-      untilPeriodYear,
-      untilPeriodMonth,
-      notes: notes.trim() || null,
-    }),
-    [selectedIds, receivedByName, handedOverAt, untilPeriodYear, untilPeriodMonth, notes],
-  );
 
   return (
     <div className="space-y-4">
@@ -166,7 +154,14 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
           variant="ghost"
           size="sm"
           disabled={!canSubmit || isSubmitting}
-          onClick={() => onSubmit(submitPayload)}
+          onClick={() => onSubmit({
+            binderIds: selectedIds,
+            receivedByName: receivedByName.trim(),
+            handedOverAt,
+            untilPeriodYear,
+            untilPeriodMonth,
+            notes: notes.trim() || null,
+          })}
         >
           אשר מסירה
         </Button>

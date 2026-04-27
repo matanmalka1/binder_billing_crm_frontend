@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/primitives/Button";
 import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -12,7 +12,7 @@ import {
 } from "@/features/binders";
 import { BindersPageDialogs } from "../components/dialogs/BindersPageDialogs";
 import { useBindersPageDialogs } from "../hooks/useBindersPageDialogs";
-import { useState } from "react";
+import { getBinderNumberLabel } from "../utils";
 
 export const Binders: React.FC = () => {
   const [receiveOpen, setReceiveOpen] = useState(false);
@@ -57,14 +57,6 @@ export const Binders: React.FC = () => {
   });
 
   const detailOpen = deepLinkBinderId !== undefined;
-
-  const getBinderNumberLabel = (binderId: number | null) => {
-    if (binderId == null) return null;
-    const fromList = binders.find((b) => b.id === binderId);
-    if (fromList?.binder_number) return fromList.binder_number;
-    if (selectedBinder?.id === binderId) return selectedBinder.binder_number;
-    return `#${binderId}`;
-  };
 
   const columns = useMemo(
     () =>
@@ -130,7 +122,7 @@ export const Binders: React.FC = () => {
         onCancelReturn={dialogs.closeReturnDialog}
         onConfirmDelete={() => void dialogs.confirmDelete()}
         onCancelDelete={dialogs.closeDeleteDialog}
-        getBinderNumberLabel={getBinderNumberLabel}
+        getBinderNumberLabel={(id) => getBinderNumberLabel(id, binders, selectedBinder)}
         bulkReadyOpen={dialogs.bulkReadyOpen}
         onCloseBulkReady={dialogs.closeBulkReadyDialog}
         onConfirmBulkReady={() => void dialogs.confirmBulkReady()}

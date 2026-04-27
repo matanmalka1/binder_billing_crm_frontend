@@ -6,8 +6,7 @@ import {
   PERIOD_YEAR_OPTIONS,
 } from "@/constants/periodOptions.constants";
 import type { ReceiveBinderFormValues } from "../../schemas";
-
-const PERIODIC_BINDER_TYPES = new Set(["vat", "salary"]);
+import { PERIODIC_BINDER_TYPES } from "../../constants";
 
 interface BinderPeriodFieldsProps {
   form: UseFormReturn<ReceiveBinderFormValues>;

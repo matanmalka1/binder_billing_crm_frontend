@@ -1,6 +1,7 @@
-import type { AuthorityContactResponse } from "../api";
-import { AuthorityContactActions } from "./AuthorityContactActions";
-import { AuthorityContactDetails } from "./AuthorityContactDetails";
+import { Edit2, Mail, MapPin, Phone, Trash2 } from "lucide-react";
+import { Button } from "../../../components/ui/primitives/Button";
+import { Badge } from "../../../components/ui/primitives/Badge";
+import { getContactTypeLabel, type AuthorityContactResponse } from "../api";
 
 interface AuthorityContactRowProps {
   contact: AuthorityContactResponse;
@@ -16,12 +17,54 @@ export const AuthorityContactRow: React.FC<AuthorityContactRowProps> = ({
   onDelete,
 }) => (
   <div className="flex items-start justify-between gap-4 rounded-lg border border-gray-200 p-4 hover:bg-gray-50 transition-colors">
-    <AuthorityContactDetails contact={contact} />
-    <AuthorityContactActions
-      contact={contact}
-      isDeleting={isDeleting}
-      onEdit={onEdit}
-      onDelete={onDelete}
-    />
+    <div className="flex-1 space-y-1.5">
+      <div className="flex items-center gap-2">
+        <Badge variant="info">{getContactTypeLabel(contact.contact_type)}</Badge>
+        <span className="font-medium text-gray-900">{contact.name}</span>
+      </div>
+
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600">
+        {contact.office && (
+          <span className="flex items-center gap-1">
+            <MapPin className="h-3.5 w-3.5 shrink-0" />
+            {contact.office}
+          </span>
+        )}
+        {contact.phone && (
+          <span className="flex items-center gap-1">
+            <Phone className="h-3.5 w-3.5 shrink-0" />
+            {contact.phone}
+          </span>
+        )}
+        {contact.email && (
+          <span className="flex items-center gap-1">
+            <Mail className="h-3.5 w-3.5 shrink-0" />
+            {contact.email}
+          </span>
+        )}
+      </div>
+
+      {contact.notes && (
+        <p className="mt-1.5 border-t border-gray-100 pt-1.5 text-sm text-gray-500">
+          {contact.notes}
+        </p>
+      )}
+    </div>
+
+    <div className="flex shrink-0 gap-1">
+      <Button type="button" variant="ghost" size="sm" onClick={() => onEdit(contact)}>
+        <Edit2 className="h-4 w-4" />
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        isLoading={isDeleting}
+        onClick={() => onDelete(contact.id)}
+        className="text-negative-600 hover:bg-negative-50"
+      >
+        <Trash2 className="h-4 w-4" />
+      </Button>
+    </div>
   </div>
 );

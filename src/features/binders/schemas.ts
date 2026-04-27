@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { format } from "date-fns";
-
-const ANNUAL_BINDER_TYPES = new Set(["annual_report", "capital_declaration"]);
-const PERIODIC_BINDER_TYPES = new Set(["vat", "salary"]);
+import { ANNUAL_BINDER_TYPES, PERIODIC_BINDER_TYPES } from "./constants";
 
 export const MATERIAL_TYPES = [
   "vat",

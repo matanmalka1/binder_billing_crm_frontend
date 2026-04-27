@@ -6,6 +6,8 @@ import { authorityContactsApi, authorityContactsQK, type AuthorityContactRespons
 import { showErrorToast } from "../../../utils/utils";
 import { authorityContactSchema, authorityContactDefaults, type AuthorityContactFormValues } from "../schemas";
 import { toast } from "../../../utils/toast";
+import { AUTHORITY_CONTACT_TEXT } from "../constants";
+import { toAuthorityContactFormValues, toAuthorityContactPayload } from "../helpers";
 
 export const useAuthorityContactForm = (
   clientId: number,
@@ -20,41 +22,25 @@ export const useAuthorityContactForm = (
     defaultValues: authorityContactDefaults,
   });
 
-  // Re-populate the form whenever the target contact changes (create → edit or edit → different contact).
   useEffect(() => {
-    if (existing) {
-      form.reset({
-        contact_type: existing.contact_type as AuthorityContactFormValues["contact_type"],
-        name: existing.name,
-        office: existing.office ?? "",
-        phone: existing.phone ?? "",
-        email: existing.email ?? "",
-        notes: existing.notes ?? "",
-      });
-    } else {
-      form.reset(authorityContactDefaults);
-    }
+    form.reset(toAuthorityContactFormValues(existing));
   }, [existing, form]);
 
   const saveMutation = useMutation({
     mutationFn: (values: AuthorityContactFormValues) => {
-      const payload = {
-        ...values,
-        office: values.office || null,
-        phone: values.phone || null,
-        email: values.email || null,
-        notes: values.notes || null,
-      };
+      const payload = toAuthorityContactPayload(values);
       return existing
         ? authorityContactsApi.updateAuthorityContact(existing.id, payload)
         : authorityContactsApi.createAuthorityContact(clientId, payload);
     },
     onSuccess: () => {
-      toast.success(existing ? "איש קשר עודכן בהצלחה" : "איש קשר נוצר בהצלחה");
+      toast.success(
+        existing ? AUTHORITY_CONTACT_TEXT.updateSuccess : AUTHORITY_CONTACT_TEXT.createSuccess,
+      );
       queryClient.invalidateQueries({ queryKey: qk });
       onSuccess();
     },
-    onError: (err) => showErrorToast(err, "שגיאה בשמירת איש קשר"),
+    onError: (err) => showErrorToast(err, AUTHORITY_CONTACT_TEXT.saveError),
   });
 
   const onSubmit = form.handleSubmit((values) => saveMutation.mutate(values));

@@ -132,7 +132,7 @@ export const BindersFiltersBar = ({
               label="סטטוס"
               value={filters.status ?? ""}
               onChange={(e) => onFilterChange("status", e.target.value)}
-              options={[...BINDER_STATUS_OPTIONS]}
+              options={BINDER_STATUS_OPTIONS}
               className={cn(
                 filters.status && "border-primary-400 ring-1 ring-primary-200",
               )}

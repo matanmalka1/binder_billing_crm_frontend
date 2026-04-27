@@ -4,6 +4,7 @@ import { useAuthorityContactsCardState } from "../hooks/useAuthorityContactsCard
 import { AuthorityContactDeleteDialog } from "./AuthorityContactDeleteDialog";
 import { AuthorityContactModal } from "./AuthorityContactModal";
 import { AuthorityContactsListCard } from "./AuthorityContactsListCard";
+import { AUTHORITY_CONTACT_TEXT } from "../constants";
 
 interface AuthorityContactsCardProps {
   clientId: number;
@@ -50,7 +51,7 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
           page={page}
           totalPages={totalPages}
           total={total}
-          label="אנשי קשר"
+          label={AUTHORITY_CONTACT_TEXT.paginationLabel}
           onPageChange={setPage}
         />
       )}

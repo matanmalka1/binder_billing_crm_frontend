@@ -1,11 +1,11 @@
-import { useState } from "react";
-import type { IncomeLineResponse, IncomeSourceType } from "../../api";
+import type { IncomeLineResponse } from "../../api";
 import {
   FinancialAmountDescriptionFields,
   FinancialEditFormShell,
   FinancialSelectField,
 } from "./FinancialLineFormParts";
-import { buildIncomePayload, type IncomeFormPayload } from "./financialHelpers";
+import type { IncomeFormPayload } from "./financialHelpers";
+import { useIncomeLineForm } from "./useFinancialLineForm";
 
 interface EditIncomeLineFormProps {
   line: IncomeLineResponse;
@@ -22,41 +22,25 @@ export const EditIncomeLineForm: React.FC<EditIncomeLineFormProps> = ({
   onSave,
   onCancel,
 }) => {
-  const [typeKey, setTypeKey] = useState<IncomeSourceType>(line.source_type);
-  const [amount, setAmount] = useState(String(line.amount));
-  const [description, setDescription] = useState(line.description ?? "");
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const { payload, error: validationError } = buildIncomePayload(
-      typeKey,
-      amount,
-      description,
-    );
-
-    if (!payload) return setError(validationError ?? null);
-
-    onSave(payload);
-  };
+  const form = useIncomeLineForm(line, onSave);
 
   return (
     <FinancialEditFormShell
-      error={error}
+      error={form.error}
       isSubmitting={isSaving}
-      onSubmit={handleSubmit}
+      onSubmit={form.submit}
       onCancel={onCancel}
     >
       <FinancialSelectField
-        value={typeKey}
-        onChange={(value) => setTypeKey(value as IncomeSourceType)}
+        value={form.typeKey}
+        onChange={form.setTypeKey}
         options={typeOptions}
       />
       <FinancialAmountDescriptionFields
-        amount={amount}
-        onAmountChange={setAmount}
-        description={description}
-        onDescriptionChange={setDescription}
+        amount={form.amount}
+        onAmountChange={form.setAmount}
+        description={form.description}
+        onDescriptionChange={form.setDescription}
       />
     </FinancialEditFormShell>
   );

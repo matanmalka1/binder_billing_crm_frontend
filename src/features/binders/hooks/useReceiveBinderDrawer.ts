@@ -14,9 +14,8 @@ import { toast } from "../../../utils/toast";
 import { getHttpStatus, showErrorToast } from "../../../utils/utils";
 import { receiveBinderSchema, type ReceiveBinderFormValues } from "../schemas";
 import { toBinderPeriodValue } from "../utils";
+import { ANNUAL_BINDER_TYPES, PERIODIC_BINDER_TYPES } from "../constants";
 
-const ANNUAL_BINDER_TYPES = new Set(["annual_report", "capital_declaration"]);
-const PERIODIC_BINDER_TYPES = new Set(["vat", "salary"]);
 const DUPLICATE_BINDER_NUMBER_MESSAGE = "קיים כבר קלסר עם מספר זה ללקוח";
 
 const getDefaultValues = (): ReceiveBinderFormValues => ({
@@ -44,14 +43,7 @@ interface UseReceiveBinderDrawerOptions {
   initialClient?: { id: number; name: string } | null;
 }
 
-export const useReceiveBinderDrawer = (
-  onSuccessOrOptions?: (() => void) | UseReceiveBinderDrawerOptions,
-  _deprecated?: never,
-) => {
-  const opts: UseReceiveBinderDrawerOptions =
-    typeof onSuccessOrOptions === "function"
-      ? { onSuccess: onSuccessOrOptions }
-      : (onSuccessOrOptions ?? {});
+export const useReceiveBinderDrawer = (opts: UseReceiveBinderDrawerOptions = {}) => {
   const { onSuccess, initialClient } = opts;
 
   const [clientQuery, setClientQuery] = useState(initialClient?.name ?? "");
@@ -74,17 +66,6 @@ export const useReceiveBinderDrawer = (
   const businessId = form.watch("business_id");
   const periodMonthStart = form.watch("period_month_start");
 
-  useEffect(() => {
-    resetBinderPeriodFields(form);
-    if (binderType && binderType !== "vat") {
-      form.setValue("business_id", null, { shouldValidate: false });
-    }
-  }, [binderType, form]);
-
-  useEffect(() => {
-    resetBinderPeriodFields(form);
-  }, [businessId, form]);
-
   const { data: businessesData } = useQuery({
     queryKey: clientsQK.businessesAll(clientRecordId!),
     queryFn: () => clientsApi.listAllBusinessesForClient(clientRecordId!),
@@ -97,17 +78,23 @@ export const useReceiveBinderDrawer = (
   const businesses = useMemo(() => businessesData?.items ?? [], [businessesData?.items]);
 
   useEffect(() => {
+    resetBinderPeriodFields(form);
+
     if (binderType !== "vat") {
       form.setValue("business_id", null, { shouldValidate: false });
       return;
     }
 
-    if (businesses.length === 0) {
-      form.setValue("business_id", null, { shouldValidate: false });
-    } else if (businesses.length === 1) {
+    if (businesses.length === 1) {
       form.setValue("business_id", businesses[0].id, { shouldValidate: true });
+    } else if (businesses.length === 0) {
+      form.setValue("business_id", null, { shouldValidate: false });
     }
-  }, [businesses, binderType, form]);
+  }, [binderType, businesses, form]);
+
+  useEffect(() => {
+    resetBinderPeriodFields(form);
+  }, [businessId, form]);
 
   const { data: clientBindersData } = useQuery({
     queryKey: bindersQK.list({ client_record_id: clientRecordId, page_size: 10 }),

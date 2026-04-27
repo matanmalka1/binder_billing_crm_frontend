@@ -105,6 +105,40 @@ export const getProfitSummary = (
   return { grossIncome, expenses, profitBeforeTax, taxAmount, netProfitAfterTax, grossMargin };
 };
 
+interface TrendReportInput {
+  year: number;
+}
+
+export interface PLTrendChartRow {
+  שנה: number;
+  הכנסות: number;
+  הוצאות: number;
+  רווח: number;
+  מס: number;
+}
+
+export const buildTrendChartRows = (
+  reports: TrendReportInput[],
+  financials: (FinancialSummaryResponse | undefined)[],
+  taxes: (TaxCalculationResult | undefined)[],
+): PLTrendChartRow[] =>
+  reports.flatMap((report, index) => {
+    const fin = financials[index];
+    const tax = taxes[index];
+    if (!fin || !tax) return [];
+
+    const income = Number(fin.total_income);
+    const expenses = Number(fin.recognized_expenses);
+
+    return [{
+      שנה: report.year,
+      הכנסות: income,
+      הוצאות: expenses,
+      רווח: income - expenses,
+      מס: Number(tax.tax_after_credits),
+    }];
+  });
+
 export const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
 
 export const toProgressWidth = (value: number) =>

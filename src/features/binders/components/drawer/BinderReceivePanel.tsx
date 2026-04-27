@@ -97,7 +97,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
       <Select
         label="סוג חומר"
         error={errors.binder_type?.message}
-        options={[...BINDER_TYPE_OPTIONS]}
+        options={BINDER_TYPE_OPTIONS}
         {...register("binder_type")}
       />
 

@@ -1,4 +1,5 @@
 import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
+import { AUTHORITY_CONTACT_TEXT } from "../constants";
 
 interface AuthorityContactDeleteDialogProps {
   confirmDeleteId: number | null;
@@ -12,20 +13,27 @@ export const AuthorityContactDeleteDialog: React.FC<AuthorityContactDeleteDialog
   deletingId,
   onCancel,
   onConfirm,
-}) => (
-  <ConfirmDialog
-    open={confirmDeleteId !== null}
-    title="מחיקת איש קשר"
-    message="האם למחוק את איש הקשר? פעולה זו אינה הפיכה."
-    confirmLabel="מחק"
-    cancelLabel="ביטול"
-    isLoading={deletingId === confirmDeleteId}
-    onConfirm={() => {
-      if (confirmDeleteId !== null) {
-        onConfirm(confirmDeleteId);
-      }
-      onCancel();
-    }}
-    onCancel={onCancel}
-  />
-);
+}) => {
+  const isOpen = confirmDeleteId !== null;
+
+  const handleConfirm = () => {
+    if (confirmDeleteId === null) {
+      return;
+    }
+    onConfirm(confirmDeleteId);
+    onCancel();
+  };
+
+  return (
+    <ConfirmDialog
+      open={isOpen}
+      title={AUTHORITY_CONTACT_TEXT.deleteTitle}
+      message={AUTHORITY_CONTACT_TEXT.deleteMessage}
+      confirmLabel={AUTHORITY_CONTACT_TEXT.deleteConfirm}
+      cancelLabel={AUTHORITY_CONTACT_TEXT.cancel}
+      isLoading={deletingId === confirmDeleteId}
+      onConfirm={handleConfirm}
+      onCancel={onCancel}
+    />
+  );
+};
