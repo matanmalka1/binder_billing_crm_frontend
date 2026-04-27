@@ -45,6 +45,8 @@ export type ClientDetailsOverviewTabProps = {
   deleteClient: () => Promise<void>;
   isDeleting: boolean;
   activeTab: ActiveClientDetailsTab;
+  isEditing: boolean;
+  onEditClose: () => void;
 };
 
 export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
@@ -55,6 +57,8 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   deleteClient,
   isDeleting,
   activeTab,
+  isEditing,
+  onEditClose,
 }) => {
   const { id: firstBusinessIdOrNull } = useFirstBusinessId(client.id);
   const firstBusinessId = firstBusinessIdOrNull ?? undefined;
@@ -110,7 +114,6 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
     [createChargeMutation],
   );
 
-  const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isAddingBusiness, setIsAddingBusiness] = useState(false);
   const [isAddingCharge, setIsAddingCharge] = useState(false);
@@ -122,20 +125,12 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
     };
   }, [isEditing]);
 
-  useEffect(() => {
-    if (activeTab !== "details") {
-      setIsEditing(false);
-    }
-  }, [activeTab]);
-
   return (
     <div className="space-y-6">
       {activeTab === "details" && (
         <>
           <ClientInfoSection
             client={client}
-            canEdit={canEditClients}
-            onEditStart={() => setIsEditing(true)}
             sideContent={<ClientNotesCard clientId={client.id} canEdit={canEditClients} />}
           />
           <ClientBusinessesCard
@@ -219,13 +214,13 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
           open={isEditing}
           title="עריכת פרטי לקוח"
           subtitle={client.full_name}
-          onClose={() => setIsEditing(false)}
+          onClose={onEditClose}
           footer={(
             <div className="flex items-center justify-between gap-3">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => { setIsEditing(false); setIsConfirmingDelete(true); }}
+                onClick={() => { onEditClose(); setIsConfirmingDelete(true); }}
                 disabled={isUpdating}
                 className="gap-2 text-negative-600 border-negative-200 hover:bg-negative-50"
               >
@@ -236,7 +231,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setIsEditing(false)}
+                  onClick={onEditClose}
                   disabled={isUpdating}
                 >
                   ביטול
@@ -260,9 +255,9 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
             hideFooter
             onSave={async (data) => {
               await updateClient(data);
-              setIsEditing(false);
+              onEditClose();
             }}
-            onCancel={() => setIsEditing(false)}
+            onCancel={onEditClose}
             isLoading={isUpdating}
           />
         </DetailDrawer>
