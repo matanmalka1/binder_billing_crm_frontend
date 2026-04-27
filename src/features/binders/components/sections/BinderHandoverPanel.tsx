@@ -51,17 +51,18 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
   const readyBinders = data?.items ?? [];
 
   useEffect(() => {
-    if (readyBinders.length === 0) {
+    const items = data?.items ?? [];
+    if (items.length === 0) {
       setSelectedIds([]);
       return;
     }
     setSelectedIds((current) => {
-      const keep = current.filter((id) => readyBinders.some((binder) => binder.id === id));
+      const keep = current.filter((id) => items.some((binder) => binder.id === id));
       if (keep.length > 0) return keep;
-      if (readyBinders.some((binder) => binder.id === initialBinderId)) return [initialBinderId];
-      return [readyBinders[0].id];
+      if (items.some((binder) => binder.id === initialBinderId)) return [initialBinderId];
+      return [items[0].id];
     });
-  }, [readyBinders, initialBinderId]);
+  }, [data, initialBinderId]);
 
   const selectedCount = selectedIds.length;
   const canSubmit = selectedCount > 0 && receivedByName.trim().length > 0 && !!handedOverAt;
