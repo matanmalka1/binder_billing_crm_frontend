@@ -11,13 +11,13 @@ import {
   CreateSignatureRequestModal,
   SIGNATURE_REQUEST_TERMINAL_STATUSES,
   SignatureRequestAuditDrawer,
-  SignatureRequestsPageRowActions,
   signatureRequestStatusVariants,
   useSignatureRequestSigningUrls,
   usePendingSignatureRequests,
   useSignatureRequestActions,
   type SignatureRequestResponse,
 } from "@/features/signatureRequests";
+import { SignatureRequestRowActions } from "../components/SignatureRequestRowActions";
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "@/utils/enums";
 import { formatClientOfficeId, formatDate } from "@/utils/utils";
 
@@ -110,14 +110,18 @@ export const SignatureRequestsPage: React.FC = () => {
         headerClassName: "w-10",
         className: "w-10",
         render: (req: SignatureRequestResponse) => (
-          <SignatureRequestsPageRowActions
-            req={req}
+          <SignatureRequestRowActions
+            request={req}
             signingUrl={signingUrls[req.id]}
             isSending={isSending}
             isCanceling={isCanceling}
-            onSend={(id) => void handleSend(id)}
-            onCancel={(id) => void cancel(id)}
+            canManage
+            onSend={async (id) => { void handleSend(id); }}
+            onCancel={async (id) => { void cancel(id); }}
             onAudit={setAuditRequestId}
+            showOpenLink
+            separateHistory
+            copySuccessMessage={null}
           />
         ),
       },

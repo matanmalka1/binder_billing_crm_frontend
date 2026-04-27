@@ -3,7 +3,6 @@ export { signatureRequestsApi, signerApi, signatureRequestsQK } from "./api";
 export { SignatureRequestsCard } from "./components/SignatureRequestsCard";
 export { CreateSignatureRequestModal } from "./components/CreateSignatureRequestModal";
 export { SignatureRequestAuditDrawer } from "./components/SignatureRequestAuditDrawer";
-export { SignatureRequestsPageRowActions } from "./components/SignatureRequestsPageRowActions";
 export { usePendingSignatureRequests } from "./hooks/usePendingSignatureRequests";
 export { useSignatureRequestActions } from "./hooks/useSignatureRequestActions";
 export { SignatureRequestsPage } from "./pages/SignatureRequestsPage";

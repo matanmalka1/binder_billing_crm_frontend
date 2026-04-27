@@ -1,8 +1,8 @@
 import { Modal } from "../../../components/ui/overlays/Modal";
+import { Button } from "../../../components/ui/primitives/Button";
 import { type AuthorityContactResponse } from "../api";
 import { useAuthorityContactForm } from "../hooks/useAuthorityContactForm";
 import { AuthorityContactFormFields } from "./AuthorityContactFormFields";
-import { AuthorityContactModalFooter } from "./AuthorityContactModalFooter";
 
 interface AuthorityContactModalProps {
   open: boolean;
@@ -25,12 +25,14 @@ export const AuthorityContactModal: React.FC<AuthorityContactModalProps> = ({
       title={existing ? "עריכת איש קשר" : "הוספת איש קשר"}
       onClose={onClose}
       footer={
-        <AuthorityContactModalFooter
-          isEditing={Boolean(existing)}
-          isSaving={isSaving}
-          onClose={onClose}
-          onSubmit={onSubmit}
-        />
+        <div className="flex items-center justify-end gap-2">
+          <Button type="button" variant="outline" disabled={isSaving} onClick={onClose}>
+            ביטול
+          </Button>
+          <Button type="button" isLoading={isSaving} onClick={onSubmit}>
+            {existing ? "עדכן" : "הוסף"}
+          </Button>
+        </div>
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">

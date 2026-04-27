@@ -22,7 +22,7 @@ import { SigningPage } from "../features/signing";
 import { TaxDeadlines } from "../features/taxDeadlines";
 import { Users } from "../features/users";
 import { VatWorkItemDetail, VatWorkItems } from "../features/vatReports";
-import { VatComplianceReportPage } from "../features/reports";
+import { VatComplianceReportView } from "../features/reports";
 
 const AuthExpiredNavigationHandler: React.FC = () => {
   const navigate = useNavigate();
@@ -105,7 +105,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax/advance-payments" element={<AdvancePayments />} />
             <Route path="tax/vat" element={<VatWorkItems />} />
             <Route path="tax/vat/:id" element={<VatWorkItemDetail />} />
-            <Route path="tax/vat-compliance" element={<VatComplianceReportPage />} />
+            <Route path="tax/vat-compliance" element={<VatComplianceReportView />} />
 <Route path="reminders" element={<RemindersPage />} />
             <Route path="signature-requests" element={<SignatureRequestsPage />} />
           </Route>
