@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BulkSelectionActionButton, BulkSelectionToolbar } from "@/components/ui/table/BulkSelectionToolbar";
 import { Button } from "@/components/ui/primitives/Button";
 import type { BulkChargeActionPayload } from "../api";
+import { CHARGE_CANCEL_REASON_PLACEHOLDER } from "../constants";
 
 interface ChargeBulkToolbarProps {
   selectedCount: number;
@@ -36,7 +37,7 @@ export const ChargeBulkToolbar: React.FC<ChargeBulkToolbarProps> = ({
             <textarea
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
-              placeholder="סיבת ביטול (אופציונלי)"
+              placeholder={CHARGE_CANCEL_REASON_PLACEHOLDER}
               rows={1}
               className="flex-1 resize-none rounded border border-gray-300 px-2.5 py-1.5 text-sm focus:border-primary-400 focus:outline-none focus:ring-1 focus:ring-primary-400"
             />

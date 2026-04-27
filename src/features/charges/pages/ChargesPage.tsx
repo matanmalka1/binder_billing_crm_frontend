@@ -14,6 +14,7 @@ import {
   ChargesSummaryBar,
   useChargesPage,
 } from "@/features/charges";
+import { getChargeRowClassName, getChargesEmptyState } from "../helpers";
 
 export const Charges: React.FC = () => {
   const [, setSearchParams] = useSearchParams();
@@ -115,21 +116,9 @@ export const Charges: React.FC = () => {
         label="חיובים"
         onPageChange={(page) => setFilter("page", String(page))}
         onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
-        rowClassName={(charge) => {
-          if (charge.status === "canceled") return "text-gray-400";
-          if (charge.status === "issued") return "bg-primary-50/20";
-          return "";
-        }}
+        rowClassName={(charge) => getChargeRowClassName(charge.status)}
         emptyMessage="אין חיובים להצגה"
-        emptyState={{
-          title: "לא נמצאו חיובים",
-          message: isAdvisor
-            ? "אין חיובים התואמים את הסינון. ניתן ליצור חיוב חדש בטופס למעלה."
-            : "אין חיובים התואמים את הסינון הנוכחי.",
-          action: isAdvisor
-            ? { label: "חיוב חדש", onClick: () => setShowCreateModal(true) }
-            : undefined,
-        }}
+        emptyState={getChargesEmptyState(isAdvisor, () => setShowCreateModal(true))}
       />
 
       <ChargeDetailDrawer chargeId={selectedChargeId} onClose={() => setSelectedChargeId(null)} />

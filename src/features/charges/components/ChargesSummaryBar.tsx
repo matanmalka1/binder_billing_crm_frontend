@@ -1,7 +1,7 @@
 import { Clock, CheckCircle2, FileText, XCircle } from "lucide-react";
-import type { ChargeListStats, ChargeStatusStat } from "../api";
-import { formatILS } from "../utils";
+import type { ChargeListStats } from "../api";
 import { StatsCard } from "@/components/ui/layout/StatsCard";
+import { getChargeStatusStatDisplay } from "../helpers";
 
 interface ChargesSummaryBarProps {
   stats: ChargeListStats;
@@ -16,9 +16,6 @@ export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({
   currentStatus,
   onStatusClick,
 }) => {
-  const display = (stat: ChargeStatusStat): string =>
-    isAdvisor ? formatILS(parseFloat(stat.amount)) : String(stat.count);
-
   const handleClick = (status: string) => {
     onStatusClick(currentStatus === status ? "" : status);
   };
@@ -27,7 +24,7 @@ export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       <StatsCard
         title="ממתין לגביה"
-        value={display(stats.issued)}
+        value={getChargeStatusStatDisplay(stats.issued, isAdvisor)}
         icon={Clock}
         variant="blue"
         selected={currentStatus === "issued"}
@@ -35,7 +32,7 @@ export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({
       />
       <StatsCard
         title="שולם"
-        value={display(stats.paid)}
+        value={getChargeStatusStatDisplay(stats.paid, isAdvisor)}
         icon={CheckCircle2}
         variant="green"
         selected={currentStatus === "paid"}
@@ -43,7 +40,7 @@ export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({
       />
       <StatsCard
         title="טיוטה"
-        value={display(stats.draft)}
+        value={getChargeStatusStatDisplay(stats.draft, isAdvisor)}
         icon={FileText}
         variant="neutral"
         selected={currentStatus === "draft"}
@@ -51,7 +48,7 @@ export const ChargesSummaryBar: React.FC<ChargesSummaryBarProps> = ({
       />
       <StatsCard
         title="בוטל"
-        value={display(stats.canceled)}
+        value={getChargeStatusStatDisplay(stats.canceled, isAdvisor)}
         icon={XCircle}
         variant="red"
         selected={currentStatus === "canceled"}

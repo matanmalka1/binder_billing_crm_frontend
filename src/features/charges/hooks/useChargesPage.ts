@@ -5,34 +5,26 @@ import {
   chargesApi,
   chargesQK,
   type BulkChargeActionPayload,
-  type ChargesListParams,
   type CreateChargePayload,
 } from "../api";
-import { getErrorMessage, parsePositiveInt, showErrorToast } from "../../../utils/utils";
-import { toOptionalNumber, toOptionalString } from "../../../utils/filters";
+import { getErrorMessage, showErrorToast } from "../../../utils/utils";
 import { useRole } from "../../../hooks/useRole";
 import { toast } from "../../../utils/toast";
 import { useMutationWithToast } from "../../../hooks/useMutationWithToast";
+import { DEFAULT_CHARGE_LIST_STATS } from "../constants";
+import {
+  getChargesFilters,
+  runChargeActionRequest,
+  toChargesListParams,
+} from "../helpers";
+import type { ChargeAction } from "../types";
 
 export const useChargesPage = () => {
   const queryClient = useQueryClient();
   const { searchParams, setFilter, setSearchParams } = useSearchParamFilters();
 
-  const filters = {
-    client_record_id: searchParams.get("client_record_id") ?? "",
-    status: searchParams.get("status") ?? "",
-    charge_type: searchParams.get("charge_type") ?? "",
-    page: parsePositiveInt(searchParams.get("page"), 1),
-    page_size: parsePositiveInt(searchParams.get("page_size"), 20),
-  };
-
-  const apiParams: ChargesListParams = {
-    client_record_id: toOptionalNumber(filters.client_record_id),
-    status: toOptionalString(filters.status),
-    charge_type: toOptionalString(filters.charge_type),
-    page: filters.page,
-    page_size: filters.page_size,
-  };
+  const filters = getChargesFilters(searchParams);
+  const apiParams = toChargesListParams(filters);
 
   const { data: listData, isPending: loading, error: listError } = useQuery({
     queryKey: chargesQK.list(apiParams),
@@ -41,8 +33,7 @@ export const useChargesPage = () => {
 
   const chargeItems = listData?.items ?? [];
   const total = listData?.total ?? 0;
-  const defaultStat = { count: 0, amount: "0" };
-  const stats = listData?.stats ?? { draft: defaultStat, issued: defaultStat, paid: defaultStat, canceled: defaultStat };
+  const stats = listData?.stats ?? DEFAULT_CHARGE_LIST_STATS;
   const error = listError ? getErrorMessage(listError, "שגיאה בטעינת רשימת חיובים") : null;
   const { isAdvisor } = useRole();
 
@@ -85,13 +76,9 @@ export const useChargesPage = () => {
       action,
       chargeId,
     }: {
-      action: "issue" | "markPaid" | "cancel";
+      action: ChargeAction;
       chargeId: number;
-    }) => {
-      if (action === "issue") return chargesApi.issue(chargeId);
-      if (action === "markPaid") return chargesApi.markPaid(chargeId);
-      return chargesApi.cancel(chargeId);
-    },
+    }) => runChargeActionRequest(chargeId, action),
     onSuccess: async () => {
       toast.success("פעולת חיוב בוצעה בהצלחה");
       await queryClient.invalidateQueries({ queryKey: chargesQK.all });
@@ -99,7 +86,7 @@ export const useChargesPage = () => {
   });
 
   const runAction = useCallback(
-    async (chargeId: number, action: "issue" | "markPaid" | "cancel") => {
+    async (chargeId: number, action: ChargeAction) => {
       if (!isAdvisor) {
         toast.error("אין הרשאה לבצע פעולת חיוב זו");
         return;

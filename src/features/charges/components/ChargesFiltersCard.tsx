@@ -8,6 +8,7 @@ import { cn } from "../../../utils/utils";
 import { CHARGE_STATUS_OPTIONS, CHARGE_TYPE_OPTIONS_WITH_ALL } from "../constants";
 import { clientsApi, clientsQK } from "@/features/clients";
 import type { ChargesFilters } from "../types";
+import { buildChargeFilterBadges } from "../helpers";
 
 interface ChargesFiltersCardProps {
   filters: ChargesFilters;
@@ -56,10 +57,6 @@ export const ChargesFiltersCard = ({
     onFilterChange("client_record_id", "");
   };
 
-  const handleClearAll = () => {
-    onClear();
-  };
-
   return (
     <ToolbarContainer>
       <div className="space-y-3">
@@ -88,11 +85,8 @@ export const ChargesFiltersCard = ({
         </div>
 
         <ActiveFilterBadges
-          badges={[
-            filters.status ? { key: "status", label: CHARGE_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? filters.status, onRemove: () => onFilterChange("status", "") } : null,
-            filters.charge_type ? { key: "charge_type", label: CHARGE_TYPE_OPTIONS_WITH_ALL.find((o) => o.value === filters.charge_type)?.label ?? filters.charge_type, onRemove: () => onFilterChange("charge_type", "") } : null,
-          ].filter((b): b is NonNullable<typeof b> => b !== null)}
-          onReset={handleClearAll}
+          badges={buildChargeFilterBadges(filters, onFilterChange)}
+          onReset={onClear}
         />
       </div>
     </ToolbarContainer>

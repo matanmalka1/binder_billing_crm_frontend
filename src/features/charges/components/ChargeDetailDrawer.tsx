@@ -9,6 +9,7 @@ import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
 import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
 import {
   getChargeAmountText,
+  getChargeClientLabel,
   getChargePeriodLabel,
   getChargeTypeLabel,
 } from "../utils";
@@ -16,7 +17,7 @@ import { formatDateTime } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { ChargeActionButtons } from "./ChargeActionButtons";
 import { useChargeDetailsPage } from "../hooks/useChargeDetailsPage";
-import { chargeStatusVariants } from "../constants";
+import { CHARGE_CANCEL_REASON_PLACEHOLDER, chargeStatusVariants } from "../constants";
 
 interface ChargeDetailDrawerProps {
   chargeId: number | null;
@@ -30,6 +31,12 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
+  const clientLabel = charge ? getChargeClientLabel(charge) : "";
+
+  const closeCancelDialog = () => {
+    setIsConfirmingCancel(false);
+    setCancelReason("");
+  };
 
   const footer = charge && isAdvisor ? (
     <div className="flex flex-wrap items-center justify-between gap-3">
@@ -69,15 +76,14 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
         isLoading={actionLoading}
         onConfirm={async () => {
           await runAction("cancel", cancelReason || undefined);
-          setIsConfirmingCancel(false);
-          setCancelReason("");
+          closeCancelDialog();
         }}
-        onCancel={() => { setIsConfirmingCancel(false); setCancelReason(""); }}
+        onCancel={closeCancelDialog}
       >
         <Textarea
           className="mt-3 resize-none"
           rows={3}
-          placeholder="סיבת ביטול (אופציונלי)"
+          placeholder={CHARGE_CANCEL_REASON_PLACEHOLDER}
           value={cancelReason}
           onChange={(e) => setCancelReason(e.target.value)}
         />
@@ -109,7 +115,7 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
                 className="text-primary-600 hover:underline"
                 onClick={onClose}
               >
-                {charge.business_name ?? `לקוח #${charge.client_record_id}`}
+                {clientLabel}
               </Link>
               <StatusBadge
                 status={charge.status}
@@ -136,7 +142,7 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
                   className="text-primary-600 hover:underline"
                   onClick={onClose}
                 >
-                  {charge.business_name ?? `לקוח #${charge.client_record_id}`}
+                  {clientLabel}
                 </Link>
               }
             />

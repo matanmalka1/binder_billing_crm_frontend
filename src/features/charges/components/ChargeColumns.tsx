@@ -13,8 +13,7 @@ import { formatClientOfficeId } from "../../../utils/utils";
 import { getChargeStatusLabel } from "../../../utils/enums";
 import { ChargeRowActions } from "./ChargeRowActions";
 import { chargeStatusVariants } from "../constants";
-
-export type ChargeAction = "issue" | "markPaid" | "cancel";
+import type { ChargeAction } from "../types";
 
 interface BuildChargeColumnsParams {
   isAdvisor: boolean;

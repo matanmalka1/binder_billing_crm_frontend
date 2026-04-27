@@ -1,13 +1,14 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { chargesApi, chargesQK } from "../api";
 import { toast } from "../../../utils/toast";
-import { getErrorMessage, getHttpStatus, isPositiveInt, showErrorToast } from "../../../utils/utils";
+import { getHttpStatus, isPositiveInt, showErrorToast } from "../../../utils/utils";
 import { useRole } from "../../../hooks/useRole";
+import { runChargeActionRequest } from "../helpers";
+import type { ChargeAction } from "../types";
 
 export const useChargeDetailsPage = (chargeId: string | undefined) => {
   const queryClient = useQueryClient();
-  const [actionError, setActionError] = useState<string | null>(null);
   const [denied, setDenied] = useState(false);
 
   const chargeIdNumber = Number(chargeId || 0);
@@ -24,11 +25,8 @@ export const useChargeDetailsPage = (chargeId: string | undefined) => {
   const queryDenied = getHttpStatus(chargeQuery.error) === 403;
 
   const actionMutation = useMutation({
-    mutationFn: ({ action, reason }: { action: "issue" | "markPaid" | "cancel"; reason?: string }) => {
-      if (action === "issue") return chargesApi.issue(chargeIdNumber);
-      if (action === "markPaid") return chargesApi.markPaid(chargeIdNumber);
-      return chargesApi.cancel(chargeIdNumber, reason);
-    },
+    mutationFn: ({ action, reason }: { action: ChargeAction; reason?: string }) =>
+      runChargeActionRequest(chargeIdNumber, action, reason),
     onSuccess: async () => {
       toast.success("פעולת חיוב בוצעה בהצלחה");
       await Promise.all([
@@ -47,34 +45,24 @@ export const useChargeDetailsPage = (chargeId: string | undefined) => {
     onError: (err) => showErrorToast(err, "שגיאה במחיקת חיוב"),
   });
 
-  const runAction = async (action: "issue" | "markPaid" | "cancel", reason?: string) => {
+  const runAction = async (action: ChargeAction, reason?: string) => {
     if (!hasValidChargeId || !isAdvisor) {
       setDenied(true);
       return;
     }
     try {
-      setActionError(null);
       setDenied(false);
       await actionMutation.mutateAsync({ action, reason });
     } catch (err: unknown) {
       if (getHttpStatus(err) === 403) setDenied(true);
-      setActionError(getErrorMessage(err, "שגיאה בביצוע פעולה"));
+      showErrorToast(err, "שגיאה בביצוע פעולה");
     }
   };
-
-  const error = useMemo(() => {
-    if (!hasValidChargeId) return "מזהה חיוב חסר";
-    if (actionError) return actionError;
-    if (chargeQuery.error) return getErrorMessage(chargeQuery.error, "שגיאה בטעינת פרטי חיוב");
-    return null;
-  }, [actionError, chargeQuery.error, hasValidChargeId]);
 
   return {
     actionLoading: actionMutation.isPending,
     charge: chargeQuery.data ?? null,
     denied: denied || queryDenied,
-    error,
-    loading: hasValidChargeId ? chargeQuery.isPending : false,
     runAction,
     deleteCharge: () => deleteMutation.mutateAsync(),
     isDeleting: deleteMutation.isPending,

@@ -10,14 +10,14 @@ import { MONTHS_COVERED_OPTIONS } from "@/constants/periodOptions.constants";
 import { FormField, Input, SelectDropdown } from "@/components/ui/inputs";
 import { Modal, ModalFormActions } from "@/components/ui/overlays";
 import type { CreateChargePayload } from "../api";
-import { CHARGE_TYPE_OPTIONS } from "../constants";
+import { CHARGE_CREATE_FORM_ID, CHARGE_TYPE_OPTIONS } from "../constants";
 import {
   chargeCreateDefaultValues,
   chargeCreateSchema,
   toCreateChargePayload,
   type ChargeCreateFormValues,
 } from "../schemas";
-import { getChargePeriodLabel } from "../utils";
+import { buildChargePeriodOptions } from "../helpers";
 
 interface ChargesCreateModalProps {
   open: boolean;
@@ -77,20 +77,10 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
   }, [open, initialClient]); // eslint-disable-line react-hooks/exhaustive-deps
   const monthsCovered = watch("months_covered") ?? 1;
 
-  const periodOptions = useMemo(() => {
-    const currentYear = new Date().getFullYear();
-    const options = [{ value: "", label: "ללא תקופה" }];
-    for (const year of [currentYear - 1, currentYear, currentYear + 1]) {
-      for (let month = 0; month < 12; month += 1) {
-        const value = `${year}-${String(month + 1).padStart(2, "0")}`;
-        options.push({
-          value,
-          label: getChargePeriodLabel(value, monthsCovered),
-        });
-      }
-    }
-    return options;
-  }, [monthsCovered]);
+  const periodOptions = useMemo(
+    () => buildChargePeriodOptions(monthsCovered),
+    [monthsCovered],
+  );
 
   const handleClose = () => {
     reset(chargeCreateDefaultValues);
@@ -119,13 +109,13 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
           cancelVariant="secondary"
           isLoading={createLoading}
           submitType="submit"
-          submitForm="charges-create-form"
+          submitForm={CHARGE_CREATE_FORM_ID}
           submitLabel="יצירת חיוב"
         />
       }
     >
       <form
-        id="charges-create-form"
+        id={CHARGE_CREATE_FORM_ID}
         onSubmit={submitForm}
         className="space-y-4"
       >

@@ -1,15 +1,6 @@
 import { z } from "zod";
 import type { CreateChargePayload } from "./api";
-
-const periodPattern = /^\d{4}-(0[1-9]|1[0-2])$/;
-const chargeTypeValues = [
-  "monthly_retainer",
-  "annual_report_fee",
-  "vat_filing_fee",
-  "representation_fee",
-  "consultation_fee",
-  "other",
-] as const;
+import { CHARGE_PERIOD_PATTERN, CHARGE_TYPE_VALUES } from "./constants";
 
 export const chargeCreateSchema = z.object({
   client_record_id: z
@@ -26,13 +17,13 @@ export const chargeCreateSchema = z.object({
     .refine((value) => Number.isFinite(Number(value)) && Number(value) > 0, {
       message: "יש להזין סכום חיובי",
     }),
-  charge_type: z.enum(chargeTypeValues),
+  charge_type: z.enum(CHARGE_TYPE_VALUES),
   months_covered: z.union([z.literal(1), z.literal(2)]),
   period: z
     .string()
     .trim()
     .optional()
-    .refine((value) => !value || periodPattern.test(value), {
+    .refine((value) => !value || CHARGE_PERIOD_PATTERN.test(value), {
       message: "פורמט תקופה חייב להיות YYYY-MM",
     }),
 });
