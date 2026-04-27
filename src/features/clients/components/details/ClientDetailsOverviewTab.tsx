@@ -1,8 +1,9 @@
 import { type FC, useEffect, useState, useCallback } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { clientsApi, clientsQK } from "../../api";
 import type { CreateBusinessPayload } from "../../api";
-import { showErrorToast } from "@/utils/utils";
+import { getErrorMessage, showErrorToast } from "@/utils/utils";
 import { toast } from "@/utils/toast";
 import { type ActiveClientDetailsTab } from "../../constants";
 import { Trash2 } from "lucide-react";
@@ -17,12 +18,17 @@ import { NotificationsTab } from "@/features/notifications";
 import { ClientStatusCard } from "./ClientStatusCard";
 import { ClientInfoSection } from "./ClientInfoSection";
 import { ClientBusinessesCard } from "./ClientBusinessesCard";
+import { ClientRelatedData } from "./ClientRelatedData";
 import { CreateBusinessModal } from "../business/CreateBusinessModal";
 import { ClientEditForm } from "../edit/ClientEditForm";
+import { ChargesCreateModal, chargesApi, chargesQK } from "@/features/charges";
+import type { CreateChargePayload } from "@/features/charges";
+import { bindersApi, bindersQK } from "@/features/binders";
 import { ClientTimelineTab } from "@/features/timeline";
 import { ClientAnnualReportsTab } from "@/features/annualReports";
 import { ClientAdvancePaymentsTab } from "@/features/advancedPayments";
 import { ClientDocumentsTab } from "@/features/documents";
+import { ClientNotesCard } from "@/features/notes";
 import { FilingTimeline } from "@/features/taxDeadlines";
 import { VatClientSummaryPanel } from "@/features/vatReports";
 import type { UpdateClientPayload, ClientResponse } from "../../api";
@@ -54,6 +60,18 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   const firstBusinessId = firstBusinessIdOrNull ?? undefined;
 
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const relatedPageSize = 5;
+  const relatedBindersQuery = useQuery({
+    queryKey: bindersQK.forClientPage(client.id, 1, relatedPageSize),
+    queryFn: () => bindersApi.listClientBinders(client.id, { page: 1, page_size: relatedPageSize }),
+    enabled: activeTab === "details",
+  });
+  const relatedChargesQuery = useQuery({
+    queryKey: chargesQK.forClientPage(client.id, 1, relatedPageSize),
+    queryFn: () => chargesApi.list({ client_record_id: client.id, page: 1, page_size: relatedPageSize }),
+    enabled: activeTab === "details",
+  });
   const createBusinessMutation = useMutation({
     mutationFn: (payload: CreateBusinessPayload) => clientsApi.createBusiness(client.id, payload),
     onSuccess: () => {
@@ -64,14 +82,38 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
     },
     onError: (err) => showErrorToast(err, "שגיאה ביצירת עסק"),
   });
+  const createChargeMutation = useMutation({
+    mutationFn: (payload: CreateChargePayload) => chargesApi.create(payload),
+    onSuccess: async () => {
+      toast.success("חיוב נוצר בהצלחה");
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: chargesQK.all }),
+        queryClient.invalidateQueries({ queryKey: chargesQK.forClientPage(client.id, 1, relatedPageSize) }),
+      ]);
+      setIsAddingCharge(false);
+    },
+    onError: (err) => showErrorToast(err, "שגיאה ביצירת חיוב"),
+  });
   const handleCreateBusiness = useCallback(
     async (payload: CreateBusinessPayload) => { await createBusinessMutation.mutateAsync(payload); },
     [createBusinessMutation],
+  );
+  const handleCreateCharge = useCallback(
+    async (payload: CreateChargePayload) => {
+      try {
+        await createChargeMutation.mutateAsync(payload);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [createChargeMutation],
   );
 
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isAddingBusiness, setIsAddingBusiness] = useState(false);
+  const [isAddingCharge, setIsAddingCharge] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = isEditing ? "hidden" : "";
@@ -94,17 +136,41 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
             client={client}
             canEdit={canEditClients}
             onEditStart={() => setIsEditing(true)}
+            sideContent={<ClientNotesCard clientId={client.id} canEdit={canEditClients} />}
           />
           <ClientBusinessesCard
             clientId={client.id}
             canEdit={canEditClients}
             onAddBusiness={() => setIsAddingBusiness(true)}
           />
+          <ClientRelatedData
+            clientId={client.id}
+            binders={relatedBindersQuery.data?.items ?? []}
+            bindersTotal={relatedBindersQuery.data?.total ?? 0}
+            charges={relatedChargesQuery.data?.items ?? []}
+            chargesTotal={relatedChargesQuery.data?.total ?? 0}
+            canViewCharges={true}
+            canCreateCharge={canEditClients}
+            onCreateCharge={() => setIsAddingCharge(true)}
+            onCreateBinder={() => navigate(`/binders?client_record_id=${client.id}`)}
+          />
           <CreateBusinessModal
             open={isAddingBusiness}
             onClose={() => setIsAddingBusiness(false)}
             onSubmit={handleCreateBusiness}
             isLoading={createBusinessMutation.isPending}
+          />
+          <ChargesCreateModal
+            open={isAddingCharge}
+            createError={
+              createChargeMutation.error
+                ? getErrorMessage(createChargeMutation.error, "שגיאה ביצירת חיוב")
+                : null
+            }
+            createLoading={createChargeMutation.isPending}
+            onClose={() => setIsAddingCharge(false)}
+            onSubmit={handleCreateCharge}
+            initialClient={{ id: client.id, name: client.full_name }}
           />
         </>
       )}

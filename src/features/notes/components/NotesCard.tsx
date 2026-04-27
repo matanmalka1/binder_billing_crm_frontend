@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { StickyNote, Pencil, Trash2, Plus, X, Check } from "lucide-react";
+import { Pencil, Trash2, Plus, X, Check } from "lucide-react";
 import { Card } from "@/components/ui/primitives/Card";
 import { Button } from "@/components/ui/primitives/Button";
 import { Alert } from "@/components/ui/overlays/Alert";
-import { StateCard } from "@/components/ui/feedback/StateCard";
 import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
 import { Textarea } from "@/components/ui/inputs/Textarea";
 import type { EntityNote } from "../api";
@@ -30,29 +29,33 @@ interface NoteRowProps {
 }
 
 const NoteRow = ({ note, isDeleting, onEdit, onDelete }: NoteRowProps) => (
-  <li className="flex items-start gap-3 py-3 border-b border-gray-100 last:border-0">
+  <li className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
     <div className="flex-1 min-w-0">
-      <p className="text-sm text-gray-800 whitespace-pre-wrap break-words">{note.note}</p>
-      <p className="mt-1 text-xs text-gray-400">{formatDate(note.created_at)}</p>
+      <p className="text-sm font-semibold text-gray-900 whitespace-pre-wrap break-words">{note.note}</p>
+      <p className="mt-2 text-xs font-medium text-gray-500">{formatDate(note.created_at)}</p>
     </div>
     <div className="flex items-center gap-1 shrink-0">
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="sm"
         onClick={() => onEdit(note)}
-        className="p-1 text-gray-400 hover:text-gray-600 rounded"
+        className="h-8 w-8 px-0 text-gray-500"
         title="ערוך"
       >
-        <Pencil className="h-3.5 w-3.5" />
-      </button>
-      <button
+        <Pencil className="h-4 w-4" />
+      </Button>
+      <Button
         type="button"
+        variant="ghost"
+        size="sm"
         onClick={() => onDelete(note.id)}
         disabled={isDeleting}
-        className="p-1 text-gray-400 hover:text-negative-600 rounded disabled:opacity-50"
+        className="h-8 w-8 px-0 text-gray-500 hover:text-negative-600"
         title="מחק"
       >
-        <Trash2 className="h-3.5 w-3.5" />
-      </button>
+        <Trash2 className="h-4 w-4" />
+      </Button>
     </div>
   </li>
 );
@@ -105,6 +108,7 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
       <Card
         title="הערות"
         subtitle={total > 0 ? `${total} הערות` : undefined}
+        className="shadow-sm"
         actions={
           canEdit && !showAdd ? (
             <Button
@@ -123,7 +127,7 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
         {error && <Alert variant="error" message={error} />}
 
         {showAdd && (
-          <div className="mb-4 space-y-2">
+          <div className="mb-5 rounded-lg border border-primary-100 bg-primary-50/40 p-4 space-y-3">
             <Textarea
               rows={3}
               placeholder="הזן הערה..."
@@ -162,14 +166,16 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
         )}
 
         {!isLoading && notes.length === 0 && !showAdd && (
-          <StateCard icon={StickyNote} message="אין הערות עדיין" variant="minimal" />
+          <p className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-5 text-center text-sm text-gray-500">
+            אין הערות עדיין
+          </p>
         )}
 
         {!isLoading && notes.length > 0 && (
-          <ul className="divide-y divide-gray-100">
+          <ul className="space-y-3">
             {notes.map((note) =>
               editing?.id === note.id ? (
-                <li key={note.id} className="py-3 space-y-2">
+                <li key={note.id} className="rounded-lg border border-primary-100 bg-primary-50/40 p-4 space-y-3">
                   <Textarea
                     rows={3}
                     value={editText}

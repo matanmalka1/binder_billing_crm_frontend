@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { Pencil, Plus, Snowflake, Trash2, Undo2 } from "lucide-react";
 import { Button } from "../../../../components/ui/primitives/Button";
+import { Card } from "../../../../components/ui/primitives/Card";
 import { StatusBadge } from "../../../../components/ui/primitives/StatusBadge";
 import { RowActionItem, RowActionsMenu } from "@/components/ui/table";
 import { ConfirmDialog } from "../../../../components/ui/overlays/ConfirmDialog";
@@ -88,42 +89,50 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
 
   return (
     <>
-      <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-        <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-gray-800">עסקים</h3>
-          {canEdit && (
+      <Card
+        title="עסקים"
+        className="shadow-sm"
+        actions={
+          canEdit ? (
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={onAddBusiness}
-              className="text-xs text-primary-600 hover:bg-primary-50 px-2 py-1"
+              className="gap-2"
             >
-              <Plus className="h-3.5 w-3.5" />
+              <Plus className="h-4 w-4" />
               הוסף עסק
             </Button>
-          )}
-        </div>
-
+          ) : undefined
+        }
+      >
         {isLoading ? (
-          <p className="text-xs text-gray-400">טוען...</p>
+          <p className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-5 text-center text-sm text-gray-500">
+            טוען...
+          </p>
         ) : businesses.length === 0 ? (
-          <p className="text-xs text-gray-400">אין עסקים רשומים</p>
+          <p className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-5 text-center text-sm text-gray-500">
+            אין עסקים רשומים
+          </p>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="space-y-3">
             {businesses.map((biz) => {
               return (
-                <li key={biz.id} className="flex items-start gap-2 py-2">
+                <li
+                  key={biz.id}
+                  className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm transition-colors hover:border-primary-200 hover:bg-primary-50/30"
+                >
                   <div className="min-w-0 flex-1">
                     <Link
                       to={CLIENT_ROUTES.businessDetail(clientId, biz.id)}
-                      className="flex min-w-0 items-center justify-between rounded-lg px-1 hover:bg-gray-50 transition-colors"
+                      className="flex min-w-0 items-center justify-between gap-4"
                     >
                       <div className="min-w-0">
                         <p className="truncate text-sm font-medium text-gray-900">
-                          {biz.business_name ?? "—"}
+                          {biz.business_name ?? "לא הוגדר"}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="mt-1 text-xs font-medium text-gray-500">
                           נפתח בתאריך {formatDate(biz.opened_at)}
                         </p>
                       </div>
@@ -176,7 +185,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
             })}
           </ul>
         )}
-      </div>
+      </Card>
 
       {/* Edit modal */}
       <Modal
