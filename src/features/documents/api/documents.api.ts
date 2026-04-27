@@ -8,7 +8,6 @@ import type {
   ListDocumentsByClientParams,
   PermanentDocumentResponse,
   UploadDocumentPayload,
-  UpdateNotesRequest,
 } from "./contracts";
 
 export const documentsApi = {
@@ -77,9 +76,6 @@ export const documentsApi = {
     if (payload.annual_report_id != null) {
       formData.append("annual_report_id", String(payload.annual_report_id));
     }
-    if (payload.notes != null) {
-      formData.append("notes", payload.notes);
-    }
     const response = await api.post<PermanentDocumentResponse>(
       DOCUMENT_ENDPOINTS.documentsUpload,
       formData,
@@ -103,11 +99,4 @@ export const documentsApi = {
     return response.data;
   },
 
-  updateNotes: async (id: number, notes: string): Promise<PermanentDocumentResponse> => {
-    const response = await api.patch<PermanentDocumentResponse>(
-      DOCUMENT_ENDPOINTS.documentNotes(id),
-      { notes } satisfies UpdateNotesRequest,
-    );
-    return response.data;
-  },
 };

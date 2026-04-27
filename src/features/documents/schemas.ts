@@ -9,7 +9,6 @@ export interface DocumentsUploadFormValues {
   file: File | null;
   tax_year: number | null;
   annual_report_id: number | null;
-  notes: string | null;
 }
 
 export const documentsUploadSchema = z.object({
@@ -36,7 +35,6 @@ export const documentsUploadSchema = z.object({
     ),
   tax_year: z.number().nullable(),
   annual_report_id: z.number().nullable(),
-  notes: z.string().nullable(),
 });
 
 export const documentsUploadDefaultValues: DocumentsUploadFormValues = {
@@ -45,5 +43,4 @@ export const documentsUploadDefaultValues: DocumentsUploadFormValues = {
   file: null,
   tax_year: null,
   annual_report_id: null,
-  notes: null,
 };

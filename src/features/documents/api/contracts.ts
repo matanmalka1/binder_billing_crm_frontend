@@ -17,7 +17,6 @@ export interface PermanentDocumentResponse {
   original_filename: string | null;
   file_size_bytes: number | null;
   mime_type: string | null;
-  notes: string | null;
   approved_by: number | null;
   approved_at: string | null;
   rejected_by: number | null;
@@ -38,10 +37,6 @@ export interface OperationalSignalsResponse {
   missing_documents: string[];
 }
 
-export interface UpdateNotesRequest {
-  notes: string;
-}
-
 export interface UploadDocumentPayload {
   client_record_id: number;
   business_id?: number | null;
@@ -59,7 +54,6 @@ export interface UploadDocumentPayload {
   file: File;
   tax_year?: number | null;
   annual_report_id?: number | null;
-  notes?: string | null;
 }
 
 export interface ListDocumentsByClientParams {

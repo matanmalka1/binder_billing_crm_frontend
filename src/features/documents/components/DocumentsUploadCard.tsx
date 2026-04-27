@@ -36,7 +36,6 @@ interface DocumentsUploadCardProps {
     business_id?: number | null;
     file: File;
     tax_year?: number | null;
-    notes?: string | null;
   }) => Promise<boolean>;
   uploadError: string | null;
   uploading: boolean;
@@ -106,7 +105,6 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
       business_id: values.business_id,
       file: values.file,
       tax_year: values.tax_year ?? null,
-      notes: values.notes ?? null,
     });
     if (uploaded) {
       reset({ ...documentsUploadDefaultValues, tax_year: initialTaxYear ?? null });
@@ -161,16 +159,6 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
             ))}
           </Select>
         )}
-
-        <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">הערות</label>
-          <textarea
-            {...register("notes")}
-            placeholder="הערות"
-            rows={2}
-            className="min-h-[42px] w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 resize-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500 focus:outline-none"
-          />
-        </div>
       </div>
 
       {/* File picker */}

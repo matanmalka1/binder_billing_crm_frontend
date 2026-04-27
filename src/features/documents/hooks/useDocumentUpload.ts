@@ -24,7 +24,6 @@ export const useDocumentUpload = () => {
     payload: Pick<UploadDocumentPayload, "client_record_id" | "document_type" | "file"> & {
       business_id?: number | null;
       tax_year?: number | null;
-      notes?: string | null;
       annual_report_id?: number | null;
     },
   ): Promise<boolean> => {

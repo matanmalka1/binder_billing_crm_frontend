@@ -9,5 +9,4 @@ export const DOCUMENT_ENDPOINTS = {
   documentById: (id: number | string) => `/documents/${id}`,
   documentReplace: (id: number | string) => `/documents/${id}/replace`,
   documentDownloadUrl: (id: number | string) => `/documents/${id}/download-url`,
-  documentNotes: (id: number | string) => `/documents/${id}/notes`,
 } as const;

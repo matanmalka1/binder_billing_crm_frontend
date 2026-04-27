@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   documentsApi,
   documentsQK,
@@ -45,16 +45,6 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
     invalidateDocs();
   };
 
-  const updateNotesMutation = useMutation({
-    mutationFn: ({ id, notes }: { id: number; notes: string }) =>
-      documentsApi.updateNotes(id, notes),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: documentsQK.clientList(clientId) });
-      toast.success("ההערה עודכנה");
-    },
-    onError: (error) => toast.error(getErrorMessage(error, "שגיאה בפעולה")),
-  });
-
   const errorSource = documentsQuery.error ?? signalsQuery.error;
 
   return {
@@ -69,13 +59,11 @@ export const useClientDocumentsTab = (clientId: number, taxYear?: number | null)
       business_id?: number | null;
       file: File;
       tax_year?: number | null;
-      notes?: string | null;
       annual_report_id?: number | null;
     }) => submitUpload({ ...payload, client_record_id: clientId }),
     uploadError,
     uploading,
     handleDelete,
     handleReplace,
-    handleUpdateNotes: (id: number, notes: string) => updateNotesMutation.mutate({ id, notes }),
   };
 };
