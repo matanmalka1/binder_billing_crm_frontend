@@ -13,7 +13,7 @@ import {
   ENTITY_TYPE_OPTIONS,
   VAT_REPORTING_FREQUENCY_OPTIONS,
 } from "../../constants";
-import { formatClientOfficeId, formatDate } from "@/utils/utils";
+import { formatDate, formatPlainIdentifier, formatShekelAmount } from "@/utils/utils";
 import type { ClientEditFormValues } from "../../schemas";
 
 type EntityTypeField = ControllerRenderProps<ClientEditFormValues, "entity_type">;
@@ -27,9 +27,6 @@ type SharedSectionProps = {
   isLoading: boolean;
   register: UseFormRegister<ClientEditFormValues>;
 };
-
-const formatSystemMoney = (value: string | null): string =>
-  value ? `₪${Number(value).toLocaleString("he-IL")}` : "נקבע על ידי המערכת";
 
 const ReadonlyField = ({
   label,
@@ -85,14 +82,14 @@ export const ClientIdentitySection = ({
       <ReadonlyField
         label="מספר מזהה"
         value={client.id_number || "לא הוגדר"}
-        help="שדה זה מנוהל כרשומת זהות ואינו ניתן לעריכה במסך זה."
+        help="מנוהל כרשומת זהות ואינו ניתן לעריכה כאן."
       />
       <ReadonlyField
         label="סוג מזהה"
         value={client.id_number_type
           ? CLIENT_ID_NUMBER_TYPE_LABELS[client.id_number_type]
           : "לא הוגדר"}
-        help="שינוי סוג מזהה דורש תהליך תיקון רשומה."
+        help="שינוי סוג מזהה דורש תיקון רשומה."
       />
     </div>
   </section>
@@ -204,11 +201,13 @@ export const ClientTaxProfileSection = ({
             name={vatReportingFrequencyField.name}
           />
         )}
-        <ReadonlyField
-          label="תקרת פטור מע״מ"
-          value={formatSystemMoney(client.vat_exempt_ceiling)}
-          help="ערך מערכת/תצורה, לא שדה עריכה ידני."
-        />
+        {isOsekPatur && (
+          <ReadonlyField
+            label="תקרת פטור מע״מ"
+            value={formatShekelAmount(client.vat_exempt_ceiling, "נקבע על ידי המערכת")}
+            help="ערך מערכת/תצורה, לא שדה ידני."
+          />
+        )}
         <Input
           label="אחוז מקדמה %"
           placeholder="8.5"
@@ -220,8 +219,8 @@ export const ClientTaxProfileSection = ({
           label="תאריך עדכון מקדמה"
           value={client.advance_rate_updated_at
             ? formatDate(client.advance_rate_updated_at)
-            : "לא קיים תאריך עדכון"}
-          help="בהיעדר תאריך, אין להניח שהאחוז אומת מול מקור רשמי."
+            : "לא זמין"}
+          help="מתעדכן רק כשקיים מקור עדכון במערכת."
         />
       </div>
     </section>
@@ -246,14 +245,12 @@ export const ClientOfficeSection = ({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <ReadonlyField
           label="מספר לקוח במשרד"
-          value={client.office_client_number != null
-            ? formatClientOfficeId(client.office_client_number)
-            : "לא הוגדר"}
+          value={formatPlainIdentifier(client.office_client_number, "לא הוגדר")}
           help="מזהה משרד ראשי להצגה, מנוהל על ידי המערכת."
         />
         <ReadonlyField
           label="מזהה מערכת"
-          value={`#${client.id}`}
+          value={formatPlainIdentifier(client.id)}
           help="מזהה פנימי לצורכי תמיכה ובקרה בלבד."
         />
       </div>

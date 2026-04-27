@@ -5,7 +5,7 @@ import { Card } from "../../../../components/ui/primitives/Card";
 import { Button } from "../../../../components/ui/primitives/Button";
 import { Badge, type BadgeVariant } from "../../../../components/ui/primitives/Badge";
 import { DefinitionList } from "../../../../components/ui/layout/DefinitionList";
-import { cn, formatClientOfficeId, formatDate } from "@/utils/utils";
+import { cn, formatDate, formatPlainIdentifier, formatShekelAmount } from "@/utils/utils";
 import type { ClientResponse } from "../../api";
 import {
   getClientIdNumberTypeLabel,
@@ -43,9 +43,6 @@ const formatStructuredAddress = (client: ClientResponse): string => {
 
   return [streetPart, aptPart, cityPart].filter(Boolean).join(", ");
 };
-
-const formatMoney = (value: string | null): string =>
-  value ? `₪${Number(value).toLocaleString("he-IL")}` : EMPTY_VALUE;
 
 const getTaxBranchValue = (value: string | null): string => value ?? EMPTY_VALUE;
 
@@ -152,23 +149,26 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   const vatReportingLabel = isOsekPatur
     ? "פטור - לא רלוונטי לדיווח תקופתי"
     : getClientVatReportingLabel(client).replace("—", EMPTY_VALUE);
-  const entityTypeLabel = client.entity_type
-    ? getEntityTypeLabel(client.entity_type)
-    : EMPTY_VALUE;
-  const officeClientNumber = client.office_client_number != null
-    ? formatClientOfficeId(client.office_client_number)
-    : EMPTY_VALUE;
+  const officeClientNumber = formatPlainIdentifier(client.office_client_number, EMPTY_VALUE);
   const statusLabel = getClientStatusLabel(client.status);
+  // TODO: Show the updating user when the client details API exposes updated_by.
+  const lastUpdatedLabel = client.updated_at
+    ? `עודכן לאחרונה: ${formatDate(client.updated_at)}`
+    : null;
 
   const taxItems = [
     {
       label: 'תדירות דיווח מע"מ',
       value: vatReportingLabel,
     },
-    {
-      label: 'תקרת פטור מע"מ',
-      value: isOsekPatur ? `${formatMoney(client.vat_exempt_ceiling)} (ערך מערכת)` : "לא רלוונטי",
-    },
+    ...(isOsekPatur
+      ? [{
+          label: 'תקרת פטור מע"מ',
+          value: client.vat_exempt_ceiling
+            ? `${formatShekelAmount(client.vat_exempt_ceiling)} (ערך מערכת)`
+            : EMPTY_VALUE,
+        }]
+      : []),
     {
       label: "אחוז מקדמה",
       value: client.advance_rate != null ? `${client.advance_rate}%` : "לא אומת",
@@ -187,19 +187,16 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
   const officeItems = [
     {
       label: "מספר לקוח במשרד",
-      value: client.office_client_number != null ? formatClientOfficeId(client.office_client_number) : EMPTY_VALUE,
+      value: officeClientNumber,
     },
+    { label: "מזהה מערכת", value: formatPlainIdentifier(client.id) },
     { label: "סטטוס לקוח", value: getClientStatusLabel(client.status) },
     {
       label: "רואה חשבון מלווה",
       value: client.accountant_id ? nameById.get(client.accountant_id) ?? "לא נמצא שם משתמש" : EMPTY_VALUE,
     },
     { label: "נוצר בתאריך", value: formatDate(client.created_at) },
-    {
-      label: "עודכן בתאריך",
-      value: client.updated_at ? formatDate(client.updated_at) : EMPTY_VALUE,
-    },
-    { label: "מזהה מערכת", value: `#${client.id}` },
+    { label: "עודכן בתאריך", value: client.updated_at ? formatDate(client.updated_at) : EMPTY_VALUE },
   ];
 
   return (
@@ -213,11 +210,11 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
               </h2>
               <Badge variant={statusVariantMap[client.status]}>{statusLabel}</Badge>
             </div>
-            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-600">
-              <span>מספר לקוח במשרד: {officeClientNumber}</span>
-              <span>סוג ישות: {entityTypeLabel}</span>
-              <span>מזהה מערכת: #{client.id}</span>
-            </div>
+            {lastUpdatedLabel ? (
+              <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-600">
+                <span>{lastUpdatedLabel}</span>
+              </div>
+            ) : null}
           </div>
           {canEdit ? (
             <Button
@@ -239,7 +236,6 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
             label="סטטוס"
             value={<Badge variant={statusVariantMap[client.status]}>{statusLabel}</Badge>}
           />
-          <SummaryCard label="סוג ישות" value={entityTypeLabel} />
           <SummaryCard
             label="אחוז מקדמה"
             value={client.advance_rate != null ? `${client.advance_rate}%` : "לא אומת"}

@@ -37,6 +37,22 @@ export const formatClientOfficeId = (
   return `#${value}`;
 };
 
+export const formatPlainIdentifier = (
+  value: number | string | null | undefined,
+  fallback = "—",
+): string => {
+  if (value == null || value === "") return fallback;
+  return String(value);
+};
+
+export const formatShekelAmount = (
+  value: string | number | null | undefined,
+  fallback = "—",
+): string => {
+  if (value == null || value === "") return fallback;
+  return `₪${Number(value).toLocaleString("he-IL")}`;
+};
+
 export const formatBinderNumber = (binderNumber: string | null | undefined): string => {
   if (!binderNumber) return "—";
   const parts = binderNumber.split("/");

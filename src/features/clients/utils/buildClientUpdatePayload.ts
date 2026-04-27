@@ -5,6 +5,15 @@ import type { ClientEditFormValues } from "../schemas";
 const blankToNull = (value: string | null | undefined): string | null =>
   value?.trim() ? value.trim() : null;
 
+const getLocalISODate = (): string => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
 export const buildClientUpdatePayload = (
   data: ClientEditFormValues,
   dirtyFields: FieldNamesMarkedBoolean<ClientEditFormValues>,
@@ -28,7 +37,11 @@ export const buildClientUpdatePayload = (
       ? null
       : data.vat_reporting_frequency || null;
   }
-  if (dirtyFields.advance_rate) payload.advance_rate = blankToNull(data.advance_rate);
+  if (dirtyFields.advance_rate) {
+    const advanceRate = blankToNull(data.advance_rate);
+    payload.advance_rate = advanceRate;
+    payload.advance_rate_updated_at = advanceRate ? getLocalISODate() : null;
+  }
   if (dirtyFields.accountant_id) {
     payload.accountant_id = data.accountant_id ? Number(data.accountant_id) : null;
   }
