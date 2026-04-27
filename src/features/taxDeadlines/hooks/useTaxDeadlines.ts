@@ -14,12 +14,9 @@ import type {
 } from "../types";
 import { toast } from "../../../utils/toast";
 import { getErrorMessage } from "../../../utils/utils";
-import {
-  DUPLICATE_TAX_DEADLINE_MESSAGE,
-  toDeadlinePayloadPeriod,
-  toDeadlinePayloadTaxYear,
-  useTaxDeadlineActions,
-} from "./useTaxDeadlineActions";
+import { DUPLICATE_TAX_DEADLINE_MESSAGE } from "../constants";
+import { getCurrentTaxYear, toDeadlinePayloadPeriod, toDeadlinePayloadTaxYear } from "../utils";
+import { useTaxDeadlineActions } from "./useTaxDeadlineActions";
 
 export const useTaxDeadlines = () => {
   const queryClient = useQueryClient();
@@ -142,7 +139,7 @@ export const useTaxDeadlines = () => {
   const generateForm = useForm<GenerateTaxDeadlinesForm>({
     defaultValues: {
       client_id: "",
-      year: String(new Date().getFullYear()),
+      year: String(getCurrentTaxYear()),
     },
   });
 

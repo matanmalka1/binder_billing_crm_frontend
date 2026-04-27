@@ -2,22 +2,14 @@ import { useMemo } from "react";
 import { AlertTriangle, CheckCircle2, ListChecks, RotateCcw } from "lucide-react";
 import { StatsCard } from "@/components/ui/layout/StatsCard";
 import { formatCurrency, type TaxDeadlineResponse } from "../api";
+import { getDeadlineSummary } from "../utils";
 
 interface DeadlineSummaryCardsProps {
   deadlines: TaxDeadlineResponse[];
 }
 
-const getSummary = (deadlines: TaxDeadlineResponse[]) => ({
-  overdue: deadlines.filter((deadline) => deadline.status === "pending" && deadline.urgency_level === "overdue").length,
-  pending: deadlines.filter((deadline) => deadline.status === "pending").length,
-  completed: deadlines.filter((deadline) => deadline.status === "completed").length,
-  totalOpen: deadlines
-    .filter((deadline) => deadline.status === "pending" && deadline.payment_amount !== null)
-    .reduce((sum, deadline) => sum + Number(deadline.payment_amount), 0),
-});
-
 export const DeadlineSummaryCards = ({ deadlines }: DeadlineSummaryCardsProps) => {
-  const summary = useMemo(() => getSummary(deadlines), [deadlines]);
+  const summary = useMemo(() => getDeadlineSummary(deadlines), [deadlines]);
 
   const stats = [
     {

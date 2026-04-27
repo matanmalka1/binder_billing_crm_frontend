@@ -12,36 +12,21 @@ import type {
   UseFormRegister,
   UseFormReturn,
 } from "react-hook-form";
-import { TAX_DEADLINE_TYPE_OPTIONS } from "../constants";
+import {
+  REQUIRED_FIELD_MESSAGE,
+  TAX_DEADLINE_TYPE_OPTIONS,
+} from "../constants";
 import type {
   CreateTaxDeadlineForm,
   EditTaxDeadlineForm,
   TaxDeadlineFormValues,
 } from "../types";
+import { computeVatDueDate, getCurrentTaxYear } from "../utils";
 import type { VatType } from "@/features/clients";
 
 type SharedTaxDeadlineForm = UseFormReturn<CreateTaxDeadlineForm> | UseFormReturn<EditTaxDeadlineForm>;
 
 const currencySuffix = <span className="text-sm text-gray-400">₪</span>;
-
-const VAT_FILING_DUE_DAY = 19;
-const REQUIRED_FIELD_MESSAGE = "שדה חובה";
-
-const computeVatDueDate = (period: string, vatType: VatType | null) => {
-  if (!period || vatType === "exempt") return "";
-
-  const [yearPart, monthPart] = period.split("-");
-  const year = Number(yearPart);
-  const month = Number(monthPart);
-  if (!Number.isInteger(year) || !Number.isInteger(month)) return "";
-
-  const filingMonthOffset = vatType === "bimonthly" ? 2 : 1;
-  const dueMonthIndex = month - 1 + filingMonthOffset;
-  const dueYear = year + Math.floor(dueMonthIndex / 12);
-  const dueMonth = (dueMonthIndex % 12) + 1;
-
-  return `${dueYear}-${String(dueMonth).padStart(2, "0")}-${String(VAT_FILING_DUE_DAY).padStart(2, "0")}`;
-};
 
 interface TaxDeadlineCommonFieldsProps {
   form: SharedTaxDeadlineForm;
@@ -78,7 +63,7 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
 
   useEffect(() => {
     if (deadlineType !== "annual_report" || period) return;
-    typedForm.setValue("period", String(new Date().getFullYear()), {
+    typedForm.setValue("period", String(getCurrentTaxYear()), {
       shouldDirty: false,
       shouldValidate: shouldValidateDerivedFields,
     });

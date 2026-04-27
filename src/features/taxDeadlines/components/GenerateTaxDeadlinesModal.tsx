@@ -9,8 +9,10 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { Modal } from "../../../components/ui/overlays/Modal";
 import { ModalFormActions } from "../../../components/ui/overlays/ModalFormActions";
 import type { GenerateTaxDeadlinesForm } from "../types";
-
-const GENERATE_TAX_DEADLINES_FORM_ID = "generate-tax-deadlines-form";
+import {
+  GENERATE_TAX_DEADLINES_FORM_ID,
+  REQUIRED_FIELD_MESSAGE,
+} from "../constants";
 
 interface GenerateTaxDeadlinesModalProps {
   open: boolean;
@@ -73,7 +75,7 @@ export const GenerateTaxDeadlinesModal: React.FC<GenerateTaxDeadlinesModalProps>
       )}
     >
       <form id={GENERATE_TAX_DEADLINES_FORM_ID} onSubmit={onSubmit} className="space-y-4">
-        <input type="hidden" {...register("client_id", { required: "שדה חובה" })} />
+        <input type="hidden" {...register("client_id", { required: REQUIRED_FIELD_MESSAGE })} />
         <ClientPickerField
           selectedClient={selectedClient}
           clientQuery={clientQuery}
@@ -90,7 +92,7 @@ export const GenerateTaxDeadlinesModal: React.FC<GenerateTaxDeadlinesModalProps>
           min="2000"
           max="2100"
           {...register("year", {
-            required: "שדה חובה",
+            required: REQUIRED_FIELD_MESSAGE,
             validate: (value) => /^\d{4}$/.test(value) || "יש להזין שנה בת 4 ספרות",
           })}
           error={errors.year?.message}

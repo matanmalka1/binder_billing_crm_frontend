@@ -5,8 +5,7 @@ import {
   TaxDeadlineModalFooter,
 } from "./TaxDeadlineFormParts";
 import type { EditTaxDeadlineForm } from "../types";
-
-const EDIT_TAX_DEADLINE_FORM_ID = "edit-tax-deadline-form";
+import { EDIT_TAX_DEADLINE_FORM_ID } from "../constants";
 
 interface EditTaxDeadlineFormProps {
   open: boolean;

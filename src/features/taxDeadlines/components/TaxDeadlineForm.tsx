@@ -13,8 +13,10 @@ import {
 } from "./TaxDeadlineFormParts";
 import type { CreateTaxDeadlineForm } from "../types";
 import { clientsApi, clientsQK } from "@/features/clients";
-
-const TAX_DEADLINE_CREATE_FORM_ID = "tax-deadline-create-form";
+import {
+  REQUIRED_FIELD_MESSAGE,
+  TAX_DEADLINE_CREATE_FORM_ID,
+} from "../constants";
 
 interface TaxDeadlineFormProps {
   open: boolean;
@@ -87,7 +89,7 @@ export const TaxDeadlineForm = ({
       }
     >
       <form id={TAX_DEADLINE_CREATE_FORM_ID} onSubmit={onSubmit} className="space-y-4">
-        <input type="hidden" {...register("client_id", { required: "שדה חובה" })} />
+        <input type="hidden" {...register("client_id", { required: REQUIRED_FIELD_MESSAGE })} />
         <ClientPickerField
           selectedClient={selectedClient}
           clientQuery={clientQuery}

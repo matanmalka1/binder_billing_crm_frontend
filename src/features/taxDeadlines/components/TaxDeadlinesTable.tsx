@@ -12,23 +12,7 @@ import {
   DeadlineUrgencyBadge,
 } from "./TaxDeadlineTableParts";
 import { getDeadlineRowClassName } from "./taxDeadlineTableUtils";
-import { getTaxDeadlinePeriodLabel } from "../utils";
-
-const HEBREW_MONTHS = [
-  "ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני",
-  "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר",
-];
-
-const getMonthGroupKey = (dueDate: string): string => {
-  const [year, month] = dueDate.split("-");
-  return `${year}-${month}`;
-};
-
-const getMonthGroupLabel = (key: string): string => {
-  const [year, month] = key.split("-");
-  const monthName = HEBREW_MONTHS[Number(month) - 1] ?? month;
-  return `${monthName} ${year}`;
-};
+import { getTaxDeadlinePeriodLabel, groupTaxDeadlinesByMonth } from "../utils";
 
 interface TaxDeadlinesTableProps {
   deadlines: TaxDeadlineResponse[];
@@ -129,23 +113,7 @@ export const TaxDeadlinesTable = ({
     [completingId, deletingId, onComplete, onDelete, onEdit, onReopen, reopeningId],
   );
 
-  const groups = useMemo(() => {
-    const map = new Map<string, TaxDeadlineResponse[]>();
-    for (const d of deadlines) {
-      const key = getMonthGroupKey(d.due_date);
-      const existing = map.get(key);
-      if (existing) {
-        existing.push(d);
-      } else {
-        map.set(key, [d]);
-      }
-    }
-    return Array.from(map.entries()).map(([key, items]) => ({
-      key,
-      label: getMonthGroupLabel(key),
-      items,
-    }));
-  }, [deadlines]);
+  const groups = useMemo(() => groupTaxDeadlinesByMonth(deadlines), [deadlines]);
 
   if (deadlines.length === 0) {
     return (

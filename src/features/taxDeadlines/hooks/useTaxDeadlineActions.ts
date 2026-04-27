@@ -6,20 +6,13 @@ import type { TaxDeadlineResponse } from "../api";
 import type { CreateTaxDeadlineForm, EditTaxDeadlineForm } from "../types";
 import { getHttpStatus, showErrorToast } from "../../../utils/utils";
 import { toast } from "../../../utils/toast";
-
-export const DUPLICATE_TAX_DEADLINE_MESSAGE = "קיים כבר מועד פעיל לאותו לקוח, סוג ותקופה";
-
-const isAnnualReportDeadline = (deadlineType: string) => deadlineType === "annual_report";
-
-const getSelectedTaxYear = (period: string) => Number(period || new Date().getFullYear());
-
-export const toDeadlinePayloadPeriod = (
-  values: Pick<CreateTaxDeadlineForm | EditTaxDeadlineForm, "deadline_type" | "period">,
-) => (isAnnualReportDeadline(values.deadline_type) ? null : values.period || null);
-
-export const toDeadlinePayloadTaxYear = (
-  values: Pick<CreateTaxDeadlineForm | EditTaxDeadlineForm, "deadline_type" | "period">,
-) => (isAnnualReportDeadline(values.deadline_type) ? getSelectedTaxYear(values.period) : null);
+import { DUPLICATE_TAX_DEADLINE_MESSAGE } from "../constants";
+import {
+  findMatchingDuplicateDeadline,
+  isAnnualReportDeadline,
+  toDeadlinePayloadPeriod,
+  toDeadlinePayloadTaxYear,
+} from "../utils";
 
 interface UseTaxDeadlineActionsParams {
   invalidateAfterMutation: () => void;
@@ -47,11 +40,7 @@ export const useTaxDeadlineActions = ({ invalidateAfterMutation }: UseTaxDeadlin
       page: 1,
       page_size: 5,
     });
-    return response.items.find((deadline) => {
-      if (deadline.id === excludeId) return false;
-      if (!isAnnualReportDeadline(values.deadline_type)) return deadline.period === values.period;
-      return deadline.tax_year === getSelectedTaxYear(values.period);
-    }) ?? null;
+    return findMatchingDuplicateDeadline(response.items, values, excludeId);
   };
 
   const updateMutation = useMutation({

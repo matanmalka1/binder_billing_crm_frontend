@@ -4,8 +4,6 @@ export type { TaxProfileData } from "./api";
 export type {
   TaxProfileCardProps,
   TaxProfileFormProps,
-  TaxProfileFormState,
-  TaxProfileQueryParams,
   TaxProfileUpdatePayload,
 } from "./types";
 export { TaxProfileCard } from "./components/TaxProfileCard";

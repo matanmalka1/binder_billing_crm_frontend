@@ -8,12 +8,19 @@ import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBad
 import { taxDeadlinesApi, taxDeadlinesQK, getDeadlineTypeLabel } from "../api";
 import type { TaxDeadlineResponse } from "../api";
 import {
+  CLIENT_DEADLINES_PAGE_SIZE,
+  INITIAL_TIMELINE_FILTERS,
   TAX_DEADLINE_FILTER_TYPE_OPTIONS,
   TAX_DEADLINE_STATUS_OPTIONS,
   getTaxDeadlineStatusLabel,
   getTaxDeadlineTypeLabel,
 } from "../constants";
-import { getTaxDeadlinePeriodLabel } from "../utils";
+import {
+  filterTimelineDeadlines,
+  getTaxDeadlinePeriodLabel,
+  getTimelineYearOptions,
+} from "../utils";
+import type { TimelineFilters } from "../types";
 import { useClientDeadlineActions } from "../hooks/useClientDeadlineActions";
 import { TaxDeadlineRowActions } from "./TaxDeadlineRowActions";
 import { EditTaxDeadlineFormModal } from "./EditTaxDeadlineForm";
@@ -31,47 +38,15 @@ interface FilingTimelineProps {
   clientId: number;
 }
 
-interface FilterState {
-  status: string;
-  type: string;
-  year: string;
-  overdueOnly: boolean;
-}
-
-// Fetch limit for embedded client deadlines tab.
-// Clients with more than 100 deadlines are rare; raise if needed.
-const CLIENT_DEADLINES_PAGE_SIZE = 100;
-
-const sortDeadlines = (items: TaxDeadlineResponse[]) => {
-  const rank = (deadline: TaxDeadlineResponse) => {
-    if (deadline.status !== "pending") return 2;
-    if (deadline.urgency_level === "overdue") return 0;
-    return 1;
-  };
-
-  return [...items].sort((a, b) => {
-    const rankDelta = rank(a) - rank(b);
-    if (rankDelta !== 0) return rankDelta;
-    return new Date(a.due_date).getTime() - new Date(b.due_date).getTime();
-  });
-};
-
-const getYearOptions = (deadlines: TaxDeadlineResponse[]) => {
-  const years = Array.from(new Set(deadlines.map((deadline) => new Date(deadline.due_date).getFullYear())))
-    .filter((year) => Number.isFinite(year))
-    .sort((a, b) => b - a);
-  return [{ value: "", label: "כל השנים" }, ...years.map((year) => ({ value: String(year), label: String(year) }))];
-};
-
 const TimelineToolbar = ({
   filters,
   yearOptions,
   onChange,
   onReset,
 }: {
-  filters: FilterState;
+  filters: TimelineFilters;
   yearOptions: { value: string; label: string }[];
-  onChange: (next: Partial<FilterState>) => void;
+  onChange: (next: Partial<TimelineFilters>) => void;
   onReset: () => void;
 }) => {
   const hasFilters = Boolean(filters.status || filters.type || filters.year || filters.overdueOnly);
@@ -137,7 +112,7 @@ const TimelineToolbar = ({
 };
 
 export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
-  const [filters, setFilters] = useState<FilterState>({ status: "", type: "", year: "", overdueOnly: false });
+  const [filters, setFilters] = useState<TimelineFilters>(INITIAL_TIMELINE_FILTERS);
   const actions = useClientDeadlineActions(clientId);
   const listParams = useMemo(
     () => ({ client_record_id: clientId, page: 1, page_size: CLIENT_DEADLINES_PAGE_SIZE }),
@@ -150,19 +125,8 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
   });
 
   const allDeadlines = useMemo(() => data?.items ?? [], [data?.items]);
-  const yearOptions = useMemo(() => getYearOptions(allDeadlines), [allDeadlines]);
-  const displayData = useMemo(() => {
-    let items = allDeadlines;
-    if (filters.status) items = items.filter((deadline) => deadline.status === filters.status);
-    if (filters.type) items = items.filter((deadline) => deadline.deadline_type === filters.type);
-    if (filters.year) {
-      items = items.filter((deadline) => new Date(deadline.due_date).getFullYear() === Number(filters.year));
-    }
-    if (filters.overdueOnly) {
-      items = items.filter((deadline) => deadline.status === "pending" && deadline.urgency_level === "overdue");
-    }
-    return sortDeadlines(items);
-  }, [allDeadlines, filters]);
+  const yearOptions = useMemo(() => getTimelineYearOptions(allDeadlines), [allDeadlines]);
+  const displayData = useMemo(() => filterTimelineDeadlines(allDeadlines, filters), [allDeadlines, filters]);
 
   const columns = useMemo<Column<TaxDeadlineResponse>[]>(
     () => [
@@ -201,7 +165,7 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
         filters={filters}
         yearOptions={yearOptions}
         onChange={(next) => setFilters((current) => ({ ...current, ...next }))}
-        onReset={() => setFilters({ status: "", type: "", year: "", overdueOnly: false })}
+        onReset={() => setFilters(INITIAL_TIMELINE_FILTERS)}
       />
       <DataTable
         data={displayData}

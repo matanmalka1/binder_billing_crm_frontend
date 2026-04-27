@@ -5,41 +5,31 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
 import { Alert } from "../../../components/ui/overlays/Alert";
 import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
-import { getVatTypeLabel } from "../../../utils/enums";
 import { useTaxProfile } from "../hooks/useTaxProfile";
 import { useAdvisorOptions } from "@/features/users";
 import { TaxProfileForm } from "./TaxProfileForm";
+import { TAX_PROFILE_FORM_ID, TAX_PROFILE_TEXT } from "../constants";
+import { getTaxProfileItems } from "../helpers";
+import type { TaxProfileCardProps } from "../types";
 
-interface Props { clientId: number | null; readOnly?: boolean }
-
-const TAX_PROFILE_FORM_ID = "tax-profile-form";
-
-export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) => {
+export const TaxProfileCard: React.FC<TaxProfileCardProps> = ({ clientId, readOnly = false }) => {
   const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(clientId ?? 0);
   const { nameById } = useAdvisorOptions(!readOnly);
   const [isEditing, setIsEditing] = useState(false);
-
-  const items = [
-    { label: "תדירות דיווח מע\"מ", value: profile?.vat_reporting_frequency ? getVatTypeLabel(profile.vat_reporting_frequency) : "—" },
-    { label: "רואה חשבון מלווה", value: profile?.accountant_id ? nameById.get(profile.accountant_id) ?? `#${profile.accountant_id}` : "—" },
-    {
-      label: "אחוז מקדמה",
-      value: profile?.advance_rate != null ? `${profile.advance_rate}%` : "—",
-    },
-  ];
+  const closeEditor = () => setIsEditing(false);
 
   return (
     <>
-      <Card title="פרטי מס" subtitle="מידע מיסויי ספציפי ללקוח">
+      <Card title={TAX_PROFILE_TEXT.title} subtitle={TAX_PROFILE_TEXT.subtitle}>
         {isLoading && (
-          <p className="py-2 text-sm text-gray-500">טוען פרטי מס...</p>
+          <p className="py-2 text-sm text-gray-500">{TAX_PROFILE_TEXT.loading}</p>
         )}
 
         {error && <Alert variant="error" message={error} />}
 
         {!isLoading && !error && (
           <div className="space-y-4">
-            <DefinitionList items={items} columns={2} />
+            <DefinitionList items={getTaxProfileItems(profile, nameById)} columns={2} />
             {!readOnly && (
               <div className="flex justify-end">
                 <Button
@@ -50,7 +40,7 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) 
                   className="gap-2"
                 >
                   <Edit2 className="h-4 w-4" />
-                  עריכה
+                  {TAX_PROFILE_TEXT.edit}
                 </Button>
               </div>
             )}
@@ -60,17 +50,17 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) 
 
       <DetailDrawer
         open={isEditing}
-        title="עריכת פרטי מס"
-        onClose={() => setIsEditing(false)}
+        title={TAX_PROFILE_TEXT.editTitle}
+        onClose={closeEditor}
         footer={(
           <div className="flex items-center justify-end gap-3">
             <Button
               type="button"
               variant="outline"
-              onClick={() => setIsEditing(false)}
+              onClick={closeEditor}
               disabled={isUpdating}
             >
-              ביטול
+              {TAX_PROFILE_TEXT.cancel}
             </Button>
             <Button
               type="submit"
@@ -79,7 +69,7 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) 
               isLoading={isUpdating}
               disabled={isUpdating}
             >
-              שמור שינויים
+              {TAX_PROFILE_TEXT.saveChanges}
             </Button>
           </div>
         )}
@@ -88,9 +78,9 @@ export const TaxProfileCard: React.FC<Props> = ({ clientId, readOnly = false }) 
           profile={profile}
           onSave={(data) => {
             updateProfile(data);
-            setIsEditing(false);
+            closeEditor();
           }}
-          onCancel={() => setIsEditing(false)}
+          onCancel={closeEditor}
           isSaving={isUpdating}
           hideFooter
           formId={TAX_PROFILE_FORM_ID}

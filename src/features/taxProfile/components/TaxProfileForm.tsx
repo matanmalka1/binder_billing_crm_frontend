@@ -4,21 +4,17 @@ import { Button } from "../../../components/ui/primitives/Button";
 import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import { useAdvisorOptions } from "@/features/users";
-import { getVatTypeLabel } from "../../../utils/enums";
-import type { TaxProfileData } from "../hooks/useTaxProfile";
-import type { TaxProfileUpdatePayload } from "../types";
-import { taxProfileSchema, taxProfileDefaults, type TaxProfileFormValues } from "../schemas";
+import { taxProfileSchema, type TaxProfileFormValues } from "../schemas";
+import { ADVANCE_RATE_INPUT, TAX_PROFILE_FIELD_LABELS, TAX_PROFILE_TEXT } from "../constants";
+import {
+  getAdvisorSelectOptions,
+  getTaxProfileFormValues,
+  toTaxProfileUpdatePayload,
+  VAT_REPORTING_FREQUENCY_OPTIONS,
+} from "../helpers";
+import type { TaxProfileFormProps } from "../types";
 
-interface Props {
-  profile: TaxProfileData | null;
-  onSave: (data: TaxProfileUpdatePayload) => void;
-  onCancel: () => void;
-  isSaving: boolean;
-  hideFooter?: boolean;
-  formId?: string;
-}
-
-export const TaxProfileForm: React.FC<Props> = ({
+export const TaxProfileForm: React.FC<TaxProfileFormProps> = ({
   profile,
   onSave,
   onCancel,
@@ -33,13 +29,7 @@ export const TaxProfileForm: React.FC<Props> = ({
     formState: { errors },
   } = useForm<TaxProfileFormValues>({
     resolver: zodResolver(taxProfileSchema),
-    defaultValues: profile
-      ? {
-          vat_reporting_frequency: profile.vat_reporting_frequency ?? taxProfileDefaults.vat_reporting_frequency,
-          accountant_id: profile.accountant_id != null ? String(profile.accountant_id) : "",
-          advance_rate: profile.advance_rate != null ? String(profile.advance_rate) : "",
-        }
-      : taxProfileDefaults,
+    defaultValues: getTaxProfileFormValues(profile),
   });
   const { field: vatReportingFrequencyField } = useController({
     name: "vat_reporting_frequency",
@@ -48,46 +38,35 @@ export const TaxProfileForm: React.FC<Props> = ({
   const { options: advisorOptions, isLoading: advisorsLoading } = useAdvisorOptions();
 
   const onSubmit = handleSubmit((values) => {
-    onSave({
-      vat_reporting_frequency: values.vat_reporting_frequency,
-      accountant_id: values.accountant_id ? Number(values.accountant_id) : null,
-      advance_rate: values.advance_rate || null,
-    });
+    onSave(toTaxProfileUpdatePayload(values));
   });
 
   return (
     <form id={formId} onSubmit={onSubmit} className="space-y-4" noValidate>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Select
-          label='תדירות דיווח מע"מ'
+          label={TAX_PROFILE_FIELD_LABELS.vatReportingFrequency}
           error={errors.vat_reporting_frequency?.message}
           disabled={isSaving}
-          options={[
-            { value: "monthly", label: getVatTypeLabel("monthly") },
-            { value: "bimonthly", label: getVatTypeLabel("bimonthly") },
-            { value: "exempt", label: getVatTypeLabel("exempt") },
-          ]}
+          options={VAT_REPORTING_FREQUENCY_OPTIONS}
           value={vatReportingFrequencyField.value ?? ""}
           onChange={vatReportingFrequencyField.onChange}
           onBlur={vatReportingFrequencyField.onBlur}
           name={vatReportingFrequencyField.name}
         />
         <Select
-          label="רואה חשבון מלווה"
+          label={TAX_PROFILE_FIELD_LABELS.accountant}
           error={errors.accountant_id?.message}
           disabled={isSaving || advisorsLoading}
-          options={[
-            { value: "", label: advisorsLoading ? "טוען רואי חשבון..." : "לא הוגדר" },
-            ...advisorOptions,
-          ]}
+          options={getAdvisorSelectOptions(advisorOptions, advisorsLoading)}
           {...register("accountant_id")}
         />
         <Input
-          label="אחוז מקדמה (%)"
+          label={TAX_PROFILE_FIELD_LABELS.advanceRateInput}
           type="number"
-          min={0}
-          max={100}
-          step={0.01}
+          min={ADVANCE_RATE_INPUT.min}
+          max={ADVANCE_RATE_INPUT.max}
+          step={ADVANCE_RATE_INPUT.step}
           error={errors.advance_rate?.message}
           {...register("advance_rate")}
         />
@@ -95,10 +74,10 @@ export const TaxProfileForm: React.FC<Props> = ({
       {!hideFooter && (
         <div className="flex gap-2 justify-end pt-2">
           <Button type="button" variant="outline" disabled={isSaving} onClick={onCancel}>
-            ביטול
+            {TAX_PROFILE_TEXT.cancel}
           </Button>
           <Button type="submit" isLoading={isSaving}>
-            שמור
+            {TAX_PROFILE_TEXT.save}
           </Button>
         </div>
       )}
