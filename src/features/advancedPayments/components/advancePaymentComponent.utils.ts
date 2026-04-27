@@ -1,0 +1,66 @@
+import { BIMONTHLY_START_MONTH_VALUES } from "@/constants/periodOptions.constants";
+import type { CreateAdvancePaymentFormValues } from "../schemas";
+import type { AdvancePaymentStatus, CreateAdvancePaymentPayload } from "../types";
+import { MONTH_OPTIONS } from "../utils";
+import { DEFAULT_BIMONTHLY_START_MONTH } from "./advancePaymentComponent.constants";
+
+type MonoTone = "neutral" | "positive" | "negative";
+
+export const getDeltaTone = (delta: string | null): MonoTone => {
+  const numericDelta = Number(delta);
+  if (numericDelta > 0) return "negative";
+  if (numericDelta < 0) return "positive";
+  return "neutral";
+};
+
+export const getCollectionPercent = (rate: number | null, cap = false) => {
+  if (rate === null) return null;
+  const roundedRate = Math.round(rate);
+  return cap ? Math.min(roundedRate, 100) : roundedRate;
+};
+
+export const getTotalPages = (total: number, pageSize: number) =>
+  Math.max(1, Math.ceil(total / pageSize));
+
+export const toggleAdvancePaymentStatusFilter = (
+  currentStatuses: AdvancePaymentStatus[],
+  status: AdvancePaymentStatus,
+) =>
+  currentStatuses.includes(status)
+    ? currentStatuses.filter((currentStatus) => currentStatus !== status)
+    : [...currentStatuses, status];
+
+export const getAdvancePaymentMonthOptions = (periodMonthsCount: 1 | 2) =>
+  periodMonthsCount === 2
+    ? MONTH_OPTIONS.filter((option) => BIMONTHLY_START_MONTH_VALUES.has(option.value))
+    : MONTH_OPTIONS;
+
+export const getValidBimonthlyMonth = (month: number) =>
+  BIMONTHLY_START_MONTH_VALUES.has(String(month)) ? month : DEFAULT_BIMONTHLY_START_MONTH;
+
+export const toNumberOrNull = (value: string) => (value === "" ? null : Number(value));
+
+export const toStringOrNull = (value: string | number | null | undefined) =>
+  value == null || value === "" ? null : String(value);
+
+export const toEditableAmount = (value: string | null) => (value == null ? "" : String(value));
+
+export const toFrequency = (value: string) => Number(value) as 1 | 2;
+
+export const toPeriod = (year: number, month: number) =>
+  `${year}-${String(month).padStart(2, "0")}`;
+
+export const buildCreateAdvancePaymentPayload = (
+  year: number,
+  data: CreateAdvancePaymentFormValues,
+): CreateAdvancePaymentPayload => ({
+  period: toPeriod(year, data.month),
+  period_months_count: data.period_months_count,
+  due_date: data.due_date,
+  expected_amount: toStringOrNull(data.expected_amount),
+  paid_amount: toStringOrNull(data.paid_amount),
+  notes: data.notes ?? null,
+});
+
+export const formatSuggestionAmount = (amount: string | null) =>
+  amount == null ? "" : Number(amount).toLocaleString("he-IL");

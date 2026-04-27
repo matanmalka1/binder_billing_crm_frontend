@@ -9,6 +9,7 @@ import {
   type AdvancePaymentRowActionsProps,
 } from "./AdvancePaymentRowActions";
 import { AdvancePaymentStatusBadge } from "./AdvancePaymentStatusBadge";
+import { getDeltaTone } from "./advancePaymentComponent.utils";
 
 type BuildColumnsOptions =
   | { canEdit: false; showBusinessName?: boolean }
@@ -54,9 +55,7 @@ export const buildAdvancePaymentColumns = (
       header: "הפרש",
       render: (row) => {
         if (row.delta == null) return <span className="text-gray-400 text-sm">—</span>;
-        const numericDelta = Number(row.delta);
-        const tone = numericDelta > 0 ? "negative" : numericDelta < 0 ? "positive" : "neutral";
-        return <MonoValue value={fmtCurrency(row.delta)} tone={tone} />;
+        return <MonoValue value={fmtCurrency(row.delta)} tone={getDeltaTone(row.delta)} />;
       },
     },
     {

@@ -1,6 +1,7 @@
 import { TrendingUp, Banknote, CheckCircle } from "lucide-react";
 import { StatsCard } from "../../../components/ui/layout/StatsCard";
 import { fmtCurrency } from "../utils";
+import { getCollectionPercent } from "./advancePaymentComponent.utils";
 
 interface OverviewKPICardsProps {
   year: number;
@@ -15,7 +16,7 @@ export const OverviewKPICards: React.FC<OverviewKPICardsProps> = ({
   totalPaid,
   collectionRate,
 }) => {
-  const pct = collectionRate !== null ? Math.min(Math.round(collectionRate), 100) : null;
+  const pct = getCollectionPercent(collectionRate, true);
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">

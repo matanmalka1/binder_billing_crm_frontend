@@ -12,6 +12,8 @@ import {
   mapLineDataToForm,
 } from "../../annex.constants";
 import { AnnexDataTable } from "./AnnexDataTable";
+import { ANNEX_TEXT, FIELD_INPUT_CLASS, TABLE_ICON_CLASS } from "./annex.constants";
+import { getInputType } from "./annex.helpers";
 
 interface Props {
   reportId: number;
@@ -62,8 +64,11 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
   });
 
   const fields = SCHEDULE_FIELDS[schedule];
+  const resetForm = () => setFormData(buildEmptyForm(schedule));
+  const handleFormChange = (key: string, value: string) =>
+    setFormData((prev) => ({ ...prev, [key]: value }));
 
-  if (isLoading) return <p className="text-xs text-gray-400 py-2">טוען...</p>;
+  if (isLoading) return <p className="text-xs text-gray-400 py-2">{ANNEX_TEXT.loading}</p>;
 
   return (
     <div className="mt-3 space-y-2">
@@ -75,7 +80,7 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
           formData={formData}
           isUpdating={updateMutation.isPending}
           isDeleting={deleteMutation.isPending}
-          onFormChange={(key, value) => setFormData((prev) => ({ ...prev, [key]: value }))}
+          onFormChange={handleFormChange}
           onStartEdit={(line) => {
             setShowForm(false);
             setEditingLineId(line.id);
@@ -83,7 +88,7 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
           }}
           onCancelEdit={() => {
             setEditingLineId(null);
-            setFormData(buildEmptyForm(schedule));
+            resetForm();
           }}
           onSaveEdit={(lineId) => updateMutation.mutate(lineId)}
           onDelete={(lineId) => deleteMutation.mutate(lineId)}
@@ -92,23 +97,25 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
 
       {showForm ? (
         <div className="border border-gray-200 rounded-lg p-3 space-y-2 bg-gray-50">
-          <p className="text-xs font-medium text-gray-600">הוסף שורה — {scheduleLabel}</p>
+          <p className="text-xs font-medium text-gray-600">
+            {ANNEX_TEXT.addLine} - {scheduleLabel}
+          </p>
           <div className="grid grid-cols-2 gap-2">
             {fields.map((f) => (
               <div key={f.key}>
                 <label className="text-xs text-gray-500 block mb-0.5">{f.label}</label>
                 <Input
-                  type={f.type === "date" ? "date" : f.type === "number" ? "number" : "text"}
+                  type={getInputType(f.type)}
                   value={formData[f.key]}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                  className="py-1 text-xs"
+                  onChange={(e) => handleFormChange(f.key, e.target.value)}
+                  className={FIELD_INPUT_CLASS}
                 />
               </div>
             ))}
           </div>
           <div className="flex gap-2 justify-end">
             <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>
-              <X className="h-3.5 w-3.5" />
+              <X className={TABLE_ICON_CLASS} />
             </Button>
             <Button
               type="button"
@@ -116,15 +123,15 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
               onClick={() => addMutation.mutate()}
               isLoading={addMutation.isPending}
             >
-              <Check className="h-3.5 w-3.5 ml-1" />
-              שמור
+              <Check className={`${TABLE_ICON_CLASS} ml-1`} />
+              {ANNEX_TEXT.save}
             </Button>
           </div>
         </div>
       ) : (
         <Button type="button" variant="outline" size="sm" onClick={() => setShowForm(true)}>
-          <Plus className="h-3.5 w-3.5 ml-1" />
-          הוסף שורה
+          <Plus className={`${TABLE_ICON_CLASS} ml-1`} />
+          {ANNEX_TEXT.addLine}
         </Button>
       )}
     </div>

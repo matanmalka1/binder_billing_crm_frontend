@@ -7,6 +7,11 @@ import {
   ADVANCE_PAYMENT_FREQUENCY_OPTIONS,
   ADVANCE_PAYMENT_STATUS_FILTERS,
 } from "../constants";
+import { toFrequency } from "./advancePaymentComponent.utils";
+import {
+  HEADER_STATUS_ACTIVE_CLASS,
+  HEADER_STATUS_INACTIVE_CLASS,
+} from "./advancePaymentComponent.constants";
 
 interface ClientAdvancePaymentsHeaderProps {
   isAdvisor: boolean;
@@ -40,7 +45,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
         <div className="w-32">
           <Select
             value={String(generationFrequency)}
-            onChange={(e) => onGenerationFrequencyChange(Number(e.target.value) as 1 | 2)}
+            onChange={(e) => onGenerationFrequencyChange(toFrequency(e.target.value))}
             options={ADVANCE_PAYMENT_FREQUENCY_OPTIONS}
           />
         </div>
@@ -61,7 +66,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
               size="sm"
               onClick={() => onToggleStatus(status)}
               className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                active ? "bg-primary-600 text-white border-primary-600 hover:bg-primary-700" : "bg-white text-gray-600 border-gray-300 hover:border-primary-400"
+                active ? HEADER_STATUS_ACTIVE_CLASS : HEADER_STATUS_INACTIVE_CLASS
               }`}
             >
               {getAdvancePaymentStatusLabel(status)}

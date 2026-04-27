@@ -5,6 +5,11 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { Select } from "../../../components/ui/inputs/Select";
 import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
 import { ADVANCE_PAYMENT_STATUS_OPTIONS } from "../constants";
+import {
+  toEditableAmount,
+  toStringOrNull,
+} from "./advancePaymentComponent.utils";
+import { INLINE_AMOUNT_INPUT_CLASS } from "./advancePaymentComponent.constants";
 
 interface EditAdvancePaymentInlineProps {
   row: AdvancePaymentRow;
@@ -19,17 +24,15 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
   onSave,
   onCancel: onCancelProp,
 }) => {
-  const [paidAmount, setPaidAmount] = useState<string>(row.paid_amount != null ? String(row.paid_amount) : "");
-  const [expectedAmount, setExpectedAmount] = useState<string>(
-    row.expected_amount != null ? String(row.expected_amount) : "",
-  );
+  const [paidAmount, setPaidAmount] = useState<string>(toEditableAmount(row.paid_amount));
+  const [expectedAmount, setExpectedAmount] = useState<string>(toEditableAmount(row.expected_amount));
   const [status, setStatus] = useState<AdvancePaymentStatus>(row.status);
 
   const handleSave = () => {
     onSave(
-      paidAmount === "" ? null : paidAmount,
+      toStringOrNull(paidAmount),
       status,
-      expectedAmount === "" ? null : expectedAmount,
+      toStringOrNull(expectedAmount),
     );
   };
 
@@ -57,7 +60,7 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
         value={paidAmount}
         onChange={(e) => setPaidAmount(e.target.value)}
         placeholder="שולם"
-        className="w-20 py-1 text-xs text-left"
+        className={INLINE_AMOUNT_INPUT_CLASS}
         autoFocus
       />
       <Input
@@ -66,7 +69,7 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
         value={expectedAmount}
         onChange={(e) => setExpectedAmount(e.target.value)}
         placeholder="צפוי"
-        className="w-20 py-1 text-xs text-left"
+        className={INLINE_AMOUNT_INPUT_CLASS}
       />
       <Select
         value={status}

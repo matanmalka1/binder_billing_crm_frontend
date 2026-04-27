@@ -5,6 +5,7 @@ import { cn } from "../../../utils/utils";
 import { YEAR_OPTIONS } from "../utils";
 import { ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL, ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS } from "../constants";
 import type { AdvancePaymentStatus } from "../types";
+import { ACTIVE_FILTER_CLASS } from "./advancePaymentComponent.constants";
 
 interface AdvancePaymentsFiltersBarProps {
   year: number;
@@ -39,14 +40,14 @@ export const AdvancePaymentsFiltersBar = ({
             value={month > 0 ? String(month) : ""}
             onChange={(e) => onParamChange("month", e.target.value)}
             options={ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS}
-            className={cn(month > 0 && "border-primary-400 ring-1 ring-primary-200")}
+            className={cn(month > 0 && ACTIVE_FILTER_CLASS)}
           />
           <Select
             label="סטטוס"
             value={status}
             onChange={(e) => onParamChange("status", e.target.value)}
             options={ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL}
-            className={cn(status && "border-primary-400 ring-1 ring-primary-200")}
+            className={cn(status && ACTIVE_FILTER_CLASS)}
           />
         </div>
 

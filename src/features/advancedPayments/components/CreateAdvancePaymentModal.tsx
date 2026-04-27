@@ -7,16 +7,26 @@ import { Input } from "../../../components/ui/inputs/Input";
 import { Button } from "../../../components/ui/primitives/Button";
 import { Select } from "../../../components/ui/inputs/Select";
 import { DatePicker } from "../../../components/ui/inputs/DatePicker";
-import { BIMONTHLY_START_MONTH_VALUES } from "@/constants/periodOptions.constants";
 import {
   createAdvancePaymentSchema,
   CREATE_ADVANCE_PAYMENT_DEFAULTS,
   type CreateAdvancePaymentFormValues,
 } from "../schemas";
 import { ADVANCE_PAYMENT_FREQUENCY_OPTIONS } from "../constants";
-import { MONTH_OPTIONS } from "../utils";
 import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import type { CreateAdvancePaymentPayload } from "../types";
+import {
+  buildCreateAdvancePaymentPayload,
+  formatSuggestionAmount,
+  getAdvancePaymentMonthOptions,
+  getValidBimonthlyMonth,
+  toFrequency,
+  toNumberOrNull,
+} from "./advancePaymentComponent.utils";
+import {
+  ADVANCE_PAYMENT_SUGGESTION_STALE_TIME_MS,
+  NOTES_TEXTAREA_CLASS,
+} from "./advancePaymentComponent.constants";
 
 interface CreateAdvancePaymentModalProps {
   open: boolean;
@@ -49,22 +59,20 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
   });
   const periodMonthsCount = watch("period_months_count");
   const month = watch("month");
-  const monthOptions =
-    periodMonthsCount === 2
-      ? MONTH_OPTIONS.filter((option) => BIMONTHLY_START_MONTH_VALUES.has(option.value))
-      : MONTH_OPTIONS;
+  const monthOptions = getAdvancePaymentMonthOptions(periodMonthsCount);
 
   useEffect(() => {
     if (periodMonthsCount !== 2) return;
-    if (BIMONTHLY_START_MONTH_VALUES.has(String(month))) return;
-    setValue("month", 1, { shouldValidate: true });
+    const nextMonth = getValidBimonthlyMonth(month);
+    if (nextMonth === month) return;
+    setValue("month", nextMonth, { shouldValidate: true });
   }, [month, periodMonthsCount, setValue]);
 
   const { data: suggestion } = useQuery({
     queryKey: advancedPaymentsQK.suggestion(clientId, year, periodMonthsCount),
     queryFn: () => advancePaymentsApi.getSuggestion(clientId, year, periodMonthsCount),
     enabled: open && clientId > 0 && year > 0,
-    staleTime: 60_000,
+    staleTime: ADVANCE_PAYMENT_SUGGESTION_STALE_TIME_MS,
   });
 
   const handleClose = () => {
@@ -73,14 +81,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    await onCreate({
-      period: `${year}-${String(data.month).padStart(2, "0")}`,
-      period_months_count: data.period_months_count,
-      due_date: data.due_date,
-      expected_amount: data.expected_amount != null ? String(data.expected_amount) : null,
-      paid_amount: data.paid_amount != null ? String(data.paid_amount) : null,
-      notes: data.notes ?? null,
-    });
+    await onCreate(buildCreateAdvancePaymentPayload(year, data));
     reset(CREATE_ADVANCE_PAYMENT_DEFAULTS);
     onClose();
   });
@@ -128,7 +129,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
             <Select
               label="תדירות"
               value={String(field.value)}
-              onChange={(e) => field.onChange(Number(e.target.value) as 1 | 2)}
+              onChange={(e) => field.onChange(toFrequency(e.target.value))}
               options={ADVANCE_PAYMENT_FREQUENCY_OPTIONS}
             />
           )}
@@ -156,9 +157,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
                 type="number"
                 min={0}
                 value={field.value ?? ""}
-                onChange={(e) =>
-                  field.onChange(e.target.value === "" ? null : Number(e.target.value))
-                }
+                onChange={(e) => field.onChange(toNumberOrNull(e.target.value))}
                 error={errors.expected_amount?.message}
               />
               {suggestion?.has_data && suggestion.suggested_amount != null && (
@@ -169,7 +168,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
                   onClick={applySuggestion}
                   className="text-sm text-primary-600 hover:underline text-right w-full px-0 hover:bg-transparent justify-end"
                 >
-                  הצעה לפי מחזור שנה קודמת: ₪{Number(suggestion.suggested_amount).toLocaleString("he-IL")} — לחץ למילוי
+                  הצעה לפי מחזור שנה קודמת: ₪{formatSuggestionAmount(suggestion.suggested_amount)} — לחץ למילוי
                 </Button>
               )}
             </div>
@@ -184,9 +183,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
               type="number"
               min={0}
               value={field.value ?? ""}
-              onChange={(e) =>
-                field.onChange(e.target.value === "" ? null : Number(e.target.value))
-              }
+              onChange={(e) => field.onChange(toNumberOrNull(e.target.value))}
               error={errors.paid_amount?.message}
             />
           )}
@@ -196,7 +193,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
           <textarea
             {...register("notes")}
             rows={2}
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className={NOTES_TEXTAREA_CLASS}
             placeholder="הערות..."
           />
         </div>

@@ -10,7 +10,12 @@ interface AdvancePaymentTableProps {
   canEdit?: boolean;
   updatingId?: number | null;
   deletingId?: number | null;
-  onUpdate?: (id: number, paid_amount: string | null, status: AdvancePaymentStatus, expected_amount: string | null) => void;
+  onUpdate?: (
+    id: number,
+    paid_amount: string | null,
+    status: AdvancePaymentStatus,
+    expected_amount: string | null,
+  ) => void;
   onDelete?: (id: number) => void;
 }
 

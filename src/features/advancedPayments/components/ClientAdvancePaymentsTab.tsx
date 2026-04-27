@@ -12,6 +12,11 @@ import { AdvancePaymentTable } from "./AdvancePaymentTable";
 import { AdvancePaymentsKPICards } from "./AdvancePaymentsKPICards";
 import { CreateAdvancePaymentModal } from "./CreateAdvancePaymentModal";
 import { PaginationCard } from "../../../components/ui/table/PaginationCard";
+import { CLIENT_ADVANCE_PAYMENT_PAGE_SIZE } from "./advancePaymentComponent.constants";
+import {
+  getTotalPages,
+  toggleAdvancePaymentStatusFilter,
+} from "./advancePaymentComponent.utils";
 
 interface ClientAdvancePaymentsTabProps {
   clientId: number;
@@ -48,10 +53,10 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
     onError: (err) => showErrorToast(err, "שגיאה ביצירת לוח מקדמות"),
   });
 
-  const totalPages = Math.max(1, Math.ceil(total / 20));
+  const totalPages = getTotalPages(total, CLIENT_ADVANCE_PAYMENT_PAGE_SIZE);
   const handleStatusToggle = (status: AdvancePaymentStatus) => {
     setPage(1);
-    setStatusFilter((prev) => (prev.includes(status) ? prev.filter((x) => x !== status) : [...prev, status]));
+    setStatusFilter((prev) => toggleAdvancePaymentStatusFilter(prev, status));
   };
 
   const handleUpdateRow = async (

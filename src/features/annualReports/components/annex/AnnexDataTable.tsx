@@ -3,6 +3,8 @@ import { Input } from "../../../../components/ui/inputs/Input";
 import { Button } from "../../../../components/ui/primitives/Button";
 import type { AnnexDataLine } from "../../api";
 import type { FieldDef } from "../../annex.constants";
+import { ANNEX_TEXT, FIELD_INPUT_CLASS, TABLE_ICON_CLASS } from "./annex.constants";
+import { getInputType, getLineFieldValue } from "./annex.helpers";
 
 interface AnnexDataTableProps {
   lines: AnnexDataLine[];
@@ -52,13 +54,13 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                 <td key={field.key} className="py-1 px-2 text-gray-700">
                   {isEditing ? (
                     <Input
-                      type={field.type === "date" ? "date" : field.type === "number" ? "number" : "text"}
+                      type={getInputType(field.type)}
                       value={formData[field.key] ?? ""}
                       onChange={(event) => onFormChange(field.key, event.target.value)}
-                      className="py-1 text-xs"
+                      className={FIELD_INPUT_CLASS}
                     />
                   ) : (
-                    String((line.data as Record<string, unknown>)[field.key] ?? "")
+                    getLineFieldValue(line, field.key)
                   )}
                 </td>
               ))}
@@ -74,7 +76,7 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                         disabled={isUpdating}
                         className="p-0.5 text-positive-500 hover:text-positive-700 hover:bg-transparent"
                       >
-                        <Check className="h-3.5 w-3.5" />
+                        <Check className={TABLE_ICON_CLASS} />
                       </Button>
                       <Button
                         type="button"
@@ -83,7 +85,7 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                         onClick={onCancelEdit}
                         className="p-0.5 text-gray-500 hover:text-gray-700 hover:bg-transparent"
                       >
-                        <X className="h-3.5 w-3.5" />
+                        <X className={TABLE_ICON_CLASS} />
                       </Button>
                     </>
                   ) : (
@@ -91,11 +93,11 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                       type="button"
                       variant="ghost"
                       size="sm"
-                      aria-label="עריכת שורה"
+                      aria-label={ANNEX_TEXT.editLine}
                       onClick={() => onStartEdit(line)}
                       className="p-0.5 text-info-400 hover:text-info-600 hover:bg-transparent"
                     >
-                      <Pencil className="h-3.5 w-3.5" />
+                      <Pencil className={TABLE_ICON_CLASS} />
                     </Button>
                   )}
                   <Button
@@ -106,7 +108,7 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                     disabled={isDeleting}
                     className="p-0.5 text-negative-400 hover:text-negative-600 hover:bg-transparent"
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
+                    <Trash2 className={TABLE_ICON_CLASS} />
                   </Button>
                 </div>
               </td>

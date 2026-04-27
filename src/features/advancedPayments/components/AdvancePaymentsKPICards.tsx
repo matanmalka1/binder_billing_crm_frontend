@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Banknote, CheckCircle, TrendingUp, AlertCircle } from "lucide-react";
 import { advancePaymentsApi, advancedPaymentsQK } from "../api";
 import { StatsCard } from "../../../components/ui/layout/StatsCard";
+import { fmtCurrency } from "../utils";
+import { getCollectionPercent } from "./advancePaymentComponent.utils";
 
 interface AdvancePaymentsKPICardsProps {
   clientId: number;
@@ -20,19 +22,19 @@ export const AdvancePaymentsKPICards: React.FC<AdvancePaymentsKPICardsProps> = (
 
   if (isLoading || !data) return null;
 
-  const collectionPct = Math.round(data.collection_rate);
+  const collectionPct = getCollectionPercent(data.collection_rate) ?? 0;
 
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       <StatsCard
         title="סה״כ צפוי"
-        value={`₪${Number(data.total_expected).toLocaleString("he-IL")}`}
+        value={fmtCurrency(data.total_expected)}
         icon={Banknote}
         variant="blue"
       />
       <StatsCard
         title="סה״כ שולם"
-        value={`₪${Number(data.total_paid).toLocaleString("he-IL")}`}
+        value={fmtCurrency(data.total_paid)}
         icon={CheckCircle}
         variant="green"
       />
