@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { reportsApi, reportsQK, type VatComplianceItem, type StalePendingItem } from "../api";
+import { type VatComplianceItem, type StalePendingItem } from "../api";
+import { useVatComplianceReport } from "../hooks/useVatComplianceReport";
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
 import { Badge } from "../../../components/ui/primitives/Badge";
@@ -103,12 +102,7 @@ const StalePendingTable = ({ items }: { items: StalePendingItem[] }) => {
 };
 
 export const VatComplianceReportView: React.FC = () => {
-  const [year, setYear] = useState(new Date().getFullYear());
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: reportsQK.vatCompliance(year),
-    queryFn: () => reportsApi.getVatComplianceReport(year),
-  });
+  const { year, setYear, data, isLoading, error } = useVatComplianceReport();
 
   const description = data ? `${data.total_clients} לקוחות` : "";
 

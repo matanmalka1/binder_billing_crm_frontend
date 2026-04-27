@@ -83,8 +83,4 @@ export const reportsApi = {
 
     return { filename };
   },
-
-  downloadExport: (downloadUrl: string): void => {
-    window.open(downloadUrl, "_blank");
-  },
 };

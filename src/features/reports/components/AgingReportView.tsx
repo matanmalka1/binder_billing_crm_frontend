@@ -2,7 +2,7 @@ import { FileDown, FileSpreadsheet } from "lucide-react";
 import { Button } from "../../../components/ui/primitives/Button";
 import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
 import { PageHeader } from "../../../components/layout/PageHeader";
-import { AgingReportFilters } from "./AgingReportFilters";
+import { DatePicker } from "../../../components/ui/inputs/DatePicker";
 import { AgingReportHeader } from "./AgingReportHeader";
 import { AgingReportTable } from "./AgingReportTable";
 import { useAgingReport } from "../hooks/useAgingReport";
@@ -50,7 +50,9 @@ export const AgingReportView: React.FC = () => {
     <PageStateGuard isLoading={isLoading} error={error} header={header} loadingMessage="טוען דוח...">
       {data && (
         <>
-          <AgingReportFilters asOfDate={asOfDate} onDateChange={setAsOfDate} />
+          <div className="max-w-xs">
+            <DatePicker label="נכון לתאריך" value={asOfDate} onChange={setAsOfDate} />
+          </div>
           <AgingReportHeader data={data} />
           <AgingReportTable items={data.items} />
         </>

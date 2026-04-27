@@ -1,7 +1,6 @@
 export { reportsApi } from "./reports.api";
 export { reportsQK } from "./queryKeys";
 export type {
-  AgingBucket,
   AgingReportItem,
   AgingReportResponse,
   AnnualReportClientEntry,

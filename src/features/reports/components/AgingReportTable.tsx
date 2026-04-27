@@ -4,13 +4,11 @@ import { Inbox } from "lucide-react";
 import type { AgingReportItem } from "../api";
 import { formatDate } from "../../../utils/utils";
 import { Badge } from "../../../components/ui/primitives/Badge";
+import { formatILS } from "../utils";
 
 interface AgingReportTableProps {
   items: AgingReportItem[];
 }
-
-const fmt = (n: number) =>
-  `₪${n.toLocaleString("he-IL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 export const AgingReportTable: React.FC<AgingReportTableProps> = ({ items }) => {
   const navigate = useNavigate();
@@ -38,7 +36,7 @@ export const AgingReportTable: React.FC<AgingReportTableProps> = ({ items }) => 
           </div>
 
           <p className="text-2xl font-bold text-gray-900 tabular-nums">
-            {fmt(item.total_outstanding)}
+            {formatILS(item.total_outstanding)}
           </p>
           <p className="mt-0.5 text-xs text-gray-500">סה"כ חוב פתוח</p>
 

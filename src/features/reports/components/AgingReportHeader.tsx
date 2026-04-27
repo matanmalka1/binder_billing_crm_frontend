@@ -1,13 +1,11 @@
 import { AlertTriangle, DollarSign } from "lucide-react";
 import { StatsCard } from "../../../components/ui/layout/StatsCard";
 import type { AgingReportResponse } from "../api";
+import { formatILS } from "../utils";
 
 interface AgingReportHeaderProps {
   data: AgingReportResponse;
 }
-
-const formatCurrency = (value: number) =>
-  `₪${value.toLocaleString("he-IL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 export const AgingReportHeader: React.FC<AgingReportHeaderProps> = ({ data }) => (
   <div className="flex flex-col gap-3">
@@ -22,7 +20,7 @@ export const AgingReportHeader: React.FC<AgingReportHeaderProps> = ({ data }) =>
     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <StatsCard
         title='סה"כ חובות'
-        value={formatCurrency(data.total_outstanding)}
+        value={formatILS(data.total_outstanding)}
         icon={DollarSign}
         variant="blue"
         description={`${data.items.length} לקוחות עם יתרות פתוחות`}
