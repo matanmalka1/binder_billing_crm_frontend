@@ -32,6 +32,8 @@ export interface BackendAction {
   binder_number?: string | null;
   category?: string | null;
   due_label?: string | null;
+  urgency?: "overdue" | "upcoming" | null;
+  due_date?: string | null;
 }
 
 export type BackendActionInput = BackendAction;
@@ -64,4 +66,6 @@ export interface ActionCommand {
   binderNumber?: string | null;
   category?: string | null;
   dueLabel?: string | null;
+  urgency?: "overdue" | "upcoming" | null;
+  dueDate?: string | null;
 }

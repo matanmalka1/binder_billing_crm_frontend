@@ -36,6 +36,8 @@ export const mapActions = (
         binderNumber: action.binder_number ?? null,
         category: action.category ?? null,
         dueLabel: action.due_label ?? null,
+        urgency: action.urgency ?? null,
+        dueDate: action.due_date ?? null,
       } as ActionCommand;
     })
     .filter((a): a is ActionCommand => Boolean(a));

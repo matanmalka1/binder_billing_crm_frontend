@@ -31,7 +31,7 @@ export type QuickActionPresentation = {
 const DEFAULT_CATEGORY = "general";
 
 export const getQuickActionCountLabel = (count: number) =>
-  count > 0 ? `${count} פעולות זמינות לביצוע מיידי` : QUICK_ACTION_COPY.noActions;
+  count > 0 ? `${count} פריטים דורשים טיפול` : QUICK_ACTION_COPY.noActions;
 
 export const getQuickActionPresentation = (
   action: ActionCommand,
