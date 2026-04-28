@@ -17,15 +17,13 @@ export const Dashboard: React.FC = () => {
     dashboard,
     denied,
     handleQuickAction,
+    isAdvisorView,
     confirmPendingAction,
     cancelPendingAction,
     pendingQuickAction,
+    quickActions,
     stats,
   } = useDashboardPage();
-  const isAdvisor = dashboard.status === "ok" && dashboard.data?.role_view === "advisor";
-  const quickActions = isAdvisor && dashboard.data?.role_view === "advisor"
-    ? dashboard.data.quick_actions
-    : undefined;
   return (
     <div className="space-y-6">
       <PageHeader title="לוח בקרה" />
@@ -48,7 +46,7 @@ export const Dashboard: React.FC = () => {
       {/* Advisor: quick actions + today card + season widget */}
       {dashboard.status === "loading" ? (
         <div className="h-28 animate-pulse rounded-xl bg-gray-100" />
-      ) : isAdvisor ? (
+      ) : isAdvisorView ? (
         <>
           {quickActions && (
             <OperationalPanel

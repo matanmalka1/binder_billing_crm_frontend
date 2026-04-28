@@ -23,14 +23,14 @@ type DashboardState = {
 };
 
 const isOverviewData = (
-  data: DashboardOverviewResponse | DashboardSummaryResponse | undefined,
+  data: DashboardData | DashboardOverviewResponse | DashboardSummaryResponse | null | undefined,
 ): data is DashboardOverviewResponse =>
-  Boolean(data && "total_clients" in data);
+  Boolean(data && "quick_actions" in data);
 
 const isSummaryData = (
-  data: DashboardOverviewResponse | DashboardSummaryResponse | undefined,
+  data: DashboardData | DashboardOverviewResponse | DashboardSummaryResponse | null | undefined,
 ): data is DashboardSummaryResponse =>
-  Boolean(data && !("total_clients" in data));
+  Boolean(data && !("quick_actions" in data));
 
 export const useDashboardPage = () => {
   const queryClient = useQueryClient();
@@ -126,6 +126,8 @@ export const useDashboardPage = () => {
     if (dashboard.status !== "ok" || !dashboard.data) return [];
     return buildDashboardStats(dashboard.data);
   }, [dashboard]);
+  const isAdvisorView = dashboard.status === "ok" && dashboard.data?.role_view === "advisor";
+  const quickActions = isOverviewData(dashboard.data) ? dashboard.data.quick_actions : undefined;
 
   const handleQuickAction = useCallback(
     (action: ActionCommand) => {
@@ -157,7 +159,9 @@ export const useDashboardPage = () => {
     handleQuickAction,
     confirmPendingAction,
     pendingQuickAction,
+    quickActions,
     cancelPendingAction,
+    isAdvisorView,
     stats,
   };
 };
