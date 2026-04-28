@@ -103,7 +103,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   const card = (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm transition-all duration-200",
+        "relative overflow-hidden rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm transition-all duration-200 h-full",
         "hover:shadow-md",
         selected && "ring-2 ring-primary-300 ring-offset-2",
         isInteractive && !selected && "ring-1 ring-transparent",

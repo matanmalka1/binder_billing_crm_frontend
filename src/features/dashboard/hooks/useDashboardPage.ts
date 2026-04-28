@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Users, FolderOpen, Bell, FileText, Building2 } from "lucide-react";
+import { Users, FolderOpen, Bell, FileText } from "lucide-react";
 import { dashboardApi, dashboardQK } from "../api";
 import type {
   DashboardOverviewResponse,
@@ -43,14 +43,6 @@ const buildStats = (
     | "active_clients"
   >,
 ): StatItem[] => [
-  {
-    key: "total_clients",
-    title: "עסקים",
-    value: data.total_clients,
-    description: "סך הכל עסקים פעילים",
-    icon: Building2,
-    variant: "blue",
-  },
   {
     key: "active_clients",
     title: "לקוחות",

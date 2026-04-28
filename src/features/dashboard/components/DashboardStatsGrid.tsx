@@ -37,13 +37,13 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
 
   const cardClass = cn(
     "group relative transition-all duration-300 hover:-translate-y-1",
-    "animate-fade-in",
+    "animate-fade-in h-full",
     stat.urgent,
     stat.href && "cursor-pointer",
   );
 
   const inner = (
-    <div className="relative">
+    <div className="relative h-full">
       <StatsCard
         title={stat.title}
         value={stat.value}
@@ -87,7 +87,7 @@ StatCard.displayName = "StatCard";
 
 export const DashboardStatsGrid = ({ stats }: DashboardStatsGridProps) => {
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+    <div className="grid grid-cols-5 gap-2 items-stretch">
       {stats.map((stat, index) => (
         <StatCard key={stat.key} stat={stat} index={index} />
       ))}
