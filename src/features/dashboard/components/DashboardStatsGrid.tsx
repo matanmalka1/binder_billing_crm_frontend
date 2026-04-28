@@ -56,6 +56,7 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
         variant={variantMap[stat.variant]}
         progress={stat.progress}
         actionLabel={stat.actionLabel}
+        compact
       />
       {stat.urgent && (
         <span className="absolute left-3 top-3 flex h-2.5 w-2.5">

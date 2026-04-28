@@ -6,14 +6,38 @@ import { DASHBOARD_STAT_HREFS, buildVatReportsHref, type VatReportsPeriodType } 
 
 type DashboardStatsData = Pick<
   DashboardOverviewResponse,
-  "active_clients" | "binders_in_office" | "open_reminders" | "vat_stats"
+  | "total_clients"
+  | "active_clients"
+  | "active_binders"
+  | "binders_in_office"
+  | "binders_ready_for_pickup"
+  | "open_reminders"
+  | "vat_stats"
 >;
 
 const formatVatValue = (submitted: number, required: number) =>
-  `${submitted.toLocaleString("he-IL")} / ${required.toLocaleString("he-IL")} הוגשו`;
+  `הוגשו ${submitted.toLocaleString("he-IL")} מתוך ${required.toLocaleString("he-IL")}`;
 
-const formatPendingVat = (pending: number) =>
+const formatPendingValue = (pending: number) =>
   `${pending.toLocaleString("he-IL")} ממתינים להגשה`;
+
+const formatVatDescription = (stat: DashboardStatsData["vat_stats"]["monthly"]) =>
+  `${formatVatValue(stat.submitted, stat.required)} · ${stat.period_label}`;
+
+const formatReminderValue = (count: number) =>
+  `${count.toLocaleString("he-IL")} ${DASHBOARD_STATS_LABELS.remindersValueSuffix}`;
+
+const formatActiveClientsValue = (count: number) =>
+  `${count.toLocaleString("he-IL")} לקוחות פעילים`;
+
+const formatClientsDescription = (total: number) =>
+  `מתוך ${total.toLocaleString("he-IL")} סך הכל`;
+
+const formatActiveBindersValue = (count: number) =>
+  `${count.toLocaleString("he-IL")} קלסרים פעילים`;
+
+const formatBindersDescription = (inOffice: number) =>
+  `מתוך ${inOffice.toLocaleString("he-IL")} במשרד`;
 
 const vatVariant = (pending: number): StatItem["variant"] =>
   pending > 0 ? "red" : "green";
@@ -26,9 +50,8 @@ const buildVatStat = (
 ): StatItem => ({
   key,
   title,
-  value: formatVatValue(stat.submitted, stat.required),
-  description: formatPendingVat(stat.pending),
-  eyebrow: stat.period_label,
+  value: formatPendingValue(stat.pending),
+  description: formatVatDescription(stat),
   icon: FileText,
   variant: vatVariant(stat.pending),
   urgent: stat.pending > 0,
@@ -41,22 +64,36 @@ export const buildDashboardStats = (data: DashboardStatsData): StatItem[] => [
   {
     key: "active_clients",
     title: DASHBOARD_STATS_LABELS.activeClientsTitle,
-    value: data.active_clients,
-    description: DASHBOARD_STATS_LABELS.activeClientsDescription,
+    value: formatActiveClientsValue(data.active_clients),
+    description: formatClientsDescription(data.total_clients),
     icon: Users,
     variant: "purple",
     href: DASHBOARD_STAT_HREFS.activeClients,
+    actionLabel: DASHBOARD_STATS_LABELS.activeClientsAction,
   },
   {
     key: "in_office",
     title: DASHBOARD_STATS_LABELS.bindersTitle,
-    value: data.binders_in_office,
-    description: DASHBOARD_STATS_LABELS.bindersDescription,
+    value: formatActiveBindersValue(data.active_binders),
+    description: formatBindersDescription(data.binders_in_office),
     icon: FolderOpen,
     variant: "blue",
     href: DASHBOARD_STAT_HREFS.bindersInOffice,
+    actionLabel: DASHBOARD_STATS_LABELS.bindersAction,
   },
-  buildVatStat(
+
+  {
+    key: "ready_reminders",
+    title: DASHBOARD_STATS_LABELS.remindersTitle,
+    value: formatReminderValue(data.open_reminders),
+    description: DASHBOARD_STATS_LABELS.remindersDescription,
+    icon: Bell,
+    variant: "amber",
+    urgent: data.open_reminders > 0,
+    href: DASHBOARD_STAT_HREFS.remindersReady,
+    actionLabel: DASHBOARD_STATS_LABELS.remindersAction,
+  },
+    buildVatStat(
     "monthly_vat",
     DASHBOARD_STATS_LABELS.monthlyVatTitle,
     data.vat_stats.monthly,
@@ -68,15 +105,4 @@ export const buildDashboardStats = (data: DashboardStatsData): StatItem[] => [
     data.vat_stats.bimonthly,
     "bimonthly",
   ),
-  {
-    key: "ready_reminders",
-    title: DASHBOARD_STATS_LABELS.remindersTitle,
-    value: data.open_reminders,
-    description: DASHBOARD_STATS_LABELS.remindersDescription,
-    icon: Bell,
-    variant: "amber",
-    urgent: data.open_reminders > 0,
-    href: DASHBOARD_STAT_HREFS.remindersReady,
-    actionLabel: DASHBOARD_STATS_LABELS.remindersAction,
-  },
 ];

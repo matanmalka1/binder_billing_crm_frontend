@@ -7,13 +7,14 @@ export const DASHBOARD_STATS_LINKS = {
 
 export const DASHBOARD_STATS_LABELS = {
   activeClientsTitle: "לקוחות",
-  activeClientsDescription: "סך הכל לקוחות פעילים",
+  activeClientsAction: "פתח לקוחות פעילים",
   bindersTitle: "קלסרים במשרד",
-  bindersDescription: "כלל הקלסרים הפעילים",
+  bindersAction: "פתח קלסרים במשרד",
   monthlyVatTitle: "מע״מ חודשי",
   bimonthlyVatTitle: "מע״מ דו־חודשי",
   vatAction: "פתח דוחות מע״מ",
   remindersTitle: "תזכורות לטיפול",
-  remindersDescription: "ממתינות לפעולה עכשיו",
+  remindersValueSuffix: "לטיפול עכשיו",
+  remindersDescription: "כולל תזכורות שהגיע מועד השליחה שלהן",
   remindersAction: "פתח תזכורות",
 } as const;

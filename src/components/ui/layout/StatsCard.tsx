@@ -20,6 +20,7 @@ export interface StatsCardProps {
   onClick?: () => void;
   className?: string;
   actionLabel?: string;
+  compact?: boolean;
 }
 
 export const StatsCard: React.FC<StatsCardProps> = ({
@@ -35,6 +36,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   onClick,
   className,
   actionLabel,
+  compact = false,
 }) => {
   const [displayValue, setDisplayValue] = useState(0);
 
@@ -107,7 +109,8 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   const card = (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm transition-all duration-200 h-full",
+        "relative overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-all duration-200 h-full",
+        compact ? "min-h-[150px] px-4 py-3" : "px-5 py-4",
         "hover:shadow-md",
         selected && "ring-2 ring-primary-300 ring-offset-2",
         isInteractive && !selected && "ring-1 ring-transparent",
@@ -117,25 +120,41 @@ export const StatsCard: React.FC<StatsCardProps> = ({
     >
       <div className={cn("absolute bottom-0 right-0 top-0 w-1 rounded-r-xl", config.accent)} />
 
-      <div className="relative flex flex-row-reverse items-start gap-4">
+      <div className={cn(
+        "relative flex h-full min-w-0",
+        compact ? "flex-col justify-between gap-2" : "flex-row-reverse items-start gap-4",
+      )}>
         {Icon && (
-          <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-lg", config.iconBg)}>
-            <Icon className="h-5 w-5" />
+          <div className={cn(
+            "flex shrink-0 items-center justify-center rounded-lg",
+            compact ? "absolute left-0 top-0 h-8 w-8" : "h-10 w-10",
+            config.iconBg,
+          )}>
+            <Icon className={cn(compact ? "h-4 w-4" : "h-5 w-5")} />
           </div>
         )}
 
-        <div className="min-w-0 flex-1 text-right">
-          <p className="mb-0.5 text-xs text-gray-500">{title}</p>
+        <div className={cn("min-w-0 flex-1 text-right", compact && "flex flex-col justify-between")}>
+          <p className={cn("text-xs text-gray-500", compact ? "mb-2 pl-9" : "mb-0.5")}>{title}</p>
           {eyebrow && (
             <p className="mb-1 text-xs font-medium text-gray-500">{eyebrow}</p>
           )}
-          <div className={cn("text-lg font-bold leading-tight tabular-nums", config.value)}>
-            {typeof value === "number" ? displayValue.toLocaleString("he-IL") : value}
-          </div>
+          <div>
+            <div className={cn(
+              "font-bold leading-tight tabular-nums",
+              compact ? "text-xl" : "text-lg",
+              config.value,
+            )}>
+              {typeof value === "number" ? displayValue.toLocaleString("he-IL") : value}
+            </div>
 
-          {description && (
-            <p className="mt-1 text-sm text-gray-600 leading-relaxed">{description}</p>
-          )}
+            {description && (
+              <p className={cn(
+                "mt-1 text-gray-600",
+                compact ? "text-xs leading-snug" : "text-sm leading-relaxed",
+              )}>{description}</p>
+            )}
+          </div>
 
           {progress !== undefined && (
             <div className={cn("mt-3 h-2 w-full rounded-full", config.progressTrack)}>
@@ -159,7 +178,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
           )}
 
           {actionLabel && (
-            <p className="mt-3 text-xs font-medium text-gray-500">{actionLabel}</p>
+            <p className={cn("text-xs font-medium text-gray-500", compact ? "mt-2" : "mt-3")}>{actionLabel}</p>
           )}
         </div>
       </div>
