@@ -2,7 +2,11 @@ import { AlertTriangle, CheckCircle, Info, Zap } from "lucide-react";
 import { mapActions } from "@/lib/actions/mapActions";
 import type { BackendAction, ActionCommand } from "@/lib/actions/types";
 import { QUICK_ACTION_COPY } from "../quickActionsConstants";
-import { getQuickActionCountLabel, groupQuickActions } from "../quickActionsUtils";
+import {
+  countOverdueQuickActions,
+  getQuickActionCountLabel,
+  groupQuickActions,
+} from "../quickActionsUtils";
 import {
   DashboardBadge,
   DashboardEmptyState,
@@ -25,7 +29,7 @@ export const OperationalPanel = ({
   const actions = mapActions(quickActions);
   const groups = groupQuickActions(actions);
   const totalCount = actions.length;
-  const overdueCount = actions.filter((a) => a.urgency === "overdue").length;
+  const overdueCount = countOverdueQuickActions(actions);
 
   return (
     <DashboardPanel>
@@ -66,19 +70,18 @@ export const OperationalPanel = ({
       ) : (
         <div className="space-y-5 bg-gray-50/50 p-4">
           {groups.map((group) => {
-            const groupOverdue = group.actions.filter((i) => i.action.urgency === "overdue").length;
             return (
               <section key={group.category} className="rounded-2xl border border-gray-200 bg-white p-3">
                 <div className="mb-3 flex items-center justify-between gap-3 px-1">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-gray-700">{group.label}</span>
-                    <DashboardBadge tone={groupOverdue > 0 ? "red" : "blue"}>
+                    <DashboardBadge tone={group.overdueCount > 0 ? "red" : "blue"}>
                       {group.actions.length}
                     </DashboardBadge>
                   </div>
-                  {groupOverdue > 0 && (
+                  {group.overdueCount > 0 && (
                     <span className="text-[11px] font-semibold text-red-600">
-                      {groupOverdue} באיחור
+                      {group.overdueCount} באיחור
                     </span>
                   )}
                 </div>

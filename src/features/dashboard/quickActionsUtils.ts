@@ -11,6 +11,7 @@ export type QuickActionGroup = {
   category: string;
   label: string;
   actions: QuickActionItem[];
+  overdueCount: number;
 };
 
 export type QuickActionItem = {
@@ -32,6 +33,9 @@ const DEFAULT_CATEGORY = "general";
 
 export const getQuickActionCountLabel = (count: number) =>
   count > 0 ? `${count} פריטים דורשים טיפול` : QUICK_ACTION_COPY.noActions;
+
+export const countOverdueQuickActions = (actions: ActionCommand[]) =>
+  actions.filter((action) => action.urgency === "overdue").length;
 
 export const getQuickActionPresentation = (
   action: ActionCommand,
@@ -74,11 +78,18 @@ export const groupQuickActions = (actions: ActionCommand[]): QuickActionGroup[] 
 
   return orderedCategories
     .filter((category) => grouped.has(category))
-    .map((category) => ({
-      category,
-      label:
-        QUICK_ACTION_CATEGORY_LABELS[category] ??
-        (category === DEFAULT_CATEGORY ? QUICK_ACTION_COPY.fallbackCategory : category),
-      actions: grouped.get(category) ?? [],
-    }));
+    .map((category) => {
+      const actionsForCategory = grouped.get(category) ?? [];
+
+      return {
+        category,
+        label:
+          QUICK_ACTION_CATEGORY_LABELS[category] ??
+          (category === DEFAULT_CATEGORY ? QUICK_ACTION_COPY.fallbackCategory : category),
+        actions: actionsForCategory,
+        overdueCount: countOverdueQuickActions(
+          actionsForCategory.map((item) => item.action),
+        ),
+      };
+    });
 };

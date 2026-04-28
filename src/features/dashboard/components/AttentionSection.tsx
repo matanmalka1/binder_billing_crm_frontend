@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import type { AttentionItem } from "../api";
 import { cn } from "../../../utils/utils";
 import { staggerAnimationDelayVars } from "../../../utils/animation";
-import type { SectionConfig } from "../utils";
+import { getAttentionItemHref, getAttentionTone, type SectionConfig } from "../utils";
 import { DashboardBadge, DashboardEmptyState } from "./DashboardPrimitives";
 
 interface AttentionSectionProps {
@@ -12,31 +12,25 @@ interface AttentionSectionProps {
   sectionIndex: number;
 }
 
-const getBusinessHref = (item: AttentionItem, fallback: string): string => {
-  if (item.client_id && item.business_id) {
-    return `/clients/${item.client_id}/businesses/${item.business_id}`;
-  }
-  if (item.client_id) {
-    return `/clients/${item.client_id}`;
-  }
-  return fallback;
-};
-
-const itemHrefMap: Record<string, (item: AttentionItem) => string> = {
-  unpaid_charge: (item) => getBusinessHref(item, "/charges?status=issued"),
-  unpaid_charges: (item) => getBusinessHref(item, "/charges?status=issued"),
-  ready_for_pickup: (item) => getBusinessHref(item, "/binders?status=ready_for_pickup"),
-};
-
-const getItemHref = (item: AttentionItem): string => {
-  const fn = itemHrefMap[item.item_type];
-  return fn ? fn(item) : getBusinessHref(item, "/binders");
-};
+const toneClasses = {
+  amber: {
+    icon: "bg-amber-50 text-amber-600",
+    dot: "bg-amber-500",
+  },
+  green: {
+    icon: "bg-green-50 text-green-600",
+    dot: "bg-green-500",
+  },
+  red: {
+    icon: "bg-red-50 text-red-600",
+    dot: "bg-red-500",
+  },
+} as const;
 
 export const AttentionSection = ({ section, items, sectionIndex }: AttentionSectionProps) => {
   const hasItems = items.length > 0;
   const IconComponent = section.icon;
-  const tone = section.severity === "success" ? "green" : section.severity === "critical" ? "red" : "amber";
+  const tone = getAttentionTone(section.severity);
 
   return (
     <section
@@ -48,7 +42,7 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
           <span
             className={cn(
               "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
-              tone === "green" ? "bg-green-50 text-green-600" : tone === "red" ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-600",
+              toneClasses[tone].icon,
             )}
           >
             <IconComponent className="h-4 w-4" />
@@ -66,13 +60,13 @@ export const AttentionSection = ({ section, items, sectionIndex }: AttentionSect
             {items.map((item, i) => (
               <Link
                 key={`${item.item_type}-${item.binder_id ?? i}-${item.business_id ?? item.client_id ?? i}`}
-                to={getItemHref(item)}
+                to={getAttentionItemHref(item)}
                 className="group flex min-h-14 items-start gap-3 rounded-xl px-3 py-2.5 text-right transition-colors hover:bg-slate-50"
               >
                 <span
                   className={cn(
                     "mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full",
-                    tone === "green" ? "bg-green-500" : tone === "red" ? "bg-red-500" : "bg-amber-500",
+                    toneClasses[tone].dot,
                   )}
                 />
                 <span className="min-w-0 flex-1">

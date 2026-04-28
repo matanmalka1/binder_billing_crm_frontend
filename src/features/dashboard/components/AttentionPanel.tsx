@@ -1,7 +1,7 @@
 import { CheckCircle2, ShieldAlert } from "lucide-react";
 import type { AttentionItem } from "../api";
 import { AttentionSection } from "./AttentionSection";
-import { SECTIONS, isKnownAttentionItem } from "../utils";
+import { getVisibleAttentionSections } from "../utils";
 import {
   DashboardEmptyState,
   DashboardPanel,
@@ -13,8 +13,7 @@ interface AttentionPanelProps {
 }
 
 export const AttentionPanel = ({ items }: AttentionPanelProps) => {
-  const visibleItems = items.filter(isKnownAttentionItem);
-  const totalItems = visibleItems.length;
+  const { sections, totalItems } = getVisibleAttentionSections(items);
   const allClear = totalItems === 0;
 
   return (
@@ -38,17 +37,14 @@ export const AttentionPanel = ({ items }: AttentionPanelProps) => {
         />
       ) : (
         <div className="grid grid-cols-1 gap-4 bg-gray-50/50 p-4 xl:grid-cols-2">
-          {SECTIONS.map((section, sectionIndex) => {
-            const sectionItems = visibleItems.filter((item) => section.types.includes(item.item_type));
-            return (
-              <AttentionSection
-                key={section.key}
-                section={section}
-                items={sectionItems}
-                sectionIndex={sectionIndex}
-              />
-            );
-          })}
+          {sections.map(({ section, items: sectionItems }, sectionIndex) => (
+            <AttentionSection
+              key={section.key}
+              section={section}
+              items={sectionItems}
+              sectionIndex={sectionIndex}
+            />
+          ))}
         </div>
       )}
     </DashboardPanel>

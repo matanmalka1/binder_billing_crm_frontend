@@ -11,6 +11,7 @@ import type { ActionCommand } from "../../../lib/actions/types";
 import { useRole } from "../../../hooks/useRole";
 import { useActionRunner } from "@/features/actions";
 import type { StatItem } from "../components/DashboardStatsGrid";
+import { DASHBOARD_COPY } from "../dashboardConstants";
 import { buildDashboardStats } from "../statsBuilder";
 
 type DashboardData =
@@ -70,7 +71,7 @@ export const useDashboardPage = () => {
     if (!hasRole) {
       return {
         status: "error",
-        message: "לא ניתן לזהות תפקיד משתמש",
+        message: DASHBOARD_COPY.roleMissing,
         data: null,
       };
     }
@@ -78,7 +79,7 @@ export const useDashboardPage = () => {
     if (dashboardQuery.isPending) {
       return {
         status: "loading",
-        message: "טוען נתוני לוח בקרה...",
+        message: DASHBOARD_COPY.loadingDashboard,
         data: null,
       };
     }
@@ -88,7 +89,7 @@ export const useDashboardPage = () => {
         status: "error",
         message: getErrorMessage(
           dashboardQuery.error,
-          "שגיאה בטעינת לוח הבקרה",
+          DASHBOARD_COPY.dashboardLoadError,
         ),
         data: null,
       };
@@ -97,7 +98,7 @@ export const useDashboardPage = () => {
     if (isAdvisor && isOverviewData(dashboardQuery.data)) {
       return {
         status: "ok",
-        message: "נתונים נטענו בהצלחה",
+        message: DASHBOARD_COPY.dashboardLoaded,
         data: { role_view: "advisor", ...dashboardQuery.data },
       };
     }
@@ -105,7 +106,7 @@ export const useDashboardPage = () => {
     if (isSecretary && isSummaryData(dashboardQuery.data)) {
       return {
         status: "ok",
-        message: "נתונים נטענו בהצלחה",
+        message: DASHBOARD_COPY.dashboardLoaded,
         data: { role_view: "secretary", ...dashboardQuery.data },
       };
     }

@@ -2,9 +2,8 @@ import { DollarSign, Package } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { AttentionItem, AttentionItemType } from "./api";
 
-// ── Section variant configs ─────────────────────────────────────────────────
-
 export type AttentionSeverity = "critical" | "warning" | "success";
+export type AttentionTone = "amber" | "green" | "red";
 
 export interface SectionConfig {
   key: string;
@@ -14,46 +13,6 @@ export interface SectionConfig {
   types?: readonly AttentionItemType[];
   viewAllHref?: string;
 }
-
-
-export const attentionSeverityCfg = {
-  critical: {
-    headerGradient: "from-gray-700 to-gray-600",
-    iconBg: "bg-gray-100",
-    iconText: "text-gray-600",
-    badge: "bg-gray-600 text-white",
-    itemDot: "bg-gray-400",
-    itemHover: "hover:bg-gray-50",
-    itemBorder: "border-gray-100",
-    viewAll: "text-gray-600 hover:text-gray-800",
-    emptyIcon: "text-gray-300",
-    countPill: "bg-white/20 text-white",
-  },
-  warning: {
-    headerGradient: "from-gray-700 to-gray-600",
-    iconBg: "bg-gray-100",
-    iconText: "text-gray-600",
-    badge: "bg-gray-600 text-white",
-    itemDot: "bg-gray-400",
-    itemHover: "hover:bg-gray-50",
-    itemBorder: "border-gray-100",
-    viewAll: "text-gray-600 hover:text-gray-800",
-    emptyIcon: "text-gray-300",
-    countPill: "bg-white/20 text-white",
-  },
-  success: {
-    headerGradient: "from-gray-700 to-gray-600",
-    iconBg: "bg-gray-100",
-    iconText: "text-gray-600",
-    badge: "bg-gray-600 text-white",
-    itemDot: "bg-gray-400",
-    itemHover: "hover:bg-gray-50",
-    itemBorder: "border-gray-100",
-    viewAll: "text-gray-600 hover:text-gray-800",
-    emptyIcon: "text-gray-300",
-    countPill: "bg-white/20 text-white",
-  },
-} as const;
 
 // ── Attention sections config ───────────────────────────────────────────────
 
@@ -87,6 +46,43 @@ const KNOWN_ATTENTION_TYPES = new Set<AttentionItemType>(
 
 export const isKnownAttentionItem = (item: AttentionItem): boolean =>
   KNOWN_ATTENTION_TYPES.has(item.item_type);
+
+export const getAttentionTone = (severity: AttentionSeverity): AttentionTone => {
+  if (severity === "success") return "green";
+  if (severity === "critical") return "red";
+  return "amber";
+};
+
+const getBusinessHref = (item: AttentionItem, fallback: string): string => {
+  if (item.client_id && item.business_id) {
+    return `/clients/${item.client_id}/businesses/${item.business_id}`;
+  }
+  if (item.client_id) {
+    return `/clients/${item.client_id}`;
+  }
+  return fallback;
+};
+
+const attentionItemHrefMap: Partial<Record<AttentionItemType, (item: AttentionItem) => string>> = {
+  unpaid_charge: (item) => getBusinessHref(item, "/charges?status=issued"),
+  unpaid_charges: (item) => getBusinessHref(item, "/charges?status=issued"),
+  ready_for_pickup: (item) => getBusinessHref(item, "/binders?status=ready_for_pickup"),
+};
+
+export const getAttentionItemHref = (item: AttentionItem): string =>
+  attentionItemHrefMap[item.item_type]?.(item) ?? getBusinessHref(item, "/binders");
+
+export const getVisibleAttentionSections = (items: AttentionItem[]) => {
+  const visibleItems = items.filter(isKnownAttentionItem);
+
+  return {
+    totalItems: visibleItems.length,
+    sections: SECTIONS.map((section) => ({
+      section,
+      items: visibleItems.filter((item) => section.types.includes(item.item_type)),
+    })),
+  };
+};
 
 // ── Advisor today section items ─────────────────────────────────────────────
 
