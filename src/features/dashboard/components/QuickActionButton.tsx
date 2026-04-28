@@ -50,7 +50,9 @@ export const QuickActionButton = ({
         ? "bg-red-100 group-hover:bg-red-200"
         : isUpcoming
           ? "bg-amber-100 group-hover:bg-amber-200"
-          : "bg-gray-100 group-hover:bg-info-100",
+          : presentation.isReadOnly
+            ? "bg-info-50 group-hover:bg-info-100"
+            : "bg-amber-50 group-hover:bg-amber-100",
   );
 
   const iconColorClass = cn(
@@ -61,7 +63,17 @@ export const QuickActionButton = ({
         ? "text-red-500 group-hover:text-red-600"
         : isUpcoming
           ? "text-amber-500 group-hover:text-amber-600"
-          : "text-gray-400 group-hover:text-info-600",
+          : presentation.isReadOnly
+            ? "text-info-500 group-hover:text-info-600"
+            : "text-amber-500 group-hover:text-amber-600",
+  );
+
+  // Action-type badge: blue for navigation (get), amber for mutations (post/patch/put/delete)
+  const actionTypeBadgeClass = cn(
+    "rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
+    presentation.isReadOnly
+      ? "bg-info-100 text-info-700"
+      : "bg-amber-100 text-amber-700",
   );
 
   return (
@@ -75,7 +87,7 @@ export const QuickActionButton = ({
       aria-label={presentation.ariaLabel}
     >
       <div className="min-w-0 flex-1">
-        {/* Urgency + category badges */}
+        {/* Badge row: urgency · action-type · confirmation */}
         <div className="mb-1.5 flex flex-wrap items-center gap-1">
           {action.urgency && (
             <span
@@ -87,8 +99,8 @@ export const QuickActionButton = ({
               {QUICK_ACTION_URGENCY_LABELS[action.urgency]}
             </span>
           )}
-          <span className="rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold text-gray-500">
-            {presentation.categoryLabel}
+          <span className={actionTypeBadgeClass}>
+            {presentation.effectLabel}
           </span>
           {presentation.requiresConfirmation && (
             <span className="rounded-full bg-warning-50 px-1.5 py-0.5 text-[10px] font-semibold text-warning-700">
@@ -121,7 +133,7 @@ export const QuickActionButton = ({
           </p>
         )}
 
-        {/* Due label */}
+        {/* Due label — always shown when present */}
         {action.dueLabel && (
           <p
             className={cn(
@@ -130,13 +142,6 @@ export const QuickActionButton = ({
             )}
           >
             {action.dueLabel}
-          </p>
-        )}
-
-        {/* Effect description — only when no dueLabel */}
-        {!action.dueLabel && (
-          <p className="mt-0.5 truncate text-[11px] leading-snug text-gray-400">
-            {presentation.effectDescription}
           </p>
         )}
 
@@ -164,7 +169,9 @@ export const QuickActionButton = ({
             ? "bg-gradient-to-l from-red-500 to-red-400"
             : isUpcoming
               ? "bg-gradient-to-l from-amber-500 to-amber-400"
-              : "bg-gradient-to-l from-info-500 to-primary-500",
+              : presentation.isReadOnly
+                ? "bg-gradient-to-l from-info-500 to-info-400"
+                : "bg-gradient-to-l from-amber-500 to-amber-400",
         )}
       />
     </button>
