@@ -7,6 +7,7 @@ export interface StatsCardProps {
   title: string;
   value: string | number;
   description?: string;
+  eyebrow?: string;
   icon?: LucideIcon;
   variant?: "blue" | "green" | "red" | "orange" | "purple" | "neutral";
   trend?: {
@@ -18,12 +19,14 @@ export interface StatsCardProps {
   selected?: boolean;
   onClick?: () => void;
   className?: string;
+  actionLabel?: string;
 }
 
 export const StatsCard: React.FC<StatsCardProps> = ({
   title,
   value,
   description,
+  eyebrow,
   icon: Icon,
   variant = "neutral",
   trend,
@@ -31,6 +34,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   selected,
   onClick,
   className,
+  actionLabel,
 }) => {
   const [displayValue, setDisplayValue] = useState(0);
 
@@ -122,6 +126,9 @@ export const StatsCard: React.FC<StatsCardProps> = ({
 
         <div className="min-w-0 flex-1 text-right">
           <p className="mb-0.5 text-xs text-gray-500">{title}</p>
+          {eyebrow && (
+            <p className="mb-1 text-xs font-medium text-gray-500">{eyebrow}</p>
+          )}
           <div className={cn("text-lg font-bold leading-tight tabular-nums", config.value)}>
             {typeof value === "number" ? displayValue.toLocaleString("he-IL") : value}
           </div>
@@ -149,6 +156,10 @@ export const StatsCard: React.FC<StatsCardProps> = ({
               </span>
               <span className="text-gray-500">{trend.label}</span>
             </div>
+          )}
+
+          {actionLabel && (
+            <p className="mt-3 text-xs font-medium text-gray-500">{actionLabel}</p>
           )}
         </div>
       </div>

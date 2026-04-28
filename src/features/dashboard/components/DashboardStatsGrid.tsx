@@ -7,12 +7,15 @@ import { StatsCard } from "@/components/ui/layout/StatsCard";
 export interface StatItem {
   key: string;
   title: string;
-  value: number;
+  value: string | number;
   description: string;
+  eyebrow?: string;
   icon: LucideIcon;
   variant: "blue" | "green" | "red" | "amber" | "purple";
   urgent?: boolean;
   href?: string;
+  progress?: number;
+  actionLabel?: string;
 }
 
 interface DashboardStatsGridProps {
@@ -48,8 +51,11 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
         title={stat.title}
         value={stat.value}
         description={stat.description}
+        eyebrow={stat.eyebrow}
         icon={stat.icon}
         variant={variantMap[stat.variant]}
+        progress={stat.progress}
+        actionLabel={stat.actionLabel}
       />
       {stat.urgent && (
         <span className="absolute left-3 top-3 flex h-2.5 w-2.5">

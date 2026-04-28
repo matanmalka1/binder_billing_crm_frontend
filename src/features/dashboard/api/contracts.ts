@@ -26,7 +26,7 @@ export interface DashboardOverviewResponse {
   binders_in_office: number;
   binders_ready_for_pickup: number;
   open_reminders: number;
-  vat_due_this_month: number;
+  vat_stats: VatDashboardStats;
   quick_actions: BackendAction[];
   attention: AttentionResponse;
 }
@@ -37,6 +37,20 @@ export interface DashboardSummaryResponse {
   binders_in_office: number;
   binders_ready_for_pickup: number;
   open_reminders: number;
-  vat_due_this_month: number;
+  vat_stats: VatDashboardStats;
   attention: AttentionResponse;
+}
+
+export interface VatDashboardPeriodStat {
+  period: string;
+  period_label: string;
+  submitted: number;
+  required: number;
+  pending: number;
+  completion_percent: number;
+}
+
+export interface VatDashboardStats {
+  monthly: VatDashboardPeriodStat;
+  bimonthly: VatDashboardPeriodStat;
 }
