@@ -26,7 +26,7 @@ export const useTaxDeadlines = () => {
     queryClient.invalidateQueries({ queryKey: timelineQK.all });
   };
   const { isAdvisor } = useRole();
-  const { searchParams, setFilter } = useSearchParamFilters();
+  const { searchParams, setFilter, setSearchParams } = useSearchParamFilters();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const deadlineActions = useTaxDeadlineActions({ invalidateAfterMutation });
@@ -41,9 +41,9 @@ export const useTaxDeadlines = () => {
     () => ({
       client_name: searchParams.get("client_name") || searchParams.get("business_name") || "",
       deadline_type: searchParams.get("deadline_type") || "",
-      status: searchParams.get("status") ?? "pending",
+      status: searchParams.has("status") ? (searchParams.get("status") ?? "") : "pending",
       due_from: searchParams.get("due_from") || "",
-      due_to: searchParams.get("due_to") || defaultDueTo,
+      due_to: searchParams.has("due_to") ? (searchParams.get("due_to") ?? "") : defaultDueTo,
       page: parsePositiveInt(searchParams.get("page"), 1),
       page_size: parsePositiveInt(searchParams.get("page_size"), 20),
     }),
@@ -155,7 +155,11 @@ export const useTaxDeadlines = () => {
     if (key === "client_name") {
       setFilter("business_name", "");
     }
-    setFilter(key, value);
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set(key, value);
+    else next.set(key, "");
+    next.set("page", "1");
+    setSearchParams(next);
   };
 
   const deadlines = deadlinesQuery.data?.items ?? [];
