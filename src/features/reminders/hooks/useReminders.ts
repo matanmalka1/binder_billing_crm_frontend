@@ -17,7 +17,9 @@ import {
   ACTIVE_REMINDERS_PAGE_SIZE,
   DEFAULT_REMINDER_STATUS_FILTER,
   DUPLICATE_REMINDER_MESSAGE,
+  REMINDER_DUE_READY_FILTER,
   REMINDERS_PAGE_SIZE,
+  type ReminderDueFilter,
 } from "../constants";
 import {
   buildReminderPayload,
@@ -29,15 +31,19 @@ import {
 export const useReminders = (opts?: { clientId?: number; clientName?: string }) => {
   const clientId = opts?.clientId;
   const queryClient = useQueryClient();
-  const { searchParams, setFilter } = useSearchParamFilters();
+  const { searchParams, setFilter, setSearchParams } = useSearchParamFilters();
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const [cancelingId, setCancelingId] = useState<number | null>(null);
   const [markingSentId, setMarkingSentId] = useState<number | null>(null);
   const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
-  const [statusFilter, setStatusFilter] = useState<string>(DEFAULT_REMINDER_STATUS_FILTER);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("");
+  const statusFilter = searchParams.get("status") ?? DEFAULT_REMINDER_STATUS_FILTER;
+  const dueFilter: ReminderDueFilter | undefined =
+    searchParams.get("due") === REMINDER_DUE_READY_FILTER
+      ? REMINDER_DUE_READY_FILTER
+      : undefined;
   const page = clientId ? 1 : parsePositiveInt(searchParams.get("page"), 1);
   const pageSize = clientId
     ? REMINDERS_PAGE_SIZE
@@ -60,11 +66,12 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   );
 
   const remindersQuery = useQuery({
-    queryKey: remindersQK.list(clientId, statusFilter, page, pageSize),
+    queryKey: remindersQK.list(clientId, statusFilter, page, pageSize, dueFilter),
     queryFn: () =>
       remindersApi.list({
         ...(clientId ? { client_record_id: clientId } : {}),
         ...(statusFilter ? { status: statusFilter as import("../api/contracts").ReminderStatus } : {}),
+        ...(dueFilter ? { due: dueFilter } : {}),
         page,
         page_size: pageSize,
       }),
@@ -126,7 +133,8 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
     [remindersQuery.data?.items, search, typeFilter],
   );
 
-  const hasFilters = !!search || !!typeFilter || statusFilter !== DEFAULT_REMINDER_STATUS_FILTER;
+  const hasFilters =
+    !!search || !!typeFilter || !!dueFilter || statusFilter !== DEFAULT_REMINDER_STATUS_FILTER;
 
   const setPage = useCallback((nextPage: number) => {
     setFilter("page", String(nextPage), false);
@@ -143,15 +151,21 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   }, [setPage]);
 
   const setReminderStatusFilter = useCallback((value: string) => {
-    setStatusFilter(value);
+    setFilter("status", value);
     setPage(1);
-  }, [setPage]);
+  }, [setFilter, setPage]);
+
+  const clearDueFilter = useCallback(() => {
+    setFilter("due", "", true);
+  }, [setFilter]);
 
   const clearFilters = () => {
     setSearch("");
     setTypeFilter("");
-    setStatusFilter(DEFAULT_REMINDER_STATUS_FILTER);
-    setPage(1);
+    const next = new URLSearchParams();
+    next.set("status", DEFAULT_REMINDER_STATUS_FILTER);
+    next.set("page", "1");
+    setSearchParams(next);
   };
 
   const createMutation = useMutation({
@@ -221,6 +235,8 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
       : null,
     statusFilter,
     setStatusFilter: setReminderStatusFilter,
+    dueFilter,
+    clearDueFilter,
     search,
     setSearch: setReminderSearch,
     typeFilter,

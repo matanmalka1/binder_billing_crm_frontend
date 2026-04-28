@@ -21,6 +21,7 @@ export const reminderStatusValues = [
 ] as const;
 
 export type ReminderStatus = (typeof reminderStatusValues)[number];
+export type ReminderDueFilter = "ready";
 
 export const reminderTypeLabels: Record<ReminderType, string> = {
   tax_deadline_approaching: "מועד מס מתקרב",

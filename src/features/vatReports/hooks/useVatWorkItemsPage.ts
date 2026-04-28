@@ -15,6 +15,7 @@ import { vatReportsQK } from "../api/queryKeys";
 import { invalidateVatWorkItem } from "./useVatInvalidation";
 import type { VatWorkItemAction } from "../types";
 import { VAT_WORK_ITEMS_STATS_STATUS_GROUPS } from "../constants";
+import { toOptionalVatPeriodTypeFilter, toVatPeriodTypeFilter } from "../filterUtils";
 
 const statsStatuses = [
   ...VAT_WORK_ITEMS_STATS_STATUS_GROUPS.pending,
@@ -33,6 +34,7 @@ export const useVatWorkItemsPage = () => {
   const filters = {
     status: searchParams.get("status") ?? "",
     period: searchParams.get("period") ?? "",
+    period_type: toVatPeriodTypeFilter(searchParams.get("period_type")),
     clientSearch: searchParams.get("clientSearch") ?? "",
     page: parsePositiveInt(searchParams.get("page"), 1),
     page_size: parsePositiveInt(searchParams.get("page_size"), 20),
@@ -43,11 +45,13 @@ export const useVatWorkItemsPage = () => {
     page: filters.page,
     page_size: filters.page_size,
     period: toOptionalString(filters.period),
+    period_type: toOptionalVatPeriodTypeFilter(filters.period_type),
     client_name: toOptionalString(filters.clientSearch),
   };
 
   const statsBase = {
     period: apiParams.period,
+    period_type: apiParams.period_type,
     client_name: apiParams.client_name,
     page: 1,
     page_size: 1,

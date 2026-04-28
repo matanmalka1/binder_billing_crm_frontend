@@ -7,6 +7,11 @@ import {
 } from "./types";
 
 export const DEFAULT_REMINDER_STATUS_FILTER = "pending";
+export const REMINDER_DUE_READY_FILTER = "ready";
+export const REMINDER_DUE_FILTER_LABELS = {
+  ready: "ממתינות לפעולה עכשיו",
+} as const;
+export type ReminderDueFilter = keyof typeof REMINDER_DUE_FILTER_LABELS;
 export const REMINDERS_PAGE_SIZE = 20;
 export const ACTIVE_REMINDERS_PAGE_SIZE = 500;
 export const LINKED_ENTITY_PAGE_SIZE = 100;

@@ -11,6 +11,7 @@ import type { ExpenseCategoryRow } from "./vatBreakdown.utils";
 export type VatWorkItemsFilters = PagedFilters<{
   status: string;
   period: string;
+  period_type: string;
   clientSearch: string;
 }>;
 

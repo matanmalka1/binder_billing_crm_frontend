@@ -4,7 +4,7 @@ import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBad
 import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
 import { ClientFilterControl } from "@/components/shared/client/ClientFilterControl";
 import { cn, MONTH_NAMES } from "../../../utils/utils";
-import { VAT_WORK_ITEMS_STATUS_OPTIONS } from "../constants";
+import { VAT_PERIOD_TYPE_OPTIONS, VAT_PERIOD_TYPE_SELECT_OPTIONS, VAT_WORK_ITEMS_STATUS_OPTIONS } from "../constants";
 import type { VatWorkItemsFiltersCardProps } from "../types";
 
 export const VatWorkItemsFiltersCard = ({
@@ -50,7 +50,7 @@ export const VatWorkItemsFiltersCard = ({
   return (
     <ToolbarContainer>
       <div className="space-y-3">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
           <ClientFilterControl
             selectedClient={selectedClient}
             clientQuery={clientQuery}
@@ -72,6 +72,13 @@ export const VatWorkItemsFiltersCard = ({
             options={VAT_WORK_ITEMS_STATUS_OPTIONS}
             className={cn(filters.status && "border-primary-400 ring-1 ring-primary-200")}
           />
+          <Select
+            label="סוג דיווח"
+            value={filters.period_type}
+            onChange={(e) => onFilterChange("period_type", e.target.value)}
+            options={VAT_PERIOD_TYPE_SELECT_OPTIONS}
+            className={cn(filters.period_type && "border-primary-400 ring-1 ring-primary-200")}
+          />
         </div>
 
         <ActiveFilterBadges
@@ -88,6 +95,13 @@ export const VatWorkItemsFiltersCard = ({
                   key: "period",
                   label: `תקופה: ${periodOptions.find((o) => o.value === filters.period)?.label ?? filters.period}`,
                   onRemove: () => onFilterChange("period", ""),
+                }
+              : null,
+            filters.period_type
+              ? {
+                  key: "period_type",
+                  label: VAT_PERIOD_TYPE_OPTIONS.find((o) => o.value === filters.period_type)?.label ?? filters.period_type,
+                  onRemove: () => onFilterChange("period_type", ""),
                 }
               : null,
           ].filter((b): b is NonNullable<typeof b> => b !== null)}

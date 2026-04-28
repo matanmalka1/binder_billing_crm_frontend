@@ -25,6 +25,8 @@ export const RemindersPage: React.FC = () => {
     error,
     statusFilter,
     setStatusFilter,
+    dueFilter,
+    clearDueFilter,
     search,
     setSearch,
     typeFilter,
@@ -148,6 +150,8 @@ export const RemindersPage: React.FC = () => {
         onTypeChange={setTypeFilter}
         statusFilter={statusFilter}
         onStatusChange={setStatusFilter}
+        dueFilter={dueFilter}
+        onDueClear={clearDueFilter}
         hasFilters={hasFilters}
         onClear={clearFilters}
       />

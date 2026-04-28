@@ -1,6 +1,6 @@
 export const DASHBOARD_STATS_LINKS = {
   clients: "/clients",
-  bindersInOffice: "/binders?status=in_office",
+  binders: "/binders",
   vatReports: "/tax/vat",
   reminders: "/reminders",
 } as const;

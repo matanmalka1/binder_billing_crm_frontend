@@ -12,8 +12,10 @@ import {
 } from "../types";
 import {
   DEFAULT_REMINDER_STATUS_FILTER,
+  REMINDER_DUE_FILTER_LABELS,
   REMINDER_STATUS_OPTIONS,
   REMINDER_TYPE_OPTIONS,
+  type ReminderDueFilter,
 } from "../constants";
 
 interface RemindersFiltersBarProps {
@@ -23,6 +25,8 @@ interface RemindersFiltersBarProps {
   onTypeChange: (value: string) => void;
   statusFilter: string;
   onStatusChange: (value: string) => void;
+  dueFilter?: ReminderDueFilter;
+  onDueClear: () => void;
   hasFilters: boolean;
   onClear: () => void;
 }
@@ -34,6 +38,8 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
   onTypeChange,
   statusFilter,
   onStatusChange,
+  dueFilter,
+  onDueClear,
   hasFilters,
   onClear,
 }) => {
@@ -108,6 +114,13 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
                         : "כל הסטטוסים"
                     }`,
                     onRemove: () => onStatusChange(DEFAULT_REMINDER_STATUS_FILTER),
+                  }
+                : null,
+              dueFilter
+                ? {
+                    key: "dueFilter",
+                    label: REMINDER_DUE_FILTER_LABELS[dueFilter],
+                    onRemove: onDueClear,
                   }
                 : null,
             ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}

@@ -1,7 +1,8 @@
 import { Bell, FileText, FolderOpen, Users } from "lucide-react";
 import type { DashboardOverviewResponse } from "./api";
 import type { StatItem } from "./components/DashboardStatsGrid";
-import { DASHBOARD_STATS_LABELS, DASHBOARD_STATS_LINKS } from "./statsConstants";
+import { DASHBOARD_STATS_LABELS } from "./statsConstants";
+import { DASHBOARD_STAT_HREFS, buildVatReportsHref, type VatReportsPeriodType } from "./statsNavigation";
 
 type DashboardStatsData = Pick<
   DashboardOverviewResponse,
@@ -21,6 +22,7 @@ const buildVatStat = (
   key: string,
   title: string,
   stat: DashboardStatsData["vat_stats"]["monthly"],
+  periodType: VatReportsPeriodType,
 ): StatItem => ({
   key,
   title,
@@ -30,7 +32,7 @@ const buildVatStat = (
   icon: FileText,
   variant: vatVariant(stat.pending),
   urgent: stat.pending > 0,
-  href: DASHBOARD_STATS_LINKS.vatReports,
+  href: buildVatReportsHref(stat.period, periodType),
   progress: stat.completion_percent,
   actionLabel: DASHBOARD_STATS_LABELS.vatAction,
 });
@@ -43,7 +45,7 @@ export const buildDashboardStats = (data: DashboardStatsData): StatItem[] => [
     description: DASHBOARD_STATS_LABELS.activeClientsDescription,
     icon: Users,
     variant: "purple",
-    href: DASHBOARD_STATS_LINKS.clients,
+    href: DASHBOARD_STAT_HREFS.activeClients,
   },
   {
     key: "in_office",
@@ -52,23 +54,29 @@ export const buildDashboardStats = (data: DashboardStatsData): StatItem[] => [
     description: DASHBOARD_STATS_LABELS.bindersDescription,
     icon: FolderOpen,
     variant: "blue",
-    href: DASHBOARD_STATS_LINKS.bindersInOffice,
+    href: DASHBOARD_STAT_HREFS.bindersInOffice,
   },
-  buildVatStat("monthly_vat", DASHBOARD_STATS_LABELS.monthlyVatTitle, data.vat_stats.monthly),
+  buildVatStat(
+    "monthly_vat",
+    DASHBOARD_STATS_LABELS.monthlyVatTitle,
+    data.vat_stats.monthly,
+    "monthly",
+  ),
   buildVatStat(
     "bimonthly_vat",
     DASHBOARD_STATS_LABELS.bimonthlyVatTitle,
     data.vat_stats.bimonthly,
+    "bimonthly",
   ),
   {
-    key: "actionable_reminders",
+    key: "ready_reminders",
     title: DASHBOARD_STATS_LABELS.remindersTitle,
     value: data.open_reminders,
     description: DASHBOARD_STATS_LABELS.remindersDescription,
     icon: Bell,
     variant: "amber",
     urgent: data.open_reminders > 0,
-    href: DASHBOARD_STATS_LINKS.reminders,
+    href: DASHBOARD_STAT_HREFS.remindersReady,
     actionLabel: DASHBOARD_STATS_LABELS.remindersAction,
   },
 ];

@@ -45,6 +45,7 @@ export interface VatWorkItemsListParams {
   page?: number;
   page_size?: number;
   period?: string;
+  period_type?: "monthly" | "bimonthly";
   client_name?: string;
 }
 

@@ -10,6 +10,17 @@ export { VAT_RATE_TYPE_LABELS, DOCUMENT_TYPE_LABELS };
 
 export const INCOME_KEY = "income";
 
+export const VAT_PERIOD_TYPE_OPTIONS = [
+  { value: "", label: "כל סוגי הדיווח" },
+  { value: "monthly", label: "חודשי" },
+  { value: "bimonthly", label: "דו־חודשי" },
+] as const;
+
+export const VAT_PERIOD_TYPE_SELECT_OPTIONS = [...VAT_PERIOD_TYPE_OPTIONS];
+
+export const VAT_PERIOD_TYPES = ["monthly", "bimonthly"] as const;
+export type VatPeriodTypeFilter = (typeof VAT_PERIOD_TYPES)[number];
+
 export const EXPENSE_CATEGORIES = [
   "inventory",
   "office",

@@ -6,6 +6,7 @@ import {
   type CreateReminderRequest,
   type RemindersListResponse,
   type ReminderStatus,
+  type ReminderDueFilter,
 } from "./contracts";
 
 export const remindersApi = {
@@ -13,6 +14,7 @@ export const remindersApi = {
     page?: number;
     page_size?: number;
     status?: ReminderStatus;
+    due?: ReminderDueFilter;
     client_record_id?: number;
   }): Promise<RemindersListResponse> => {
     const response = await api.get<RemindersListResponse>(REMINDER_ENDPOINTS.reminders, { params });
