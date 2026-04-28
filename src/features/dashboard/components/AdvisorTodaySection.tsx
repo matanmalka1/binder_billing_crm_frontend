@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
-import { ArrowLeft, Inbox } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { cn } from "../../../utils/utils";
 import { staggerAnimationDelayVars } from "../../../utils/animation";
 import type { SectionItem } from "../utils";
+import { DashboardBadge, DashboardEmptyState } from "./DashboardPrimitives";
 
 interface AdvisorTodaySectionProps {
   icon: LucideIcon;
@@ -11,9 +12,8 @@ interface AdvisorTodaySectionProps {
   items: SectionItem[];
   emptyLabel: string;
   sectionIndex?: number;
+  variant?: "default" | "deadline";
 }
-
-/* ── Component ──────────────────────────────────────────────────────────── */
 
 export const AdvisorTodaySection = ({
   icon: Icon,
@@ -21,82 +21,100 @@ export const AdvisorTodaySection = ({
   items,
   emptyLabel,
   sectionIndex = 0,
+  variant = "default",
 }: AdvisorTodaySectionProps) => {
   const hasItems = items.length > 0;
+  const isDeadline = variant === "deadline";
 
   return (
-    <div
-      className="flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-elevation-1 animate-fade-in [animation-delay:var(--enter-delay)]"
+    <section
+      className="animate-fade-in overflow-hidden rounded-2xl border border-gray-200 bg-white [animation-delay:var(--enter-delay)]"
       style={staggerAnimationDelayVars(sectionIndex, 70)}
     >
-      <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-4 py-2.5">
-        <div className="flex items-center gap-2">
-          <div className="rounded-lg bg-white p-1.5 shadow-sm">
-            <Icon className="h-3.5 w-3.5 text-gray-500" />
-          </div>
-          <p className="text-xs font-bold text-gray-700 tracking-wide">{title}</p>
+      <div className="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3">
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+            <Icon className="h-4 w-4" />
+          </span>
+          <p className="truncate text-xs font-bold text-gray-800">{title}</p>
         </div>
-
-        <span className={`inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1.5 text-[11px] font-bold tabular-nums ${hasItems ? "bg-gray-200 text-gray-700" : "bg-gray-100 text-gray-300"}`}>
-          {items.length}
-        </span>
+        <DashboardBadge tone={hasItems ? "blue" : "neutral"}>{items.length}</DashboardBadge>
       </div>
 
-      <div className="max-h-[280px] flex-1 divide-y divide-gray-50 overflow-y-auto">
+      <div className="max-h-[260px] flex-1 overflow-y-auto p-2">
         {hasItems ? (
-          items.map((item, index) => {
-            const content = (
-              <>
-                <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-gray-400" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-semibold text-gray-800 leading-tight">
-                    {item.label}
-                    {item.sublabel && (
-                      <span className="text-[11px] text-gray-500"> · {item.sublabel}</span>
-                    )}
-                  </p>
-                </div>
-                {item.href && (
-                  <ArrowLeft className="mt-1 h-3.5 w-3.5 shrink-0 text-gray-300 transition-colors group-hover:text-gray-500" />
-                )}
-              </>
-            );
-
-            if (item.href) {
-              return (
-                <Link
-                  key={item.id}
-                  to={item.href}
-                  className={cn(
-                    "group flex items-start gap-3 px-5 py-3 transition-colors duration-150 animate-fade-in [animation-delay:var(--enter-delay)]",
-                    "hover:bg-gray-50"
+          <div className={cn(isDeadline ? "space-y-2" : "space-y-1")}>
+            {items.map((item, index) => {
+              const content = isDeadline ? (
+                <>
+                  <span className="flex min-h-12 min-w-16 shrink-0 flex-col items-center justify-center rounded-xl border border-amber-100 bg-amber-50 px-3 text-amber-700">
+                    <span className="text-[11px] font-semibold leading-4 text-amber-600">מועד</span>
+                    <span className="text-xs font-bold leading-4">{item.sublabel}</span>
+                  </span>
+                  <span className="min-w-0 flex-1 self-center">
+                    <span className="block truncate text-sm font-bold leading-6 text-gray-900">
+                      {item.label}
+                    </span>
+                  </span>
+                  {item.href && (
+                    <ArrowLeft className="h-4 w-4 shrink-0 self-center text-gray-300 transition-colors group-hover:text-amber-600" />
                   )}
+                </>
+              ) : (
+                <>
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-xs font-semibold leading-5 text-gray-800">
+                      {item.label}
+                    </span>
+                    {item.sublabel && (
+                      <span className="block truncate text-[11px] leading-4 text-gray-500">
+                        {item.sublabel}
+                      </span>
+                    )}
+                  </span>
+                  {item.href && (
+                    <ArrowLeft className="mt-1 h-3.5 w-3.5 shrink-0 text-gray-300 transition-colors group-hover:text-blue-500" />
+                  )}
+                </>
+              );
+
+              const className = cn(
+                "animate-fade-in flex gap-3 rounded-xl text-right [animation-delay:var(--enter-delay)]",
+                isDeadline ? "items-stretch border border-gray-100 bg-white px-3 py-3 shadow-sm" : "items-start px-3 py-2.5",
+                item.href && "group transition-colors",
+                item.href && (isDeadline ? "hover:border-amber-200 hover:bg-amber-50/30" : "hover:bg-blue-50/60"),
+              );
+
+              if (item.href) {
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.href}
+                    className={className}
+                    style={staggerAnimationDelayVars(index, 35)}
+                  >
+                    {content}
+                  </Link>
+                );
+              }
+
+              return (
+                <div
+                  key={item.id}
+                  className={className}
                   style={staggerAnimationDelayVars(index, 35)}
                 >
                   {content}
-                </Link>
+                </div>
               );
-            }
-
-            return (
-              <div
-                key={item.id}
-                className="flex items-start gap-3 px-5 py-3 animate-fade-in [animation-delay:var(--enter-delay)]"
-                style={staggerAnimationDelayVars(index, 35)}
-              >
-                {content}
-              </div>
-            );
-          })
-        ) : (
-          <div className="flex flex-col items-center justify-center gap-2 py-8 text-center">
-            <Inbox className="h-7 w-7 text-gray-300" />
-            <p className="text-xs text-gray-400">{emptyLabel}</p>
+            })}
           </div>
+        ) : (
+          <DashboardEmptyState title={emptyLabel} className="py-8" />
         )}
       </div>
-
-    </div>
+    </section>
   );
 };
 

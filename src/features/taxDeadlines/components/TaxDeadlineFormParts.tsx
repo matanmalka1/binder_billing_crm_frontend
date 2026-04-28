@@ -49,7 +49,7 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
     ? "vat"
     : deadlineType === "annual_report"
       ? "annual_report"
-      : "other";
+      : "national_insurance";
   const isAutoVatDueDate = deadlineType === "vat";
 
   useEffect(() => {

@@ -171,7 +171,6 @@ export const TAX_DEADLINE_TYPE_LABELS: Record<string, string> = {
   advance_payment: "מקדמות",
   national_insurance: "ביטוח לאומי",
   annual_report: "דוח שנתי",
-  other: "אחר",
 };
 
-export const getDeadlineTypeLabel = makeLabelGetter(TAX_DEADLINE_TYPE_LABELS, "אחר");
+export const getDeadlineTypeLabel = makeLabelGetter(TAX_DEADLINE_TYPE_LABELS, "סוג מועד לא ידוע");

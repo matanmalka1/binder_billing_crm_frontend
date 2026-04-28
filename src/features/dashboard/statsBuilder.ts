@@ -33,11 +33,11 @@ const formatActiveClientsValue = (count: number) =>
 const formatClientsDescription = (total: number) =>
   `מתוך ${total.toLocaleString("he-IL")} סך הכל`;
 
-const formatActiveBindersValue = (count: number) =>
-  `${count.toLocaleString("he-IL")} קלסרים פעילים`;
+const formatBindersInOfficeValue = (count: number) =>
+  `${count.toLocaleString("he-IL")} קלסרים במשרד`;
 
-const formatBindersDescription = (inOffice: number) =>
-  `מתוך ${inOffice.toLocaleString("he-IL")} במשרד`;
+const formatBindersDescription = (activeBinders: number) =>
+  `מתוך ${activeBinders.toLocaleString("he-IL")} קלסרים פעילים`;
 
 const vatVariant = (pending: number): StatItem["variant"] =>
   pending > 0 ? "red" : "green";
@@ -74,8 +74,8 @@ export const buildDashboardStats = (data: DashboardStatsData): StatItem[] => [
   {
     key: "in_office",
     title: DASHBOARD_STATS_LABELS.bindersTitle,
-    value: formatActiveBindersValue(data.active_binders),
-    description: formatBindersDescription(data.binders_in_office),
+    value: formatBindersInOfficeValue(data.binders_in_office),
+    description: formatBindersDescription(data.active_binders),
     icon: FolderOpen,
     variant: "blue",
     href: DASHBOARD_STAT_HREFS.bindersInOffice,

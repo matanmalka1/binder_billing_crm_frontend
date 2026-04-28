@@ -1,7 +1,7 @@
 import { CalendarClock, Clock, Bell, Sparkles } from "lucide-react";
 import { AdvisorTodaySection } from "./AdvisorTodaySection";
 import { useAdvisorToday } from "../hooks/useAdvisorToday";
-import { cn } from "../../../utils/utils";
+import { DashboardPanel, DashboardSectionHeader } from "./DashboardPrimitives";
 
 export const AdvisorTodayCard = () => {
   const {
@@ -17,34 +17,17 @@ export const AdvisorTodayCard = () => {
     reminderItems.length;
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-      {/* ── Header ────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between gap-4 border-b border-gray-100 px-4 py-2.5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100">
-              <Sparkles className="h-3.5 w-3.5 text-gray-500" />
-            </div>
-            <div>
-              <h2 className="text-xs font-bold tracking-wide text-gray-700">מה לעשות היום</h2>
-              <p className="text-[11px] text-gray-400">
-                {isLoading ? "טוען משימות..." : `${totalTasks} פריטים ממתינים לטיפול`}
-              </p>
-            </div>
-          </div>
-
-          {!isLoading && (
-            <div className={cn(
-              "flex h-6 min-w-[1.5rem] items-center justify-center rounded-full px-2 text-xs font-bold tabular-nums",
-              totalTasks > 0
-                ? "bg-gray-100 text-gray-600"
-                : "bg-gray-50 text-gray-300"
-            )}>
-              {totalTasks}
-            </div>
-          )}
+    <DashboardPanel>
+      <div className="border-b border-gray-100 px-5 py-4">
+        <DashboardSectionHeader
+          icon={Sparkles}
+          title="מה לעשות היום"
+          subtitle={isLoading ? "טוען משימות..." : `${totalTasks} פריטים ממתינים לטיפול`}
+          count={!isLoading ? totalTasks : undefined}
+          tone={totalTasks > 0 ? "amber" : "neutral"}
+        />
       </div>
 
-      {/* ── Content ───────────────────────────────────────────────────── */}
       {isLoading ? (
         <div className="flex items-center justify-center py-16 text-sm text-gray-400">
           <div className="flex flex-col items-center gap-3">
@@ -53,20 +36,19 @@ export const AdvisorTodayCard = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 bg-gray-50/50 p-4 lg:grid-cols-3">
+        <div className="space-y-3 bg-gray-50/50 p-4">
           <AdvisorTodaySection
             icon={CalendarClock}
             title="מועדי מס השבוע"
             emptyLabel="אין מועדים קרובים"
-
             sectionIndex={0}
             items={deadlineItems}
+            variant="deadline"
           />
           <AdvisorTodaySection
             icon={Clock}
             title="דוחות תקועים"
             emptyLabel="אין דוחות תקועים"
-
             sectionIndex={1}
             items={stuckReportItems}
           />
@@ -74,13 +56,12 @@ export const AdvisorTodayCard = () => {
             icon={Bell}
             title="תזכורות פתוחות"
             emptyLabel="אין תזכורות תלויות"
-
             sectionIndex={2}
             items={reminderItems}
           />
         </div>
       )}
-    </div>
+    </DashboardPanel>
   );
 };
 

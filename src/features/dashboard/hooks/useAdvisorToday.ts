@@ -7,7 +7,6 @@ import { remindersApi } from "@/features/reminders";
 import { dashboardQK } from "../api";
 import { useRole } from "../../../hooks/useRole";
 import { formatDate } from "../../../utils/utils";
-import { getDeadlineTypeLabel } from "@/features/taxDeadlines";
 import type { SectionItem } from "../utils";
 
 // Compute once per calendar day — stable across re-renders within the same day
@@ -25,6 +24,39 @@ const STUCK_REPORT_DAYS = 14;
 
 const getReportAnchorDate = (createdAt: string, updatedAt: string) =>
   updatedAt ? parseISO(updatedAt) : parseISO(createdAt);
+
+const DASHBOARD_DEADLINE_LABELS: Record<string, string> = {
+  vat: "דיווח מע״מ תקופתי",
+  advance_payment: "מקדמות מס הכנסה",
+  national_insurance: "מועד תשלום ביטוח לאומי",
+  annual_report: "הגשת דוחות שנתיים",
+};
+
+const getDashboardDeadlineLabel = (deadlineType: string) =>
+  DASHBOARD_DEADLINE_LABELS[deadlineType];
+
+const buildGeneralDeadlineItems = (
+  deadlines: NonNullable<Awaited<ReturnType<typeof taxDeadlinesApi.listTaxDeadlines>>["items"]>,
+): SectionItem[] => {
+  const grouped = new Map<string, SectionItem>();
+
+  deadlines.forEach((deadline) => {
+    const label = getDashboardDeadlineLabel(deadline.deadline_type);
+    if (!label) return;
+
+    const key = `${deadline.deadline_type}-${deadline.due_date}`;
+    if (grouped.has(key)) return;
+
+    grouped.set(key, {
+      id: deadline.id,
+      label,
+      sublabel: formatDate(deadline.due_date),
+      href: `/tax/deadlines`,
+    });
+  });
+
+  return [...grouped.values()];
+};
 
 export const useAdvisorToday = () => {
   const { isAdvisor } = useRole();
@@ -62,14 +94,11 @@ export const useAdvisorToday = () => {
 
   const deadlineItems = useMemo<SectionItem[]>(
     () =>
-      (deadlinesQuery.data?.items ?? [])
-        .filter((d) => d.due_date >= today && d.due_date <= weekEnd)
-        .map((d) => ({
-          id: d.id,
-          label: d.client_name ?? `לקוח #${d.client_record_id}`,
-          sublabel: `${getDeadlineTypeLabel(d.deadline_type)} — ${formatDate(d.due_date)}`,
-          href: `/tax/deadlines`,
-        })),
+      buildGeneralDeadlineItems(
+        (deadlinesQuery.data?.items ?? []).filter(
+          (d) => d.due_date >= today && d.due_date <= weekEnd,
+        ),
+      ),
     [deadlinesQuery.data, today, weekEnd],
   );
 

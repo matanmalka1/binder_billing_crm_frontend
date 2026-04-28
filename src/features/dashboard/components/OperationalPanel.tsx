@@ -1,9 +1,14 @@
 import { AlertTriangle, CheckCircle, Info, Zap } from "lucide-react";
 import { mapActions } from "@/lib/actions/mapActions";
 import type { BackendAction, ActionCommand } from "@/lib/actions/types";
-import { cn } from "@/utils/utils";
 import { QUICK_ACTION_COPY } from "../quickActionsConstants";
 import { getQuickActionCountLabel, groupQuickActions } from "../quickActionsUtils";
+import {
+  DashboardBadge,
+  DashboardEmptyState,
+  DashboardPanel,
+  DashboardSectionHeader,
+} from "./DashboardPrimitives";
 import { QuickActionButton } from "./QuickActionButton";
 
 interface OperationalPanelProps {
@@ -23,85 +28,81 @@ export const OperationalPanel = ({
   const overdueCount = actions.filter((a) => a.urgency === "overdue").length;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-      {/* Header */}
-      <div className="flex items-center gap-3 border-b border-gray-100 bg-gradient-to-l from-info-50/60 to-transparent px-6 py-4">
-        <div
-          className={cn(
-            "rounded-xl p-2",
-            overdueCount > 0 ? "bg-red-100 text-red-600" : "bg-info-100 text-info-600",
-          )}
-        >
-          {overdueCount > 0 ? <AlertTriangle className="h-5 w-5" /> : <Zap className="h-5 w-5" />}
-        </div>
-        <div className="flex-1">
-          <h2 className="text-base font-bold text-gray-900">{QUICK_ACTION_COPY.title}</h2>
-          <p className="text-xs text-gray-400">{getQuickActionCountLabel(totalCount)}</p>
-        </div>
-        {overdueCount > 0 && (
-          <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-bold text-red-700">
-            {overdueCount} באיחור
-          </span>
-        )}
+    <DashboardPanel>
+      <div className="border-b border-gray-100 bg-white px-5 py-4">
+        <DashboardSectionHeader
+          title={QUICK_ACTION_COPY.title}
+          subtitle={getQuickActionCountLabel(totalCount)}
+          icon={overdueCount > 0 ? AlertTriangle : Zap}
+          tone={overdueCount > 0 ? "red" : "blue"}
+          count={totalCount}
+          action={
+            overdueCount > 0 ? (
+              <DashboardBadge tone="red" strong>
+                {overdueCount} באיחור
+              </DashboardBadge>
+            ) : null
+          }
+        />
       </div>
 
-      {/* Body */}
-      {totalCount === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
-          <CheckCircle className="h-10 w-10 text-positive-400" />
-          <p className="text-sm font-semibold text-gray-700">{QUICK_ACTION_COPY.emptyTitle}</p>
-          <p className="text-xs text-gray-400">{QUICK_ACTION_COPY.emptyDescription}</p>
-        </div>
-      ) : (
-        <>
-          {/* Inline legend — above the list, not interrupting flow */}
-          <div className="flex items-center gap-1.5 border-b border-gray-50 bg-gray-50/60 px-5 py-2 text-[11px] text-gray-400">
-            <Info className="h-3 w-3 shrink-0" />
-            <span>{QUICK_ACTION_COPY.footerHint}</span>
-          </div>
-
-          <div className="space-y-4 divide-y divide-gray-50 p-5">
-            {groups.map((group) => {
-              const groupOverdue = group.actions.filter((i) => i.action.urgency === "overdue").length;
-              return (
-                <div key={group.category} className="pt-4 first:pt-0">
-                  <div className="mb-2.5 flex items-center gap-2">
-                    <span className="text-xs font-bold uppercase tracking-wide text-gray-400">
-                      {group.label}
-                    </span>
-                    <span
-                      className={cn(
-                        "rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
-                        groupOverdue > 0
-                          ? "bg-red-100 text-red-700"
-                          : "bg-info-100 text-info-600",
-                      )}
-                    >
-                      {group.actions.length}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-                    {group.actions.map(({ action, index }) => {
-                      const isLoading = activeActionKey === action.uiKey;
-                      return (
-                        <QuickActionButton
-                          key={action.uiKey}
-                          action={action}
-                          isLoading={isLoading}
-                          isDisabled={activeActionKey !== null && !isLoading}
-                          index={index}
-                          onQuickAction={onQuickAction}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </>
+      {totalCount > 0 && (
+        <details className="border-b border-gray-100 bg-slate-50/70 px-5 py-2 text-[11px] text-gray-500">
+          <summary className="flex cursor-pointer list-none items-center gap-1.5 font-semibold text-slate-500 transition-colors hover:text-slate-700">
+            <Info className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+            <span>איך פעולות עובדות</span>
+          </summary>
+          <p className="mt-1.5 leading-5 text-gray-400">{QUICK_ACTION_COPY.footerHint}</p>
+        </details>
       )}
-    </div>
+
+      {totalCount === 0 ? (
+        <DashboardEmptyState
+          icon={CheckCircle}
+          title={QUICK_ACTION_COPY.emptyTitle}
+          description={QUICK_ACTION_COPY.emptyDescription}
+          className="py-14"
+        />
+      ) : (
+        <div className="space-y-5 bg-gray-50/50 p-4">
+          {groups.map((group) => {
+            const groupOverdue = group.actions.filter((i) => i.action.urgency === "overdue").length;
+            return (
+              <section key={group.category} className="rounded-2xl border border-gray-200 bg-white p-3">
+                <div className="mb-3 flex items-center justify-between gap-3 px-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-gray-700">{group.label}</span>
+                    <DashboardBadge tone={groupOverdue > 0 ? "red" : "blue"}>
+                      {group.actions.length}
+                    </DashboardBadge>
+                  </div>
+                  {groupOverdue > 0 && (
+                    <span className="text-[11px] font-semibold text-red-600">
+                      {groupOverdue} באיחור
+                    </span>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  {group.actions.map(({ action, index }) => {
+                    const isLoading = activeActionKey === action.uiKey;
+                    return (
+                      <QuickActionButton
+                        key={action.uiKey}
+                        action={action}
+                        isLoading={isLoading}
+                        isDisabled={activeActionKey !== null && !isLoading}
+                        index={index}
+                        onQuickAction={onQuickAction}
+                      />
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      )}
+    </DashboardPanel>
   );
 };
 
