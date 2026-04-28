@@ -2,7 +2,7 @@ export const ADVISOR_TODAY_COPY = {
   title: "מה לעשות היום",
   loading: "טוען משימות...",
   pendingCount: (count: number) => `${count} פריטים ממתינים לטיפול`,
-  taxDeadlinesTitle: "מועדי מס השבוע",
+  taxDeadlinesTitle: "מועדי מס החודש",
   taxDeadlinesEmpty: "אין מועדים קרובים",
   stuckReportsTitle: "דוחות תקועים",
   stuckReportsEmpty: "אין דוחות תקועים",
@@ -11,7 +11,7 @@ export const ADVISOR_TODAY_COPY = {
 } as const;
 
 export const ADVISOR_TODAY_LIMITS = {
-  upcomingDeadlineDays: 7,
+  upcomingDeadlineDays: 30,
   staleReminderDays: 7,
   stuckReportDays: 14,
   taxDeadlinePageSize: 50,
