@@ -3,7 +3,7 @@ import { Bell, CalendarClock } from "lucide-react";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
 import {
-  AttentionPanelV2,
+  AttentionPanel,
   DashboardStatsGrid,
   SeasonSummaryWidget,
   useDashboardPage,
@@ -15,7 +15,7 @@ import {
   attentionSectionsToPanelSections,
   quickActionsToPanelSections,
   type PanelSection,
-} from "../utils";
+} from "../attentionPanelSections";
 
 const StatsSkeleton = () => (
   <div className="grid animate-pulse grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -25,7 +25,7 @@ const StatsSkeleton = () => (
   </div>
 );
 
-export const Dashboard: React.FC = () => {
+export const DashboardPage: React.FC = () => {
   const {
     activeQuickAction,
     attentionItems,
@@ -101,13 +101,13 @@ export const Dashboard: React.FC = () => {
       {dashboard.status === "loading" ? (
         <div className="h-80 animate-pulse rounded-2xl bg-gray-100" />
       ) : isAdvisorView ? (
-        <AttentionPanelV2
+        <AttentionPanel
           sections={attentionSections}
           activeActionKey={activeQuickAction}
           onAction={handleQuickAction}
         />
       ) : (
-        <AttentionPanelV2 sections={attentionSections} />
+        <AttentionPanel sections={attentionSections} />
       )}
 
       <ConfirmDialog

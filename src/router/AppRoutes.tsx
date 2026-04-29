@@ -11,7 +11,7 @@ import { Binders } from "../features/binders";
 import { Charges } from "../features/charges";
 import { ClientDetails, Clients } from "../features/clients";
 import { BusinessDetails } from "../features/businesses";
-import { Dashboard } from "../features/dashboard";
+import { DashboardPage } from "../features/dashboard";
 import { Navbar } from "../components/layout/Navbar";
 import { Sidebar } from "../components/layout/Sidebar/Sidebar";
 import { PageLayout } from "../components/layout/PageLayout";
@@ -83,7 +83,7 @@ export const AppRoutes: React.FC = () => {
 
         <Route path="/" element={<ProtectedRoute />}>
           <Route element={<AuthenticatedLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route index element={<DashboardPage />} />
             <Route path="binders" element={<Binders />} />
             <Route path="clients" element={<Clients />} />
             <Route path="clients/:clientId" element={<ClientDetails />} />

@@ -3,7 +3,7 @@ import type { taxDeadlinesApi } from "@/features/taxDeadlines";
 import type { remindersApi } from "@/features/reminders";
 import { formatDate } from "@/utils/utils";
 import { ADVISOR_TODAY_LIMITS, DASHBOARD_DEADLINE_LABELS } from "./advisorTodayConstants";
-import type { SectionItem } from "./utils";
+import type { SectionItem } from "./attentionPanelSections";
 
 type TaxDeadlineItems = NonNullable<Awaited<ReturnType<typeof taxDeadlinesApi.listTaxDeadlines>>["items"]>;
 type ReminderItems = NonNullable<Awaited<ReturnType<typeof remindersApi.list>>["items"]>;

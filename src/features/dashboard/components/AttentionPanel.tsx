@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, ChevronDown, ShieldAlert, Zap } from "lucide-react";
 import { cn } from "@/utils/utils";
 import type { ActionCommand } from "@/lib/actions/types";
-import type { PanelItem, PanelSection } from "../utils";
-import type { AttentionTone } from "../utils";
+import type { PanelItem, PanelSection } from "../attentionPanelSections";
+import type { AttentionTone } from "../attentionPanelSections";
 import {
   DashboardEmptyState,
   DashboardPanel,
@@ -112,17 +112,17 @@ const ActionRow = ({ item, tone, activeActionKey, onAction }: ActionRowProps) =>
   );
 };
 
-interface AttentionPanelV2Props {
+interface AttentionPanelProps {
   sections: PanelSection[];
   activeActionKey?: string | null;
   onAction?: (action: ActionCommand) => void;
 }
 
-export const AttentionPanelV2 = ({
+export const AttentionPanel = ({
   sections,
   activeActionKey = null,
   onAction,
-}: AttentionPanelV2Props) => {
+}: AttentionPanelProps) => {
   const filledSections = sections.filter((s) => s.items.length > 0);
   const totalItems = filledSections.reduce((n, s) => n + s.items.length, 0);
 
@@ -134,7 +134,11 @@ export const AttentionPanelV2 = ({
   const toggleGroup = (key: string) =>
     setExpandedGroups((prev) => {
       const next = new Set(prev);
-      next.has(key) ? next.delete(key) : next.add(key);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
       return next;
     });
 
@@ -266,4 +270,4 @@ export const AttentionPanelV2 = ({
   );
 };
 
-AttentionPanelV2.displayName = "AttentionPanelV2";
+AttentionPanel.displayName = "AttentionPanel";

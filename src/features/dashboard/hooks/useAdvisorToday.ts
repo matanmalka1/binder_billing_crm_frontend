@@ -4,7 +4,7 @@ import { taxDeadlinesApi } from "@/features/taxDeadlines";
 import { remindersApi } from "@/features/reminders";
 import { dashboardQK } from "../api";
 import { useRole } from "../../../hooks/useRole";
-import type { SectionItem } from "../utils";
+import type { SectionItem } from "../attentionPanelSections";
 import { ADVISOR_TODAY_LIMITS } from "../advisorTodayConstants";
 import {
   buildDeadlineItems,
@@ -50,7 +50,5 @@ export const useAdvisorToday = () => {
     [remindersQuery.data, staleReminderDate],
   );
 
-  const isLoading = isAdvisor && (deadlinesQuery.isPending || remindersQuery.isPending);
-
-  return { isLoading, deadlineItems, reminderItems };
+  return { deadlineItems, reminderItems };
 };

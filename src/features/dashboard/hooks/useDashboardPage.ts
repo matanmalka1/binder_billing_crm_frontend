@@ -12,7 +12,7 @@ import { useRole } from "../../../hooks/useRole";
 import { useActionRunner } from "@/features/actions";
 import type { StatItem } from "../components/DashboardStatsGrid";
 import { DASHBOARD_COPY } from "../dashboardConstants";
-import { buildDashboardStats } from "../statsBuilder";
+import { buildDashboardStats } from "../dashboardStats";
 
 type DashboardData =
   | (DashboardOverviewResponse & { role_view: "advisor" })
