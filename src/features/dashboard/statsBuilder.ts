@@ -1,8 +1,6 @@
 import { Bell, FileText, FolderOpen, Users } from "lucide-react";
 import type { DashboardOverviewResponse } from "./api";
 import type { StatItem } from "./components/DashboardStatsGrid";
-import { DASHBOARD_STATS_LABELS } from "./statsConstants";
-import { DASHBOARD_STAT_HREFS, buildVatReportsHref, type VatReportsPeriodType } from "./statsNavigation";
 
 type DashboardStatsData = Pick<
   DashboardOverviewResponse,
@@ -15,29 +13,18 @@ type DashboardStatsData = Pick<
   | "vat_stats"
 >;
 
-const formatVatValue = (submitted: number, required: number) =>
-  `הוגשו ${submitted.toLocaleString("he-IL")} מתוך ${required.toLocaleString("he-IL")}`;
+type VatPeriodType = "monthly" | "bimonthly";
 
-const formatPendingValue = (pending: number) =>
-  `${pending.toLocaleString("he-IL")} ממתינים להגשה`;
+const withParams = (base: string, params: Record<string, string>) =>
+  `${base}?${new URLSearchParams(params).toString()}`;
 
-const formatVatDescription = (stat: DashboardStatsData["vat_stats"]["monthly"]) =>
-  `${formatVatValue(stat.submitted, stat.required)} · ${stat.period_label}`;
-
-const formatReminderValue = (count: number) =>
-  `${count.toLocaleString("he-IL")} ${DASHBOARD_STATS_LABELS.remindersValueSuffix}`;
-
-const formatActiveClientsValue = (count: number) =>
-  `${count.toLocaleString("he-IL")} לקוחות פעילים`;
-
-const formatClientsDescription = (total: number) =>
-  `מתוך ${total.toLocaleString("he-IL")} סך הכל`;
-
-const formatBindersInOfficeValue = (count: number) =>
-  `${count.toLocaleString("he-IL")} קלסרים במשרד`;
-
-const formatBindersDescription = (activeBinders: number) =>
-  `מתוך ${activeBinders.toLocaleString("he-IL")} קלסרים פעילים`;
+const HREFS = {
+  activeClients: withParams("/clients", { status: "active" }),
+  bindersInOffice: withParams("/binders", { status: "in_office" }),
+  remindersReady: withParams("/reminders", { status: "pending", due: "ready" }),
+  vat: (period: string, periodType: VatPeriodType) =>
+    withParams("/tax/vat", { period, period_type: periodType }),
+};
 
 const vatVariant = (pending: number): StatItem["variant"] =>
   pending > 0 ? "red" : "green";
@@ -46,63 +33,52 @@ const buildVatStat = (
   key: string,
   title: string,
   stat: DashboardStatsData["vat_stats"]["monthly"],
-  periodType: VatReportsPeriodType,
+  periodType: VatPeriodType,
 ): StatItem => ({
   key,
   title,
-  value: formatPendingValue(stat.pending),
-  description: formatVatDescription(stat),
+  value: `${stat.pending.toLocaleString("he-IL")} ממתינים להגשה`,
+  description: `הוגשו ${stat.submitted.toLocaleString("he-IL")} מתוך ${stat.required.toLocaleString("he-IL")} · ${stat.period_label}`,
   icon: FileText,
   variant: vatVariant(stat.pending),
   urgent: stat.pending > 0,
-  href: buildVatReportsHref(stat.period, periodType),
+  href: HREFS.vat(stat.period, periodType),
   progress: stat.completion_percent,
-  actionLabel: DASHBOARD_STATS_LABELS.vatAction,
+  actionLabel: 'פתח דוחות מע״מ',
 });
 
 export const buildDashboardStats = (data: DashboardStatsData): StatItem[] => [
   {
     key: "active_clients",
-    title: DASHBOARD_STATS_LABELS.activeClientsTitle,
-    value: formatActiveClientsValue(data.active_clients),
-    description: formatClientsDescription(data.total_clients),
+    title: "לקוחות",
+    value: `${data.active_clients.toLocaleString("he-IL")} לקוחות פעילים`,
+    description: `מתוך ${data.total_clients.toLocaleString("he-IL")} סך הכל`,
     icon: Users,
     variant: "purple",
-    href: DASHBOARD_STAT_HREFS.activeClients,
-    actionLabel: DASHBOARD_STATS_LABELS.activeClientsAction,
+    href: HREFS.activeClients,
+    actionLabel: "פתח לקוחות פעילים",
   },
   {
     key: "in_office",
-    title: DASHBOARD_STATS_LABELS.bindersTitle,
-    value: formatBindersInOfficeValue(data.binders_in_office),
-    description: formatBindersDescription(data.active_binders),
+    title: "קלסרים במשרד",
+    value: `${data.binders_in_office.toLocaleString("he-IL")} קלסרים במשרד`,
+    description: `מתוך ${data.active_binders.toLocaleString("he-IL")} קלסרים פעילים`,
     icon: FolderOpen,
     variant: "blue",
-    href: DASHBOARD_STAT_HREFS.bindersInOffice,
-    actionLabel: DASHBOARD_STATS_LABELS.bindersAction,
+    href: HREFS.bindersInOffice,
+    actionLabel: "פתח קלסרים במשרד",
   },
-
   {
     key: "ready_reminders",
-    title: DASHBOARD_STATS_LABELS.remindersTitle,
-    value: formatReminderValue(data.open_reminders),
-    description: DASHBOARD_STATS_LABELS.remindersDescription,
+    title: "תזכורות לטיפול",
+    value: `${data.open_reminders.toLocaleString("he-IL")} לטיפול עכשיו`,
+    description: "כולל תזכורות שהגיע מועד השליחה שלהן",
     icon: Bell,
     variant: "amber",
     urgent: data.open_reminders > 0,
-    href: DASHBOARD_STAT_HREFS.remindersReady,
-    actionLabel: DASHBOARD_STATS_LABELS.remindersAction,
+    href: HREFS.remindersReady,
+    actionLabel: "פתח תזכורות",
   },
-    buildVatStat(
-    "monthly_vat",
-    DASHBOARD_STATS_LABELS.monthlyVatTitle,
-    data.vat_stats.monthly,
-    "monthly",
-  ),
-  buildVatStat(
-    "bimonthly_vat",
-    DASHBOARD_STATS_LABELS.bimonthlyVatTitle,
-    data.vat_stats.bimonthly,
-    "bimonthly",
-  ),
+  buildVatStat("monthly_vat", 'מע״מ חודשי', data.vat_stats.monthly, "monthly"),
+  buildVatStat("bimonthly_vat", 'מע״מ דו־חודשי', data.vat_stats.bimonthly, "bimonthly"),
 ];

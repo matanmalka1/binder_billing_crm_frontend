@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { taxDeadlinesApi } from "@/features/taxDeadlines";
-import { annualReportsApi } from "@/features/annualReports";
 import { remindersApi } from "@/features/reminders";
 import { dashboardQK } from "../api";
 import { useRole } from "../../../hooks/useRole";
@@ -10,7 +9,6 @@ import { ADVISOR_TODAY_LIMITS } from "../advisorTodayConstants";
 import {
   buildDeadlineItems,
   buildReminderItems,
-  buildStuckReportItems,
   getAdvisorTodayDateAnchors,
 } from "../advisorTodayHelpers";
 
@@ -31,17 +29,6 @@ export const useAdvisorToday = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  const reportsQuery = useQuery({
-    enabled: isAdvisor,
-    queryKey: dashboardQK.advisorToday.reports,
-    queryFn: () =>
-      annualReportsApi.listReports({
-        page: 1,
-        page_size: ADVISOR_TODAY_LIMITS.annualReportsPageSize,
-      }),
-    staleTime: 5 * 60 * 1000,
-  });
-
   const remindersQuery = useQuery({
     enabled: isAdvisor,
     queryKey: dashboardQK.advisorToday.reminders,
@@ -54,33 +41,16 @@ export const useAdvisorToday = () => {
   });
 
   const deadlineItems = useMemo<SectionItem[]>(
-    () =>
-      buildDeadlineItems(deadlinesQuery.data?.items ?? [], today, weekEnd),
+    () => buildDeadlineItems(deadlinesQuery.data?.items ?? [], today, weekEnd),
     [deadlinesQuery.data, today, weekEnd],
   );
 
-  const stuckReportItems = useMemo<SectionItem[]>(
-    () =>
-      buildStuckReportItems(reportsQuery.data?.items ?? []),
-    [reportsQuery.data],
-  );
-
   const reminderItems = useMemo<SectionItem[]>(
-    () =>
-      buildReminderItems(remindersQuery.data?.items ?? [], staleReminderDate),
+    () => buildReminderItems(remindersQuery.data?.items ?? [], staleReminderDate),
     [remindersQuery.data, staleReminderDate],
   );
 
-  const isLoading =
-    isAdvisor &&
-    (deadlinesQuery.isPending ||
-      reportsQuery.isPending ||
-      remindersQuery.isPending);
+  const isLoading = isAdvisor && (deadlinesQuery.isPending || remindersQuery.isPending);
 
-  return {
-    isLoading,
-    deadlineItems,
-    stuckReportItems,
-    reminderItems,
-  };
+  return { isLoading, deadlineItems, reminderItems };
 };

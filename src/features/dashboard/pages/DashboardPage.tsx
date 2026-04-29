@@ -1,31 +1,27 @@
+import { useMemo } from "react";
+import { Bell, CalendarClock } from "lucide-react";
 import { Alert } from "@/components/ui/overlays/Alert";
 import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
 import {
-  AdvisorTodayCard,
-  AttentionPanel,
+  AttentionPanelV2,
   DashboardStatsGrid,
-  OperationalPanel,
   SeasonSummaryWidget,
   useDashboardPage,
 } from "@/features/dashboard";
 import { DASHBOARD_COPY, DASHBOARD_LOADING_CARD_COUNT } from "../dashboardConstants";
 import { DashboardSurface } from "../components/DashboardPrimitives";
+import { useAdvisorToday } from "../hooks/useAdvisorToday";
+import {
+  attentionSectionsToPanelSections,
+  quickActionsToPanelSections,
+  type PanelSection,
+} from "../utils";
 
 const StatsSkeleton = () => (
   <div className="grid animate-pulse grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-    {Array.from({ length: DASHBOARD_LOADING_CARD_COUNT }, (_, index) => (
-      <div key={index} className="h-32 rounded-xl bg-gray-100" />
+    {Array.from({ length: DASHBOARD_LOADING_CARD_COUNT }, (_, i) => (
+      <div key={i} className="h-32 rounded-xl bg-gray-100" />
     ))}
-  </div>
-);
-
-const AdvisorSkeleton = () => (
-  <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
-    <div className="h-80 animate-pulse rounded-2xl bg-gray-100" />
-    <div className="space-y-5">
-      <div className="h-28 animate-pulse rounded-2xl bg-gray-100" />
-      <div className="h-64 animate-pulse rounded-2xl bg-gray-100" />
-    </div>
   </div>
 );
 
@@ -43,6 +39,45 @@ export const Dashboard: React.FC = () => {
     quickActions,
     stats,
   } = useDashboardPage();
+
+  const { deadlineItems, reminderItems } = useAdvisorToday();
+
+  const attentionSections = useMemo<PanelSection[]>(() => {
+    const base = attentionSectionsToPanelSections(attentionItems);
+    if (!isAdvisorView) return base;
+
+    return [
+      ...base,
+      {
+        key: "deadlines",
+        title: "מועדי הגשה החודש",
+        icon: CalendarClock,
+        tone: "amber",
+        viewAllHref: "/tax/deadlines",
+        items: deadlineItems.map((item) => ({
+          id: item.id,
+          label: item.label,
+          sublabel: item.sublabel,
+          href: item.href ?? "/tax/deadlines",
+        })),
+      },
+      {
+        key: "open_reminders",
+        title: "תזכורות פתוחות",
+        icon: Bell,
+        tone: "blue",
+        viewAllHref: "/reminders",
+        items: reminderItems.map((item) => ({
+          id: item.id,
+          label: item.label,
+          sublabel: item.sublabel,
+          href: item.href ?? "/reminders",
+        })),
+      },
+      ...(quickActions?.length ? quickActionsToPanelSections(quickActions) : []),
+    ];
+  }, [attentionItems, deadlineItems, reminderItems, quickActions, isAdvisorView]);
+
   return (
     <DashboardSurface>
       <div className="px-1">
@@ -50,9 +85,7 @@ export const Dashboard: React.FC = () => {
         <p className="mt-1 text-sm text-gray-500">{DASHBOARD_COPY.pageSubtitle}</p>
       </div>
 
-      {denied && (
-        <Alert variant="warning" message={DASHBOARD_COPY.permissionDenied} />
-      )}
+      {denied && <Alert variant="warning" message={DASHBOARD_COPY.permissionDenied} />}
       {dashboard.status === "error" && !denied && (
         <Alert variant="error" message={dashboard.message} />
       )}
@@ -66,29 +99,17 @@ export const Dashboard: React.FC = () => {
       ) : null}
 
       {dashboard.status === "loading" ? (
-        <AdvisorSkeleton />
+        <div className="h-80 animate-pulse rounded-2xl bg-gray-100" />
       ) : isAdvisorView ? (
-        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
-          <div>
-            {quickActions && (
-              <OperationalPanel
-                quickActions={quickActions}
-                activeActionKey={activeQuickAction}
-                onQuickAction={handleQuickAction}
-              />
-            )}
-          </div>
-          <aside className="space-y-5">
-            <AdvisorTodayCard />
-          </aside>
-        </div>
-      ) : null}
-
-      {dashboard.status === "loading" ? (
-        <div className="h-56 animate-pulse rounded-2xl bg-gray-100" />
+        <AttentionPanelV2
+          sections={attentionSections}
+          activeActionKey={activeQuickAction}
+          onAction={handleQuickAction}
+        />
       ) : (
-        <AttentionPanel items={attentionItems} />
+        <AttentionPanelV2 sections={attentionSections} />
       )}
+
       <ConfirmDialog
         open={Boolean(pendingQuickAction)}
         title={pendingQuickAction?.confirm?.title || DASHBOARD_COPY.confirmTitle}
