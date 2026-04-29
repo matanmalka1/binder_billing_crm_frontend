@@ -57,6 +57,8 @@ export const Dashboard: React.FC = () => {
         <Alert variant="error" message={dashboard.message} />
       )}
 
+      {isAdvisorView && <SeasonSummaryWidget />}
+
       {dashboard.status === "loading" ? (
         <StatsSkeleton />
       ) : dashboard.status === "ok" ? (
@@ -77,7 +79,6 @@ export const Dashboard: React.FC = () => {
             )}
           </div>
           <aside className="space-y-5">
-            <SeasonSummaryWidget />
             <AdvisorTodayCard />
           </aside>
         </div>

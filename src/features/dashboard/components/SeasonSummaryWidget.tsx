@@ -12,7 +12,32 @@ export const SeasonSummaryWidget: React.FC = () => {
     return <div className="h-28 animate-pulse rounded-2xl bg-gray-100" />;
   }
 
-  if (!stats || stats.total === 0) return null;
+  if (!stats || stats.total === 0) {
+    return (
+      <DashboardPanel>
+        <Link
+          to="/tax/reports"
+          className="group block p-5 transition-colors hover:bg-slate-50/70"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="truncate text-xs font-semibold text-gray-400">
+                עונת הגשה
+              </p>
+              <h3 className="mt-1 text-lg font-bold text-gray-950">
+                אין דוחות פעילים
+              </h3>
+            </div>
+
+            <DashboardBadge tone="neutral">
+              <TrendingUp className="ml-1 h-3.5 w-3.5" />
+              0%
+            </DashboardBadge>
+          </div>
+        </Link>
+      </DashboardPanel>
+    );
+  }
 
   return (
     <DashboardPanel>
