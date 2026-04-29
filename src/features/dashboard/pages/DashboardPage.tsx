@@ -10,7 +10,6 @@ import {
 } from "@/features/dashboard";
 import { DASHBOARD_COPY, DASHBOARD_LOADING_CARD_COUNT } from "../dashboardConstants";
 import { DashboardSurface } from "../components/DashboardPrimitives";
-import { useAdvisorToday } from "../hooks/useAdvisorToday";
 import {
   attentionSectionsToPanelSections,
   quickActionsToPanelSections,
@@ -37,10 +36,9 @@ export const DashboardPage: React.FC = () => {
     cancelPendingAction,
     pendingQuickAction,
     quickActions,
+    advisorToday,
     stats,
   } = useDashboardPage();
-
-  const { deadlineItems, reminderItems } = useAdvisorToday();
 
   const attentionSections = useMemo<PanelSection[]>(() => {
     const base = attentionSectionsToPanelSections(attentionItems);
@@ -54,10 +52,10 @@ export const DashboardPage: React.FC = () => {
         icon: CalendarClock,
         tone: "amber",
         viewAllHref: "/tax/deadlines",
-        items: deadlineItems.map((item) => ({
+        items: (advisorToday?.deadline_items ?? []).map((item) => ({
           id: `deadline-${item.id}`,
           label: item.label,
-          sublabel: item.sublabel,
+          sublabel: item.sublabel ?? undefined,
           href: item.href ?? "/tax/deadlines",
           meta: item.description
             ? { description: item.description }
@@ -70,16 +68,16 @@ export const DashboardPage: React.FC = () => {
         icon: Bell,
         tone: "blue",
         viewAllHref: "/reminders",
-        items: reminderItems.map((item) => ({
+        items: (advisorToday?.reminder_items ?? []).map((item) => ({
           id: `reminder-${item.id}`,
           label: item.label,
-          sublabel: item.sublabel,
+          sublabel: item.sublabel ?? undefined,
           href: item.href ?? "/reminders",
         })),
       },
       ...(quickActions?.length ? quickActionsToPanelSections(quickActions) : []),
     ];
-  }, [attentionItems, deadlineItems, reminderItems, quickActions, isAdvisorView]);
+  }, [attentionItems, advisorToday, quickActions, isAdvisorView]);
 
   return (
     <DashboardSurface>

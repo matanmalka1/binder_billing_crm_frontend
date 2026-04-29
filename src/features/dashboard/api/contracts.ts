@@ -42,6 +42,19 @@ export interface AttentionResponse {
   total: number;
 }
 
+export interface AdvisorTodayItem {
+  id: number;
+  label: string;
+  sublabel?: string | null;
+  description?: string | null;
+  href?: string | null;
+}
+
+export interface AdvisorTodayResponse {
+  deadline_items: AdvisorTodayItem[];
+  reminder_items: AdvisorTodayItem[];
+}
+
 export interface DashboardOverviewResponse {
   total_clients: number;
   active_clients: number;
@@ -52,6 +65,7 @@ export interface DashboardOverviewResponse {
   vat_stats: VatDashboardStats;
   quick_actions: BackendAction[];
   attention: AttentionResponse;
+  advisor_today: AdvisorTodayResponse;
 }
 
 export interface DashboardSummaryResponse {

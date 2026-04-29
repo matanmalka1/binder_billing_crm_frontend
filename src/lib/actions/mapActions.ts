@@ -36,6 +36,7 @@ export const mapActions = (
         binderNumber: action.binder_number ?? null,
         category: action.category ?? null,
         dueLabel: action.due_label ?? null,
+        description: action.description ?? null,
         urgency: action.urgency ?? null,
         dueDate: action.due_date ?? null,
       } as ActionCommand;

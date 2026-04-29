@@ -129,6 +129,7 @@ export const useDashboardPage = () => {
   }, [dashboard]);
   const isAdvisorView = dashboard.status === "ok" && dashboard.data?.role_view === "advisor";
   const quickActions = isOverviewData(dashboard.data) ? dashboard.data.quick_actions : undefined;
+  const advisorToday = isOverviewData(dashboard.data) ? dashboard.data.advisor_today : undefined;
 
   const handleQuickAction = useCallback(
     (action: ActionCommand) => {
@@ -161,6 +162,7 @@ export const useDashboardPage = () => {
     confirmPendingAction,
     pendingQuickAction,
     quickActions,
+    advisorToday,
     cancelPendingAction,
     isAdvisorView,
     stats,

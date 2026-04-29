@@ -159,11 +159,7 @@ export const quickActionsToPanelSections = (rawActions: BackendAction[]): PanelS
           label: a.action.clientName ?? a.action.binderNumber ?? a.label,
           sublabel: a.dueLabel ?? QA_CATEGORY_LABELS[cat] ?? undefined,
           href: meta.href,
-          meta: a.urgency === "overdue"
-            ? { badge: "באיחור", badgeTone: "red" as AttentionTone }
-            : a.urgency === "upcoming"
-              ? { badge: "מתקרב", badgeTone: "amber" as AttentionTone }
-              : undefined,
+          meta: a.action.description ? { description: a.action.description } : undefined,
           actions: [a],
         })),
       } satisfies PanelSection;
