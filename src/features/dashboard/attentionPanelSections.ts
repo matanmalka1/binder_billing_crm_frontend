@@ -10,6 +10,7 @@ export interface SectionItem {
   id: number;
   label: string;
   sublabel?: string;
+  description?: string;
   href?: string;
 }
 
@@ -77,6 +78,11 @@ const getAttentionItemHref = (item: AttentionItem, fallback: string): string => 
   return fallback;
 };
 
+const getChargeItemDescription = (item: AttentionItem): string | undefined => {
+  if (item.item_type !== "unpaid_charge") return undefined;
+  return item.charge_subject ?? undefined;
+};
+
 export const attentionSectionsToPanelSections = (items: AttentionItem[]): PanelSection[] => {
   const visible = items.filter((i) => KNOWN_ATTENTION_TYPES.has(i.item_type));
   return ATTENTION_SECTIONS.map((section) => ({
@@ -95,6 +101,7 @@ export const attentionSectionsToPanelSections = (items: AttentionItem[]): PanelS
         meta: {
           tag: i.item_type === "unpaid_charges" ? "מרובות" : undefined,
           tagTone: "amber" as AttentionTone,
+          description: getChargeItemDescription(i),
         },
       })),
   }));
@@ -150,7 +157,7 @@ export const quickActionsToPanelSections = (rawActions: BackendAction[]): PanelS
         items: catActions.map((a, idx) => ({
           id: `${cat}-${a.uiKey}-${idx}`,
           label: a.action.clientName ?? a.action.binderNumber ?? a.label,
-          sublabel: a.dueLabel ?? undefined,
+          sublabel: a.dueLabel ?? QA_CATEGORY_LABELS[cat] ?? undefined,
           href: meta.href,
           meta: a.urgency === "overdue"
             ? { badge: "באיחור", badgeTone: "red" as AttentionTone }

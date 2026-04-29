@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, ChevronDown, ShieldAlert } from "lucide-react";
 import { cn } from "@/utils/utils";
@@ -84,6 +84,11 @@ const RowCard = ({ item, tone, activeActionKey, onAction }: RowCardProps) => {
             </span>
           )}
         </div>
+        {meta?.description && (
+          <p className="mt-1 truncate text-xs font-medium text-gray-600">
+            {meta.description}
+          </p>
+        )}
       </div>
 
       {/* LEFT: action button or arrow */}
@@ -158,6 +163,16 @@ export const AttentionPanel = ({
 
   const activeSection = filledSections.find((s) => s.key === activeTab);
 
+  useEffect(() => {
+    if (filledSections.length === 0) {
+      setActiveTab("");
+      return;
+    }
+    if (!filledSections.some((s) => s.key === activeTab)) {
+      setActiveTab(filledSections[0].key);
+    }
+  }, [activeTab, filledSections]);
+
   const toggleGroup = (key: string) =>
     setExpandedGroups((prev) => {
       const next = new Set(prev);
@@ -230,7 +245,7 @@ export const AttentionPanel = ({
 
               return (
                 <>
-                  <div className="divide-y divide-gray-100">
+                  <div key={activeSection.key} className="divide-y divide-gray-100">
                     {visibleItems.map((item) => (
                       <RowCard
                         key={item.id}

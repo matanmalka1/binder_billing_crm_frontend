@@ -6,9 +6,9 @@ export const ADVISOR_TODAY_LIMITS = {
   reminderPreviewLength: 48,
 } as const;
 
-export const DASHBOARD_DEADLINE_LABELS: Record<string, string> = {
-  vat: "דיווח מע״מ תקופתי",
-  advance_payment: "מקדמות מס הכנסה",
-  national_insurance: "מועד תשלום ביטוח לאומי",
-  annual_report: "הגשת דוחות שנתיים",
+export const DASHBOARD_DEADLINE_COPY: Record<string, { title: string; action: string }> = {
+  vat: { title: "מע״מ", action: "הגשה ותשלום" },
+  advance_payment: { title: "מס הכנסה", action: "תשלום מקדמות" },
+  national_insurance: { title: "ביטוח לאומי", action: "תשלום מקדמות" },
+  annual_report: { title: "דוחות שנתיים", action: "הגשה" },
 };

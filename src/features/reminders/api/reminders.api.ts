@@ -16,6 +16,7 @@ export const remindersApi = {
     status?: ReminderStatus;
     due?: ReminderDueFilter;
     client_record_id?: number;
+    created_before?: string;
   }): Promise<RemindersListResponse> => {
     const response = await api.get<RemindersListResponse>(REMINDER_ENDPOINTS.reminders, { params });
     return response.data;

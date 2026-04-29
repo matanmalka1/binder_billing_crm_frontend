@@ -55,10 +55,13 @@ export const DashboardPage: React.FC = () => {
         tone: "amber",
         viewAllHref: "/tax/deadlines",
         items: deadlineItems.map((item) => ({
-          id: item.id,
+          id: `deadline-${item.id}`,
           label: item.label,
+          sublabel: item.sublabel,
           href: item.href ?? "/tax/deadlines",
-          meta: { tag: item.sublabel, tagTone: "amber" as const },
+          meta: item.description
+            ? { description: item.description }
+            : undefined,
         })),
       },
       {
@@ -68,7 +71,7 @@ export const DashboardPage: React.FC = () => {
         tone: "blue",
         viewAllHref: "/reminders",
         items: reminderItems.map((item) => ({
-          id: item.id,
+          id: `reminder-${item.id}`,
           label: item.label,
           sublabel: item.sublabel,
           href: item.href ?? "/reminders",
