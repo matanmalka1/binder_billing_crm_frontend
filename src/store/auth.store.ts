@@ -23,36 +23,17 @@ const getInitialTarget = (): "local" | "session" => {
 
 const storageTarget = { current: getInitialTarget() };
 
-const stripTokenFromPersistedState = (
-  rawValue: string,
-  storage: Storage,
-  key: string,
-): string => {
-  try {
-    const parsed = JSON.parse(rawValue);
-    if (parsed?.state?.token) {
-      delete parsed.state.token;
-      const sanitized = JSON.stringify(parsed);
-      storage.setItem(key, sanitized);
-      return sanitized;
-    }
-  } catch {
-    // ignore parse errors and fall back to raw value
-  }
-  return rawValue;
-};
-
 const dynamicStorage: StateStorage = {
   getItem: (name) => {
     try {
       const localValue = localStorage.getItem(name);
       if (localValue) {
-        return stripTokenFromPersistedState(localValue, localStorage, name);
+        return localValue;
       }
 
       const sessionValue = sessionStorage.getItem(name);
       if (sessionValue) {
-        return stripTokenFromPersistedState(sessionValue, sessionStorage, name);
+        return sessionValue;
       }
       return null;
     } catch {
@@ -90,6 +71,7 @@ export const useAuthStore = create<AuthState>()(
     persist(
       (set) => ({
         user: null,
+        token: null,
         isLoading: false,
         error: null,
 
@@ -99,15 +81,17 @@ export const useAuthStore = create<AuthState>()(
 
           try {
             const response = await authApi.login({ email, password, rememberMe });
-            const { user } = response;
+            const { token, user } = response;
 
             set({
+              token,
               user,
               error: null,
               isLoading: false,
             });
           } catch (error: unknown) {
             set({
+              token: null,
               user: null,
               error: getErrorMessage(error, "שגיאה בהתחברות"),
               isLoading: false,
@@ -122,6 +106,7 @@ export const useAuthStore = create<AuthState>()(
             // Even if cookie clearing fails, drop local session state
           } finally {
             set({
+              token: null,
               user: null,
               isLoading: false,
               error: null,
@@ -133,6 +118,7 @@ export const useAuthStore = create<AuthState>()(
 
         resetSession: () => {
           set({
+            token: null,
             user: null,
             isLoading: false,
             error: null,
@@ -142,7 +128,7 @@ export const useAuthStore = create<AuthState>()(
       {
         name: AUTH_STORAGE_KEY,
         storage: createJSONStorage(() => dynamicStorage),
-        partialize: (state) => ({ user: state.user }),
+        partialize: (state) => ({ token: state.token, user: state.user }),
         onRehydrateStorage: () => () => {
           try {
             if (typeof window === "undefined") return;

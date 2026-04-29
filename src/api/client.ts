@@ -18,7 +18,31 @@ export const api = axios.create({
   withCredentials: true,
 });
 
+const getPersistedAuthToken = (): string | null => {
+  try {
+    const rawValue =
+      localStorage.getItem(AUTH_STORAGE_KEY) ??
+      sessionStorage.getItem(AUTH_STORAGE_KEY);
+    if (!rawValue) return null;
+
+    const parsed = JSON.parse(rawValue);
+    return typeof parsed?.state?.token === "string"
+      ? parsed.state.token
+      : null;
+  } catch {
+    return null;
+  }
+};
+
 let authExpiryRefCount = 0;
+
+api.interceptors.request.use((config) => {
+  const token = getPersistedAuthToken();
+  if (token && !config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 api.interceptors.response.use(
   (response) => response,
