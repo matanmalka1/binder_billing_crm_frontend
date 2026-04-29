@@ -26,6 +26,14 @@ export interface PanelItem {
   label: string;
   sublabel?: string;
   href: string;
+  /** Section-specific metadata for richer row rendering */
+  meta?: {
+    tag?: string;           // pill text (e.g. due date, period)
+    tagTone?: AttentionTone;
+    badge?: string;         // small badge (e.g. "באיחור")
+    badgeTone?: AttentionTone;
+    description?: string;   // secondary line below sublabel
+  };
   actions?: PanelItemAction[];
 }
 
@@ -84,6 +92,10 @@ export const attentionSectionsToPanelSections = (items: AttentionItem[]): PanelS
         label: i.client_name ?? "",
         sublabel: i.description,
         href: getAttentionItemHref(i, section.viewAllHref),
+        meta: {
+          tag: i.item_type === "unpaid_charges" ? "מרובות" : undefined,
+          tagTone: "amber" as AttentionTone,
+        },
       })),
   }));
 };
@@ -127,14 +139,7 @@ export const quickActionsToPanelSections = (rawActions: BackendAction[]): PanelS
     .filter((cat) => grouped.has(cat))
     .map((cat) => {
       const catActions = grouped.get(cat)!;
-      const overdueCount = catActions.filter((a) => a.urgency === "overdue").length;
       const meta = QA_CATEGORY_META[cat] ?? DEFAULT_META;
-
-      const byClient = new Map<string, PanelItemAction[]>();
-      for (const a of catActions) {
-        const key = a.action.clientName ?? a.action.uiKey;
-        byClient.set(key, [...(byClient.get(key) ?? []), a]);
-      }
 
       return {
         key: cat,
@@ -142,12 +147,17 @@ export const quickActionsToPanelSections = (rawActions: BackendAction[]): PanelS
         icon: meta.icon,
         tone: meta.tone,
         viewAllHref: meta.href,
-        items: [...byClient.entries()].map(([clientKey, clientActions], idx) => ({
-          id: `${cat}-${clientKey}-${idx}`,
-          label: clientActions[0].action.clientName ?? clientKey,
-          sublabel: overdueCount > 0 ? `${overdueCount} באיחור` : undefined,
+        items: catActions.map((a, idx) => ({
+          id: `${cat}-${a.uiKey}-${idx}`,
+          label: a.action.clientName ?? a.action.binderNumber ?? a.label,
+          sublabel: a.dueLabel ?? undefined,
           href: meta.href,
-          actions: clientActions,
+          meta: a.urgency === "overdue"
+            ? { badge: "באיחור", badgeTone: "red" as AttentionTone }
+            : a.urgency === "upcoming"
+              ? { badge: "מתקרב", badgeTone: "amber" as AttentionTone }
+              : undefined,
+          actions: [a],
         })),
       } satisfies PanelSection;
     });

@@ -57,8 +57,8 @@ export const DashboardPage: React.FC = () => {
         items: deadlineItems.map((item) => ({
           id: item.id,
           label: item.label,
-          sublabel: item.sublabel,
           href: item.href ?? "/tax/deadlines",
+          meta: { tag: item.sublabel, tagTone: "amber" as const },
         })),
       },
       {
@@ -90,21 +90,21 @@ export const DashboardPage: React.FC = () => {
         <Alert variant="error" message={dashboard.message} />
       )}
 
-      {isAdvisorView && <SeasonSummaryWidget />}
-
       {dashboard.status === "loading" ? (
         <StatsSkeleton />
       ) : dashboard.status === "ok" ? (
         <DashboardStatsGrid stats={stats} />
       ) : null}
 
+      {isAdvisorView && <SeasonSummaryWidget />}
+
       {dashboard.status === "loading" ? (
         <div className="h-80 animate-pulse rounded-2xl bg-gray-100" />
       ) : isAdvisorView ? (
         <AttentionPanel
-          sections={attentionSections}
-          activeActionKey={activeQuickAction}
-          onAction={handleQuickAction}
+        sections={attentionSections}
+        activeActionKey={activeQuickAction}
+        onAction={handleQuickAction}
         />
       ) : (
         <AttentionPanel sections={attentionSections} />
