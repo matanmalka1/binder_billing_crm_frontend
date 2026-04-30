@@ -130,6 +130,15 @@ export const useClientsPage = () => {
     restoreMutation.mutate(deletedClientInfo.id)
   }, [deletedClientInfo, restoreMutation])
 
+  const restoreDeletedClient = useCallback(
+    async (clientId: number) => {
+      const restored = await restoreMutation.mutateAsync(clientId)
+      setDeletedClientInfo(null)
+      return restored
+    },
+    [restoreMutation],
+  )
+
   const handleDismissDeletedDialog = useCallback(() => {
     setDeletedClientInfo(null)
   }, [])
@@ -179,6 +188,7 @@ export const useClientsPage = () => {
     deletedClientInfo,
     deletedClientDialogOpen: deletedClientInfo !== null,
     handleRestoreClient,
+    restoreDeletedClient,
     handleDismissDeletedDialog,
     restoreLoading: restoreMutation.isPending,
     updateClient: (clientId: number, payload: UpdateClientPayload) =>

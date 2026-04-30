@@ -49,6 +49,7 @@ export const Clients: React.FC = () => {
     deletedClientInfo,
     deletedClientDialogOpen,
     handleRestoreClient,
+    restoreDeletedClient,
     handleDismissDeletedDialog,
     restoreLoading,
     updateClient,
@@ -172,7 +173,15 @@ export const Clients: React.FC = () => {
         open={showCreateModal && !deletedClientDialogOpen}
         onClose={() => setShowCreateModal(false)}
         onSubmit={createClient}
+        onRestoreDeletedClient={async (clientId) => {
+          const restored = await restoreDeletedClient(clientId)
+          setShowCreateModal(false)
+          navigate(CLIENT_ROUTES.detail(restored.id))
+          return restored
+        }}
+        isAdvisor={isAdvisor}
         isLoading={createLoading}
+        restoreLoading={restoreLoading}
       />
       <ImportExportModal open={showImportExport} onClose={() => setShowImportExport(false)} />
       <ConfirmDialog

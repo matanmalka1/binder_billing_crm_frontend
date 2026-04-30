@@ -5,7 +5,11 @@ import type {
   UseFormClearErrors,
   UseFormRegister,
 } from 'react-hook-form'
-import type { ClientCreationImpactResponse } from '../../api/contracts'
+import type {
+  ActiveClientSummary,
+  ClientCreationImpactResponse,
+  DeletedClientSummary,
+} from '../../api/contracts'
 import type { CreateClientFormValues } from '../../schemas'
 import { CreateClientBusinessStep } from './CreateClientBusinessStep'
 import { CreateClientIdentityStep } from './CreateClientIdentityStep'
@@ -16,14 +20,19 @@ interface Props {
   advisorsLoading: boolean
   businessOpenedAtField: ControllerRenderProps<CreateClientFormValues, 'business_opened_at'>
   control: Control<CreateClientFormValues>
+  activeConflicts: ActiveClientSummary[]
   disabled: boolean
+  deletedClient?: DeletedClientSummary
   errors: FieldErrors<CreateClientFormValues>
+  isAdvisor: boolean
+  isRestoreLoading: boolean
   clearErrors: UseFormClearErrors<CreateClientFormValues>
   impactData?: ClientCreationImpactResponse
   impactLoading: boolean
   isCompany: boolean
   isExempt: boolean
   register: UseFormRegister<CreateClientFormValues>
+  onRestoreDeletedClient: (clientId: number) => void
   showVatFrequency: boolean
   stepIndex: number
 }
@@ -33,14 +42,19 @@ export const CreateClientStepContent: React.FC<Props> = ({
   advisorsLoading,
   businessOpenedAtField,
   control,
+  activeConflicts,
   disabled,
+  deletedClient,
   errors,
+  isAdvisor,
+  isRestoreLoading,
   clearErrors,
   impactData,
   impactLoading,
   isCompany,
   isExempt,
   register,
+  onRestoreDeletedClient,
   showVatFrequency,
   stepIndex,
 }) => {
@@ -48,10 +62,15 @@ export const CreateClientStepContent: React.FC<Props> = ({
     return (
       <CreateClientIdentityStep
         control={control}
+        activeConflicts={activeConflicts}
         disabled={disabled}
+        deletedClient={deletedClient}
         errors={errors}
+        isAdvisor={isAdvisor}
         isCompany={isCompany}
+        isRestoreLoading={isRestoreLoading}
         clearErrors={clearErrors}
+        onRestoreDeletedClient={onRestoreDeletedClient}
         register={register}
       />
     )

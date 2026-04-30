@@ -3,7 +3,7 @@ import { useController, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal } from '../../../../components/ui/overlays/Modal'
 import { useAdvisorOptions } from '@/features/users'
-import type { CreateClientPayload } from '../../api'
+import type { ClientResponse, CreateClientPayload } from '../../api'
 import { useClientCreationImpact } from '../../hooks/useClientCreationImpact'
 import { CREATE_CLIENT_DEFAULT_VALUES } from '../../constants'
 import { createClientSchema, type CreateClientFormValues } from '../../schemas'
@@ -18,14 +18,20 @@ interface Props {
   open: boolean
   onClose: () => void
   onSubmit: (data: CreateClientPayload) => Promise<void>
+  onRestoreDeletedClient: (clientId: number) => Promise<ClientResponse>
+  isAdvisor: boolean
   isLoading?: boolean
+  restoreLoading?: boolean
 }
 
 export const CreateClientModal: React.FC<Props> = ({
   open,
   onClose,
   onSubmit,
+  onRestoreDeletedClient,
+  isAdvisor,
   isLoading = false,
+  restoreLoading = false,
 }) => {
   const [stepIndex, setStepIndex] = useState(0)
   const {
@@ -56,6 +62,8 @@ export const CreateClientModal: React.FC<Props> = ({
 
   const { conflict } = useIdNumberConflict(currentIdNumber ?? '', stepIndex === 0)
   const hasActiveConflict = (conflict?.active_clients?.length ?? 0) > 0
+  const deletedClient = conflict?.deleted_clients?.[0]
+  const hasDeletedConflict = Boolean(deletedClient)
 
   const impactQuery = useClientCreationImpact(
     currentEntityType && (isExempt || currentVatFrequency)
@@ -89,7 +97,7 @@ export const CreateClientModal: React.FC<Props> = ({
   }
 
   const goToNextStep = async () => {
-    if (stepIndex === 0 && hasActiveConflict) return
+    if (stepIndex === 0 && (hasActiveConflict || hasDeletedConflict)) return
     const isValid = await trigger([...currentStep.fields], { shouldFocus: true })
     if (isValid) setStepIndex((current) => Math.min(current + 1, CREATE_CLIENT_STEPS.length - 1))
   }
@@ -123,7 +131,7 @@ export const CreateClientModal: React.FC<Props> = ({
           onSubmit={onFormSubmit}
           onNext={goToNextStep}
           stepIndex={stepIndex}
-          nextDisabled={stepIndex === 0 && hasActiveConflict}
+          nextDisabled={stepIndex === 0 && (hasActiveConflict || hasDeletedConflict)}
         />
       }
     >
@@ -134,14 +142,19 @@ export const CreateClientModal: React.FC<Props> = ({
           advisorsLoading={advisorsLoading}
           businessOpenedAtField={businessOpenedAtField}
           control={control}
+          activeConflicts={conflict?.active_clients ?? []}
           disabled={isLoading}
+          deletedClient={deletedClient}
           errors={errors}
+          isAdvisor={isAdvisor}
+          isRestoreLoading={restoreLoading}
           clearErrors={clearErrors}
           impactData={impactQuery.data}
           impactLoading={impactQuery.isLoading}
           isCompany={isCompany}
           isExempt={isExempt}
           register={register}
+          onRestoreDeletedClient={onRestoreDeletedClient}
           showVatFrequency={showVatFrequency}
           stepIndex={stepIndex}
         />
