@@ -21,7 +21,7 @@ export const StatusTransitionPanel = ({
   isLoading,
 }: StatusTransitionPanelProps) => {
   const queryClient = useQueryClient()
-  const allowed = getAllowedTransitions(report.status)
+  const allowed = getAllowedTransitions(report)
   const [selected, setSelected] = useState<(typeof allowed)[number] | null>(null)
   const [form, setForm] = useState<TransitionForm>(getEmptyTransitionForm)
   const [amendOpen, setAmendOpen] = useState(false)

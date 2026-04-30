@@ -1,3 +1,4 @@
+import type { BackendAction } from '@/lib/actions/types'
 import type { PaginatedResponse } from '@/types'
 
 export interface VatWorkItemResponse {
@@ -36,6 +37,7 @@ export interface VatWorkItemResponse {
   extended_deadline: string | null
   days_until_deadline: number | null
   is_overdue: boolean | null
+  available_actions?: BackendAction[]
 }
 
 export type VatWorkItemListResponse = PaginatedResponse<VatWorkItemResponse>

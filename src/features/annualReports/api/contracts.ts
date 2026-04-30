@@ -127,6 +127,7 @@ export interface AnnualReportFull {
   profit?: string | null
   final_balance?: string | null
   available_actions?: BackendAction[]
+  available_transitions?: AnnualReportStatus[]
 }
 
 export interface ReportDetailResponse {

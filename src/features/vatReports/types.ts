@@ -61,17 +61,15 @@ export interface VatClientSummaryPanelProps {
 export interface VatInvoiceTabProps {
   invoiceType: 'income' | 'expense'
   workItemId: number
-  status: string
+  workItem: VatWorkItemResponse
   invoices: VatInvoiceResponse[]
-  clientStatus?: string | null
   isFilingPending?: boolean
 }
 
 export interface VatActionButtonsProps {
-  status: string
+  workItem: VatWorkItemResponse
   isAdvisor: boolean
   isLoading: boolean
-  clientStatus?: string | null
   onMaterialsComplete: () => void
   onReadyForReview: () => void
   onFile: () => void

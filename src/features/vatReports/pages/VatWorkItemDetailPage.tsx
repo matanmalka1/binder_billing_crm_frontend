@@ -108,9 +108,8 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
           <VatInvoiceTab
             invoiceType="income"
             workItemId={workItem.id}
-            status={workItem.status}
+            workItem={workItem}
             invoices={invoices}
-            clientStatus={workItem.client_status}
             isFilingPending={isFilingPending}
           />
         )}
@@ -118,9 +117,8 @@ const VatDetailContent: React.FC<{ workItemId: number }> = ({ workItemId }) => {
           <VatInvoiceTab
             invoiceType="expense"
             workItemId={workItem.id}
-            status={workItem.status}
+            workItem={workItem}
             invoices={invoices}
-            clientStatus={workItem.client_status}
             isFilingPending={isFilingPending}
           />
         )}

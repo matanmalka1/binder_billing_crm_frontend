@@ -1,10 +1,11 @@
 import { CheckCircle2, Eye, FileText, Trash2 } from 'lucide-react'
 import { RowActionItem, RowActionSeparator, RowActionsMenu } from '@/components/ui/table'
 import { canCancel, canIssue, canMarkPaid } from '../utils'
+import type { BackendAction } from '@/lib/actions/types'
 
 interface ChargeRowActionsProps {
   chargeId: number
-  status: string
+  actions?: BackendAction[] | null
   disabled?: boolean
   showActions?: boolean
   onIssue: () => void
@@ -15,7 +16,7 @@ interface ChargeRowActionsProps {
 
 export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
   chargeId,
-  status,
+  actions,
   disabled = false,
   showActions = true,
   onIssue,
@@ -23,7 +24,7 @@ export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
   onCancel,
   onOpenDetail,
 }) => {
-  const hasActions = showActions && (canIssue(status) || canMarkPaid(status) || canCancel(status))
+  const hasActions = showActions && (canIssue(actions) || canMarkPaid(actions) || canCancel(actions))
 
   return (
     <RowActionsMenu ariaLabel={`פעולות לחיוב ${chargeId}`}>
@@ -34,7 +35,7 @@ export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
         disabled={disabled}
       />
       {hasActions && <RowActionSeparator />}
-      {showActions && canIssue(status) && (
+      {showActions && canIssue(actions) && (
         <RowActionItem
           label="הנפקה"
           onClick={onIssue}
@@ -42,7 +43,7 @@ export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
           disabled={disabled}
         />
       )}
-      {showActions && canMarkPaid(status) && (
+      {showActions && canMarkPaid(actions) && (
         <RowActionItem
           label="סימון שולם"
           onClick={onMarkPaid}
@@ -50,7 +51,7 @@ export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
           disabled={disabled}
         />
       )}
-      {showActions && canCancel(status) && (
+      {showActions && canCancel(actions) && (
         <RowActionItem
           label="ביטול"
           onClick={onCancel}

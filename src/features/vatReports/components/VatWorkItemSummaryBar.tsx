@@ -158,10 +158,9 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({
             </div>
           ) : (
             <VatActionButtons
-              status={workItem.status}
+              workItem={workItem}
               isAdvisor={isAdvisor}
               isLoading={isLoading}
-              clientStatus={workItem.client_status}
               onMaterialsComplete={handleMaterialsComplete}
               onReadyForReview={handleReadyForReview}
               onFile={() => setShowFileModal(true)}

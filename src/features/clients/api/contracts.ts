@@ -94,6 +94,7 @@ export interface ClientCreationImpactResponse {
   items: CreationImpactItem[]
   years_scope: number
   note?: string | null
+  vat_exempt_ceiling?: string | null
 }
 
 export interface CreateClientResponse {

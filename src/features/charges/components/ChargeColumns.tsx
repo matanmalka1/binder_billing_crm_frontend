@@ -104,7 +104,7 @@ export const buildChargeColumns = ({
       render: (charge) => (
         <ChargeRowActions
           chargeId={charge.id}
-          status={charge.status}
+          actions={charge.available_actions}
           disabled={actionLoadingId !== null}
           onOpenDetail={() => onOpenDetail(charge.id)}
           onIssue={() => void runAction(charge.id, 'issue')}

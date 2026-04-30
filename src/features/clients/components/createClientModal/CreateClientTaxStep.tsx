@@ -1,14 +1,16 @@
 import type { FieldErrors, UseFormRegister } from 'react-hook-form'
 import { Input } from '../../../../components/ui/inputs/Input'
 import { Select } from '../../../../components/ui/inputs/Select'
-import { CREATE_CLIENT_VAT_OPTIONS, DEFAULT_VAT_EXEMPT_CEILING } from '../../constants'
+import { CREATE_CLIENT_VAT_OPTIONS } from '../../constants'
 import type { CreateClientFormValues } from '../../schemas'
+import { formatShekelAmount } from '@/utils/utils'
 import { stripNonDecimal } from './createClientFormUtils'
 
 interface ImpactData {
   items: Array<{ label: string; count: number }>
   note?: string | null
   years_scope: number
+  vat_exempt_ceiling?: string | null
 }
 
 interface Props {
@@ -50,7 +52,7 @@ export const CreateClientTaxStep: React.FC<Props> = ({
         <div>
           <p className="mb-2 text-sm font-medium text-gray-700">תקרת פטור מע״מ</p>
           <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600">
-            ₪{DEFAULT_VAT_EXEMPT_CEILING}
+            {formatShekelAmount(impactData?.vat_exempt_ceiling, 'טוען...')}
           </div>
           <p className="mt-1 text-xs text-gray-400">נגזר אוטומטית לפי הגדרת המערכת</p>
         </div>

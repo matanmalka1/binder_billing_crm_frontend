@@ -9,7 +9,9 @@ export const VatWorkItemRowActions: React.FC<VatWorkItemRowActionsProps> = ({
   isDisabled,
   runAction,
 }) => {
-  const hasAny = canMarkMaterialsComplete(item.status) || canMarkReadyForReview(item.status)
+  const hasAny =
+    canMarkMaterialsComplete(item.available_actions) ||
+    canMarkReadyForReview(item.available_actions)
 
   if (isFiled(item.status)) {
     return <span className="text-xs text-gray-400">הוגש</span>
@@ -19,7 +21,7 @@ export const VatWorkItemRowActions: React.FC<VatWorkItemRowActionsProps> = ({
 
   return (
     <RowActionsMenu ariaLabel={`פעולות לפריט ${item.id}`}>
-      {canMarkMaterialsComplete(item.status) && (
+      {canMarkMaterialsComplete(item.available_actions) && (
         <RowActionItem
           label="אישור קבלה"
           onClick={() => void runAction(item.id, 'materialsComplete')}
@@ -27,7 +29,7 @@ export const VatWorkItemRowActions: React.FC<VatWorkItemRowActionsProps> = ({
           disabled={isLoading || isDisabled}
         />
       )}
-      {canMarkReadyForReview(item.status) && (
+      {canMarkReadyForReview(item.available_actions) && (
         <RowActionItem
           label="שלח לבדיקה"
           onClick={() => void runAction(item.id, 'readyForReview')}

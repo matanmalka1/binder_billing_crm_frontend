@@ -174,7 +174,6 @@ export const CLIENT_ID_TYPES_REQUIRING_ISRAELI_ID_CHECKSUM: readonly ClientIdNum
 ] as const
 
 export const DEFAULT_CLIENT_ID_NUMBER_TYPE: ClientIdNumberType = 'individual'
-export const DEFAULT_VAT_EXEMPT_CEILING = '120000'
 export const CREATE_CLIENT_DEFAULT_VALUES = {
   full_name: '',
   id_number: '',

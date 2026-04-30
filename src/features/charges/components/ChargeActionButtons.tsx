@@ -1,9 +1,10 @@
 import { CheckCircle2 } from 'lucide-react'
 import { Button } from '../../../components/ui/primitives/Button'
 import { canCancel, canIssue, canMarkPaid } from '../utils'
+import type { BackendAction } from '@/lib/actions/types'
 
 interface ChargeActionButtonsProps {
-  status: string
+  actions?: BackendAction[] | null
   disabled?: boolean
   onIssue: React.MouseEventHandler<HTMLButtonElement>
   onMarkPaid: React.MouseEventHandler<HTMLButtonElement>
@@ -12,7 +13,7 @@ interface ChargeActionButtonsProps {
 }
 
 export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
-  status,
+  actions,
   disabled = false,
   onIssue,
   onMarkPaid,
@@ -23,7 +24,7 @@ export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
 
   return (
     <div className={gap}>
-      {canIssue(status) && (
+      {canIssue(actions) && (
         <Button
           type="button"
           variant="outline"
@@ -35,7 +36,7 @@ export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
           הנפקה
         </Button>
       )}
-      {canMarkPaid(status) && (
+      {canMarkPaid(actions) && (
         <Button
           type="button"
           variant="outline"
@@ -48,7 +49,7 @@ export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
           סימון שולם
         </Button>
       )}
-      {canCancel(status) && (
+      {canCancel(actions) && (
         <Button
           type="button"
           variant="outline"

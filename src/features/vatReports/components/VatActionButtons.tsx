@@ -5,20 +5,20 @@ import { isClientClosed } from '../../../utils/clientStatus'
 import type { VatActionButtonsProps } from '../types'
 
 export const VatActionButtons: React.FC<VatActionButtonsProps> = ({
-  status,
+  workItem,
   isAdvisor,
   isLoading,
-  clientStatus,
   onMaterialsComplete,
   onReadyForReview,
   onFile,
   onSendBack,
 }) => {
-  const closed = isClientClosed(clientStatus)
-  const showMaterialsComplete = status === 'pending_materials'
-  const showReadyForReview = canMarkReadyForReview(status)
-  const showFile = isAdvisor && canFile(status)
-  const showSendBack = isAdvisor && canSendBack(status)
+  const closed = isClientClosed(workItem.client_status)
+  const actions = workItem.available_actions
+  const showMaterialsComplete = canMarkMaterialsComplete(actions)
+  const showReadyForReview = canMarkReadyForReview(actions)
+  const showFile = isAdvisor && canFile(actions)
+  const showSendBack = isAdvisor && canSendBack(actions)
 
   if (!showMaterialsComplete && !showReadyForReview && !showFile && !showSendBack) return null
 

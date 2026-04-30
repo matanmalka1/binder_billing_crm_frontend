@@ -1,3 +1,4 @@
+import type { BackendAction } from '@/lib/actions/types'
 import type { PaginatedResponse } from '@/types'
 
 export interface ChargeResponse {
@@ -22,6 +23,7 @@ export interface ChargeResponse {
   canceled_at: string | null
   canceled_by: number | null
   cancellation_reason: string | null
+  available_actions?: BackendAction[]
 }
 
 export type ChargeBase = ChargeResponse

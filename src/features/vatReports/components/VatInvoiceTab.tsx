@@ -13,12 +13,14 @@ import type { VatInvoiceTabProps } from '../types'
 export const VatInvoiceTab: React.FC<VatInvoiceTabProps> = ({
   invoiceType,
   workItemId,
-  status,
+  workItem,
   invoices,
-  clientStatus,
   isFilingPending,
 }) => {
-  const canEdit = canAddInvoice(status) && !isClientClosed(clientStatus) && !isFilingPending
+  const canEdit =
+    canAddInvoice(workItem.available_actions) &&
+    !isClientClosed(workItem.client_status) &&
+    !isFilingPending
   const { addInvoice, isAdding } = useAddInvoice(workItemId)
   const [categoryFilter, setCategoryFilter] = useState('')
 

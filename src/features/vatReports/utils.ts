@@ -2,20 +2,29 @@ import { CATEGORY_LABELS } from './constants'
 import { EXPENSE_CATEGORIES } from './constants'
 import type { VatInvoiceRowValues } from './schemas/invoice.schema'
 import { semanticMonoToneClasses } from '../../utils/semanticColors'
+import type { BackendAction } from '@/lib/actions/types'
 
-export const canMarkMaterialsComplete = (status: string): boolean => status === 'pending_materials'
+const hasVatAction = (
+  actions: BackendAction[] | null | undefined,
+  key: string,
+): boolean => actions?.some((action) => action.key === key) ?? false
 
-export const canAddInvoice = (status: string): boolean =>
-  status === 'material_received' ||
-  status === 'data_entry_in_progress' ||
-  status === 'ready_for_review'
+export const canMarkMaterialsComplete = (
+  actions: BackendAction[] | null | undefined,
+): boolean => hasVatAction(actions, 'materials_complete')
 
-export const canMarkReadyForReview = (status: string): boolean =>
-  status === 'data_entry_in_progress'
+export const canAddInvoice = (actions: BackendAction[] | null | undefined): boolean =>
+  hasVatAction(actions, 'add_invoice')
 
-export const canSendBack = (status: string): boolean => status === 'ready_for_review'
+export const canMarkReadyForReview = (
+  actions: BackendAction[] | null | undefined,
+): boolean => hasVatAction(actions, 'ready_for_review')
 
-export const canFile = (status: string): boolean => status === 'ready_for_review'
+export const canSendBack = (actions: BackendAction[] | null | undefined): boolean =>
+  hasVatAction(actions, 'send_back')
+
+export const canFile = (actions: BackendAction[] | null | undefined): boolean =>
+  hasVatAction(actions, 'file_vat_return')
 
 export const isFiled = (status: string): boolean => status === 'filed'
 

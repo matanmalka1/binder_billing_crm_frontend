@@ -2,22 +2,36 @@ import { formatCompactCurrencyILS, MONTH_NAMES } from '../../utils/utils'
 import type { ChargeResponse } from './api'
 import { CHARGE_PERIOD_PATTERN } from './constants'
 import type { ChargeAction } from './types'
+import type { BackendAction } from '@/lib/actions/types'
 export { CHARGE_TYPE_LABELS, getChargeTypeLabel } from '../../utils/enums'
 
-const ACTION_ALLOWED_STATUSES: Record<ChargeAction, Set<string>> = {
-  issue: new Set(['draft']),
-  markPaid: new Set(['issued']),
-  cancel: new Set(['draft', 'issued']),
+const CHARGE_ACTION_KEYS: Record<ChargeAction, string> = {
+  issue: 'issue_charge',
+  markPaid: 'mark_paid',
+  cancel: 'cancel_charge',
 }
 
-export const canRunChargeAction = (status: string, action: ChargeAction): boolean =>
-  ACTION_ALLOWED_STATUSES[action].has(status)
+export const hasChargeAction = (
+  actions: BackendAction[] | null | undefined,
+  key: string,
+): boolean => actions?.some((action) => action.key === key) ?? false
 
-export const canIssue = (status: string): boolean => canRunChargeAction(status, 'issue')
+export const canRunChargeAction = (
+  actions: BackendAction[] | null | undefined,
+  action: ChargeAction,
+): boolean => hasChargeAction(actions, CHARGE_ACTION_KEYS[action])
 
-export const canMarkPaid = (status: string): boolean => canRunChargeAction(status, 'markPaid')
+export const canIssue = (actions: BackendAction[] | null | undefined): boolean =>
+  canRunChargeAction(actions, 'issue')
 
-export const canCancel = (status: string): boolean => canRunChargeAction(status, 'cancel')
+export const canMarkPaid = (actions: BackendAction[] | null | undefined): boolean =>
+  canRunChargeAction(actions, 'markPaid')
+
+export const canCancel = (actions: BackendAction[] | null | undefined): boolean =>
+  canRunChargeAction(actions, 'cancel')
+
+export const canDeleteCharge = (actions: BackendAction[] | null | undefined): boolean =>
+  hasChargeAction(actions, 'delete_charge')
 
 export const getChargePeriodLabel = (
   period: string | null,

@@ -16,6 +16,7 @@ import {
   getChargeClientLabel,
   getChargePeriodLabel,
   getChargeTypeLabel,
+  canDeleteCharge,
 } from '../utils'
 import { formatDateTime } from '../../../utils/utils'
 import { getChargeStatusLabel } from '../../../utils/enums'
@@ -45,14 +46,14 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
     charge && isAdvisor ? (
       <div className="flex flex-wrap items-center justify-between gap-3">
         <ChargeActionButtons
-          status={charge.status}
+          actions={charge.available_actions}
           disabled={actionLoading}
           size="sm"
           onIssue={() => void runAction('issue')}
           onMarkPaid={() => void runAction('markPaid')}
           onCancel={() => setIsConfirmingCancel(true)}
         />
-        {charge.status === 'draft' && (
+        {canDeleteCharge(charge.available_actions) && (
           <Button
             type="button"
             variant="outline"

@@ -1,5 +1,10 @@
 import { makeClassGetter, makeLabelGetter } from '@/utils/labels'
-import type { AnnualReportStatus, ClientTypeForReport, AnnualReportScheduleKey } from './contracts'
+import type {
+  AnnualReportFull,
+  AnnualReportStatus,
+  ClientTypeForReport,
+  AnnualReportScheduleKey,
+} from './contracts'
 
 // ── Status labels ──────────────────────────────────────────────────────────
 
@@ -43,29 +48,9 @@ const statusVariants: Record<AnnualReportStatus, BadgeVariant> = {
 export const getStatusVariant = (status: string): BadgeVariant =>
   (statusVariants as Record<string, BadgeVariant>)[status] ?? 'neutral'
 
-const validTransitions: Record<AnnualReportStatus, AnnualReportStatus[]> = {
-  not_started: ['collecting_docs'],
-  collecting_docs: ['docs_complete', 'not_started'],
-  docs_complete: ['in_preparation', 'collecting_docs'],
-  in_preparation: ['pending_client', 'docs_complete'],
-  pending_client: ['in_preparation', 'submitted'],
-  submitted: ['accepted', 'assessment_issued', 'amended'],
-  accepted: ['closed'],
-  assessment_issued: [
-    'objection_filed',
-    'closed',
-    'pending_client',
-    'in_preparation',
-    'docs_complete',
-  ],
-  objection_filed: ['closed', 'docs_complete'],
-  closed: [],
-  amended: ['in_preparation', 'submitted'],
-  canceled: [],
-}
-
-export const getAllowedTransitions = (status: string): AnnualReportStatus[] =>
-  (validTransitions as Record<string, AnnualReportStatus[]>)[status] ?? []
+export const getAllowedTransitions = (
+  report: Pick<AnnualReportFull, 'available_transitions'>,
+): AnnualReportStatus[] => report.available_transitions ?? []
 
 // ── Client type labels ────────────────────────────────────────────────────
 
