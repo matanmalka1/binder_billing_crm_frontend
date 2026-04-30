@@ -57,18 +57,18 @@ export const TaxDeadlines: React.FC = () => {
 
   const header = (
     <PageHeader
-      title="דוחות מס"
+      title="מועדי הגשה ללקוח"
       description={`ניהול מועדי מס ומעקב הגשה לשנת ${currentYear}`}
       actions={
         <div className="flex gap-2">
           {isAdvisor && (
-            <Button variant="outline" onClick={() => setShowGenerateModal(true)} className="gap-2">
+            <Button variant="ghost" onClick={() => setShowGenerateModal(true)} className="gap-2">
               <CalendarPlus className="h-4 w-4" />
               צור מועדים
             </Button>
           )}
           {isAdvisor && (
-            <Button variant="primary" onClick={() => setShowCreateModal(true)} className="gap-2">
+            <Button variant="ghost" onClick={() => setShowCreateModal(true)} className="gap-2">
               <Plus className="h-4 w-4" />
               מועד חדש
             </Button>

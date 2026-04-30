@@ -23,7 +23,7 @@ export const Button: React.FC<ButtonProps> = ({
     primary: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 shadow-sm',
     secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300',
     outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100',
-    ghost: 'text-gray-600 hover:bg-gray-100 active:bg-gray-200',
+    ghost: 'text-gray-600 hover:bg-gray-200 active:bg-gray-200',
     danger: 'bg-negative-600 text-white hover:bg-negative-700 active:bg-negative-800 shadow-sm',
   }
 
