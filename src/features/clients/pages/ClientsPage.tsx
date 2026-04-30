@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Users } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { StatsCard } from '@/components/ui/layout/StatsCard'
 import { Alert } from '@/components/ui/overlays/Alert'
@@ -147,6 +148,8 @@ export const Clients: React.FC = () => {
         onPageChange={setPage}
         onPageSizeChange={(size) => handleFilterChange('page_size', String(size))}
         emptyState={{
+          icon: Users,
+          variant: isEmptyState && can.createClients ? 'illustration' : 'default',
           title: 'אין לקוחות במערכת עדיין',
           message: can.createClients
             ? 'צור לקוח ראשון או ייבא רשימת לקוחות קיימת. יצירת לקוח תפתח אוטומטית קלסר ראשוני, מועדי מס רלוונטיים ותיק דוח שנתי לפי סוג הלקוח.'
