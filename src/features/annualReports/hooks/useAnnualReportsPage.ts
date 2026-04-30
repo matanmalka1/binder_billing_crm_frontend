@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSeasonDashboard } from './useSeasonDashboard'
-import { CURRENT_YEAR } from '../types'
 import type { AnnualReportsFilters } from '../components/shared/AnnualReportsFiltersBar'
 
 const DEFAULT_FILTERS: AnnualReportsFilters = {
@@ -16,8 +15,10 @@ export const useAnnualReportsPage = () => {
   const [filters, setFilters] = useState<AnnualReportsFilters>(DEFAULT_FILTERS)
   const navigate = useNavigate()
 
-  const taxYear = filters.year ? Number(filters.year) : CURRENT_YEAR
-  const season = useSeasonDashboard(taxYear)
+  const selectedTaxYear = filters.year ? Number(filters.year) : undefined
+  const season = useSeasonDashboard(selectedTaxYear)
+  const taxYear = season.summary?.tax_year ?? selectedTaxYear
+  const filingSeasonYear = season.summary?.filing_season_year
 
   const openReport = (id: number) => navigate(`/tax/reports/${id}`)
 
@@ -40,6 +41,7 @@ export const useAnnualReportsPage = () => {
 
   return {
     taxYear,
+    filingSeasonYear,
     showCreate,
     openCreate: () => setShowCreate(true),
     closeCreate: () => setShowCreate(false),

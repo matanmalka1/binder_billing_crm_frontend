@@ -4,8 +4,26 @@ import { ANNUAL_REPORT_ENDPOINTS } from './endpoints'
 import type { AnnualReportFull, AnnualReportListResponse, SeasonSummary } from './contracts'
 
 export const annualReportSeasonApi = {
+  getActiveSeasonSummary: async (): Promise<SeasonSummary> => {
+    const response = await api.get<SeasonSummary>(ANNUAL_REPORT_ENDPOINTS.activeTaxYearSummary)
+    return response.data
+  },
+
   getSeasonSummary: async (taxYear: number): Promise<SeasonSummary> => {
     const response = await api.get<SeasonSummary>(ANNUAL_REPORT_ENDPOINTS.taxYearSummary(taxYear))
+    return response.data
+  },
+
+  listActiveSeasonReports: async (params: {
+    page?: number
+    page_size?: number
+  }): Promise<AnnualReportListResponse> => {
+    const response = await api.get<AnnualReportListResponse>(
+      ANNUAL_REPORT_ENDPOINTS.activeTaxYearReports,
+      {
+        params: toQueryParams(params),
+      },
+    )
     return response.data
   },
 

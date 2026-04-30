@@ -6,4 +6,5 @@ export type {
   AttentionItem,
   AttentionItemType,
   AttentionResponse,
+  AttentionEmptyCheck,
 } from './contracts'

@@ -4,6 +4,7 @@ import { Alert } from '@/components/ui/overlays/Alert'
 import { ConfirmDialog } from '@/components/ui/overlays/ConfirmDialog'
 import {
   AttentionPanel,
+  DashboardOnboardingEmptyState,
   DashboardStatsGrid,
   SeasonSummaryWidget,
   useDashboardPage,
@@ -37,6 +38,8 @@ export const DashboardPage: React.FC = () => {
     pendingQuickAction,
     quickActions,
     advisorToday,
+    emptyState,
+    attentionEmptyChecks,
     stats,
   } = useDashboardPage()
 
@@ -91,22 +94,25 @@ export const DashboardPage: React.FC = () => {
 
       {dashboard.status === 'loading' ? (
         <StatsSkeleton />
+      ) : emptyState?.is_empty ? (
+        <DashboardOnboardingEmptyState />
       ) : dashboard.status === 'ok' ? (
         <DashboardStatsGrid stats={stats} />
       ) : null}
 
-      {isAdvisorView && <SeasonSummaryWidget />}
+      {isAdvisorView && !emptyState?.is_empty && <SeasonSummaryWidget />}
 
       {dashboard.status === 'loading' ? (
         <div className="h-80 animate-pulse rounded-2xl bg-gray-100" />
       ) : isAdvisorView ? (
         <AttentionPanel
           sections={attentionSections}
+          emptyChecks={attentionEmptyChecks}
           activeActionKey={activeQuickAction}
           onAction={handleQuickAction}
         />
       ) : (
-        <AttentionPanel sections={attentionSections} />
+        <AttentionPanel sections={attentionSections} emptyChecks={attentionEmptyChecks} />
       )}
 
       <ConfirmDialog

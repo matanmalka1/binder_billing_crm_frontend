@@ -174,6 +174,7 @@ export type StatusHistoryPagedResponse = PaginatedResponse<StatusHistoryEntry>
 
 export interface SeasonSummary {
   tax_year: number
+  filing_season_year: number
   total: number
   not_started: number
   collecting_docs: number

@@ -16,6 +16,7 @@ import {
 export const AnnualReportsPage: React.FC = () => {
   const {
     taxYear,
+    filingSeasonYear,
     showCreate,
     openCreate,
     closeCreate,
@@ -26,16 +27,17 @@ export const AnnualReportsPage: React.FC = () => {
     filteredReports,
     season,
   } = useAnnualReportsPage()
+  const taxYearLabel = taxYear ? String(taxYear) : '...'
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="דוחות שנתיים"
-        description="ניהול ומעקב אחר דוחות שנתיים"
+        title={`דוחות שנתיים לשנת המס ${taxYearLabel}`}
+        description={filingSeasonYear ? `עונת הגשה ${filingSeasonYear}` : 'ניהול ומעקב אחר דוחות שנתיים'}
         actions={
-          <Button variant="primary" onClick={openCreate} className="gap-2">
+          <Button variant="primary" onClick={openCreate} disabled={!taxYear} className="gap-2">
             <Plus className="h-4 w-4" />
-            דוח חדש
+            {taxYear ? `דוח שנתי ${taxYear}` : 'דוח שנתי'}
           </Button>
         }
       />
@@ -64,6 +66,7 @@ export const AnnualReportsPage: React.FC = () => {
             <SeasonReportsTable
               reports={filteredReports}
               isLoading={season.isLoading}
+              taxYear={taxYear}
               onSelect={(report) => openReport(report.id)}
             />
           </div>
@@ -72,12 +75,12 @@ export const AnnualReportsPage: React.FC = () => {
 
       {!season.isLoading && !season.error && !season.summary && (
         <div className="rounded-xl border border-dashed border-gray-300 py-16 text-center text-gray-500">
-          <p className="text-lg font-medium">אין דוחות לשנת מס {taxYear}</p>
-          <p className="mt-1 text-sm">לחץ על "דוח חדש" כדי להתחיל</p>
+          <p className="text-lg font-medium">עדיין אין דוחות שנתיים לשנת המס {taxYear}</p>
+          <p className="mt-1 text-sm">{`לחץ על "דוח שנתי ${taxYear}" כדי להתחיל`}</p>
         </div>
       )}
 
-      <CreateReportModal open={showCreate} onClose={closeCreate} />
+      <CreateReportModal open={showCreate} onClose={closeCreate} taxYear={taxYear} />
     </div>
   )
 }

@@ -28,6 +28,8 @@ export const ANNUAL_REPORT_ENDPOINTS = {
     `/annual-reports/${id}/annex/${schedule}/${lineId}`,
   annualReportOverdue: '/annual-reports/overdue',
   clientAnnualReports: (clientId: number | string) => `/clients/${clientId}/annual-reports`,
+  activeTaxYearSummary: '/tax-year/active/summary',
+  activeTaxYearReports: '/tax-year/active/reports',
   taxYearSummary: (taxYear: number | string) => `/tax-year/${taxYear}/summary`,
   taxYearReports: (taxYear: number | string) => `/tax-year/${taxYear}/reports`,
   annualReportTaxSave: (id: number | string) => `/annual-reports/${id}/tax-calculation/save`,

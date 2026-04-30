@@ -12,6 +12,7 @@ import { semanticMonoToneClasses } from '@/utils/semanticColors'
 interface SeasonReportsTableProps {
   reports: AnnualReportFull[]
   isLoading?: boolean
+  taxYear?: number
   onSelect?: (report: AnnualReportFull) => void
 }
 
@@ -118,6 +119,7 @@ const columns: Column<AnnualReportFull>[] = [
 export const SeasonReportsTable: React.FC<SeasonReportsTableProps> = ({
   reports,
   isLoading,
+  taxYear,
   onSelect,
 }) => (
   <DataTable
@@ -126,7 +128,9 @@ export const SeasonReportsTable: React.FC<SeasonReportsTableProps> = ({
     getRowKey={(r) => r.id}
     isLoading={isLoading}
     onRowClick={onSelect}
-    emptyMessage="אין דוחות לשנה זו"
+    emptyMessage={
+      taxYear ? `עדיין אין דוחות שנתיים לשנת המס ${taxYear}` : 'אין דוחות לשנה זו'
+    }
     rowClassName={(r) => {
       const days = daysUntil(r.filing_deadline)
       const overdue = days !== null && days < 0 && !TERMINAL_STATUSES.has(r.status)

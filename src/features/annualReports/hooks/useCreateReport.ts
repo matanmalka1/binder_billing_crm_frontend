@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,28 +11,30 @@ import { computeTaxPreview } from '../taxPreview'
 
 type CreateReportFormOutput = z.output<typeof createReportSchema>
 
-export const useCreateReport = (onSuccess?: () => void) => {
+const buildDefaultValues = (taxYear?: number): CreateReportFormValues => ({
+  client_id: '',
+  tax_year: taxYear ? String(taxYear) : '',
+  client_type: 'individual',
+  deadline_type: 'standard',
+  submission_method: undefined,
+  extension_reason: undefined,
+  notes: '',
+  has_rental_income: false,
+  has_capital_gains: false,
+  has_foreign_income: false,
+  has_depreciation: false,
+  gross_income: '',
+  expenses: '',
+  advances_paid: '',
+  credit_points: '',
+})
+
+export const useCreateReport = (taxYear?: number, onSuccess?: () => void) => {
   const queryClient = useQueryClient()
 
   const form = useForm<CreateReportFormValues, undefined, CreateReportFormOutput>({
     resolver: zodResolver(createReportSchema),
-    defaultValues: {
-      client_id: '',
-      tax_year: String(new Date().getFullYear() - 1),
-      client_type: 'individual',
-      deadline_type: 'standard',
-      submission_method: undefined,
-      extension_reason: undefined,
-      notes: '',
-      has_rental_income: false,
-      has_capital_gains: false,
-      has_foreign_income: false,
-      has_depreciation: false,
-      gross_income: '',
-      expenses: '',
-      advances_paid: '',
-      credit_points: '',
-    },
+    defaultValues: buildDefaultValues(taxYear),
   })
 
   const [grossIncome, expenses, advancesPaid, creditPoints, taxYearStr] = useWatch({
@@ -45,10 +47,9 @@ export const useCreateReport = (onSuccess?: () => void) => {
     const exp = parseFloat(expenses ?? '') || 0
     const advances = parseFloat(advancesPaid ?? '') || 0
     const credits = parseFloat(creditPoints ?? '') || 0
-    const taxYear = parseInt(taxYearStr ?? '') || new Date().getFullYear() - 1
-
-    return computeTaxPreview(income, exp, advances, credits, taxYear)
-  }, [grossIncome, expenses, advancesPaid, creditPoints, taxYearStr])
+    const previewTaxYear = parseInt(taxYearStr ?? '') || taxYear || 0
+    return computeTaxPreview(income, exp, advances, credits, previewTaxYear)
+  }, [grossIncome, expenses, advancesPaid, creditPoints, taxYearStr, taxYear])
 
   const mutation = useMutation({
     mutationFn: (payload: CreateAnnualReportPayload) => annualReportsApi.createReport(payload),
@@ -59,7 +60,7 @@ export const useCreateReport = (onSuccess?: () => void) => {
           : 'דוח שנתי נוצר בהצלחה'
       toast.success(message)
       queryClient.invalidateQueries({ queryKey: annualReportsQK.all })
-      form.reset()
+      form.reset(buildDefaultValues(taxYear))
       onSuccess?.()
     },
     onError: (err) => showErrorToast(err, 'שגיאה ביצירת דוח'),
@@ -83,5 +84,9 @@ export const useCreateReport = (onSuccess?: () => void) => {
     mutation.mutate(buildPayload(values))
   })
 
-  return { form, onSubmit, isSubmitting: mutation.isPending, preview }
+  const resetForm = useCallback(() => {
+    form.reset(buildDefaultValues(taxYear))
+  }, [form, taxYear])
+
+  return { form, onSubmit, isSubmitting: mutation.isPending, preview, resetForm }
 }

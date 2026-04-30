@@ -36,47 +36,59 @@ const buildVatStat = (
 ): StatItem => ({
   key,
   title,
-  value: `${stat.pending.toLocaleString('he-IL')} ממתינים להגשה`,
-  description: `הוגשו ${stat.submitted.toLocaleString('he-IL')} מתוך ${stat.required.toLocaleString('he-IL')} · ${stat.period_label}`,
+  value: `${stat.pending.toLocaleString('he-IL')} דוחות ממתינים`,
+  description: `${stat.period_label} · ${stat.status_label}`,
   icon: FileText,
   variant: vatVariant(stat.pending),
   urgent: stat.pending > 0,
   href: HREFS.vat(stat.period, periodType),
   progress: stat.completion_percent,
-  actionLabel: 'פתח דוחות מע״מ',
+  actionLabel: stat.required > 0 ? 'פתח דוחות מע״מ' : 'צור תיק מע״מ ראשון',
 })
 
 export const buildDashboardStats = (data: DashboardStatsData): StatItem[] => [
   {
     key: 'active_clients',
     title: 'לקוחות',
-    value: `${data.active_clients.toLocaleString('he-IL')} לקוחות פעילים`,
-    description: `מתוך ${data.total_clients.toLocaleString('he-IL')} סך הכל`,
+    value:
+      data.total_clients > 0
+        ? `${data.active_clients.toLocaleString('he-IL')} לקוחות פעילים`
+        : 'אין לקוחות עדיין',
+    description:
+      data.total_clients > 0
+        ? `מתוך ${data.total_clients.toLocaleString('he-IL')} סך הכל`
+        : 'צור לקוח ראשון כדי להתחיל',
     icon: Users,
     variant: 'purple',
     href: HREFS.activeClients,
-    actionLabel: 'פתח לקוחות פעילים',
+    actionLabel: data.active_clients > 0 ? 'פתח לקוחות פעילים' : 'הוסף לקוח ראשון',
   },
   {
     key: 'in_office',
     title: 'קלסרים במשרד',
-    value: `${data.binders_in_office.toLocaleString('he-IL')} קלסרים במשרד`,
-    description: `מתוך ${data.active_binders.toLocaleString('he-IL')} קלסרים פעילים`,
+    value:
+      data.active_binders > 0
+        ? `${data.binders_in_office.toLocaleString('he-IL')} קלסרים במשרד`
+        : 'אין קלסרים עדיין',
+    description:
+      data.active_binders > 0
+        ? `מתוך ${data.active_binders.toLocaleString('he-IL')} קלסרים פעילים`
+        : 'קלסרים ייפתחו לאחר יצירת לקוח',
     icon: FolderOpen,
     variant: 'blue',
     href: HREFS.bindersInOffice,
-    actionLabel: 'פתח קלסרים במשרד',
+    actionLabel: data.active_binders > 0 ? 'פתח קלסרים במשרד' : 'הוסף לקוח ראשון',
   },
   {
     key: 'ready_reminders',
     title: 'תזכורות לטיפול',
     value: `${data.open_reminders.toLocaleString('he-IL')} לטיפול עכשיו`,
-    description: 'כולל תזכורות שהגיע מועד השליחה שלהן',
+    description: 'תזכורות שמועד הטיפול שלהן הגיע',
     icon: Bell,
     variant: 'amber',
     urgent: data.open_reminders > 0,
     href: HREFS.remindersReady,
-    actionLabel: 'פתח תזכורות',
+    actionLabel: data.open_reminders > 0 ? 'פתח תזכורות' : 'צור תזכורת ראשונה',
   },
   buildVatStat('monthly_vat', 'מע״מ חודשי', data.vat_stats.monthly, 'monthly'),
   buildVatStat('bimonthly_vat', 'מע״מ דו־חודשי', data.vat_stats.bimonthly, 'bimonthly'),

@@ -65,7 +65,7 @@ export const Login: React.FC = () => {
             <h1 className="mb-1.5 text-3xl font-black tracking-tight text-slate-900">
               ברוכים השבים
             </h1>
-            <p className="text-sm text-slate-500">התחברו לחשבון הניהול שלכם להמשיך</p>
+            <p className="text-sm text-slate-500">התחברו לחשבון הניהול שלכם כדי להמשיך</p>
           </div>
 
           {/* Form */}
@@ -105,7 +105,7 @@ export const Login: React.FC = () => {
               {...register('password')}
             />
 
-            <div className="min-h-[4.5rem]" aria-live="polite">
+            <div aria-live="polite">
               {isLoading ? (
                 <div
                   className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm"
@@ -169,10 +169,10 @@ export const Login: React.FC = () => {
         {/* Top: logo */}
         <div className="relative z-10 flex items-center gap-3 animate-fade-in">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/20">
-            <span className="text-base font-black text-white">ב</span>
+            <span className="text-base font-black text-white">YM</span>
           </div>
           <div>
-            <p className="text-base font-bold tracking-tight text-white">יוסף מאיר יועץ מס</p>
+            <p className="text-base font-bold tracking-tight text-white">יוסף מאיר יועץ מס </p>
             <p className="text-xs text-slate-500">מערכת ניהול</p>
           </div>
         </div>
@@ -183,17 +183,17 @@ export const Login: React.FC = () => {
           <h2 className="text-4xl font-black leading-[1.15] tracking-tight text-white">
             ניהול לקוחות,
             <br />
-            <span className="text-slate-400">קלסרים וחיובים</span>
+            <span className="text-slate-400">קלסרים חיובים ודוחות</span>
             <br />
             במקום אחד
           </h2>
           <p className="max-w-xs text-sm leading-relaxed text-slate-500">
-            פלטפורמת הניהול הפנים-ארגונית של יוסף מאיר — מרוכזת, מאובטחת, ויעילה.
+            פלטפורמת הניהול הפנים ארגונית של יוסף מאיר  מרוכזת, מאובטחת, ויעילה.
           </p>
 
           {/* Feature pills */}
           <div className="flex flex-wrap gap-2 pt-2">
-            {['קלסרים', 'לקוחות', 'חיובים', 'מסמכים', 'דוחות מס'].map((label) => (
+            {['לקוחות','קלסרים', 'חיובים', 'מסמכים', 'דוחות מס'].map((label) => (
               <span
                 key={label}
                 className="rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-400"

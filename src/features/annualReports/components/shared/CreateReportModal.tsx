@@ -24,10 +24,11 @@ import {
 interface CreateReportModalProps {
   open: boolean
   onClose: () => void
+  taxYear?: number
 }
 
-export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onClose }) => {
-  const { form, onSubmit, isSubmitting, preview } = useCreateReport(onClose)
+export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onClose, taxYear }) => {
+  const { form, onSubmit, isSubmitting, preview, resetForm } = useCreateReport(taxYear, onClose)
   const {
     register,
     setValue,
@@ -46,12 +47,12 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
 
   useEffect(() => {
     if (open) return
-    form.reset()
+    resetForm()
     resetClientPicker()
-  }, [form, open, resetClientPicker])
+  }, [open, resetClientPicker, resetForm])
 
   const handleClose = () => {
-    form.reset()
+    resetForm()
     resetClientPicker()
     onClose()
   }

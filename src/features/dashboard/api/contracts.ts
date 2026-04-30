@@ -39,6 +39,11 @@ export interface AttentionResponse {
   total: number
 }
 
+export interface AttentionEmptyCheck {
+  key: string
+  label: string
+}
+
 export interface AdvisorTodayItem {
   id: number
   label: string
@@ -63,6 +68,7 @@ export interface DashboardOverviewResponse {
   quick_actions: BackendAction[]
   attention: AttentionResponse
   advisor_today: AdvisorTodayResponse
+  attention_empty_checks: AttentionEmptyCheck[]
 }
 
 export interface DashboardSummaryResponse {
@@ -79,6 +85,7 @@ export interface DashboardSummaryResponse {
 export interface VatDashboardPeriodStat {
   period: string
   period_label: string
+  status_label: string
   submitted: number
   required: number
   pending: number

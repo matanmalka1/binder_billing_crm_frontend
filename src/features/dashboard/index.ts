@@ -1,6 +1,7 @@
 export { dashboardApi, dashboardQK } from './api'
 export { DASHBOARD_ENDPOINTS } from './api/endpoints'
 export { AttentionPanel } from './components/AttentionPanel'
+export { DashboardOnboardingEmptyState } from './components/DashboardOnboardingEmptyState'
 export { DashboardStatsGrid } from './components/DashboardStatsGrid'
 export { SeasonSummaryWidget } from './components/SeasonSummaryWidget'
 export { useDashboardPage } from './hooks/useDashboardPage'

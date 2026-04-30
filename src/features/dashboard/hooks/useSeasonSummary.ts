@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getYear } from 'date-fns'
 import { annualReportSeasonApi, annualReportsQK } from '@/features/annualReports'
 import type { annualReportSeasonApi as SeasonApiType } from '@/features/annualReports'
 
@@ -12,10 +11,12 @@ const getProgressColor = (pct: number) => {
   return 'bg-warning-500'
 }
 
-const buildStats = (data: SeasonSummaryData, currentYear: number) => {
+const buildStats = (data: SeasonSummaryData) => {
   const completionPct = Math.round(data.completion_rate)
   const done = data.submitted + data.accepted + data.closed
   return {
+    taxYear: data.tax_year,
+    filingSeasonYear: data.filing_season_year,
     total: data.total,
     notStarted: data.not_started,
     submitted: data.submitted,
@@ -25,20 +26,17 @@ const buildStats = (data: SeasonSummaryData, currentYear: number) => {
     inProgress: data.total - data.not_started - done,
     completionPct,
     hasOverdue: data.overdue_count > 0,
-    currentYear,
     progressColor: getProgressColor(completionPct),
   }
 }
 
 export const useSeasonSummary = () => {
-  const currentYear = useMemo(() => getYear(new Date()), [])
-
   const { data, isPending } = useQuery({
-    queryKey: annualReportsQK.seasonSummary(currentYear),
-    queryFn: () => annualReportSeasonApi.getSeasonSummary(currentYear),
+    queryKey: annualReportsQK.activeSeasonSummary,
+    queryFn: annualReportSeasonApi.getActiveSeasonSummary,
   })
 
-  const stats = useMemo(() => (data ? buildStats(data, currentYear) : null), [data, currentYear])
+  const stats = useMemo(() => (data ? buildStats(data) : null), [data])
 
   return { stats, isPending }
 }

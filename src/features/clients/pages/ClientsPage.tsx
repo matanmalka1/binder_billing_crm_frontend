@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { StatsCard } from '@/components/ui/layout/StatsCard'
 import { Alert } from '@/components/ui/overlays/Alert'
@@ -24,6 +24,7 @@ const EDIT_FORM_ID = 'client-edit-form-list'
 
 export const Clients: React.FC = () => {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showImportExport, setShowImportExport] = useState(false)
   const [editingClient, setEditingClient] = useState<ClientResponse | null>(null)
@@ -57,6 +58,16 @@ export const Clients: React.FC = () => {
   const columns = buildClientColumns({
     onEditClient: can.editClients ? (client) => setEditingClient(client) : undefined,
   })
+
+  useEffect(() => {
+    if (searchParams.get('create') !== '1' || !can.createClients) return
+    setShowCreateModal(true)
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      next.delete('create')
+      return next
+    })
+  }, [can.createClients, searchParams, setSearchParams])
 
   return (
     <div className="space-y-6">

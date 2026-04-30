@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowLeft, CheckCircle2, ChevronDown, ChevronUp, ShieldAlert } from 'lucide-react'
 import { cn } from '@/utils/utils'
 import type { ActionCommand } from '@/lib/actions/types'
+import type { AttentionEmptyCheck } from '../api'
 import type { PanelItem, PanelSection, AttentionTone } from '../attentionPanelSections'
 import { DashboardEmptyState, DashboardPanel, DashboardSectionHeader } from './DashboardPrimitives'
 
@@ -148,12 +149,14 @@ const RowCard = ({ item, tone, activeActionKey, onAction }: RowCardProps) => {
 
 interface AttentionPanelProps {
   sections: PanelSection[]
+  emptyChecks?: AttentionEmptyCheck[]
   activeActionKey?: string | null
   onAction?: (action: ActionCommand) => void
 }
 
 export const AttentionPanel = ({
   sections,
+  emptyChecks = [],
   activeActionKey = null,
   onAction = () => {},
 }: AttentionPanelProps) => {
@@ -209,12 +212,27 @@ export const AttentionPanel = ({
       </div>
 
       {totalItems === 0 ? (
-        <DashboardEmptyState
-          icon={CheckCircle2}
-          title="כל הפריטים תחת שליטה"
-          description="אין דחיפויות כרגע"
-          className="py-14"
-        />
+        <div className="px-5 py-6">
+          <DashboardEmptyState
+            icon={CheckCircle2}
+            title="כל הפריטים תחת שליטה"
+            description="אין דחיפויות כרגע"
+            className="py-5"
+          />
+          {emptyChecks.length > 0 && (
+            <div className="grid grid-cols-1 gap-2 border-t border-gray-100 pt-4 sm:grid-cols-2">
+              {emptyChecks.map((check) => (
+                <div
+                  key={check.key}
+                  className="flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2 text-xs font-semibold text-green-700"
+                >
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  {check.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       ) : (
         <>
           <div className="flex gap-1 overflow-x-auto border-b border-gray-100 bg-gray-50/60 px-4 py-2.5">
