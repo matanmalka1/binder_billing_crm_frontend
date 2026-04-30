@@ -4,20 +4,12 @@ import { CheckCircle2, Edit2, ExternalLink, RotateCcw, Trash2 } from 'lucide-rea
 import { RowActionItem, RowActionSeparator, RowActionsMenu } from '@/components/ui/table'
 import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
 import type { TaxDeadlineResponse } from '../api'
+import { getTaxDeadlineSourcePath } from '../sourcePath'
 
 const SOURCE_LINK_LABELS: Record<string, string> = {
   vat: 'פתח דוח מע״מ',
   advance_payment: 'פתח מקדמות',
   annual_report: 'פתח דוח שנתי',
-}
-
-const getSourcePath = (deadline: TaxDeadlineResponse): string | null => {
-  const id = deadline.client_record_id
-  if (!id) return null
-  if (deadline.deadline_type === 'vat') return `/clients/${id}/vat`
-  if (deadline.deadline_type === 'advance_payment') return `/clients/${id}/advance-payments`
-  if (deadline.deadline_type === 'annual_report') return `/clients/${id}/annual-reports`
-  return null
 }
 
 interface TaxDeadlineRowActionsProps {
@@ -43,7 +35,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
 }) => {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const navigate = useNavigate()
-  const sourcePath = getSourcePath(deadline)
+  const sourcePath = getTaxDeadlineSourcePath(deadline)
   const sourceLabel = SOURCE_LINK_LABELS[deadline.deadline_type] ?? 'פתח מקור'
   const actionKeys = new Set((deadline.available_actions ?? []).map((action) => action.key))
   const canComplete = Boolean(onComplete) && actionKeys.has('complete')

@@ -18,6 +18,7 @@ export interface TaxDeadlineResponse {
   completed_at: string | null
   completed_by: number | null
   advance_payment_id: number | null
+  vat_work_item_id: number | null
   created_at: string
   urgency_level: DeadlineUrgencyLevel
   available_actions?: BackendAction[]
