@@ -32,16 +32,28 @@ export const createClientSchema = z
     email: z.string().trim().min(1, 'יש להזין כתובת אימייל').email('כתובת אימייל לא תקינה'),
     address_street: z.string().trim().min(1, 'יש להזין רחוב'),
     address_building_number: z.string().trim().min(1, 'יש להזין מספר בניין'),
-    address_apartment: z.string().trim().min(1, 'יש להזין מספר דירה'),
+    address_apartment: z.string().trim().optional().or(z.literal('')),
     address_city: z.string().trim().min(1, 'יש להזין עיר'),
-    address_zip_code: z.string().trim().min(1, 'יש להזין מיקוד'),
+    address_zip_code: z.string().trim().optional().or(z.literal('')),
     vat_reporting_frequency: z
       .enum(VAT_TYPES, { message: 'יש לציין תדירות דיווח מע"מ' })
       .optional()
       .nullable(),
-    advance_rate: z.string().trim().optional().nullable(),
-    accountant_id: z.string().trim().min(1, 'יש להזין רואה חשבון מלווה'),
-    business_name: z.string().trim().min(1, 'יש להזין שם עסק').max(100, 'שם עסק ארוך מדי'),
+    advance_rate: z
+      .string()
+      .trim()
+      .optional()
+      .nullable()
+      .refine(
+        (v) => {
+          if (!v) return true
+          const n = parseFloat(v)
+          return !isNaN(n) && n >= 0 && n <= 100
+        },
+        { message: 'שיעור מקדמות חייב להיות בין 0 ל-100' },
+      ),
+    accountant_id: z.string().trim().optional().or(z.literal('')),
+    business_name: z.string().trim().max(100, 'שם עסק ארוך מדי').optional().or(z.literal('')),
     business_opened_at: z.string().optional().nullable(),
   })
   .superRefine((data, ctx) => {
@@ -92,6 +104,15 @@ export const createClientSchema = z
         message: isCompany
           ? CREATE_CLIENT_VALIDATION_MESSAGES.idChecksumCompany
           : CREATE_CLIENT_VALIDATION_MESSAGES.idChecksumIndividual,
+      })
+    }
+
+    const street = data.address_street?.trim() ?? ''
+    if (/\s+\d+$/.test(street)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['address_street'],
+        message: CREATE_CLIENT_VALIDATION_MESSAGES.streetContainsNumber,
       })
     }
   })

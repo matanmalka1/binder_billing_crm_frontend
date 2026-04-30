@@ -22,17 +22,22 @@ export const CreateClientBusinessStep: React.FC<Props> = ({
   <div className="space-y-4">
     <p className="text-xs text-gray-500">שדות מסומנים בכוכבית חובה.</p>
     <div className="space-y-4 border-t border-gray-200 pt-4">
-      <p className="text-sm font-medium text-gray-700">{isCompany ? 'פרטי התאגדות' : 'פרטי עסק'}</p>
+      <p className="text-sm font-medium text-gray-700">{isCompany ? 'פרטי חברה ויצירת קשר' : 'פרטי עסק'}</p>
       <div className="grid grid-cols-2 gap-4">
-        <Input
-          label="שם עסק *"
-          placeholder={isCompany ? 'לדוגמה: חטיבת פעילות מרכזית' : 'לדוגמה: מסעדת ישראל'}
-          error={errors.business_name?.message}
-          disabled={disabled}
-          {...register('business_name')}
-        />
+        <div>
+          <Input
+            label={isCompany ? 'שם פעילות / שם מסחרי במערכת' : 'שם עסק'}
+            placeholder={isCompany ? 'ריק = שם החברה' : 'לדוגמה: מסעדת ישראל'}
+            error={errors.business_name?.message}
+            disabled={disabled}
+            {...register('business_name')}
+          />
+          {!isCompany && (
+            <p className="mt-1 text-xs text-gray-400">אם לא יוזן שם עסק, ייעשה שימוש בשם הלקוח.</p>
+          )}
+        </div>
         <DatePicker
-          label={isCompany ? 'תאריך התאגדות / פתיחה' : 'תאריך פתיחת עסק'}
+          label={isCompany ? 'תאריך התאגדות' : 'תאריך פתיחת תיק/פעילות'}
           error={errors.business_opened_at?.message}
           disabled={disabled}
           value={businessOpenedAtField.value ?? ''}
@@ -82,13 +87,13 @@ export const CreateClientBusinessStep: React.FC<Props> = ({
       </div>
       <div className="grid grid-cols-2 gap-4">
         <Input
-          label="דירה *"
+          label="דירה"
           error={errors.address_apartment?.message}
           disabled={disabled}
           {...register('address_apartment')}
         />
         <Input
-          label="מיקוד *"
+          label="מיקוד"
           placeholder="1234567"
           error={errors.address_zip_code?.message}
           disabled={disabled}

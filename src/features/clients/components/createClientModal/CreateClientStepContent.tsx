@@ -1,4 +1,5 @@
 import type {
+  Control,
   ControllerRenderProps,
   FieldErrors,
   UseFormClearErrors,
@@ -14,6 +15,7 @@ interface Props {
   advisorOptions: Array<{ value: string; label: string }>
   advisorsLoading: boolean
   businessOpenedAtField: ControllerRenderProps<CreateClientFormValues, 'business_opened_at'>
+  control: Control<CreateClientFormValues>
   disabled: boolean
   errors: FieldErrors<CreateClientFormValues>
   clearErrors: UseFormClearErrors<CreateClientFormValues>
@@ -30,6 +32,7 @@ export const CreateClientStepContent: React.FC<Props> = ({
   advisorOptions,
   advisorsLoading,
   businessOpenedAtField,
+  control,
   disabled,
   errors,
   clearErrors,
@@ -44,6 +47,7 @@ export const CreateClientStepContent: React.FC<Props> = ({
   if (stepIndex === 0) {
     return (
       <CreateClientIdentityStep
+        control={control}
         disabled={disabled}
         errors={errors}
         isCompany={isCompany}
@@ -73,6 +77,7 @@ export const CreateClientStepContent: React.FC<Props> = ({
       errors={errors}
       impactData={impactData}
       impactLoading={impactLoading}
+      isCompany={isCompany}
       isExempt={isExempt}
       register={register}
       showVatFrequency={showVatFrequency}

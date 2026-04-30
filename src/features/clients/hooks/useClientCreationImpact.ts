@@ -2,7 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { clientsApi, clientsQK, type CreateClientPayload } from '../api'
 import type { ClientCreationImpactResponse } from '../api/contracts'
 
-type ImpactParams = Pick<CreateClientPayload, 'entity_type' | 'vat_reporting_frequency'>
+type ImpactParams = Pick<CreateClientPayload, 'entity_type' | 'vat_reporting_frequency'> & {
+  advance_rate?: string | null
+}
 
 export const useClientCreationImpact = (
   params: Partial<ImpactParams> | null,
@@ -13,11 +15,15 @@ export const useClientCreationImpact = (
   )
 
   return useQuery({
-    queryKey: clientsQK.creationImpact(params?.entity_type, params?.vat_reporting_frequency),
+    queryKey: [
+      ...clientsQK.creationImpact(params?.entity_type, params?.vat_reporting_frequency),
+      params?.advance_rate ?? null,
+    ],
     queryFn: () =>
       clientsApi.previewImpact({
         entity_type: params!.entity_type!,
         vat_reporting_frequency: params!.vat_reporting_frequency!,
+        advance_rate: params!.advance_rate ?? null,
       } as CreateClientPayload),
     enabled,
     staleTime: 60_000,

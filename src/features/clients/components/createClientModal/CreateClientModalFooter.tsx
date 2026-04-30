@@ -4,6 +4,7 @@ import { ModalFormActions } from '../../../../components/ui/overlays/ModalFormAc
 interface Props {
   isLastStep: boolean
   isLoading: boolean
+  nextDisabled?: boolean
   onClose: () => void
   onPrevious: () => void
   onSubmit: () => void
@@ -14,6 +15,7 @@ interface Props {
 export const CreateClientModalFooter: React.FC<Props> = ({
   isLastStep,
   isLoading,
+  nextDisabled = false,
   onClose,
   onPrevious,
   onSubmit,
@@ -43,7 +45,7 @@ export const CreateClientModalFooter: React.FC<Props> = ({
           חזרה
         </Button>
       )}
-      <Button type="button" onClick={onNext} disabled={isLoading}>
+      <Button type="button" onClick={onNext} disabled={isLoading || nextDisabled}>
         הבא
       </Button>
     </div>

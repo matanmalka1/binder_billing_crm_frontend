@@ -74,13 +74,13 @@ export interface CreateClientPayload {
   email: string
   address_street: string
   address_building_number: string
-  address_apartment: string
+  address_apartment?: string | null
   address_city: string
-  address_zip_code: string
+  address_zip_code?: string | null
   vat_reporting_frequency?: VatType | null
   advance_rate?: string | null
   advance_rate_updated_at?: string | null
-  accountant_id: number
+  accountant_id?: number | null
   business_name: string
   business_opened_at?: ISODateString | null
 }

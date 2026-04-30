@@ -12,6 +12,7 @@ import { CreateClientStepContent } from './CreateClientStepContent'
 import { CreateClientStepIndicator } from './CreateClientStepIndicator'
 import { buildCreateClientPayload } from './createClientFormUtils'
 import { CREATE_CLIENT_STEPS } from './createClientSteps'
+import { useIdNumberConflict } from './useIdNumberConflict'
 
 interface Props {
   open: boolean
@@ -46,14 +47,23 @@ export const CreateClientModal: React.FC<Props> = ({
 
   const currentEntityType = watch('entity_type')
   const currentVatFrequency = watch('vat_reporting_frequency')
+  const currentAdvanceRate = watch('advance_rate')
+  const currentIdNumber = watch('id_number')
   const { options: advisorOptions, isLoading: advisorsLoading } = useAdvisorOptions()
   const isCompany = currentEntityType === 'company_ltd'
   const isExempt = currentEntityType === 'osek_patur'
   const showVatFrequency = currentEntityType != null && !isExempt
 
+  const { conflict } = useIdNumberConflict(currentIdNumber ?? '', stepIndex === 0)
+  const hasActiveConflict = (conflict?.active_clients?.length ?? 0) > 0
+
   const impactQuery = useClientCreationImpact(
     currentEntityType && (isExempt || currentVatFrequency)
-      ? { entity_type: currentEntityType, vat_reporting_frequency: currentVatFrequency }
+      ? {
+          entity_type: currentEntityType,
+          vat_reporting_frequency: currentVatFrequency,
+          advance_rate: currentAdvanceRate,
+        }
       : null,
   )
   const currentStep = CREATE_CLIENT_STEPS[stepIndex]
@@ -62,10 +72,8 @@ export const CreateClientModal: React.FC<Props> = ({
   useEffect(() => {
     if (isExempt) {
       setValue('vat_reporting_frequency', null, { shouldValidate: false })
-    } else if (currentVatFrequency == null) {
-      setValue('vat_reporting_frequency', 'monthly', { shouldValidate: false })
     }
-  }, [currentVatFrequency, isExempt, setValue])
+  }, [isExempt, setValue])
 
   useEffect(() => {
     if (!open) {
@@ -83,6 +91,7 @@ export const CreateClientModal: React.FC<Props> = ({
   }
 
   const goToNextStep = async () => {
+    if (stepIndex === 0 && hasActiveConflict) return
     const isValid = await trigger([...currentStep.fields], { shouldFocus: true })
     if (isValid) setStepIndex((current) => Math.min(current + 1, CREATE_CLIENT_STEPS.length - 1))
   }
@@ -116,6 +125,7 @@ export const CreateClientModal: React.FC<Props> = ({
           onSubmit={onFormSubmit}
           onNext={goToNextStep}
           stepIndex={stepIndex}
+          nextDisabled={stepIndex === 0 && hasActiveConflict}
         />
       }
     >
@@ -125,6 +135,7 @@ export const CreateClientModal: React.FC<Props> = ({
           advisorOptions={advisorOptions}
           advisorsLoading={advisorsLoading}
           businessOpenedAtField={businessOpenedAtField}
+          control={control}
           disabled={isLoading}
           errors={errors}
           clearErrors={clearErrors}

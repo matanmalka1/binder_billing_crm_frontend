@@ -6,8 +6,13 @@ import type { CreateClientFormValues } from '../../schemas'
 import { formatShekelAmount } from '@/utils/utils'
 import { stripNonDecimal } from './createClientFormUtils'
 
+interface ImpactItem {
+  label: string
+  count: number
+}
+
 interface ImpactData {
-  items: Array<{ label: string; count: number }>
+  items: ImpactItem[]
   note?: string | null
   years_scope: number
   vat_exempt_ceiling?: string | null
@@ -20,9 +25,21 @@ interface Props {
   errors: FieldErrors<CreateClientFormValues>
   impactData?: ImpactData
   impactLoading: boolean
+  isCompany: boolean
   isExempt: boolean
   register: UseFormRegister<CreateClientFormValues>
   showVatFrequency: boolean
+}
+
+const buildRemindersTooltip = (items: ImpactItem[]): string => {
+  const vatItem = items.find((i) => i.label === 'מועדי מע"מ')
+  const advanceItem = items.find((i) => i.label === 'מועדי מקדמות')
+  const annualItem = items.find((i) => i.label === 'מועדי דוח שנתי')
+  const parts: string[] = []
+  if (vatItem) parts.push(`${vatItem.count} תזכורות מע"מ`)
+  if (advanceItem) parts.push(`${advanceItem.count} תזכורות מקדמות`)
+  if (annualItem) parts.push(`${annualItem.count} תזכורת דוח שנתי`)
+  return parts.join('\n')
 }
 
 export const CreateClientTaxStep: React.FC<Props> = ({
@@ -32,6 +49,7 @@ export const CreateClientTaxStep: React.FC<Props> = ({
   errors,
   impactData,
   impactLoading,
+  isCompany,
   isExempt,
   register,
   showVatFrequency,
@@ -52,14 +70,18 @@ export const CreateClientTaxStep: React.FC<Props> = ({
         <div>
           <p className="mb-2 text-sm font-medium text-gray-700">תקרת פטור מע״מ</p>
           <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600">
-            {formatShekelAmount(impactData?.vat_exempt_ceiling, 'טוען...')}
+            {impactLoading
+              ? 'טוען...'
+              : impactData?.vat_exempt_ceiling
+                ? formatShekelAmount(impactData.vat_exempt_ceiling)
+                : 'לא הוגדר — פנה למנהל מערכת'}
           </div>
           <p className="mt-1 text-xs text-gray-400">נגזר אוטומטית לפי הגדרת המערכת</p>
         </div>
       )}
       <Input
-        label="אחוז מקדמה (%)"
-        placeholder="לדוגמה: 8.5"
+        label="שיעור מקדמות מס הכנסה (%)"
+        placeholder="ריק = אין מקדמות / לא ידוע"
         error={errors.advance_rate?.message}
         disabled={disabled}
         onInput={stripNonDecimal}
@@ -67,7 +89,7 @@ export const CreateClientTaxStep: React.FC<Props> = ({
       />
     </div>
     <Select
-      label="רואה חשבון מלווה *"
+      label="רואה חשבון מלווה"
       error={errors.accountant_id?.message}
       disabled={disabled || advisorsLoading}
       options={[
@@ -87,12 +109,23 @@ export const CreateClientTaxStep: React.FC<Props> = ({
       ) : impactData ? (
         <>
           <ul className="space-y-1">
-            {impactData.items.map((item) => (
-              <li key={item.label} className="flex justify-between text-sm text-blue-700">
-                <span>{item.label}</span>
-                <span className="font-medium">{item.count}</span>
-              </li>
-            ))}
+            {impactData.items.map((item) => {
+              const isReminders = item.label === 'תזכורות'
+              const tooltip = isReminders ? buildRemindersTooltip(impactData.items) : undefined
+              return (
+                <li
+                  key={item.label}
+                  className="flex items-baseline gap-2 text-sm text-blue-700"
+                  title={tooltip}
+                >
+                  <span className="font-medium">{item.count}</span>
+                  <span>{item.label}</span>
+                  {isReminders && tooltip && (
+                    <span className="text-xs text-blue-500 cursor-help" title={tooltip}>ⓘ</span>
+                  )}
+                </li>
+              )
+            })}
           </ul>
           {impactData.note && <p className="mt-2 text-xs text-blue-600">{impactData.note}</p>}
           {impactData.years_scope === 2 && (
@@ -100,7 +133,13 @@ export const CreateClientTaxStep: React.FC<Props> = ({
           )}
         </>
       ) : (
-        <p className="text-sm text-blue-700">ייתכן שייווצרו קלסר ומועדים בהתאם לסוג הלקוח</p>
+        <p className="text-sm text-blue-700">
+          {isExempt
+            ? 'ייווצר קלסר ודוח שנתי. מועדי מע"מ תקופתיים לא ייווצרו'
+            : isCompany
+            ? 'ייווצר קלסר, מועדי מע"מ לפי תדירות ודוח שנתי לחברה'
+            : 'ייווצר קלסר, מועדי מע"מ לפי תדירות ודוח שנתי'}
+        </p>
       )}
     </div>
   </div>

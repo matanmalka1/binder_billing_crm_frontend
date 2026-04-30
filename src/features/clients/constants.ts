@@ -201,6 +201,7 @@ export const CREATE_CLIENT_VALIDATION_MESSAGES = {
   idLengthIndividual: 'מספר תעודת זהות חייב להכיל בדיוק 9 ספרות',
   idChecksumCompany: 'מספר ח.פ אינו תקין',
   idChecksumIndividual: 'מספר תעודת זהות אינו תקין',
+  streetContainsNumber: 'שדה הרחוב צריך להכיל שם בלבד — הזן מספר בניין בשדה הייעודי',
 } as const
 
 export const requiresIsraeliNumericId = (idNumberType: ClientIdNumberType): boolean =>
