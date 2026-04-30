@@ -73,6 +73,7 @@ export const CreateClientStepContent: React.FC<Props> = ({
     <CreateClientTaxStep
       advisorOptions={advisorOptions}
       advisorsLoading={advisorsLoading}
+      control={control}
       disabled={disabled}
       errors={errors}
       impactData={impactData}

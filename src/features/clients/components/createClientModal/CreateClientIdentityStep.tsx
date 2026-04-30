@@ -27,13 +27,16 @@ export const CreateClientIdentityStep: React.FC<Props> = ({
   const nameLabel = isCompany ? 'שם חברה' : 'שם מלא'
   const idNumberLabel = isCompany ? 'ח.פ' : 'ת.ז'
   const idNumberPlaceholder = isCompany ? '512345678' : '123456789'
+
+  const entityTypeValue = useWatch({ control, name: 'entity_type' })
+  const idNumber = useWatch({ control, name: 'id_number' })
+
   const entityTypeField = register('entity_type', {
     onChange: (event) => {
       if (event.target.value) clearErrors('entity_type')
     },
   })
 
-  const idNumber = useWatch({ control, name: 'id_number' })
   const { conflict } = useIdNumberConflict(idNumber ?? '', true)
   const activeConflicts = conflict?.active_clients ?? []
 
@@ -45,6 +48,7 @@ export const CreateClientIdentityStep: React.FC<Props> = ({
         error={errors.entity_type?.message}
         disabled={disabled}
         options={[{ value: '', label: 'בחר סוג ישות' }, ...CREATE_CLIENT_ENTITY_OPTIONS]}
+        value={entityTypeValue ?? ''}
         {...entityTypeField}
       />
       <Input

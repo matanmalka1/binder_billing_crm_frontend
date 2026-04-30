@@ -70,10 +70,8 @@ export const CreateClientModal: React.FC<Props> = ({
   const isLastStep = stepIndex === CREATE_CLIENT_STEPS.length - 1
 
   useEffect(() => {
-    if (isExempt) {
-      setValue('vat_reporting_frequency', null, { shouldValidate: false })
-    }
-  }, [isExempt, setValue])
+    setValue('vat_reporting_frequency', null, { shouldValidate: false })
+  }, [currentEntityType, setValue])
 
   useEffect(() => {
     if (!open) {

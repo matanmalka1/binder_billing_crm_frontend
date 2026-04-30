@@ -62,6 +62,15 @@ export const Clients: React.FC = () => {
 
   const hasActiveFilters = Boolean(filters.search || filters.status || filters.accountant_id)
   const isEmptyState = !loading && total === 0 && !hasActiveFilters
+  const emptyStateTitle = isEmptyState ? 'אין לקוחות במערכת עדיין' : 'לא נמצאו לקוחות'
+  const emptyStateMessage =
+    isEmptyState && can.createClients
+      ? 'צור לקוח ראשון או ייבא רשימת לקוחות קיימת. יצירת לקוח תפתח אוטומטית קלסר ראשוני, מועדי מס רלוונטיים ותיק דוח שנתי לפי סוג הלקוח.'
+      : 'לא נמצאו לקוחות התואמים את החיפוש או הסינון הנוכחי.'
+  const emptyStateAction =
+    isEmptyState && can.createClients
+      ? { label: 'לקוח חדש', onClick: () => setShowCreateModal(true) }
+      : undefined
 
   useEffect(() => {
     if (searchParams.get('create') !== '1' || !can.createClients) return
@@ -150,13 +159,9 @@ export const Clients: React.FC = () => {
         emptyState={{
           icon: Users,
           variant: isEmptyState && can.createClients ? 'illustration' : 'default',
-          title: 'אין לקוחות במערכת עדיין',
-          message: can.createClients
-            ? 'צור לקוח ראשון או ייבא רשימת לקוחות קיימת. יצירת לקוח תפתח אוטומטית קלסר ראשוני, מועדי מס רלוונטיים ותיק דוח שנתי לפי סוג הלקוח.'
-            : 'לא נמצאו לקוחות התואמים את הסינון הנוכחי.',
-          action: can.createClients
-            ? { label: 'לקוח חדש', onClick: () => setShowCreateModal(true) }
-            : undefined,
+          title: emptyStateTitle,
+          message: emptyStateMessage,
+          action: emptyStateAction,
           secondaryAction:
             isEmptyState && can.createClients
               ? { label: 'ייבוא לקוחות', onClick: () => setShowImportExport(true) }
