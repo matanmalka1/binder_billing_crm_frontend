@@ -179,7 +179,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
             items={binders}
             emptyText="אין קלסרים להצגה"
             getKey={(binder) => binder.id}
-            getTitle={(binder) => formatBinderNumber(binder.binder_number)}
+            getTitle={(binder) => `מספר קלסר ${formatBinderNumber(binder.binder_number)}`}
             getSubtitle={(binder) => getBinderStatusLabel(binder.status)}
             getItemHref={(binder) => `/binders?client_record_id=${clientId}&binder_id=${binder.id}`}
           />

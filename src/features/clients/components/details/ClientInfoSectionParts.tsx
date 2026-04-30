@@ -3,7 +3,7 @@ import { Card } from '../../../../components/ui/primitives/Card'
 import { DefinitionList } from '../../../../components/ui/layout/DefinitionList'
 import { cn } from '@/utils/utils'
 
-const EMPTY_VALUE = 'לא הוגדר'
+const EMPTY_VALUE = '—'
 
 type DefinitionItem = {
   label: string

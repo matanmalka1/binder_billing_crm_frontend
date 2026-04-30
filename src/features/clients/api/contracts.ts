@@ -171,7 +171,6 @@ export interface CreateBusinessPayload {
 export interface UpdateBusinessPayload {
   business_name?: string | null
   status?: BusinessStatus
-  notes?: string | null
   closed_at?: string | null
 }
 

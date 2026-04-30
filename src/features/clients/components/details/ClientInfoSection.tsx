@@ -16,7 +16,7 @@ type ClientInfoSectionProps = {
   sideContent?: ReactNode
 }
 
-const EMPTY_VALUE = 'לא הוגדר'
+const EMPTY_VALUE = '—'
 
 export const ClientInfoSection: FC<ClientInfoSectionProps> = ({ client, sideContent }) => {
   const { nameById } = useAdvisorOptions()
@@ -90,10 +90,8 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({ client, sideCont
       value: client.advance_rate != null ? `${client.advance_rate}%` : 'לא אומת',
     },
     {
-      label: 'מקור / תאריך עדכון מקדמה',
-      value: client.advance_rate_updated_at
-        ? `עודכן בתאריך ${formatDate(client.advance_rate_updated_at)}`
-        : 'לא קיים תאריך עדכון',
+      label: 'עדכון מקדמה',
+      value: client.advance_rate_updated_at ? formatDate(client.advance_rate_updated_at) : EMPTY_VALUE,
     },
     { label: 'סניף מע"מ', value: officeByType('vat_branch') ?? EMPTY_VALUE },
     { label: 'סניף ביטוח לאומי', value: officeByType('national_insurance') ?? EMPTY_VALUE },

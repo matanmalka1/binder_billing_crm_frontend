@@ -91,11 +91,11 @@ export const Clients: React.FC = () => {
         actions={
           isEmptyState ? undefined : (
             <div className="flex items-center gap-2">
-              <Button variant="primary" size="sm" onClick={() => setShowImportExport(true)}>
+              <Button variant="ghost" size="sm" onClick={() => setShowImportExport(true)}>
                 ייבוא / ייצוא
               </Button>
               {can.createClients && (
-                <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)}>
+                <Button variant="ghost" size="sm" onClick={() => setShowCreateModal(true)}>
                   לקוח חדש
                 </Button>
               )}

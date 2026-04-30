@@ -48,7 +48,7 @@ const buildClientHeader = (client: ClientResponse) => ({
       />
       <ClientHeaderMetaItem
         icon={<BriefcaseBusiness className="h-4 w-4" />}
-        label={`סוג יישות: ${client.entity_type ? getEntityTypeLabel(client.entity_type) : 'לא הוגדר'}`}
+        label={`סוג ישות: ${client.entity_type ? getEntityTypeLabel(client.entity_type) : '—'}`}
       />
     </span>
   ),

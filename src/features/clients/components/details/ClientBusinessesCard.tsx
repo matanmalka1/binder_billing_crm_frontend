@@ -11,7 +11,6 @@ import { Modal } from '../../../../components/ui/overlays/Modal'
 import { ModalFormActions } from '../../../../components/ui/overlays/ModalFormActions'
 import { Input } from '../../../../components/ui/inputs/Input'
 import { Select } from '../../../../components/ui/inputs/Select'
-import { Textarea } from '../../../../components/ui/inputs/Textarea'
 import { clientsApi, clientsQK } from '../../api'
 import type { BusinessResponse, UpdateBusinessPayload } from '../../api'
 import { BUSINESS_STATUS_LABELS } from '../../../businesses/constants'
@@ -43,7 +42,6 @@ interface Props {
 interface EditState {
   business: BusinessResponse
   name: string
-  notes: string
   status: BusinessResponse['status']
   closedAt: string
 }
@@ -66,7 +64,6 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
     setEditState({
       business: biz,
       name: biz.business_name ?? '',
-      notes: biz.notes ?? '',
       status: biz.status,
       closedAt: biz.closed_at ?? '',
     })
@@ -75,7 +72,6 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
     if (!editState) return
     const payload: UpdateBusinessPayload = {
       business_name: editState.name || null,
-      notes: editState.notes || null,
       status: editState.status,
       closed_at: editState.status === 'closed' ? editState.closedAt || null : null,
     }
@@ -243,14 +239,6 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                 disabled={isUpdating}
               />
             )}
-            <Textarea
-              label="הערות"
-              rows={3}
-              placeholder="הערות חופשיות..."
-              disabled={isUpdating}
-              value={editState.notes}
-              onChange={(e) => setEditState((s) => s && { ...s, notes: e.target.value })}
-            />
           </div>
         )}
       </Modal>

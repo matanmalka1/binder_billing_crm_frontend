@@ -27,7 +27,7 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
         <span className="block max-w-[220px]">
           <span className="block truncate font-semibold text-gray-900">{name}</span>
           {showPeriod && (
-            <span className="block text-xs font-medium text-gray-500">תיק #{item.id}</span>
+            <span className="block text-xs font-medium text-gray-500">פריט מע״מ #{item.id}</span>
           )}
         </span>
       )
