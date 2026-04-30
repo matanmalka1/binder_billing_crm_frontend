@@ -94,6 +94,7 @@ export interface SignerViewResponse {
   status: SignatureRequestStatus
   content_hash: string | null
   expires_at: string | null
+  is_expired: boolean
 }
 
 export interface SignerDeclinePayload {

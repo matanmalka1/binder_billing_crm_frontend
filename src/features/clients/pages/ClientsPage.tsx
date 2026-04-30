@@ -59,6 +59,9 @@ export const Clients: React.FC = () => {
     onEditClient: can.editClients ? (client) => setEditingClient(client) : undefined,
   })
 
+  const hasActiveFilters = Boolean(filters.search || filters.status || filters.accountant_id)
+  const isEmptyState = !loading && total === 0 && !hasActiveFilters
+
   useEffect(() => {
     if (searchParams.get('create') !== '1' || !can.createClients) return
     setShowCreateModal(true)
@@ -73,52 +76,64 @@ export const Clients: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="לקוחות"
-        description="רשימת כל הלקוחות במערכת"
+        description={isEmptyState ? undefined : 'רשימת כל הלקוחות במערכת'}
         actions={
-          <div className="flex items-center gap-2">
-            <Button variant="primary" size="sm" onClick={() => setShowImportExport(true)}>
-              ייבוא / ייצוא
-            </Button>
-            {can.createClients && (
-              <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)}>
-                לקוח חדש
+          isEmptyState ? undefined : (
+            <div className="flex items-center gap-2">
+              <Button variant="primary" size="sm" onClick={() => setShowImportExport(true)}>
+                ייבוא / ייצוא
               </Button>
-            )}
-          </div>
+              {can.createClients && (
+                <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)}>
+                  לקוח חדש
+                </Button>
+              )}
+            </div>
+          )
         }
       />
       {!can.editClients && (
         <Alert variant="info" message="צפייה בלבד. יצירה ועריכה של לקוחות זמינה ליועצים בלבד." />
       )}
-      <div className="grid grid-cols-3 gap-4">
-        <StatsCard
-          title="פעילים"
-          value={stats.active}
-          variant="green"
-          selected={filters.status === 'active'}
-          onClick={() => handleFilterChange('status', filters.status === 'active' ? '' : 'active')}
-        />
-        <StatsCard
-          title="מוקפאים"
-          value={stats.frozen}
-          variant="orange"
-          selected={filters.status === 'frozen'}
-          onClick={() => handleFilterChange('status', filters.status === 'frozen' ? '' : 'frozen')}
-        />
-        <StatsCard
-          title="סגורים"
-          value={stats.closed}
-          variant="neutral"
-          selected={filters.status === 'closed'}
-          onClick={() => handleFilterChange('status', filters.status === 'closed' ? '' : 'closed')}
-        />
-      </div>
-      <ClientsFiltersBar
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        onReset={handleReset}
-        showAccountantFilter={can.editClients}
-      />
+      {!isEmptyState && (
+        <>
+          <div className="grid grid-cols-3 gap-4">
+            <StatsCard
+              title="פעילים"
+              value={stats.active}
+              variant="green"
+              selected={filters.status === 'active'}
+              onClick={() =>
+                handleFilterChange('status', filters.status === 'active' ? '' : 'active')
+              }
+            />
+            <StatsCard
+              title="מוקפאים"
+              value={stats.frozen}
+              variant="orange"
+              selected={filters.status === 'frozen'}
+              onClick={() =>
+                handleFilterChange('status', filters.status === 'frozen' ? '' : 'frozen')
+              }
+            />
+            <StatsCard
+              title="סגורים"
+              value={stats.closed}
+              variant="neutral"
+              selected={filters.status === 'closed'}
+              onClick={() =>
+                handleFilterChange('status', filters.status === 'closed' ? '' : 'closed')
+              }
+            />
+          </div>
+          <ClientsFiltersBar
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onReset={handleReset}
+            showAccountantFilter={can.editClients}
+          />
+        </>
+      )}
       <PaginatedDataTable
         data={clients}
         columns={columns}
@@ -132,13 +147,17 @@ export const Clients: React.FC = () => {
         onPageChange={setPage}
         onPageSizeChange={(size) => handleFilterChange('page_size', String(size))}
         emptyState={{
-          title: 'אין לקוחות להצגה',
+          title: 'אין לקוחות במערכת עדיין',
           message: can.createClients
-            ? 'עדיין לא נוספו לקוחות. הוסף את הלקוח הראשון כדי להתחיל.'
+            ? 'צור לקוח ראשון או ייבא רשימת לקוחות קיימת. יצירת לקוח תפתח אוטומטית קלסר ראשוני, מועדי מס רלוונטיים ותיק דוח שנתי לפי סוג הלקוח.'
             : 'לא נמצאו לקוחות התואמים את הסינון הנוכחי.',
           action: can.createClients
             ? { label: 'לקוח חדש', onClick: () => setShowCreateModal(true) }
             : undefined,
+          secondaryAction:
+            isEmptyState && can.createClients
+              ? { label: 'ייבוא לקוחות', onClick: () => setShowImportExport(true) }
+              : undefined,
         }}
       />
       <CreateClientModal

@@ -74,6 +74,7 @@ export const DataTable = <T,>({
         title={emptyState?.title}
         message={emptyState?.message ?? emptyMessage}
         action={emptyState?.action}
+        secondaryAction={emptyState?.secondaryAction}
         variant={emptyState?.variant}
         className={cn(className, emptyState?.className)}
       />

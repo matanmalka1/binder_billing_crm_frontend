@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -7,7 +7,6 @@ import { annualReportsApi, annualReportsQK, type CreateAnnualReportPayload } fro
 import { showErrorToast } from '../../../utils/utils'
 import { toast } from '../../../utils/toast'
 import { createReportSchema, type CreateReportFormValues } from '../schemas'
-import { computeTaxPreview } from '../taxPreview'
 
 type CreateReportFormOutput = z.output<typeof createReportSchema>
 
@@ -42,14 +41,24 @@ export const useCreateReport = (taxYear?: number, onSuccess?: () => void) => {
     name: ['gross_income', 'expenses', 'advances_paid', 'credit_points', 'tax_year'],
   })
 
-  const preview = useMemo(() => {
+  const previewParams = useMemo(() => {
     const income = parseFloat(grossIncome ?? '') || 0
     const exp = parseFloat(expenses ?? '') || 0
     const advances = parseFloat(advancesPaid ?? '') || 0
     const credits = parseFloat(creditPoints ?? '') || 0
-    const previewTaxYear = parseInt(taxYearStr ?? '') || taxYear || 0
-    return computeTaxPreview(income, exp, advances, credits, previewTaxYear)
+    const year = parseInt(taxYearStr ?? '') || taxYear || 0
+    return { tax_year: year, gross_income: income, expenses: exp, advances_paid: advances, credit_points: credits }
   }, [grossIncome, expenses, advancesPaid, creditPoints, taxYearStr, taxYear])
+
+  const { data: previewData } = useQuery({
+    queryKey: ['annualReport', 'taxPreview', previewParams],
+    queryFn: () => annualReportsApi.taxPreview(previewParams),
+    enabled: previewParams.tax_year > 0,
+    staleTime: 30_000,
+    placeholderData: (prev) => prev,
+  })
+
+  const preview = previewData ?? { net_profit: 0, estimated_tax: 0, balance: 0 }
 
   const mutation = useMutation({
     mutationFn: (payload: CreateAnnualReportPayload) => annualReportsApi.createReport(payload),

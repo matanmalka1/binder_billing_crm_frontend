@@ -152,6 +152,20 @@ export const annualReportsApi = {
     await api.delete(ANNUAL_REPORT_ENDPOINTS.annualReportAnnexLine(reportId, schedule, lineId))
   },
 
+  taxPreview: async (payload: {
+    tax_year: number
+    gross_income: number
+    expenses: number
+    advances_paid: number
+    credit_points: number
+  }): Promise<{ net_profit: number; estimated_tax: number; balance: number }> => {
+    const response = await api.post<{ net_profit: number; estimated_tax: number; balance: number }>(
+      ANNUAL_REPORT_ENDPOINTS.annualReportTaxPreview,
+      payload,
+    )
+    return response.data
+  },
+
   amend: async (reportId: number, reason: string): Promise<AnnualReportFull> => {
     const response = await api.post<AnnualReportFull>(
       ANNUAL_REPORT_ENDPOINTS.annualReportAmend(reportId),

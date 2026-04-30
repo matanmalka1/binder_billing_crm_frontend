@@ -64,7 +64,7 @@ export const useSigningPageState = (token?: string): UseSigningPageStateResult =
     return pageState === 'loading' ? 'ready' : pageState
   })()
 
-  const isExpired = !!(data?.expires_at && new Date(data.expires_at) < new Date())
+  const isExpired = data?.is_expired ?? false
 
   return {
     data,
