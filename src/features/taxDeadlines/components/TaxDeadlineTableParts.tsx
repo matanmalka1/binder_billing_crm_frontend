@@ -27,6 +27,43 @@ export const DeadlineDateCell = ({ dueDate }: { dueDate: string }) => (
   />
 )
 
+const URGENCY_TEXT_CLASS: Record<DeadlineUrgencyLevel, string> = {
+  overdue: 'text-negative-600',
+  critical: 'text-negative-500',
+  warning: 'text-warning-600',
+  normal: 'text-gray-500',
+  none: 'text-gray-400',
+}
+
+export const DeadlineDateWithUrgencyCell = ({
+  deadline,
+}: {
+  deadline: DeadlineDisplayFields
+}) => {
+  const daysRemaining = calculateDaysRemaining(deadline.due_date)
+  const urgencyText =
+    deadline.status !== 'pending'
+      ? null
+      : deadline.urgency_level === 'none'
+        ? null
+        : getDeadlineDaysLabelShort(daysRemaining, false)
+
+  return (
+    <div className="flex flex-col gap-0.5">
+      <IconLabel
+        icon={<Calendar className="h-3.5 w-3.5 shrink-0 text-gray-400" />}
+        label={formatDate(deadline.due_date)}
+        className="border-transparent bg-transparent px-0 text-sm font-medium text-gray-700"
+      />
+      {urgencyText && (
+        <span className={cn('text-xs font-medium', URGENCY_TEXT_CLASS[deadline.urgency_level])}>
+          {urgencyText}
+        </span>
+      )}
+    </div>
+  )
+}
+
 export const DeadlineUrgencyBadge = ({ deadline }: { deadline: DeadlineDisplayFields }) => {
   const daysRemaining = calculateDaysRemaining(deadline.due_date)
 

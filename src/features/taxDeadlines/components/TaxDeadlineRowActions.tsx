@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircle2, Edit2, ExternalLink, RotateCcw, Trash2 } from 'lucide-react'
 import { RowActionItem, RowActionSeparator, RowActionsMenu } from '@/components/ui/table'
+import { Button } from '@/components/ui/primitives/Button'
 import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
 import type { TaxDeadlineResponse } from '../api'
 import { getTaxDeadlineSourcePath } from '../sourcePath'
@@ -21,6 +22,7 @@ interface TaxDeadlineRowActionsProps {
   onReopen?: (id: number) => void
   onEdit?: (deadline: TaxDeadlineResponse) => void
   onDelete?: (id: number) => void
+  clientScoped?: boolean
 }
 
 export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
@@ -32,6 +34,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
   onReopen,
   onEdit,
   onDelete,
+  clientScoped = false,
 }) => {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const navigate = useNavigate()
@@ -42,11 +45,99 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
   const canReopen = Boolean(onReopen) && actionKeys.has('reopen')
   const canEdit = Boolean(onEdit) && actionKeys.has('edit')
   const canDelete = Boolean(onDelete) && actionKeys.has('delete')
-  const hasMenu = canComplete || canReopen || canEdit || canDelete || sourcePath !== null
   const isCompleting = completingId === deadline.id
   const isReopening = reopeningId === deadline.id
   const isDeleting = deletingId === deadline.id
   const isMutating = completingId !== null || reopeningId !== null || deletingId !== null
+
+  if (clientScoped) {
+    const hasSecondary = canEdit || canDelete
+    return (
+      <>
+        <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+          {sourcePath && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate(sourcePath)}
+              className="gap-1.5 whitespace-nowrap"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              {sourceLabel}
+            </Button>
+          )}
+          {canComplete && (
+            <Button
+              variant="secondary"
+              size="sm"
+              isLoading={isCompleting}
+              loadingLabel="מסמן..."
+              disabled={isMutating}
+              onClick={() => onComplete?.(deadline.id)}
+              className="gap-1.5 whitespace-nowrap"
+            >
+              <CheckCircle2 className="h-3.5 w-3.5 text-positive-600" />
+              סמן הושלם
+            </Button>
+          )}
+          {canReopen && (
+            <Button
+              variant="secondary"
+              size="sm"
+              isLoading={isReopening}
+              loadingLabel="מחזיר..."
+              disabled={isMutating}
+              onClick={() => onReopen?.(deadline.id)}
+              className="gap-1.5 whitespace-nowrap"
+            >
+              <RotateCcw className="h-3.5 w-3.5 text-warning-600" />
+              החזר לממתין
+            </Button>
+          )}
+          {hasSecondary && (
+            <RowActionsMenu ariaLabel={`פעולות נוספות למועד ${deadline.id}`}>
+              {canEdit && (
+                <RowActionItem
+                  label="עריכה"
+                  onClick={() => onEdit?.(deadline)}
+                  icon={<Edit2 className="h-4 w-4" />}
+                  disabled={isMutating}
+                />
+              )}
+              {canDelete && (
+                <>
+                  {canEdit && <RowActionSeparator />}
+                  <RowActionItem
+                    label={isDeleting ? 'מוחק...' : 'מחק'}
+                    onClick={() => setConfirmDelete(true)}
+                    icon={<Trash2 className="h-4 w-4" />}
+                    danger
+                    disabled={isMutating}
+                  />
+                </>
+              )}
+            </RowActionsMenu>
+          )}
+        </div>
+
+        <ConfirmDialog
+          open={confirmDelete}
+          title="מחיקת מועד"
+          message="האם למחוק את המועד? פעולה זו אינה הפיכה."
+          confirmLabel="מחק"
+          cancelLabel="ביטול"
+          isLoading={isDeleting}
+          onConfirm={() => {
+            setConfirmDelete(false)
+            onDelete?.(deadline.id)
+          }}
+          onCancel={() => setConfirmDelete(false)}
+        />
+      </>
+    )
+  }
+
+  const hasMenu = canComplete || canReopen || canEdit || canDelete || sourcePath !== null
   if (!hasMenu) return null
 
   return (

@@ -6,8 +6,8 @@ import type { TaxDeadlineResponse } from '../api'
 import { getDeadlineTypeLabel } from '../api'
 import { formatClientOfficeId } from '../../../utils/utils'
 import {
-  DeadlineAmountCell,
   DeadlineDateCell,
+  DeadlineDateWithUrgencyCell,
   DeadlineStatusBadge,
   DeadlineUrgencyBadge,
 } from './TaxDeadlineTableParts'
@@ -16,6 +16,8 @@ import { getTaxDeadlinePeriodLabel, groupTaxDeadlinesByMonth } from '../utils'
 
 interface TaxDeadlinesTableProps {
   deadlines: TaxDeadlineResponse[]
+  isLoading?: boolean
+  clientScoped?: boolean
   onComplete?: (id: number) => void
   onReopen?: (id: number) => void
   completingId: number | null
@@ -28,6 +30,8 @@ interface TaxDeadlinesTableProps {
 
 export const TaxDeadlinesTable = ({
   deadlines,
+  isLoading,
+  clientScoped = false,
   onComplete,
   onReopen,
   completingId,
@@ -39,24 +43,28 @@ export const TaxDeadlinesTable = ({
 }: TaxDeadlinesTableProps) => {
   const columns = useMemo<Column<TaxDeadlineResponse>[]>(
     () => [
-      {
-        key: 'office_client_number',
-        header: "מס' לקוח",
-        render: (deadline) => (
-          <span className="font-mono text-sm text-gray-500 tabular-nums">
-            {formatClientOfficeId(deadline.office_client_number)}
-          </span>
-        ),
-      },
-      {
-        key: 'client_name',
-        header: 'לקוח',
-        render: (deadline) => (
-          <span className="block max-w-[220px] truncate text-sm font-semibold text-gray-900">
-            {deadline.client_name ?? `לקוח #${deadline.client_record_id}`}
-          </span>
-        ),
-      },
+      ...(!clientScoped
+        ? [
+            {
+              key: 'office_client_number',
+              header: "מס' לקוח",
+              render: (deadline: TaxDeadlineResponse) => (
+                <span className="font-mono text-sm text-gray-500 tabular-nums">
+                  {formatClientOfficeId(deadline.office_client_number)}
+                </span>
+              ),
+            },
+            {
+              key: 'client_name',
+              header: 'לקוח',
+              render: (deadline: TaxDeadlineResponse) => (
+                <span className="block max-w-[220px] truncate text-sm font-semibold text-gray-900">
+                  {deadline.client_name ?? `לקוח #${deadline.client_record_id}`}
+                </span>
+              ),
+            },
+          ]
+        : []),
       {
         key: 'deadline_type',
         header: 'סוג',
@@ -76,20 +84,22 @@ export const TaxDeadlinesTable = ({
       {
         key: 'due_date',
         header: 'מועד',
-        render: (deadline) => <DeadlineDateCell dueDate={deadline.due_date} />,
+        render: (deadline) =>
+          clientScoped ? (
+            <DeadlineDateWithUrgencyCell deadline={deadline} />
+          ) : (
+            <DeadlineDateCell dueDate={deadline.due_date} />
+          ),
       },
-      {
-        key: 'urgency',
-        header: 'דחיפות',
-        render: (deadline) => <DeadlineUrgencyBadge deadline={deadline} />,
-      },
-      {
-        key: 'payment_amount',
-        header: 'סכום',
-        render: (deadline) => (
-          <DeadlineAmountCell amount={deadline.payment_amount} status={deadline.status} />
-        ),
-      },
+      ...(!clientScoped
+        ? [
+            {
+              key: 'urgency',
+              header: 'דחיפות',
+              render: (deadline: TaxDeadlineResponse) => <DeadlineUrgencyBadge deadline={deadline} />,
+            },
+          ]
+        : []),
       {
         key: 'status',
         header: 'סטטוס',
@@ -98,8 +108,8 @@ export const TaxDeadlinesTable = ({
       {
         key: 'actions',
         header: '',
-        headerClassName: 'w-10',
-        className: 'w-10',
+        headerClassName: clientScoped ? 'w-64' : 'w-10',
+        className: clientScoped ? 'w-64' : 'w-10',
         render: (deadline) => (
           <TaxDeadlineRowActions
             deadline={deadline}
@@ -110,21 +120,23 @@ export const TaxDeadlinesTable = ({
             onReopen={onReopen}
             onEdit={onEdit}
             onDelete={onDelete}
+            clientScoped={clientScoped}
           />
         ),
       },
     ],
-    [completingId, deletingId, onComplete, onDelete, onEdit, onReopen, reopeningId],
+    [clientScoped, completingId, deletingId, onComplete, onDelete, onEdit, onReopen, reopeningId],
   )
 
   const groups = useMemo(() => groupTaxDeadlinesByMonth(deadlines), [deadlines])
 
-  if (deadlines.length === 0) {
+  if (isLoading || deadlines.length === 0) {
     return (
       <DataTable
         data={[]}
         columns={columns}
         getRowKey={(d) => d.id}
+        isLoading={isLoading}
         emptyState={{
           icon: Inbox,
           title: 'אין מועדים להצגה',

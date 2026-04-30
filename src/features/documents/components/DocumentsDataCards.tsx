@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { Plus } from 'lucide-react'
-import { Alert } from '../../../components/ui/overlays/Alert'
 import { Modal } from '../../../components/ui/overlays/Modal'
 import { Button } from '../../../components/ui/primitives/Button'
 import { DocumentCard } from './DocumentCard'
@@ -19,7 +18,6 @@ import { UPLOAD_FORM_ID } from './DocumentsDataCards.constants'
 import {
   filterDocuments,
   getCountLabel,
-  getMissingDocumentsMessage,
 } from './DocumentsDataCards.utils'
 import { useDocumentCardActions } from './useDocumentCardActions'
 import { DocumentsDataCardsToolbar } from './DocumentsDataCardsToolbar'
@@ -46,7 +44,6 @@ interface DocumentsDataCardsProps {
 
 export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
   documents,
-  signals,
   taxYear,
   onTaxYearChange,
   businesses,
@@ -106,13 +103,9 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
 
   return (
     <div className="space-y-4">
-      {signals.missing_documents.length > 0 && (
-        <Alert variant="warning" message={getMissingDocumentsMessage(signals.missing_documents)} />
-      )}
-
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-base font-semibold text-gray-900">מסמכים ({countLabel})</h3>
-        <Button size="sm" onClick={() => setUploadOpen(true)} className="gap-1.5 shrink-0">
+        <Button variant="ghost" size="sm" onClick={() => setUploadOpen(true)} className="gap-1.5 shrink-0">
           <Plus className="h-4 w-4" />
           העלאת מסמך
         </Button>

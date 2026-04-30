@@ -1,244 +1,376 @@
-import { useMemo, useState } from 'react'
+import { useRef, useState } from 'react'
+import { CalendarPlus, ChevronDown, Plus } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
-import { Inbox } from 'lucide-react'
-import { DataTable, type Column } from '../../../components/ui/table/DataTable'
-import { Button } from '../../../components/ui/primitives/Button'
+import type { UseFormReturn } from 'react-hook-form'
+import { DropdownMenuItem } from '../../../components/ui/overlays/DropdownMenu'
+import { useDismissibleLayer } from '../../../components/ui/overlays/useDismissibleLayer'
 import { Select } from '../../../components/ui/inputs/Select'
+import { DatePicker } from '../../../components/ui/inputs/DatePicker'
+
+import { cn } from '../../../utils/utils'
+import { ToolbarContainer } from '../../../components/ui/layout/ToolbarContainer'
 import { ActiveFilterBadges } from '../../../components/ui/table/ActiveFilterBadges'
-import { taxDeadlinesApi, taxDeadlinesQK, getDeadlineTypeLabel } from '../api'
-import type { TaxDeadlineResponse } from '../api'
+import { Modal } from '../../../components/ui/overlays/Modal'
+import { Input } from '../../../components/ui/inputs/Input'
+import { ModalFormActions } from '../../../components/ui/overlays/ModalFormActions'
+import { clientsApi, clientsQK, type VatType } from '@/features/clients'
 import {
-  CLIENT_DEADLINES_PAGE_SIZE,
-  INITIAL_TIMELINE_FILTERS,
   TAX_DEADLINE_FILTER_TYPE_OPTIONS,
   TAX_DEADLINE_STATUS_OPTIONS,
   getTaxDeadlineStatusLabel,
   getTaxDeadlineTypeLabel,
+  TAX_DEADLINE_CREATE_FORM_ID,
+  GENERATE_TAX_DEADLINES_FORM_ID,
+  REQUIRED_FIELD_MESSAGE,
 } from '../constants'
-import {
-  filterTimelineDeadlines,
-  getTaxDeadlinePeriodLabel,
-  getTimelineYearOptions,
-} from '../utils'
-import type { TimelineFilters } from '../types'
-import { useClientDeadlineActions } from '../hooks/useClientDeadlineActions'
-import { TaxDeadlineRowActions } from './TaxDeadlineRowActions'
-import { EditTaxDeadlineFormModal } from './EditTaxDeadlineForm'
+import { useClientTaxDeadlines } from '../hooks/useClientTaxDeadlines'
+import { TaxDeadlinesTable } from './TaxDeadlinesTable'
 import { DeadlineSummaryCards } from './DeadlineSummaryCards'
-import {
-  DeadlineAmountCell,
-  DeadlineDateCell,
-  DeadlineStatusBadge,
-  DeadlineUrgencyBadge,
-} from './TaxDeadlineTableParts'
-import { getDeadlineRowClassName } from './taxDeadlineTableUtils'
-import { cn } from '../../../utils/utils'
+import { TaxDeadlineDrawer } from './TaxDeadlineDrawer'
+import { EditTaxDeadlineFormModal } from './EditTaxDeadlineForm'
+import { TaxDeadlineCommonFields, TaxDeadlineModalFooter } from './TaxDeadlineFormParts'
+import type { TaxDeadlineResponse } from '../api'
+import type { ClientDeadlineFilters } from '../hooks/useClientTaxDeadlines'
+import type { CreateTaxDeadlineForm, GenerateTaxDeadlinesForm } from '../types'
 
 interface FilingTimelineProps {
   clientId: number
 }
 
-const TimelineToolbar = ({
-  filters,
-  yearOptions,
-  onChange,
-  onReset,
+// ── Add deadline dropdown button ─────────────────────────────────────────────
+
+const AddDeadlineMenu = ({
+  onCreateManual,
+  onGenerate,
 }: {
-  filters: TimelineFilters
-  yearOptions: { value: string; label: string }[]
-  onChange: (next: Partial<TimelineFilters>) => void
-  onReset: () => void
+  onCreateManual: () => void
+  onGenerate: () => void
 }) => {
-  const hasFilters = Boolean(filters.status || filters.type || filters.year || filters.overdueOnly)
+  const [open, setOpen] = useState(false)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useDismissibleLayer({
+    open,
+    triggerRef,
+    layerRef: menuRef,
+    onDismiss: () => setOpen(false),
+    closeOnScroll: true,
+    closeOnResize: true,
+  })
 
   return (
-    <div className="rounded-lg border border-gray-100 bg-white p-3">
-      <div className="space-y-3">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end">
-          <Select
-            label="סטטוס"
-            value={filters.status}
-            onChange={(e) => onChange({ status: e.target.value })}
-            options={TAX_DEADLINE_STATUS_OPTIONS}
-          />
-          <Select
-            label="סוג"
-            value={filters.type}
-            onChange={(e) => onChange({ type: e.target.value })}
-            options={TAX_DEADLINE_FILTER_TYPE_OPTIONS}
-          />
-          <Select
-            label="שנה"
-            value={filters.year}
-            onChange={(e) => onChange({ year: e.target.value })}
-            options={yearOptions}
-          />
-          <Button
-            type="button"
-            variant="outline"
-            size="md"
-            aria-pressed={filters.overdueOnly}
-            onClick={() => onChange({ overdueOnly: !filters.overdueOnly })}
-            className={cn(
-              'h-10 whitespace-nowrap',
-              filters.overdueOnly &&
-                'border-negative-200 bg-negative-50 text-negative-700 ring-1 ring-negative-200',
-            )}
+    <div className="flex justify-end">
+      <div className="relative">
+        <button
+          ref={triggerRef}
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+        >
+          <Plus className="h-4 w-4" />
+          הוסף מועד
+          <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', open && 'rotate-180')} />
+        </button>
+
+        {open && (
+          <div
+            ref={menuRef}
+            className="absolute left-0 top-full z-50 mt-1 min-w-44 rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
           >
-            באיחור בלבד
-          </Button>
-        </div>
-        {hasFilters && (
-          <ActiveFilterBadges
-            badges={[
-              filters.status
-                ? {
-                    key: 'status',
-                    label: getTaxDeadlineStatusLabel(filters.status),
-                    onRemove: () => onChange({ status: '' }),
-                  }
-                : null,
-              filters.type
-                ? {
-                    key: 'type',
-                    label: getTaxDeadlineTypeLabel(filters.type),
-                    onRemove: () => onChange({ type: '' }),
-                  }
-                : null,
-              filters.year
-                ? {
-                    key: 'year',
-                    label: `שנה: ${filters.year}`,
-                    onRemove: () => onChange({ year: '' }),
-                  }
-                : null,
-              filters.overdueOnly
-                ? {
-                    key: 'overdueOnly',
-                    label: 'באיחור בלבד',
-                    onRemove: () => onChange({ overdueOnly: false }),
-                  }
-                : null,
-            ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}
-            onReset={onReset}
-          />
+            <DropdownMenuItem
+              label="מועד ידני"
+              icon={<Plus className="h-4 w-4" />}
+              onClick={() => { setOpen(false); onCreateManual() }}
+            />
+            <DropdownMenuItem
+              label="צור מועדים אוטומטית"
+              icon={<CalendarPlus className="h-4 w-4" />}
+              onClick={() => { setOpen(false); onGenerate() }}
+            />
+          </div>
         )}
       </div>
     </div>
   )
 }
 
-export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
-  const [filters, setFilters] = useState<TimelineFilters>(INITIAL_TIMELINE_FILTERS)
-  const actions = useClientDeadlineActions(clientId)
-  const listParams = useMemo(
-    () => ({ client_record_id: clientId, page: 1, page_size: CLIENT_DEADLINES_PAGE_SIZE }),
-    [clientId],
-  )
+// ── Filters toolbar ──────────────────────────────────────────────────────────
 
-  const { data, isLoading } = useQuery({
-    queryKey: taxDeadlinesQK.list(listParams),
-    queryFn: () => taxDeadlinesApi.listTaxDeadlines(listParams),
-  })
-
-  const allDeadlines = useMemo(() => data?.items ?? [], [data?.items])
-  const yearOptions = useMemo(() => getTimelineYearOptions(allDeadlines), [allDeadlines])
-  const displayData = useMemo(
-    () => filterTimelineDeadlines(allDeadlines, filters),
-    [allDeadlines, filters],
-  )
-
-  const columns = useMemo<Column<TaxDeadlineResponse>[]>(
-    () => [
-      {
-        key: 'due_date',
-        header: 'מועד',
-        render: (deadline) => <DeadlineDateCell dueDate={deadline.due_date} />,
-      },
-      {
-        key: 'urgency',
-        header: 'דחיפות',
-        render: (deadline) => <DeadlineUrgencyBadge deadline={deadline} />,
-      },
-      {
-        key: 'deadline_type',
-        header: 'סוג',
-        render: (deadline) => (
-          <span className="text-sm text-gray-500">
-            {getDeadlineTypeLabel(deadline.deadline_type)}
-          </span>
-        ),
-      },
-      {
-        key: 'period',
-        header: 'תקופה',
-        render: (deadline) => (
-          <span className="text-sm text-gray-500">{getTaxDeadlinePeriodLabel(deadline)}</span>
-        ),
-      },
-      {
-        key: 'payment_amount',
-        header: 'סכום',
-        render: (deadline) => (
-          <DeadlineAmountCell amount={deadline.payment_amount} status={deadline.status} />
-        ),
-      },
-      {
-        key: 'status',
-        header: 'סטטוס',
-        render: (deadline) => <DeadlineStatusBadge status={deadline.status} />,
-      },
-      {
-        key: 'actions',
-        header: 'פעולות',
-        headerClassName: 'w-16',
-        className: 'w-16',
-        render: (deadline) => (
-          <TaxDeadlineRowActions
-            deadline={deadline}
-            completingId={actions.completingId}
-            reopeningId={actions.reopeningId}
-            deletingId={actions.deletingId}
-            onComplete={actions.handleComplete}
-            onReopen={actions.handleReopen}
-            onEdit={actions.handleEdit}
-            onDelete={actions.handleDelete}
-          />
-        ),
-      },
-    ],
-    [actions],
+const ClientDeadlineFiltersBar = ({
+  filters,
+  onChange,
+  onReset,
+}: {
+  filters: ClientDeadlineFilters
+  onChange: (key: keyof ClientDeadlineFilters, value: string) => void
+  onReset: () => void
+}) => {
+  const hasFilters = Boolean(
+    filters.deadline_type || filters.status || filters.due_from || filters.due_to,
   )
 
   return (
+    <ToolbarContainer>
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <Select
+            label="סוג מועד"
+            value={filters.deadline_type}
+            onChange={(e) => onChange('deadline_type', e.target.value)}
+            options={TAX_DEADLINE_FILTER_TYPE_OPTIONS}
+          />
+          <Select
+            label="סטטוס"
+            value={filters.status}
+            onChange={(e) => onChange('status', e.target.value)}
+            options={TAX_DEADLINE_STATUS_OPTIONS}
+          />
+          <DatePicker
+            label="מתאריך"
+            value={filters.due_from}
+            onChange={(v) => onChange('due_from', v)}
+          />
+          <DatePicker
+            label="עד תאריך"
+            value={filters.due_to}
+            onChange={(v) => onChange('due_to', v)}
+          />
+        </div>
+        {hasFilters && (
+          <ActiveFilterBadges
+            badges={[
+              filters.deadline_type
+                ? {
+                    key: 'deadline_type',
+                    label: getTaxDeadlineTypeLabel(filters.deadline_type),
+                    onRemove: () => onChange('deadline_type', ''),
+                  }
+                : null,
+              filters.status
+                ? {
+                    key: 'status',
+                    label: getTaxDeadlineStatusLabel(filters.status),
+                    onRemove: () => onChange('status', ''),
+                  }
+                : null,
+              filters.due_from
+                ? {
+                    key: 'due_from',
+                    label: `מתאריך: ${filters.due_from}`,
+                    onRemove: () => onChange('due_from', ''),
+                  }
+                : null,
+              filters.due_to
+                ? {
+                    key: 'due_to',
+                    label: `עד: ${filters.due_to}`,
+                    onRemove: () => onChange('due_to', ''),
+                  }
+                : null,
+            ].filter((b): b is NonNullable<typeof b> => b !== null)}
+            onReset={onReset}
+          />
+        )}
+      </div>
+    </ToolbarContainer>
+  )
+}
+
+// ── Create modal (no client picker — client pre-set) ────────────────────────
+
+const ClientCreateDeadlineModal = ({
+  open,
+  onClose,
+  onSubmit,
+  form,
+  isSubmitting,
+  vatType,
+}: {
+  open: boolean
+  onClose: () => void
+  onSubmit: () => void
+  form: UseFormReturn<CreateTaxDeadlineForm>
+  isSubmitting: boolean
+  vatType: VatType | null | undefined
+}) => (
+  <Modal
+    open={open}
+    title="יצירת מועד מס חדש"
+    onClose={onClose}
+    footer={
+      <TaxDeadlineModalFooter
+        isSubmitting={isSubmitting}
+        submitLabel="צור מועד"
+        onCancel={onClose}
+        onSubmit={onSubmit}
+        submitForm={TAX_DEADLINE_CREATE_FORM_ID}
+        submitType="submit"
+      />
+    }
+  >
+    <form id={TAX_DEADLINE_CREATE_FORM_ID} onSubmit={onSubmit} className="space-y-4">
+      <TaxDeadlineCommonFields form={form} vatType={vatType ?? null} />
+    </form>
+  </Modal>
+)
+
+// ── Generate modal (no client picker — client pre-set) ───────────────────────
+
+const ClientGenerateDeadlinesModal = ({
+  open,
+  onClose,
+  onSubmit,
+  form,
+  isSubmitting,
+}: {
+  open: boolean
+  onClose: () => void
+  onSubmit: () => void
+  form: UseFormReturn<GenerateTaxDeadlinesForm>
+  isSubmitting: boolean
+}) => {
+  const { register, formState: { errors } } = form
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title="יצירת מועדים אוטומטית"
+      footer={
+        <ModalFormActions
+          onCancel={onClose}
+          isLoading={isSubmitting}
+          submitForm={GENERATE_TAX_DEADLINES_FORM_ID}
+          submitLabel="צור מועדים"
+          submitType="submit"
+        />
+      }
+    >
+      <form id={GENERATE_TAX_DEADLINES_FORM_ID} onSubmit={onSubmit} className="space-y-4">
+        <Input
+          label="שנת מס *"
+          type="number"
+          min="2000"
+          max="2100"
+          {...register('year', {
+            required: REQUIRED_FIELD_MESSAGE,
+            validate: (value) => /^\d{4}$/.test(value) || 'יש להזין שנה בת 4 ספרות',
+          })}
+          error={errors.year?.message}
+        />
+      </form>
+    </Modal>
+  )
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
+
+export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
+  const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null)
+
+  const {
+    deadlines,
+    filters,
+    isLoading,
+    isAdvisor,
+    isCreating,
+    isGenerating,
+    isUpdating,
+    showCreateModal,
+    showGenerateModal,
+    setShowCreateModal,
+    setShowGenerateModal,
+    handleFilterChange,
+    handleResetFilters,
+    createForm,
+    onCreateSubmit,
+    generateForm,
+    onGenerateSubmit,
+    completingId,
+    reopeningId,
+    deletingId,
+    editingDeadline,
+    editForm,
+    setEditingDeadline,
+    handleComplete,
+    handleReopen,
+    handleEdit,
+    handleDelete,
+    onEditSubmit,
+  } = useClientTaxDeadlines(clientId)
+
+  const clientQuery = useQuery({
+    queryKey: clientsQK.detail(clientId),
+    queryFn: () => clientsApi.getById(clientId),
+    enabled: showCreateModal,
+  })
+
+  return (
     <div className="space-y-4">
-      <DeadlineSummaryCards deadlines={allDeadlines} />
-      <TimelineToolbar
+      {isAdvisor && (
+        <AddDeadlineMenu
+          onCreateManual={() => setShowCreateModal(true)}
+          onGenerate={() => setShowGenerateModal(true)}
+        />
+      )}
+
+      <DeadlineSummaryCards deadlines={deadlines} />
+
+      <ClientDeadlineFiltersBar
         filters={filters}
-        yearOptions={yearOptions}
-        onChange={(next) => setFilters((current) => ({ ...current, ...next }))}
-        onReset={() => setFilters(INITIAL_TIMELINE_FILTERS)}
+        onChange={handleFilterChange}
+        onReset={handleResetFilters}
       />
-      <DataTable
-        data={displayData}
-        columns={columns}
-        getRowKey={(entry) => entry.id}
+
+      <TaxDeadlinesTable
+        deadlines={deadlines}
         isLoading={isLoading}
-        rowClassName={getDeadlineRowClassName}
-        emptyState={{
-          icon: Inbox,
-          title: 'אין מועדים להצגה',
-          message: 'לא נמצאו מועדי מס ללקוח',
-          variant: 'illustration',
-        }}
+        clientScoped
+        completingId={completingId}
+        reopeningId={reopeningId}
+        deletingId={deletingId}
+        onComplete={isAdvisor ? handleComplete : undefined}
+        onReopen={isAdvisor ? handleReopen : undefined}
+        onEdit={isAdvisor ? handleEdit : undefined}
+        onDelete={isAdvisor ? handleDelete : undefined}
+        onRowClick={setSelectedDeadline}
       />
-      <EditTaxDeadlineFormModal
-        open={Boolean(actions.editingDeadline)}
-        onClose={() => actions.setEditingDeadline(null)}
-        onSubmit={actions.onEditSubmit}
-        form={actions.editForm}
-        isSubmitting={actions.isUpdating}
-      />
+
+      <TaxDeadlineDrawer deadline={selectedDeadline} onClose={() => setSelectedDeadline(null)} />
+
+      {isAdvisor && (
+        <ClientCreateDeadlineModal
+          open={showCreateModal}
+          onClose={() => {
+            setShowCreateModal(false)
+            createForm.reset({ client_id: String(clientId) })
+          }}
+          onSubmit={onCreateSubmit}
+          form={createForm}
+          isSubmitting={isCreating}
+          vatType={clientQuery.data?.vat_reporting_frequency}
+        />
+      )}
+
+      {isAdvisor && (
+        <ClientGenerateDeadlinesModal
+          open={showGenerateModal}
+          onClose={() => setShowGenerateModal(false)}
+          onSubmit={onGenerateSubmit}
+          form={generateForm}
+          isSubmitting={isGenerating}
+        />
+      )}
+
+      {isAdvisor && (
+        <EditTaxDeadlineFormModal
+          open={Boolean(editingDeadline)}
+          onClose={() => setEditingDeadline(null)}
+          onSubmit={onEditSubmit}
+          form={editForm}
+          isSubmitting={isUpdating}
+        />
+      )}
     </div>
   )
 }

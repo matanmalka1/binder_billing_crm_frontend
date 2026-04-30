@@ -3,17 +3,15 @@ import {
   CheckCircle2,
   ExternalLink,
   MinusCircle,
-  Plus,
   ReceiptText,
   WalletCards,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '../../../components/ui/primitives/Badge'
 import { Button } from '../../../components/ui/primitives/Button'
-import { Select } from '../../../components/ui/inputs/Select'
 import { StatsCard } from '../../../components/ui/layout/StatsCard'
 import { VatWorkItemsCreateModal } from './VatWorkItemsCreateModal'
-import { VatExportButtons } from './VatExportButtons'
+import { VatClientActionBar } from './VatClientActionBar'
 import type { CreateVatWorkItemPayload, VatAnnualSummary, VatPeriodRow } from '../api'
 import { showErrorToast } from '../../../utils/utils'
 import { useAuthStore } from '../../../store/auth.store'
@@ -195,24 +193,14 @@ export const VatClientSummaryPanel = ({ clientId }: VatClientSummaryPanelProps) 
 
   return (
     <div className="space-y-4" dir="rtl">
-      {/* Action bar */}
-      <div className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-        <Button onClick={() => setCreateOpen(true)} size="sm">
-          <Plus className="h-4 w-4" />
-          פתיחת תיק מע״מ
-        </Button>
-        <div className="flex flex-wrap items-center gap-2">
-          <Select
-            value={String(selectedAnnual?.year ?? selectedYear)}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-            options={yearOptions}
-            className="w-28 py-1.5"
-          />
-          {role === 'advisor' && (
-            <VatExportButtons clientId={clientId} year={selectedAnnual?.year ?? selectedYear} />
-          )}
-        </div>
-      </div>
+      <VatClientActionBar
+        clientId={clientId}
+        isAdvisor={role === 'advisor'}
+        selectedYear={selectedAnnual?.year ?? selectedYear}
+        yearOptions={yearOptions}
+        onCreateClick={() => setCreateOpen(true)}
+        onYearChange={setSelectedYear}
+      />
 
       {/* Error */}
       {error && (
