@@ -3,10 +3,7 @@ import { ChevronDown, Clock, InboxIcon } from "lucide-react";
 import type { NormalizedTimelineEvent } from "../normalize";
 import { TimelineEventItem } from "./TimelineEventItem";
 import { cn } from "../../../utils/utils";
-import { type EventGroup, groupEventsByDate } from "./timelineGrouping";
-
-export type { EventGroup };
-export { groupEventsByDate };
+import { groupEventsByDate } from "./timelineGrouping";
 
 // ── Empty state ───────────────────────────────────────────────────────────────
 

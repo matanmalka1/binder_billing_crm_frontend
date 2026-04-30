@@ -12,12 +12,12 @@ type DefinitionItem = {
 
 const EmptyValue = () => <span className="font-medium text-gray-400">{EMPTY_VALUE}</span>;
 
-export const displayValue = (value: ReactNode) => {
+const displayValue = (value: ReactNode) => {
   if (value === EMPTY_VALUE || value === "" || value == null) return <EmptyValue />;
   return value;
 };
 
-export const SectionCard = ({
+const SectionCard = ({
   title,
   children,
   className,
