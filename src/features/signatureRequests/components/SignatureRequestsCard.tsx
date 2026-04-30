@@ -35,7 +35,7 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, businessId, can
         title={`בקשות חתימה${total > 0 ? ` (${total})` : ''}`}
         actions={
           canManage ? (
-            <Button variant="outline" size="sm" onClick={() => setShowCreate(true)}>
+            <Button variant="ghost" size="sm" onClick={() => setShowCreate(true)}>
               <Plus className="h-3.5 w-3.5" />
               בקשה חדשה
             </Button>

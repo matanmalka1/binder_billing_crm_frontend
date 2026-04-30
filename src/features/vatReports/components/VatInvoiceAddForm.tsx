@@ -193,7 +193,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
               {deductionRateHint.label}
             </span>
           )}
-          <Button type="submit" variant="primary" size="sm" isLoading={isAdding}>
+          <Button type="submit" variant="ghost" size="sm" isLoading={isAdding}>
             <Plus className="h-3.5 w-3.5" />
             הוסף
           </Button>

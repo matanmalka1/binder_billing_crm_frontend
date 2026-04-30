@@ -208,11 +208,10 @@ export const TaxCalculationPanel: React.FC<Props> = ({ reportId }) => {
         <div className="flex justify-end">
           <Button
             type="button"
-            variant="primary"
+            variant="ghost"
             size="sm"
             onClick={handleSaveTaxResult}
             isLoading={saveTaxMutation.isPending}
-            className="bg-info-600 hover:bg-info-700"
           >
             שמור חישוב מס
           </Button>

@@ -68,7 +68,7 @@ export const AnnualReportPanelLayout = ({
               )}
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={onDelete}
                 className="border-negative-300 text-negative-600 hover:bg-negative-50"
@@ -77,7 +77,7 @@ export const AnnualReportPanelLayout = ({
               </Button>
               <Button
                 type="button"
-                variant="primary"
+                variant="ghost"
                 size="sm"
                 onClick={onSave}
                 disabled={!isDirty || isSaving}

@@ -66,7 +66,7 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
       onClose={handleClose}
       footer={
         <div className="flex gap-2 justify-end">
-          <Button type="button" variant="outline" disabled={isCreating} onClick={handleClose}>
+          <Button type="button" variant="ghost" disabled={isCreating} onClick={handleClose}>
             ביטול
           </Button>
           <Button type="button" isLoading={isCreating} disabled={isCreating} onClick={submit}>

@@ -63,7 +63,7 @@ export const CorrespondenceCard = ({ businessId, clientId }: CorrespondenceCardP
         actions={
           <Button
             type="button"
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={() => setModalOpen(true)}
             className="gap-2"

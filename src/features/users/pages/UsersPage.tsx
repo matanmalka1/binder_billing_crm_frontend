@@ -15,6 +15,7 @@ import {
   type UserResponse,
   UsersFiltersBar,
 } from '@/features/users'
+import { Plus } from 'lucide-react'
 
 export const Users: React.FC = () => {
   const currentUserId = useAuthStore((s) => s.user?.id)
@@ -72,11 +73,12 @@ export const Users: React.FC = () => {
         description="ניהול חשבונות משתמשים, תפקידים והרשאות"
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => setShowAuditLogs(true)}>
+            <Button variant="ghost" size="sm" onClick={() => setShowAuditLogs(true)}>
               לוג ביקורת
             </Button>
-            <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+            <Button variant="ghost" size="sm" onClick={() => setShowCreateModal(true)}>
               משתמש חדש
+              <Plus className="h-4 w-4" />
             </Button>
           </div>
         }

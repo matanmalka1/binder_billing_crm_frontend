@@ -56,15 +56,15 @@ export const TaxDeadlines: React.FC = () => {
       actions={
         <div className="flex gap-2">
           {isAdvisor && (
-            <Button variant="ghost" onClick={() => setShowGenerateModal(true)} className="gap-2">
-              <CalendarPlus className="h-4 w-4" />
+            <Button variant="ghost" size="sm" onClick={() => setShowGenerateModal(true)} className="gap-2">
               צור מועדים
+              <CalendarPlus className="h-4 w-4" />
             </Button>
           )}
           {isAdvisor && (
-            <Button variant="ghost" onClick={() => setShowCreateModal(true)} className="gap-2">
-              <Plus className="h-4 w-4" />
+            <Button variant="ghost" size="sm" onClick={() => setShowCreateModal(true)} className="gap-2">
               מועד חדש
+              <Plus className="h-4 w-4" />
             </Button>
           )}
         </div>

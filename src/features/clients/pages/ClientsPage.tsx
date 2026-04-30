@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Users } from 'lucide-react'
+import { Plus, Users } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { StatsCard } from '@/components/ui/layout/StatsCard'
 import { Alert } from '@/components/ui/overlays/Alert'
@@ -97,6 +97,7 @@ export const Clients: React.FC = () => {
               {can.createClients && (
                 <Button variant="ghost" size="sm" onClick={() => setShowCreateModal(true)}>
                   לקוח חדש
+                   <Plus className="h-3.5 w-3.5" />
                 </Button>
               )}
             </div>

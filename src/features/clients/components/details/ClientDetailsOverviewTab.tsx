@@ -81,7 +81,10 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
             client={client}
             sideContent={<ClientNotesCard clientId={client.id} canEdit={canEditClients} />}
           />
-          <MissingDocumentsNotice clientId={client.id} />
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(260px,0.65fr)_minmax(0,1.6fr)]">
+            <MissingDocumentsNotice clientId={client.id} />
+            <ClientStatusCard clientId={client.id} />
+          </div>
           <ClientBusinessesCard
             clientId={client.id}
             canEdit={canEditClients}
@@ -138,7 +141,6 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
 
       {activeTab === 'finance' && (
         <div className="space-y-6">
-          <ClientStatusCard clientId={client.id} />
           <ClientRemindersCard clientId={client.id} clientName={client.full_name} />
           <NotificationsTab businessId={firstBusinessId ?? undefined} />
         </div>
@@ -165,7 +167,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
             <div className="flex items-center justify-between gap-3">
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={() => {
                   onEditClose()
                   setIsConfirmingDelete(true)
@@ -177,13 +179,13 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
                 מחק לקוח
               </Button>
               <div className="flex items-center gap-3">
-                <Button type="button" variant="outline" onClick={onEditClose} disabled={isUpdating}>
+                <Button type="button" variant="ghost" onClick={onEditClose} disabled={isUpdating}>
                   ביטול
                 </Button>
                 <Button
                   type="submit"
                   form={EDIT_FORM_ID}
-                  variant="primary"
+                  variant="ghost"
                   isLoading={isUpdating}
                   disabled={isUpdating}
                 >

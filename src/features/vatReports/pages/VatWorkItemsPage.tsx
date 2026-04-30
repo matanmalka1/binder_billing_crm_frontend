@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
-import { AlertTriangle, Clock, FileText, Hourglass, CheckCircle2 } from 'lucide-react'
+import { AlertTriangle, Clock, FileText, Hourglass, CheckCircle2, Plus } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import {
   buildVatWorkItemColumns,
@@ -73,8 +73,9 @@ export const VatWorkItems: React.FC = () => {
         description='ניהול תיקי מע"מ חודשיים ברמת לקוח — הקלדה, בדיקה והגשה'
         actions={
           isAdvisor ? (
-            <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)}>
-              תיק חדש
+            <Button variant="ghost" size="sm" onClick={() => setShowCreateModal(true)}>
+              דוח מע״מ חדש
+              <Plus className="h-4 w-4" />
             </Button>
           ) : undefined
         }

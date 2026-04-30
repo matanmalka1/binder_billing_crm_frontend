@@ -26,9 +26,7 @@ export const SECTION_KEYS = [
   'financials',
   'tax',
   'deductions',
-  'documents',
   'timeline',
-  'charges',
 ] as const
 
 export type SectionKey = (typeof SECTION_KEYS)[number]

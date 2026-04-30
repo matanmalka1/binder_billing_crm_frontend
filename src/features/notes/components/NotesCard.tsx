@@ -121,7 +121,7 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
           canEdit && !showAdd ? (
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={() => setShowAdd(true)}
               className="gap-2"

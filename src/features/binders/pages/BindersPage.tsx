@@ -13,6 +13,7 @@ import {
 import { BindersPageDialogs } from '../components/dialogs/BindersPageDialogs'
 import { useBindersPageDialogs } from '../hooks/useBindersPageDialogs'
 import { getBinderNumberLabel } from '../utils'
+import { Plus } from 'lucide-react'
 
 export const Binders: React.FC = () => {
   const [receiveOpen, setReceiveOpen] = useState(false)
@@ -79,8 +80,9 @@ export const Binders: React.FC = () => {
         title="קלסרים"
         description="רשימת הקלסרים במשרד — סינון לפי סטטוס, תקופה וחיפוש חופשי"
         actions={
-          <Button variant="primary" size="sm" onClick={() => setReceiveOpen(true)}>
+          <Button variant="ghost" size="sm" onClick={() => setReceiveOpen(true)}>
             קליטת חומר
+             <Plus className="h-3.5 w-3.5" />
           </Button>
         }
       />

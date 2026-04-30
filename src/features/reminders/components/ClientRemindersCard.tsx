@@ -43,7 +43,7 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
       title="תזכורות לקוח"
       subtitle="תזכורות פתוחות ומאוחרות עבור הלקוח"
       actions={
-        <Button variant="outline" size="sm" onClick={() => setShowCreateModal(true)}>
+        <Button variant="ghost" size="sm" onClick={() => setShowCreateModal(true)}>
           <Plus className="h-4 w-4" />
           תזכורת חדשה
         </Button>

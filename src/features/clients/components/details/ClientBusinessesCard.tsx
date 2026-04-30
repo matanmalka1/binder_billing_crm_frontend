@@ -93,12 +93,12 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
     <>
       <Card
         title="עסקים"
-        className="shadow-sm"
+        className="shadow-none"
         actions={
           canEdit ? (
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={onAddBusiness}
               className="gap-2"
@@ -110,19 +110,19 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
         }
       >
         {isLoading ? (
-          <p className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-5 text-center text-sm text-gray-500">
+          <p className="px-1 py-4 text-sm text-gray-500">
             טוען...
           </p>
         ) : businesses.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-5 text-center text-sm text-gray-500">
+          <p className="px-1 py-4 text-sm text-gray-500">
             אין עסקים רשומים
           </p>
         ) : (
-          <ul className="space-y-3">
+          <ul className="divide-y divide-gray-100">
             {businesses.map((biz) => (
               <li
                 key={biz.id}
-                className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm transition-colors hover:border-primary-200 hover:bg-primary-50/30"
+                className="flex items-center gap-3 py-3"
               >
                 <div className="min-w-0 flex-1">
                   <Link

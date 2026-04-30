@@ -38,7 +38,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
   <div className="flex items-center justify-between">
     {isAdvisor && (
       <div className="flex gap-2">
-        <Button variant="primary" size="sm" onClick={onOpenCreate}>
+        <Button variant="ghost" size="sm" onClick={onOpenCreate}>
           הוסף מקדמה
         </Button>
         <div className="w-32">

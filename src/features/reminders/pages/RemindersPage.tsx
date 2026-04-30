@@ -61,13 +61,13 @@ export const RemindersPage: React.FC = () => {
       description="תזכורות אוטומטיות למועדי מס, תיקים לא פעילים וחשבוניות שלא שולמו"
       actions={
         <Button
-          variant="primary"
-          size="md"
+          variant="ghost"
+          size="sm"
           onClick={() => setShowCreateModal(true)}
           className="gap-2"
         >
-          <Plus className="h-4 w-4" />
           תזכורת חדשה
+          <Plus className="h-4 w-4" />
         </Button>
       }
     />
@@ -114,9 +114,9 @@ export const RemindersPage: React.FC = () => {
           <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center text-gray-500">
             <p className="text-lg font-medium mb-2">אין תזכורות להצגה</p>
             <p className="text-sm mb-4">צור תזכורת חדשה כדי להופיע כאן.</p>
-            <Button variant="primary" className="gap-2" onClick={() => setShowCreateModal(true)}>
-              <Plus className="h-4 w-4" />
+            <Button variant="ghost" className="gap-2" onClick={() => setShowCreateModal(true)}>
               תזכורת חדשה
+              <Plus className="h-4 w-4" />
             </Button>
           </div>
         )

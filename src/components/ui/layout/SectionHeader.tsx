@@ -40,7 +40,8 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
       {subtitle && (
         <p
           className={cn(
-            'mt-1 text-gray-600',
+            'text-gray-600',
+            size === 'lg' ? 'mt-3' : 'mt-1',
             size === 'lg' ? 'text-base md:text-lg max-w-3xl leading-relaxed' : 'text-sm',
           )}
         >

@@ -84,7 +84,7 @@ export const AnnualReportFullPanel = ({
                 </Button>
               )}
               <Button
-                variant="secondary"
+                variant="ghost"
                 onClick={() => setShowDeleteConfirm(true)}
                 className="gap-1.5 border-negative-300 text-negative-600 hover:bg-negative-50"
               >
@@ -92,7 +92,7 @@ export const AnnualReportFullPanel = ({
                 מחק דוח
               </Button>
               <Button
-                variant="primary"
+                variant="ghost"
                 onClick={handleSave}
                 disabled={!isDirty || isUpdating}
                 className="gap-1.5"

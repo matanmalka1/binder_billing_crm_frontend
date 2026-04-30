@@ -35,9 +35,9 @@ export const AnnualReportsPage: React.FC = () => {
         title={`דוחות שנתיים לשנת המס ${taxYearLabel}`}
         description={filingSeasonYear ? `עונת הגשה ${filingSeasonYear}` : 'ניהול ומעקב אחר דוחות שנתיים'}
         actions={
-          <Button variant="primary" onClick={openCreate} disabled={!taxYear} className="gap-2">
-            <Plus className="h-4 w-4" />
+          <Button variant="ghost" size='sm' onClick={openCreate} disabled={!taxYear} className="gap-2">
             {taxYear ? `דוח שנתי ${taxYear}` : 'דוח שנתי'}
+            <Plus className="h-4 w-4" />
           </Button>
         }
       />

@@ -38,7 +38,7 @@ export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ 
           <BarChart2 className="h-4 w-4" />
           השוואה בין שנים
         </Button>
-        <Button variant="primary" size="sm" onClick={() => setShowCreate(true)}>
+        <Button variant="ghost" size="sm" onClick={() => setShowCreate(true)}>
           <Plus className="h-4 w-4" />
           דוח חדש
         </Button>

@@ -95,11 +95,10 @@ export const AutoPopulateControls: React.FC<AutoPopulateControlsProps> = ({
     ) : (
       <Button
         type="button"
-        variant="primary"
+        variant="ghost"
         size="sm"
         onClick={() => onPopulate(false)}
         isLoading={isPending}
-        className="bg-info-600 hover:bg-info-700"
       >
         מלא מנתוני מע"מ
       </Button>

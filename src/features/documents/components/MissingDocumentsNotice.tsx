@@ -45,23 +45,23 @@ export const MissingDocumentsNotice: React.FC<MissingDocumentsNoticeProps> = ({
   }
 
   return (
-    <Card className="border-amber-200 bg-amber-50/80">
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div className="flex min-w-0 items-start gap-3">
-          <div className="rounded-lg bg-amber-100 p-2 text-amber-700">
+    <Card className="border-amber-200 bg-white [&>div]:p-5">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <div className="flex w-full items-start justify-between gap-4">
+          <div className="rounded-xl bg-amber-100 p-3 text-amber-700">
             <AlertTriangle className="h-5 w-5" />
           </div>
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-amber-950">
+          <div className="min-w-0 flex-1">
+            <p className="text-lg font-bold text-amber-950">
               חסרים {missingDocuments.length} מסמכים בפרטי הלקוח
             </p>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
               {missingDocuments.map((documentType) => (
                 <span
                   key={documentType}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-white px-3 py-1 text-xs font-medium text-amber-900"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-white px-4 py-1.5 text-sm font-semibold text-amber-900"
                 >
-                  <FileText className="h-3.5 w-3.5" />
+                  <FileText className="h-4 w-4" />
                   {getDocumentTypeLabel(documentType)}
                 </span>
               ))}
@@ -70,7 +70,7 @@ export const MissingDocumentsNotice: React.FC<MissingDocumentsNoticeProps> = ({
         </div>
         <Link
           to={`/clients/${clientId}/documents`}
-          className="inline-flex shrink-0 items-center justify-center rounded-md border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-900 transition-colors hover:bg-amber-100"
+          className="inline-flex w-full items-center justify-center rounded-lg border border-amber-400 bg-white px-4 py-2 text-sm font-bold text-amber-900 transition-colors hover:bg-amber-50"
         >
           מעבר למסמכים
         </Link>

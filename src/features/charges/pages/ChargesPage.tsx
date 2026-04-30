@@ -65,9 +65,9 @@ export const Charges: React.FC = () => {
         actions={
           <div className="flex items-center gap-2">
             {isAdvisor && (
-              <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)}>
-                <Plus className="h-3.5 w-3.5" />
+              <Button variant="ghost" size="sm" onClick={() => setShowCreateModal(true)}>
                 חיוב חדש
+                <Plus className="h-3.5 w-3.5" />
               </Button>
             )}
           </div>

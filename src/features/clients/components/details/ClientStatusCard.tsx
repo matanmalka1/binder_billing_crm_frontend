@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -8,12 +8,10 @@ import {
   TrendingUp,
   FolderOpen,
   FileCheck,
-  ChevronLeft,
 } from 'lucide-react'
 import { clientsApi, clientsQK } from '../../api'
 import { CLIENT_ROUTES } from '../../api/endpoints'
 import { vatReportsApi, vatReportsQK } from '@/features/vatReports'
-import { Card } from '../../../../components/ui/primitives/Card'
 import { useFirstBusinessId } from '../../hooks/useFirstBusinessId'
 import { fmtCurrency as fmt } from '@/utils/utils'
 interface Props {
@@ -29,24 +27,24 @@ interface TileProps {
 }
 
 const Tile: React.FC<TileProps> = ({ icon, title, primary, secondary, onClick }) => (
-  <div
-    className={`relative flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4 ${onClick ? 'cursor-pointer hover:bg-gray-100 transition-colors' : ''}`}
+  <button
+    type="button"
+    disabled={!onClick}
+    className={`flex min-w-0 items-center gap-2 rounded-md px-2 py-1.5 text-right transition-colors ${
+      onClick ? 'hover:bg-gray-50' : 'cursor-default'
+    }`}
     onClick={onClick}
   >
-    <div className="mt-0.5 shrink-0 text-primary-600">{icon}</div>
+    <div className="shrink-0 text-gray-400">{icon}</div>
     <div className="min-w-0 flex-1">
-      <p className="text-xs font-medium text-gray-500">{title}</p>
-      <p className="mt-0.5 text-lg font-semibold text-gray-900 leading-tight">{primary}</p>
-      <p className="mt-0.5 text-xs text-gray-500">{secondary}</p>
+      <p className="truncate text-[11px] font-medium text-gray-500">{title}</p>
+      <p className="truncate text-sm font-semibold leading-tight text-gray-900">{primary}</p>
+      <p className="truncate text-[11px] text-gray-500">{secondary}</p>
     </div>
-    {onClick && (
-      <ChevronLeft className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-300" />
-    )}
-  </div>
+  </button>
 )
 
 const CURRENT_YEAR = new Date().getFullYear()
-const YEAR_OPTIONS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2]
 
 export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
   const navigate = useNavigate()
@@ -71,6 +69,22 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
 
   const isLoading = isBusinessLoading || isStatusLoading || isVatLoading
   const vatYear = vatSummary?.annual?.find((entry) => entry.year === selectedYear)
+  const yearOptions = useMemo(() => {
+    const years = new Set<number>()
+    vatSummary?.annual?.forEach((entry) => {
+      if (
+        entry.periods_count > 0 ||
+        entry.filed_count > 0 ||
+        Number(entry.total_output_vat) !== 0 ||
+        Number(entry.total_input_vat) !== 0 ||
+        Number(entry.net_vat) !== 0
+      ) {
+        years.add(entry.year)
+      }
+    })
+    years.add(data?.year ?? CURRENT_YEAR)
+    return Array.from(years).sort((a, b) => b - a)
+  }, [data?.year, vatSummary?.annual])
   const vatPrimary = vatYear ? fmt(vatYear.net_vat) : '—'
   const vatStatus = vatYear
     ? vatYear.periods_count === 0
@@ -80,7 +94,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
 
   const yearSelector = (
     <div className="flex gap-1">
-      {YEAR_OPTIONS.map((y) => (
+      {yearOptions.map((y) => (
         <button
           key={y}
           type="button"
@@ -99,13 +113,16 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
 
   if (isLoading) {
     return (
-      <Card title="סטטוס לקוח">
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+      <section className="h-full space-y-2 rounded-lg border border-gray-100 bg-white px-4 py-3">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-sm font-semibold text-gray-900">סטטוס לקוח</h3>
+        </div>
+        <div className="grid grid-cols-2 gap-1 md:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-24 animate-pulse rounded-lg bg-gray-100" />
+            <div key={i} className="h-12 animate-pulse rounded-md bg-gray-100" />
           ))}
         </div>
-      </Card>
+      </section>
     )
   }
 
@@ -128,38 +145,42 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
         : '—'
 
   return (
-    <Card title={`סטטוס לקוח — ${year}`} actions={yearSelector}>
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+    <section className="h-full space-y-2 rounded-lg border border-gray-100 bg-white px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h3 className="text-sm font-semibold text-gray-900">סטטוס לקוח — {year}</h3>
+        {yearSelector}
+      </div>
+      <div className="grid grid-cols-2 gap-1 md:grid-cols-3">
         <Tile
-          icon={<Receipt size={18} />}
+          icon={<Receipt size={14} />}
           title='מע"מ (לקוח)'
           primary={vatPrimary}
           secondary={vatStatus}
           onClick={() => navigate(CLIENT_ROUTES.vat(clientId))}
         />
         <Tile
-          icon={<FileText size={18} />}
+          icon={<FileText size={14} />}
           title="דוח שנתי"
           primary={arStatus}
           secondary={arSecondary}
           onClick={() => navigate(CLIENT_ROUTES.annualReports(clientId))}
         />
         <Tile
-          icon={<CreditCard size={18} />}
+          icon={<CreditCard size={14} />}
           title="חיובים פתוחים"
           primary={fmt(charges.total_outstanding)}
           secondary={`${charges.unpaid_count} חיובים`}
           onClick={() => navigate(`/charges?client_record_id=${clientId}`)}
         />
         <Tile
-          icon={<TrendingUp size={18} />}
+          icon={<TrendingUp size={14} />}
           title="מקדמות"
           primary={fmt(advance_payments.total_paid)}
           secondary={`${advance_payments.count} תשלומים`}
           onClick={() => navigate(CLIENT_ROUTES.advancePayments(clientId))}
         />
         <Tile
-          icon={<FolderOpen size={18} />}
+          icon={<FolderOpen size={14} />}
           title="קלסרים"
           primary={firstBusinessId == null ? '—' : `${binders.active_count} פעילים`}
           secondary={
@@ -172,7 +193,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           }
         />
         <Tile
-          icon={<FileCheck size={18} />}
+          icon={<FileCheck size={14} />}
           title="מסמכים"
           primary={
             firstBusinessId == null ? '—' : `${documents.present_count}/${documents.total_count}`
@@ -183,6 +204,6 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           }
         />
       </div>
-    </Card>
+    </section>
   )
 }

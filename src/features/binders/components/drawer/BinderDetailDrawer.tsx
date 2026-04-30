@@ -39,7 +39,7 @@ export const BinderDetailDrawer: React.FC<BinderDetailDrawerProps> = ({
     footer={
       binder && onDelete ? (
         <div className="flex justify-end">
-          <Button variant="danger" size="sm" onClick={onDelete}>
+          <Button variant="ghost" size="sm" onClick={onDelete}>
             <Trash2 className="h-4 w-4 ml-1" />
             מחק קלסר
           </Button>
