@@ -6,24 +6,24 @@ import {
   statusColumn,
   textColumn,
   type Column,
-} from "../../../components/ui/table";
-import type { ChargeResponse } from "../api";
-import { getChargeAmountText, getChargePeriodLabel, getChargeTypeLabel } from "../utils";
-import { formatClientOfficeId } from "../../../utils/utils";
-import { getChargeStatusLabel } from "../../../utils/enums";
-import { ChargeRowActions } from "./ChargeRowActions";
-import { chargeStatusVariants } from "../constants";
-import type { ChargeAction } from "../types";
+} from '../../../components/ui/table'
+import type { ChargeResponse } from '../api'
+import { getChargeAmountText, getChargePeriodLabel, getChargeTypeLabel } from '../utils'
+import { formatClientOfficeId } from '../../../utils/utils'
+import { getChargeStatusLabel } from '../../../utils/enums'
+import { ChargeRowActions } from './ChargeRowActions'
+import { chargeStatusVariants } from '../constants'
+import type { ChargeAction } from '../types'
 
 interface BuildChargeColumnsParams {
-  isAdvisor: boolean;
-  actionLoadingId: number | null;
-  runAction: (chargeId: number, action: ChargeAction) => Promise<void>;
-  onOpenDetail: (chargeId: number) => void;
-  selectedIds?: Set<number>;
-  onToggleSelect?: (id: number) => void;
-  onToggleAll?: (ids: number[]) => void;
-  allIds?: number[];
+  isAdvisor: boolean
+  actionLoadingId: number | null
+  runAction: (chargeId: number, action: ChargeAction) => Promise<void>
+  onOpenDetail: (chargeId: number) => void
+  selectedIds?: Set<number>
+  onToggleSelect?: (id: number) => void
+  onToggleAll?: (ids: number[]) => void
+  allIds?: number[]
 }
 
 export const buildChargeColumns = ({
@@ -38,83 +38,83 @@ export const buildChargeColumns = ({
 }: BuildChargeColumnsParams): Column<ChargeResponse>[] => {
   const dataColumns: Column<ChargeResponse>[] = [
     monoColumn({
-      key: "office_client_number",
+      key: 'office_client_number',
       header: "מס' לקוח",
-      headerClassName: "w-28",
-      className: "w-28",
+      headerClassName: 'w-28',
+      className: 'w-28',
       getValue: (charge) => formatClientOfficeId(charge.office_client_number),
     }),
     monoColumn({
-      key: "id",
-      header: "#",
-      headerClassName: "w-10 text-center",
-      className: "w-10 text-center",
-      valueClassName: "text-xs text-gray-400",
+      key: 'id',
+      header: '#',
+      headerClassName: 'w-10 text-center',
+      className: 'w-10 text-center',
+      valueClassName: 'text-xs text-gray-400',
       getValue: (charge) => charge.id,
     }),
     textColumn({
-      key: "client_record_id",
-      header: "לקוח",
-      headerClassName: "w-48",
-      className: "w-48 max-w-[12rem]",
-      valueClassName: "font-semibold text-gray-900",
+      key: 'client_record_id',
+      header: 'לקוח',
+      headerClassName: 'w-48',
+      className: 'w-48 max-w-[12rem]',
+      valueClassName: 'font-semibold text-gray-900',
       getValue: (charge) => charge.business_name ?? `לקוח #${charge.client_record_id}`,
     }),
     textColumn({
-      key: "charge_type",
-      header: "סוג",
-      headerClassName: "w-24",
-      className: "w-24",
+      key: 'charge_type',
+      header: 'סוג',
+      headerClassName: 'w-24',
+      className: 'w-24',
       getValue: (charge) => getChargeTypeLabel(charge.charge_type),
     }),
     textColumn({
-      key: "period",
-      header: "תקופה",
-      headerClassName: "w-40",
-      className: "w-40",
+      key: 'period',
+      header: 'תקופה',
+      headerClassName: 'w-40',
+      className: 'w-40',
       getValue: (charge) => getChargePeriodLabel(charge.period, charge.months_covered),
     }),
     statusColumn({
-      key: "status",
-      header: "סטטוס",
-      headerClassName: "w-28",
-      className: "w-28",
+      key: 'status',
+      header: 'סטטוס',
+      headerClassName: 'w-28',
+      className: 'w-28',
       getStatus: (charge) => charge.status,
       getLabel: getChargeStatusLabel,
       variantMap: chargeStatusVariants,
     }),
     monoColumn({
-      key: "amount",
-      header: "סכום",
-      headerClassName: "w-36",
-      className: "w-36",
-      valueClassName: "font-semibold text-gray-900",
+      key: 'amount',
+      header: 'סכום',
+      headerClassName: 'w-36',
+      className: 'w-36',
+      valueClassName: 'font-semibold text-gray-900',
       getValue: (charge) => getChargeAmountText(charge),
     }),
     dateColumn({
-      key: "created_at",
-      header: "תאריך",
-      headerClassName: "w-24",
-      className: "w-24",
-      valueClassName: "text-gray-400",
+      key: 'created_at',
+      header: 'תאריך',
+      headerClassName: 'w-24',
+      className: 'w-24',
+      valueClassName: 'text-gray-400',
       getValue: (charge) => charge.created_at,
     }),
     actionsColumn({
-      header: "",
+      header: '',
       render: (charge) => (
         <ChargeRowActions
           chargeId={charge.id}
           status={charge.status}
           disabled={actionLoadingId !== null}
           onOpenDetail={() => onOpenDetail(charge.id)}
-          onIssue={() => void runAction(charge.id, "issue")}
-          onMarkPaid={() => void runAction(charge.id, "markPaid")}
-          onCancel={() => void runAction(charge.id, "cancel")}
+          onIssue={() => void runAction(charge.id, 'issue')}
+          onMarkPaid={() => void runAction(charge.id, 'markPaid')}
+          onCancel={() => void runAction(charge.id, 'cancel')}
           showActions={isAdvisor}
         />
       ),
     }),
-  ];
+  ]
 
   if (isAdvisor && onToggleSelect) {
     return [
@@ -127,8 +127,8 @@ export const buildChargeColumns = ({
         getItemAriaLabel: (charge) => `בחר חיוב ${charge.id}`,
       }),
       ...dataColumns,
-    ];
+    ]
   }
 
-  return dataColumns;
-};
+  return dataColumns
+}

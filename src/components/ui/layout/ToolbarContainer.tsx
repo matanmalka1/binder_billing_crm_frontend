@@ -1,11 +1,11 @@
-import { cn } from "../../../utils/utils";
-import { Card } from "../primitives/Card";
+import { cn } from '../../../utils/utils'
+import { Card } from '../primitives/Card'
 
 interface ToolbarContainerProps {
-  children: React.ReactNode;
+  children: React.ReactNode
   /** When true, wraps in a Card. When false (default), uses bare border container. */
-  elevated?: boolean;
-  className?: string;
+  elevated?: boolean
+  className?: string
 }
 
 export const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
@@ -18,14 +18,14 @@ export const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
       <Card className={className}>
         <div>{children}</div>
       </Card>
-    );
+    )
   }
 
   return (
-    <div className={cn("rounded-xl border border-gray-200 bg-gray-50/60 px-4 py-3", className)}>
+    <div className={cn('rounded-xl border border-gray-200 bg-gray-50/60 px-4 py-3', className)}>
       {children}
     </div>
-  );
-};
+  )
+}
 
-ToolbarContainer.displayName = "ToolbarContainer";
+ToolbarContainer.displayName = 'ToolbarContainer'

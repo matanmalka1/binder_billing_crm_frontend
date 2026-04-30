@@ -1,47 +1,47 @@
-import { useState } from "react";
-import type { AnnualReportScheduleKey, ScheduleEntry } from "../../api";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { Input } from "../../../../components/ui/inputs/Input";
-import { Select } from "../../../../components/ui/inputs/Select";
-import { ANNEX_TEXT } from "./annex.constants";
-import { buildScheduleOptions, getAvailableSchedules, normalizeNotes } from "./annex.helpers";
+import { useState } from 'react'
+import type { AnnualReportScheduleKey, ScheduleEntry } from '../../api'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { Input } from '../../../../components/ui/inputs/Input'
+import { Select } from '../../../../components/ui/inputs/Select'
+import { ANNEX_TEXT } from './annex.constants'
+import { buildScheduleOptions, getAvailableSchedules, normalizeNotes } from './annex.helpers'
 
 interface ScheduleAddFormProps {
-  schedules: ScheduleEntry[];
-  onAdd: (schedule: AnnualReportScheduleKey, notes?: string) => void;
-  isAdding: boolean;
+  schedules: ScheduleEntry[]
+  onAdd: (schedule: AnnualReportScheduleKey, notes?: string) => void
+  isAdding: boolean
 }
 
 export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onAdd, isAdding }) => {
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<AnnualReportScheduleKey | "">("");
-  const [notes, setNotes] = useState("");
+  const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState<AnnualReportScheduleKey | ''>('')
+  const [notes, setNotes] = useState('')
 
-  const available = getAvailableSchedules(schedules);
+  const available = getAvailableSchedules(schedules)
 
   const resetFields = () => {
-    setSelected("");
-    setNotes("");
-  };
+    setSelected('')
+    setNotes('')
+  }
 
   const handleOpen = () => {
-    resetFields();
-    setOpen(true);
-  };
+    resetFields()
+    setOpen(true)
+  }
 
   const handleCancel = () => {
-    resetFields();
-    setOpen(false);
-  };
+    resetFields()
+    setOpen(false)
+  }
 
   const handleAdd = () => {
-    if (!selected) return;
-    onAdd(selected, normalizeNotes(notes));
-    handleCancel();
-  };
+    if (!selected) return
+    onAdd(selected, normalizeNotes(notes))
+    handleCancel()
+  }
 
   if (available.length === 0) {
-    return <p className="text-xs text-gray-500">{ANNEX_TEXT.allSchedulesExist}</p>;
+    return <p className="text-xs text-gray-500">{ANNEX_TEXT.allSchedulesExist}</p>
   }
 
   if (!open) {
@@ -49,7 +49,7 @@ export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onA
       <Button type="button" variant="outline" size="sm" onClick={handleOpen}>
         {ANNEX_TEXT.addAnnex}
       </Button>
-    );
+    )
   }
 
   return (
@@ -57,7 +57,7 @@ export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onA
       <p className="text-xs font-medium text-gray-600">{ANNEX_TEXT.addAnnexManual}</p>
       <Select
         value={selected}
-        onChange={(event) => setSelected(event.target.value as AnnualReportScheduleKey | "")}
+        onChange={(event) => setSelected(event.target.value as AnnualReportScheduleKey | '')}
         options={buildScheduleOptions(available, ANNEX_TEXT.chooseSchedule)}
       />
       <Input
@@ -70,12 +70,18 @@ export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onA
         <Button type="button" variant="ghost" size="sm" onClick={handleCancel}>
           {ANNEX_TEXT.cancel}
         </Button>
-        <Button type="button" size="sm" onClick={handleAdd} isLoading={isAdding} disabled={!selected}>
+        <Button
+          type="button"
+          size="sm"
+          onClick={handleAdd}
+          isLoading={isAdding}
+          disabled={!selected}
+        >
           {ANNEX_TEXT.addAnnex}
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-ScheduleAddForm.displayName = "ScheduleAddForm";
+ScheduleAddForm.displayName = 'ScheduleAddForm'

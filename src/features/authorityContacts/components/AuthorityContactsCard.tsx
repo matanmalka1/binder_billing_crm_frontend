@@ -1,13 +1,13 @@
-import { PaginationCard } from "../../../components/ui/table/PaginationCard";
-import { useAuthorityContacts } from "../hooks/useAuthorityContacts";
-import { useAuthorityContactsCardState } from "../hooks/useAuthorityContactsCardState";
-import { AuthorityContactDeleteDialog } from "./AuthorityContactDeleteDialog";
-import { AuthorityContactModal } from "./AuthorityContactModal";
-import { AuthorityContactsListCard } from "./AuthorityContactsListCard";
-import { AUTHORITY_CONTACT_TEXT } from "../constants";
+import { PaginationCard } from '../../../components/ui/table/PaginationCard'
+import { useAuthorityContacts } from '../hooks/useAuthorityContacts'
+import { useAuthorityContactsCardState } from '../hooks/useAuthorityContactsCardState'
+import { AuthorityContactDeleteDialog } from './AuthorityContactDeleteDialog'
+import { AuthorityContactModal } from './AuthorityContactModal'
+import { AuthorityContactsListCard } from './AuthorityContactsListCard'
+import { AUTHORITY_CONTACT_TEXT } from '../constants'
 
 interface AuthorityContactsCardProps {
-  clientId: number;
+  clientId: number
 }
 
 export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ clientId }) => {
@@ -21,7 +21,7 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
     error,
     deleteContact,
     deletingId,
-  } = useAuthorityContacts(clientId);
+  } = useAuthorityContacts(clientId)
   const {
     editing,
     isModalOpen,
@@ -31,7 +31,7 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
     closeModal,
     requestDelete,
     clearDeleteRequest,
-  } = useAuthorityContactsCardState();
+  } = useAuthorityContactsCardState()
 
   return (
     <div className="space-y-4">
@@ -70,5 +70,5 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
         onCancel={clearDeleteRequest}
       />
     </div>
-  );
-};
+  )
+}

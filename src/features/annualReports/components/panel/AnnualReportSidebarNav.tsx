@@ -1,10 +1,10 @@
-import { cn } from "../../../../utils/utils";
-import type { SectionKey } from "../../types";
-import { PANEL_NAV_ITEMS, SIDEBAR_NAV_VARIANTS } from "./constants";
+import { cn } from '../../../../utils/utils'
+import type { SectionKey } from '../../types'
+import { PANEL_NAV_ITEMS, SIDEBAR_NAV_VARIANTS } from './constants'
 
 interface AnnualReportSidebarNavProps {
-  activeSection: SectionKey;
-  onSectionChange: (section: SectionKey) => void;
+  activeSection: SectionKey
+  onSectionChange: (section: SectionKey) => void
 }
 
 const AnnualReportSidebarNav = ({
@@ -19,8 +19,8 @@ const AnnualReportSidebarNav = ({
           type="button"
           onClick={() => onSectionChange(key)}
           className={cn(
-            "flex items-center gap-2 pr-3 py-2 rounded-lg text-sm transition-colors w-full text-right",
-            SIDEBAR_NAV_VARIANTS[activeSection === key ? "active" : "inactive"],
+            'flex items-center gap-2 pr-3 py-2 rounded-lg text-sm transition-colors w-full text-right',
+            SIDEBAR_NAV_VARIANTS[activeSection === key ? 'active' : 'inactive'],
           )}
         >
           <Icon size={15} />
@@ -28,9 +28,9 @@ const AnnualReportSidebarNav = ({
         </button>
       ))}
     </nav>
-  );
-};
+  )
+}
 
-AnnualReportSidebarNav.displayName = "AnnualReportSidebarNav";
+AnnualReportSidebarNav.displayName = 'AnnualReportSidebarNav'
 
-export default AnnualReportSidebarNav;
+export default AnnualReportSidebarNav

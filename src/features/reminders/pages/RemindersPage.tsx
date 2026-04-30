@@ -1,9 +1,9 @@
-import { Plus } from "lucide-react";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/primitives/Button";
-import { ActiveFilterBadges } from "@/components/ui/table/ActiveFilterBadges";
-import { PaginationCard } from "@/components/ui/table/PaginationCard";
-import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
+import { Plus } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { Button } from '@/components/ui/primitives/Button'
+import { ActiveFilterBadges } from '@/components/ui/table/ActiveFilterBadges'
+import { PaginationCard } from '@/components/ui/table/PaginationCard'
+import { PageStateGuard } from '@/components/ui/layout/PageStateGuard'
 import {
   CreateReminderModal,
   ReminderDrawer,
@@ -11,9 +11,9 @@ import {
   RemindersFiltersBar,
   RemindersSummaryCards,
   useReminders,
-} from "@/features/reminders";
-import { statusLabels, type ReminderStatus } from "../types";
-import { DEFAULT_REMINDER_STATUS_FILTER } from "../constants";
+} from '@/features/reminders'
+import { statusLabels, type ReminderStatus } from '../types'
+import { DEFAULT_REMINDER_STATUS_FILTER } from '../constants'
 
 export const RemindersPage: React.FC = () => {
   const {
@@ -53,7 +53,7 @@ export const RemindersPage: React.FC = () => {
     clientAdvancePayments,
     clientBusinesses,
     setPage,
-  } = useReminders();
+  } = useReminders()
 
   const header = (
     <PageHeader
@@ -71,15 +71,14 @@ export const RemindersPage: React.FC = () => {
         </Button>
       }
     />
-  );
+  )
 
   const renderBody = () => {
     if (reminders.length === 0) {
       if (hasFilters) {
-        const statusLabel =
-          statusFilter
-            ? statusLabels[statusFilter as ReminderStatus] ?? statusFilter
-            : "כל הסטטוסים";
+        const statusLabel = statusFilter
+          ? (statusLabels[statusFilter as ReminderStatus] ?? statusFilter)
+          : 'כל הסטטוסים'
 
         return (
           <div className="flex flex-col items-center rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center text-gray-500">
@@ -87,11 +86,19 @@ export const RemindersPage: React.FC = () => {
             <p className="text-sm mb-4">אין תוצאות התואמות את הסינון הנוכחי.</p>
             <ActiveFilterBadges
               badges={[
-                search ? { key: "search", label: `חיפוש: ${search}`, onRemove: () => setSearch("") } : null,
-                typeFilter ? { key: "typeFilter", label: `סוג: ${typeFilter}`, onRemove: () => setTypeFilter("") } : null,
+                search
+                  ? { key: 'search', label: `חיפוש: ${search}`, onRemove: () => setSearch('') }
+                  : null,
+                typeFilter
+                  ? {
+                      key: 'typeFilter',
+                      label: `סוג: ${typeFilter}`,
+                      onRemove: () => setTypeFilter(''),
+                    }
+                  : null,
                 statusFilter !== DEFAULT_REMINDER_STATUS_FILTER
                   ? {
-                      key: "statusFilter",
+                      key: 'statusFilter',
                       label: `סטטוס: ${statusLabel}`,
                       onRemove: () => setStatusFilter(DEFAULT_REMINDER_STATUS_FILTER),
                     }
@@ -100,7 +107,7 @@ export const RemindersPage: React.FC = () => {
               onReset={clearFilters}
             />
           </div>
-        );
+        )
       }
       if (rawTotal === 0) {
         return (
@@ -112,7 +119,7 @@ export const RemindersPage: React.FC = () => {
               תזכורת חדשה
             </Button>
           </div>
-        );
+        )
       }
     }
 
@@ -126,8 +133,8 @@ export const RemindersPage: React.FC = () => {
         onViewDetails={setSelectedReminder}
         onRowClick={setSelectedReminder}
       />
-    );
-  };
+    )
+  }
 
   return (
     <PageStateGuard
@@ -173,8 +180,8 @@ export const RemindersPage: React.FC = () => {
         form={form}
         isSubmitting={isSubmitting}
         onClose={() => {
-          form.reset();
-          setShowCreateModal(false);
+          form.reset()
+          setShowCreateModal(false)
         }}
         onSubmit={onSubmit}
         clientBinders={clientBinders}
@@ -185,10 +192,7 @@ export const RemindersPage: React.FC = () => {
         clientBusinesses={clientBusinesses}
       />
 
-      <ReminderDrawer
-        reminder={selectedReminder}
-        onClose={() => setSelectedReminder(null)}
-      />
+      <ReminderDrawer reminder={selectedReminder} onClose={() => setSelectedReminder(null)} />
     </PageStateGuard>
-  );
-};
+  )
+}

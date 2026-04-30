@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Textarea } from "../../../components/ui/inputs/Textarea";
-import { Select } from "../../../components/ui/inputs/Select";
-import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
-import { useSendNotification } from "../hooks/useSendNotification";
-import { useClientForNotification } from "../hooks/useClientForNotification";
-import type { SendNotificationModalProps } from "../types";
+import { useEffect, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { Modal } from '../../../components/ui/overlays/Modal'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Textarea } from '../../../components/ui/inputs/Textarea'
+import { Select } from '../../../components/ui/inputs/Select'
+import { ClientSearchInput, SelectedClientDisplay } from '@/components/shared/client'
+import { useSendNotification } from '../hooks/useSendNotification'
+import { useClientForNotification } from '../hooks/useClientForNotification'
+import type { SendNotificationModalProps } from '../types'
 
 interface FormValues {
-  channel: "whatsapp" | "email";
-  message: string;
+  channel: 'whatsapp' | 'email'
+  message: string
 }
 
 export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
@@ -19,8 +19,8 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
   onClose,
   clientId,
 }) => {
-  const [clientQuery, setClientQuery] = useState("");
-  const [clientError, setClientError] = useState<string | undefined>();
+  const [clientQuery, setClientQuery] = useState('')
+  const [clientError, setClientError] = useState<string | undefined>()
 
   const {
     selectedClient,
@@ -29,7 +29,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
     selectClient,
     clearClient,
     reset: resetClient,
-  } = useClientForNotification(clientId);
+  } = useClientForNotification(clientId)
 
   const {
     register,
@@ -38,38 +38,38 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
     control,
     formState: { errors, isDirty },
   } = useForm<FormValues>({
-    defaultValues: { channel: "email", message: "" },
-  });
+    defaultValues: { channel: 'email', message: '' },
+  })
 
-  const channel = useWatch({ control, name: "channel" });
+  const channel = useWatch({ control, name: 'channel' })
 
   useEffect(() => {
     if (open) {
-      reset({ channel: "email", message: "" });
-      setClientQuery("");
-      setClientError(undefined);
-      resetClient(clientId);
+      reset({ channel: 'email', message: '' })
+      setClientQuery('')
+      setClientError(undefined)
+      resetClient(clientId)
     }
-  }, [open, clientId, reset, resetClient]);
+  }, [open, clientId, reset, resetClient])
 
-  const { sendNotification, isSending } = useSendNotification(onClose);
+  const { sendNotification, isSending } = useSendNotification(onClose)
 
   const onSubmit = (values: FormValues) => {
     if (!selectedClient) {
-      setClientError("שדה חובה");
-      return;
+      setClientError('שדה חובה')
+      return
     }
     if (!selectedBusinessId) {
-      setClientError("לא נמצא עסק פעיל ללקוח זה");
-      return;
+      setClientError('לא נמצא עסק פעיל ללקוח זה')
+      return
     }
-    setClientError(undefined);
+    setClientError(undefined)
     sendNotification({
       business_id: selectedBusinessId,
       channel: values.channel,
       message: values.message,
-    });
-  };
+    })
+  }
 
   return (
     <Modal
@@ -80,7 +80,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
       footer={
         <div className="flex gap-2 justify-start" dir="rtl">
           <Button type="submit" form="send-notification-form" disabled={isSending}>
-            {isSending ? "שולח..." : "שלח"}
+            {isSending ? 'שולח...' : 'שלח'}
           </Button>
           <Button type="button" variant="outline" onClick={onClose} disabled={isSending}>
             ביטול
@@ -107,7 +107,10 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
               label="לקוח"
               name={selectedClient.name}
               id={selectedClient.id}
-              onClear={() => { clearClient(); setClientQuery(""); }}
+              onClear={() => {
+                clearClient()
+                setClientQuery('')
+              }}
             />
           ) : (
             <ClientSearchInput
@@ -115,8 +118,8 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
               value={clientQuery}
               onChange={setClientQuery}
               onSelect={async (c) => {
-                setClientError(undefined);
-                await selectClient({ id: c.id, name: c.name });
+                setClientError(undefined)
+                await selectClient({ id: c.id, name: c.name })
               }}
               error={clientError}
               placeholder="חפש לפי שם, ת.ז. / ח.פ..."
@@ -124,16 +127,16 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
           )}
           {selectedClient && clientContact && (
             <p className="text-xs text-gray-500 pe-1">
-              {channel === "whatsapp"
-                ? (clientContact.phone ?? "אין מספר טלפון ללקוח")
-                : (clientContact.email ?? "אין כתובת אימייל ללקוח")}
+              {channel === 'whatsapp'
+                ? (clientContact.phone ?? 'אין מספר טלפון ללקוח')
+                : (clientContact.email ?? 'אין כתובת אימייל ללקוח')}
             </p>
           )}
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">ערוץ שליחה</label>
-          <Select {...register("channel", { required: true })}>
+          <Select {...register('channel', { required: true })}>
             <option value="email">אימייל</option>
             <option value="whatsapp">וואטסאפ</option>
           </Select>
@@ -142,7 +145,10 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">תוכן ההודעה</label>
           <Textarea
-            {...register("message", { required: "שדה חובה", maxLength: { value: 1000, message: "עד 1000 תווים" } })}
+            {...register('message', {
+              required: 'שדה חובה',
+              maxLength: { value: 1000, message: 'עד 1000 תווים' },
+            })}
             rows={4}
             placeholder="הכנס את תוכן ההודעה..."
           />
@@ -152,7 +158,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
         </div>
       </form>
     </Modal>
-  );
-};
+  )
+}
 
-SendNotificationModal.displayName = "SendNotificationModal";
+SendNotificationModal.displayName = 'SendNotificationModal'

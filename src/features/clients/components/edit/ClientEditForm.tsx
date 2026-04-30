@@ -1,48 +1,48 @@
-import { useEffect, useState } from "react";
-import { useController, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { ConfirmDialog } from "../../../../components/ui/overlays/ConfirmDialog";
-import type { ClientResponse, UpdateClientPayload } from "../../api";
-import { clientEditSchema, type ClientEditFormValues } from "../../schemas";
-import { buildClientEditImpactMessage } from "../../utils/clientEditImpact";
+import { useEffect, useState } from 'react'
+import { useController, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { ConfirmDialog } from '../../../../components/ui/overlays/ConfirmDialog'
+import type { ClientResponse, UpdateClientPayload } from '../../api'
+import { clientEditSchema, type ClientEditFormValues } from '../../schemas'
+import { buildClientEditImpactMessage } from '../../utils/clientEditImpact'
 import {
   buildClientUpdatePayload,
   hasClientUpdatePayload,
-} from "../../utils/buildClientUpdatePayload";
+} from '../../utils/buildClientUpdatePayload'
 import {
   ClientContactSection,
   ClientIdentitySection,
   ClientOfficeSection,
   ClientTaxProfileSection,
-} from "./ClientEditFormSections";
+} from './ClientEditFormSections'
 
 interface ClientEditFormProps {
-  client: ClientResponse;
-  onSave: (data: UpdateClientPayload) => Promise<void>;
-  onCancel: () => void;
-  isLoading?: boolean;
+  client: ClientResponse
+  onSave: (data: UpdateClientPayload) => Promise<void>
+  onCancel: () => void
+  isLoading?: boolean
   /** When true, the form renders without its own action buttons (parent renders them). */
-  hideFooter?: boolean;
+  hideFooter?: boolean
   /** Exposed form id so a parent can submit via <button form="...">. */
-  formId?: string;
+  formId?: string
 }
 
 const getClientDefaultValues = (client: ClientResponse): ClientEditFormValues => ({
   full_name: client.full_name,
   status: client.status,
-  phone: client.phone ?? "",
-  email: client.email ?? "",
-  address_street: client.address_street ?? "",
-  address_building_number: client.address_building_number ?? "",
-  address_apartment: client.address_apartment ?? "",
-  address_city: client.address_city ?? "",
-  address_zip_code: client.address_zip_code ?? "",
+  phone: client.phone ?? '',
+  email: client.email ?? '',
+  address_street: client.address_street ?? '',
+  address_building_number: client.address_building_number ?? '',
+  address_apartment: client.address_apartment ?? '',
+  address_city: client.address_city ?? '',
+  address_zip_code: client.address_zip_code ?? '',
   entity_type: client.entity_type ?? null,
   vat_reporting_frequency: client.vat_reporting_frequency ?? null,
-  advance_rate: client.advance_rate ?? "",
-  accountant_id: client.accountant_id != null ? String(client.accountant_id) : "",
-});
+  advance_rate: client.advance_rate ?? '',
+  accountant_id: client.accountant_id != null ? String(client.accountant_id) : '',
+})
 
 export const ClientEditForm: React.FC<ClientEditFormProps> = ({
   client,
@@ -52,8 +52,8 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
   hideFooter = false,
   formId,
 }) => {
-  const [pendingData, setPendingData] = useState<UpdateClientPayload | null>(null);
-  const [impactMessage, setImpactMessage] = useState<string | null>(null);
+  const [pendingData, setPendingData] = useState<UpdateClientPayload | null>(null)
+  const [impactMessage, setImpactMessage] = useState<string | null>(null)
 
   const {
     control,
@@ -65,126 +65,126 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
   } = useForm<ClientEditFormValues>({
     resolver: zodResolver(clientEditSchema),
     defaultValues: getClientDefaultValues(client),
-  });
-  const { field: statusField } = useController({ name: "status", control });
-  const { field: entityTypeField } = useController({ name: "entity_type", control });
-  const { field: accountantIdField } = useController({ name: "accountant_id", control });
+  })
+  const { field: statusField } = useController({ name: 'status', control })
+  const { field: entityTypeField } = useController({ name: 'entity_type', control })
+  const { field: accountantIdField } = useController({ name: 'accountant_id', control })
 
-  const isOsekPatur = entityTypeField.value === "osek_patur";
+  const isOsekPatur = entityTypeField.value === 'osek_patur'
   const { field: vatReportingFrequencyField } = useController({
-    name: "vat_reporting_frequency",
+    name: 'vat_reporting_frequency',
     control,
-  });
+  })
 
   useEffect(() => {
-    reset(getClientDefaultValues(client));
-  }, [client, reset]);
+    reset(getClientDefaultValues(client))
+  }, [client, reset])
 
   useEffect(() => {
     if (isOsekPatur && vatReportingFrequencyField.value != null) {
-      setValue("vat_reporting_frequency", null, {
+      setValue('vat_reporting_frequency', null, {
         shouldDirty: Boolean(dirtyFields.entity_type),
         shouldValidate: true,
-      });
+      })
     }
-  }, [dirtyFields.entity_type, isOsekPatur, setValue, vatReportingFrequencyField.value]);
+  }, [dirtyFields.entity_type, isOsekPatur, setValue, vatReportingFrequencyField.value])
 
   const onSubmit = handleSubmit(async (data) => {
-    const payload = buildClientUpdatePayload(data, dirtyFields);
-    if (!hasClientUpdatePayload(payload)) return;
+    const payload = buildClientUpdatePayload(data, dirtyFields)
+    if (!hasClientUpdatePayload(payload)) return
 
     const msg = buildClientEditImpactMessage(
       client.status,
       data.status,
       client.entity_type,
       data.entity_type,
-    );
+    )
     if (msg) {
-      setPendingData(payload);
-      setImpactMessage(msg);
-      return;
+      setPendingData(payload)
+      setImpactMessage(msg)
+      return
     }
-    await onSave(payload);
-  });
+    await onSave(payload)
+  })
 
   const handleConfirm = async () => {
-    if (!pendingData) return;
-    const data = pendingData;
-    setPendingData(null);
-    setImpactMessage(null);
-    await onSave(data);
-  };
+    if (!pendingData) return
+    const data = pendingData
+    setPendingData(null)
+    setImpactMessage(null)
+    await onSave(data)
+  }
 
   const handleCancelConfirm = () => {
-    setPendingData(null);
-    setImpactMessage(null);
-  };
+    setPendingData(null)
+    setImpactMessage(null)
+  }
 
   return (
     <>
-    <ConfirmDialog
-      open={!!impactMessage}
-      title="אזהרה: פעולה בלתי הפיכה"
-      message={impactMessage ?? ""}
-      confirmLabel="אישור ושמירה"
-      cancelLabel="ביטול"
-      isLoading={isLoading}
-      onConfirm={handleConfirm}
-      onCancel={handleCancelConfirm}
-    />
-    <form id={formId} onSubmit={onSubmit} className="space-y-6">
-      <ClientIdentitySection
-        client={client}
-        errors={errors}
+      <ConfirmDialog
+        open={!!impactMessage}
+        title="אזהרה: פעולה בלתי הפיכה"
+        message={impactMessage ?? ''}
+        confirmLabel="אישור ושמירה"
+        cancelLabel="ביטול"
         isLoading={isLoading}
-        register={register}
-        entityTypeField={entityTypeField}
+        onConfirm={handleConfirm}
+        onCancel={handleCancelConfirm}
       />
-      <ClientContactSection
-        client={client}
-        errors={errors}
-        isLoading={isLoading}
-        register={register}
-      />
-      <ClientTaxProfileSection
-        client={client}
-        errors={errors}
-        isLoading={isLoading}
-        register={register}
-        isOsekPatur={isOsekPatur}
-        vatReportingFrequencyField={vatReportingFrequencyField}
-      />
-      <ClientOfficeSection
-        client={client}
-        errors={errors}
-        isLoading={isLoading}
-        register={register}
-        statusField={statusField}
-        accountantIdField={accountantIdField}
-      />
+      <form id={formId} onSubmit={onSubmit} className="space-y-6">
+        <ClientIdentitySection
+          client={client}
+          errors={errors}
+          isLoading={isLoading}
+          register={register}
+          entityTypeField={entityTypeField}
+        />
+        <ClientContactSection
+          client={client}
+          errors={errors}
+          isLoading={isLoading}
+          register={register}
+        />
+        <ClientTaxProfileSection
+          client={client}
+          errors={errors}
+          isLoading={isLoading}
+          register={register}
+          isOsekPatur={isOsekPatur}
+          vatReportingFrequencyField={vatReportingFrequencyField}
+        />
+        <ClientOfficeSection
+          client={client}
+          errors={errors}
+          isLoading={isLoading}
+          register={register}
+          statusField={statusField}
+          accountantIdField={accountantIdField}
+        />
 
-      {!hideFooter && (
-        <>
-          <div className="flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
-            <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
-              ביטול
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              isLoading={isLoading}
-              disabled={isLoading || !isDirty}
-            >
-              שמור שינויים
-            </Button>
-          </div>
+        {!hideFooter && (
+          <>
+            <div className="flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
+              <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
+                ביטול
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                isLoading={isLoading}
+                disabled={isLoading || !isDirty}
+              >
+                שמור שינויים
+              </Button>
+            </div>
 
-          {!isDirty && (
-            <p className="text-center text-sm text-gray-500">לא בוצעו שינויים בטופס</p>
-          )}
-        </>
-      )}
-    </form>
+            {!isDirty && (
+              <p className="text-center text-sm text-gray-500">לא בוצעו שינויים בטופס</p>
+            )}
+          </>
+        )}
+      </form>
     </>
-  );
-};
+  )
+}

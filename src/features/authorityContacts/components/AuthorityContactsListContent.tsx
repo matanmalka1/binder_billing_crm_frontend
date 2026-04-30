@@ -1,15 +1,15 @@
-import { Users } from "lucide-react";
-import { StateCard } from "../../../components/ui/feedback/StateCard";
-import type { AuthorityContactResponse } from "../api";
-import { AUTHORITY_CONTACT_TEXT } from "../constants";
-import { AuthorityContactRow } from "./AuthorityContactRow";
+import { Users } from 'lucide-react'
+import { StateCard } from '../../../components/ui/feedback/StateCard'
+import type { AuthorityContactResponse } from '../api'
+import { AUTHORITY_CONTACT_TEXT } from '../constants'
+import { AuthorityContactRow } from './AuthorityContactRow'
 
 interface AuthorityContactsListContentProps {
-  contacts: AuthorityContactResponse[];
-  deletingId: number | null;
-  isLoading: boolean;
-  onEdit: (contact: AuthorityContactResponse) => void;
-  onDelete: (id: number) => void;
+  contacts: AuthorityContactResponse[]
+  deletingId: number | null
+  isLoading: boolean
+  onEdit: (contact: AuthorityContactResponse) => void
+  onDelete: (id: number) => void
 }
 
 export const AuthorityContactsListContent: React.FC<AuthorityContactsListContentProps> = ({
@@ -20,7 +20,9 @@ export const AuthorityContactsListContent: React.FC<AuthorityContactsListContent
   onDelete,
 }) => {
   if (isLoading) {
-    return <p className="py-4 text-center text-sm text-gray-500">{AUTHORITY_CONTACT_TEXT.loading}</p>;
+    return (
+      <p className="py-4 text-center text-sm text-gray-500">{AUTHORITY_CONTACT_TEXT.loading}</p>
+    )
   }
 
   if (contacts.length === 0) {
@@ -31,7 +33,7 @@ export const AuthorityContactsListContent: React.FC<AuthorityContactsListContent
         size="compact"
         variant="minimal"
       />
-    );
+    )
   }
 
   return (
@@ -46,5 +48,5 @@ export const AuthorityContactsListContent: React.FC<AuthorityContactsListContent
         />
       ))}
     </div>
-  );
-};
+  )
+}

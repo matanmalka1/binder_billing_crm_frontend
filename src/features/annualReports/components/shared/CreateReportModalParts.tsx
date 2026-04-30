@@ -1,31 +1,55 @@
-import { Input, Select } from "@/components/ui/inputs";
-import { FLAG_FIELDS } from "../../utils";
-import { semanticMonoToneClasses } from "@/utils/semanticColors";
-import { formatWholeNumber } from "./annualReports.constants";
+import { Input, Select } from '@/components/ui/inputs'
+import { FLAG_FIELDS } from '../../utils'
+import { semanticMonoToneClasses } from '@/utils/semanticColors'
+import { formatWholeNumber } from './annualReports.constants'
 
-const currencySuffix = <span className="text-sm text-gray-400">₪</span>;
+const currencySuffix = <span className="text-sm text-gray-400">₪</span>
 
 interface FinancialFieldsProps {
-  register: (name: never) => object;
+  register: (name: never) => object
 }
 
 export const FinancialFields = ({ register }: FinancialFieldsProps) => (
   <div>
     <p className="mb-2 text-sm font-medium text-gray-700">נתוני הכנסות ראשוניים (לתצוגה בלבד)</p>
     <div className="grid grid-cols-2 gap-3">
-      <Input label="הכנסה ברוטו" type="number" min={0} endElement={currencySuffix} {...register("gross_income" as never)} />
-      <Input label="הוצאות" type="number" min={0} endElement={currencySuffix} {...register("expenses" as never)} />
-      <Input label="מקדמות ששולמו" type="number" min={0} endElement={currencySuffix} {...register("advances_paid" as never)} />
+      <Input
+        label="הכנסה ברוטו"
+        type="number"
+        min={0}
+        endElement={currencySuffix}
+        {...register('gross_income' as never)}
+      />
+      <Input
+        label="הוצאות"
+        type="number"
+        min={0}
+        endElement={currencySuffix}
+        {...register('expenses' as never)}
+      />
+      <Input
+        label="מקדמות ששולמו"
+        type="number"
+        min={0}
+        endElement={currencySuffix}
+        {...register('advances_paid' as never)}
+      />
       <div>
-        <Input label="נקודות זיכוי" type="number" min={0} step={0.25} {...register("credit_points" as never)} />
+        <Input
+          label="נקודות זיכוי"
+          type="number"
+          min={0}
+          step={0.25}
+          {...register('credit_points' as never)}
+        />
         <p className="mt-1 text-xs text-gray-500">לצורך הצגת אומדן בלבד — לא נשמר בדוח</p>
       </div>
     </div>
   </div>
-);
+)
 
 interface PreviewProps {
-  preview: { netProfit: number; estimatedTax: number; balance: number };
+  preview: { netProfit: number; estimatedTax: number; balance: number }
 }
 
 export const TaxPreview = ({ preview }: PreviewProps) => (
@@ -36,20 +60,23 @@ export const TaxPreview = ({ preview }: PreviewProps) => (
       <PreviewValue label="מס משוער" value={preview.estimatedTax} />
       <div>
         <span className="block text-xs text-info-500">יתרה לתשלום</span>
-        <span className={`font-mono ${preview.balance < 0 ? semanticMonoToneClasses.positive : semanticMonoToneClasses.negative}`}>
-          ₪{formatWholeNumber(Math.abs(preview.balance))}{preview.balance < 0 ? " (החזר)" : ""}
+        <span
+          className={`font-mono ${preview.balance < 0 ? semanticMonoToneClasses.positive : semanticMonoToneClasses.negative}`}
+        >
+          ₪{formatWholeNumber(Math.abs(preview.balance))}
+          {preview.balance < 0 ? ' (החזר)' : ''}
         </span>
       </div>
     </div>
   </div>
-);
+)
 
 const PreviewValue = ({ label, value }: { label: string; value: number }) => (
   <div>
     <span className="block text-xs text-info-500">{label}</span>
     <span className="font-mono">₪{formatWholeNumber(value)}</span>
   </div>
-);
+)
 
 export const RequiredAppendices = ({ register }: FinancialFieldsProps) => (
   <div>
@@ -67,13 +94,13 @@ export const RequiredAppendices = ({ register }: FinancialFieldsProps) => (
       ))}
     </div>
   </div>
-);
+)
 
 interface SelectOptionsProps {
-  label: string;
-  options: { value: string; label: string }[];
-  error?: string;
-  registerProps: object;
+  label: string
+  options: { value: string; label: string }[]
+  error?: string
+  registerProps: object
 }
 
 export const SelectOptions = ({ label, options, error, registerProps }: SelectOptionsProps) => (
@@ -84,4 +111,4 @@ export const SelectOptions = ({ label, options, error, registerProps }: SelectOp
       </option>
     ))}
   </Select>
-);
+)

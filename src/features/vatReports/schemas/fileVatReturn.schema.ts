@@ -1,6 +1,6 @@
-import { z } from "zod";
-import type { FileVatReturnPayload } from "../api";
-import { DEFAULT_VAT_FILING_METHOD, VAT_FILING_METHODS } from "../constants";
+import { z } from 'zod'
+import type { FileVatReturnPayload } from '../api'
+import { DEFAULT_VAT_FILING_METHOD, VAT_FILING_METHODS } from '../constants'
 
 export const vatFileModalSchema = z
   .object({
@@ -10,41 +10,39 @@ export const vatFileModalSchema = z
     amends_item_id: z.string().trim().optional(),
   })
   .superRefine((values, ctx) => {
-    if (!values.is_amendment) return;
+    if (!values.is_amendment) return
 
     if (!values.amends_item_id) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["amends_item_id"],
-        message: "יש להזין מזהה ההגשה המקורית",
-      });
-      return;
+        path: ['amends_item_id'],
+        message: 'יש להזין מזהה ההגשה המקורית',
+      })
+      return
     }
 
-    const parsed = Number(values.amends_item_id);
+    const parsed = Number(values.amends_item_id)
     if (!Number.isInteger(parsed) || parsed <= 0) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["amends_item_id"],
-        message: "מזהה ההגשה המקורית חייב להיות מספר",
-      });
+        path: ['amends_item_id'],
+        message: 'מזהה ההגשה המקורית חייב להיות מספר',
+      })
     }
-  });
+  })
 
-export type VatFileModalFormValues = z.infer<typeof vatFileModalSchema>;
+export type VatFileModalFormValues = z.infer<typeof vatFileModalSchema>
 
 export const vatFileModalDefaultValues: VatFileModalFormValues = {
   submission_method: DEFAULT_VAT_FILING_METHOD,
-  submission_reference: "",
+  submission_reference: '',
   is_amendment: false,
-  amends_item_id: "",
-};
+  amends_item_id: '',
+}
 
-export const toFileVatReturnPayload = (
-  values: VatFileModalFormValues,
-): FileVatReturnPayload => ({
+export const toFileVatReturnPayload = (values: VatFileModalFormValues): FileVatReturnPayload => ({
   submission_method: values.submission_method,
   submission_reference: values.submission_reference?.trim() || undefined,
   is_amendment: values.is_amendment,
   amends_item_id: values.is_amendment ? Number(values.amends_item_id?.trim()) : null,
-});
+})

@@ -1,84 +1,88 @@
-import { useState, useRef, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
-import { cn } from "../../../utils/utils";
+import { useState, useRef, useEffect } from 'react'
+import { ChevronDown } from 'lucide-react'
+import { cn } from '../../../utils/utils'
 
 interface InlineSelectProps {
-  value: number;
-  options: { label: string; value: number }[];
-  onChange: (val: number) => void;
+  value: number
+  options: { label: string; value: number }[]
+  onChange: (val: number) => void
 }
 
-export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({ value, options, onChange }) => {
-  const [open, setOpen] = useState(false);
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const ref = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
+export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({
+  value,
+  options,
+  onChange,
+}) => {
+  const [open, setOpen] = useState(false)
+  const [highlightedIndex, setHighlightedIndex] = useState(-1)
+  const ref = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (open && listRef.current) {
-      const selected = listRef.current.querySelector("[data-selected=true]") as HTMLElement;
-      if (selected) selected.scrollIntoView({ block: "nearest" });
+      const selected = listRef.current.querySelector('[data-selected=true]') as HTMLElement
+      if (selected) selected.scrollIntoView({ block: 'nearest' })
     }
-  }, [open]);
+  }, [open])
 
   useEffect(() => {
     if (!open) {
-      setHighlightedIndex(-1);
-      return;
+      setHighlightedIndex(-1)
+      return
     }
-    const selectedIndex = options.findIndex((opt) => opt.value === value);
-    setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : 0);
-  }, [open, options, value]);
+    const selectedIndex = options.findIndex((opt) => opt.value === value)
+    setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : 0)
+  }, [open, options, value])
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    if (open) document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    if (open) document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
 
-  const current = options.find((o) => o.value === value);
+  const current = options.find((o) => o.value === value)
 
   const moveHighlight = (direction: 1 | -1) => {
-    if (options.length === 0) return;
+    if (options.length === 0) return
     setHighlightedIndex((prev) => {
-      if (prev < 0) return direction === 1 ? 0 : options.length - 1;
-      return (prev + direction + options.length) % options.length;
-    });
-  };
+      if (prev < 0) return direction === 1 ? 0 : options.length - 1
+      return (prev + direction + options.length) % options.length
+    })
+  }
 
   const handleTriggerKeyDown: React.KeyboardEventHandler<HTMLButtonElement> = (event) => {
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault();
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault()
       if (!open) {
-        setOpen(true);
-        return;
+        setOpen(true)
+        return
       }
-      moveHighlight(event.key === "ArrowDown" ? 1 : -1);
-      return;
+      moveHighlight(event.key === 'ArrowDown' ? 1 : -1)
+      return
     }
 
-    if ((event.key === "Enter" || event.key === " ") && !open) {
-      event.preventDefault();
-      setOpen(true);
-      return;
+    if ((event.key === 'Enter' || event.key === ' ') && !open) {
+      event.preventDefault()
+      setOpen(true)
+      return
     }
 
-    if ((event.key === "Enter" || event.key === " ") && open) {
-      const highlighted = options[highlightedIndex];
-      if (!highlighted) return;
-      event.preventDefault();
-      onChange(highlighted.value);
-      setOpen(false);
-      return;
+    if ((event.key === 'Enter' || event.key === ' ') && open) {
+      const highlighted = options[highlightedIndex]
+      if (!highlighted) return
+      event.preventDefault()
+      onChange(highlighted.value)
+      setOpen(false)
+      return
     }
 
-    if (event.key === "Escape" && open) {
-      event.preventDefault();
-      setOpen(false);
+    if (event.key === 'Escape' && open) {
+      event.preventDefault()
+      setOpen(false)
     }
-  };
+  }
 
   return (
     <div ref={ref} className="relative">
@@ -91,7 +95,9 @@ export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({ value, opt
         aria-expanded={open}
       >
         {current?.label}
-        <ChevronDown className={cn("h-3 w-3 text-gray-500 transition-transform", open && "rotate-180")} />
+        <ChevronDown
+          className={cn('h-3 w-3 text-gray-500 transition-transform', open && 'rotate-180')}
+        />
       </button>
       {open && (
         <div
@@ -104,14 +110,17 @@ export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({ value, opt
               key={opt.value}
               type="button"
               data-selected={opt.value === value}
-              onClick={() => { onChange(opt.value); setOpen(false); }}
+              onClick={() => {
+                onChange(opt.value)
+                setOpen(false)
+              }}
               onMouseEnter={() => setHighlightedIndex(index)}
               className={cn(
-                "w-full text-right px-3 py-1.5 text-sm transition-colors",
-                highlightedIndex === index && opt.value !== value && "bg-gray-100",
+                'w-full text-right px-3 py-1.5 text-sm transition-colors',
+                highlightedIndex === index && opt.value !== value && 'bg-gray-100',
                 opt.value === value
-                  ? "bg-primary-600 text-white font-semibold"
-                  : "text-gray-700 hover:bg-gray-100",
+                  ? 'bg-primary-600 text-white font-semibold'
+                  : 'text-gray-700 hover:bg-gray-100',
               )}
               role="option"
               aria-selected={opt.value === value}
@@ -122,7 +131,7 @@ export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({ value, opt
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-DatePickerInlineSelect.displayName = "DatePickerInlineSelect";
+DatePickerInlineSelect.displayName = 'DatePickerInlineSelect'

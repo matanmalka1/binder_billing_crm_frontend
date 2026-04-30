@@ -1,6 +1,6 @@
-import { createQueryKeys } from "@/lib/queryKeys";
+import { createQueryKeys } from '@/lib/queryKeys'
 
 export const usersQK = {
-  ...createQueryKeys("users"),
-  auditLogs: (params: object) => ["users", "audit-logs", params] as const,
-};
+  ...createQueryKeys('users'),
+  auditLogs: (params: object) => ['users', 'audit-logs', params] as const,
+}

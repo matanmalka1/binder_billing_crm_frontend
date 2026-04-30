@@ -1,16 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
-import { RowActionItem, RowActionSeparator, RowActionsMenu } from "@/components/ui/table";
-import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
-import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
-import { EditAdvancePaymentInline } from "./EditAdvancePaymentInline";
+import { useEffect, useRef, useState } from 'react'
+import { Pencil, Trash2 } from 'lucide-react'
+import { RowActionItem, RowActionSeparator, RowActionsMenu } from '@/components/ui/table'
+import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
+import type { AdvancePaymentRow, AdvancePaymentStatus } from '../types'
+import { EditAdvancePaymentInline } from './EditAdvancePaymentInline'
 
 export interface AdvancePaymentRowActionsProps {
-  row: AdvancePaymentRow;
-  updatingId: number | null;
-  deletingId: number | null;
-  onUpdate: (id: number, paid_amount: string | null, status: AdvancePaymentStatus, expected_amount: string | null) => void;
-  onDelete: (id: number) => void;
+  row: AdvancePaymentRow
+  updatingId: number | null
+  deletingId: number | null
+  onUpdate: (
+    id: number,
+    paid_amount: string | null,
+    status: AdvancePaymentStatus,
+    expected_amount: string | null,
+  ) => void
+  onDelete: (id: number) => void
 }
 
 export const AdvancePaymentRowActions: React.FC<AdvancePaymentRowActionsProps> = ({
@@ -20,18 +25,18 @@ export const AdvancePaymentRowActions: React.FC<AdvancePaymentRowActionsProps> =
   onUpdate,
   onDelete,
 }) => {
-  const [editing, setEditing] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [editing, setEditing] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!editing) return;
+    if (!editing) return
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setEditing(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [editing]);
+      if (ref.current && !ref.current.contains(e.target as Node)) setEditing(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [editing])
 
   return (
     <div ref={ref} className="relative flex justify-center" onClick={(e) => e.stopPropagation()}>
@@ -40,8 +45,8 @@ export const AdvancePaymentRowActions: React.FC<AdvancePaymentRowActionsProps> =
           row={row}
           isUpdating={updatingId === row.id}
           onSave={(paid_amount, status, expected_amount) => {
-            onUpdate(row.id, paid_amount, status, expected_amount);
-            setEditing(false);
+            onUpdate(row.id, paid_amount, status, expected_amount)
+            setEditing(false)
           }}
           onCancel={() => setEditing(false)}
         />
@@ -54,7 +59,7 @@ export const AdvancePaymentRowActions: React.FC<AdvancePaymentRowActionsProps> =
           />
           <RowActionSeparator />
           <RowActionItem
-            label={deletingId === row.id ? "מוחק..." : "מחק"}
+            label={deletingId === row.id ? 'מוחק...' : 'מחק'}
             onClick={() => setConfirmDelete(true)}
             icon={<Trash2 className="h-4 w-4" />}
             danger
@@ -70,11 +75,14 @@ export const AdvancePaymentRowActions: React.FC<AdvancePaymentRowActionsProps> =
         confirmLabel="מחק"
         cancelLabel="ביטול"
         isLoading={deletingId === row.id}
-        onConfirm={() => { setConfirmDelete(false); onDelete(row.id); }}
+        onConfirm={() => {
+          setConfirmDelete(false)
+          onDelete(row.id)
+        }}
         onCancel={() => setConfirmDelete(false)}
       />
     </div>
-  );
-};
+  )
+}
 
-AdvancePaymentRowActions.displayName = "AdvancePaymentRowActions";
+AdvancePaymentRowActions.displayName = 'AdvancePaymentRowActions'

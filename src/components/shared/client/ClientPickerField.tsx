@@ -1,14 +1,19 @@
-import { ClientSearchInput, SelectedClientDisplay } from "./ClientSearchInput";
+import { ClientSearchInput, SelectedClientDisplay } from './ClientSearchInput'
 
 interface ClientPickerFieldProps {
-  selectedClient: { id: number; name: string } | null;
-  clientQuery: string;
-  onQueryChange: (query: string) => void;
-  onSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void;
-  onClear: () => void;
-  error?: string;
-  label?: string;
-  placeholder?: string;
+  selectedClient: { id: number; name: string } | null
+  clientQuery: string
+  onQueryChange: (query: string) => void
+  onSelect: (client: {
+    id: number
+    name: string
+    id_number: string
+    client_status?: string | null
+  }) => void
+  onClear: () => void
+  error?: string
+  label?: string
+  placeholder?: string
 }
 
 export const ClientPickerField: React.FC<ClientPickerFieldProps> = ({
@@ -18,7 +23,7 @@ export const ClientPickerField: React.FC<ClientPickerFieldProps> = ({
   onSelect,
   onClear,
   error,
-  label = "לקוח",
+  label = 'לקוח',
   placeholder = 'חפש לפי שם, ת"ז / ח.פ...',
 }) =>
   selectedClient ? (
@@ -37,6 +42,6 @@ export const ClientPickerField: React.FC<ClientPickerFieldProps> = ({
       onSelect={onSelect}
       error={error}
     />
-  );
+  )
 
-ClientPickerField.displayName = "ClientPickerField";
+ClientPickerField.displayName = 'ClientPickerField'

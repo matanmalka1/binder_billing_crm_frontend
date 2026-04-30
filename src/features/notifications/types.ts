@@ -1,20 +1,20 @@
-import type { NotificationSeverity } from "./api";
+import type { NotificationSeverity } from './api'
 
 export interface NotificationDrawerProps {
-  open: boolean;
-  onClose: () => void;
+  open: boolean
+  onClose: () => void
 }
 
 export interface NotificationsTabProps {
-  businessId?: number;
+  businessId?: number
 }
 
 export interface SeverityBadgeProps {
-  severity: NotificationSeverity;
+  severity: NotificationSeverity
 }
 
 export interface SendNotificationModalProps {
-  open: boolean;
-  onClose: () => void;
-  clientId?: number;
+  open: boolean
+  onClose: () => void
+  clientId?: number
 }

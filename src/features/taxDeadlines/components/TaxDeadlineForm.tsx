@@ -1,29 +1,23 @@
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   ClientPickerField,
   createClientIdPickerHandlers,
   useClientPickerState,
-} from "../../../components/shared/client";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import type { UseFormReturn } from "react-hook-form";
-import {
-  TaxDeadlineCommonFields,
-  TaxDeadlineModalFooter,
-} from "./TaxDeadlineFormParts";
-import type { CreateTaxDeadlineForm } from "../types";
-import { clientsApi, clientsQK } from "@/features/clients";
-import {
-  REQUIRED_FIELD_MESSAGE,
-  TAX_DEADLINE_CREATE_FORM_ID,
-} from "../constants";
+} from '../../../components/shared/client'
+import { Modal } from '../../../components/ui/overlays/Modal'
+import type { UseFormReturn } from 'react-hook-form'
+import { TaxDeadlineCommonFields, TaxDeadlineModalFooter } from './TaxDeadlineFormParts'
+import type { CreateTaxDeadlineForm } from '../types'
+import { clientsApi, clientsQK } from '@/features/clients'
+import { REQUIRED_FIELD_MESSAGE, TAX_DEADLINE_CREATE_FORM_ID } from '../constants'
 
 interface TaxDeadlineFormProps {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: () => void;
-  form: UseFormReturn<CreateTaxDeadlineForm>;
-  isSubmitting: boolean;
+  open: boolean
+  onClose: () => void
+  onSubmit: () => void
+  form: UseFormReturn<CreateTaxDeadlineForm>
+  isSubmitting: boolean
 }
 
 export const TaxDeadlineForm = ({
@@ -39,7 +33,7 @@ export const TaxDeadlineForm = ({
     watch,
     formState: { errors },
     reset,
-  } = form;
+  } = form
   const {
     clientQuery,
     selectedClient,
@@ -48,29 +42,27 @@ export const TaxDeadlineForm = ({
     handleClientQueryChange,
     resetClientPicker,
   } = useClientPickerState(
-    createClientIdPickerHandlers((value, options) =>
-      setValue("client_id", value, options),
-    ),
-  );
-  const selectedClientId = watch("client_id");
-  const clientIdNumber = Number(selectedClientId);
+    createClientIdPickerHandlers((value, options) => setValue('client_id', value, options)),
+  )
+  const selectedClientId = watch('client_id')
+  const clientIdNumber = Number(selectedClientId)
   const selectedClientQuery = useQuery({
     queryKey: clientsQK.detail(clientIdNumber),
     queryFn: () => clientsApi.getById(clientIdNumber),
     enabled: Number.isInteger(clientIdNumber) && clientIdNumber > 0,
-  });
+  })
 
   useEffect(() => {
-    if (open) return;
-    reset();
-    resetClientPicker();
-  }, [open, reset, resetClientPicker]);
+    if (open) return
+    reset()
+    resetClientPicker()
+  }, [open, reset, resetClientPicker])
 
   const handleClose = () => {
-    reset();
-    resetClientPicker();
-    onClose();
-  };
+    reset()
+    resetClientPicker()
+    onClose()
+  }
 
   return (
     <Modal
@@ -89,7 +81,7 @@ export const TaxDeadlineForm = ({
       }
     >
       <form id={TAX_DEADLINE_CREATE_FORM_ID} onSubmit={onSubmit} className="space-y-4">
-        <input type="hidden" {...register("client_id", { required: REQUIRED_FIELD_MESSAGE })} />
+        <input type="hidden" {...register('client_id', { required: REQUIRED_FIELD_MESSAGE })} />
         <ClientPickerField
           selectedClient={selectedClient}
           clientQuery={clientQuery}
@@ -105,7 +97,7 @@ export const TaxDeadlineForm = ({
         />
       </form>
     </Modal>
-  );
-};
+  )
+}
 
-TaxDeadlineForm.displayName = "TaxDeadlineForm";
+TaxDeadlineForm.displayName = 'TaxDeadlineForm'

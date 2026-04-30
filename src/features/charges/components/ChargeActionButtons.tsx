@@ -1,14 +1,14 @@
-import { CheckCircle2 } from "lucide-react";
-import { Button } from "../../../components/ui/primitives/Button";
-import { canCancel, canIssue, canMarkPaid } from "../utils";
+import { CheckCircle2 } from 'lucide-react'
+import { Button } from '../../../components/ui/primitives/Button'
+import { canCancel, canIssue, canMarkPaid } from '../utils'
 
 interface ChargeActionButtonsProps {
-  status: string;
-  disabled?: boolean;
-  onIssue: React.MouseEventHandler<HTMLButtonElement>;
-  onMarkPaid: React.MouseEventHandler<HTMLButtonElement>;
-  onCancel: React.MouseEventHandler<HTMLButtonElement>;
-  size?: "sm" | "inline";
+  status: string
+  disabled?: boolean
+  onIssue: React.MouseEventHandler<HTMLButtonElement>
+  onMarkPaid: React.MouseEventHandler<HTMLButtonElement>
+  onCancel: React.MouseEventHandler<HTMLButtonElement>
+  size?: 'sm' | 'inline'
 }
 
 export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
@@ -17,9 +17,9 @@ export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
   onIssue,
   onMarkPaid,
   onCancel,
-  size = "inline",
+  size = 'inline',
 }) => {
-  const gap = size === "sm" ? "flex flex-wrap gap-2 py-2" : "flex flex-wrap items-center gap-1.5";
+  const gap = size === 'sm' ? 'flex flex-wrap gap-2 py-2' : 'flex flex-wrap items-center gap-1.5'
 
   return (
     <div className={gap}>
@@ -61,7 +61,7 @@ export const ChargeActionButtons: React.FC<ChargeActionButtonsProps> = ({
         </Button>
       )}
     </div>
-  );
-};
+  )
+}
 
-ChargeActionButtons.displayName = "ChargeActionButtons";
+ChargeActionButtons.displayName = 'ChargeActionButtons'

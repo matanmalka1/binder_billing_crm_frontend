@@ -1,19 +1,19 @@
-import type { ReactNode } from "react";
-import { Loader2 } from "lucide-react";
-import { cn } from "../../../utils/utils";
+import type { ReactNode } from 'react'
+import { Loader2 } from 'lucide-react'
+import { cn } from '../../../utils/utils'
 
 interface BulkSelectionToolbarProps {
-  children: ReactNode;
-  clearLabel?: string;
-  extra?: ReactNode;
-  loading: boolean;
-  onClear: () => void;
-  selectedCount: number;
+  children: ReactNode
+  clearLabel?: string
+  extra?: ReactNode
+  loading: boolean
+  onClear: () => void
+  selectedCount: number
 }
 
 export const BulkSelectionToolbar: React.FC<BulkSelectionToolbarProps> = ({
   children,
-  clearLabel = "נקה בחירה",
+  clearLabel = 'נקה בחירה',
   extra,
   loading,
   onClear,
@@ -36,14 +36,14 @@ export const BulkSelectionToolbar: React.FC<BulkSelectionToolbarProps> = ({
     </div>
     {extra}
   </div>
-);
+)
 
 interface BulkSelectionActionButtonProps {
-  disabled: boolean;
-  label: string;
-  loading: boolean;
-  onClick: () => void;
-  variant?: "default" | "danger";
+  disabled: boolean
+  label: string
+  loading: boolean
+  onClick: () => void
+  variant?: 'default' | 'danger'
 }
 
 export const BulkSelectionActionButton: React.FC<BulkSelectionActionButtonProps> = ({
@@ -51,20 +51,20 @@ export const BulkSelectionActionButton: React.FC<BulkSelectionActionButtonProps>
   label,
   loading,
   onClick,
-  variant = "default",
+  variant = 'default',
 }) => (
   <button
     type="button"
     onClick={onClick}
     disabled={disabled}
     className={cn(
-      "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50",
-      variant === "danger"
-        ? "border border-negative-200 bg-white text-negative-600 hover:bg-negative-50"
-        : "border border-primary-300 bg-white text-primary-700 hover:bg-primary-100",
+      'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50',
+      variant === 'danger'
+        ? 'border border-negative-200 bg-white text-negative-600 hover:bg-negative-50'
+        : 'border border-primary-300 bg-white text-primary-700 hover:bg-primary-100',
     )}
   >
     {loading && <Loader2 className="h-3 w-3 animate-spin" />}
     {label}
   </button>
-);
+)

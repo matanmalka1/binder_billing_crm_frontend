@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Plus } from "lucide-react";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { Alert } from "@/components/ui/overlays/Alert";
-import { Button } from "@/components/ui/primitives/Button";
-import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
+import { useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { Plus } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { Alert } from '@/components/ui/overlays/Alert'
+import { Button } from '@/components/ui/primitives/Button'
+import { PaginatedDataTable } from '@/components/ui/table/PaginatedDataTable'
 import {
   ChargeBulkToolbar,
   buildChargeColumns,
@@ -13,13 +13,13 @@ import {
   ChargesFiltersCard,
   ChargesSummaryBar,
   useChargesPage,
-} from "@/features/charges";
-import { getChargeRowClassName, getChargesEmptyState } from "../helpers";
+} from '@/features/charges'
+import { getChargeRowClassName, getChargesEmptyState } from '../helpers'
 
 export const Charges: React.FC = () => {
-  const [, setSearchParams] = useSearchParams();
-  const [selectedChargeId, setSelectedChargeId] = useState<number | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [, setSearchParams] = useSearchParams()
+  const [selectedChargeId, setSelectedChargeId] = useState<number | null>(null)
+  const [showCreateModal, setShowCreateModal] = useState(false)
   const {
     actionLoadingId,
     bulkLoading,
@@ -40,8 +40,8 @@ export const Charges: React.FC = () => {
     stats,
     submitCreate,
     total,
-  } = useChargesPage();
-  const allIds = useMemo(() => charges.map((c) => c.id), [charges]);
+  } = useChargesPage()
+  const allIds = useMemo(() => charges.map((c) => c.id), [charges])
   const columns = useMemo(
     () =>
       buildChargeColumns({
@@ -55,7 +55,7 @@ export const Charges: React.FC = () => {
         allIds,
       }),
     [isAdvisor, actionLoadingId, runAction, selectedIds, toggleSelect, toggleSelectAll, allIds],
-  );
+  )
 
   return (
     <div className="space-y-6">
@@ -78,14 +78,11 @@ export const Charges: React.FC = () => {
         stats={stats}
         isAdvisor={isAdvisor}
         currentStatus={filters.status}
-        onStatusClick={(status) => setFilter("status", status)}
+        onStatusClick={(status) => setFilter('status', status)}
       />
 
       {!isAdvisor && (
-        <Alert
-          variant="info"
-          message="צפייה בלבד. יצירה ושינוי חיובים זמינים ליועץ בלבד."
-        />
+        <Alert variant="info" message="צפייה בלבד. יצירה ושינוי חיובים זמינים ליועץ בלבד." />
       )}
 
       <ChargesFiltersCard
@@ -114,8 +111,8 @@ export const Charges: React.FC = () => {
         pageSize={filters.page_size}
         total={total}
         label="חיובים"
-        onPageChange={(page) => setFilter("page", String(page))}
-        onPageSizeChange={(pageSize) => setFilter("page_size", String(pageSize))}
+        onPageChange={(page) => setFilter('page', String(page))}
+        onPageSizeChange={(pageSize) => setFilter('page_size', String(pageSize))}
         rowClassName={(charge) => getChargeRowClassName(charge.status)}
         emptyMessage="אין חיובים להצגה"
         emptyState={getChargesEmptyState(isAdvisor, () => setShowCreateModal(true))}
@@ -130,5 +127,5 @@ export const Charges: React.FC = () => {
         onSubmit={submitCreate}
       />
     </div>
-  );
-};
+  )
+}

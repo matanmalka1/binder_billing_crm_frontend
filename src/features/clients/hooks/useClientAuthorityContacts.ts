@@ -1,18 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
-import { authorityContactsApi, authorityContactsQK, type ContactType } from "@/features/authorityContacts";
+import { useQuery } from '@tanstack/react-query'
+import {
+  authorityContactsApi,
+  authorityContactsQK,
+  type ContactType,
+} from '@/features/authorityContacts'
 
-const PAGE = 1;
-const PAGE_SIZE = 20;
+const PAGE = 1
+const PAGE_SIZE = 20
 const DEFAULT_BRANCH_CONTACT_TYPES = new Set<ContactType>([
-  "assessing_officer",
-  "vat_branch",
-  "national_insurance",
-]);
+  'assessing_officer',
+  'vat_branch',
+  'national_insurance',
+])
 
 const normalizeBranchCity = (city: string | null | undefined): string | null => {
-  const normalized = city?.trim();
-  return normalized ? normalized : null;
-};
+  const normalized = city?.trim()
+  return normalized ? normalized : null
+}
 
 export const useClientAuthorityContacts = (clientId: number, addressCity?: string | null) => {
   const { data } = useQuery({
@@ -20,16 +24,16 @@ export const useClientAuthorityContacts = (clientId: number, addressCity?: strin
     queryFn: () => authorityContactsApi.listAuthorityContacts(clientId, undefined, PAGE, PAGE_SIZE),
     enabled: clientId > 0,
     staleTime: 60_000,
-  });
+  })
 
-  const contacts = data?.items ?? [];
-  const defaultBranchOffice = normalizeBranchCity(addressCity);
+  const contacts = data?.items ?? []
+  const defaultBranchOffice = normalizeBranchCity(addressCity)
 
   const officeByType = (type: ContactType): string | null => {
-    const manualOffice = normalizeBranchCity(contacts.find((c) => c.contact_type === type)?.office);
-    if (manualOffice) return manualOffice;
-    return DEFAULT_BRANCH_CONTACT_TYPES.has(type) ? defaultBranchOffice : null;
-  };
+    const manualOffice = normalizeBranchCity(contacts.find((c) => c.contact_type === type)?.office)
+    if (manualOffice) return manualOffice
+    return DEFAULT_BRANCH_CONTACT_TYPES.has(type) ? defaultBranchOffice : null
+  }
 
-  return { officeByType };
-};
+  return { officeByType }
+}

@@ -1,49 +1,46 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
-import { Badge } from "../../../components/ui/primitives/Badge";
-import { Button } from "../../../components/ui/primitives/Button";
-import { usersApi, usersQK } from "../api";
-import { formatDateTime } from "../../../utils/utils";
-import { PAGE_SIZE_SM as PAGE_SIZE } from "@/constants/pagination.constants";
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { DetailDrawer } from '../../../components/ui/overlays/DetailDrawer'
+import { Badge } from '../../../components/ui/primitives/Badge'
+import { Button } from '../../../components/ui/primitives/Button'
+import { usersApi, usersQK } from '../api'
+import { formatDateTime } from '../../../utils/utils'
+import { PAGE_SIZE_SM as PAGE_SIZE } from '@/constants/pagination.constants'
 
 const auditActionLabel: Record<string, string> = {
-  login_success: "כניסה למערכת",
-  login_failure: "כניסה נכשלה",
-  user_created: "משתמש נוצר",
-  user_updated: "פרטים עודכנו",
-  user_activated: "הופעל",
-  user_deactivated: "הושבת",
-  password_reset: "סיסמה אופסה",
-  logout: "יציאה מהמערכת",
-};
-
-interface AuditLogsDrawerProps {
-  open: boolean;
-  onClose: () => void;
+  login_success: 'כניסה למערכת',
+  login_failure: 'כניסה נכשלה',
+  user_created: 'משתמש נוצר',
+  user_updated: 'פרטים עודכנו',
+  user_activated: 'הופעל',
+  user_deactivated: 'הושבת',
+  password_reset: 'סיסמה אופסה',
+  logout: 'יציאה מהמערכת',
 }
 
-export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({
-  open,
-  onClose,
-}) => {
-  const [page, setPage] = useState(1);
-  const params = { page, page_size: PAGE_SIZE };
+interface AuditLogsDrawerProps {
+  open: boolean
+  onClose: () => void
+}
+
+export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({ open, onClose }) => {
+  const [page, setPage] = useState(1)
+  const params = { page, page_size: PAGE_SIZE }
 
   const { data, isPending, isError } = useQuery({
     queryKey: usersQK.auditLogs(params),
     queryFn: () => usersApi.listAuditLogs(params),
     enabled: open,
-  });
+  })
 
-  const logs = data?.items ?? [];
-  const total = data?.total ?? 0;
-  const hasMore = page * PAGE_SIZE < total;
+  const logs = data?.items ?? []
+  const total = data?.total ?? 0
+  const hasMore = page * PAGE_SIZE < total
 
   const handleClose = () => {
-    setPage(1);
-    onClose();
-  };
+    setPage(1)
+    onClose()
+  }
 
   return (
     <DetailDrawer
@@ -60,9 +57,7 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({
         </div>
       )}
 
-      {isError && (
-        <p className="text-sm text-negative-600">שגיאה בטעינת לוג הביקורת</p>
-      )}
+      {isError && <p className="text-sm text-negative-600">שגיאה בטעינת לוג הביקורת</p>}
 
       {!isPending && !isError && logs.length === 0 && (
         <p className="text-sm text-gray-500">אין רשומות להצגה</p>
@@ -79,16 +74,12 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({
                 <span className="text-sm font-medium text-gray-800">
                   {auditActionLabel[log.action] ?? log.action}
                 </span>
-                <Badge variant={log.status === "success" ? "success" : "error"}>
-                  {log.status === "success" ? "הצלחה" : "כישלון"}
+                <Badge variant={log.status === 'success' ? 'success' : 'error'}>
+                  {log.status === 'success' ? 'הצלחה' : 'כישלון'}
                 </Badge>
               </div>
-              {log.email && (
-                <p className="text-xs text-gray-500">אימייל: {log.email}</p>
-              )}
-              {log.reason && (
-                <p className="text-xs text-gray-500">סיבה: {log.reason}</p>
-              )}
+              {log.email && <p className="text-xs text-gray-500">אימייל: {log.email}</p>}
+              {log.reason && <p className="text-xs text-gray-500">סיבה: {log.reason}</p>}
               <p className="text-xs text-gray-400">{formatDateTime(log.created_at)}</p>
             </div>
           ))}
@@ -112,5 +103,5 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({
         </Button>
       </div>
     </DetailDrawer>
-  );
-};
+  )
+}

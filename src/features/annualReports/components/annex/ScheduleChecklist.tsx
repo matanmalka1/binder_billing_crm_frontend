@@ -1,24 +1,24 @@
-import { useState } from "react";
-import { CheckCircle2, Circle, ChevronDown, ChevronUp } from "lucide-react";
-import { Card } from "../../../../components/ui/primitives/Card";
-import { Button } from "../../../../components/ui/primitives/Button";
-import type { ScheduleEntry, AnnualReportScheduleKey } from "../../api";
-import { getScheduleLabel } from "../../api";
-import { cn, formatDate } from "../../../../utils/utils";
-import { AnnexDataPanel } from "./AnnexDataPanel";
-import { ScheduleAddForm } from "./ScheduleAddForm";
-import { semanticMonoToneClasses } from "@/utils/semanticColors";
-import { ANNEX_TEXT } from "./annex.constants";
-import { getCompletedCount, toggleExpandedSchedule } from "./annex.helpers";
+import { useState } from 'react'
+import { CheckCircle2, Circle, ChevronDown, ChevronUp } from 'lucide-react'
+import { Card } from '../../../../components/ui/primitives/Card'
+import { Button } from '../../../../components/ui/primitives/Button'
+import type { ScheduleEntry, AnnualReportScheduleKey } from '../../api'
+import { getScheduleLabel } from '../../api'
+import { cn, formatDate } from '../../../../utils/utils'
+import { AnnexDataPanel } from './AnnexDataPanel'
+import { ScheduleAddForm } from './ScheduleAddForm'
+import { semanticMonoToneClasses } from '@/utils/semanticColors'
+import { ANNEX_TEXT } from './annex.constants'
+import { getCompletedCount, toggleExpandedSchedule } from './annex.helpers'
 
 interface ScheduleChecklistProps {
-  reportId: number;
-  schedules: ScheduleEntry[];
-  onComplete: (schedule: AnnualReportScheduleKey) => void;
-  onAdd: (schedule: AnnualReportScheduleKey, notes?: string) => void;
-  isLoading: boolean;
-  isAdding: boolean;
-  completingKey?: AnnualReportScheduleKey | null;
+  reportId: number
+  schedules: ScheduleEntry[]
+  onComplete: (schedule: AnnualReportScheduleKey) => void
+  onAdd: (schedule: AnnualReportScheduleKey, notes?: string) => void
+  isLoading: boolean
+  isAdding: boolean
+  completingKey?: AnnualReportScheduleKey | null
 }
 
 export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
@@ -30,7 +30,7 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
   isAdding,
   completingKey,
 }) => {
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
   if (schedules.length === 0) {
     return (
@@ -40,33 +40,35 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
           <ScheduleAddForm schedules={schedules} onAdd={onAdd} isAdding={isAdding} />
         </div>
       </Card>
-    );
+    )
   }
 
-  const completed = getCompletedCount(schedules);
-  const allDone = completed === schedules.length;
+  const completed = getCompletedCount(schedules)
+  const allDone = completed === schedules.length
 
   const toggle = (key: string) =>
-    setExpanded((prev) => toggleExpandedSchedule(prev, key as AnnualReportScheduleKey));
+    setExpanded((prev) => toggleExpandedSchedule(prev, key as AnnualReportScheduleKey))
 
   return (
     <Card
       title={ANNEX_TEXT.requiredSchedules}
-      subtitle={allDone ? ANNEX_TEXT.allSchedulesComplete : `${completed}/${schedules.length} הושלמו`}
+      subtitle={
+        allDone ? ANNEX_TEXT.allSchedulesComplete : `${completed}/${schedules.length} הושלמו`
+      }
     >
       <ul className="space-y-2">
         {schedules.map((entry) => {
-          const isExpanded = !!expanded[entry.schedule];
-          const scheduleLabel = getScheduleLabel(entry.schedule);
+          const isExpanded = !!expanded[entry.schedule]
+          const scheduleLabel = getScheduleLabel(entry.schedule)
 
           return (
             <li
               key={entry.id}
               className={cn(
-                "rounded-lg border transition-colors",
+                'rounded-lg border transition-colors',
                 entry.is_complete
-                  ? "border-positive-200 bg-positive-50"
-                  : "border-gray-200 bg-white hover:bg-gray-50",
+                  ? 'border-positive-200 bg-positive-50'
+                  : 'border-gray-200 bg-white hover:bg-gray-50',
               )}
             >
               <div className="flex items-center justify-between p-3">
@@ -79,15 +81,15 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
                   <div>
                     <p
                       className={cn(
-                        "text-sm font-medium",
-                        entry.is_complete ? "text-positive-800" : "text-gray-800",
+                        'text-sm font-medium',
+                        entry.is_complete ? 'text-positive-800' : 'text-gray-800',
                       )}
                     >
                       {scheduleLabel}
                     </p>
                     {entry.notes && <p className="text-xs text-gray-500">{entry.notes}</p>}
                     {entry.completed_at && (
-                      <p className={cn("text-xs", semanticMonoToneClasses.positive)}>
+                      <p className={cn('text-xs', semanticMonoToneClasses.positive)}>
                         הושלם: {formatDate(entry.completed_at)}
                       </p>
                     )}
@@ -135,14 +137,14 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
                 </div>
               )}
             </li>
-          );
+          )
         })}
       </ul>
       <div className="mt-3">
         <ScheduleAddForm schedules={schedules} onAdd={onAdd} isAdding={isAdding} />
       </div>
     </Card>
-  );
-};
+  )
+}
 
-ScheduleChecklist.displayName = "ScheduleChecklist";
+ScheduleChecklist.displayName = 'ScheduleChecklist'

@@ -1,34 +1,33 @@
-import type { ReactNode } from "react";
-import { Alert } from "../overlays/Alert";
-import { DataTable, type DataTableProps } from "./DataTable";
-import { getTotalPages } from "../../../utils/paginationUtils";
-import { PaginationCard } from "./PaginationCard";
-
+import type { ReactNode } from 'react'
+import { Alert } from '../overlays/Alert'
+import { DataTable, type DataTableProps } from './DataTable'
+import { getTotalPages } from '../../../utils/paginationUtils'
+import { PaginationCard } from './PaginationCard'
 
 type BasePaginatedDataTableProps<T> = Pick<
   DataTableProps<T>,
-  | "className"
-  | "columns"
-  | "data"
-  | "emptyMessage"
-  | "emptyState"
-  | "getRowKey"
-  | "onRowClick"
-  | "rowClassName"
->;
+  | 'className'
+  | 'columns'
+  | 'data'
+  | 'emptyMessage'
+  | 'emptyState'
+  | 'getRowKey'
+  | 'onRowClick'
+  | 'rowClassName'
+>
 
 export interface PaginatedDataTableProps<T> extends BasePaginatedDataTableProps<T> {
-  error?: string | null;
-  isLoading?: boolean;
-  label?: string;
-  onPageChange: (page: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
-  page: number;
-  pageSize: number;
-  pageSizeOptions?: number[];
-  showPagination?: boolean;
-  summary?: ReactNode;
-  total: number;
+  error?: string | null
+  isLoading?: boolean
+  label?: string
+  onPageChange: (page: number) => void
+  onPageSizeChange?: (pageSize: number) => void
+  page: number
+  pageSize: number
+  pageSizeOptions?: number[]
+  showPagination?: boolean
+  summary?: ReactNode
+  total: number
 }
 
 export const PaginatedDataTable = <T,>({
@@ -50,7 +49,7 @@ export const PaginatedDataTable = <T,>({
   summary,
   total,
 }: PaginatedDataTableProps<T>) => {
-  const shouldShowPagination = showPagination ?? (!isLoading && total > 0 && data.length > 0);
+  const shouldShowPagination = showPagination ?? (!isLoading && total > 0 && data.length > 0)
 
   return (
     <>
@@ -74,9 +73,8 @@ export const PaginatedDataTable = <T,>({
           total={total}
           label={label}
           onPageChange={onPageChange}
-
         />
       )}
     </>
-  );
-};
+  )
+}

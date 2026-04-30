@@ -3,27 +3,27 @@ import type {
   FieldErrors,
   UseFormClearErrors,
   UseFormRegister,
-} from "react-hook-form";
-import type { ClientCreationImpactResponse } from "../../api/contracts";
-import type { CreateClientFormValues } from "../../schemas";
-import { CreateClientBusinessStep } from "./CreateClientBusinessStep";
-import { CreateClientIdentityStep } from "./CreateClientIdentityStep";
-import { CreateClientTaxStep } from "./CreateClientTaxStep";
+} from 'react-hook-form'
+import type { ClientCreationImpactResponse } from '../../api/contracts'
+import type { CreateClientFormValues } from '../../schemas'
+import { CreateClientBusinessStep } from './CreateClientBusinessStep'
+import { CreateClientIdentityStep } from './CreateClientIdentityStep'
+import { CreateClientTaxStep } from './CreateClientTaxStep'
 
 interface Props {
-  advisorOptions: Array<{ value: string; label: string }>;
-  advisorsLoading: boolean;
-  businessOpenedAtField: ControllerRenderProps<CreateClientFormValues, "business_opened_at">;
-  disabled: boolean;
-  errors: FieldErrors<CreateClientFormValues>;
-  clearErrors: UseFormClearErrors<CreateClientFormValues>;
-  impactData?: ClientCreationImpactResponse;
-  impactLoading: boolean;
-  isCompany: boolean;
-  isExempt: boolean;
-  register: UseFormRegister<CreateClientFormValues>;
-  showVatFrequency: boolean;
-  stepIndex: number;
+  advisorOptions: Array<{ value: string; label: string }>
+  advisorsLoading: boolean
+  businessOpenedAtField: ControllerRenderProps<CreateClientFormValues, 'business_opened_at'>
+  disabled: boolean
+  errors: FieldErrors<CreateClientFormValues>
+  clearErrors: UseFormClearErrors<CreateClientFormValues>
+  impactData?: ClientCreationImpactResponse
+  impactLoading: boolean
+  isCompany: boolean
+  isExempt: boolean
+  register: UseFormRegister<CreateClientFormValues>
+  showVatFrequency: boolean
+  stepIndex: number
 }
 
 export const CreateClientStepContent: React.FC<Props> = ({
@@ -50,7 +50,7 @@ export const CreateClientStepContent: React.FC<Props> = ({
         clearErrors={clearErrors}
         register={register}
       />
-    );
+    )
   }
 
   if (stepIndex === 1) {
@@ -62,7 +62,7 @@ export const CreateClientStepContent: React.FC<Props> = ({
         isCompany={isCompany}
         register={register}
       />
-    );
+    )
   }
 
   return (
@@ -77,5 +77,5 @@ export const CreateClientStepContent: React.FC<Props> = ({
       register={register}
       showVatFrequency={showVatFrequency}
     />
-  );
-};
+  )
+}

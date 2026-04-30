@@ -1,37 +1,39 @@
-import { useState } from "react";
-import { Pencil, Trash2, Plus, X, Check } from "lucide-react";
-import { Card } from "@/components/ui/primitives/Card";
-import { Button } from "@/components/ui/primitives/Button";
-import { Alert } from "@/components/ui/overlays/Alert";
-import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
-import { Textarea } from "@/components/ui/inputs/Textarea";
-import type { EntityNote } from "../api";
-import { formatDate } from "@/utils/utils";
+import { useState } from 'react'
+import { Pencil, Trash2, Plus, X, Check } from 'lucide-react'
+import { Card } from '@/components/ui/primitives/Card'
+import { Button } from '@/components/ui/primitives/Button'
+import { Alert } from '@/components/ui/overlays/Alert'
+import { ConfirmDialog } from '@/components/ui/overlays/ConfirmDialog'
+import { Textarea } from '@/components/ui/inputs/Textarea'
+import type { EntityNote } from '../api'
+import { formatDate } from '@/utils/utils'
 
 export interface NotesHookResult {
-  notes: EntityNote[];
-  total: number;
-  isLoading: boolean;
-  error: string | null;
-  addNote: (note: string) => Promise<EntityNote>;
-  isAdding: boolean;
-  updateNote: (noteId: number, note: string) => Promise<EntityNote>;
-  isUpdating: boolean;
-  deleteNote: (noteId: number) => void;
-  deletingId: number | null;
+  notes: EntityNote[]
+  total: number
+  isLoading: boolean
+  error: string | null
+  addNote: (note: string) => Promise<EntityNote>
+  isAdding: boolean
+  updateNote: (noteId: number, note: string) => Promise<EntityNote>
+  isUpdating: boolean
+  deleteNote: (noteId: number) => void
+  deletingId: number | null
 }
 
 interface NoteRowProps {
-  note: EntityNote;
-  isDeleting: boolean;
-  onEdit: (note: EntityNote) => void;
-  onDelete: (id: number) => void;
+  note: EntityNote
+  isDeleting: boolean
+  onEdit: (note: EntityNote) => void
+  onDelete: (id: number) => void
 }
 
 const NoteRow = ({ note, isDeleting, onEdit, onDelete }: NoteRowProps) => (
   <li className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
     <div className="flex-1 min-w-0">
-      <p className="text-sm font-semibold text-gray-900 whitespace-pre-wrap break-words">{note.note}</p>
+      <p className="text-sm font-semibold text-gray-900 whitespace-pre-wrap break-words">
+        {note.note}
+      </p>
       <p className="mt-2 text-xs font-medium text-gray-500">{formatDate(note.created_at)}</p>
     </div>
     <div className="flex items-center gap-1 shrink-0">
@@ -58,50 +60,56 @@ const NoteRow = ({ note, isDeleting, onEdit, onDelete }: NoteRowProps) => (
       </Button>
     </div>
   </li>
-);
+)
 
 interface NotesCardProps {
-  hook: NotesHookResult;
-  canEdit: boolean;
+  hook: NotesHookResult
+  canEdit: boolean
 }
 
 export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
   const {
-    notes, total, isLoading, error,
-    addNote, isAdding,
-    updateNote, isUpdating,
-    deleteNote, deletingId,
-  } = hook;
+    notes,
+    total,
+    isLoading,
+    error,
+    addNote,
+    isAdding,
+    updateNote,
+    isUpdating,
+    deleteNote,
+    deletingId,
+  } = hook
 
-  const [showAdd, setShowAdd] = useState(false);
-  const [addText, setAddText] = useState("");
-  const [editing, setEditing] = useState<EntityNote | null>(null);
-  const [editText, setEditText] = useState("");
-  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  const [showAdd, setShowAdd] = useState(false)
+  const [addText, setAddText] = useState('')
+  const [editing, setEditing] = useState<EntityNote | null>(null)
+  const [editText, setEditText] = useState('')
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null)
 
   const handleAdd = async () => {
-    if (!addText.trim()) return;
-    await addNote(addText.trim());
-    setAddText("");
-    setShowAdd(false);
-  };
+    if (!addText.trim()) return
+    await addNote(addText.trim())
+    setAddText('')
+    setShowAdd(false)
+  }
 
   const handleEditStart = (note: EntityNote) => {
-    setEditing(note);
-    setEditText(note.note);
-  };
+    setEditing(note)
+    setEditText(note.note)
+  }
 
   const handleEditSave = async () => {
-    if (!editing || !editText.trim()) return;
-    await updateNote(editing.id, editText.trim());
-    setEditing(null);
-    setEditText("");
-  };
+    if (!editing || !editText.trim()) return
+    await updateNote(editing.id, editText.trim())
+    setEditing(null)
+    setEditText('')
+  }
 
   const handleEditCancel = () => {
-    setEditing(null);
-    setEditText("");
-  };
+    setEditing(null)
+    setEditText('')
+  }
 
   return (
     <>
@@ -141,7 +149,10 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => { setShowAdd(false); setAddText(""); }}
+                onClick={() => {
+                  setShowAdd(false)
+                  setAddText('')
+                }}
                 disabled={isAdding}
               >
                 <X className="h-3.5 w-3.5" />
@@ -161,9 +172,7 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
           </div>
         )}
 
-        {isLoading && (
-          <p className="py-4 text-center text-sm text-gray-500">טוען...</p>
-        )}
+        {isLoading && <p className="py-4 text-center text-sm text-gray-500">טוען...</p>}
 
         {!isLoading && notes.length === 0 && !showAdd && (
           <p className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-5 text-center text-sm text-gray-500">
@@ -175,7 +184,10 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
           <ul className="space-y-3">
             {notes.map((note) =>
               editing?.id === note.id ? (
-                <li key={note.id} className="rounded-lg border border-primary-100 bg-primary-50/40 p-4 space-y-3">
+                <li
+                  key={note.id}
+                  className="rounded-lg border border-primary-100 bg-primary-50/40 p-4 space-y-3"
+                >
                   <Textarea
                     rows={3}
                     value={editText}
@@ -214,7 +226,7 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
                   onEdit={handleEditStart}
                   onDelete={(id) => setConfirmDeleteId(id)}
                 />
-              )
+              ),
             )}
           </ul>
         )}
@@ -228,11 +240,11 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
         cancelLabel="ביטול"
         isLoading={deletingId === confirmDeleteId}
         onConfirm={() => {
-          if (confirmDeleteId !== null) deleteNote(confirmDeleteId);
-          setConfirmDeleteId(null);
+          if (confirmDeleteId !== null) deleteNote(confirmDeleteId)
+          setConfirmDeleteId(null)
         }}
         onCancel={() => setConfirmDeleteId(null)}
       />
     </>
-  );
-};
+  )
+}

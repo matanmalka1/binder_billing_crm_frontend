@@ -1,24 +1,24 @@
-import type { ExpenseLineResponse, ExpenseCategoryType } from "../../api";
-import { EXPENSE_LABELS } from "../../report.constants";
+import type { ExpenseLineResponse, ExpenseCategoryType } from '../../api'
+import { EXPENSE_LABELS } from '../../report.constants'
 import {
   ExpenseSupplementaryFields,
   FinancialAmountDescriptionFields,
   FinancialEditFormShell,
   FinancialSelectField,
-} from "./FinancialLineFormParts";
-import { useExpenseLineForm } from "./useFinancialLineForm";
+} from './FinancialLineFormParts'
+import { useExpenseLineForm } from './useFinancialLineForm'
 
 interface EditExpenseLineFormProps {
-  line: ExpenseLineResponse;
-  isSaving: boolean;
+  line: ExpenseLineResponse
+  isSaving: boolean
   onSave: (payload: {
-    category: ExpenseCategoryType;
-    amount: string;
-    description?: string;
-    recognition_rate?: string;
-    supporting_document_ref?: string;
-  }) => void;
-  onCancel: () => void;
+    category: ExpenseCategoryType
+    amount: string
+    description?: string
+    recognition_rate?: string
+    supporting_document_ref?: string
+  }) => void
+  onCancel: () => void
 }
 
 export const EditExpenseLineForm: React.FC<EditExpenseLineFormProps> = ({
@@ -27,7 +27,7 @@ export const EditExpenseLineForm: React.FC<EditExpenseLineFormProps> = ({
   onSave,
   onCancel,
 }) => {
-  const form = useExpenseLineForm(line, onSave);
+  const form = useExpenseLineForm(line, onSave)
 
   return (
     <FinancialEditFormShell
@@ -54,7 +54,7 @@ export const EditExpenseLineForm: React.FC<EditExpenseLineFormProps> = ({
         onDocumentReferenceChange={form.setDocumentReference}
       />
     </FinancialEditFormShell>
-  );
-};
+  )
+}
 
-EditExpenseLineForm.displayName = "EditExpenseLineForm";
+EditExpenseLineForm.displayName = 'EditExpenseLineForm'

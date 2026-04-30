@@ -1,27 +1,25 @@
-import type { ActionCommand, BackendAction } from "./types";
+import type { ActionCommand, BackendAction } from './types'
 
-const HIDDEN_ACTION_KEYS = new Set<string>(["freeze", "activate"]);
+const HIDDEN_ACTION_KEYS = new Set<string>(['freeze', 'activate'])
 
-const mapConfirm = (confirm?: BackendAction["confirm"] | null): ActionCommand["confirm"] => {
-  if (!confirm) return undefined;
+const mapConfirm = (confirm?: BackendAction['confirm'] | null): ActionCommand['confirm'] => {
+  if (!confirm) return undefined
   return {
     title: confirm.title,
     message: confirm.message,
     confirmLabel: confirm.confirm_label,
     cancelLabel: confirm.cancel_label,
     inputs: confirm.inputs,
-  };
-};
+  }
+}
 
-export const mapActions = (
-  actions: BackendAction[] | null | undefined,
-): ActionCommand[] => {
-  if (!Array.isArray(actions)) return [];
+export const mapActions = (actions: BackendAction[] | null | undefined): ActionCommand[] => {
+  if (!Array.isArray(actions)) return []
 
   return actions
     .filter((action) => !HIDDEN_ACTION_KEYS.has(action.key))
     .map((action) => {
-      if (!action.endpoint) return null;
+      if (!action.endpoint) return null
 
       return {
         key: action.key,
@@ -39,7 +37,7 @@ export const mapActions = (
         description: action.description ?? null,
         urgency: action.urgency ?? null,
         dueDate: action.due_date ?? null,
-      } as ActionCommand;
+      } as ActionCommand
     })
-    .filter((a): a is ActionCommand => Boolean(a));
-};
+    .filter((a): a is ActionCommand => Boolean(a))
+}

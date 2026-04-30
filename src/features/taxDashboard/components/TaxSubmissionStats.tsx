@@ -1,23 +1,23 @@
-import { StatsCard } from "@/components/ui/layout/StatsCard";
-import type { TaxSubmissionWidgetResponse } from "../api";
-import { buildTaxSubmissionStats, getNextTaxSubmissionFilter } from "../helpers";
+import { StatsCard } from '@/components/ui/layout/StatsCard'
+import type { TaxSubmissionWidgetResponse } from '../api'
+import { buildTaxSubmissionStats, getNextTaxSubmissionFilter } from '../helpers'
 
 interface TaxSubmissionStatsProps {
-  data?: TaxSubmissionWidgetResponse;
-  activeFilter?: string;
-  onFilter?: (status: string) => void;
+  data?: TaxSubmissionWidgetResponse
+  activeFilter?: string
+  onFilter?: (status: string) => void
 }
 
 export const TaxSubmissionStats = ({ data, activeFilter, onFilter }: TaxSubmissionStatsProps) => {
-  if (!data) return null;
+  if (!data) return null
 
-  const stats = buildTaxSubmissionStats(data);
+  const stats = buildTaxSubmissionStats(data)
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
       {stats.map(({ key, title, value, icon, variant, filterValue }) => {
-        const isFilterable = filterValue !== undefined;
-        const isSelected = isFilterable && activeFilter === filterValue;
+        const isFilterable = filterValue !== undefined
+        const isSelected = isFilterable && activeFilter === filterValue
 
         return (
           <StatsCard
@@ -33,10 +33,10 @@ export const TaxSubmissionStats = ({ data, activeFilter, onFilter }: TaxSubmissi
             }
             selected={isSelected}
           />
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
 
-TaxSubmissionStats.displayName = "TaxSubmissionStats";
+TaxSubmissionStats.displayName = 'TaxSubmissionStats'

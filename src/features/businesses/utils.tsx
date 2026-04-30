@@ -1,33 +1,29 @@
-import { Link } from "react-router-dom";
-import type { Breadcrumb } from "@/components/layout/PageHeader";
-import type { DefinitionItem } from "@/components/ui/layout/DefinitionList";
-import {
-  CLIENT_ROUTES,
-  type BusinessResponse,
-  type ClientResponse,
-} from "@/features/clients";
-import { formatClientOfficeId, formatDate } from "@/utils/utils";
-import { BUSINESS_DETAILS_COPY, getBusinessStatusLabel } from "./constants";
+import { Link } from 'react-router-dom'
+import type { Breadcrumb } from '@/components/layout/PageHeader'
+import type { DefinitionItem } from '@/components/ui/layout/DefinitionList'
+import { CLIENT_ROUTES, type BusinessResponse, type ClientResponse } from '@/features/clients'
+import { formatClientOfficeId, formatDate } from '@/utils/utils'
+import { BUSINESS_DETAILS_COPY, getBusinessStatusLabel } from './constants'
 
 type BusinessRouteParams = {
-  clientId: string;
-  businessId: string;
-};
+  clientId: string
+  businessId: string
+}
 
 export const formatBusinessDisplayName = (
-  business: Pick<BusinessResponse, "business_name"> | null,
-) => business?.business_name ?? BUSINESS_DETAILS_COPY.title;
+  business: Pick<BusinessResponse, 'business_name'> | null,
+) => business?.business_name ?? BUSINESS_DETAILS_COPY.title
 
 export const getBusinessRouteParams = (
   clientId: string | undefined,
   businessId: string | undefined,
 ): BusinessRouteParams | null => {
   if (!clientId || !businessId) {
-    return null;
+    return null
   }
 
-  return { clientId, businessId };
-};
+  return { clientId, businessId }
+}
 
 export const buildBusinessBreadcrumbs = ({
   clientId,
@@ -35,8 +31,8 @@ export const buildBusinessBreadcrumbs = ({
   clientName,
   businessName,
 }: BusinessRouteParams & {
-  clientName: string;
-  businessName: string;
+  clientName: string
+  businessName: string
 }): Breadcrumb[] => [
   { label: BUSINESS_DETAILS_COPY.clientsListLabel, to: CLIENT_ROUTES.list },
   { label: clientName, to: CLIENT_ROUTES.detail(clientId) },
@@ -44,7 +40,7 @@ export const buildBusinessBreadcrumbs = ({
     label: businessName,
     to: CLIENT_ROUTES.businessDetail(clientId, businessId),
   },
-];
+]
 
 export const buildBusinessSummaryItems = (
   business: BusinessResponse,
@@ -57,10 +53,7 @@ export const buildBusinessSummaryItems = (
   {
     label: BUSINESS_DETAILS_COPY.clientLabel,
     value: client ? (
-      <Link
-        to={CLIENT_ROUTES.detail(client.id)}
-        className="text-primary-600 hover:underline"
-      >
+      <Link to={CLIENT_ROUTES.detail(client.id)} className="text-primary-600 hover:underline">
         {client.full_name}
       </Link>
     ) : (
@@ -87,4 +80,4 @@ export const buildBusinessSummaryItems = (
     label: BUSINESS_DETAILS_COPY.createdAtLabel,
     value: formatDate(business.created_at),
   },
-];
+]

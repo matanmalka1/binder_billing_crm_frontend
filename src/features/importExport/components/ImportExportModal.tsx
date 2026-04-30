@@ -1,14 +1,14 @@
-import { useRef } from "react";
-import { Download, Upload, FileSpreadsheet, AlertCircle } from "lucide-react";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Card } from "../../../components/ui/primitives/Card";
-import { useImportExport } from "../hooks/useImportExport";
+import { useRef } from 'react'
+import { Download, Upload, FileSpreadsheet, AlertCircle } from 'lucide-react'
+import { Modal } from '../../../components/ui/overlays/Modal'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Card } from '../../../components/ui/primitives/Card'
+import { useImportExport } from '../hooks/useImportExport'
 
 // ── Shared info box ────────────────────────────────────────────────────────────
 
 interface InfoBoxProps {
-  items: string[];
+  items: string[]
 }
 
 const InfoBox: React.FC<InfoBoxProps> = ({ items }) => (
@@ -20,54 +20,68 @@ const InfoBox: React.FC<InfoBoxProps> = ({ items }) => (
       ))}
     </ul>
   </div>
-);
+)
 
 // ── Export panel ───────────────────────────────────────────────────────────────
 
 interface ExportPanelProps {
-  exporting: boolean;
-  onExport: () => void;
+  exporting: boolean
+  onExport: () => void
 }
 
 const ExportPanel: React.FC<ExportPanelProps> = ({ exporting, onExport }) => (
-  <Card title="ייצוא לאקסל" variant="elevated" className="bg-gradient-to-br from-green-50 to-emerald-50">
+  <Card
+    title="ייצוא לאקסל"
+    variant="elevated"
+    className="bg-gradient-to-br from-green-50 to-emerald-50"
+  >
     <div className="space-y-3">
       <p className="text-sm text-gray-700">ייצא את כל נתוני הלקוחות לקובץ Excel מעוצב</p>
-      <InfoBox items={["כל השדות הרלוונטיים", "עיצוב וצבעים לקריאות מיטבית", "כותרות עם סינון אוטומטי"]} />
+      <InfoBox
+        items={['כל השדות הרלוונטיים', 'עיצוב וצבעים לקריאות מיטבית', 'כותרות עם סינון אוטומטי']}
+      />
       <Button variant="primary" onClick={onExport} isLoading={exporting} className="gap-2">
         <Download className="h-4 w-4" />
         ייצוא ל-Excel
       </Button>
     </div>
   </Card>
-);
+)
 
 // ── Import panel ───────────────────────────────────────────────────────────────
 
 interface ImportPanelProps {
-  importing: boolean;
-  onFileSelect: (file: File) => void;
-  onDownloadTemplate: () => void;
+  importing: boolean
+  onFileSelect: (file: File) => void
+  onDownloadTemplate: () => void
 }
 
-const ImportPanel: React.FC<ImportPanelProps> = ({ importing, onFileSelect, onDownloadTemplate }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+const ImportPanel: React.FC<ImportPanelProps> = ({
+  importing,
+  onFileSelect,
+  onDownloadTemplate,
+}) => {
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) onFileSelect(file);
-  };
+    const file = e.target.files?.[0]
+    if (file) onFileSelect(file)
+  }
 
   return (
-    <Card title="ייבוא מאקסל" variant="elevated" className="bg-gradient-to-br from-purple-50 to-pink-50">
+    <Card
+      title="ייבוא מאקסל"
+      variant="elevated"
+      className="bg-gradient-to-br from-purple-50 to-pink-50"
+    >
       <div className="space-y-3">
         <p className="text-sm text-gray-700">העלה קובץ Excel לייבוא נתוני לקוחות חדשים</p>
         <InfoBox
           items={[
-            "פורמט: .xlsx או .xls",
-            "שורת כותרות חובה",
-            "שמות עמודות צריכים להתאים למודל",
-            "תאריכים בפורמט: YYYY-MM-DD",
+            'פורמט: .xlsx או .xls',
+            'שורת כותרות חובה',
+            'שמות עמודות צריכים להתאים למודל',
+            'תאריכים בפורמט: YYYY-MM-DD',
           ]}
         />
         <div className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center hover:border-primary-400 transition-colors">
@@ -89,7 +103,7 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ importing, onFileSelect, onDo
             className="gap-2"
           >
             <Upload className="h-4 w-4" />
-            {importing ? "מייבא..." : "בחר קובץ לייבוא"}
+            {importing ? 'מייבא...' : 'בחר קובץ לייבוא'}
           </Button>
         </div>
         <div className="flex items-center justify-between border-t border-gray-200 pt-3">
@@ -103,19 +117,19 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ importing, onFileSelect, onDo
         </div>
       </div>
     </Card>
-  );
-};
+  )
+}
 
 // ── Modal ──────────────────────────────────────────────────────────────────────
 
 interface ImportExportModalProps {
-  open: boolean;
-  onClose: () => void;
+  open: boolean
+  onClose: () => void
 }
 
 export const ImportExportModal: React.FC<ImportExportModalProps> = ({ open, onClose }) => {
   const { importing, exporting, handleExport, handleImport, handleDownloadTemplate } =
-    useImportExport();
+    useImportExport()
 
   return (
     <Modal
@@ -139,5 +153,5 @@ export const ImportExportModal: React.FC<ImportExportModalProps> = ({ open, onCl
         />
       </div>
     </Modal>
-  );
-};
+  )
+}

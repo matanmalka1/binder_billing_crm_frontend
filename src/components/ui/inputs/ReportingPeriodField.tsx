@@ -1,21 +1,21 @@
-import type { ChangeEvent } from "react";
-import { Select } from "./Select";
+import type { ChangeEvent } from 'react'
+import { Select } from './Select'
 import {
   buildBimonthlyPeriodOptions,
   buildMonthlyPeriodOptions,
   buildYearPeriodOptions,
   type PeriodOption,
-} from "./periodOptions";
+} from './periodOptions'
 
 interface ReportingPeriodFieldProps {
-  materialType: string;
-  vatType: "monthly" | "bimonthly" | "exempt" | null;
-  value: string;
-  onChange: (value: string) => void;
-  error?: string;
+  materialType: string
+  vatType: 'monthly' | 'bimonthly' | 'exempt' | null
+  value: string
+  onChange: (value: string) => void
+  error?: string
 }
 
-const ANNUAL_TYPES = ["annual_report", "capital_declaration"];
+const ANNUAL_TYPES = ['annual_report', 'capital_declaration']
 
 export const ReportingPeriodField: React.FC<ReportingPeriodFieldProps> = ({
   materialType,
@@ -24,26 +24,26 @@ export const ReportingPeriodField: React.FC<ReportingPeriodFieldProps> = ({
   onChange,
   error,
 }) => {
-  let label = "תקופת דיווח";
-  let options: PeriodOption[];
+  let label = 'תקופת דיווח'
+  let options: PeriodOption[]
 
-  if (materialType === "vat") {
-    label = 'תקופת מע"מ';
-    options = vatType === "bimonthly" ? buildBimonthlyPeriodOptions(6) : buildMonthlyPeriodOptions(6);
+  if (materialType === 'vat') {
+    label = 'תקופת מע"מ'
+    options =
+      vatType === 'bimonthly' ? buildBimonthlyPeriodOptions(6) : buildMonthlyPeriodOptions(6)
   } else if (ANNUAL_TYPES.includes(materialType)) {
-    label = "שנת דיווח";
-    options = buildYearPeriodOptions(5);
+    label = 'שנת דיווח'
+    options = buildYearPeriodOptions(5)
   } else {
-    options = buildMonthlyPeriodOptions(12);
+    options = buildMonthlyPeriodOptions(12)
   }
 
-  const selectOptions = [{ value: "", label: "בחר תקופה..." }, ...options];
+  const selectOptions = [{ value: '', label: 'בחר תקופה...' }, ...options]
 
-  const effectiveValue = ANNUAL_TYPES.includes(materialType) && !value
-    ? String(new Date().getFullYear())
-    : value;
+  const effectiveValue =
+    ANNUAL_TYPES.includes(materialType) && !value ? String(new Date().getFullYear()) : value
 
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value);
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)
 
   return (
     <Select
@@ -53,7 +53,7 @@ export const ReportingPeriodField: React.FC<ReportingPeriodFieldProps> = ({
       onChange={handleChange}
       options={selectOptions}
     />
-  );
-};
+  )
+}
 
-ReportingPeriodField.displayName = "ReportingPeriodField";
+ReportingPeriodField.displayName = 'ReportingPeriodField'

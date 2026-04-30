@@ -1,19 +1,13 @@
-import { cn } from "../../../utils/utils";
-import { formatVatAmount, getVatDeductionRateClass, getVatDeductionRateLabel } from "../utils";
-import type { VatCategoryTableProps } from "../types";
-import { VAT_DEDUCTIBLE_ACCENT } from "../../../utils/chartColors";
+import { cn } from '../../../utils/utils'
+import { formatVatAmount, getVatDeductionRateClass, getVatDeductionRateLabel } from '../utils'
+import type { VatCategoryTableProps } from '../types'
+import { VAT_DEDUCTIBLE_ACCENT } from '../../../utils/chartColors'
 
-const TABLE_COLUMNS = [
-  "קטגוריה",
-  "% ניכוי",
-  "הוצאה ברוטו",
-  'מע"מ בחשבוניות',
-  'מע"מ לניכוי',
-];
+const TABLE_COLUMNS = ['קטגוריה', '% ניכוי', 'הוצאה ברוטו', 'מע"מ בחשבוניות', 'מע"מ לניכוי']
 
-const headerCellClass = "px-4 py-3 text-right";
-const amountCellClass = "px-4 py-3 text-right font-mono tabular-nums";
-const mutedAmountCellClass = `${amountCellClass} text-gray-600`;
+const headerCellClass = 'px-4 py-3 text-right'
+const amountCellClass = 'px-4 py-3 text-right font-mono tabular-nums'
+const mutedAmountCellClass = `${amountCellClass} text-gray-600`
 
 export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
   rows,
@@ -21,10 +15,10 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
   totalGrossVat,
   totalInputVat,
 }) => {
-  if (!rows?.length) return null;
+  if (!rows?.length) return null
 
-  const totalGrossAmount = totalExpenseNet + totalGrossVat;
-  const showNonDeductibleNote = totalExpenseNet > 0 && totalInputVat === 0;
+  const totalGrossAmount = totalExpenseNet + totalGrossVat
+  const showNonDeductibleNote = totalExpenseNet > 0 && totalInputVat === 0
 
   return (
     <section dir="rtl" className="space-y-3">
@@ -53,31 +47,26 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
 
           <tbody className="divide-y divide-gray-100 bg-white">
             {rows.map((row) => {
-              const grossAmount = row.netAmount + row.grossVat;
+              const grossAmount = row.netAmount + row.grossVat
 
               return (
                 <tr key={row.categoryKey} className="group transition-colors hover:bg-blue-50/30">
                   <td className="px-4 py-3 font-medium text-gray-900">{row.label}</td>
-                  <td className={cn(
-                    amountCellClass,
-                    getVatDeductionRateClass(row.deductionRate)
-                  )}>
+                  <td className={cn(amountCellClass, getVatDeductionRateClass(row.deductionRate))}>
                     {getVatDeductionRateLabel(row.deductionRate)}
                   </td>
-                  <td className={mutedAmountCellClass}>
-                    {formatVatAmount(grossAmount)}
-                  </td>
-                  <td className={mutedAmountCellClass}>
-                    {formatVatAmount(row.grossVat)}
-                  </td>
-                  <td className={cn(
-                    "px-4 py-3 text-right font-mono font-bold tabular-nums",
-                    VAT_DEDUCTIBLE_ACCENT
-                  )}>
+                  <td className={mutedAmountCellClass}>{formatVatAmount(grossAmount)}</td>
+                  <td className={mutedAmountCellClass}>{formatVatAmount(row.grossVat)}</td>
+                  <td
+                    className={cn(
+                      'px-4 py-3 text-right font-mono font-bold tabular-nums',
+                      VAT_DEDUCTIBLE_ACCENT,
+                    )}
+                  >
                     {formatVatAmount(row.deductibleVat)}
                   </td>
                 </tr>
-              );
+              )
             })}
           </tbody>
 
@@ -85,16 +74,14 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
             <tr className="font-bold">
               <td className="px-4 py-3">סה"כ</td>
               <td />
-              <td className={amountCellClass}>
-                {formatVatAmount(totalGrossAmount)}
-              </td>
-              <td className={amountCellClass}>
-                {formatVatAmount(totalGrossVat)}
-              </td>
-              <td className={cn(
-                `${amountCellClass} underline decoration-2 underline-offset-4`,
-                VAT_DEDUCTIBLE_ACCENT
-              )}>
+              <td className={amountCellClass}>{formatVatAmount(totalGrossAmount)}</td>
+              <td className={amountCellClass}>{formatVatAmount(totalGrossVat)}</td>
+              <td
+                className={cn(
+                  `${amountCellClass} underline decoration-2 underline-offset-4`,
+                  VAT_DEDUCTIBLE_ACCENT,
+                )}
+              >
                 {formatVatAmount(totalInputVat)}
               </td>
             </tr>
@@ -102,7 +89,7 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
         </table>
       </div>
     </section>
-  );
-};
+  )
+}
 
-VatCategoryTable.displayName = "VatCategoryTable";
+VatCategoryTable.displayName = 'VatCategoryTable'

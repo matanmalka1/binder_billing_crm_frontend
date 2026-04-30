@@ -1,18 +1,18 @@
-import { useController, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Select } from "../../../components/ui/inputs/Select";
-import { useAdvisorOptions } from "@/features/users";
-import { taxProfileSchema, type TaxProfileFormValues } from "../schemas";
-import { ADVANCE_RATE_INPUT, TAX_PROFILE_FIELD_LABELS, TAX_PROFILE_TEXT } from "../constants";
+import { useController, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Input } from '../../../components/ui/inputs/Input'
+import { Select } from '../../../components/ui/inputs/Select'
+import { useAdvisorOptions } from '@/features/users'
+import { taxProfileSchema, type TaxProfileFormValues } from '../schemas'
+import { ADVANCE_RATE_INPUT, TAX_PROFILE_FIELD_LABELS, TAX_PROFILE_TEXT } from '../constants'
 import {
   getAdvisorSelectOptions,
   getTaxProfileFormValues,
   toTaxProfileUpdatePayload,
   VAT_REPORTING_FREQUENCY_OPTIONS,
-} from "../helpers";
-import type { TaxProfileFormProps } from "../types";
+} from '../helpers'
+import type { TaxProfileFormProps } from '../types'
 
 export const TaxProfileForm: React.FC<TaxProfileFormProps> = ({
   profile,
@@ -30,16 +30,16 @@ export const TaxProfileForm: React.FC<TaxProfileFormProps> = ({
   } = useForm<TaxProfileFormValues>({
     resolver: zodResolver(taxProfileSchema),
     defaultValues: getTaxProfileFormValues(profile),
-  });
+  })
   const { field: vatReportingFrequencyField } = useController({
-    name: "vat_reporting_frequency",
+    name: 'vat_reporting_frequency',
     control,
-  });
-  const { options: advisorOptions, isLoading: advisorsLoading } = useAdvisorOptions();
+  })
+  const { options: advisorOptions, isLoading: advisorsLoading } = useAdvisorOptions()
 
   const onSubmit = handleSubmit((values) => {
-    onSave(toTaxProfileUpdatePayload(values));
-  });
+    onSave(toTaxProfileUpdatePayload(values))
+  })
 
   return (
     <form id={formId} onSubmit={onSubmit} className="space-y-4" noValidate>
@@ -49,7 +49,7 @@ export const TaxProfileForm: React.FC<TaxProfileFormProps> = ({
           error={errors.vat_reporting_frequency?.message}
           disabled={isSaving}
           options={VAT_REPORTING_FREQUENCY_OPTIONS}
-          value={vatReportingFrequencyField.value ?? ""}
+          value={vatReportingFrequencyField.value ?? ''}
           onChange={vatReportingFrequencyField.onChange}
           onBlur={vatReportingFrequencyField.onBlur}
           name={vatReportingFrequencyField.name}
@@ -59,7 +59,7 @@ export const TaxProfileForm: React.FC<TaxProfileFormProps> = ({
           error={errors.accountant_id?.message}
           disabled={isSaving || advisorsLoading}
           options={getAdvisorSelectOptions(advisorOptions, advisorsLoading)}
-          {...register("accountant_id")}
+          {...register('accountant_id')}
         />
         <Input
           label={TAX_PROFILE_FIELD_LABELS.advanceRateInput}
@@ -68,7 +68,7 @@ export const TaxProfileForm: React.FC<TaxProfileFormProps> = ({
           max={ADVANCE_RATE_INPUT.max}
           step={ADVANCE_RATE_INPUT.step}
           error={errors.advance_rate?.message}
-          {...register("advance_rate")}
+          {...register('advance_rate')}
         />
       </div>
       {!hideFooter && (
@@ -82,5 +82,5 @@ export const TaxProfileForm: React.FC<TaxProfileFormProps> = ({
         </div>
       )}
     </form>
-  );
-};
+  )
+}

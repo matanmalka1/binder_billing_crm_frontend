@@ -1,20 +1,20 @@
-import { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Select } from "../../../components/ui/inputs/Select";
-import { DatePicker } from "../../../components/ui/inputs/DatePicker";
+import { useEffect } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
+import { Modal } from '../../../components/ui/overlays/Modal'
+import { Input } from '../../../components/ui/inputs/Input'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Select } from '../../../components/ui/inputs/Select'
+import { DatePicker } from '../../../components/ui/inputs/DatePicker'
 import {
   createAdvancePaymentSchema,
   CREATE_ADVANCE_PAYMENT_DEFAULTS,
   type CreateAdvancePaymentFormValues,
-} from "../schemas";
-import { ADVANCE_PAYMENT_FREQUENCY_OPTIONS } from "../constants";
-import { advancePaymentsApi, advancedPaymentsQK } from "../api";
-import type { CreateAdvancePaymentPayload } from "../types";
+} from '../schemas'
+import { ADVANCE_PAYMENT_FREQUENCY_OPTIONS } from '../constants'
+import { advancePaymentsApi, advancedPaymentsQK } from '../api'
+import type { CreateAdvancePaymentPayload } from '../types'
 import {
   buildCreateAdvancePaymentPayload,
   formatSuggestionAmount,
@@ -22,19 +22,19 @@ import {
   getValidBimonthlyMonth,
   toFrequency,
   toNumberOrNull,
-} from "./advancePaymentComponent.utils";
+} from './advancePaymentComponent.utils'
 import {
   ADVANCE_PAYMENT_SUGGESTION_STALE_TIME_MS,
   NOTES_TEXTAREA_CLASS,
-} from "./advancePaymentComponent.constants";
+} from './advancePaymentComponent.constants'
 
 interface CreateAdvancePaymentModalProps {
-  open: boolean;
-  clientId: number;
-  year: number;
-  isCreating: boolean;
-  onClose: () => void;
-  onCreate: (payload: CreateAdvancePaymentPayload) => Promise<unknown>;
+  open: boolean
+  clientId: number
+  year: number
+  isCreating: boolean
+  onClose: () => void
+  onCreate: (payload: CreateAdvancePaymentPayload) => Promise<unknown>
 }
 
 export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps> = ({
@@ -56,41 +56,41 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
   } = useForm<CreateAdvancePaymentFormValues>({
     resolver: zodResolver(createAdvancePaymentSchema),
     defaultValues: CREATE_ADVANCE_PAYMENT_DEFAULTS,
-  });
-  const periodMonthsCount = watch("period_months_count");
-  const month = watch("month");
-  const monthOptions = getAdvancePaymentMonthOptions(periodMonthsCount);
+  })
+  const periodMonthsCount = watch('period_months_count')
+  const month = watch('month')
+  const monthOptions = getAdvancePaymentMonthOptions(periodMonthsCount)
 
   useEffect(() => {
-    if (periodMonthsCount !== 2) return;
-    const nextMonth = getValidBimonthlyMonth(month);
-    if (nextMonth === month) return;
-    setValue("month", nextMonth, { shouldValidate: true });
-  }, [month, periodMonthsCount, setValue]);
+    if (periodMonthsCount !== 2) return
+    const nextMonth = getValidBimonthlyMonth(month)
+    if (nextMonth === month) return
+    setValue('month', nextMonth, { shouldValidate: true })
+  }, [month, periodMonthsCount, setValue])
 
   const { data: suggestion } = useQuery({
     queryKey: advancedPaymentsQK.suggestion(clientId, year, periodMonthsCount),
     queryFn: () => advancePaymentsApi.getSuggestion(clientId, year, periodMonthsCount),
     enabled: open && clientId > 0 && year > 0,
     staleTime: ADVANCE_PAYMENT_SUGGESTION_STALE_TIME_MS,
-  });
+  })
 
   const handleClose = () => {
-    reset(CREATE_ADVANCE_PAYMENT_DEFAULTS);
-    onClose();
-  };
+    reset(CREATE_ADVANCE_PAYMENT_DEFAULTS)
+    onClose()
+  }
 
   const onSubmit = handleSubmit(async (data) => {
-    await onCreate(buildCreateAdvancePaymentPayload(year, data));
-    reset(CREATE_ADVANCE_PAYMENT_DEFAULTS);
-    onClose();
-  });
+    await onCreate(buildCreateAdvancePaymentPayload(year, data))
+    reset(CREATE_ADVANCE_PAYMENT_DEFAULTS)
+    onClose()
+  })
 
   const applySuggestion = () => {
     if (suggestion?.suggested_amount != null) {
-      setValue("expected_amount", Number(suggestion.suggested_amount), { shouldValidate: true });
+      setValue('expected_amount', Number(suggestion.suggested_amount), { shouldValidate: true })
     }
-  };
+  }
 
   return (
     <Modal
@@ -156,7 +156,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
                 label="סכום צפוי"
                 type="number"
                 min={0}
-                value={field.value ?? ""}
+                value={field.value ?? ''}
                 onChange={(e) => field.onChange(toNumberOrNull(e.target.value))}
                 error={errors.expected_amount?.message}
               />
@@ -168,7 +168,8 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
                   onClick={applySuggestion}
                   className="text-sm text-primary-600 hover:underline text-right w-full px-0 hover:bg-transparent justify-end"
                 >
-                  הצעה לפי מחזור שנה קודמת: ₪{formatSuggestionAmount(suggestion.suggested_amount)} — לחץ למילוי
+                  הצעה לפי מחזור שנה קודמת: ₪{formatSuggestionAmount(suggestion.suggested_amount)} —
+                  לחץ למילוי
                 </Button>
               )}
             </div>
@@ -182,7 +183,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
               label="סכום ששולם (אופציונלי)"
               type="number"
               min={0}
-              value={field.value ?? ""}
+              value={field.value ?? ''}
               onChange={(e) => field.onChange(toNumberOrNull(e.target.value))}
               error={errors.paid_amount?.message}
             />
@@ -191,7 +192,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
         <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700">הערות (אופציונלי)</label>
           <textarea
-            {...register("notes")}
+            {...register('notes')}
             rows={2}
             className={NOTES_TEXTAREA_CLASS}
             placeholder="הערות..."
@@ -199,7 +200,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
         </div>
       </form>
     </Modal>
-  );
-};
+  )
+}
 
-CreateAdvancePaymentModal.displayName = "CreateAdvancePaymentModal";
+CreateAdvancePaymentModal.displayName = 'CreateAdvancePaymentModal'

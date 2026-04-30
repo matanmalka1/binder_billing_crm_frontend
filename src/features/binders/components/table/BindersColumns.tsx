@@ -1,17 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 import {
   actionsColumn,
   monoColumn,
   statusColumn,
   textColumn,
   type Column,
-} from "@/components/ui/table";
-import { MonoValue } from "@/components/ui/primitives/MonoValue";
-import type { BinderResponse } from "../../types";
-import { getStatusLabel } from "@/utils/enums";
-import { formatBinderNumber, formatClientOfficeId, formatMonthYear } from "@/utils/utils";
-import { BINDER_STATUS_VARIANTS } from "../../constants";
-import { BinderRowActions } from "./BinderRowActions";
+} from '@/components/ui/table'
+import { MonoValue } from '@/components/ui/primitives/MonoValue'
+import type { BinderResponse } from '../../types'
+import { getStatusLabel } from '@/utils/enums'
+import { formatBinderNumber, formatClientOfficeId, formatMonthYear } from '@/utils/utils'
+import { BINDER_STATUS_VARIANTS } from '../../constants'
+import { BinderRowActions } from './BinderRowActions'
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => (
@@ -24,18 +24,18 @@ const ClientCell: React.FC<{ binder: BinderResponse }> = ({ binder }) => (
       {binder.client_name ?? `#${binder.client_record_id}`}
     </Link>
   </span>
-);
-ClientCell.displayName = "ClientCell";
+)
+ClientCell.displayName = 'ClientCell'
 
 interface BuildBindersColumnsParams {
-  actionLoadingId: number | null;
-  onMarkReady: (binderId: number) => void;
-  onRevertReady: (binderId: number) => void;
-  onReturn: (binderId: number) => void;
-  onOpenDetail: (binderId: number) => void;
-  onDelete: (binderId: number) => void;
-  onBulkReady?: (binder: BinderResponse) => void;
-  onHandover?: (binder: BinderResponse) => void;
+  actionLoadingId: number | null
+  onMarkReady: (binderId: number) => void
+  onRevertReady: (binderId: number) => void
+  onReturn: (binderId: number) => void
+  onOpenDetail: (binderId: number) => void
+  onDelete: (binderId: number) => void
+  onBulkReady?: (binder: BinderResponse) => void
+  onHandover?: (binder: BinderResponse) => void
 }
 
 export const buildBindersColumns = ({
@@ -49,60 +49,60 @@ export const buildBindersColumns = ({
   onHandover,
 }: BuildBindersColumnsParams): Column<BinderResponse>[] => [
   monoColumn({
-    key: "office_client_number",
+    key: 'office_client_number',
     header: "מס' לקוח",
     getValue: (binder) => formatClientOfficeId(binder.office_client_number),
   }),
   textColumn({
-    key: "client_name",
-    header: "לקוח",
+    key: 'client_name',
+    header: 'לקוח',
     getValue: (binder) => <ClientCell binder={binder} />,
   }),
   monoColumn({
-    key: "client_id_number",
-    header: "ת.ז / ח.פ",
+    key: 'client_id_number',
+    header: 'ת.ז / ח.פ',
     getValue: (binder) => binder.client_id_number,
   }),
   monoColumn({
-    key: "binder_number",
-    header: "מספר קלסר",
-    valueClassName: "font-semibold text-gray-700",
+    key: 'binder_number',
+    header: 'מספר קלסר',
+    valueClassName: 'font-semibold text-gray-700',
     getValue: (binder) => formatBinderNumber(binder.binder_number),
   }),
   statusColumn({
-    key: "status",
-    header: "סטטוס",
+    key: 'status',
+    header: 'סטטוס',
     getStatus: (binder) => binder.status,
     getLabel: getStatusLabel,
     variantMap: BINDER_STATUS_VARIANTS,
   }),
   textColumn({
-    key: "period_start",
-    header: "תקופה",
-    valueClassName: "text-gray-600 tabular-nums",
+    key: 'period_start',
+    header: 'תקופה',
+    valueClassName: 'text-gray-600 tabular-nums',
     getValue: (binder) => {
       if (!binder.period_start && !binder.period_end) {
-        return <span className="text-gray-400">—</span>;
+        return <span className="text-gray-400">—</span>
       }
-      const start = formatMonthYear(binder.period_start);
-      const end = binder.period_end ? formatMonthYear(binder.period_end) : "פעיל";
-      return `${start} - ${end}`;
+      const start = formatMonthYear(binder.period_start)
+      const end = binder.period_end ? formatMonthYear(binder.period_end) : 'פעיל'
+      return `${start} - ${end}`
     },
   }),
   {
-    key: "days_in_office",
-    header: "ימים במשרד",
+    key: 'days_in_office',
+    header: 'ימים במשרד',
     render: (binder) => (
       <MonoValue
         value={binder.days_in_office}
         format="days"
-        returned={binder.status === "returned"}
+        returned={binder.status === 'returned'}
       />
     ),
   },
   actionsColumn({
-    key: "actions",
-    header: "",
+    key: 'actions',
+    header: '',
     render: (binder) => (
       <BinderRowActions
         binder={binder}
@@ -117,4 +117,4 @@ export const buildBindersColumns = ({
       />
     ),
   }),
-];
+]

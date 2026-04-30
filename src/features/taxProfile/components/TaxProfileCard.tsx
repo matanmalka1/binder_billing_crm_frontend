@@ -1,29 +1,27 @@
-import { useState } from "react";
-import { Edit2 } from "lucide-react";
-import { Card } from "../../../components/ui/primitives/Card";
-import { Button } from "../../../components/ui/primitives/Button";
-import { DefinitionList } from "../../../components/ui/layout/DefinitionList";
-import { Alert } from "../../../components/ui/overlays/Alert";
-import { DetailDrawer } from "../../../components/ui/overlays/DetailDrawer";
-import { useTaxProfile } from "../hooks/useTaxProfile";
-import { useAdvisorOptions } from "@/features/users";
-import { TaxProfileForm } from "./TaxProfileForm";
-import { TAX_PROFILE_FORM_ID, TAX_PROFILE_TEXT } from "../constants";
-import { getTaxProfileItems } from "../helpers";
-import type { TaxProfileCardProps } from "../types";
+import { useState } from 'react'
+import { Edit2 } from 'lucide-react'
+import { Card } from '../../../components/ui/primitives/Card'
+import { Button } from '../../../components/ui/primitives/Button'
+import { DefinitionList } from '../../../components/ui/layout/DefinitionList'
+import { Alert } from '../../../components/ui/overlays/Alert'
+import { DetailDrawer } from '../../../components/ui/overlays/DetailDrawer'
+import { useTaxProfile } from '../hooks/useTaxProfile'
+import { useAdvisorOptions } from '@/features/users'
+import { TaxProfileForm } from './TaxProfileForm'
+import { TAX_PROFILE_FORM_ID, TAX_PROFILE_TEXT } from '../constants'
+import { getTaxProfileItems } from '../helpers'
+import type { TaxProfileCardProps } from '../types'
 
 export const TaxProfileCard: React.FC<TaxProfileCardProps> = ({ clientId, readOnly = false }) => {
-  const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(clientId ?? 0);
-  const { nameById } = useAdvisorOptions(!readOnly);
-  const [isEditing, setIsEditing] = useState(false);
-  const closeEditor = () => setIsEditing(false);
+  const { profile, isLoading, error, updateProfile, isUpdating } = useTaxProfile(clientId ?? 0)
+  const { nameById } = useAdvisorOptions(!readOnly)
+  const [isEditing, setIsEditing] = useState(false)
+  const closeEditor = () => setIsEditing(false)
 
   return (
     <>
       <Card title={TAX_PROFILE_TEXT.title} subtitle={TAX_PROFILE_TEXT.subtitle}>
-        {isLoading && (
-          <p className="py-2 text-sm text-gray-500">{TAX_PROFILE_TEXT.loading}</p>
-        )}
+        {isLoading && <p className="py-2 text-sm text-gray-500">{TAX_PROFILE_TEXT.loading}</p>}
 
         {error && <Alert variant="error" message={error} />}
 
@@ -52,14 +50,9 @@ export const TaxProfileCard: React.FC<TaxProfileCardProps> = ({ clientId, readOn
         open={isEditing}
         title={TAX_PROFILE_TEXT.editTitle}
         onClose={closeEditor}
-        footer={(
+        footer={
           <div className="flex items-center justify-end gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={closeEditor}
-              disabled={isUpdating}
-            >
+            <Button type="button" variant="outline" onClick={closeEditor} disabled={isUpdating}>
               {TAX_PROFILE_TEXT.cancel}
             </Button>
             <Button
@@ -72,13 +65,13 @@ export const TaxProfileCard: React.FC<TaxProfileCardProps> = ({ clientId, readOn
               {TAX_PROFILE_TEXT.saveChanges}
             </Button>
           </div>
-        )}
+        }
       >
         <TaxProfileForm
           profile={profile}
           onSave={(data) => {
-            updateProfile(data);
-            closeEditor();
+            updateProfile(data)
+            closeEditor()
           }}
           onCancel={closeEditor}
           isSaving={isUpdating}
@@ -87,5 +80,5 @@ export const TaxProfileCard: React.FC<TaxProfileCardProps> = ({ clientId, readOn
         />
       </DetailDrawer>
     </>
-  );
-};
+  )
+}

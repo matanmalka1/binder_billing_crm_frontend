@@ -1,5 +1,5 @@
-export { usersApi } from "./users.api";
-export { usersQK } from "./queryKeys";
+export { usersApi } from './users.api'
+export { usersQK } from './queryKeys'
 export type {
   UserResponse,
   UserListResponse,
@@ -10,4 +10,4 @@ export type {
   UpdateUserPayload,
   ResetPasswordPayload,
   ListAuditLogsParams,
-} from "./contracts";
+} from './contracts'

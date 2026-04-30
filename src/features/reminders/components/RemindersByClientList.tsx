@@ -1,19 +1,19 @@
-import { useMemo, useState } from "react";
-import { ChevronDown, ChevronLeft } from "lucide-react";
-import { Link } from "react-router-dom";
-import { formatClientOfficeId } from "@/utils/utils";
-import type { Reminder } from "../types";
-import { groupRemindersByClient } from "../utils";
-import { RemindersTable } from "./RemindersTable";
+import { useMemo, useState } from 'react'
+import { ChevronDown, ChevronLeft } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { formatClientOfficeId } from '@/utils/utils'
+import type { Reminder } from '../types'
+import { groupRemindersByClient } from '../utils'
+import { RemindersTable } from './RemindersTable'
 
 interface RemindersByClientListProps {
-  reminders: Reminder[];
-  cancelingId: number | null;
-  markingSentId: number | null;
-  onCancel: (id: number) => void;
-  onMarkSent: (id: number) => void;
-  onViewDetails: (reminder: Reminder) => void;
-  onRowClick?: (reminder: Reminder) => void;
+  reminders: Reminder[]
+  cancelingId: number | null
+  markingSentId: number | null
+  onCancel: (id: number) => void
+  onMarkSent: (id: number) => void
+  onViewDetails: (reminder: Reminder) => void
+  onRowClick?: (reminder: Reminder) => void
 }
 
 export const RemindersByClientList: React.FC<RemindersByClientListProps> = ({
@@ -25,23 +25,23 @@ export const RemindersByClientList: React.FC<RemindersByClientListProps> = ({
   onViewDetails,
   onRowClick,
 }) => {
-  const groups = useMemo(() => groupRemindersByClient(reminders), [reminders]);
-  const [collapsedKeys, setCollapsedKeys] = useState<Set<string>>(new Set());
+  const groups = useMemo(() => groupRemindersByClient(reminders), [reminders])
+  const [collapsedKeys, setCollapsedKeys] = useState<Set<string>>(new Set())
 
   const toggleCollapsed = (key: string) => {
     setCollapsedKeys((current) => {
-      const next = new Set(current);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  };
+      const next = new Set(current)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
 
   return (
     <div className="space-y-4">
       {groups.map((group) => {
-        const collapsed = collapsedKeys.has(group.key);
-        const Icon = collapsed ? ChevronLeft : ChevronDown;
+        const collapsed = collapsedKeys.has(group.key)
+        const Icon = collapsed ? ChevronLeft : ChevronDown
 
         return (
           <section
@@ -75,7 +75,7 @@ export const RemindersByClientList: React.FC<RemindersByClientListProps> = ({
                 className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-600 hover:bg-gray-100"
                 onClick={() => toggleCollapsed(group.key)}
                 aria-expanded={!collapsed}
-                aria-label={collapsed ? "פתח תזכורות לקוח" : "קפל תזכורות לקוח"}
+                aria-label={collapsed ? 'פתח תזכורות לקוח' : 'קפל תזכורות לקוח'}
               >
                 <Icon className="h-4 w-4" />
               </button>
@@ -93,10 +93,10 @@ export const RemindersByClientList: React.FC<RemindersByClientListProps> = ({
               />
             )}
           </section>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
 
-RemindersByClientList.displayName = "RemindersByClientList";
+RemindersByClientList.displayName = 'RemindersByClientList'

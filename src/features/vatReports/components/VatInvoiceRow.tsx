@@ -1,21 +1,21 @@
-import { Pencil, Trash2 } from "lucide-react";
-import { Badge } from "../../../components/ui/primitives/Badge";
-import { RowActionItem, RowActionSeparator, RowActionsMenu } from "@/components/ui/table";
-import { formatVatAmount, getVatDeductionRateClass, getVatDeductionRateLabel } from "../utils";
+import { Pencil, Trash2 } from 'lucide-react'
+import { Badge } from '../../../components/ui/primitives/Badge'
+import { RowActionItem, RowActionSeparator, RowActionsMenu } from '@/components/ui/table'
+import { formatVatAmount, getVatDeductionRateClass, getVatDeductionRateLabel } from '../utils'
 import {
   CATEGORY_COLORS,
   CATEGORY_LABELS,
   DOCUMENT_TYPE_LABELS,
   VAT_EXCEPTIONAL_INVOICE_TOOLTIP,
   VAT_RATE_TYPE_LABELS,
-} from "../constants";
-import { formatDate, formatDateTime } from "../../../utils/utils";
-import { semanticMonoToneClasses } from "../../../utils/semanticColors";
-import type { VatInvoiceRowProps } from "../types";
+} from '../constants'
+import { formatDate, formatDateTime } from '../../../utils/utils'
+import { semanticMonoToneClasses } from '../../../utils/semanticColors'
+import type { VatInvoiceRowProps } from '../types'
 
-const TD = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
+const TD = ({ className = '', children }: { className?: string; children: React.ReactNode }) => (
   <td className={`px-4 py-2.5 ${className}`}>{children}</td>
-);
+)
 
 export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
   inv,
@@ -26,8 +26,8 @@ export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const isExpense = sectionType === "expense";
-  const catColor = inv.expense_category ? CATEGORY_COLORS[inv.expense_category] : "";
+  const isExpense = sectionType === 'expense'
+  const catColor = inv.expense_category ? CATEGORY_COLORS[inv.expense_category] : ''
 
   return (
     <tr className="group transition-colors hover:bg-gray-50/60">
@@ -45,28 +45,32 @@ export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
       <TD className="text-gray-500">{formatDate(inv.invoice_date)}</TD>
       <TD className="font-medium text-gray-700">{inv.counterparty_name}</TD>
       <TD className="whitespace-nowrap text-xs text-gray-500">
-        {inv.counterparty_id ? <span className="font-mono">{inv.counterparty_id}</span> : "—"}
+        {inv.counterparty_id ? <span className="font-mono">{inv.counterparty_id}</span> : '—'}
       </TD>
       <TD>
         {inv.document_type ? (
           <Badge variant="neutral">
             {DOCUMENT_TYPE_LABELS[inv.document_type] ?? inv.document_type}
           </Badge>
-        ) : "—"}
+        ) : (
+          '—'
+        )}
       </TD>
       <TD>
-        {inv.rate_type && inv.rate_type !== "standard" ? (
-          <Badge variant="info">
-            {VAT_RATE_TYPE_LABELS[inv.rate_type] ?? inv.rate_type}
-          </Badge>
-        ) : "—"}
+        {inv.rate_type && inv.rate_type !== 'standard' ? (
+          <Badge variant="info">{VAT_RATE_TYPE_LABELS[inv.rate_type] ?? inv.rate_type}</Badge>
+        ) : (
+          '—'
+        )}
       </TD>
       {isExpense && (
         <TD>
           <span className="inline-flex items-center gap-1.5">
-            <span className={`h-2 w-2 rounded-full ${catColor || "bg-gray-300"}`} />
+            <span className={`h-2 w-2 rounded-full ${catColor || 'bg-gray-300'}`} />
             <span className="text-xs text-gray-600">
-              {inv.expense_category ? (CATEGORY_LABELS[inv.expense_category] ?? inv.expense_category) : "—"}
+              {inv.expense_category
+                ? (CATEGORY_LABELS[inv.expense_category] ?? inv.expense_category)
+                : '—'}
             </span>
           </span>
         </TD>
@@ -84,7 +88,9 @@ export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
         </TD>
       )}
       <TD className="font-mono text-xs text-gray-400">#{inv.created_by}</TD>
-      <TD className="whitespace-nowrap text-xs tabular-nums text-gray-400">{formatDateTime(inv.created_at)}</TD>
+      <TD className="whitespace-nowrap text-xs tabular-nums text-gray-400">
+        {formatDateTime(inv.created_at)}
+      </TD>
       {canEdit && (
         <td className="px-2 py-2">
           <RowActionsMenu ariaLabel={`פעולות לחשבונית ${inv.id}`}>
@@ -106,7 +112,7 @@ export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
         </td>
       )}
     </tr>
-  );
-};
+  )
+}
 
-VatInvoiceRow.displayName = "VatInvoiceRow";
+VatInvoiceRow.displayName = 'VatInvoiceRow'

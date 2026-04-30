@@ -1,8 +1,8 @@
-import { Plus } from "lucide-react";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { PageLoading } from "@/components/ui/layout/PageLoading";
-import { Alert } from "@/components/ui/overlays/Alert";
-import { Button } from "@/components/ui/primitives/Button";
+import { Plus } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { PageLoading } from '@/components/ui/layout/PageLoading'
+import { Alert } from '@/components/ui/overlays/Alert'
+import { Button } from '@/components/ui/primitives/Button'
 import {
   AnnualReportsFiltersBar,
   CreateReportModal,
@@ -11,7 +11,7 @@ import {
   SeasonReportsTable,
   SeasonSummaryCards,
   useAnnualReportsPage,
-} from "@/features/annualReports";
+} from '@/features/annualReports'
 
 export const AnnualReportsPage: React.FC = () => {
   const {
@@ -25,7 +25,7 @@ export const AnnualReportsPage: React.FC = () => {
     handleResetFilters,
     filteredReports,
     season,
-  } = useAnnualReportsPage();
+  } = useAnnualReportsPage()
 
   return (
     <div className="space-y-6">
@@ -79,5 +79,5 @@ export const AnnualReportsPage: React.FC = () => {
 
       <CreateReportModal open={showCreate} onClose={closeCreate} />
     </div>
-  );
-};
+  )
+}

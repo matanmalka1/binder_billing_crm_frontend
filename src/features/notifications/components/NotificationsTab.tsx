@@ -1,14 +1,14 @@
-import { useNotifications } from "../hooks/useNotifications";
-import { SeverityBadge } from "./SeverityBadge";
-import { Button } from "../../../components/ui/primitives/Button";
-import type { NotificationsTabProps } from "../types";
+import { useNotifications } from '../hooks/useNotifications'
+import { SeverityBadge } from './SeverityBadge'
+import { Button } from '../../../components/ui/primitives/Button'
+import type { NotificationsTabProps } from '../types'
 
 export const NotificationsTab: React.FC<NotificationsTabProps> = ({ businessId }) => {
-  const { notifications, unreadCount, markAllRead, isLoading } = useNotifications(businessId);
-  const limited = notifications.slice(0, 50);
+  const { notifications, unreadCount, markAllRead, isLoading } = useNotifications(businessId)
+  const limited = notifications.slice(0, 50)
 
   if (isLoading) {
-    return <p className="text-sm text-gray-400 py-8 text-center">טוען התראות...</p>;
+    return <p className="text-sm text-gray-400 py-8 text-center">טוען התראות...</p>
   }
 
   return (
@@ -32,23 +32,26 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ businessId }
           {limited.map((item) => (
             <li
               key={item.id}
-              className={`px-4 py-3 flex flex-col gap-1 ${!item.is_read ? "bg-info-50" : "bg-white"}`}
+              className={`px-4 py-3 flex flex-col gap-1 ${!item.is_read ? 'bg-info-50' : 'bg-white'}`}
             >
               <div className="flex items-center gap-2">
                 <SeverityBadge severity={item.severity} />
                 {!item.is_read && (
-                  <span className="h-2 w-2 rounded-full bg-info-500 shrink-0" aria-label="לא נקרא" />
+                  <span
+                    className="h-2 w-2 rounded-full bg-info-500 shrink-0"
+                    aria-label="לא נקרא"
+                  />
                 )}
               </div>
               <p className="text-sm text-gray-800">{item.content_snapshot}</p>
               <span className="text-xs text-gray-400">
-                {new Date(item.created_at).toLocaleDateString("he-IL")}
+                {new Date(item.created_at).toLocaleDateString('he-IL')}
               </span>
             </li>
           ))}
         </ul>
       )}
     </div>
-  );
-};
-NotificationsTab.displayName = "NotificationsTab";
+  )
+}
+NotificationsTab.displayName = 'NotificationsTab'

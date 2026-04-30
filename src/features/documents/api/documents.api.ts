@@ -1,6 +1,6 @@
-import { api } from "@/api/client";
-import { DOCUMENT_ENDPOINTS } from "./endpoints";
-import { toQueryParams } from "@/api/queryParams";
+import { api } from '@/api/client'
+import { DOCUMENT_ENDPOINTS } from './endpoints'
+import { toQueryParams } from '@/api/queryParams'
 import type {
   PermanentDocumentListResponse,
   DocumentVersionsResponse,
@@ -8,7 +8,7 @@ import type {
   ListDocumentsByClientParams,
   PermanentDocumentResponse,
   UploadDocumentPayload,
-} from "./contracts";
+} from './contracts'
 
 export const documentsApi = {
   // ── Queries ──────────────────────────────────────────────────────────────
@@ -20,20 +20,20 @@ export const documentsApi = {
     const response = await api.get<PermanentDocumentListResponse>(
       DOCUMENT_ENDPOINTS.documentsByClient(clientId),
       params ? { params: toQueryParams(params) } : undefined,
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   getDownloadUrl: async (id: number): Promise<{ url: string }> => {
-    const response = await api.get<{ url: string }>(DOCUMENT_ENDPOINTS.documentDownloadUrl(id));
-    return response.data;
+    const response = await api.get<{ url: string }>(DOCUMENT_ENDPOINTS.documentDownloadUrl(id))
+    return response.data
   },
 
   getSignalsByClient: async (clientId: number): Promise<OperationalSignalsResponse> => {
     const response = await api.get<OperationalSignalsResponse>(
       DOCUMENT_ENDPOINTS.documentSignalsByClient(clientId),
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   getVersions: async (
@@ -49,54 +49,53 @@ export const documentsApi = {
           ...(taxYear != null ? { tax_year: taxYear } : {}),
         }),
       },
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   listByAnnualReport: async (reportId: number): Promise<DocumentVersionsResponse> => {
     const response = await api.get<DocumentVersionsResponse>(
       DOCUMENT_ENDPOINTS.documentsByAnnualReport(reportId),
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   // ── Mutations ────────────────────────────────────────────────────────────
 
   upload: async (payload: UploadDocumentPayload): Promise<PermanentDocumentResponse> => {
-    const formData = new FormData();
-    formData.append("client_record_id", String(payload.client_record_id));
+    const formData = new FormData()
+    formData.append('client_record_id', String(payload.client_record_id))
     if (payload.business_id != null) {
-      formData.append("business_id", String(payload.business_id));
+      formData.append('business_id', String(payload.business_id))
     }
-    formData.append("document_type", payload.document_type);
-    formData.append("file", payload.file);
+    formData.append('document_type', payload.document_type)
+    formData.append('file', payload.file)
     if (payload.tax_year != null) {
-      formData.append("tax_year", String(payload.tax_year));
+      formData.append('tax_year', String(payload.tax_year))
     }
     if (payload.annual_report_id != null) {
-      formData.append("annual_report_id", String(payload.annual_report_id));
+      formData.append('annual_report_id', String(payload.annual_report_id))
     }
     const response = await api.post<PermanentDocumentResponse>(
       DOCUMENT_ENDPOINTS.documentsUpload,
       formData,
-      { headers: { "Content-Type": "multipart/form-data" } },
-    );
-    return response.data;
+      { headers: { 'Content-Type': 'multipart/form-data' } },
+    )
+    return response.data
   },
 
   deleteDocument: async (id: number): Promise<void> => {
-    await api.delete(DOCUMENT_ENDPOINTS.documentById(id));
+    await api.delete(DOCUMENT_ENDPOINTS.documentById(id))
   },
 
   replaceDocument: async (id: number, file: File): Promise<PermanentDocumentResponse> => {
-    const formData = new FormData();
-    formData.append("file", file);
+    const formData = new FormData()
+    formData.append('file', file)
     const response = await api.put<PermanentDocumentResponse>(
       DOCUMENT_ENDPOINTS.documentReplace(id),
       formData,
-      { headers: { "Content-Type": "multipart/form-data" } },
-    );
-    return response.data;
+      { headers: { 'Content-Type': 'multipart/form-data' } },
+    )
+    return response.data
   },
-
-};
+}

@@ -1,14 +1,14 @@
-import { useMemo } from "react";
-import { ChevronDown, Clock, InboxIcon } from "lucide-react";
-import type { NormalizedTimelineEvent } from "../normalize";
-import { TimelineEventItem } from "./TimelineEventItem";
-import { cn } from "../../../utils/utils";
-import { groupEventsByDate } from "./timelineGrouping";
+import { useMemo } from 'react'
+import { ChevronDown, Clock, InboxIcon } from 'lucide-react'
+import type { NormalizedTimelineEvent } from '../normalize'
+import { TimelineEventItem } from './TimelineEventItem'
+import { cn } from '../../../utils/utils'
+import { groupEventsByDate } from './timelineGrouping'
 
 // ── Empty state ───────────────────────────────────────────────────────────────
 
 interface EmptyTimelineProps {
-  hasActiveFilters?: boolean;
+  hasActiveFilters?: boolean
 }
 
 const EmptyTimeline: React.FC<EmptyTimelineProps> = ({ hasActiveFilters }) => (
@@ -17,23 +17,25 @@ const EmptyTimeline: React.FC<EmptyTimelineProps> = ({ hasActiveFilters }) => (
       <InboxIcon className="h-7 w-7 text-gray-400" />
     </div>
     <p className="text-sm font-medium text-gray-500">
-      {hasActiveFilters ? "לא נמצאו אירועים לפי הסינון" : "אין אירועים בציר הזמן"}
+      {hasActiveFilters ? 'לא נמצאו אירועים לפי הסינון' : 'אין אירועים בציר הזמן'}
     </p>
     <p className="text-xs text-gray-400">
-      {hasActiveFilters ? "נסה לשנות את הפילטרים או את החיפוש" : "אירועים חדשים יופיעו כאן לאחר פעילות לקוח"}
+      {hasActiveFilters
+        ? 'נסה לשנות את הפילטרים או את החיפוש'
+        : 'אירועים חדשים יופיעו כאן לאחר פעילות לקוח'}
     </p>
   </div>
-);
+)
 
 // ── Date group header ─────────────────────────────────────────────────────────
 
 interface GroupHeaderProps {
-  date:       string;
-  count:      number;
-  isFirst:    boolean;
-  expanded:   boolean;
-  controlsId: string;
-  onToggle:   () => void;
+  date: string
+  count: number
+  isFirst: boolean
+  expanded: boolean
+  controlsId: string
+  onToggle: () => void
 }
 
 const GroupHeader: React.FC<GroupHeaderProps> = ({
@@ -44,7 +46,7 @@ const GroupHeader: React.FC<GroupHeaderProps> = ({
   controlsId,
   onToggle,
 }) => (
-  <div className={cn("flex items-center gap-3 px-1 py-2", !isFirst && "mt-4")}>
+  <div className={cn('flex items-center gap-3 px-1 py-2', !isFirst && 'mt-4')}>
     <button
       type="button"
       aria-expanded={expanded}
@@ -52,26 +54,28 @@ const GroupHeader: React.FC<GroupHeaderProps> = ({
       onClick={onToggle}
       className="flex items-center gap-2 rounded-full border border-slate-200/80 bg-slate-100 px-3.5 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-200/70 focus:outline-none focus:ring-2 focus:ring-primary-300"
     >
-      <ChevronDown className={cn("h-3.5 w-3.5 text-slate-400 transition-transform", !expanded && "rotate-90")} />
+      <ChevronDown
+        className={cn('h-3.5 w-3.5 text-slate-400 transition-transform', !expanded && 'rotate-90')}
+      />
       <Clock className="h-3.5 w-3.5 text-slate-400" />
       {date}
     </button>
     <div className="flex-1 h-px bg-gradient-to-l from-transparent to-slate-200" />
     <span className="text-[11px] text-gray-400 whitespace-nowrap">
-      {count} {count === 1 ? "אירוע" : "אירועים"}
+      {count} {count === 1 ? 'אירוע' : 'אירועים'}
     </span>
   </div>
-);
+)
 
 // ── Main component ────────────────────────────────────────────────────────────
 
 export interface TimelineCardProps {
-  events: NormalizedTimelineEvent[];
-  expandedDateKeys: Set<string>;
-  onToggleDate: (dateKey: string) => void;
-  hasActiveFilters?: boolean;
-  onAction?: (action: NormalizedTimelineEvent["actionsList"][number]) => void;
-  activeActionKey?: string | null;
+  events: NormalizedTimelineEvent[]
+  expandedDateKeys: Set<string>
+  onToggleDate: (dateKey: string) => void
+  hasActiveFilters?: boolean
+  onAction?: (action: NormalizedTimelineEvent['actionsList'][number]) => void
+  activeActionKey?: string | null
 }
 
 export const TimelineCard: React.FC<TimelineCardProps> = ({
@@ -82,15 +86,15 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({
   onAction,
   activeActionKey,
 }) => {
-  const groups = useMemo(() => groupEventsByDate(events), [events]);
+  const groups = useMemo(() => groupEventsByDate(events), [events])
 
-  if (events.length === 0) return <EmptyTimeline hasActiveFilters={hasActiveFilters} />;
+  if (events.length === 0) return <EmptyTimeline hasActiveFilters={hasActiveFilters} />
 
   return (
     <div className="space-y-2 animate-fade-in">
       {groups.map((group, groupIndex) => {
-        const expanded = expandedDateKeys.has(group.date);
-        const controlsId = `timeline-date-${groupIndex}`;
+        const expanded = expandedDateKeys.has(group.date)
+        const controlsId = `timeline-date-${groupIndex}`
 
         return (
           <section key={group.date}>
@@ -122,10 +126,10 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({
               </div>
             )}
           </section>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
 
-TimelineCard.displayName = "TimelineCard";
+TimelineCard.displayName = 'TimelineCard'

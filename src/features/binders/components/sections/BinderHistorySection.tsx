@@ -1,31 +1,34 @@
-import { useQuery } from "@tanstack/react-query";
-import { Clock, ArrowRight } from "lucide-react";
-import { format, parseISO } from "date-fns";
-import { he } from "date-fns/locale";
-import { Card } from "@/components/ui/primitives/Card";
-import { Badge } from "@/components/ui/primitives/Badge";
-import { Timeline, TimelineEntry } from "@/components/ui/feedback/Timeline";
-import { bindersApi, bindersQK } from "../../api";
-import { getStatusLabel } from "@/utils/enums";
-import { staggerDelay } from "@/utils/animation";
-import { BINDER_STATUS_VARIANTS } from "../../constants";
+import { useQuery } from '@tanstack/react-query'
+import { Clock, ArrowRight } from 'lucide-react'
+import { format, parseISO } from 'date-fns'
+import { he } from 'date-fns/locale'
+import { Card } from '@/components/ui/primitives/Card'
+import { Badge } from '@/components/ui/primitives/Badge'
+import { Timeline, TimelineEntry } from '@/components/ui/feedback/Timeline'
+import { bindersApi, bindersQK } from '../../api'
+import { getStatusLabel } from '@/utils/enums'
+import { staggerDelay } from '@/utils/animation'
+import { BINDER_STATUS_VARIANTS } from '../../constants'
 
 interface BinderHistorySectionProps {
-  binderId: number;
+  binderId: number
 }
 
 export const BinderHistorySection: React.FC<BinderHistorySectionProps> = ({ binderId }) => {
   const { data, isLoading } = useQuery({
     queryKey: bindersQK.history(binderId),
     queryFn: () => bindersApi.getHistory(binderId),
-  });
+  })
 
-  const history = data?.history ?? [];
+  const history = data?.history ?? []
 
-  if (isLoading) return null;
+  if (isLoading) return null
 
   return (
-    <Card title="היסטוריית שינויים" subtitle={history.length ? `${history.length} שינויים` : undefined}>
+    <Card
+      title="היסטוריית שינויים"
+      subtitle={history.length ? `${history.length} שינויים` : undefined}
+    >
       {history.length === 0 ? (
         <p className="text-sm text-gray-500">אין רשומות היסטוריה</p>
       ) : (
@@ -35,13 +38,19 @@ export const BinderHistorySection: React.FC<BinderHistorySectionProps> = ({ bind
               <div className="mb-1 flex flex-wrap items-center gap-1.5 text-sm">
                 {entry.old_status && (
                   <>
-                    <Badge variant={BINDER_STATUS_VARIANTS[entry.old_status] ?? "neutral"} className="text-xs">
+                    <Badge
+                      variant={BINDER_STATUS_VARIANTS[entry.old_status] ?? 'neutral'}
+                      className="text-xs"
+                    >
                       {getStatusLabel(entry.old_status)}
                     </Badge>
                     <ArrowRight className="h-3 w-3 text-gray-400" />
                   </>
                 )}
-                <Badge variant={BINDER_STATUS_VARIANTS[entry.new_status] ?? "neutral"} className="text-xs">
+                <Badge
+                  variant={BINDER_STATUS_VARIANTS[entry.new_status] ?? 'neutral'}
+                  className="text-xs"
+                >
                   {getStatusLabel(entry.new_status)}
                 </Badge>
               </div>
@@ -52,7 +61,7 @@ export const BinderHistorySection: React.FC<BinderHistorySectionProps> = ({ bind
                 )}
                 {entry.changed_by_name && <span>·</span>}
                 <Clock className="h-3 w-3" />
-                {format(parseISO(entry.changed_at), "d MMM yyyy HH:mm", { locale: he })}
+                {format(parseISO(entry.changed_at), 'd MMM yyyy HH:mm', { locale: he })}
               </div>
 
               {entry.notes && (
@@ -65,5 +74,5 @@ export const BinderHistorySection: React.FC<BinderHistorySectionProps> = ({ bind
         </Timeline>
       )}
     </Card>
-  );
-};
+  )
+}

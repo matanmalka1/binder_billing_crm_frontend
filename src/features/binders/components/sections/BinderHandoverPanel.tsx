@@ -1,31 +1,28 @@
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { DatePicker } from "@/components/ui/inputs/DatePicker";
-import { Input } from "@/components/ui/inputs/Input";
-import { Select } from "@/components/ui/inputs/Select";
-import { Textarea } from "@/components/ui/inputs/Textarea";
-import { Button } from "@/components/ui/primitives/Button";
-import { Checkbox } from "@/components/ui/primitives/Checkbox";
-import { bindersApi, bindersQK } from "../../api";
-import { formatMonthYear } from "@/utils/utils";
-import {
-  NUMERIC_MONTH_OPTIONS,
-  PERIOD_YEAR_OPTIONS,
-} from "@/constants/periodOptions.constants";
+import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
+import { DatePicker } from '@/components/ui/inputs/DatePicker'
+import { Input } from '@/components/ui/inputs/Input'
+import { Select } from '@/components/ui/inputs/Select'
+import { Textarea } from '@/components/ui/inputs/Textarea'
+import { Button } from '@/components/ui/primitives/Button'
+import { Checkbox } from '@/components/ui/primitives/Checkbox'
+import { bindersApi, bindersQK } from '../../api'
+import { formatMonthYear } from '@/utils/utils'
+import { NUMERIC_MONTH_OPTIONS, PERIOD_YEAR_OPTIONS } from '@/constants/periodOptions.constants'
 
 interface BinderHandoverPanelProps {
-  clientId: number;
-  initialBinderId: number;
-  isSubmitting: boolean;
+  clientId: number
+  initialBinderId: number
+  isSubmitting: boolean
   onSubmit: (payload: {
-    binderIds: number[];
-    receivedByName: string;
-    handedOverAt: string;
-    untilPeriodYear: number;
-    untilPeriodMonth: number;
-    notes: string | null;
-  }) => void;
+    binderIds: number[]
+    receivedByName: string
+    handedOverAt: string
+    untilPeriodYear: number
+    untilPeriodMonth: number
+    notes: string | null
+  }) => void
 }
 
 export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
@@ -34,38 +31,43 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
   isSubmitting,
   onSubmit,
 }) => {
-  const [selectedIds, setSelectedIds] = useState<number[]>([initialBinderId]);
-  const [receivedByName, setReceivedByName] = useState("");
-  const [handedOverAt, setHandedOverAt] = useState(format(new Date(), "yyyy-MM-dd"));
-  const [untilPeriodYear, setUntilPeriodYear] = useState(new Date().getFullYear());
-  const [untilPeriodMonth, setUntilPeriodMonth] = useState(new Date().getMonth() + 1);
-  const [notes, setNotes] = useState("");
+  const [selectedIds, setSelectedIds] = useState<number[]>([initialBinderId])
+  const [receivedByName, setReceivedByName] = useState('')
+  const [handedOverAt, setHandedOverAt] = useState(format(new Date(), 'yyyy-MM-dd'))
+  const [untilPeriodYear, setUntilPeriodYear] = useState(new Date().getFullYear())
+  const [untilPeriodMonth, setUntilPeriodMonth] = useState(new Date().getMonth() + 1)
+  const [notes, setNotes] = useState('')
 
   const { data, isLoading } = useQuery({
-    queryKey: bindersQK.list({ client_record_id: clientId, status: "ready_for_pickup", page_size: 100 }),
-    queryFn: () => bindersApi.list({ client_record_id: clientId, status: "ready_for_pickup", page_size: 100 }),
+    queryKey: bindersQK.list({
+      client_record_id: clientId,
+      status: 'ready_for_pickup',
+      page_size: 100,
+    }),
+    queryFn: () =>
+      bindersApi.list({ client_record_id: clientId, status: 'ready_for_pickup', page_size: 100 }),
     enabled: clientId > 0,
     staleTime: 30_000,
-  });
+  })
 
-  const readyBinders = data?.items ?? [];
+  const readyBinders = data?.items ?? []
 
   useEffect(() => {
-    const items = data?.items ?? [];
+    const items = data?.items ?? []
     if (items.length === 0) {
-      setSelectedIds([]);
-      return;
+      setSelectedIds([])
+      return
     }
     setSelectedIds((current) => {
-      const keep = current.filter((id) => items.some((binder) => binder.id === id));
-      if (keep.length > 0) return keep;
-      if (items.some((binder) => binder.id === initialBinderId)) return [initialBinderId];
-      return [items[0].id];
-    });
-  }, [data, initialBinderId]);
+      const keep = current.filter((id) => items.some((binder) => binder.id === id))
+      if (keep.length > 0) return keep
+      if (items.some((binder) => binder.id === initialBinderId)) return [initialBinderId]
+      return [items[0].id]
+    })
+  }, [data, initialBinderId])
 
-  const selectedCount = selectedIds.length;
-  const canSubmit = selectedCount > 0 && receivedByName.trim().length > 0 && !!handedOverAt;
+  const selectedCount = selectedIds.length
+  const canSubmit = selectedCount > 0 && receivedByName.trim().length > 0 && !!handedOverAt
 
   return (
     <div className="space-y-4">
@@ -82,7 +84,7 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
             <p className="text-sm text-gray-500">אין קלסרים מוכנים למסירה עבור לקוח זה.</p>
           ) : (
             readyBinders.map((binder) => {
-              const checked = selectedIds.includes(binder.id);
+              const checked = selectedIds.includes(binder.id)
               return (
                 <label
                   key={binder.id}
@@ -102,11 +104,13 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
                   <div className="min-w-0">
                     <div className="text-sm font-medium text-gray-900">{binder.binder_number}</div>
                     <div className="text-xs text-gray-500">
-                      {binder.period_start ? `${formatMonthYear(binder.period_start)} - ${binder.period_end ? formatMonthYear(binder.period_end) : "פעיל"}` : "ללא תקופה"}
+                      {binder.period_start
+                        ? `${formatMonthYear(binder.period_start)} - ${binder.period_end ? formatMonthYear(binder.period_end) : 'פעיל'}`
+                        : 'ללא תקופה'}
                     </div>
                   </div>
                 </label>
-              );
+              )
             })
           )}
         </div>
@@ -119,11 +123,7 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
         placeholder="שם מקבל הקלסרים"
       />
 
-      <DatePicker
-        label="תאריך מסירה"
-        value={handedOverAt}
-        onChange={setHandedOverAt}
-      />
+      <DatePicker label="תאריך מסירה" value={handedOverAt} onChange={setHandedOverAt} />
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Select
@@ -155,20 +155,22 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
           variant="ghost"
           size="sm"
           disabled={!canSubmit || isSubmitting}
-          onClick={() => onSubmit({
-            binderIds: selectedIds,
-            receivedByName: receivedByName.trim(),
-            handedOverAt,
-            untilPeriodYear,
-            untilPeriodMonth,
-            notes: notes.trim() || null,
-          })}
+          onClick={() =>
+            onSubmit({
+              binderIds: selectedIds,
+              receivedByName: receivedByName.trim(),
+              handedOverAt,
+              untilPeriodYear,
+              untilPeriodMonth,
+              notes: notes.trim() || null,
+            })
+          }
         >
           אשר מסירה
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-BinderHandoverPanel.displayName = "BinderHandoverPanel";
+BinderHandoverPanel.displayName = 'BinderHandoverPanel'

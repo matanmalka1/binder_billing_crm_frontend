@@ -1,34 +1,34 @@
-import type { KeyboardEvent, ReactNode } from "react";
-import { Card } from "../primitives/Card";
-import { cn } from "../../../utils/utils";
-import { StateCard } from "../feedback/StateCard";
-import type { StateCardProps as EmptyStateProps } from "../feedback/StateCard";
-import type { LucideIcon } from "lucide-react";
-import { Inbox } from "lucide-react";
-import { TableSkeleton } from "./TableSkeleton";
+import type { KeyboardEvent, ReactNode } from 'react'
+import { Card } from '../primitives/Card'
+import { cn } from '../../../utils/utils'
+import { StateCard } from '../feedback/StateCard'
+import type { StateCardProps as EmptyStateProps } from '../feedback/StateCard'
+import type { LucideIcon } from 'lucide-react'
+import { Inbox } from 'lucide-react'
+import { TableSkeleton } from './TableSkeleton'
 
 export interface Column<T> {
-  key: string;
-  header: string;
-  headerRender?: () => ReactNode;
-  render: (item: T, index: number) => ReactNode;
-  className?: string;
-  headerClassName?: string;
+  key: string
+  header: string
+  headerRender?: () => ReactNode
+  render: (item: T, index: number) => ReactNode
+  className?: string
+  headerClassName?: string
 }
 
 export interface DataTableProps<T> {
-  data: T[];
-  columns: Column<T>[];
-  getRowKey: (item: T) => string | number;
-  onRowClick?: (item: T) => void;
-  className?: string;
-  emptyMessage?: string;
-  isLoading?: boolean;
-  rowClassName?: (item: T, index: number) => string;
-  emptyState?: Omit<EmptyStateProps, "icon" | "message"> & {
-    icon?: LucideIcon;
-    message?: string;
-  };
+  data: T[]
+  columns: Column<T>[]
+  getRowKey: (item: T) => string | number
+  onRowClick?: (item: T) => void
+  className?: string
+  emptyMessage?: string
+  isLoading?: boolean
+  rowClassName?: (item: T, index: number) => string
+  emptyState?: Omit<EmptyStateProps, 'icon' | 'message'> & {
+    icon?: LucideIcon
+    message?: string
+  }
 }
 
 export const DataTable = <T,>({
@@ -37,44 +37,34 @@ export const DataTable = <T,>({
   getRowKey,
   onRowClick,
   className,
-  emptyMessage = "אין נתונים להצגה",
+  emptyMessage = 'אין נתונים להצגה',
   isLoading = false,
   rowClassName,
   emptyState,
 }: DataTableProps<T>) => {
-  const handleRowKeyDown = (
-    event: KeyboardEvent<HTMLTableRowElement>,
-    item: T,
-  ) => {
-    if (!onRowClick) return;
+  const handleRowKeyDown = (event: KeyboardEvent<HTMLTableRowElement>, item: T) => {
+    if (!onRowClick) return
 
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      onRowClick(item);
-      return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      onRowClick(item)
+      return
     }
 
-    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
 
-    event.preventDefault();
-    const currentRow = event.currentTarget;
-    const sibling = event.key === "ArrowDown"
-      ? currentRow.nextElementSibling
-      : currentRow.previousElementSibling;
+    event.preventDefault()
+    const currentRow = event.currentTarget
+    const sibling =
+      event.key === 'ArrowDown' ? currentRow.nextElementSibling : currentRow.previousElementSibling
 
     if (sibling instanceof HTMLTableRowElement) {
-      sibling.focus();
+      sibling.focus()
     }
-  };
+  }
 
   if (isLoading) {
-    return (
-      <TableSkeleton
-        rows={5}
-        columns={Math.max(columns.length, 1)}
-        className={className}
-      />
-    );
+    return <TableSkeleton rows={5} columns={Math.max(columns.length, 1)} className={className} />
   }
 
   if (data.length === 0) {
@@ -87,11 +77,11 @@ export const DataTable = <T,>({
         variant={emptyState?.variant}
         className={cn(className, emptyState?.className)}
       />
-    );
+    )
   }
 
   return (
-    <Card className={cn("overflow-hidden p-0", className)}>
+    <Card className={cn('overflow-hidden p-0', className)}>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
@@ -100,7 +90,7 @@ export const DataTable = <T,>({
                 <th
                   key={column.key}
                   className={cn(
-                    "px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500",
+                    'px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500',
                     column.headerClassName,
                   )}
                 >
@@ -114,9 +104,10 @@ export const DataTable = <T,>({
               <tr
                 key={getRowKey(item)}
                 className={cn(
-                  "transition-colors duration-100",
-                  onRowClick && "cursor-pointer hover:bg-primary-50/40 active:bg-primary-50/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset",
-                  !onRowClick && "hover:bg-gray-50/60",
+                  'transition-colors duration-100',
+                  onRowClick &&
+                    'cursor-pointer hover:bg-primary-50/40 active:bg-primary-50/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset',
+                  !onRowClick && 'hover:bg-gray-50/60',
                   rowClassName?.(item, index),
                 )}
                 onClick={() => onRowClick?.(item)}
@@ -124,10 +115,7 @@ export const DataTable = <T,>({
                 tabIndex={onRowClick ? 0 : undefined}
               >
                 {columns.map((column) => (
-                  <td
-                    key={column.key}
-                    className={cn("px-3 py-2.5 align-middle", column.className)}
-                  >
+                  <td key={column.key} className={cn('px-3 py-2.5 align-middle', column.className)}>
                     {column.render(item, index)}
                   </td>
                 ))}
@@ -137,5 +125,5 @@ export const DataTable = <T,>({
         </table>
       </div>
     </Card>
-  );
-};
+  )
+}

@@ -1,13 +1,16 @@
-import { Menu } from "lucide-react";
-import { NotificationBell } from "./NotificationBell";
+import { Menu } from 'lucide-react'
+import { NotificationBell } from './NotificationBell'
 
 interface NavbarProps {
-  toggleSidebar: () => void;
+  toggleSidebar: () => void
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   return (
-    <header role="banner" className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 z-10 shrink-0">
+    <header
+      role="banner"
+      className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 z-10 shrink-0"
+    >
       <div className="flex items-center gap-4">
         <button
           onClick={toggleSidebar}
@@ -23,5 +26,5 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
         <NotificationBell />
       </div>
     </header>
-  );
-};
+  )
+}

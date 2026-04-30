@@ -1,7 +1,7 @@
-import { createQueryKeys } from "@/lib/queryKeys";
+import { createQueryKeys } from '@/lib/queryKeys'
 
 export const chargesQK = {
-  ...createQueryKeys("charges"),
+  ...createQueryKeys('charges'),
   forClientPage: (clientId: number, page: number, pageSize: number) =>
-    ["charges", "client", clientId, { page, page_size: pageSize }] as const,
-};
+    ['charges', 'client', clientId, { page, page_size: pageSize }] as const,
+}

@@ -1,8 +1,8 @@
-import { OverlayContainer } from "../layout/OverlayContainer";
+import { OverlayContainer } from '../layout/OverlayContainer'
 
 interface UnsavedChangesGuardProps {
-  onContinue: () => void;
-  onDiscard: () => void;
+  onContinue: () => void
+  onDiscard: () => void
 }
 
 export const UnsavedChangesGuard: React.FC<UnsavedChangesGuardProps> = ({
@@ -29,6 +29,6 @@ export const UnsavedChangesGuard: React.FC<UnsavedChangesGuardProps> = ({
       </button>
     </div>
   </OverlayContainer>
-);
+)
 
-UnsavedChangesGuard.displayName = "UnsavedChangesGuard";
+UnsavedChangesGuard.displayName = 'UnsavedChangesGuard'

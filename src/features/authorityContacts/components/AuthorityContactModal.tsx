@@ -1,15 +1,15 @@
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { Button } from "../../../components/ui/primitives/Button";
-import { type AuthorityContactResponse } from "../api";
-import { AUTHORITY_CONTACT_TEXT } from "../constants";
-import { useAuthorityContactForm } from "../hooks/useAuthorityContactForm";
-import { AuthorityContactFormFields } from "./AuthorityContactFormFields";
+import { Modal } from '../../../components/ui/overlays/Modal'
+import { Button } from '../../../components/ui/primitives/Button'
+import { type AuthorityContactResponse } from '../api'
+import { AUTHORITY_CONTACT_TEXT } from '../constants'
+import { useAuthorityContactForm } from '../hooks/useAuthorityContactForm'
+import { AuthorityContactFormFields } from './AuthorityContactFormFields'
 
 interface AuthorityContactModalProps {
-  open: boolean;
-  clientId: number;
-  existing?: AuthorityContactResponse | null;
-  onClose: () => void;
+  open: boolean
+  clientId: number
+  existing?: AuthorityContactResponse | null
+  onClose: () => void
 }
 
 export const AuthorityContactModal: React.FC<AuthorityContactModalProps> = ({
@@ -18,7 +18,7 @@ export const AuthorityContactModal: React.FC<AuthorityContactModalProps> = ({
   existing,
   onClose,
 }) => {
-  const { form, onSubmit, isSaving } = useAuthorityContactForm(clientId, onClose, existing);
+  const { form, onSubmit, isSaving } = useAuthorityContactForm(clientId, onClose, existing)
 
   return (
     <Modal
@@ -40,5 +40,5 @@ export const AuthorityContactModal: React.FC<AuthorityContactModalProps> = ({
         <AuthorityContactFormFields form={form} />
       </form>
     </Modal>
-  );
-};
+  )
+}

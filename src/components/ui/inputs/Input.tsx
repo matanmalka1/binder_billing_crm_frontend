@@ -1,19 +1,19 @@
-import React from "react";
-import { cn } from "../../../utils/utils";
-import { FormField } from "./FormField";
+import React from 'react'
+import { cn } from '../../../utils/utils'
+import { FormField } from './FormField'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  error?: string;
-  startIcon?: React.ReactNode;
-  endIcon?: React.ReactNode;
-  endElement?: React.ReactNode;
+  label?: string
+  error?: string
+  startIcon?: React.ReactNode
+  endIcon?: React.ReactNode
+  endElement?: React.ReactNode
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, className, startIcon, endIcon, endElement, ...props }, ref) => {
-    const hasStart = Boolean(startIcon);
-    const hasEnd = Boolean(endIcon || endElement);
+    const hasStart = Boolean(startIcon)
+    const hasEnd = Boolean(endIcon || endElement)
 
     return (
       <FormField label={label} error={error} className="w-full">
@@ -27,11 +27,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             className={cn(
-              "h-9 w-full rounded-lg border px-3 py-2 shadow-sm transition-all focus:border-primary-500 focus:ring-2 focus:ring-primary-500 sm:text-sm",
-              error ? "border-negative-500" : "border-gray-300",
-              props.disabled ? "bg-gray-50 cursor-not-allowed" : "bg-white",
-              hasStart ? "ps-11" : "ps-3",
-              hasEnd ? "pe-11" : "pe-3",
+              'h-9 w-full rounded-lg border px-3 py-2 shadow-sm transition-all focus:border-primary-500 focus:ring-2 focus:ring-primary-500 sm:text-sm',
+              error ? 'border-negative-500' : 'border-gray-300',
+              props.disabled ? 'bg-gray-50 cursor-not-allowed' : 'bg-white',
+              hasStart ? 'ps-11' : 'ps-3',
+              hasEnd ? 'pe-11' : 'pe-3',
               className,
             )}
             {...props}
@@ -48,8 +48,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
       </FormField>
-    );
+    )
   },
-);
+)
 
-Input.displayName = "Input";
+Input.displayName = 'Input'

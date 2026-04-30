@@ -1,74 +1,83 @@
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Check, Plus, X } from "lucide-react";
-import { annualReportsApi, annualReportsQK, type AnnualReportScheduleKey } from "../../api";
-import { showErrorToast } from "../../../../utils/utils";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { Input } from "../../../../components/ui/inputs/Input";
+import { useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Check, Plus, X } from 'lucide-react'
+import { annualReportsApi, annualReportsQK, type AnnualReportScheduleKey } from '../../api'
+import { showErrorToast } from '../../../../utils/utils'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { Input } from '../../../../components/ui/inputs/Input'
 import {
   SCHEDULE_FIELDS,
   buildAnnexPayload,
   buildEmptyForm,
   mapLineDataToForm,
-} from "../../annex.constants";
-import { AnnexDataTable } from "./AnnexDataTable";
-import { ANNEX_TEXT, FIELD_INPUT_CLASS, TABLE_ICON_CLASS } from "./annex.constants";
-import { getInputType } from "./annex.helpers";
+} from '../../annex.constants'
+import { AnnexDataTable } from './AnnexDataTable'
+import { ANNEX_TEXT, FIELD_INPUT_CLASS, TABLE_ICON_CLASS } from './annex.constants'
+import { getInputType } from './annex.helpers'
 
 interface Props {
-  reportId: number;
-  schedule: AnnualReportScheduleKey;
-  scheduleLabel: string;
+  reportId: number
+  schedule: AnnualReportScheduleKey
+  scheduleLabel: string
 }
 
 export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLabel }) => {
-  const qc = useQueryClient();
-  const [showForm, setShowForm] = useState(false);
-  const [editingLineId, setEditingLineId] = useState<number | null>(null);
-  const [formData, setFormData] = useState<Record<string, string>>(buildEmptyForm(schedule));
+  const qc = useQueryClient()
+  const [showForm, setShowForm] = useState(false)
+  const [editingLineId, setEditingLineId] = useState<number | null>(null)
+  const [formData, setFormData] = useState<Record<string, string>>(buildEmptyForm(schedule))
 
-  const qk = annualReportsQK.annex(reportId, schedule);
+  const qk = annualReportsQK.annex(reportId, schedule)
 
   const { data: annexData, isLoading } = useQuery({
     queryKey: qk,
     queryFn: () => annualReportsApi.getAnnexLines(reportId, schedule),
-  });
-  const lines = annexData?.items ?? [];
+  })
+  const lines = annexData?.items ?? []
 
   const invalidate = () => {
-    qc.invalidateQueries({ queryKey: qk });
-    qc.invalidateQueries({ queryKey: annualReportsQK.readiness(reportId) });
-  };
+    qc.invalidateQueries({ queryKey: qk })
+    qc.invalidateQueries({ queryKey: annualReportsQK.readiness(reportId) })
+  }
 
   const addMutation = useMutation({
-    mutationFn: () => annualReportsApi.addAnnexLine(reportId, schedule, { data: buildAnnexPayload(schedule, formData) }),
-    onSuccess: () => { invalidate(); setShowForm(false); setFormData(buildEmptyForm(schedule)); },
-    onError: (err) => showErrorToast(err, "שגיאה בהוספת שורה"),
-  });
+    mutationFn: () =>
+      annualReportsApi.addAnnexLine(reportId, schedule, {
+        data: buildAnnexPayload(schedule, formData),
+      }),
+    onSuccess: () => {
+      invalidate()
+      setShowForm(false)
+      setFormData(buildEmptyForm(schedule))
+    },
+    onError: (err) => showErrorToast(err, 'שגיאה בהוספת שורה'),
+  })
 
   const updateMutation = useMutation({
     mutationFn: (lineId: number) =>
-      annualReportsApi.updateAnnexLine(reportId, schedule, lineId, { data: buildAnnexPayload(schedule, formData) }),
+      annualReportsApi.updateAnnexLine(reportId, schedule, lineId, {
+        data: buildAnnexPayload(schedule, formData),
+      }),
     onSuccess: () => {
-      invalidate();
-      setEditingLineId(null);
-      setFormData(buildEmptyForm(schedule));
+      invalidate()
+      setEditingLineId(null)
+      setFormData(buildEmptyForm(schedule))
     },
-    onError: (err) => showErrorToast(err, "שגיאה בעדכון שורה"),
-  });
+    onError: (err) => showErrorToast(err, 'שגיאה בעדכון שורה'),
+  })
 
   const deleteMutation = useMutation({
     mutationFn: (lineId: number) => annualReportsApi.deleteAnnexLine(reportId, schedule, lineId),
     onSuccess: invalidate,
-    onError: (err) => showErrorToast(err, "שגיאה במחיקת שורה"),
-  });
+    onError: (err) => showErrorToast(err, 'שגיאה במחיקת שורה'),
+  })
 
-  const fields = SCHEDULE_FIELDS[schedule];
-  const resetForm = () => setFormData(buildEmptyForm(schedule));
+  const fields = SCHEDULE_FIELDS[schedule]
+  const resetForm = () => setFormData(buildEmptyForm(schedule))
   const handleFormChange = (key: string, value: string) =>
-    setFormData((prev) => ({ ...prev, [key]: value }));
+    setFormData((prev) => ({ ...prev, [key]: value }))
 
-  if (isLoading) return <p className="text-xs text-gray-400 py-2">{ANNEX_TEXT.loading}</p>;
+  if (isLoading) return <p className="text-xs text-gray-400 py-2">{ANNEX_TEXT.loading}</p>
 
   return (
     <div className="mt-3 space-y-2">
@@ -82,13 +91,13 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
           isDeleting={deleteMutation.isPending}
           onFormChange={handleFormChange}
           onStartEdit={(line) => {
-            setShowForm(false);
-            setEditingLineId(line.id);
-            setFormData(mapLineDataToForm(schedule, line.data as Record<string, unknown>));
+            setShowForm(false)
+            setEditingLineId(line.id)
+            setFormData(mapLineDataToForm(schedule, line.data as Record<string, unknown>))
           }}
           onCancelEdit={() => {
-            setEditingLineId(null);
-            resetForm();
+            setEditingLineId(null)
+            resetForm()
           }}
           onSaveEdit={(lineId) => updateMutation.mutate(lineId)}
           onDelete={(lineId) => deleteMutation.mutate(lineId)}
@@ -135,7 +144,7 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
         </Button>
       )}
     </div>
-  );
-};
+  )
+}
 
-AnnexDataPanel.displayName = "AnnexDataPanel";
+AnnexDataPanel.displayName = 'AnnexDataPanel'

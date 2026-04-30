@@ -1,39 +1,46 @@
-import { useQuery } from "@tanstack/react-query";
-import { FileCheck, FileWarning, FileText } from "lucide-react";
-import { documentsApi, documentsQK } from "@/features/documents";
-import { DocumentCard, MissingDocRow } from "./DocumentParts";
-import { semanticMonoToneClasses } from "@/utils/semanticColors";
-import { getMissingDocumentTypes } from "./annualReports.helpers";
+import { useQuery } from '@tanstack/react-query'
+import { FileCheck, FileWarning, FileText } from 'lucide-react'
+import { documentsApi, documentsQK } from '@/features/documents'
+import { DocumentCard, MissingDocRow } from './DocumentParts'
+import { semanticMonoToneClasses } from '@/utils/semanticColors'
+import { getMissingDocumentTypes } from './annualReports.helpers'
 
-interface DocumentsTabProps { clientId: number; reportId?: number; }
+interface DocumentsTabProps {
+  clientId: number
+  reportId?: number
+}
 
 export const DocumentsTab = ({ clientId, reportId }: DocumentsTabProps) => {
   const byClient = useQuery({
     queryKey: documentsQK.clientList(clientId),
     queryFn: () => documentsApi.listByClient(clientId),
     enabled: !!clientId && reportId == null,
-  });
+  })
 
   const byReport = useQuery({
     queryKey: documentsQK.byAnnualReport(reportId!),
     queryFn: () => documentsApi.listByAnnualReport(reportId!),
     enabled: !!reportId,
-  });
+  })
 
   const { data: signals } = useQuery({
     queryKey: documentsQK.clientSignals(clientId),
     queryFn: () => documentsApi.getSignalsByClient(clientId),
     enabled: !!clientId,
-  });
+  })
 
-  const activeQuery = reportId != null ? byReport : byClient;
-  const docs = activeQuery.data?.items ?? [];
-  const uploadedTypes = new Set(docs.map((d) => d.document_type));
+  const activeQuery = reportId != null ? byReport : byClient
+  const docs = activeQuery.data?.items ?? []
+  const uploadedTypes = new Set(docs.map((d) => d.document_type))
 
-  const missingTypes = getMissingDocumentTypes(uploadedTypes, signals?.missing_documents);
+  const missingTypes = getMissingDocumentTypes(uploadedTypes, signals?.missing_documents)
 
   if (activeQuery.isPending) {
-    return <div className="flex items-center justify-center py-16 text-sm text-gray-400">טוען מסמכים...</div>;
+    return (
+      <div className="flex items-center justify-center py-16 text-sm text-gray-400">
+        טוען מסמכים...
+      </div>
+    )
   }
 
   return (
@@ -50,7 +57,9 @@ export const DocumentsTab = ({ clientId, reportId }: DocumentsTabProps) => {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {docs.map((doc) => <DocumentCard key={doc.id} doc={doc} />)}
+            {docs.map((doc) => (
+              <DocumentCard key={doc.id} doc={doc} />
+            ))}
           </div>
         )}
       </section>
@@ -59,16 +68,23 @@ export const DocumentsTab = ({ clientId, reportId }: DocumentsTabProps) => {
         <section>
           <div className="mb-4 flex items-center gap-2">
             <FileWarning className="h-4 w-4 text-warning-500" />
-            <h3 className={`text-sm font-semibold ${semanticMonoToneClasses.warning}`}>מסמכים חסרים ({missingTypes.length})</h3>
+            <h3 className={`text-sm font-semibold ${semanticMonoToneClasses.warning}`}>
+              מסמכים חסרים ({missingTypes.length})
+            </h3>
           </div>
           <div className="space-y-2">
             {missingTypes.map((type) => (
-              <MissingDocRow key={type} clientId={clientId} docType={type} annualReportId={reportId} />
+              <MissingDocRow
+                key={type}
+                clientId={clientId}
+                docType={type}
+                annualReportId={reportId}
+              />
             ))}
           </div>
         </section>
       )}
     </div>
-  );
-};
-DocumentsTab.displayName = "DocumentsTab";
+  )
+}
+DocumentsTab.displayName = 'DocumentsTab'

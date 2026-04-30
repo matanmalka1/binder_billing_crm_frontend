@@ -1,39 +1,39 @@
-import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { usersApi, usersQK } from "../api";
+import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { usersApi, usersQK } from '../api'
 
 const ADVISOR_LIST_PARAMS = {
-  is_active: "true" as const,
+  is_active: 'true' as const,
   page: 1,
   page_size: 100,
-};
+}
 
 export const useAdvisorOptions = (enabled = true) => {
   const query = useQuery({
     enabled,
     queryKey: usersQK.list(ADVISOR_LIST_PARAMS),
     queryFn: () => usersApi.list(ADVISOR_LIST_PARAMS),
-  });
+  })
 
   const advisors = useMemo(
-    () => (query.data?.items ?? []).filter((user) => user.role === "advisor"),
+    () => (query.data?.items ?? []).filter((user) => user.role === 'advisor'),
     [query.data?.items],
-  );
+  )
 
   const options = useMemo(
     () => advisors.map((user) => ({ value: String(user.id), label: user.full_name })),
     [advisors],
-  );
+  )
 
   const nameById = useMemo(
     () => new Map(advisors.map((user) => [user.id, user.full_name])),
     [advisors],
-  );
+  )
 
   return {
     advisors,
     options,
     nameById,
     isLoading: query.isPending,
-  };
-};
+  }
+}

@@ -2,83 +2,83 @@ import {
   VAT_RATE_TYPE_LABELS,
   DOCUMENT_TYPE_LABELS,
   getVatWorkItemStatusLabel,
-} from "../../utils/enums";
-import { CATEGORY_COLOR_TOKENS } from "../../utils/chartColors";
-import { ALL_STATUSES_OPTION, ALL_CATEGORIES_OPTION } from "@/constants/filterOptions.constants";
+} from '../../utils/enums'
+import { CATEGORY_COLOR_TOKENS } from '../../utils/chartColors'
+import { ALL_STATUSES_OPTION, ALL_CATEGORIES_OPTION } from '@/constants/filterOptions.constants'
 
-export { VAT_RATE_TYPE_LABELS, DOCUMENT_TYPE_LABELS };
+export { VAT_RATE_TYPE_LABELS, DOCUMENT_TYPE_LABELS }
 
-export const INCOME_KEY = "income";
+export const INCOME_KEY = 'income'
 
 export const VAT_PERIOD_TYPE_OPTIONS = [
-  { value: "", label: "כל סוגי הדיווח" },
-  { value: "monthly", label: "חודשי" },
-  { value: "bimonthly", label: "דו־חודשי" },
-] as const;
+  { value: '', label: 'כל סוגי הדיווח' },
+  { value: 'monthly', label: 'חודשי' },
+  { value: 'bimonthly', label: 'דו־חודשי' },
+] as const
 
-export const VAT_PERIOD_TYPE_SELECT_OPTIONS = [...VAT_PERIOD_TYPE_OPTIONS];
+export const VAT_PERIOD_TYPE_SELECT_OPTIONS = [...VAT_PERIOD_TYPE_OPTIONS]
 
-export const VAT_PERIOD_TYPES = ["monthly", "bimonthly"] as const;
-export type VatPeriodTypeFilter = (typeof VAT_PERIOD_TYPES)[number];
+export const VAT_PERIOD_TYPES = ['monthly', 'bimonthly'] as const
+export type VatPeriodTypeFilter = (typeof VAT_PERIOD_TYPES)[number]
 
 export const EXPENSE_CATEGORIES = [
-  "inventory",
-  "office",
-  "travel",
-  "professional_services",
-  "equipment",
-  "rent",
-  "salary",
-  "marketing",
-  "vehicle",
-  "fuel",
-  "vehicle_maintenance",
-  "vehicle_insurance",
-  "vehicle_leasing",
-  "tolls_and_parking",
-  "entertainment",
-  "gifts",
-  "communication",
-  "insurance",
-  "maintenance",
-  "municipal_tax",
-  "utilities",
-  "postage_and_shipping",
-  "bank_fees",
-  "mixed_expense",
-] as const;
+  'inventory',
+  'office',
+  'travel',
+  'professional_services',
+  'equipment',
+  'rent',
+  'salary',
+  'marketing',
+  'vehicle',
+  'fuel',
+  'vehicle_maintenance',
+  'vehicle_insurance',
+  'vehicle_leasing',
+  'tolls_and_parking',
+  'entertainment',
+  'gifts',
+  'communication',
+  'insurance',
+  'maintenance',
+  'municipal_tax',
+  'utilities',
+  'postage_and_shipping',
+  'bank_fees',
+  'mixed_expense',
+] as const
 
-export type ExpenseCategoryKey = (typeof EXPENSE_CATEGORIES)[number];
+export type ExpenseCategoryKey = (typeof EXPENSE_CATEGORIES)[number]
 
 export const CATEGORY_LABELS: Record<string, string> = {
-  [INCOME_KEY]: "הכנסות",
-  inventory: "קניית סחורה / מלאי",
-  office: "משרד",
-  travel: "נסיעות",
-  professional_services: "שירותים מקצועיים",
-  equipment: "ציוד",
-  rent: "שכירות",
-  salary: "שכר עבודה",
-  marketing: "שיווק",
-  vehicle: "רכב פרטי",
-  fuel: "דלק",
-  vehicle_maintenance: "תחזוקת רכב",
-  vehicle_insurance: "ביטוח רכב",
-  vehicle_leasing: "ליסינג רכב",
-  tolls_and_parking: "חניה וכבישי אגרה",
-  entertainment: "אירוח וכיבוד",
-  gifts: "מתנות",
-  communication: "תקשורת",
-  insurance: "ביטוח",
-  maintenance: "תחזוקה",
-  municipal_tax: "ארנונה",
-  utilities: "חשמל ומים",
-  postage_and_shipping: "משלוחים ודואר",
-  bank_fees: "עמלות בנק",
-  mixed_expense: "הוצאה מעורבת",
-};
+  [INCOME_KEY]: 'הכנסות',
+  inventory: 'קניית סחורה / מלאי',
+  office: 'משרד',
+  travel: 'נסיעות',
+  professional_services: 'שירותים מקצועיים',
+  equipment: 'ציוד',
+  rent: 'שכירות',
+  salary: 'שכר עבודה',
+  marketing: 'שיווק',
+  vehicle: 'רכב פרטי',
+  fuel: 'דלק',
+  vehicle_maintenance: 'תחזוקת רכב',
+  vehicle_insurance: 'ביטוח רכב',
+  vehicle_leasing: 'ליסינג רכב',
+  tolls_and_parking: 'חניה וכבישי אגרה',
+  entertainment: 'אירוח וכיבוד',
+  gifts: 'מתנות',
+  communication: 'תקשורת',
+  insurance: 'ביטוח',
+  maintenance: 'תחזוקה',
+  municipal_tax: 'ארנונה',
+  utilities: 'חשמל ומים',
+  postage_and_shipping: 'משלוחים ודואר',
+  bank_fees: 'עמלות בנק',
+  mixed_expense: 'הוצאה מעורבת',
+}
 
-export const CATEGORY_COLORS: Record<string, string> = CATEGORY_COLOR_TOKENS;
+export const CATEGORY_COLORS: Record<string, string> = CATEGORY_COLOR_TOKENS
 
 /** VAT deduction rates per expense category (frontend display only) */
 export const DEDUCTION_RATES: Record<string, number> = {
@@ -106,44 +106,50 @@ export const DEDUCTION_RATES: Record<string, number> = {
   postage_and_shipping: 1.0,
   bank_fees: 1.0,
   mixed_expense: 2 / 3,
-};
+}
 
 /** Like CATEGORY_LABELS but travel → "נסיעות/רכב" for the breakdown table */
 export const CATEGORY_TABLE_LABELS: Record<string, string> = {
   ...CATEGORY_LABELS,
-  travel: "רכב",
-};
+  travel: 'רכב',
+}
 
-export const VAT_STATUS_BADGE_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
-  pending_materials: "warning",
-  material_received: "info",
-  data_entry_in_progress: "info",
-  ready_for_review: "warning",
-  filed: "success",
-};
+export const VAT_STATUS_BADGE_VARIANTS: Record<
+  string,
+  'success' | 'warning' | 'error' | 'info' | 'neutral'
+> = {
+  pending_materials: 'warning',
+  material_received: 'info',
+  data_entry_in_progress: 'info',
+  ready_for_review: 'warning',
+  filed: 'success',
+}
 
-export const VAT_CLIENT_SUMMARY_STATUS_VARIANTS: Record<string, "success" | "warning" | "info" | "neutral"> = {
-  filed: "success",
-  ready_for_review: "warning",
-  data_entry_in_progress: "info",
-  material_received: "info",
-  pending_materials: "warning",
-};
+export const VAT_CLIENT_SUMMARY_STATUS_VARIANTS: Record<
+  string,
+  'success' | 'warning' | 'info' | 'neutral'
+> = {
+  filed: 'success',
+  ready_for_review: 'warning',
+  data_entry_in_progress: 'info',
+  material_received: 'info',
+  pending_materials: 'warning',
+}
 
 export const VAT_WORKFLOW_STEPS = [
-  "pending_materials",
-  "material_received",
-  "data_entry_in_progress",
-  "ready_for_review",
-  "filed",
-] as const;
+  'pending_materials',
+  'material_received',
+  'data_entry_in_progress',
+  'ready_for_review',
+  'filed',
+] as const
 
 export const VAT_WORK_ITEMS_STATS_STATUS_GROUPS = {
-  pending: ["pending_materials"],
-  typing: ["material_received", "data_entry_in_progress"],
-  review: ["ready_for_review"],
-  filed: ["filed"],
-} as const;
+  pending: ['pending_materials'],
+  typing: ['material_received', 'data_entry_in_progress'],
+  review: ['ready_for_review'],
+  filed: ['filed'],
+} as const
 
 export const VAT_WORK_ITEMS_STATUS_OPTIONS: Array<{ value: string; label: string }> = [
   ALL_STATUSES_OPTION,
@@ -151,68 +157,60 @@ export const VAT_WORK_ITEMS_STATUS_OPTIONS: Array<{ value: string; label: string
     value: status,
     label: getVatWorkItemStatusLabel(status),
   })),
-];
+]
 
 export const VAT_EXPENSE_CATEGORY_FILTER_OPTIONS = [
   ALL_CATEGORIES_OPTION,
   ...EXPENSE_CATEGORIES.map((c) => ({ value: c, label: CATEGORY_LABELS[c] ?? c })),
-];
+]
 
 export const VAT_EXPENSE_CATEGORY_OPTIONS = EXPENSE_CATEGORIES.map((category) => ({
   value: category,
   label: CATEGORY_LABELS[category],
-}));
+}))
 
 export const VAT_FILING_METHOD_LABELS: Record<string, string> = {
-  manual: "ידנית",
-  online: "אונליין",
-  representative: "דרך מערכת המייצגים",
-};
+  manual: 'ידנית',
+  online: 'אונליין',
+  representative: 'דרך מערכת המייצגים',
+}
 
-export const VAT_FILING_METHODS = ["online", "manual", "representative"] as const;
-export const DEFAULT_VAT_FILING_METHOD = VAT_FILING_METHODS[0];
+export const VAT_FILING_METHODS = ['online', 'manual', 'representative'] as const
+export const DEFAULT_VAT_FILING_METHOD = VAT_FILING_METHODS[0]
 
 export const VAT_FILE_MODAL_MESSAGES = {
-  invalidAmendmentId: "מזהה ההגשה המקורית חייב להיות מספר",
-  filingSuccess: "התיק הוגש בהצלחה",
-  filingError: "שגיאה בהגשה",
-} as const;
+  invalidAmendmentId: 'מזהה ההגשה המקורית חייב להיות מספר',
+  filingSuccess: 'התיק הוגש בהצלחה',
+  filingError: 'שגיאה בהגשה',
+} as const
 
-
-export const DEFAULT_RATE_TYPE = "standard" as const;
+export const DEFAULT_RATE_TYPE = 'standard' as const
 
 // Mirrors app/vat_reports/services/constants.py: EXCEPTIONAL_INVOICE_THRESHOLD
-export const VAT_EXCEPTIONAL_INVOICE_THRESHOLD = 25_000;
-export const VAT_EXCEPTIONAL_INVOICE_TOOLTIP = `חשבונית מעל ${VAT_EXCEPTIONAL_INVOICE_THRESHOLD.toLocaleString("en-US")} ₪ — נדרש דיווח מיוחד`;
+export const VAT_EXCEPTIONAL_INVOICE_THRESHOLD = 25_000
+export const VAT_EXCEPTIONAL_INVOICE_TOOLTIP = `חשבונית מעל ${VAT_EXCEPTIONAL_INVOICE_THRESHOLD.toLocaleString('en-US')} ₪ — נדרש דיווח מיוחד`
 
 // Any field backed by a backend enum MUST use a Zod enum in the frontend schema.
-export const VAT_RATE_TYPES = ["standard", "exempt", "zero_rate"] as const;
+export const VAT_RATE_TYPES = ['standard', 'exempt', 'zero_rate'] as const
 export const VAT_RATE_TYPE_OPTIONS = VAT_RATE_TYPES.map((rateType) => ({
   value: rateType,
   label: VAT_RATE_TYPE_LABELS[rateType],
-}));
+}))
 
 export const DOCUMENT_TYPES = [
-  "tax_invoice",
-  "transaction_invoice",
-  "receipt",
-  "consolidated",
-  "self_invoice",
-  "credit_note",
-] as const;
+  'tax_invoice',
+  'transaction_invoice',
+  'receipt',
+  'consolidated',
+  'self_invoice',
+  'credit_note',
+] as const
 
 export const DOCUMENT_TYPE_OPTIONS = DOCUMENT_TYPES.map((documentType) => ({
   value: documentType,
   label: DOCUMENT_TYPE_LABELS[documentType],
-}));
+}))
 
-export const VAT_DEADLINE_WARNING_DAYS = 3;
+export const VAT_DEADLINE_WARNING_DAYS = 3
 
-export const VAT_NUMERIC_KEYS = [
-  "ArrowLeft",
-  "ArrowRight",
-  "Delete",
-  "Backspace",
-  "Enter",
-  "Tab",
-];
+export const VAT_NUMERIC_KEYS = ['ArrowLeft', 'ArrowRight', 'Delete', 'Backspace', 'Enter', 'Tab']

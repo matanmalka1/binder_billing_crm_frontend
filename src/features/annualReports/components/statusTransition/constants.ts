@@ -1,2 +1,1 @@
-export const AMEND_REASON_MIN_LENGTH = 10;
-
+export const AMEND_REASON_MIN_LENGTH = 10

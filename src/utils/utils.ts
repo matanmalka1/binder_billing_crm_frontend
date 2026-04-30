@@ -1,138 +1,131 @@
-import { isAxiosError } from "axios";
-import { toast } from "./toast";
-import { format, parseISO } from "date-fns";
-import { he } from "date-fns/locale";
+import { isAxiosError } from 'axios'
+import { toast } from './toast'
+import { format, parseISO } from 'date-fns'
+import { he } from 'date-fns/locale'
 export {
   buildYearOptions,
   getReportingPeriodMonthLabel,
   MONTH_NAMES,
   MONTH_OPTIONS,
   YEAR_OPTIONS,
-} from "@/constants/periodOptions.constants";
+} from '@/constants/periodOptions.constants'
 // ============================================================================
 // STRING & TYPE UTILITIES
 // ============================================================================
 
-export const cn = (
-  ...classes: (string | boolean | undefined | null)[]
-): string => {
-  return classes.filter(Boolean).join(" ");
-};
+export const cn = (...classes: (string | boolean | undefined | null)[]): string => {
+  return classes.filter(Boolean).join(' ')
+}
 
 // ============================================================================
 // NUMBER UTILITIES
 // ============================================================================
 
-export const parsePositiveInt = (
-  value: string | null,
-  fallback: number,
-): number => {
-  const parsed = Number(value);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
-};
+export const parsePositiveInt = (value: string | null, fallback: number): number => {
+  const parsed = Number(value)
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+}
 
-export const isPositiveInt = (
-  value: number | null | undefined,
-): value is number => {
-  return value != null && value > 0;
-};
+export const isPositiveInt = (value: number | null | undefined): value is number => {
+  return value != null && value > 0
+}
 
-export const formatClientOfficeId = (
-  value: number | string | null | undefined,
-): string => {
-  if (value == null || value === "") return "—";
-  return `#${value}`;
-};
+export const formatClientOfficeId = (value: number | string | null | undefined): string => {
+  if (value == null || value === '') return '—'
+  return `#${value}`
+}
 
 export const formatPlainIdentifier = (
   value: number | string | null | undefined,
-  fallback = "—",
+  fallback = '—',
 ): string => {
-  if (value == null || value === "") return fallback;
-  return String(value);
-};
+  if (value == null || value === '') return fallback
+  return String(value)
+}
 
 export const formatShekelAmount = (
   value: string | number | null | undefined,
-  fallback = "—",
+  fallback = '—',
 ): string => {
-  if (value == null || value === "") return fallback;
-  return `₪${Number(value).toLocaleString("he-IL")}`;
-};
+  if (value == null || value === '') return fallback
+  return `₪${Number(value).toLocaleString('he-IL')}`
+}
 
 export const formatBinderNumber = (binderNumber: string | null | undefined): string => {
-  if (!binderNumber) return "—";
-  const parts = binderNumber.split("/");
-  return parts[parts.length - 1];
-};
+  if (!binderNumber) return '—'
+  const parts = binderNumber.split('/')
+  return parts[parts.length - 1]
+}
 
 export const formatDate = (value: string | null): string => {
-  if (!value) return "—";
-  return format(parseISO(value), "dd/MM/yyyy", { locale: he });
-};
+  if (!value) return '—'
+  return format(parseISO(value), 'dd/MM/yyyy', { locale: he })
+}
 
 export const formatMonthYear = (value: string | null): string => {
-  if (!value) return "—";
-  return format(parseISO(value), "MM.yyyy", { locale: he });
-};
+  if (!value) return '—'
+  return format(parseISO(value), 'MM.yyyy', { locale: he })
+}
 
 export const formatDateTime = (value: string | null): string => {
-  if (!value) return "—";
-  return format(parseISO(value), "dd/MM/yyyy HH:mm", { locale: he });
-};
+  if (!value) return '—'
+  return format(parseISO(value), 'dd/MM/yyyy HH:mm', { locale: he })
+}
 
 export const fmtCurrency = (n: string | number | null | undefined): string => {
-  if (n == null) return "—";
-  const numeric = Number(n);
-  if (Number.isNaN(numeric)) return "—";
-  return `₪${numeric.toLocaleString("he-IL", { minimumFractionDigits: 0 })}`;
-};
+  if (n == null) return '—'
+  const numeric = Number(n)
+  if (Number.isNaN(numeric)) return '—'
+  return `₪${numeric.toLocaleString('he-IL', { minimumFractionDigits: 0 })}`
+}
 
 export const formatCurrencyILS = (
   value: string | number | null | undefined,
   maximumFractionDigits = 0,
 ): string => {
-  if (value == null || value === "") return "—";
-  const numeric = Number(value);
-  if (Number.isNaN(numeric)) return "—";
-  return numeric.toLocaleString("he-IL", {
-    style: "currency",
-    currency: "ILS",
+  if (value == null || value === '') return '—'
+  const numeric = Number(value)
+  if (Number.isNaN(numeric)) return '—'
+  return numeric.toLocaleString('he-IL', {
+    style: 'currency',
+    currency: 'ILS',
     maximumFractionDigits,
-  });
-};
+  })
+}
 
 export const formatCompactCurrencyILS = (
   value: string | number | null | undefined,
   fractionDigits = 2,
 ): string => {
-  if (value == null || value === "") return "—";
-  const numeric = Number(value);
-  if (Number.isNaN(numeric)) return "—";
-  return numeric.toLocaleString("he-IL", {
-    style: "currency",
-    currency: "ILS",
-    minimumFractionDigits: fractionDigits,
-    maximumFractionDigits: fractionDigits,
-  }).replace(/\s/g, "");
-};
+  if (value == null || value === '') return '—'
+  const numeric = Number(value)
+  if (Number.isNaN(numeric)) return '—'
+  return numeric
+    .toLocaleString('he-IL', {
+      style: 'currency',
+      currency: 'ILS',
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
+    })
+    .replace(/\s/g, '')
+}
 
 export const formatFileSize = (bytes: number | null | undefined): string => {
-  if (bytes == null) return "—";
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
+  if (bytes == null) return '—'
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
 
 export const getHttpStatus = (error: unknown): number | null => {
-  if (!isAxiosError(error)) return null;
-  const status = error.response?.status;
-  return typeof status === "number" ? status : null;
-};
+  if (!isAxiosError(error)) return null
+  const status = error.response?.status
+  return typeof status === 'number' ? status : null
+}
 
 type ErrorOptions = {
-  canonicalAction?: boolean;
-};
+  canonicalAction?: boolean
+}
 
 const resolveErrorMessage = (
   error: unknown,
@@ -140,49 +133,49 @@ const resolveErrorMessage = (
   options?: ErrorOptions,
 ): string => {
   if (options?.canonicalAction) {
-    const status = getHttpStatus(error);
-    if (status === 403) return "אין הרשאה לבצע פעולה זו";
-    if (status === 500) return "שגיאת שרת פנימית. נסה שוב בעוד מספר רגעים";
+    const status = getHttpStatus(error)
+    if (status === 403) return 'אין הרשאה לבצע פעולה זו'
+    if (status === 500) return 'שגיאת שרת פנימית. נסה שוב בעוד מספר רגעים'
   }
 
   if (isAxiosError(error)) {
-    if (error.code === "ECONNABORTED" || /timeout/i.test(error.message ?? "")) {
-      return "הבקשה נמשכה יותר מדי זמן. נסה שוב.";
+    if (error.code === 'ECONNABORTED' || /timeout/i.test(error.message ?? '')) {
+      return 'הבקשה נמשכה יותר מדי זמן. נסה שוב.'
     }
 
-    const detail = error.response?.data?.detail;
-    if (typeof detail === "string" && detail.trim()) return detail.trim();
+    const detail = error.response?.data?.detail
+    if (typeof detail === 'string' && detail.trim()) return detail.trim()
     if (Array.isArray(detail) && detail.length > 0) {
-      const msg = detail[0]?.msg;
-      if (typeof msg === "string" && msg.trim()) return msg.trim();
-      return fallbackMessage;
+      const msg = detail[0]?.msg
+      if (typeof msg === 'string' && msg.trim()) return msg.trim()
+      return fallbackMessage
     }
 
-    if (detail && typeof detail === "object") {
-      const nestedDetail = (detail as { detail?: unknown }).detail;
-      if (typeof nestedDetail === "string" && nestedDetail.trim()) {
-        return nestedDetail.trim();
+    if (detail && typeof detail === 'object') {
+      const nestedDetail = (detail as { detail?: unknown }).detail
+      if (typeof nestedDetail === 'string' && nestedDetail.trim()) {
+        return nestedDetail.trim()
       }
     }
 
-    const errorMetaDetail = error.response?.data?.error_meta?.detail;
-    if (typeof errorMetaDetail === "string" && errorMetaDetail.trim()) {
-      return errorMetaDetail.trim();
+    const errorMetaDetail = error.response?.data?.error_meta?.detail
+    if (typeof errorMetaDetail === 'string' && errorMetaDetail.trim()) {
+      return errorMetaDetail.trim()
     }
   }
 
   if (error instanceof Error && error.message) {
-    return error.message;
+    return error.message
   }
 
-  return fallbackMessage;
-};
+  return fallbackMessage
+}
 
 export const getErrorMessage = (
   error: unknown,
   fallbackMessage: string,
   options?: ErrorOptions,
-): string => resolveErrorMessage(error, fallbackMessage, options);
+): string => resolveErrorMessage(error, fallbackMessage, options)
 
 /**
  * Convenience companion to `toast.error(message)`.
@@ -196,7 +189,7 @@ export const showErrorToast = (
   fallbackMessage: string,
   options?: ErrorOptions,
 ): string => {
-  const message = resolveErrorMessage(error, fallbackMessage, options);
-  toast.error(message);
-  return message;
-};
+  const message = resolveErrorMessage(error, fallbackMessage, options)
+  toast.error(message)
+  return message
+}

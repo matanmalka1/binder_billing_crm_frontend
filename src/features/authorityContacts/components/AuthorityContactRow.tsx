@@ -1,13 +1,13 @@
-import { Edit2, Mail, MapPin, Phone, Trash2 } from "lucide-react";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Badge } from "../../../components/ui/primitives/Badge";
-import { getContactTypeLabel, type AuthorityContactResponse } from "../api";
+import { Edit2, Mail, MapPin, Phone, Trash2 } from 'lucide-react'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Badge } from '../../../components/ui/primitives/Badge'
+import { getContactTypeLabel, type AuthorityContactResponse } from '../api'
 
 interface AuthorityContactRowProps {
-  contact: AuthorityContactResponse;
-  isDeleting: boolean;
-  onEdit: (contact: AuthorityContactResponse) => void;
-  onDelete: (id: number) => void;
+  contact: AuthorityContactResponse
+  isDeleting: boolean
+  onEdit: (contact: AuthorityContactResponse) => void
+  onDelete: (id: number) => void
 }
 
 export const AuthorityContactRow: React.FC<AuthorityContactRowProps> = ({
@@ -67,4 +67,4 @@ export const AuthorityContactRow: React.FC<AuthorityContactRowProps> = ({
       </Button>
     </div>
   </div>
-);
+)

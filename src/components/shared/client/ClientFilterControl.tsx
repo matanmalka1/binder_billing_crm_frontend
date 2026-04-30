@@ -1,13 +1,13 @@
-import { ClientSearchInput, SelectedClientDisplay } from "@/components/shared/client";
+import { ClientSearchInput, SelectedClientDisplay } from '@/components/shared/client'
 
 interface ClientFilterControlProps {
-  selectedClient: { id: number; name: string } | null;
-  clientQuery: string;
-  onQueryChange: (query: string) => void;
-  onSelect: (client: { id: number; name: string }) => void;
-  onClear: () => void;
-  label?: string;
-  placeholder?: string;
+  selectedClient: { id: number; name: string } | null
+  clientQuery: string
+  onQueryChange: (query: string) => void
+  onSelect: (client: { id: number; name: string }) => void
+  onClear: () => void
+  label?: string
+  placeholder?: string
 }
 
 export const ClientFilterControl: React.FC<ClientFilterControlProps> = ({
@@ -16,8 +16,8 @@ export const ClientFilterControl: React.FC<ClientFilterControlProps> = ({
   onQueryChange,
   onSelect,
   onClear,
-  label = "לקוח",
-  placeholder = "שם, ת.ז. / ח.פ...",
+  label = 'לקוח',
+  placeholder = 'שם, ת.ז. / ח.פ...',
 }) => (
   <div>
     {selectedClient ? (
@@ -37,6 +37,6 @@ export const ClientFilterControl: React.FC<ClientFilterControlProps> = ({
       />
     )}
   </div>
-);
+)
 
-ClientFilterControl.displayName = "ClientFilterControl";
+ClientFilterControl.displayName = 'ClientFilterControl'

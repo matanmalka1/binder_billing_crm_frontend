@@ -1,18 +1,18 @@
-import { AlertTriangle } from "lucide-react";
-import { Modal } from "../../../../components/ui/overlays/Modal";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { formatDate } from "../../../../utils/utils";
-import type { DeletedClientSummary } from "../../api";
+import { AlertTriangle } from 'lucide-react'
+import { Modal } from '../../../../components/ui/overlays/Modal'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { formatDate } from '../../../../utils/utils'
+import type { DeletedClientSummary } from '../../api'
 
 interface Props {
-  open: boolean;
-  deletedClient: DeletedClientSummary | null;
-  isAdvisor: boolean;
-  onRestore: () => void;
-  onForceCreate: () => void;
-  onDismiss: () => void;
-  restoreLoading?: boolean;
-  forceCreateLoading?: boolean;
+  open: boolean
+  deletedClient: DeletedClientSummary | null
+  isAdvisor: boolean
+  onRestore: () => void
+  onForceCreate: () => void
+  onDismiss: () => void
+  restoreLoading?: boolean
+  forceCreateLoading?: boolean
 }
 
 export const DeletedClientDialog: React.FC<Props> = ({
@@ -25,9 +25,9 @@ export const DeletedClientDialog: React.FC<Props> = ({
   restoreLoading = false,
   forceCreateLoading = false,
 }) => {
-  const isLoading = restoreLoading || forceCreateLoading;
+  const isLoading = restoreLoading || forceCreateLoading
 
-    if (!deletedClient) return null; 
+  if (!deletedClient) return null
   return (
     <Modal
       open={open}
@@ -35,12 +35,7 @@ export const DeletedClientDialog: React.FC<Props> = ({
       title="נמצאה רשומה קודמת"
       footer={
         <div className="flex items-center justify-end gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onDismiss}
-            disabled={isLoading}
-          >
+          <Button type="button" variant="outline" onClick={onDismiss} disabled={isLoading}>
             ביטול
           </Button>
           <Button
@@ -77,9 +72,7 @@ export const DeletedClientDialog: React.FC<Props> = ({
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">שם</span>
-            <span className="font-medium text-gray-900">
-              {deletedClient.full_name}
-            </span>
+            <span className="font-medium text-gray-900">{deletedClient.full_name}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">נמחק בתאריך</span>
@@ -91,20 +84,18 @@ export const DeletedClientDialog: React.FC<Props> = ({
 
         <div className="space-y-2 text-sm text-gray-600">
           <p>
-            <span className="font-medium">שחזר לקוח</span> — מחזיר את הרשומה
-            הישנה עם כל ההיסטוריה (מסמכים, דוחות, חיובים).
+            <span className="font-medium">שחזר לקוח</span> — מחזיר את הרשומה הישנה עם כל ההיסטוריה
+            (מסמכים, דוחות, חיובים).
           </p>
           <p>
-            <span className="font-medium">צור לקוח חדש</span> — יוצר רשומה חדשה
-            נקייה, הרשומה הישנה תישאר מחוקה.
+            <span className="font-medium">צור לקוח חדש</span> — יוצר רשומה חדשה נקייה, הרשומה הישנה
+            תישאר מחוקה.
           </p>
           {!isAdvisor && (
-            <p className="text-amber-700">
-              שחזור לקוח זמין ליועצים בלבד. פנה ליועץ לביצוע שחזור.
-            </p>
+            <p className="text-amber-700">שחזור לקוח זמין ליועצים בלבד. פנה ליועץ לביצוע שחזור.</p>
           )}
         </div>
       </div>
     </Modal>
-  );
-};
+  )
+}

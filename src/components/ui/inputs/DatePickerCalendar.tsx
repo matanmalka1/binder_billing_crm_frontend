@@ -1,23 +1,23 @@
-import { DayPicker } from "react-day-picker";
-import { setMonth, setYear, getMonth, getYear, addMonths, subMonths } from "date-fns";
-import { he } from "date-fns/locale";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { cn, MONTH_NAMES } from "../../../utils/utils";
-import { DatePickerInlineSelect } from "./DatePickerInlineSelect";
-import "react-day-picker/style.css";
+import { DayPicker } from 'react-day-picker'
+import { setMonth, setYear, getMonth, getYear, addMonths, subMonths } from 'date-fns'
+import { he } from 'date-fns/locale'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { cn, MONTH_NAMES } from '../../../utils/utils'
+import { DatePickerInlineSelect } from './DatePickerInlineSelect'
+import 'react-day-picker/style.css'
 
-const START_YEAR = 2000;
-const END_YEAR = 2099;
+const START_YEAR = 2000
+const END_YEAR = 2099
 
 interface DatePickerCalendarProps {
-  selected: Date | undefined;
-  month: Date;
-  onMonthChange: (month: Date) => void;
-  onSelect: (day: Date | undefined) => void;
-  maxDate?: Date;
-  containerRef?: React.RefObject<HTMLDivElement | null>;
-  className?: string;
-  style?: React.CSSProperties;
+  selected: Date | undefined
+  month: Date
+  onMonthChange: (month: Date) => void
+  onSelect: (day: Date | undefined) => void
+  maxDate?: Date
+  containerRef?: React.RefObject<HTMLDivElement | null>
+  className?: string
+  style?: React.CSSProperties
 }
 
 export const DatePickerCalendar: React.FC<DatePickerCalendarProps> = ({
@@ -30,14 +30,18 @@ export const DatePickerCalendar: React.FC<DatePickerCalendarProps> = ({
   className,
   style,
 }) => {
-  const monthOptions = MONTH_NAMES.map((label, i) => ({ label, value: i }));
+  const monthOptions = MONTH_NAMES.map((label, i) => ({ label, value: i }))
   const yearOptions = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => ({
     label: String(START_YEAR + i),
     value: START_YEAR + i,
-  }));
+  }))
 
   return (
-    <div ref={containerRef} className={cn("rounded-xl border border-gray-200 bg-white shadow-lg", className)} style={style}>
+    <div
+      ref={containerRef}
+      className={cn('rounded-xl border border-gray-200 bg-white shadow-lg', className)}
+      style={style}
+    >
       <div className="p-3">
         <div className="flex items-center justify-between mb-3">
           <button
@@ -78,26 +82,27 @@ export const DatePickerCalendar: React.FC<DatePickerCalendarProps> = ({
           dir="rtl"
           hideNavigation
           classNames={{
-            root: "",
-            month_caption: "hidden",
-            weeks: "border-collapse",
-            weekdays: "flex",
-            weekday: "w-9 text-center text-xs text-gray-400 font-normal pb-1",
-            week: "flex",
-            day: "w-9 h-9 text-center text-sm",
+            root: '',
+            month_caption: 'hidden',
+            weeks: 'border-collapse',
+            weekdays: 'flex',
+            weekday: 'w-9 text-center text-xs text-gray-400 font-normal pb-1',
+            week: 'flex',
+            day: 'w-9 h-9 text-center text-sm',
             day_button: cn(
-              "w-9 h-9 rounded-lg text-sm font-normal transition-colors",
-              "hover:bg-primary-50 hover:text-primary-700",
+              'w-9 h-9 rounded-lg text-sm font-normal transition-colors',
+              'hover:bg-primary-50 hover:text-primary-700',
             ),
-            selected: "[&>button]:bg-primary-600 [&>button]:text-white [&>button]:hover:bg-primary-700",
-            today: "[&>button]:font-semibold [&>button]:text-primary-600",
-            outside: "opacity-30",
-            disabled: "opacity-30 cursor-not-allowed",
+            selected:
+              '[&>button]:bg-primary-600 [&>button]:text-white [&>button]:hover:bg-primary-700',
+            today: '[&>button]:font-semibold [&>button]:text-primary-600',
+            outside: 'opacity-30',
+            disabled: 'opacity-30 cursor-not-allowed',
           }}
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-DatePickerCalendar.displayName = "DatePickerCalendar";
+DatePickerCalendar.displayName = 'DatePickerCalendar'

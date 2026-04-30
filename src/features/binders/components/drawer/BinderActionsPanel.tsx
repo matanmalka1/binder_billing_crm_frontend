@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/primitives/Button";
-import { BinderActionButtons } from "./BinderActionButtons";
+import { Button } from '@/components/ui/primitives/Button'
+import { BinderActionButtons } from './BinderActionButtons'
 
 interface BinderActionsPanelProps {
-  status: string;
-  disabled?: boolean;
-  onMarkReady: React.MouseEventHandler<HTMLButtonElement>;
-  onRevertReady?: React.MouseEventHandler<HTMLButtonElement>;
-  onReturn?: React.MouseEventHandler<HTMLButtonElement>;
-  onBulkReady?: React.MouseEventHandler<HTMLButtonElement>;
-  onOpenHandover?: React.MouseEventHandler<HTMLButtonElement>;
+  status: string
+  disabled?: boolean
+  onMarkReady: React.MouseEventHandler<HTMLButtonElement>
+  onRevertReady?: React.MouseEventHandler<HTMLButtonElement>
+  onReturn?: React.MouseEventHandler<HTMLButtonElement>
+  onBulkReady?: React.MouseEventHandler<HTMLButtonElement>
+  onOpenHandover?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export const BinderActionsPanel: React.FC<BinderActionsPanelProps> = ({
@@ -20,8 +20,8 @@ export const BinderActionsPanel: React.FC<BinderActionsPanelProps> = ({
   onBulkReady,
   onOpenHandover,
 }) => {
-  if (status !== "in_office" && status !== "closed_in_office" && status !== "ready_for_pickup") {
-    return null;
+  if (status !== 'in_office' && status !== 'closed_in_office' && status !== 'ready_for_pickup') {
+    return null
   }
 
   return (
@@ -34,7 +34,7 @@ export const BinderActionsPanel: React.FC<BinderActionsPanelProps> = ({
         onReturn={onReturn}
         size="sm"
       />
-      {(status === "in_office" || status === "closed_in_office") && onBulkReady && (
+      {(status === 'in_office' || status === 'closed_in_office') && onBulkReady && (
         <Button
           type="button"
           variant="outline"
@@ -46,7 +46,7 @@ export const BinderActionsPanel: React.FC<BinderActionsPanelProps> = ({
           מוכן עד תקופה
         </Button>
       )}
-      {status === "ready_for_pickup" && onOpenHandover && (
+      {status === 'ready_for_pickup' && onOpenHandover && (
         <Button
           type="button"
           variant="outline"
@@ -59,7 +59,7 @@ export const BinderActionsPanel: React.FC<BinderActionsPanelProps> = ({
         </Button>
       )}
     </div>
-  );
-};
+  )
+}
 
-BinderActionsPanel.displayName = "BinderActionsPanel";
+BinderActionsPanel.displayName = 'BinderActionsPanel'

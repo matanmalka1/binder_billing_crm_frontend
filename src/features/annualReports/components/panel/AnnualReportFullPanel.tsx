@@ -1,39 +1,63 @@
-import { cn } from "@/utils/utils";
-import { Download, Trash2, Save } from "lucide-react";
-import { useAnnualReportDetailPage } from "../../hooks/useAnnualReportDetailPage";
-import { DeleteReportConfirmDialog } from "./DeleteReportConfirmDialog";
-import { AnnualReportSidebarStatus } from "./AnnualReportSidebarStatus";
-import { AnnualReportSectionContent } from "./AnnualReportSectionContent";
-import { PageHeader } from "../../../../components/layout/PageHeader";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { PANEL_NAV_ITEMS, PANEL_TAB_VARIANTS } from "./constants";
-import { getClientLabel } from "./helpers";
+import { cn } from '@/utils/utils'
+import { Download, Trash2, Save } from 'lucide-react'
+import { useAnnualReportDetailPage } from '../../hooks/useAnnualReportDetailPage'
+import { DeleteReportConfirmDialog } from './DeleteReportConfirmDialog'
+import { AnnualReportSidebarStatus } from './AnnualReportSidebarStatus'
+import { AnnualReportSectionContent } from './AnnualReportSectionContent'
+import { PageHeader } from '../../../../components/layout/PageHeader'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { PANEL_NAV_ITEMS, PANEL_TAB_VARIANTS } from './constants'
+import { getClientLabel } from './helpers'
 
 interface AnnualReportFullPanelProps {
-  reportId: number;
-  backPath?: string;
+  reportId: number
+  backPath?: string
 }
 
-export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: AnnualReportFullPanelProps) => {
+export const AnnualReportFullPanel = ({
+  reportId,
+  backPath = '/tax/reports',
+}: AnnualReportFullPanelProps) => {
   const {
-    report, isLoading, error,
-    activeSection, setActiveSection,
-    isDirty, setIsDirty,
-    showDeleteConfirm, setShowDeleteConfirm,
-    isExportingPdf, isAdvisor,
+    report,
+    isLoading,
+    error,
+    activeSection,
+    setActiveSection,
+    isDirty,
+    setIsDirty,
+    showDeleteConfirm,
+    setShowDeleteConfirm,
+    isExportingPdf,
+    isAdvisor,
     submitRef,
-    isUpdating, isDeleting,
-    completeSchedule, addSchedule, isCompletingSchedule, isAddingSchedule,
+    isUpdating,
+    isDeleting,
+    completeSchedule,
+    addSchedule,
+    isCompletingSchedule,
+    isAddingSchedule,
     updateDetail,
-    handleSave, handleExportPdf, handleTransition, handleDeleteConfirm,
-  } = useAnnualReportDetailPage(reportId, backPath);
+    handleSave,
+    handleExportPdf,
+    handleTransition,
+    handleDeleteConfirm,
+  } = useAnnualReportDetailPage(reportId, backPath)
 
   if (isLoading) {
-    return <div className="flex flex-1 items-center justify-center py-24 text-sm text-gray-400">טוען דוח...</div>;
+    return (
+      <div className="flex flex-1 items-center justify-center py-24 text-sm text-gray-400">
+        טוען דוח...
+      </div>
+    )
   }
 
   if (error || !report) {
-    return <div className="flex flex-1 items-center justify-center py-24 text-sm text-negative-500">{error ?? "שגיאה בטעינת הדוח"}</div>;
+    return (
+      <div className="flex flex-1 items-center justify-center py-24 text-sm text-negative-500">
+        {error ?? 'שגיאה בטעינת הדוח'}
+      </div>
+    )
   }
 
   return (
@@ -43,13 +67,18 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
           title={`דוח שנתי ${report.tax_year}`}
           description={getClientLabel(report)}
           breadcrumbs={[
-            { label: "דוחות שנתיים", to: backPath },
-            { label: `דוח ${report.tax_year}`, to: "#" },
+            { label: 'דוחות שנתיים', to: backPath },
+            { label: `דוח ${report.tax_year}`, to: '#' },
           ]}
           actions={
             <>
               {isAdvisor && (
-                <Button variant="ghost" size="sm" onClick={handleExportPdf} isLoading={isExportingPdf}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleExportPdf}
+                  isLoading={isExportingPdf}
+                >
                   <Download className="h-4 w-4" />
                   הורד טיוטה
                 </Button>
@@ -62,9 +91,14 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
                 <Trash2 size={14} />
                 מחק דוח
               </Button>
-              <Button variant="primary" onClick={handleSave} disabled={!isDirty || isUpdating} className="gap-1.5">
+              <Button
+                variant="primary"
+                onClick={handleSave}
+                disabled={!isDirty || isUpdating}
+                className="gap-1.5"
+              >
                 <Save size={14} />
-                {isUpdating ? "שומר..." : "שמור"}
+                {isUpdating ? 'שומר...' : 'שמור'}
               </Button>
             </>
           }
@@ -81,8 +115,8 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
                 aria-selected={activeSection === key}
                 onClick={() => setActiveSection(key)}
                 className={cn(
-                  "flex items-center gap-2 px-5 py-3 text-sm whitespace-nowrap transition-colors first:rounded-r-xl last:rounded-l-xl",
-                  PANEL_TAB_VARIANTS[activeSection === key ? "active" : "inactive"],
+                  'flex items-center gap-2 px-5 py-3 text-sm whitespace-nowrap transition-colors first:rounded-r-xl last:rounded-l-xl',
+                  PANEL_TAB_VARIANTS[activeSection === key ? 'active' : 'inactive'],
                 )}
               >
                 <Icon size={15} />
@@ -94,7 +128,12 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
 
         {/* Status strip */}
         <div className="mt-3 rounded-xl border border-gray-200 bg-gray-50">
-          <AnnualReportSidebarStatus report={report} detail={null} availableActions={[]} onTransition={handleTransition} />
+          <AnnualReportSidebarStatus
+            report={report}
+            detail={null}
+            availableActions={[]}
+            onTransition={handleTransition}
+          />
         </div>
 
         {/* Section content */}
@@ -123,7 +162,7 @@ export const AnnualReportFullPanel = ({ reportId, backPath = "/tax/reports" }: A
         />
       )}
     </>
-  );
-};
+  )
+}
 
-AnnualReportFullPanel.displayName = "AnnualReportFullPanel";
+AnnualReportFullPanel.displayName = 'AnnualReportFullPanel'

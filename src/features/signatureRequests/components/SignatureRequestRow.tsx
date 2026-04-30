@@ -1,11 +1,14 @@
-import { useState } from "react";
-import { ChevronDown, ChevronUp, Link2 } from "lucide-react";
-import { Button } from "../../../components/ui/primitives/Button";
-import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
-import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "../../../utils/enums";
-import { formatDate, formatDateTime } from "../../../utils/utils";
-import { signatureRequestStatusVariants } from "../utils";
-import { SignatureRequestRowActions, type SignatureRequestActionProps } from "./SignatureRequestRowActions";
+import { useState } from 'react'
+import { ChevronDown, ChevronUp, Link2 } from 'lucide-react'
+import { Button } from '../../../components/ui/primitives/Button'
+import { StatusBadge } from '../../../components/ui/primitives/StatusBadge'
+import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from '../../../utils/enums'
+import { formatDate, formatDateTime } from '../../../utils/utils'
+import { signatureRequestStatusVariants } from '../utils'
+import {
+  SignatureRequestRowActions,
+  type SignatureRequestActionProps,
+} from './SignatureRequestRowActions'
 
 // ── Shared field row for expanded details ─────────────────────────────────────
 
@@ -14,11 +17,11 @@ const FieldRow = ({ label, value }: { label: string; value: React.ReactNode }) =
     <span className="w-20 shrink-0 font-medium text-gray-600">{label}</span>
     <span className="text-gray-700">{value}</span>
   </div>
-);
+)
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-type Props = SignatureRequestActionProps;
+type Props = SignatureRequestActionProps
 
 export const SignatureRequestRow: React.FC<Props> = ({
   request,
@@ -30,8 +33,8 @@ export const SignatureRequestRow: React.FC<Props> = ({
   onCancel,
   onAudit,
 }) => {
-  const [expanded, setExpanded] = useState(false);
-  const isPending = request.status === "pending_signature";
+  const [expanded, setExpanded] = useState(false)
+  const isPending = request.status === 'pending_signature'
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-sm">
@@ -40,10 +43,15 @@ export const SignatureRequestRow: React.FC<Props> = ({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="truncate text-sm font-semibold text-gray-900">{request.title}</span>
-            <StatusBadge status={request.status} getLabel={getSignatureRequestStatusLabel} variantMap={signatureRequestStatusVariants} />
+            <StatusBadge
+              status={request.status}
+              getLabel={getSignatureRequestStatusLabel}
+              variantMap={signatureRequestStatusVariants}
+            />
           </div>
           <p className="mt-0.5 text-xs text-gray-500">
-            {getSignatureRequestTypeLabel(request.request_type)} · {request.signer_name} · {formatDate(request.created_at)}
+            {getSignatureRequestTypeLabel(request.request_type)} · {request.signer_name} ·{' '}
+            {formatDate(request.created_at)}
           </p>
         </div>
 
@@ -76,8 +84,18 @@ export const SignatureRequestRow: React.FC<Props> = ({
           {request.description && <FieldRow label="תיאור" value={request.description} />}
           {request.signer_email && <FieldRow label='דוא"ל' value={request.signer_email} />}
           {request.expires_at && <FieldRow label="תפוגה" value={formatDate(request.expires_at)} />}
-          {request.sent_at && <FieldRow label="נשלח" value={<span className="tabular-nums">{formatDateTime(request.sent_at)}</span>} />}
-          {request.signed_at && <FieldRow label="נחתם" value={<span className="tabular-nums">{formatDateTime(request.signed_at)}</span>} />}
+          {request.sent_at && (
+            <FieldRow
+              label="נשלח"
+              value={<span className="tabular-nums">{formatDateTime(request.sent_at)}</span>}
+            />
+          )}
+          {request.signed_at && (
+            <FieldRow
+              label="נחתם"
+              value={<span className="tabular-nums">{formatDateTime(request.signed_at)}</span>}
+            />
+          )}
           {request.decline_reason && <FieldRow label="סיבת דחייה" value={request.decline_reason} />}
           {isPending && signingUrl && (
             <div className="flex items-center gap-2 pt-1">
@@ -88,6 +106,6 @@ export const SignatureRequestRow: React.FC<Props> = ({
         </div>
       )}
     </div>
-  );
-};
-SignatureRequestRow.displayName = "SignatureRequestRow";
+  )
+}
+SignatureRequestRow.displayName = 'SignatureRequestRow'

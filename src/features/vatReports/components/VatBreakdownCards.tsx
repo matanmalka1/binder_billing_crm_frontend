@@ -1,36 +1,45 @@
-import { ChevronLeft } from "lucide-react";
-import { formatVatAmount } from "../utils";
-import type { VatBreakdownData } from "../vatBreakdown.utils";
+import { ChevronLeft } from 'lucide-react'
+import { formatVatAmount } from '../utils'
+import type { VatBreakdownData } from '../vatBreakdown.utils'
 
-interface VatOutputCardProps { data: VatBreakdownData; onNavigate?: () => void }
-interface VatInputCardProps { data: VatBreakdownData; onNavigate?: () => void }
+interface VatOutputCardProps {
+  data: VatBreakdownData
+  onNavigate?: () => void
+}
+interface VatInputCardProps {
+  data: VatBreakdownData
+  onNavigate?: () => void
+}
 
-type VatCardTone = "positive" | "warning";
+type VatCardTone = 'positive' | 'warning'
 
 interface VatCardProps {
-  title: string;
-  tone: VatCardTone;
-  onNavigate?: () => void;
-  children: React.ReactNode;
+  title: string
+  tone: VatCardTone
+  onNavigate?: () => void
+  children: React.ReactNode
 }
 
 const VAT_CARD_CLASSES: Record<VatCardTone, { border: string; title: string; button: string }> = {
   positive: {
-    border: "border-r-positive-400",
-    title: "text-positive-700",
-    button: "text-positive-600 hover:text-positive-800",
+    border: 'border-r-positive-400',
+    title: 'text-positive-700',
+    button: 'text-positive-600 hover:text-positive-800',
   },
   warning: {
-    border: "border-r-warning-400",
-    title: "text-warning-700",
-    button: "text-warning-600 hover:text-warning-800",
+    border: 'border-r-warning-400',
+    title: 'text-warning-700',
+    button: 'text-warning-600 hover:text-warning-800',
   },
-};
+}
 
 const VatCard: React.FC<VatCardProps> = ({ title, tone, onNavigate, children }) => {
-  const classes = VAT_CARD_CLASSES[tone];
+  const classes = VAT_CARD_CLASSES[tone]
   return (
-    <div className={`rounded-xl border border-gray-100 border-r-4 ${classes.border} bg-white p-4 shadow-sm`} dir="rtl">
+    <div
+      className={`rounded-xl border border-gray-100 border-r-4 ${classes.border} bg-white p-4 shadow-sm`}
+      dir="rtl"
+    >
       <div className="mb-3 flex items-center justify-between">
         <p className={`text-xs font-semibold uppercase tracking-wide ${classes.title}`}>{title}</p>
         {onNavigate && (
@@ -47,13 +56,13 @@ const VatCard: React.FC<VatCardProps> = ({ title, tone, onNavigate, children }) 
       </div>
       {children}
     </div>
-  );
-};
+  )
+}
 
 // ── Output (income) card ──────────────────────────────────────────────────────
 
 export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }) => (
-  <VatCard title="מע&quot;מ עסקאות – מכירות" tone="positive" onNavigate={onNavigate}>
+  <VatCard title='מע"מ עסקאות – מכירות' tone="positive" onNavigate={onNavigate}>
     <div className="space-y-2 text-sm">
       <div className="flex justify-between text-gray-500">
         <span>סה&quot;כ מכירות (ללא מע&quot;מ)</span>
@@ -71,14 +80,14 @@ export const VatOutputCard: React.FC<VatOutputCardProps> = ({ data, onNavigate }
       </span>
     </div>
   </VatCard>
-);
+)
 
-VatOutputCard.displayName = "VatOutputCard";
+VatOutputCard.displayName = 'VatOutputCard'
 
 // ── Input (expense) card ──────────────────────────────────────────────────────
 
 export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) => (
-  <VatCard title="מע&quot;מ תשומות – הוצאות" tone="warning" onNavigate={onNavigate}>
+  <VatCard title='מע"מ תשומות – הוצאות' tone="warning" onNavigate={onNavigate}>
     {data.totalExpenseNet > 0 && data.totalInputVat === 0 && (
       <div className="mb-3 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs text-gray-500">
         הוצאות אלו אינן מזכות בניכוי מע&quot;מ לפי הקטגוריות שהוזנו.
@@ -118,6 +127,6 @@ export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) 
       </span>
     </div>
   </VatCard>
-);
+)
 
-VatInputCard.displayName = "VatInputCard";
+VatInputCard.displayName = 'VatInputCard'

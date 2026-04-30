@@ -1,44 +1,44 @@
-import { useEffect } from "react";
-import { Controller } from "react-hook-form";
-import type { UseFormReturn } from "react-hook-form";
+import { useEffect } from 'react'
+import { Controller } from 'react-hook-form'
+import type { UseFormReturn } from 'react-hook-form'
 import {
   ClientPickerField,
   createClientIdPickerHandlers,
   useClientPickerState,
-} from "../../../components/shared/client";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Input } from "../../../components/ui/inputs/Input";
-import { DatePicker } from "../../../components/ui/inputs/DatePicker";
-import { Select } from "../../../components/ui/inputs/Select";
-import type { CreateReminderFormValues } from "../types";
-import type { BinderResponse } from "@/features/binders";
-import type { ChargeResponse } from "@/features/charges";
-import type { TaxDeadlineResponse } from "@/features/taxDeadlines";
-import type { AnnualReportFull } from "@/features/annualReports";
-import type { AdvancePaymentRow } from "@/features/advancedPayments";
-import type { BusinessResponse } from "@/features/clients";
-import { reminderTypeOptions } from "../types";
-import { ReminderLinkedFields } from "./ReminderLinkedFields";
+} from '../../../components/shared/client'
+import { Modal } from '../../../components/ui/overlays/Modal'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Input } from '../../../components/ui/inputs/Input'
+import { DatePicker } from '../../../components/ui/inputs/DatePicker'
+import { Select } from '../../../components/ui/inputs/Select'
+import type { CreateReminderFormValues } from '../types'
+import type { BinderResponse } from '@/features/binders'
+import type { ChargeResponse } from '@/features/charges'
+import type { TaxDeadlineResponse } from '@/features/taxDeadlines'
+import type { AnnualReportFull } from '@/features/annualReports'
+import type { AdvancePaymentRow } from '@/features/advancedPayments'
+import type { BusinessResponse } from '@/features/clients'
+import { reminderTypeOptions } from '../types'
+import { ReminderLinkedFields } from './ReminderLinkedFields'
 
 interface CreateReminderModalProps {
-  open: boolean;
-  form: UseFormReturn<CreateReminderFormValues>;
-  isSubmitting: boolean;
-  onClose: () => void;
-  onSubmit: (e?: React.BaseSyntheticEvent) => void;
-  fixedClientId?: number;
-  fixedClientName?: string;
-  clientBinders?: BinderResponse[];
-  clientCharges?: ChargeResponse[];
-  clientTaxDeadlines?: TaxDeadlineResponse[];
-  clientAnnualReports?: AnnualReportFull[];
-  clientAdvancePayments?: AdvancePaymentRow[];
-  clientBusinesses?: BusinessResponse[];
+  open: boolean
+  form: UseFormReturn<CreateReminderFormValues>
+  isSubmitting: boolean
+  onClose: () => void
+  onSubmit: (e?: React.BaseSyntheticEvent) => void
+  fixedClientId?: number
+  fixedClientName?: string
+  clientBinders?: BinderResponse[]
+  clientCharges?: ChargeResponse[]
+  clientTaxDeadlines?: TaxDeadlineResponse[]
+  clientAnnualReports?: AnnualReportFull[]
+  clientAdvancePayments?: AdvancePaymentRow[]
+  clientBusinesses?: BusinessResponse[]
 }
 
 // react-hook-form types errors on discriminated unions narrowly; cast once here.
-type FormErrors = Partial<Record<keyof CreateReminderFormValues, { message?: string }>>;
+type FormErrors = Partial<Record<keyof CreateReminderFormValues, { message?: string }>>
 
 export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   open,
@@ -60,8 +60,8 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
     control,
     setValue,
     formState: { errors },
-  } = form;
-  const e = errors as FormErrors;
+  } = form
+  const e = errors as FormErrors
   const {
     clientQuery,
     selectedClient,
@@ -70,28 +70,26 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
     handleClientQueryChange,
     resetClientPicker,
   } = useClientPickerState(
-    createClientIdPickerHandlers((value, options) =>
-      setValue("client_record_id", value, options),
-    ),
-  );
+    createClientIdPickerHandlers((value, options) => setValue('client_record_id', value, options)),
+  )
 
   const clientDisplay = fixedClientId
     ? fixedClientName
       ? `${fixedClientName} (#${fixedClientId})`
       : `#${fixedClientId}`
-    : null;
+    : null
 
   useEffect(() => {
-    if (open || fixedClientId) return;
-    resetClientPicker();
-  }, [fixedClientId, open, resetClientPicker]);
+    if (open || fixedClientId) return
+    resetClientPicker()
+  }, [fixedClientId, open, resetClientPicker])
 
   const handleClose = () => {
     if (!fixedClientId) {
-      resetClientPicker();
+      resetClientPicker()
     }
-    onClose();
-  };
+    onClose()
+  }
 
   return (
     <Modal
@@ -110,8 +108,8 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">
-        <input type="hidden" {...register("client_record_id", { required: "שדה חובה" })} />
-        <input type="hidden" {...register("business_id")} />
+        <input type="hidden" {...register('client_record_id', { required: 'שדה חובה' })} />
+        <input type="hidden" {...register('business_id')} />
         {clientDisplay ? (
           <div>
             <p className="mb-1 text-sm font-medium text-gray-700">לקוח</p>
@@ -129,11 +127,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           />
         )}
 
-        <Select
-          label="סוג תזכורת"
-          error={e.reminder_type?.message}
-          {...register("reminder_type")}
-        >
+        <Select label="סוג תזכורת" error={e.reminder_type?.message} {...register('reminder_type')}>
           {reminderTypeOptions.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -170,11 +164,11 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           label="ימים לפני"
           min={0}
           error={e.days_before?.message}
-          {...register("days_before", { valueAsNumber: true })}
+          {...register('days_before', { valueAsNumber: true })}
         />
       </form>
     </Modal>
-  );
-};
+  )
+}
 
-CreateReminderModal.displayName = "CreateReminderModal";
+CreateReminderModal.displayName = 'CreateReminderModal'

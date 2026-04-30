@@ -1,11 +1,11 @@
-import { api } from "@/api/client";
-import { CORRESPONDENCE_ENDPOINTS } from "./endpoints";
+import { api } from '@/api/client'
+import { CORRESPONDENCE_ENDPOINTS } from './endpoints'
 import type {
   CorrespondenceEntry,
   CorrespondenceListResponse,
   CreateCorrespondencePayload,
   UpdateCorrespondencePayload,
-} from "./contracts";
+} from './contracts'
 
 export const correspondenceApi = {
   list: async (
@@ -15,8 +15,8 @@ export const correspondenceApi = {
     const response = await api.get<CorrespondenceListResponse>(
       CORRESPONDENCE_ENDPOINTS.correspondenceList(clientId),
       { params },
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   create: async (
@@ -26,8 +26,8 @@ export const correspondenceApi = {
     const response = await api.post<CorrespondenceEntry>(
       CORRESPONDENCE_ENDPOINTS.correspondenceList(clientId),
       payload,
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   update: async (
@@ -38,11 +38,11 @@ export const correspondenceApi = {
     const response = await api.patch<CorrespondenceEntry>(
       CORRESPONDENCE_ENDPOINTS.correspondenceById(clientId, id),
       payload,
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   delete: async (clientId: number, id: number): Promise<void> => {
-    await api.delete(CORRESPONDENCE_ENDPOINTS.correspondenceById(clientId, id));
+    await api.delete(CORRESPONDENCE_ENDPOINTS.correspondenceById(clientId, id))
   },
-};
+}

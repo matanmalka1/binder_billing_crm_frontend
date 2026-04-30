@@ -1,9 +1,9 @@
-import { getStatusLabel } from "../../api";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { Input } from "../../../../components/ui/inputs/Input";
-import { Select } from "../../../../components/ui/inputs/Select";
-import type { TransitionDetailsFormProps } from "../../types";
-import { SUBMISSION_METHOD_OPTIONS } from "../shared/submissionMethodOptions";
+import { getStatusLabel } from '../../api'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { Input } from '../../../../components/ui/inputs/Input'
+import { Select } from '../../../../components/ui/inputs/Select'
+import type { TransitionDetailsFormProps } from '../../types'
+import { SUBMISSION_METHOD_OPTIONS } from '../shared/submissionMethodOptions'
 
 export const TransitionDetailsForm = ({
   selected,
@@ -18,22 +18,22 @@ export const TransitionDetailsForm = ({
       <Input
         label="הערה (אופציונלי)"
         value={form.note}
-        onChange={onFieldChange("note")}
+        onChange={onFieldChange('note')}
         placeholder="הערה על המעבר..."
       />
 
-      {selected === "submitted" && (
+      {selected === 'submitted' && (
         <>
           <Input
             label="מספר אסמכתא (ITA)"
             value={form.itaRef}
-            onChange={onFieldChange("itaRef")}
+            onChange={onFieldChange('itaRef')}
             placeholder="מספר אסמכתא ממס הכנסה"
           />
           <Select
             label="שיטת הגשה"
             value={form.submissionMethod}
-            onChange={onFieldChange("submissionMethod")}
+            onChange={onFieldChange('submissionMethod')}
           >
             {SUBMISSION_METHOD_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -44,25 +44,25 @@ export const TransitionDetailsForm = ({
         </>
       )}
 
-      {selected === "assessment_issued" && (
+      {selected === 'assessment_issued' && (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
             label="סכום שומה (₪)"
             type="number"
             value={form.assessmentAmount}
-            onChange={onFieldChange("assessmentAmount")}
+            onChange={onFieldChange('assessmentAmount')}
           />
           <Input
             label="החזר מס (₪)"
             type="number"
             value={form.refundDue}
-            onChange={onFieldChange("refundDue")}
+            onChange={onFieldChange('refundDue')}
           />
           <Input
             label="תשלום נוסף (₪)"
             type="number"
             value={form.taxDue}
-            onChange={onFieldChange("taxDue")}
+            onChange={onFieldChange('taxDue')}
           />
         </div>
       )}
@@ -76,5 +76,5 @@ export const TransitionDetailsForm = ({
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}

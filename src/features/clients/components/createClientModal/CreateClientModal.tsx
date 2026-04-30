@@ -1,23 +1,23 @@
-import { useEffect, useState } from "react";
-import { useController, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "../../../../components/ui/overlays/Modal";
-import { useAdvisorOptions } from "@/features/users";
-import type { CreateClientPayload } from "../../api";
-import { useClientCreationImpact } from "../../hooks/useClientCreationImpact";
-import { CREATE_CLIENT_DEFAULT_VALUES } from "../../constants";
-import { createClientSchema, type CreateClientFormValues } from "../../schemas";
-import { CreateClientModalFooter } from "./CreateClientModalFooter";
-import { CreateClientStepContent } from "./CreateClientStepContent";
-import { CreateClientStepIndicator } from "./CreateClientStepIndicator";
-import { buildCreateClientPayload } from "./createClientFormUtils";
-import { CREATE_CLIENT_STEPS } from "./createClientSteps";
+import { useEffect, useState } from 'react'
+import { useController, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Modal } from '../../../../components/ui/overlays/Modal'
+import { useAdvisorOptions } from '@/features/users'
+import type { CreateClientPayload } from '../../api'
+import { useClientCreationImpact } from '../../hooks/useClientCreationImpact'
+import { CREATE_CLIENT_DEFAULT_VALUES } from '../../constants'
+import { createClientSchema, type CreateClientFormValues } from '../../schemas'
+import { CreateClientModalFooter } from './CreateClientModalFooter'
+import { CreateClientStepContent } from './CreateClientStepContent'
+import { CreateClientStepIndicator } from './CreateClientStepIndicator'
+import { buildCreateClientPayload } from './createClientFormUtils'
+import { CREATE_CLIENT_STEPS } from './createClientSteps'
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: (data: CreateClientPayload) => Promise<void>;
-  isLoading?: boolean;
+  open: boolean
+  onClose: () => void
+  onSubmit: (data: CreateClientPayload) => Promise<void>
+  isLoading?: boolean
 }
 
 export const CreateClientModal: React.FC<Props> = ({
@@ -26,7 +26,7 @@ export const CreateClientModal: React.FC<Props> = ({
   onSubmit,
   isLoading = false,
 }) => {
-  const [stepIndex, setStepIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0)
   const {
     register,
     control,
@@ -39,68 +39,68 @@ export const CreateClientModal: React.FC<Props> = ({
     reset,
   } = useForm<CreateClientFormValues>({
     resolver: zodResolver(createClientSchema),
-    mode: "onBlur",
+    mode: 'onBlur',
     defaultValues: CREATE_CLIENT_DEFAULT_VALUES,
-  });
-  const { field: businessOpenedAtField } = useController({ name: "business_opened_at", control });
+  })
+  const { field: businessOpenedAtField } = useController({ name: 'business_opened_at', control })
 
-  const currentEntityType = watch("entity_type");
-  const currentVatFrequency = watch("vat_reporting_frequency");
-  const { options: advisorOptions, isLoading: advisorsLoading } = useAdvisorOptions();
-  const isCompany = currentEntityType === "company_ltd";
-  const isExempt = currentEntityType === "osek_patur";
-  const showVatFrequency = currentEntityType != null && !isExempt;
+  const currentEntityType = watch('entity_type')
+  const currentVatFrequency = watch('vat_reporting_frequency')
+  const { options: advisorOptions, isLoading: advisorsLoading } = useAdvisorOptions()
+  const isCompany = currentEntityType === 'company_ltd'
+  const isExempt = currentEntityType === 'osek_patur'
+  const showVatFrequency = currentEntityType != null && !isExempt
 
   const impactQuery = useClientCreationImpact(
     currentEntityType && (isExempt || currentVatFrequency)
       ? { entity_type: currentEntityType, vat_reporting_frequency: currentVatFrequency }
       : null,
-  );
-  const currentStep = CREATE_CLIENT_STEPS[stepIndex];
-  const isLastStep = stepIndex === CREATE_CLIENT_STEPS.length - 1;
+  )
+  const currentStep = CREATE_CLIENT_STEPS[stepIndex]
+  const isLastStep = stepIndex === CREATE_CLIENT_STEPS.length - 1
 
   useEffect(() => {
     if (isExempt) {
-      setValue("vat_reporting_frequency", null, { shouldValidate: false });
+      setValue('vat_reporting_frequency', null, { shouldValidate: false })
     } else if (currentVatFrequency == null) {
-      setValue("vat_reporting_frequency", "monthly", { shouldValidate: false });
+      setValue('vat_reporting_frequency', 'monthly', { shouldValidate: false })
     }
-  }, [currentVatFrequency, isExempt, setValue]);
+  }, [currentVatFrequency, isExempt, setValue])
 
   useEffect(() => {
     if (!open) {
-      reset();
-      setStepIndex(0);
+      reset()
+      setStepIndex(0)
     }
-  }, [open, reset]);
+  }, [open, reset])
 
   const handleClose = () => {
     if (!isLoading) {
-      reset();
-      setStepIndex(0);
-      onClose();
+      reset()
+      setStepIndex(0)
+      onClose()
     }
-  };
+  }
 
   const goToNextStep = async () => {
-    const isValid = await trigger([...currentStep.fields], { shouldFocus: true });
-    if (isValid) setStepIndex((current) => Math.min(current + 1, CREATE_CLIENT_STEPS.length - 1));
-  };
+    const isValid = await trigger([...currentStep.fields], { shouldFocus: true })
+    if (isValid) setStepIndex((current) => Math.min(current + 1, CREATE_CLIENT_STEPS.length - 1))
+  }
 
   const goToPreviousStep = () => {
-    setStepIndex((current) => Math.max(current - 1, 0));
-  };
+    setStepIndex((current) => Math.max(current - 1, 0))
+  }
 
   const onFormSubmit = handleSubmit(async (data) => {
     try {
-      await onSubmit(buildCreateClientPayload(data));
+      await onSubmit(buildCreateClientPayload(data))
     } catch {
-      return;
+      return
     }
-    reset();
-    setStepIndex(0);
-    onClose();
-  });
+    reset()
+    setStepIndex(0)
+    onClose()
+  })
 
   return (
     <Modal
@@ -138,5 +138,5 @@ export const CreateClientModal: React.FC<Props> = ({
         />
       </form>
     </Modal>
-  );
-};
+  )
+}

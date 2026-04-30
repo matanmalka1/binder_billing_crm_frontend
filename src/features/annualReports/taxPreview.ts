@@ -6,8 +6,8 @@
  */
 
 interface TaxBracket {
-  limit: number;
-  rate: number;
+  limit: number
+  rate: number
 }
 
 const TAX_BRACKETS_2024: TaxBracket[] = [
@@ -18,22 +18,22 @@ const TAX_BRACKETS_2024: TaxBracket[] = [
   { limit: 542_160, rate: 0.35 },
   { limit: 698_280, rate: 0.47 },
   { limit: Infinity, rate: 0.5 },
-];
+]
 
 const CREDIT_POINT_VALUE_BY_YEAR: Record<number, number> = {
   2024: 2_904,
-};
+}
 
-const DEFAULT_BRACKETS = TAX_BRACKETS_2024;
-const DEFAULT_CREDIT_POINT_VALUE = 2_904;
+const DEFAULT_BRACKETS = TAX_BRACKETS_2024
+const DEFAULT_CREDIT_POINT_VALUE = 2_904
 
 const getBrackets = (_taxYear: number): TaxBracket[] => {
   // Extend this map as the backend adds new-year bracket tables.
-  return DEFAULT_BRACKETS;
+  return DEFAULT_BRACKETS
 }
 
 const getCreditPointValue = (taxYear: number): number => {
-  return CREDIT_POINT_VALUE_BY_YEAR[taxYear] ?? DEFAULT_CREDIT_POINT_VALUE;
+  return CREDIT_POINT_VALUE_BY_YEAR[taxYear] ?? DEFAULT_CREDIT_POINT_VALUE
 }
 
 export const computeTaxPreview = (
@@ -41,23 +41,23 @@ export const computeTaxPreview = (
   expenses: number,
   advancesPaid: number,
   creditPoints: number,
-  taxYear: number
+  taxYear: number,
 ): { netProfit: number; estimatedTax: number; balance: number } => {
-  const brackets = getBrackets(taxYear);
-  const creditPointValue = getCreditPointValue(taxYear);
-  const netProfit = grossIncome - expenses;
+  const brackets = getBrackets(taxYear)
+  const creditPointValue = getCreditPointValue(taxYear)
+  const netProfit = grossIncome - expenses
 
-  let tax = 0;
-  let prev = 0;
+  let tax = 0
+  let prev = 0
   for (const { limit, rate } of brackets) {
-    if (netProfit <= prev) break;
-    tax += (Math.min(netProfit, limit) - prev) * rate;
-    prev = limit;
+    if (netProfit <= prev) break
+    tax += (Math.min(netProfit, limit) - prev) * rate
+    prev = limit
   }
-  const grossTax = Math.max(0, tax);
-  const creditReduction = creditPoints * creditPointValue;
-  const estimatedTax = Math.max(0, grossTax - creditReduction);
-  const balance = estimatedTax - advancesPaid;
+  const grossTax = Math.max(0, tax)
+  const creditReduction = creditPoints * creditPointValue
+  const estimatedTax = Math.max(0, grossTax - creditReduction)
+  const balance = estimatedTax - advancesPaid
 
-  return { netProfit, estimatedTax, balance };
-};
+  return { netProfit, estimatedTax, balance }
+}

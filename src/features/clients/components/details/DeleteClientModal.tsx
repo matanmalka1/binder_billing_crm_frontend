@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { AlertTriangle } from "lucide-react";
-import { Modal } from "../../../../components/ui/overlays/Modal";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { Input } from "../../../../components/ui/inputs/Input";
+import { useState } from 'react'
+import { AlertTriangle } from 'lucide-react'
+import { Modal } from '../../../../components/ui/overlays/Modal'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { Input } from '../../../../components/ui/inputs/Input'
 
 interface Props {
-  open: boolean;
-  clientName: string;
-  isDeleting: boolean;
-  onConfirm: () => Promise<void>;
-  onCancel: () => void;
+  open: boolean
+  clientName: string
+  isDeleting: boolean
+  onConfirm: () => Promise<void>
+  onCancel: () => void
 }
 
 export const DeleteClientModal: React.FC<Props> = ({
@@ -19,17 +19,17 @@ export const DeleteClientModal: React.FC<Props> = ({
   onConfirm,
   onCancel,
 }) => {
-  const [confirmation, setConfirmation] = useState("");
+  const [confirmation, setConfirmation] = useState('')
 
   const handleClose = () => {
-    setConfirmation("");
-    onCancel();
-  };
+    setConfirmation('')
+    onCancel()
+  }
 
   const handleConfirm = async () => {
-    await onConfirm();
-    setConfirmation("");
-  };
+    await onConfirm()
+    setConfirmation('')
+  }
 
   return (
     <Modal
@@ -60,8 +60,8 @@ export const DeleteClientModal: React.FC<Props> = ({
           <div className="space-y-2 text-sm">
             <p className="font-semibold">מחיקת הלקוח {clientName} היא פעולה בלתי הפיכה.</p>
             <p>
-              המחיקה תסיר את רשומת הלקוח מהעבודה השוטפת ועלולה להשפיע על תצוגת מסמכים,
-              מועדים, חיובים, קלסרים והיסטוריית פעילות המקושרים ללקוח.
+              המחיקה תסיר את רשומת הלקוח מהעבודה השוטפת ועלולה להשפיע על תצוגת מסמכים, מועדים,
+              חיובים, קלסרים והיסטוריית פעילות המקושרים ללקוח.
             </p>
           </div>
         </div>
@@ -73,5 +73,5 @@ export const DeleteClientModal: React.FC<Props> = ({
         />
       </div>
     </Modal>
-  );
-};
+  )
+}

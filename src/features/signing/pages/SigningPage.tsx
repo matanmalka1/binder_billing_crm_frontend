@@ -1,27 +1,22 @@
-import { useParams } from "react-router-dom";
-import { FileSignature } from "lucide-react";
+import { useParams } from 'react-router-dom'
+import { FileSignature } from 'lucide-react'
 import {
   SigningForm,
   SigningStatus,
   useSigningPageState,
   type SigningTerminalState,
-} from "@/features/signing";
+} from '@/features/signing'
 
 const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
     {children}
   </div>
-);
+)
 
-const TERMINAL_STATES: SigningTerminalState[] = [
-  "loading",
-  "error",
-  "signed",
-  "declined",
-];
+const TERMINAL_STATES: SigningTerminalState[] = ['loading', 'error', 'signed', 'declined']
 
 export const SigningPage: React.FC = () => {
-  const { token } = useParams<{ token: string }>();
+  const { token } = useParams<{ token: string }>()
   const {
     data,
     status,
@@ -37,9 +32,9 @@ export const SigningPage: React.FC = () => {
     backToReady,
     confirmApprove,
     confirmDecline,
-  } = useSigningPageState(token);
+  } = useSigningPageState(token)
 
-  const terminalState = TERMINAL_STATES.find((state) => state === effectiveState);
+  const terminalState = TERMINAL_STATES.find((state) => state === effectiveState)
 
   return (
     <div
@@ -83,5 +78,5 @@ export const SigningPage: React.FC = () => {
         מערכת ניהול משרד · חתימה מאובטחת ומוצפנת
       </p>
     </div>
-  );
-};
+  )
+}

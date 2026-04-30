@@ -1,29 +1,27 @@
-import type { CreateClientPayload, ISODateString } from "../../api";
-import { deriveCreateClientIdNumberType } from "../../constants";
-import type { CreateClientFormValues } from "../../schemas";
+import type { CreateClientPayload, ISODateString } from '../../api'
+import { deriveCreateClientIdNumberType } from '../../constants'
+import type { CreateClientFormValues } from '../../schemas'
 
 export const stripNonDigits = (e: React.FormEvent<HTMLInputElement>) => {
-  const input = e.currentTarget;
-  const cleaned = input.value.replace(/\D/g, "");
-  if (cleaned !== input.value) input.value = cleaned;
-};
+  const input = e.currentTarget
+  const cleaned = input.value.replace(/\D/g, '')
+  if (cleaned !== input.value) input.value = cleaned
+}
 
 export const stripNonPhone = (e: React.FormEvent<HTMLInputElement>) => {
-  const input = e.currentTarget;
-  const cleaned = input.value.replace(/[^\d-]/g, "");
-  if (cleaned !== input.value) input.value = cleaned;
-};
+  const input = e.currentTarget
+  const cleaned = input.value.replace(/[^\d-]/g, '')
+  if (cleaned !== input.value) input.value = cleaned
+}
 
 export const stripNonDecimal = (e: React.FormEvent<HTMLInputElement>) => {
-  const input = e.currentTarget;
-  const cleaned = input.value.replace(/[^\d.]/g, "");
-  if (cleaned !== input.value) input.value = cleaned;
-};
+  const input = e.currentTarget
+  const cleaned = input.value.replace(/[^\d.]/g, '')
+  if (cleaned !== input.value) input.value = cleaned
+}
 
-export const buildCreateClientPayload = (
-  data: CreateClientFormValues,
-): CreateClientPayload => {
-  const trimmedIdNumber = data.id_number.trim();
+export const buildCreateClientPayload = (data: CreateClientFormValues): CreateClientPayload => {
+  const trimmedIdNumber = data.id_number.trim()
 
   return {
     full_name: data.full_name.trim(),
@@ -38,10 +36,10 @@ export const buildCreateClientPayload = (
     address_city: data.address_city,
     address_zip_code: data.address_zip_code,
     vat_reporting_frequency:
-      data.entity_type === "osek_patur" ? undefined : data.vat_reporting_frequency,
+      data.entity_type === 'osek_patur' ? undefined : data.vat_reporting_frequency,
     advance_rate: data.advance_rate?.trim() ? data.advance_rate.trim() : null,
     accountant_id: Number(data.accountant_id),
     business_name: data.business_name.trim(),
     business_opened_at: (data.business_opened_at || null) as ISODateString | null,
-  };
-};
+  }
+}

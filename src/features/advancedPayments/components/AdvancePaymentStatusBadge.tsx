@@ -1,18 +1,16 @@
-import { Badge } from "../../../components/ui/primitives/Badge";
-import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
-import type { AdvancePaymentStatus } from "../types";
-import { STATUS_VARIANT } from "../utils";
+import { Badge } from '../../../components/ui/primitives/Badge'
+import { getAdvancePaymentStatusLabel } from '../../../utils/enums'
+import type { AdvancePaymentStatus } from '../types'
+import { STATUS_VARIANT } from '../utils'
 
 interface AdvancePaymentStatusBadgeProps {
-  status: AdvancePaymentStatus;
+  status: AdvancePaymentStatus
 }
 
-export const AdvancePaymentStatusBadge: React.FC<AdvancePaymentStatusBadgeProps> = ({
-  status,
-}) => (
-  <Badge variant={STATUS_VARIANT[status] ?? "neutral"}>
+export const AdvancePaymentStatusBadge: React.FC<AdvancePaymentStatusBadgeProps> = ({ status }) => (
+  <Badge variant={STATUS_VARIANT[status] ?? 'neutral'}>
     {getAdvancePaymentStatusLabel(status)}
   </Badge>
-);
+)
 
-AdvancePaymentStatusBadge.displayName = "AdvancePaymentStatusBadge";
+AdvancePaymentStatusBadge.displayName = 'AdvancePaymentStatusBadge'

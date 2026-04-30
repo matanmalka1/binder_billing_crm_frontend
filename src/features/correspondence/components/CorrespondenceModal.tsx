@@ -1,25 +1,25 @@
-import { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Select } from "../../../components/ui/inputs/Select";
-import { DatePicker } from "../../../components/ui/inputs/DatePicker";
-import { Textarea } from "../../../components/ui/inputs/Textarea";
-import { correspondenceSchema, type CorrespondenceFormValues } from "../schemas";
-import type { CorrespondenceEntry } from "../api";
-import type { AuthorityContactResponse } from "@/features/authorityContacts";
-import { CORRESPONDENCE_TYPE_OPTIONS } from "../constants";
-import { getCorrespondenceDefaults, getCorrespondenceFormValues } from "../utils";
+import { useEffect } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Modal } from '../../../components/ui/overlays/Modal'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Input } from '../../../components/ui/inputs/Input'
+import { Select } from '../../../components/ui/inputs/Select'
+import { DatePicker } from '../../../components/ui/inputs/DatePicker'
+import { Textarea } from '../../../components/ui/inputs/Textarea'
+import { correspondenceSchema, type CorrespondenceFormValues } from '../schemas'
+import type { CorrespondenceEntry } from '../api'
+import type { AuthorityContactResponse } from '@/features/authorityContacts'
+import { CORRESPONDENCE_TYPE_OPTIONS } from '../constants'
+import { getCorrespondenceDefaults, getCorrespondenceFormValues } from '../utils'
 
 interface CorrespondenceModalProps {
-  open: boolean;
-  isCreating: boolean;
-  onClose: () => void;
-  onSubmit: (values: CorrespondenceFormValues) => Promise<void>;
-  existing?: CorrespondenceEntry | null;
-  contacts?: AuthorityContactResponse[];
+  open: boolean
+  isCreating: boolean
+  onClose: () => void
+  onSubmit: (values: CorrespondenceFormValues) => Promise<void>
+  existing?: CorrespondenceEntry | null
+  contacts?: AuthorityContactResponse[]
 }
 
 export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
@@ -39,25 +39,25 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
   } = useForm<CorrespondenceFormValues>({
     resolver: zodResolver(correspondenceSchema),
     defaultValues: getCorrespondenceDefaults(),
-  });
+  })
 
   useEffect(() => {
     if (open) {
-      reset(existing ? getCorrespondenceFormValues(existing) : getCorrespondenceDefaults(contacts));
+      reset(existing ? getCorrespondenceFormValues(existing) : getCorrespondenceDefaults(contacts))
     }
-  }, [open, existing, contacts, reset]);
+  }, [open, existing, contacts, reset])
 
   const handleClose = () => {
-    reset(getCorrespondenceDefaults());
-    onClose();
-  };
+    reset(getCorrespondenceDefaults())
+    onClose()
+  }
 
   const submit = handleSubmit(async (values) => {
-    await onSubmit(values);
-    reset(getCorrespondenceDefaults());
-  });
+    await onSubmit(values)
+    reset(getCorrespondenceDefaults())
+  })
 
-  const title = existing ? "עריכת רשומת התכתבות" : "הוספת רשומת התכתבות";
+  const title = existing ? 'עריכת רשומת התכתבות' : 'הוספת רשומת התכתבות'
 
   return (
     <Modal
@@ -70,7 +70,7 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
             ביטול
           </Button>
           <Button type="button" isLoading={isCreating} disabled={isCreating} onClick={submit}>
-            {existing ? "עדכן" : "הוסף"}
+            {existing ? 'עדכן' : 'הוסף'}
           </Button>
         </div>
       }
@@ -79,7 +79,7 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
         <Select
           label="סוג"
           error={errors.correspondence_type?.message}
-          {...register("correspondence_type")}
+          {...register('correspondence_type')}
         >
           {CORRESPONDENCE_TYPE_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -88,7 +88,7 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
           ))}
         </Select>
 
-        <Input label="נושא *" error={errors.subject?.message} {...register("subject")} />
+        <Input label="נושא *" error={errors.subject?.message} {...register('subject')} />
 
         <Controller
           name="occurred_at"
@@ -111,16 +111,17 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
             render={({ field }) => (
               <Select
                 label="איש קשר (רשות)"
-                value={field.value ?? ""}
+                value={field.value ?? ''}
                 onChange={(e) => {
-                  const val = e.target.value;
-                  field.onChange(val === "" ? null : Number(val));
+                  const val = e.target.value
+                  field.onChange(val === '' ? null : Number(val))
                 }}
               >
                 <option value="">ללא איש קשר</option>
                 {contacts.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.name}{c.office ? ` — ${c.office}` : ""}
+                    {c.name}
+                    {c.office ? ` — ${c.office}` : ''}
                   </option>
                 ))}
               </Select>
@@ -128,15 +129,10 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
           />
         )}
 
-        <Textarea
-          label="הערות"
-          rows={3}
-          placeholder="הוסף הערות..."
-          {...register("notes")}
-        />
+        <Textarea label="הערות" rows={3} placeholder="הוסף הערות..." {...register('notes')} />
       </form>
     </Modal>
-  );
-};
+  )
+}
 
-CorrespondenceModal.displayName = "CorrespondenceModal";
+CorrespondenceModal.displayName = 'CorrespondenceModal'

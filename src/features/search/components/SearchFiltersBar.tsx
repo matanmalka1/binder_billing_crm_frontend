@@ -1,7 +1,7 @@
-import { RotateCcw, SlidersHorizontal, ChevronDown, ChevronUp } from "lucide-react";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Button } from "../../../components/ui/primitives/Button";
-import type { SearchFiltersBarProps } from "../types";
+import { RotateCcw, SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react'
+import { Input } from '../../../components/ui/inputs/Input'
+import { Button } from '../../../components/ui/primitives/Button'
+import type { SearchFiltersBarProps } from '../types'
 
 export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
   filters,
@@ -10,8 +10,9 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
   isOpen,
   onToggle,
 }) => {
-  const advancedCount =
-    [filters.client_name, filters.id_number, filters.binder_number].filter(Boolean).length;
+  const advancedCount = [filters.client_name, filters.id_number, filters.binder_number].filter(
+    Boolean,
+  ).length
 
   return (
     <div>
@@ -39,21 +40,21 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
               label="שם לקוח"
               type="text"
               value={filters.client_name}
-              onChange={(e) => onFilterChange("client_name", e.target.value)}
+              onChange={(e) => onFilterChange('client_name', e.target.value)}
               placeholder="שם לקוח"
             />
             <Input
               label="ת.ז / ח.פ"
               type="text"
               value={filters.id_number}
-              onChange={(e) => onFilterChange("id_number", e.target.value)}
+              onChange={(e) => onFilterChange('id_number', e.target.value)}
               placeholder="מספר מזהה"
             />
             <Input
               label="מספר קלסר"
               type="text"
               value={filters.binder_number}
-              onChange={(e) => onFilterChange("binder_number", e.target.value)}
+              onChange={(e) => onFilterChange('binder_number', e.target.value)}
               placeholder="לדוגמה: 12345"
             />
           </div>
@@ -61,7 +62,13 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
           {advancedCount > 0 && onReset && (
             <div className="flex items-center justify-between border-t border-gray-100 pt-2">
               <span className="text-xs text-gray-500">{advancedCount} פילטרים פעילים</span>
-              <Button type="button" variant="ghost" size="sm" onClick={onReset} className="gap-1.5 text-xs">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={onReset}
+                className="gap-1.5 text-xs"
+              >
                 <RotateCcw className="h-3.5 w-3.5" />
                 איפוס הכל
               </Button>
@@ -70,5 +77,5 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

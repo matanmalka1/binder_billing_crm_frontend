@@ -1,38 +1,38 @@
-import { useEffect } from "react";
+import { useEffect } from 'react'
 import {
   ClientPickerField,
   createClientIdPickerHandlers,
   useClientPickerState,
-} from "@/components/shared/client";
-import { Input, Textarea } from "@/components/ui/inputs";
-import { Modal, ModalFormActions } from "@/components/ui/overlays";
-import { useCreateReport } from "../../hooks/useCreateReport";
-import { SUBMISSION_METHOD_OPTIONS } from "./submissionMethodOptions";
+} from '@/components/shared/client'
+import { Input, Textarea } from '@/components/ui/inputs'
+import { Modal, ModalFormActions } from '@/components/ui/overlays'
+import { useCreateReport } from '../../hooks/useCreateReport'
+import { SUBMISSION_METHOD_OPTIONS } from './submissionMethodOptions'
 import {
   CLIENT_TYPE_OPTIONS,
   DEADLINE_TYPE_OPTIONS,
   EXTENSION_REASON_OPTIONS,
   TAX_YEAR_LIMITS,
-} from "./annualReports.constants";
+} from './annualReports.constants'
 import {
   FinancialFields,
   RequiredAppendices,
   SelectOptions,
   TaxPreview,
-} from "./CreateReportModalParts";
+} from './CreateReportModalParts'
 
 interface CreateReportModalProps {
-  open: boolean;
-  onClose: () => void;
+  open: boolean
+  onClose: () => void
 }
 
 export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onClose }) => {
-  const { form, onSubmit, isSubmitting, preview } = useCreateReport(onClose);
+  const { form, onSubmit, isSubmitting, preview } = useCreateReport(onClose)
   const {
     register,
     setValue,
     formState: { errors },
-  } = form;
+  } = form
   const {
     clientQuery,
     selectedClient,
@@ -41,20 +41,20 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
     handleClientQueryChange,
     resetClientPicker,
   } = useClientPickerState(
-    createClientIdPickerHandlers((value, options) => setValue("client_id", value, options)),
-  );
+    createClientIdPickerHandlers((value, options) => setValue('client_id', value, options)),
+  )
 
   useEffect(() => {
-    if (open) return;
-    form.reset();
-    resetClientPicker();
-  }, [form, open, resetClientPicker]);
+    if (open) return
+    form.reset()
+    resetClientPicker()
+  }, [form, open, resetClientPicker])
 
   const handleClose = () => {
-    form.reset();
-    resetClientPicker();
-    onClose();
-  };
+    form.reset()
+    resetClientPicker()
+    onClose()
+  }
 
   return (
     <Modal
@@ -71,7 +71,7 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">
-        <input type="hidden" {...register("client_id")} />
+        <input type="hidden" {...register('client_id')} />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <ClientPickerField
@@ -90,7 +90,7 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
             min={TAX_YEAR_LIMITS.min}
             max={TAX_YEAR_LIMITS.max}
             error={errors.tax_year?.message}
-            {...register("tax_year")}
+            {...register('tax_year')}
           />
         </div>
 
@@ -98,34 +98,34 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
           label="סוג לקוח *"
           options={CLIENT_TYPE_OPTIONS}
           error={errors.client_type?.message}
-          registerProps={register("client_type")}
+          registerProps={register('client_type')}
         />
 
         <SelectOptions
           label="סוג מועד"
           options={DEADLINE_TYPE_OPTIONS}
           error={errors.deadline_type?.message}
-          registerProps={register("deadline_type")}
+          registerProps={register('deadline_type')}
         />
 
         <SelectOptions
           label="שיטת הגשה"
           options={SUBMISSION_METHOD_OPTIONS}
-          registerProps={register("submission_method")}
+          registerProps={register('submission_method')}
         />
 
         <SelectOptions
           label="סיבת הארכה"
           options={EXTENSION_REASON_OPTIONS}
-          registerProps={register("extension_reason")}
+          registerProps={register('extension_reason')}
         />
 
         <FinancialFields register={register} />
         <TaxPreview preview={preview} />
         <RequiredAppendices register={register} />
 
-        <Textarea label="הערות" rows={2} {...register("notes")} />
+        <Textarea label="הערות" rows={2} {...register('notes')} />
       </form>
     </Modal>
-  );
-};
+  )
+}

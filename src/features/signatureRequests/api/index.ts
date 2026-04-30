@@ -1,5 +1,5 @@
-export { signatureRequestsApi, signerApi } from "./signatureRequests.api";
-export { signatureRequestsQK } from "./queryKeys";
+export { signatureRequestsApi, signerApi } from './signatureRequests.api'
+export { signatureRequestsQK } from './queryKeys'
 export type {
   SignatureRequestStatus,
   SignatureRequestType,
@@ -13,4 +13,4 @@ export type {
   CancelSignatureRequestPayload,
   SignerViewResponse,
   SignerDeclinePayload,
-} from "./contracts";
+} from './contracts'

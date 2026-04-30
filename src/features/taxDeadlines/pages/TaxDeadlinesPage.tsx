@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { CalendarPlus, Plus } from "lucide-react";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { PaginationCard } from "@/components/ui/table/PaginationCard";
-import { PageLoading } from "@/components/ui/layout/PageLoading";
-import { Alert } from "@/components/ui/overlays/Alert";
-import { Button } from "@/components/ui/primitives/Button";
+import { useState } from 'react'
+import { CalendarPlus, Plus } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { PaginationCard } from '@/components/ui/table/PaginationCard'
+import { PageLoading } from '@/components/ui/layout/PageLoading'
+import { Alert } from '@/components/ui/overlays/Alert'
+import { Button } from '@/components/ui/primitives/Button'
 import {
   EditTaxDeadlineFormModal,
   GenerateTaxDeadlinesModal,
@@ -14,9 +14,9 @@ import {
   TaxDeadlinesTable,
   useTaxDeadlines,
   type TaxDeadlineResponse,
-} from "@/features/taxDeadlines";
-import { DeadlineSummaryCards } from "../components/DeadlineSummaryCards";
-import { TaxSubmissionStats, useTaxDashboard } from "@/features/taxDashboard";
+} from '@/features/taxDeadlines'
+import { DeadlineSummaryCards } from '../components/DeadlineSummaryCards'
+import { TaxSubmissionStats, useTaxDashboard } from '@/features/taxDashboard'
 
 export const TaxDeadlines: React.FC = () => {
   const {
@@ -50,10 +50,10 @@ export const TaxDeadlines: React.FC = () => {
     isAdvisor,
     showGenerateModal,
     setShowGenerateModal,
-  } = useTaxDeadlines();
+  } = useTaxDeadlines()
 
-  const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null);
-  const { currentYear, submissions } = useTaxDashboard();
+  const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null)
+  const { currentYear, submissions } = useTaxDashboard()
 
   const header = (
     <PageHeader
@@ -76,7 +76,7 @@ export const TaxDeadlines: React.FC = () => {
         </div>
       }
     />
-  );
+  )
 
   if (isLoading) {
     return (
@@ -84,7 +84,7 @@ export const TaxDeadlines: React.FC = () => {
         {header}
         <PageLoading message="טוען מועדי מס..." rows={6} columns={7} />
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -93,7 +93,7 @@ export const TaxDeadlines: React.FC = () => {
         {header}
         <Alert variant="error" message={error} />
       </div>
-    );
+    )
   }
 
   return (
@@ -103,7 +103,7 @@ export const TaxDeadlines: React.FC = () => {
       <TaxSubmissionStats
         data={submissions}
         activeFilter={filters.status}
-        onFilter={(status) => handleFilterChange("status", status)}
+        onFilter={(status) => handleFilterChange('status', status)}
       />
 
       <DeadlineSummaryCards deadlines={deadlines} />
@@ -128,7 +128,7 @@ export const TaxDeadlines: React.FC = () => {
           totalPages={totalPages}
           total={total}
           label="מועדים"
-          onPageChange={(page) => handleFilterChange("page", String(page))}
+          onPageChange={(page) => handleFilterChange('page', String(page))}
         />
       )}
 
@@ -162,10 +162,7 @@ export const TaxDeadlines: React.FC = () => {
         />
       )}
 
-      <TaxDeadlineDrawer
-        deadline={selectedDeadline}
-        onClose={() => setSelectedDeadline(null)}
-      />
+      <TaxDeadlineDrawer deadline={selectedDeadline} onClose={() => setSelectedDeadline(null)} />
     </div>
-  );
-};
+  )
+}

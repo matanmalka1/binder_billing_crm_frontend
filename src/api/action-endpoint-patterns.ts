@@ -10,4 +10,4 @@ export const ACTION_ENDPOINT_PATTERNS: RegExp[] = [
   /^\/tax-deadlines\/\d+$/,
   /^\/annual-reports\/\d+\/amend$/,
   /^\/annual-reports\/\d+\/submit$/,
-] as const;
+] as const

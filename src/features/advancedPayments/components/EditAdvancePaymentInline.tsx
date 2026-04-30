@@ -1,21 +1,22 @@
-import { useState } from "react";
-import { Check, X, Loader2 } from "lucide-react";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Select } from "../../../components/ui/inputs/Select";
-import type { AdvancePaymentRow, AdvancePaymentStatus } from "../types";
-import { ADVANCE_PAYMENT_STATUS_OPTIONS } from "../constants";
-import {
-  toEditableAmount,
-  toStringOrNull,
-} from "./advancePaymentComponent.utils";
-import { INLINE_AMOUNT_INPUT_CLASS } from "./advancePaymentComponent.constants";
+import { useState } from 'react'
+import { Check, X, Loader2 } from 'lucide-react'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Input } from '../../../components/ui/inputs/Input'
+import { Select } from '../../../components/ui/inputs/Select'
+import type { AdvancePaymentRow, AdvancePaymentStatus } from '../types'
+import { ADVANCE_PAYMENT_STATUS_OPTIONS } from '../constants'
+import { toEditableAmount, toStringOrNull } from './advancePaymentComponent.utils'
+import { INLINE_AMOUNT_INPUT_CLASS } from './advancePaymentComponent.constants'
 
 interface EditAdvancePaymentInlineProps {
-  row: AdvancePaymentRow;
-  isUpdating: boolean;
-  onSave: (paid_amount: string | null, status: AdvancePaymentStatus, expected_amount: string | null) => void;
-  onCancel?: () => void;
+  row: AdvancePaymentRow
+  isUpdating: boolean
+  onSave: (
+    paid_amount: string | null,
+    status: AdvancePaymentStatus,
+    expected_amount: string | null,
+  ) => void
+  onCancel?: () => void
 }
 
 export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> = ({
@@ -24,29 +25,27 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
   onSave,
   onCancel: onCancelProp,
 }) => {
-  const [paidAmount, setPaidAmount] = useState<string>(toEditableAmount(row.paid_amount));
-  const [expectedAmount, setExpectedAmount] = useState<string>(toEditableAmount(row.expected_amount));
-  const [status, setStatus] = useState<AdvancePaymentStatus>(row.status);
+  const [paidAmount, setPaidAmount] = useState<string>(toEditableAmount(row.paid_amount))
+  const [expectedAmount, setExpectedAmount] = useState<string>(
+    toEditableAmount(row.expected_amount),
+  )
+  const [status, setStatus] = useState<AdvancePaymentStatus>(row.status)
 
   const handleSave = () => {
-    onSave(
-      toStringOrNull(paidAmount),
-      status,
-      toStringOrNull(expectedAmount),
-    );
-  };
+    onSave(toStringOrNull(paidAmount), status, toStringOrNull(expectedAmount))
+  }
 
   const handleCancel = () => {
-    onCancelProp?.();
-  };
+    onCancelProp?.()
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleSave();
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleSave()
     }
-    if (e.key === "Escape") handleCancel();
-  };
+    if (e.key === 'Escape') handleCancel()
+  }
 
   return (
     <div
@@ -105,5 +104,5 @@ export const EditAdvancePaymentInline: React.FC<EditAdvancePaymentInlineProps> =
         </>
       )}
     </div>
-  );
-};
+  )
+}

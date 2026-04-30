@@ -1,34 +1,29 @@
-import { Search, X } from "lucide-react";
-import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Select } from "../../../components/ui/inputs/Select";
-import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
-import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
-import {
-  reminderTypeLabels,
-  statusLabels,
-  type ReminderStatus,
-  type ReminderType,
-} from "../types";
+import { Search, X } from 'lucide-react'
+import { useSearchDebounce } from '../../../hooks/useSearchDebounce'
+import { Input } from '../../../components/ui/inputs/Input'
+import { Select } from '../../../components/ui/inputs/Select'
+import { ToolbarContainer } from '../../../components/ui/layout/ToolbarContainer'
+import { ActiveFilterBadges } from '../../../components/ui/table/ActiveFilterBadges'
+import { reminderTypeLabels, statusLabels, type ReminderStatus, type ReminderType } from '../types'
 import {
   DEFAULT_REMINDER_STATUS_FILTER,
   REMINDER_DUE_FILTER_LABELS,
   REMINDER_STATUS_OPTIONS,
   REMINDER_TYPE_OPTIONS,
   type ReminderDueFilter,
-} from "../constants";
+} from '../constants'
 
 interface RemindersFiltersBarProps {
-  search: string;
-  onSearchChange: (value: string) => void;
-  typeFilter: string;
-  onTypeChange: (value: string) => void;
-  statusFilter: string;
-  onStatusChange: (value: string) => void;
-  dueFilter?: ReminderDueFilter;
-  onDueClear: () => void;
-  hasFilters: boolean;
-  onClear: () => void;
+  search: string
+  onSearchChange: (value: string) => void
+  typeFilter: string
+  onTypeChange: (value: string) => void
+  statusFilter: string
+  onStatusChange: (value: string) => void
+  dueFilter?: ReminderDueFilter
+  onDueClear: () => void
+  hasFilters: boolean
+  onClear: () => void
 }
 
 export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
@@ -43,12 +38,12 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
   hasFilters,
   onClear,
 }) => {
-  const [searchDraft, setSearchDraft] = useSearchDebounce(search, onSearchChange);
+  const [searchDraft, setSearchDraft] = useSearchDebounce(search, onSearchChange)
 
   const handleClear = () => {
-    setSearchDraft("");
-    onClear();
-  };
+    setSearchDraft('')
+    onClear()
+  }
 
   return (
     <ToolbarContainer>
@@ -64,7 +59,10 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
               searchDraft ? (
                 <button
                   type="button"
-                  onClick={() => { setSearchDraft(""); onSearchChange(""); }}
+                  onClick={() => {
+                    setSearchDraft('')
+                    onSearchChange('')
+                  }}
                   className="p-1 text-gray-400 hover:text-gray-600"
                 >
                   <X className="h-3.5 w-3.5" />
@@ -90,35 +88,35 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
             badges={[
               search
                 ? {
-                    key: "search",
+                    key: 'search',
                     label: `חיפוש: ${search}`,
                     onRemove: () => {
-                      setSearchDraft("");
-                      onSearchChange("");
+                      setSearchDraft('')
+                      onSearchChange('')
                     },
                   }
                 : null,
               typeFilter
                 ? {
-                    key: "typeFilter",
+                    key: 'typeFilter',
                     label: `סוג: ${reminderTypeLabels[typeFilter as ReminderType] ?? typeFilter}`,
-                    onRemove: () => onTypeChange(""),
+                    onRemove: () => onTypeChange(''),
                   }
                 : null,
               statusFilter !== DEFAULT_REMINDER_STATUS_FILTER
                 ? {
-                    key: "statusFilter",
+                    key: 'statusFilter',
                     label: `סטטוס: ${
                       statusFilter
-                        ? statusLabels[statusFilter as ReminderStatus] ?? statusFilter
-                        : "כל הסטטוסים"
+                        ? (statusLabels[statusFilter as ReminderStatus] ?? statusFilter)
+                        : 'כל הסטטוסים'
                     }`,
                     onRemove: () => onStatusChange(DEFAULT_REMINDER_STATUS_FILTER),
                   }
                 : null,
               dueFilter
                 ? {
-                    key: "dueFilter",
+                    key: 'dueFilter',
                     label: REMINDER_DUE_FILTER_LABELS[dueFilter],
                     onRemove: onDueClear,
                   }
@@ -129,5 +127,5 @@ export const RemindersFiltersBar: React.FC<RemindersFiltersBarProps> = ({
         )}
       </div>
     </ToolbarContainer>
-  );
-};
+  )
+}

@@ -1,15 +1,12 @@
-import type {
-  AuthorityContactCreatePayload,
-  AuthorityContactResponse,
-} from "./api";
-import type { AuthorityContactFormValues } from "./schemas";
-import { authorityContactDefaults } from "./schemas";
-import { AUTHORITY_CONTACT_TEXT } from "./constants";
+import type { AuthorityContactCreatePayload, AuthorityContactResponse } from './api'
+import type { AuthorityContactFormValues } from './schemas'
+import { authorityContactDefaults } from './schemas'
+import { AUTHORITY_CONTACT_TEXT } from './constants'
 
 export const getAuthorityContactsSubtitle = (total: number) =>
   total > 0
     ? `${total} ${AUTHORITY_CONTACT_TEXT.totalSuffix}`
-    : AUTHORITY_CONTACT_TEXT.defaultSubtitle;
+    : AUTHORITY_CONTACT_TEXT.defaultSubtitle
 
 export const toAuthorityContactFormValues = (
   contact?: AuthorityContactResponse | null,
@@ -18,14 +15,14 @@ export const toAuthorityContactFormValues = (
     ? {
         contact_type: contact.contact_type,
         name: contact.name,
-        office: contact.office ?? "",
-        phone: contact.phone ?? "",
-        email: contact.email ?? "",
-        notes: contact.notes ?? "",
+        office: contact.office ?? '',
+        phone: contact.phone ?? '',
+        email: contact.email ?? '',
+        notes: contact.notes ?? '',
       }
-    : authorityContactDefaults;
+    : authorityContactDefaults
 
-const emptyToNull = (value?: string) => value || null;
+const emptyToNull = (value?: string) => value || null
 
 export const toAuthorityContactPayload = (
   values: AuthorityContactFormValues,
@@ -35,4 +32,4 @@ export const toAuthorityContactPayload = (
   phone: emptyToNull(values.phone),
   email: emptyToNull(values.email),
   notes: emptyToNull(values.notes),
-});
+})

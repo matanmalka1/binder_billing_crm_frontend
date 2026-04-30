@@ -1,31 +1,31 @@
-import { useMemo, useEffect, useRef } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useMemo, useEffect, useRef } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
 import {
   ClientPickerField,
   createClientIdPickerHandlers,
   useClientPickerState,
-} from "@/components/shared/client";
-import { MONTHS_COVERED_OPTIONS } from "@/constants/periodOptions.constants";
-import { FormField, Input, SelectDropdown } from "@/components/ui/inputs";
-import { Modal, ModalFormActions } from "@/components/ui/overlays";
-import type { CreateChargePayload } from "../api";
-import { CHARGE_CREATE_FORM_ID, CHARGE_TYPE_OPTIONS } from "../constants";
+} from '@/components/shared/client'
+import { MONTHS_COVERED_OPTIONS } from '@/constants/periodOptions.constants'
+import { FormField, Input, SelectDropdown } from '@/components/ui/inputs'
+import { Modal, ModalFormActions } from '@/components/ui/overlays'
+import type { CreateChargePayload } from '../api'
+import { CHARGE_CREATE_FORM_ID, CHARGE_TYPE_OPTIONS } from '../constants'
 import {
   chargeCreateDefaultValues,
   chargeCreateSchema,
   toCreateChargePayload,
   type ChargeCreateFormValues,
-} from "../schemas";
-import { buildChargePeriodOptions } from "../helpers";
+} from '../schemas'
+import { buildChargePeriodOptions } from '../helpers'
 
 interface ChargesCreateModalProps {
-  open: boolean;
-  createError: string | null;
-  createLoading: boolean;
-  onClose: () => void;
-  onSubmit: (payload: CreateChargePayload) => Promise<boolean>;
-  initialClient?: { id: number; name: string } | null;
+  open: boolean
+  createError: string | null
+  createLoading: boolean
+  onClose: () => void
+  onSubmit: (payload: CreateChargePayload) => Promise<boolean>
+  initialClient?: { id: number; name: string } | null
 }
 
 export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
@@ -36,7 +36,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
   onSubmit,
   initialClient,
 }) => {
-  const currencySuffix = <span className="text-sm text-gray-400">₪</span>;
+  const currencySuffix = <span className="text-sm text-gray-400">₪</span>
 
   const {
     formState: { errors, isDirty },
@@ -49,7 +49,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
   } = useForm<ChargeCreateFormValues>({
     defaultValues: chargeCreateDefaultValues,
     resolver: zodResolver(chargeCreateSchema),
-  });
+  })
 
   const {
     clientQuery,
@@ -59,43 +59,38 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
     handleClientQueryChange,
     resetClientPicker,
   } = useClientPickerState(
-    createClientIdPickerHandlers((value, options) =>
-      setValue("client_record_id", value, options),
-    ),
-  );
+    createClientIdPickerHandlers((value, options) => setValue('client_record_id', value, options)),
+  )
 
   // Pre-select client when modal opens with an initialClient
-  const didSeedRef = useRef(false);
+  const didSeedRef = useRef(false)
   useEffect(() => {
     if (open && initialClient && !didSeedRef.current) {
-      handleSelectClient({ id: initialClient.id, name: initialClient.name });
-      didSeedRef.current = true;
+      handleSelectClient({ id: initialClient.id, name: initialClient.name })
+      didSeedRef.current = true
     }
     if (!open) {
-      didSeedRef.current = false;
+      didSeedRef.current = false
     }
-  }, [open, initialClient]); // eslint-disable-line react-hooks/exhaustive-deps
-  const monthsCovered = watch("months_covered") ?? 1;
+  }, [open, initialClient]) // eslint-disable-line react-hooks/exhaustive-deps
+  const monthsCovered = watch('months_covered') ?? 1
 
-  const periodOptions = useMemo(
-    () => buildChargePeriodOptions(monthsCovered),
-    [monthsCovered],
-  );
+  const periodOptions = useMemo(() => buildChargePeriodOptions(monthsCovered), [monthsCovered])
 
   const handleClose = () => {
-    reset(chargeCreateDefaultValues);
-    resetClientPicker();
-    onClose();
-  };
+    reset(chargeCreateDefaultValues)
+    resetClientPicker()
+    onClose()
+  }
 
   const submitForm = handleSubmit(async (values) => {
-    const created = await onSubmit(toCreateChargePayload(values));
+    const created = await onSubmit(toCreateChargePayload(values))
     if (created) {
-      reset(chargeCreateDefaultValues);
-      resetClientPicker();
-      onClose();
+      reset(chargeCreateDefaultValues)
+      resetClientPicker()
+      onClose()
     }
-  });
+  })
 
   return (
     <Modal
@@ -114,12 +109,8 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
         />
       }
     >
-      <form
-        id={CHARGE_CREATE_FORM_ID}
-        onSubmit={submitForm}
-        className="space-y-4"
-      >
-        <input type="hidden" {...register("client_record_id")} />
+      <form id={CHARGE_CREATE_FORM_ID} onSubmit={submitForm} className="space-y-4">
+        <input type="hidden" {...register('client_record_id')} />
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="col-span-2">
             <ClientPickerField
@@ -140,7 +131,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
             placeholder="0.00"
             error={errors.amount?.message}
             endElement={currencySuffix}
-            {...register("amount")}
+            {...register('amount')}
           />
           <Controller
             control={control}
@@ -153,7 +144,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
                   onBlur={field.onBlur}
                   name={field.name}
                   options={CHARGE_TYPE_OPTIONS}
-                  className={errors.charge_type ? "border-negative-500" : undefined}
+                  className={errors.charge_type ? 'border-negative-500' : undefined}
                 />
               </FormField>
             )}
@@ -165,9 +156,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
               <FormField label="תדירות" error={errors.months_covered?.message} className="w-full">
                 <SelectDropdown
                   value={String(field.value ?? 1)}
-                  onChange={(e) =>
-                    field.onChange(Number(e.target.value) as 1 | 2)
-                  }
+                  onChange={(e) => field.onChange(Number(e.target.value) as 1 | 2)}
                   onBlur={field.onBlur}
                   name={field.name}
                   options={MONTHS_COVERED_OPTIONS}
@@ -181,7 +170,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
             render={({ field }) => (
               <FormField label="תקופה" error={errors.period?.message} className="w-full">
                 <SelectDropdown
-                  value={field.value ?? ""}
+                  value={field.value ?? ''}
                   onChange={(e) => field.onChange(e.target.value)}
                   onBlur={field.onBlur}
                   name={field.name}
@@ -195,7 +184,7 @@ export const ChargesCreateModal: React.FC<ChargesCreateModalProps> = ({
         {createError && <p className="text-sm text-negative-600">{createError}</p>}
       </form>
     </Modal>
-  );
-};
+  )
+}
 
-ChargesCreateModal.displayName = "ChargesCreateModal";
+ChargesCreateModal.displayName = 'ChargesCreateModal'

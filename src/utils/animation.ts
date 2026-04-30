@@ -1,21 +1,21 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties } from 'react'
 
-const DEFAULT_STEP_MS = 60;
+const DEFAULT_STEP_MS = 60
 
 type AnimationDelayVars = CSSProperties & {
-  "--enter-delay": string;
-};
+  '--enter-delay': string
+}
 
 export const staggerDelay = (index: number, stepMs: number = DEFAULT_STEP_MS, offsetMs = 0) => {
-  return `${offsetMs + index * stepMs}ms`;
-};
+  return `${offsetMs + index * stepMs}ms`
+}
 
 export const animationDelayVars = (delay: string): AnimationDelayVars => ({
-  "--enter-delay": delay,
-});
+  '--enter-delay': delay,
+})
 
 export const staggerAnimationDelayVars = (
   index: number,
   stepMs: number = DEFAULT_STEP_MS,
   offsetMs = 0,
-): AnimationDelayVars => animationDelayVars(staggerDelay(index, stepMs, offsetMs));
+): AnimationDelayVars => animationDelayVars(staggerDelay(index, stepMs, offsetMs))

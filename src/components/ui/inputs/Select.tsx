@@ -1,17 +1,17 @@
-import { cn } from "../../../utils/utils";
-import { FormField } from "./FormField";
-import { SelectDropdown } from "./SelectDropdown";
+import { cn } from '../../../utils/utils'
+import { FormField } from './FormField'
+import { SelectDropdown } from './SelectDropdown'
 
 interface SelectOption {
-  value: string;
-  label: string;
-  disabled?: boolean;
+  value: string
+  label: string
+  disabled?: boolean
 }
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  label?: string;
-  error?: string;
-  options?: SelectOption[];
+  label?: string
+  error?: string
+  options?: SelectOption[]
 }
 
 const ChevronIcon = () => (
@@ -27,7 +27,7 @@ const ChevronIcon = () => (
       clipRule="evenodd"
     />
   </svg>
-);
+)
 
 export const Select: React.FC<SelectProps> = ({
   label,
@@ -51,7 +51,7 @@ export const Select: React.FC<SelectProps> = ({
         options={options}
         disabled={disabled}
         name={name}
-        className={cn(error ? "border-negative-500" : undefined, className)}
+        className={cn(error ? 'border-negative-500' : undefined, className)}
       />
     ) : (
       <div className="relative">
@@ -62,10 +62,10 @@ export const Select: React.FC<SelectProps> = ({
           disabled={disabled}
           name={name}
           className={cn(
-            "appearance-none w-full px-3 py-2.5 pr-9 bg-white border rounded-lg text-sm text-gray-800 cursor-pointer transition-colors",
-            "focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 hover:border-primary-300",
-            "disabled:opacity-50 disabled:cursor-not-allowed",
-            error ? "border-negative-500" : "border-gray-200",
+            'appearance-none w-full px-3 py-2.5 pr-9 bg-white border rounded-lg text-sm text-gray-800 cursor-pointer transition-colors',
+            'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 hover:border-primary-300',
+            'disabled:opacity-50 disabled:cursor-not-allowed',
+            error ? 'border-negative-500' : 'border-gray-200',
             className,
           )}
           {...props}
@@ -76,4 +76,4 @@ export const Select: React.FC<SelectProps> = ({
       </div>
     )}
   </FormField>
-);
+)

@@ -1,23 +1,23 @@
-import { Modal } from "../../../../components/ui/overlays/Modal";
-import { getStatusLabel } from "../../api/utils";
-import type { AnnualReportFull } from "../../api/contracts";
-import { fmtCurrency as fmt } from "@/utils/utils";
+import { Modal } from '../../../../components/ui/overlays/Modal'
+import { getStatusLabel } from '../../api/utils'
+import type { AnnualReportFull } from '../../api/contracts'
+import { fmtCurrency as fmt } from '@/utils/utils'
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  reports: AnnualReportFull[];
+  open: boolean
+  onClose: () => void
+  reports: AnnualReportFull[]
 }
 
 const ROWS: { label: string; render: (r: AnnualReportFull) => string }[] = [
-  { label: "סטטוס", render: (r) => getStatusLabel(r.status) },
-  { label: "חבות מס", render: (r) => fmt(r.tax_due) },
-  { label: "החזר מס", render: (r) => fmt(r.refund_due) },
-  { label: "סכום שומה", render: (r) => fmt(r.assessment_amount) },
-];
+  { label: 'סטטוס', render: (r) => getStatusLabel(r.status) },
+  { label: 'חבות מס', render: (r) => fmt(r.tax_due) },
+  { label: 'החזר מס', render: (r) => fmt(r.refund_due) },
+  { label: 'סכום שומה', render: (r) => fmt(r.assessment_amount) },
+]
 
 export const ClientYearComparisonModal: React.FC<Props> = ({ open, onClose, reports }) => {
-  const sorted = [...reports].sort((a, b) => b.tax_year - a.tax_year);
+  const sorted = [...reports].sort((a, b) => b.tax_year - a.tax_year)
 
   return (
     <Modal open={open} onClose={onClose} title="השוואה בין שנים" footer={null}>
@@ -52,7 +52,7 @@ export const ClientYearComparisonModal: React.FC<Props> = ({ open, onClose, repo
         </div>
       )}
     </Modal>
-  );
-};
+  )
+}
 
-ClientYearComparisonModal.displayName = "ClientYearComparisonModal";
+ClientYearComparisonModal.displayName = 'ClientYearComparisonModal'

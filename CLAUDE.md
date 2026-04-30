@@ -144,11 +144,11 @@ Active top-level feature folders:
 ## Shared Types (`src/types/index.ts`)
 
 ```ts
-PaginatedResponse<T>; // { items: T[]; page: number; page_size: number; total: number }
-PagedQueryParams; // { page: number; page_size: number }
-PagedFilters<T>; // PagedQueryParams & T
-UserRole; // "advisor" | "secretary"
-AuthUser; // { id: number; full_name: string; role: UserRole }
+PaginatedResponse<T> // { items: T[]; page: number; page_size: number; total: number }
+PagedQueryParams // { page: number; page_size: number }
+PagedFilters<T> // PagedQueryParams & T
+UserRole // "advisor" | "secretary"
+AuthUser // { id: number; full_name: string; role: UserRole }
 ```
 
 API response fields use **snake_case** to match the Python backend. Use snake_case keys in contracts, query params, and form field names when they map to backend fields.

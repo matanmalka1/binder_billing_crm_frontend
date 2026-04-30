@@ -1,32 +1,43 @@
-import { api } from "@/api/client";
-import { ANNUAL_REPORT_ENDPOINTS } from "./endpoints";
-import type { AnnualReportFull, DeadlineType, StageKey, StatusTransitionPayload } from "./contracts";
+import { api } from '@/api/client'
+import { ANNUAL_REPORT_ENDPOINTS } from './endpoints'
+import type { AnnualReportFull, DeadlineType, StageKey, StatusTransitionPayload } from './contracts'
 
 export const annualReportStatusApi = {
-  transitionStatus: async (reportId: number, payload: StatusTransitionPayload): Promise<AnnualReportFull> => {
+  transitionStatus: async (
+    reportId: number,
+    payload: StatusTransitionPayload,
+  ): Promise<AnnualReportFull> => {
     const response = await api.post<AnnualReportFull>(
       ANNUAL_REPORT_ENDPOINTS.annualReportTransitionStatus(reportId),
       payload,
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   submitReport: async (
     reportId: number,
-    payload: { submitted_at?: string; ita_reference?: string | null; submission_method?: string | null; note?: string | null } = {},
+    payload: {
+      submitted_at?: string
+      ita_reference?: string | null
+      submission_method?: string | null
+      note?: string | null
+    } = {},
   ): Promise<AnnualReportFull> => {
     const response = await api.post<AnnualReportFull>(
       ANNUAL_REPORT_ENDPOINTS.annualReportSubmit(reportId),
       payload,
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   transitionStage: async (reportId: number, toStage: StageKey): Promise<AnnualReportFull> => {
-    const response = await api.post<AnnualReportFull>(ANNUAL_REPORT_ENDPOINTS.annualReportTransition(reportId), {
-      to_stage: toStage,
-    });
-    return response.data;
+    const response = await api.post<AnnualReportFull>(
+      ANNUAL_REPORT_ENDPOINTS.annualReportTransition(reportId),
+      {
+        to_stage: toStage,
+      },
+    )
+    return response.data
   },
 
   updateDeadline: async (
@@ -36,7 +47,7 @@ export const annualReportStatusApi = {
     const response = await api.post<AnnualReportFull>(
       ANNUAL_REPORT_ENDPOINTS.annualReportDeadline(reportId),
       payload,
-    );
-    return response.data;
+    )
+    return response.data
   },
-};
+}

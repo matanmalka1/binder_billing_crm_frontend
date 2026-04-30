@@ -6,19 +6,23 @@ import {
   statusColumn,
   textColumn,
   type Column,
-
-} from "../../../../components/ui/table";
-import type { ClientResponse } from "../../api";
-import { formatClientOfficeId } from "@/utils/utils";
-import { ClientRowActions } from "./ClientRowActions";
-import { CLIENT_STATUS_BADGE_VARIANTS, getEntityTypeLabel, getClientStatusLabel, getClientVatReportingLabel } from "../../constants";
+} from '../../../../components/ui/table'
+import type { ClientResponse } from '../../api'
+import { formatClientOfficeId } from '@/utils/utils'
+import { ClientRowActions } from './ClientRowActions'
+import {
+  CLIENT_STATUS_BADGE_VARIANTS,
+  getEntityTypeLabel,
+  getClientStatusLabel,
+  getClientVatReportingLabel,
+} from '../../constants'
 
 interface BuildClientColumnsParams {
-  selectedIds?: Set<number>;
-  onToggleSelect?: (id: number) => void;
-  onToggleAll?: (ids: number[]) => void;
-  allIds?: number[];
-  onEditClient?: (client: ClientResponse) => void;
+  selectedIds?: Set<number>
+  onToggleSelect?: (id: number) => void
+  onToggleAll?: (ids: number[]) => void
+  allIds?: number[]
+  onEditClient?: (client: ClientResponse) => void
 }
 
 export const buildClientColumns = ({
@@ -30,57 +34,57 @@ export const buildClientColumns = ({
 }: BuildClientColumnsParams = {}): Column<ClientResponse>[] => {
   const dataColumns: Column<ClientResponse>[] = [
     monoColumn({
-      key: "office_client_number",
+      key: 'office_client_number',
       header: "מס' לקוח",
       getValue: (client) => formatClientOfficeId(client.office_client_number),
     }),
     textColumn({
-      key: "full_name",
-      header: "שם לקוח",
-      valueClassName: "font-semibold text-gray-900",
+      key: 'full_name',
+      header: 'שם לקוח',
+      valueClassName: 'font-semibold text-gray-900',
       getValue: (client) => client.full_name,
     }),
     monoColumn({
-      key: "id_number",
-      header: "ת.ז / ח.פ",
+      key: 'id_number',
+      header: 'ת.ז / ח.פ',
       getValue: (client) => client.id_number,
     }),
     textColumn({
-      key: "entity_type",
-      header: "סוג ישות",
-      getValue: (client) => client.entity_type ? getEntityTypeLabel(client.entity_type) : null,
+      key: 'entity_type',
+      header: 'סוג ישות',
+      getValue: (client) => (client.entity_type ? getEntityTypeLabel(client.entity_type) : null),
     }),
     monoColumn({
-      key: "active_binder_number",
-      header: "קלסר פעיל",
+      key: 'active_binder_number',
+      header: 'קלסר פעיל',
       getValue: (client) => client.active_binder_number,
       emptyValue: <span className="text-gray-400 text-sm">אין קלסר פתוח</span>,
     }),
     textColumn({
-      key: "vat_reporting_frequency",
-      header: "סוג דיווח",
+      key: 'vat_reporting_frequency',
+      header: 'סוג דיווח',
       getValue: (client) => getClientVatReportingLabel(client),
     }),
     statusColumn({
-      key: "status",
-      header: "סטטוס",
+      key: 'status',
+      header: 'סטטוס',
       getStatus: (client) => client.status,
       getLabel: getClientStatusLabel,
       variantMap: CLIENT_STATUS_BADGE_VARIANTS,
     }),
     monoColumn({
-      key: "phone",
-      header: "טלפון",
+      key: 'phone',
+      header: 'טלפון',
       getValue: (client) => client.phone,
     }),
     textColumn({
-      key: "email",
-      header: "אימייל",
+      key: 'email',
+      header: 'אימייל',
       getValue: (client) => client.email,
     }),
     dateColumn({
-      key: "created_at",
-      header: "נוצר בתאריך",
+      key: 'created_at',
+      header: 'נוצר בתאריך',
       getValue: (client) => client.created_at,
     }),
     actionsColumn({
@@ -92,10 +96,10 @@ export const buildClientColumns = ({
         />
       ),
     }),
-  ];
+  ]
 
   if (!onToggleSelect) {
-    return dataColumns;
+    return dataColumns
   }
 
   return [
@@ -108,5 +112,5 @@ export const buildClientColumns = ({
       getItemAriaLabel: (client) => `בחר לקוח ${formatClientOfficeId(client.office_client_number)}`,
     }),
     ...dataColumns,
-  ];
-};
+  ]
+}

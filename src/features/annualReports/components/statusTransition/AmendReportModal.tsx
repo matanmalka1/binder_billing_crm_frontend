@@ -1,9 +1,9 @@
-import { Button } from "../../../../components/ui/primitives/Button";
-import { Modal } from "../../../../components/ui/overlays/Modal";
-import { Textarea } from "../../../../components/ui/inputs/Textarea";
-import type { AmendReportModalProps } from "../../types";
-import { AMEND_REASON_MIN_LENGTH } from "./constants";
-import { isValidAmendReason } from "./helpers";
+import { Button } from '../../../../components/ui/primitives/Button'
+import { Modal } from '../../../../components/ui/overlays/Modal'
+import { Textarea } from '../../../../components/ui/inputs/Textarea'
+import type { AmendReportModalProps } from '../../types'
+import { AMEND_REASON_MIN_LENGTH } from './constants'
+import { isValidAmendReason } from './helpers'
 
 export const AmendReportModal = ({
   open,
@@ -13,9 +13,9 @@ export const AmendReportModal = ({
   onClose,
   onSubmit,
 }: AmendReportModalProps) => {
-  const trimmedReason = reason.trim();
-  const isReasonValid = isValidAmendReason(trimmedReason);
-  const showValidation = trimmedReason.length > 0 && !isReasonValid;
+  const trimmedReason = reason.trim()
+  const isReasonValid = isValidAmendReason(trimmedReason)
+  const showValidation = trimmedReason.length > 0 && !isReasonValid
 
   return (
     <Modal
@@ -52,5 +52,5 @@ export const AmendReportModal = ({
         </p>
       )}
     </Modal>
-  );
-};
+  )
+}

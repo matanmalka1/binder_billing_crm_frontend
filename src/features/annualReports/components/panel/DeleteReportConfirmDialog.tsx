@@ -1,10 +1,10 @@
-import { Button } from "../../../../components/ui/primitives/Button";
-import { useEscapeToClose } from "@/components/ui/overlays/useEscapeToClose";
+import { Button } from '../../../../components/ui/primitives/Button'
+import { useEscapeToClose } from '@/components/ui/overlays/useEscapeToClose'
 
 interface DeleteReportConfirmDialogProps {
-  isDeleting: boolean;
-  onCancel: () => void;
-  onConfirm: () => void;
+  isDeleting: boolean
+  onCancel: () => void
+  onConfirm: () => void
 }
 
 export const DeleteReportConfirmDialog = ({
@@ -12,7 +12,7 @@ export const DeleteReportConfirmDialog = ({
   onCancel,
   onConfirm,
 }: DeleteReportConfirmDialogProps) => {
-  useEscapeToClose({ open: true, onClose: onCancel });
+  useEscapeToClose({ open: true, onClose: onCancel })
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4">
@@ -36,7 +36,7 @@ export const DeleteReportConfirmDialog = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-DeleteReportConfirmDialog.displayName = "DeleteReportConfirmDialog";
+DeleteReportConfirmDialog.displayName = 'DeleteReportConfirmDialog'

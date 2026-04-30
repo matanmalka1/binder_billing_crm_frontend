@@ -1,31 +1,25 @@
-import { DOC_TYPE_LABELS } from "../documents.constants";
-import type {
-  OperationalSignalsResponse,
-  PermanentDocumentResponse,
-} from "../api";
-import type { BusinessResponse } from "@/features/clients";
-import type { FilterBadge } from "../../../components/ui/table/ActiveFilterBadges";
-import { GENERAL_CLIENT_DOCUMENT_LABEL } from "./DocumentsDataCards.constants";
+import { DOC_TYPE_LABELS } from '../documents.constants'
+import type { OperationalSignalsResponse, PermanentDocumentResponse } from '../api'
+import type { BusinessResponse } from '@/features/clients'
+import type { FilterBadge } from '../../../components/ui/table/ActiveFilterBadges'
+import { GENERAL_CLIENT_DOCUMENT_LABEL } from './DocumentsDataCards.constants'
 
 export const getDocumentTypeLabel = (
-  documentType: PermanentDocumentResponse["document_type"] | string,
-) => DOC_TYPE_LABELS[documentType] ?? documentType;
+  documentType: PermanentDocumentResponse['document_type'] | string,
+) => DOC_TYPE_LABELS[documentType] ?? documentType
 
 export const getMissingDocumentsMessage = (
-  missingDocuments: OperationalSignalsResponse["missing_documents"],
-) => `מסמכים חסרים: ${missingDocuments.map(getDocumentTypeLabel).join(", ")}`;
+  missingDocuments: OperationalSignalsResponse['missing_documents'],
+) => `מסמכים חסרים: ${missingDocuments.map(getDocumentTypeLabel).join(', ')}`
 
-const matchesDocumentSearch = (
-  doc: PermanentDocumentResponse,
-  searchTerm: string,
-) => {
-  if (!searchTerm) return true;
-  const query = searchTerm.toLowerCase();
-  const filename = (doc.original_filename ?? "").toLowerCase();
-  const documentType = getDocumentTypeLabel(doc.document_type).toLowerCase();
+const matchesDocumentSearch = (doc: PermanentDocumentResponse, searchTerm: string) => {
+  if (!searchTerm) return true
+  const query = searchTerm.toLowerCase()
+  const filename = (doc.original_filename ?? '').toLowerCase()
+  const documentType = getDocumentTypeLabel(doc.document_type).toLowerCase()
 
-  return filename.includes(query) || documentType.includes(query);
-};
+  return filename.includes(query) || documentType.includes(query)
+}
 
 export const filterDocuments = (
   documents: PermanentDocumentResponse[],
@@ -33,30 +27,28 @@ export const filterDocuments = (
   documentType: string,
 ) =>
   documents.filter((doc) => {
-    if (documentType && doc.document_type !== documentType) return false;
-    return matchesDocumentSearch(doc, searchTerm);
-  });
+    if (documentType && doc.document_type !== documentType) return false
+    return matchesDocumentSearch(doc, searchTerm)
+  })
 
 export const getCountLabel = (filteredCount: number, totalCount: number) =>
-  filteredCount !== totalCount
-    ? `${filteredCount}/${totalCount}`
-    : `${totalCount}`;
+  filteredCount !== totalCount ? `${filteredCount}/${totalCount}` : `${totalCount}`
 
 export const getBusinessOptions = (businesses: BusinessResponse[]) => [
-  { value: "", label: GENERAL_CLIENT_DOCUMENT_LABEL },
+  { value: '', label: GENERAL_CLIENT_DOCUMENT_LABEL },
   ...businesses.map((business) => ({
     value: String(business.id),
     label: business.business_name ?? `עסק #${business.id}`,
   })),
-];
+]
 
 interface DocumentFilterBadgesParams {
-  search: string;
-  filterType: string;
-  taxYear: number | null;
-  onSearchChange: (search: string) => void;
-  onFilterTypeChange: (documentType: string) => void;
-  onTaxYearChange: (year: number | null) => void;
+  search: string
+  filterType: string
+  taxYear: number | null
+  onSearchChange: (search: string) => void
+  onFilterTypeChange: (documentType: string) => void
+  onTaxYearChange: (year: number | null) => void
 }
 
 export const getDocumentFilterBadges = ({
@@ -70,23 +62,23 @@ export const getDocumentFilterBadges = ({
   [
     search
       ? {
-          key: "search",
+          key: 'search',
           label: `חיפוש: ${search}`,
-          onRemove: () => onSearchChange(""),
+          onRemove: () => onSearchChange(''),
         }
       : null,
     filterType
       ? {
-          key: "filterType",
+          key: 'filterType',
           label: getDocumentTypeLabel(filterType),
-          onRemove: () => onFilterTypeChange(""),
+          onRemove: () => onFilterTypeChange(''),
         }
       : null,
     taxYear
       ? {
-          key: "taxYear",
+          key: 'taxYear',
           label: `שנה: ${taxYear}`,
           onRemove: () => onTaxYearChange(null),
         }
       : null,
-  ].filter((badge): badge is FilterBadge => badge !== null);
+  ].filter((badge): badge is FilterBadge => badge !== null)

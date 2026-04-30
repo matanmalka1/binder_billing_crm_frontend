@@ -1,31 +1,31 @@
-import type { AnchorHTMLAttributes } from "react";
-import { DropdownMenu, DropdownMenuItem } from "../overlays/DropdownMenu";
+import type { AnchorHTMLAttributes } from 'react'
+import { DropdownMenu, DropdownMenuItem } from '../overlays/DropdownMenu'
 
 interface RowActionsMenuProps {
-  ariaLabel?: string;
-  children: React.ReactNode;
-  title?: string;
+  ariaLabel?: string
+  children: React.ReactNode
+  title?: string
 }
 
 export const RowActionsMenu: React.FC<RowActionsMenuProps> = ({ ariaLabel, children, title }) => (
   <div className="flex justify-center" onClick={(event) => event.stopPropagation()}>
-    <DropdownMenu ariaLabel={ariaLabel ?? "פעולות"} title={title}>
+    <DropdownMenu ariaLabel={ariaLabel ?? 'פעולות'} title={title}>
       {children}
     </DropdownMenu>
   </div>
-);
+)
 
-RowActionsMenu.displayName = "RowActionsMenu";
+RowActionsMenu.displayName = 'RowActionsMenu'
 
-export const RowActionItem = DropdownMenuItem;
+export const RowActionItem = DropdownMenuItem
 
-export const RowActionSeparator = () => <div className="my-1 border-t border-gray-100" />;
+export const RowActionSeparator = () => <div className="my-1 border-t border-gray-100" />
 
-RowActionSeparator.displayName = "RowActionSeparator";
+RowActionSeparator.displayName = 'RowActionSeparator'
 
 interface RowActionLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
-  label: string;
-  icon: React.ReactNode;
+  label: string
+  icon: React.ReactNode
 }
 
 export const RowActionLink: React.FC<RowActionLinkProps> = ({
@@ -36,10 +36,13 @@ export const RowActionLink: React.FC<RowActionLinkProps> = ({
   ...props
 }) => (
   <a
-    className={className ?? "block w-full px-3 py-2 text-right text-sm text-gray-700 transition-colors hover:bg-gray-50"}
+    className={
+      className ??
+      'block w-full px-3 py-2 text-right text-sm text-gray-700 transition-colors hover:bg-gray-50'
+    }
     onClick={(event) => {
-      event.stopPropagation();
-      onClick?.(event);
+      event.stopPropagation()
+      onClick?.(event)
     }}
     {...props}
   >
@@ -48,6 +51,6 @@ export const RowActionLink: React.FC<RowActionLinkProps> = ({
       <span className="flex h-4 w-4 items-center justify-center">{icon}</span>
     </span>
   </a>
-);
+)
 
-RowActionLink.displayName = "RowActionLink";
+RowActionLink.displayName = 'RowActionLink'

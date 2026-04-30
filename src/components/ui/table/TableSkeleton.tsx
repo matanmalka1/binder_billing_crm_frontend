@@ -1,11 +1,11 @@
-import { Card } from "../primitives/Card";
-import { SkeletonBlock } from "../primitives/SkeletonBlock";
-import { staggerDelay } from "../../../utils/animation";
+import { Card } from '../primitives/Card'
+import { SkeletonBlock } from '../primitives/SkeletonBlock'
+import { staggerDelay } from '../../../utils/animation'
 
 export interface TableSkeletonProps {
-  rows?: number;
-  columns?: number;
-  className?: string;
+  rows?: number
+  columns?: number
+  className?: string
 }
 
 export const TableSkeleton: React.FC<TableSkeletonProps> = ({
@@ -32,7 +32,7 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
                 <td key={colIndex} className="py-4 pe-4">
                   <SkeletonBlock
                     shimmer
-                    width={colIndex === 0 ? "w-32" : colIndex === columns - 1 ? "w-20" : "w-24"}
+                    width={colIndex === 0 ? 'w-32' : colIndex === columns - 1 ? 'w-20' : 'w-24'}
                     height="h-4"
                     delay={staggerDelay(rowIndex)}
                   />
@@ -44,4 +44,4 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
       </table>
     </div>
   </Card>
-);
+)

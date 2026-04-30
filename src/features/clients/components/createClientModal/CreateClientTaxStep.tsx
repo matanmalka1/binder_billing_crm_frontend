@@ -1,29 +1,26 @@
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import { Input } from "../../../../components/ui/inputs/Input";
-import { Select } from "../../../../components/ui/inputs/Select";
-import {
-  CREATE_CLIENT_VAT_OPTIONS,
-  DEFAULT_VAT_EXEMPT_CEILING,
-} from "../../constants";
-import type { CreateClientFormValues } from "../../schemas";
-import { stripNonDecimal } from "./createClientFormUtils";
+import type { FieldErrors, UseFormRegister } from 'react-hook-form'
+import { Input } from '../../../../components/ui/inputs/Input'
+import { Select } from '../../../../components/ui/inputs/Select'
+import { CREATE_CLIENT_VAT_OPTIONS, DEFAULT_VAT_EXEMPT_CEILING } from '../../constants'
+import type { CreateClientFormValues } from '../../schemas'
+import { stripNonDecimal } from './createClientFormUtils'
 
 interface ImpactData {
-  items: Array<{ label: string; count: number }>;
-  note?: string | null;
-  years_scope: number;
+  items: Array<{ label: string; count: number }>
+  note?: string | null
+  years_scope: number
 }
 
 interface Props {
-  advisorOptions: Array<{ value: string; label: string }>;
-  advisorsLoading: boolean;
-  disabled: boolean;
-  errors: FieldErrors<CreateClientFormValues>;
-  impactData?: ImpactData;
-  impactLoading: boolean;
-  isExempt: boolean;
-  register: UseFormRegister<CreateClientFormValues>;
-  showVatFrequency: boolean;
+  advisorOptions: Array<{ value: string; label: string }>
+  advisorsLoading: boolean
+  disabled: boolean
+  errors: FieldErrors<CreateClientFormValues>
+  impactData?: ImpactData
+  impactLoading: boolean
+  isExempt: boolean
+  register: UseFormRegister<CreateClientFormValues>
+  showVatFrequency: boolean
 }
 
 export const CreateClientTaxStep: React.FC<Props> = ({
@@ -44,8 +41,8 @@ export const CreateClientTaxStep: React.FC<Props> = ({
         label="תדירות דיווח מע״מ *"
         error={errors.vat_reporting_frequency?.message}
         disabled={disabled}
-        options={[{ value: "", label: "בחר תדירות דיווח" }, ...CREATE_CLIENT_VAT_OPTIONS]}
-        {...register("vat_reporting_frequency")}
+        options={[{ value: '', label: 'בחר תדירות דיווח' }, ...CREATE_CLIENT_VAT_OPTIONS]}
+        {...register('vat_reporting_frequency')}
       />
     )}
     <div className="grid grid-cols-2 gap-4">
@@ -64,7 +61,7 @@ export const CreateClientTaxStep: React.FC<Props> = ({
         error={errors.advance_rate?.message}
         disabled={disabled}
         onInput={stripNonDecimal}
-        {...register("advance_rate")}
+        {...register('advance_rate')}
       />
     </div>
     <Select
@@ -72,10 +69,10 @@ export const CreateClientTaxStep: React.FC<Props> = ({
       error={errors.accountant_id?.message}
       disabled={disabled || advisorsLoading}
       options={[
-        { value: "", label: advisorsLoading ? "טוען רואי חשבון..." : "בחר רואה חשבון" },
+        { value: '', label: advisorsLoading ? 'טוען רואי חשבון...' : 'בחר רואה חשבון' },
         ...advisorOptions,
       ]}
-      {...register("accountant_id")}
+      {...register('accountant_id')}
     />
     <div className="rounded-lg border border-blue-200 bg-blue-50 p-4" dir="rtl">
       <p className="mb-2 text-sm font-semibold text-blue-800">מה ייווצר לאחר שמירה?</p>
@@ -105,4 +102,4 @@ export const CreateClientTaxStep: React.FC<Props> = ({
       )}
     </div>
   </div>
-);
+)

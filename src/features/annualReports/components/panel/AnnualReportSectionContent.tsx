@@ -1,26 +1,26 @@
-import type { MutableRefObject } from "react";
-import type { SectionKey, AnnualReportDetail } from "../../types";
-import type { ReportDetailResponse, AnnualReportScheduleKey } from "../../api";
-import { AnnualReportOverviewSection } from "./AnnualReportOverviewSection";
-import { IncomeExpensePanel } from "../financials/IncomeExpensePanel";
-import { TaxCalculationPanel } from "../tax/TaxCalculationPanel";
-import { DeductionsTab } from "../tax/DeductionsTab";
-import { ClientDocumentsTab } from "@/features/documents";
-import { FilingTimelineTab } from "../shared/FilingTimelineTab";
-import { ReportChargesPanel } from "../charges/ReportChargesPanel";
+import type { MutableRefObject } from 'react'
+import type { SectionKey, AnnualReportDetail } from '../../types'
+import type { ReportDetailResponse, AnnualReportScheduleKey } from '../../api'
+import { AnnualReportOverviewSection } from './AnnualReportOverviewSection'
+import { IncomeExpensePanel } from '../financials/IncomeExpensePanel'
+import { TaxCalculationPanel } from '../tax/TaxCalculationPanel'
+import { DeductionsTab } from '../tax/DeductionsTab'
+import { ClientDocumentsTab } from '@/features/documents'
+import { FilingTimelineTab } from '../shared/FilingTimelineTab'
+import { ReportChargesPanel } from '../charges/ReportChargesPanel'
 
 interface AnnualReportSectionContentProps {
-  reportId: number;
-  activeSection: SectionKey;
-  report: AnnualReportDetail;
-  updateDetail: (payload: Partial<ReportDetailResponse>) => void;
-  isUpdating: boolean;
-  completeSchedule: (schedule: AnnualReportScheduleKey) => void;
-  addSchedule: (schedule: AnnualReportScheduleKey, notes?: string) => void;
-  isCompletingSchedule: boolean;
-  isAddingSchedule: boolean;
-  setIsDirty: (v: boolean) => void;
-  submitRef: MutableRefObject<(() => void) | null>;
+  reportId: number
+  activeSection: SectionKey
+  report: AnnualReportDetail
+  updateDetail: (payload: Partial<ReportDetailResponse>) => void
+  isUpdating: boolean
+  completeSchedule: (schedule: AnnualReportScheduleKey) => void
+  addSchedule: (schedule: AnnualReportScheduleKey, notes?: string) => void
+  isCompletingSchedule: boolean
+  isAddingSchedule: boolean
+  setIsDirty: (v: boolean) => void
+  submitRef: MutableRefObject<(() => void) | null>
 }
 
 export const AnnualReportSectionContent = ({
@@ -37,7 +37,7 @@ export const AnnualReportSectionContent = ({
   submitRef,
 }: AnnualReportSectionContentProps) => {
   switch (activeSection) {
-    case "overview":
+    case 'overview':
       return (
         <AnnualReportOverviewSection
           report={report}
@@ -53,14 +53,20 @@ export const AnnualReportSectionContent = ({
           onDirtyChange={setIsDirty}
           submitRef={submitRef}
         />
-      );
-    case "financials": return <IncomeExpensePanel reportId={reportId} />;
-    case "tax": return <TaxCalculationPanel reportId={reportId} />;
-    case "deductions": return <DeductionsTab reportId={reportId} taxYear={report.tax_year} />;
-    case "documents": return <ClientDocumentsTab clientId={report.client_record_id} />;
-    case "timeline": return <FilingTimelineTab reports={[report]} />;
-    case "charges": return <ReportChargesPanel reportId={reportId} />;
+      )
+    case 'financials':
+      return <IncomeExpensePanel reportId={reportId} />
+    case 'tax':
+      return <TaxCalculationPanel reportId={reportId} />
+    case 'deductions':
+      return <DeductionsTab reportId={reportId} taxYear={report.tax_year} />
+    case 'documents':
+      return <ClientDocumentsTab clientId={report.client_record_id} />
+    case 'timeline':
+      return <FilingTimelineTab reports={[report]} />
+    case 'charges':
+      return <ReportChargesPanel reportId={reportId} />
   }
-};
+}
 
-AnnualReportSectionContent.displayName = "AnnualReportSectionContent";
+AnnualReportSectionContent.displayName = 'AnnualReportSectionContent'

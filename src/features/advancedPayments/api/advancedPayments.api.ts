@@ -1,7 +1,7 @@
-import { api } from "@/api/client";
-import { ADVANCE_PAYMENT_ENDPOINTS } from "./endpoints";
-import { toQueryParams } from "@/api/queryParams";
-import type { PaginatedResponse } from "@/types";
+import { api } from '@/api/client'
+import { ADVANCE_PAYMENT_ENDPOINTS } from './endpoints'
+import { toQueryParams } from '@/api/queryParams'
+import type { PaginatedResponse } from '@/types'
 import type {
   AdvancePaymentRow,
   ListAdvancePaymentsParams,
@@ -11,18 +11,18 @@ import type {
   AdvancePaymentOverviewResponse,
   AdvancePaymentSuggestionResponse,
   AnnualKPIResponse,
-} from "../types";
+} from '../types'
 
 export const advancePaymentsApi = {
   list: async (
     params: ListAdvancePaymentsParams,
   ): Promise<PaginatedResponse<AdvancePaymentRow>> => {
-    const { client_id, ...queryParams } = params;
+    const { client_id, ...queryParams } = params
     const response = await api.get<PaginatedResponse<AdvancePaymentRow>>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePayments(client_id),
       { params: toQueryParams(queryParams) },
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   listAllForClient: async (
@@ -32,8 +32,8 @@ export const advancePaymentsApi = {
     const response = await api.get<PaginatedResponse<AdvancePaymentRow>>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePayments(clientId),
       { params: toQueryParams({ page_size: pageSize }) },
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   create: async (
@@ -43,8 +43,8 @@ export const advancePaymentsApi = {
     const response = await api.post<AdvancePaymentRow>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePayments(clientId),
       payload,
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   update: async (
@@ -55,8 +55,8 @@ export const advancePaymentsApi = {
     const response = await api.patch<AdvancePaymentRow>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentById(clientId, id),
       payload,
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   overview: async (
@@ -65,14 +65,12 @@ export const advancePaymentsApi = {
     const response = await api.get<AdvancePaymentOverviewResponse>(
       ADVANCE_PAYMENT_ENDPOINTS.advancePaymentsOverview,
       { params: toQueryParams(params) },
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   delete: async (clientId: number, id: number): Promise<void> => {
-    await api.delete(
-      ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentById(clientId, id),
-    );
+    await api.delete(ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentById(clientId, id))
   },
 
   getSuggestion: async (
@@ -85,19 +83,16 @@ export const advancePaymentsApi = {
       {
         params: toQueryParams({ year, period_months_count: periodMonthsCount }),
       },
-    );
-    return response.data;
+    )
+    return response.data
   },
 
-  getAnnualKPIs: async (
-    clientId: number,
-    year: number,
-  ): Promise<AnnualKPIResponse> => {
+  getAnnualKPIs: async (clientId: number, year: number): Promise<AnnualKPIResponse> => {
     const response = await api.get<AnnualKPIResponse>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentsKPI(clientId),
       { params: toQueryParams({ year }) },
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   generateSchedule: async (
@@ -108,7 +103,7 @@ export const advancePaymentsApi = {
     const response = await api.post<{ created: number; skipped: number }>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentsGenerate(clientId),
       { year, period_months_count: periodMonthsCount },
-    );
-    return response.data;
+    )
+    return response.data
   },
-};
+}

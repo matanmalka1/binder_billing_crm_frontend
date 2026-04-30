@@ -1,25 +1,22 @@
-import React from "react";
-import { cn } from "../../../utils/utils";
-import {
-  semanticBadgeClasses,
-  semanticSignalBadgeClasses,
-} from "@/utils/semanticColors";
+import React from 'react'
+import { cn } from '../../../utils/utils'
+import { semanticBadgeClasses, semanticSignalBadgeClasses } from '@/utils/semanticColors'
 
-export type BadgeVariant = "success" | "warning" | "error" | "info" | "neutral";
+export type BadgeVariant = 'success' | 'warning' | 'error' | 'info' | 'neutral'
 
 interface BadgeProps {
-  children: React.ReactNode;
-  variant?: BadgeVariant;
+  children: React.ReactNode
+  variant?: BadgeVariant
   /** Dot color class for signal-style badges (e.g. "bg-negative-500") */
-  dot?: string;
+  dot?: string
   /** Adds ring-1 for signal-style appearance */
-  ring?: boolean;
+  ring?: boolean
   /** Shows × remove button (active-filter pill mode) */
-  removable?: boolean;
-  onRemove?: () => void;
-  onClick?: React.MouseEventHandler<HTMLSpanElement>;
-  onKeyDown?: React.KeyboardEventHandler<HTMLSpanElement>;
-  className?: string;
+  removable?: boolean
+  onRemove?: () => void
+  onClick?: React.MouseEventHandler<HTMLSpanElement>
+  onKeyDown?: React.KeyboardEventHandler<HTMLSpanElement>
+  className?: string
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
@@ -28,7 +25,7 @@ const variantClasses: Record<BadgeVariant, string> = {
   error: semanticBadgeClasses.negative,
   info: semanticBadgeClasses.info,
   neutral: semanticBadgeClasses.neutral,
-};
+}
 
 const signalVariantClasses: Record<BadgeVariant, string> = {
   warning: semanticSignalBadgeClasses.warning,
@@ -36,11 +33,11 @@ const signalVariantClasses: Record<BadgeVariant, string> = {
   neutral: semanticSignalBadgeClasses.neutral,
   success: semanticSignalBadgeClasses.positive,
   error: semanticSignalBadgeClasses.negative,
-};
+}
 
 export const Badge: React.FC<BadgeProps> = ({
   children,
-  variant = "neutral",
+  variant = 'neutral',
   dot,
   ring,
   removable,
@@ -51,10 +48,12 @@ export const Badge: React.FC<BadgeProps> = ({
 }) => {
   if (removable) {
     return (
-      <span className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-primary-50 py-0.5 pe-2.5 ps-1.5 text-xs font-medium text-primary-800",
-        className,
-      )}>
+      <span
+        className={cn(
+          'inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-primary-50 py-0.5 pe-2.5 ps-1.5 text-xs font-medium text-primary-800',
+          className,
+        )}
+      >
         {children}
         <button
           type="button"
@@ -65,40 +64,41 @@ export const Badge: React.FC<BadgeProps> = ({
           ×
         </button>
       </span>
-    );
+    )
   }
 
   if (dot !== undefined || ring) {
     return (
       <span
         className={cn(
-          "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-xs font-medium",
+          'inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-xs font-medium',
           signalVariantClasses[variant],
           className,
         )}
       >
-        <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", dot ?? "bg-gray-400")} />
+        <span className={cn('h-1.5 w-1.5 rounded-full shrink-0', dot ?? 'bg-gray-400')} />
         {children}
       </span>
-    );
+    )
   }
 
   return (
     <span
       className={cn(
-        "px-2.5 py-0.5 rounded-full text-xs font-medium",
+        'px-2.5 py-0.5 rounded-full text-xs font-medium',
         variantClasses[variant],
-        onClick && "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
+        onClick &&
+          'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500',
         className,
       )}
       onClick={onClick}
       onKeyDown={onKeyDown}
-      role={onClick ? "button" : undefined}
+      role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
     >
       {children}
     </span>
-  );
-};
+  )
+}
 
-Badge.displayName = "Badge";
+Badge.displayName = 'Badge'

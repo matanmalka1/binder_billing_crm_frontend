@@ -3,85 +3,85 @@ version: alpha
 name: YM Tax CRM
 description: Hebrew-first internal tax advisory CRM with a calm operational interface, dark institutional navigation, white data surfaces, indigo primary actions, amber accents, and clear semantic status colors.
 colors:
-  primary: "#4F46E5"
-  on-primary: "#FFFFFF"
-  primary-hover: "#4338CA"
-  primary-active: "#312E81"
-  primary-container: "#EEF2FF"
-  on-primary-container: "#312E81"
-  secondary: "#101B2F"
-  on-secondary: "#FFFFFF"
-  secondary-container: "#0C1526"
-  on-secondary-container: "#CBD5E1"
-  tertiary: "#F59E0B"
-  on-tertiary: "#FFFFFF"
-  tertiary-container: "#FEF3C7"
-  on-tertiary-container: "#92400E"
-  background: "#F9FAFB"
-  background-gradient-start: "#F8FAFC"
-  background-gradient-end: "#EEF2FF"
-  surface: "#FFFFFF"
-  surface-muted: "#F9FAFB"
-  surface-soft: "#F8FAFC"
-  surface-warm: "#F7F6F2"
-  surface-glass: "#FFFFFF"
-  on-surface: "#0F172A"
-  on-surface-strong: "#020617"
-  on-surface-muted: "#475569"
-  on-surface-subtle: "#64748B"
-  inverse-surface: "#0A0F1F"
-  inverse-on-surface: "#FFFFFF"
-  outline: "#D1D5DB"
-  outline-soft: "#E5E7EB"
-  outline-muted: "#F3F4F6"
-  sidebar-start: "#101B2F"
-  sidebar-middle: "#0C1526"
-  sidebar-end: "#0A0F1F"
-  sidebar-active: "#4F7DFF"
-  sidebar-on-active: "#FFFFFF"
-  sidebar-text: "#9CA3AF"
-  sidebar-border: "#FFFFFF"
-  neutral-50: "#F9FAFB"
-  neutral-100: "#F3F4F6"
-  neutral-200: "#E5E7EB"
-  neutral-300: "#D1D5DB"
-  neutral-400: "#9CA3AF"
-  neutral-500: "#6B7280"
-  neutral-600: "#4B5563"
-  neutral-700: "#374151"
-  neutral-800: "#1F2937"
-  neutral-900: "#111827"
-  slate-50: "#F8FAFC"
-  slate-100: "#F1F5F9"
-  slate-200: "#E2E8F0"
-  slate-300: "#CBD5E1"
-  slate-400: "#94A3B8"
-  slate-500: "#64748B"
-  slate-600: "#475569"
-  slate-700: "#334155"
-  slate-800: "#1E293B"
-  slate-900: "#0F172A"
-  slate-950: "#020617"
-  info: "#6366F1"
-  info-container: "#E0E7FF"
-  on-info-container: "#312E81"
-  positive: "#10B981"
-  positive-container: "#D1FAE5"
-  on-positive-container: "#065F46"
-  warning: "#F59E0B"
-  warning-container: "#FEF3C7"
-  on-warning-container: "#92400E"
-  negative: "#DC2626"
-  negative-container: "#FEE2E2"
-  on-negative-container: "#991B1B"
-  chart-blue: "#60A5FA"
-  chart-orange: "#FB923C"
-  chart-purple: "#A78BFA"
-  chart-amber: "#FBBF24"
-  chart-rose: "#FB7185"
-  chart-cyan: "#06B6D4"
-  chart-teal: "#14B8A6"
-  chart-emerald: "#10B981"
+  primary: '#4F46E5'
+  on-primary: '#FFFFFF'
+  primary-hover: '#4338CA'
+  primary-active: '#312E81'
+  primary-container: '#EEF2FF'
+  on-primary-container: '#312E81'
+  secondary: '#101B2F'
+  on-secondary: '#FFFFFF'
+  secondary-container: '#0C1526'
+  on-secondary-container: '#CBD5E1'
+  tertiary: '#F59E0B'
+  on-tertiary: '#FFFFFF'
+  tertiary-container: '#FEF3C7'
+  on-tertiary-container: '#92400E'
+  background: '#F9FAFB'
+  background-gradient-start: '#F8FAFC'
+  background-gradient-end: '#EEF2FF'
+  surface: '#FFFFFF'
+  surface-muted: '#F9FAFB'
+  surface-soft: '#F8FAFC'
+  surface-warm: '#F7F6F2'
+  surface-glass: '#FFFFFF'
+  on-surface: '#0F172A'
+  on-surface-strong: '#020617'
+  on-surface-muted: '#475569'
+  on-surface-subtle: '#64748B'
+  inverse-surface: '#0A0F1F'
+  inverse-on-surface: '#FFFFFF'
+  outline: '#D1D5DB'
+  outline-soft: '#E5E7EB'
+  outline-muted: '#F3F4F6'
+  sidebar-start: '#101B2F'
+  sidebar-middle: '#0C1526'
+  sidebar-end: '#0A0F1F'
+  sidebar-active: '#4F7DFF'
+  sidebar-on-active: '#FFFFFF'
+  sidebar-text: '#9CA3AF'
+  sidebar-border: '#FFFFFF'
+  neutral-50: '#F9FAFB'
+  neutral-100: '#F3F4F6'
+  neutral-200: '#E5E7EB'
+  neutral-300: '#D1D5DB'
+  neutral-400: '#9CA3AF'
+  neutral-500: '#6B7280'
+  neutral-600: '#4B5563'
+  neutral-700: '#374151'
+  neutral-800: '#1F2937'
+  neutral-900: '#111827'
+  slate-50: '#F8FAFC'
+  slate-100: '#F1F5F9'
+  slate-200: '#E2E8F0'
+  slate-300: '#CBD5E1'
+  slate-400: '#94A3B8'
+  slate-500: '#64748B'
+  slate-600: '#475569'
+  slate-700: '#334155'
+  slate-800: '#1E293B'
+  slate-900: '#0F172A'
+  slate-950: '#020617'
+  info: '#6366F1'
+  info-container: '#E0E7FF'
+  on-info-container: '#312E81'
+  positive: '#10B981'
+  positive-container: '#D1FAE5'
+  on-positive-container: '#065F46'
+  warning: '#F59E0B'
+  warning-container: '#FEF3C7'
+  on-warning-container: '#92400E'
+  negative: '#DC2626'
+  negative-container: '#FEE2E2'
+  on-negative-container: '#991B1B'
+  chart-blue: '#60A5FA'
+  chart-orange: '#FB923C'
+  chart-purple: '#A78BFA'
+  chart-amber: '#FBBF24'
+  chart-rose: '#FB7185'
+  chart-cyan: '#06B6D4'
+  chart-teal: '#14B8A6'
+  chart-emerald: '#10B981'
 typography:
   display:
     fontFamily: Heebo
@@ -157,21 +157,21 @@ typography:
     letterSpacing: 0em
 spacing:
   px: 1px
-  "0": 0px
-  "0_5": 2px
-  "1": 4px
-  "1_5": 6px
-  "2": 8px
-  "2_5": 10px
-  "3": 12px
-  "4": 16px
-  "5": 20px
-  "6": 24px
-  "8": 32px
-  "10": 40px
-  "12": 48px
-  "14": 56px
-  "16": 64px
+  '0': 0px
+  '0_5': 2px
+  '1': 4px
+  '1_5': 6px
+  '2': 8px
+  '2_5': 10px
+  '3': 12px
+  '4': 16px
+  '5': 20px
+  '6': 24px
+  '8': 32px
+  '10': 40px
+  '12': 48px
+  '14': 56px
+  '16': 64px
   page: 32px
   page-compact: 24px
   card-padding: 24px
@@ -187,32 +187,32 @@ rounded:
   md: 6px
   lg: 8px
   xl: 12px
-  "2xl": 16px
+  '2xl': 16px
   full: 9999px
 radii:
-  button: "{rounded.md}"
-  input: "{rounded.lg}"
-  card: "{rounded.xl}"
-  modal: "{rounded.xl}"
-  drawer-section: "{rounded.lg}"
-  badge: "{rounded.full}"
+  button: '{rounded.md}'
+  input: '{rounded.lg}'
+  card: '{rounded.xl}'
+  modal: '{rounded.xl}'
+  drawer-section: '{rounded.lg}'
+  badge: '{rounded.full}'
 shadows:
-  sm: "0 1px 2px #0000000D"
-  md: "0 4px 6px #00000012"
-  lg: "0 10px 15px #0000001A"
-  xl: "0 20px 25px #0000001A"
-  "2xl": "0 25px 50px #00000040"
-  elevation-1: "0 2px 8px #6366F114"
-  elevation-2: "0 4px 16px #6366F11F"
-  elevation-3: "0 8px 24px #6366F129"
-  sidebar-active: "0 12px 28px #4F7DFF40"
+  sm: '0 1px 2px #0000000D'
+  md: '0 4px 6px #00000012'
+  lg: '0 10px 15px #0000001A'
+  xl: '0 20px 25px #0000001A'
+  '2xl': '0 25px 50px #00000040'
+  elevation-1: '0 2px 8px #6366F114'
+  elevation-2: '0 4px 16px #6366F11F'
+  elevation-3: '0 8px 24px #6366F129'
+  sidebar-active: '0 12px 28px #4F7DFF40'
 elevation:
-  flat: "border-only"
-  raised-card: "{shadows.elevation-1}"
-  elevated-card: "{shadows.elevation-2}"
-  interactive-hover: "{shadows.elevation-3}"
-  overlay: "{shadows.xl}"
-  drawer: "{shadows.2xl}"
+  flat: 'border-only'
+  raised-card: '{shadows.elevation-1}'
+  elevated-card: '{shadows.elevation-2}'
+  interactive-hover: '{shadows.elevation-3}'
+  overlay: '{shadows.xl}'
+  drawer: '{shadows.2xl}'
 motion:
   duration-fast: 100ms
   duration-base: 200ms
@@ -220,136 +220,136 @@ motion:
   duration-slow: 350ms
   easing-standard: ease-in-out
   easing-enter: ease-out
-  fade-in: "300ms ease-out"
-  fade-in-up: "350ms ease-out"
-  scale-in: "250ms ease-out"
-  slide-in: "300ms ease-out"
-  shimmer: "2000ms linear infinite"
+  fade-in: '300ms ease-out'
+  fade-in-up: '350ms ease-out'
+  scale-in: '250ms ease-out'
+  slide-in: '300ms ease-out'
+  shimmer: '2000ms linear infinite'
 components:
   button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.on-primary}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.md}"
+    backgroundColor: '{colors.primary}'
+    textColor: '{colors.on-primary}'
+    typography: '{typography.body-md}'
+    rounded: '{rounded.md}'
     padding: 8px 16px
   button-primary-hover:
-    backgroundColor: "{colors.primary-hover}"
-    textColor: "{colors.on-primary}"
+    backgroundColor: '{colors.primary-hover}'
+    textColor: '{colors.on-primary}'
   button-primary-active:
-    backgroundColor: "{colors.primary-active}"
-    textColor: "{colors.on-primary}"
+    backgroundColor: '{colors.primary-active}'
+    textColor: '{colors.on-primary}'
   button-secondary:
-    backgroundColor: "{colors.neutral-100}"
-    textColor: "{colors.neutral-900}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.md}"
+    backgroundColor: '{colors.neutral-100}'
+    textColor: '{colors.neutral-900}'
+    typography: '{typography.body-md}'
+    rounded: '{rounded.md}'
     padding: 8px 16px
   button-outline:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.neutral-700}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.md}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.neutral-700}'
+    typography: '{typography.body-md}'
+    rounded: '{rounded.md}'
     padding: 8px 16px
   button-danger:
-    backgroundColor: "{colors.negative}"
-    textColor: "{colors.on-primary}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.md}"
+    backgroundColor: '{colors.negative}'
+    textColor: '{colors.on-primary}'
+    typography: '{typography.body-md}'
+    rounded: '{rounded.md}'
     padding: 8px 16px
   login-button:
-    backgroundColor: "{colors.slate-900}"
-    textColor: "{colors.on-primary}"
-    typography: "{typography.label-md}"
-    rounded: "{rounded.xl}"
+    backgroundColor: '{colors.slate-900}'
+    textColor: '{colors.on-primary}'
+    typography: '{typography.label-md}'
+    rounded: '{rounded.xl}'
     padding: 14px 24px
   input-field:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-surface}"
-    typography: "{typography.body-sm}"
-    rounded: "{rounded.lg}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
+    typography: '{typography.body-sm}'
+    rounded: '{rounded.lg}'
     height: 36px
     padding: 8px 12px
   input-focus:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-surface}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
   card-default:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-surface}"
-    rounded: "{rounded.xl}"
-    padding: "{spacing.card-padding}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
+    rounded: '{rounded.xl}'
+    padding: '{spacing.card-padding}'
   card-header:
-    backgroundColor: "{colors.surface-soft}"
-    textColor: "{colors.on-surface}"
+    backgroundColor: '{colors.surface-soft}'
+    textColor: '{colors.on-surface}'
     padding: 16px 24px
   stats-card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-surface}"
-    rounded: "{rounded.xl}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
+    rounded: '{rounded.xl}'
     padding: 16px 20px
   table-card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-surface}"
-    rounded: "{rounded.xl}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
+    rounded: '{rounded.xl}'
     padding: 0px
   table-header:
-    backgroundColor: "{colors.neutral-50}"
-    textColor: "{colors.neutral-500}"
-    typography: "{typography.label-caps}"
+    backgroundColor: '{colors.neutral-50}'
+    textColor: '{colors.neutral-500}'
+    typography: '{typography.label-caps}'
     padding: 8px 12px
   table-row-hover:
-    backgroundColor: "{colors.primary-container}"
-    textColor: "{colors.on-surface}"
+    backgroundColor: '{colors.primary-container}'
+    textColor: '{colors.on-surface}'
   badge-neutral:
-    backgroundColor: "{colors.neutral-100}"
-    textColor: "{colors.neutral-800}"
-    typography: "{typography.label-sm}"
-    rounded: "{rounded.full}"
+    backgroundColor: '{colors.neutral-100}'
+    textColor: '{colors.neutral-800}'
+    typography: '{typography.label-sm}'
+    rounded: '{rounded.full}'
     padding: 2px 10px
   badge-info:
-    backgroundColor: "{colors.info-container}"
-    textColor: "{colors.on-info-container}"
-    typography: "{typography.label-sm}"
-    rounded: "{rounded.full}"
+    backgroundColor: '{colors.info-container}'
+    textColor: '{colors.on-info-container}'
+    typography: '{typography.label-sm}'
+    rounded: '{rounded.full}'
     padding: 2px 10px
   badge-positive:
-    backgroundColor: "{colors.positive-container}"
-    textColor: "{colors.on-positive-container}"
-    typography: "{typography.label-sm}"
-    rounded: "{rounded.full}"
+    backgroundColor: '{colors.positive-container}'
+    textColor: '{colors.on-positive-container}'
+    typography: '{typography.label-sm}'
+    rounded: '{rounded.full}'
     padding: 2px 10px
   badge-warning:
-    backgroundColor: "{colors.warning-container}"
-    textColor: "{colors.on-warning-container}"
-    typography: "{typography.label-sm}"
-    rounded: "{rounded.full}"
+    backgroundColor: '{colors.warning-container}'
+    textColor: '{colors.on-warning-container}'
+    typography: '{typography.label-sm}'
+    rounded: '{rounded.full}'
     padding: 2px 10px
   badge-negative:
-    backgroundColor: "{colors.negative-container}"
-    textColor: "{colors.on-negative-container}"
-    typography: "{typography.label-sm}"
-    rounded: "{rounded.full}"
+    backgroundColor: '{colors.negative-container}'
+    textColor: '{colors.on-negative-container}'
+    typography: '{typography.label-sm}'
+    rounded: '{rounded.full}'
     padding: 2px 10px
   sidebar:
-    backgroundColor: "{colors.sidebar-middle}"
-    textColor: "{colors.sidebar-text}"
+    backgroundColor: '{colors.sidebar-middle}'
+    textColor: '{colors.sidebar-text}'
     width: 224px
   sidebar-collapsed:
-    backgroundColor: "{colors.sidebar-middle}"
-    textColor: "{colors.sidebar-text}"
+    backgroundColor: '{colors.sidebar-middle}'
+    textColor: '{colors.sidebar-text}'
     width: 64px
   sidebar-item-active:
-    backgroundColor: "{colors.sidebar-active}"
-    textColor: "{colors.sidebar-on-active}"
-    rounded: "{rounded.xl}"
+    backgroundColor: '{colors.sidebar-active}'
+    textColor: '{colors.sidebar-on-active}'
+    rounded: '{rounded.xl}'
     padding: 10px 16px
   modal:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-surface}"
-    rounded: "{rounded.xl}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
+    rounded: '{rounded.xl}'
     padding: 24px
   drawer:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-surface}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.on-surface}'
     width: 448px
 ---
 

@@ -1,37 +1,33 @@
-import { Search, X } from "lucide-react";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Select } from "../../../components/ui/inputs/Select";
-import { ToolbarContainer } from "../../../components/ui/layout/ToolbarContainer";
-import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
-import { useSearchDebounce } from "../../../hooks/useSearchDebounce";
-import { cn } from "../../../utils/utils";
-import type { UsersFilters } from "../types";
+import { Search, X } from 'lucide-react'
+import { Input } from '../../../components/ui/inputs/Input'
+import { Select } from '../../../components/ui/inputs/Select'
+import { ToolbarContainer } from '../../../components/ui/layout/ToolbarContainer'
+import { ActiveFilterBadges } from '../../../components/ui/table/ActiveFilterBadges'
+import { useSearchDebounce } from '../../../hooks/useSearchDebounce'
+import { cn } from '../../../utils/utils'
+import type { UsersFilters } from '../types'
 
 interface UsersFiltersBarProps {
-  filters: UsersFilters;
-  onFilterChange: (key: string, value: string) => void;
+  filters: UsersFilters
+  onFilterChange: (key: string, value: string) => void
 }
 
 const ACTIVE_OPTIONS = [
-  { value: "", label: "כל המשתמשים" },
-  { value: "true", label: "פעילים בלבד" },
-  { value: "false", label: "לא פעילים" },
-];
+  { value: '', label: 'כל המשתמשים' },
+  { value: 'true', label: 'פעילים בלבד' },
+  { value: 'false', label: 'לא פעילים' },
+]
 
-export const UsersFiltersBar: React.FC<UsersFiltersBarProps> = ({
-  filters,
-  onFilterChange,
-}) => {
-  const [searchDraft, setSearchDraft] = useSearchDebounce(
-    filters.search ?? "",
-    (value) => onFilterChange("search", value),
-  );
+export const UsersFiltersBar: React.FC<UsersFiltersBarProps> = ({ filters, onFilterChange }) => {
+  const [searchDraft, setSearchDraft] = useSearchDebounce(filters.search ?? '', (value) =>
+    onFilterChange('search', value),
+  )
 
   const handleReset = () => {
-    setSearchDraft("");
-    onFilterChange("search", "");
-    onFilterChange("is_active", "");
-  };
+    setSearchDraft('')
+    onFilterChange('search', '')
+    onFilterChange('is_active', '')
+  }
 
   return (
     <ToolbarContainer>
@@ -48,8 +44,8 @@ export const UsersFiltersBar: React.FC<UsersFiltersBarProps> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    setSearchDraft("");
-                    onFilterChange("search", "");
+                    setSearchDraft('')
+                    onFilterChange('search', '')
                   }}
                   className="p-1 text-gray-400 hover:text-gray-600"
                 >
@@ -60,10 +56,10 @@ export const UsersFiltersBar: React.FC<UsersFiltersBarProps> = ({
           />
           <Select
             label="סטטוס"
-            value={filters.is_active ?? ""}
-            onChange={(e) => onFilterChange("is_active", e.target.value)}
+            value={filters.is_active ?? ''}
+            onChange={(e) => onFilterChange('is_active', e.target.value)}
             options={ACTIVE_OPTIONS}
-            className={cn(filters.is_active && "border-primary-400 ring-1 ring-primary-200")}
+            className={cn(filters.is_active && 'border-primary-400 ring-1 ring-primary-200')}
           />
         </div>
 
@@ -71,19 +67,21 @@ export const UsersFiltersBar: React.FC<UsersFiltersBarProps> = ({
           badges={[
             filters.search
               ? {
-                  key: "search",
+                  key: 'search',
                   label: `חיפוש: ${filters.search}`,
                   onRemove: () => {
-                    setSearchDraft("");
-                    onFilterChange("search", "");
+                    setSearchDraft('')
+                    onFilterChange('search', '')
                   },
                 }
               : null,
             filters.is_active
               ? {
-                  key: "is_active",
-                  label: ACTIVE_OPTIONS.find((option) => option.value === filters.is_active)?.label ?? filters.is_active,
-                  onRemove: () => onFilterChange("is_active", ""),
+                  key: 'is_active',
+                  label:
+                    ACTIVE_OPTIONS.find((option) => option.value === filters.is_active)?.label ??
+                    filters.is_active,
+                  onRemove: () => onFilterChange('is_active', ''),
                 }
               : null,
           ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}
@@ -91,5 +89,5 @@ export const UsersFiltersBar: React.FC<UsersFiltersBarProps> = ({
         />
       </div>
     </ToolbarContainer>
-  );
-};
+  )
+}

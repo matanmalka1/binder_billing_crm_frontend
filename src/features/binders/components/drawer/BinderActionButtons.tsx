@@ -1,13 +1,13 @@
-import { Button } from "@/components/ui/primitives/Button";
-import { canMarkReady, canReturn, canRevertReady } from "../../utils";
+import { Button } from '@/components/ui/primitives/Button'
+import { canMarkReady, canReturn, canRevertReady } from '../../utils'
 
 interface BinderActionButtonsProps {
-  status: string;
-  disabled?: boolean;
-  onMarkReady: React.MouseEventHandler<HTMLButtonElement>;
-  onRevertReady?: React.MouseEventHandler<HTMLButtonElement>;
-  onReturn?: React.MouseEventHandler<HTMLButtonElement>;
-  size?: "sm" | "inline";
+  status: string
+  disabled?: boolean
+  onMarkReady: React.MouseEventHandler<HTMLButtonElement>
+  onRevertReady?: React.MouseEventHandler<HTMLButtonElement>
+  onReturn?: React.MouseEventHandler<HTMLButtonElement>
+  size?: 'sm' | 'inline'
 }
 
 export const BinderActionButtons: React.FC<BinderActionButtonsProps> = ({
@@ -16,9 +16,9 @@ export const BinderActionButtons: React.FC<BinderActionButtonsProps> = ({
   onMarkReady,
   onRevertReady,
   onReturn,
-  size = "inline",
+  size = 'inline',
 }) => {
-  const gap = size === "sm" ? "flex flex-wrap gap-2 py-2" : "flex flex-wrap items-center gap-1.5";
+  const gap = size === 'sm' ? 'flex flex-wrap gap-2 py-2' : 'flex flex-wrap items-center gap-1.5'
 
   return (
     <div className={gap}>
@@ -59,7 +59,7 @@ export const BinderActionButtons: React.FC<BinderActionButtonsProps> = ({
         </Button>
       )}
     </div>
-  );
-};
+  )
+}
 
-BinderActionButtons.displayName = "BinderActionButtons";
+BinderActionButtons.displayName = 'BinderActionButtons'

@@ -9,4 +9,4 @@ export const NOTES_ENDPOINTS = {
     businessId: number | string,
     noteId: number | string,
   ) => `/clients/${clientId}/businesses/${businessId}/notes/${noteId}`,
-} as const;
+} as const

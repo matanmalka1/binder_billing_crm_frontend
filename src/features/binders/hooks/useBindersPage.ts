@@ -1,12 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { bindersApi, bindersQK } from "../api";
-import { getErrorMessage } from "../../../utils/utils";
-import { useBindersFilters } from "./useBindersFilters";
-import { useBinderSelection } from "./useBinderSelection";
-import { useBinderMutations } from "./useBinderMutations";
+import { useQuery } from '@tanstack/react-query'
+import { bindersApi, bindersQK } from '../api'
+import { getErrorMessage } from '../../../utils/utils'
+import { useBindersFilters } from './useBindersFilters'
+import { useBinderSelection } from './useBinderSelection'
+import { useBinderMutations } from './useBinderMutations'
 
 export const useBindersPage = () => {
-  const { filters, setPage, handleFilterChange, handleReset, handleSort } = useBindersFilters();
+  const { filters, setPage, handleFilterChange, handleReset, handleSort } = useBindersFilters()
 
   const listParams = {
     status: filters.status || undefined,
@@ -18,19 +18,19 @@ export const useBindersPage = () => {
     page_size: filters.page_size,
     sort_by: filters.sort_by,
     sort_dir: filters.sort_dir,
-  };
+  }
 
   const bindersQuery = useQuery({
     queryKey: bindersQK.list(listParams),
     queryFn: () => bindersApi.list(listParams),
-  });
+  })
 
-  const pageItems = bindersQuery.data?.items ?? [];
+  const pageItems = bindersQuery.data?.items ?? []
 
   const { deepLinkBinderId, selectedBinder, handleSelectBinder, handleCloseDrawer } =
-    useBinderSelection(pageItems);
+    useBinderSelection(pageItems)
 
-  const mutations = useBinderMutations(handleCloseDrawer);
+  const mutations = useBinderMutations(handleCloseDrawer)
 
   return {
     ...mutations,
@@ -47,7 +47,7 @@ export const useBindersPage = () => {
       returned: 0,
     },
     error: bindersQuery.error
-      ? getErrorMessage(bindersQuery.error, "שגיאה בטעינת רשימת קלסרים")
+      ? getErrorMessage(bindersQuery.error, 'שגיאה בטעינת רשימת קלסרים')
       : null,
     filters,
     handleFilterChange,
@@ -57,5 +57,5 @@ export const useBindersPage = () => {
     handleSelectBinder,
     handleCloseDrawer,
     loading: bindersQuery.isPending,
-  };
-};
+  }
+}

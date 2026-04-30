@@ -1,28 +1,34 @@
-import { api } from "@/api/client";
-import { toQueryParams } from "@/api/queryParams";
-import { ANNUAL_REPORT_ENDPOINTS } from "./endpoints";
-import type { AnnualReportFull, AnnualReportListResponse, SeasonSummary } from "./contracts";
+import { api } from '@/api/client'
+import { toQueryParams } from '@/api/queryParams'
+import { ANNUAL_REPORT_ENDPOINTS } from './endpoints'
+import type { AnnualReportFull, AnnualReportListResponse, SeasonSummary } from './contracts'
 
 export const annualReportSeasonApi = {
   getSeasonSummary: async (taxYear: number): Promise<SeasonSummary> => {
-    const response = await api.get<SeasonSummary>(ANNUAL_REPORT_ENDPOINTS.taxYearSummary(taxYear));
-    return response.data;
+    const response = await api.get<SeasonSummary>(ANNUAL_REPORT_ENDPOINTS.taxYearSummary(taxYear))
+    return response.data
   },
 
   listSeasonReports: async (
     taxYear: number,
     params: { page?: number; page_size?: number },
   ): Promise<AnnualReportListResponse> => {
-    const response = await api.get<AnnualReportListResponse>(ANNUAL_REPORT_ENDPOINTS.taxYearReports(taxYear), {
-      params: toQueryParams(params),
-    });
-    return response.data;
+    const response = await api.get<AnnualReportListResponse>(
+      ANNUAL_REPORT_ENDPOINTS.taxYearReports(taxYear),
+      {
+        params: toQueryParams(params),
+      },
+    )
+    return response.data
   },
 
   getOverdue: async (taxYear?: number): Promise<AnnualReportFull[]> => {
-    const response = await api.get<AnnualReportFull[]>(ANNUAL_REPORT_ENDPOINTS.annualReportOverdue, {
-      params: toQueryParams({ tax_year: taxYear }),
-    });
-    return response.data;
+    const response = await api.get<AnnualReportFull[]>(
+      ANNUAL_REPORT_ENDPOINTS.annualReportOverdue,
+      {
+        params: toQueryParams({ tax_year: taxYear }),
+      },
+    )
+    return response.data
   },
-};
+}

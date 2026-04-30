@@ -1,24 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
-import { annualReportsApi, annualReportsQK } from "../../api";
-import { formatCurrencyILS as fmt } from "@/utils/utils";
-import { buildCreditRows, sumCreditRows } from "./helpers";
+import { useQuery } from '@tanstack/react-query'
+import { annualReportsApi, annualReportsQK } from '../../api'
+import { formatCurrencyILS as fmt } from '@/utils/utils'
+import { buildCreditRows, sumCreditRows } from './helpers'
 
 interface Props {
-  reportId: number;
-  taxYear: number;
+  reportId: number
+  taxYear: number
 }
 
 export const TaxCreditsPanel: React.FC<Props> = ({ reportId, taxYear }) => {
   const { data, isLoading } = useQuery({
     queryKey: annualReportsQK.detail(reportId),
     queryFn: () => annualReportsApi.getReport(reportId),
-  });
+  })
 
-  if (isLoading) return <p className="text-sm text-gray-400">טוען זיכויים...</p>;
-  if (!data) return null;
+  if (isLoading) return <p className="text-sm text-gray-400">טוען זיכויים...</p>
+  if (!data) return null
 
-  const rows = buildCreditRows(data, taxYear);
-  const total = sumCreditRows(rows);
+  const rows = buildCreditRows(data, taxYear)
+  const total = sumCreditRows(rows)
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white">
@@ -41,5 +41,5 @@ export const TaxCreditsPanel: React.FC<Props> = ({ reportId, taxYear }) => {
         <span className="text-sm font-bold text-info-800">{fmt(total)}</span>
       </div>
     </div>
-  );
-};
+  )
+}

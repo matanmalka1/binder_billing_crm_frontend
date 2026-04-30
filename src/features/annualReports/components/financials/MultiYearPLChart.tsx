@@ -1,26 +1,18 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
-import {
-  Legend,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { useQueries, useQuery } from '@tanstack/react-query'
+import { Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import {
   annualReportFinancialsApi,
   annualReportsApi,
   annualReportsQK,
   annualReportTaxApi,
-} from "../../api";
-import { formatCurrencyILS as fmt } from "../../../../utils/utils";
-import { CHART_LINES, CHART_MARGIN, TREND_REPORT_LIMIT } from "./financialConstants";
-import { buildTrendChartRows } from "./financialHelpers";
+} from '../../api'
+import { formatCurrencyILS as fmt } from '../../../../utils/utils'
+import { CHART_LINES, CHART_MARGIN, TREND_REPORT_LIMIT } from './financialConstants'
+import { buildTrendChartRows } from './financialHelpers'
 
 interface MultiYearPLChartProps {
-  clientId: number;
-  currentReportId: number;
+  clientId: number
+  currentReportId: number
 }
 
 export const MultiYearPLChart: React.FC<MultiYearPLChartProps> = ({
@@ -30,17 +22,17 @@ export const MultiYearPLChart: React.FC<MultiYearPLChartProps> = ({
   const reportsQ = useQuery({
     queryKey: annualReportsQK.forClient(clientId),
     queryFn: () => annualReportsApi.listClientReports(clientId),
-  });
+  })
 
   const reports = [...(reportsQ.data ?? [])]
     .sort((a, b) => a.tax_year - b.tax_year)
-    .slice(-TREND_REPORT_LIMIT);
+    .slice(-TREND_REPORT_LIMIT)
 
   const queryInputs = reports.map((report) => ({
     id: report.id,
     year: report.tax_year,
     isCurrent: report.id === currentReportId,
-  }));
+  }))
 
   const financialResults = useQueries({
     queries: queryInputs.map((report) => ({
@@ -48,7 +40,7 @@ export const MultiYearPLChart: React.FC<MultiYearPLChartProps> = ({
       queryFn: () => annualReportFinancialsApi.getFinancials(report.id),
       enabled: queryInputs.length > 0,
     })),
-  });
+  })
 
   const taxResults = useQueries({
     queries: queryInputs.map((report) => ({
@@ -56,15 +48,15 @@ export const MultiYearPLChart: React.FC<MultiYearPLChartProps> = ({
       queryFn: () => annualReportTaxApi.getTaxCalculation(report.id),
       enabled: queryInputs.length > 0,
     })),
-  });
+  })
 
   const chartData = buildTrendChartRows(
     queryInputs,
     financialResults.map((result) => result.data),
     taxResults.map((result) => result.data),
-  );
+  )
 
-  if (chartData.length < 2) return null;
+  if (chartData.length < 2) return null
 
   return (
     <div>
@@ -90,5 +82,5 @@ export const MultiYearPLChart: React.FC<MultiYearPLChartProps> = ({
         </LineChart>
       </ResponsiveContainer>
     </div>
-  );
-};
+  )
+}

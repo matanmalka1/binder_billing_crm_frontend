@@ -1,14 +1,14 @@
-import { Plus } from "lucide-react";
-import { Card } from "../../../components/ui/primitives/Card";
-import { Button } from "../../../components/ui/primitives/Button";
-import { RemindersTable } from "./RemindersTable";
-import { ReminderDrawer } from "./ReminderDrawer";
-import { CreateReminderModal } from "./CreateReminderModal";
-import { useReminders } from "../hooks/useReminders";
+import { Plus } from 'lucide-react'
+import { Card } from '../../../components/ui/primitives/Card'
+import { Button } from '../../../components/ui/primitives/Button'
+import { RemindersTable } from './RemindersTable'
+import { ReminderDrawer } from './ReminderDrawer'
+import { CreateReminderModal } from './CreateReminderModal'
+import { useReminders } from '../hooks/useReminders'
 
 interface ClientRemindersCardProps {
-  clientId: number;
-  clientName?: string;
+  clientId: number
+  clientName?: string
 }
 
 export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
@@ -36,18 +36,14 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
     clientAnnualReports,
     clientAdvancePayments,
     clientBusinesses,
-  } = useReminders({ clientId, clientName });
+  } = useReminders({ clientId, clientName })
 
   return (
     <Card
       title="תזכורות לקוח"
       subtitle="תזכורות פתוחות ומאוחרות עבור הלקוח"
       actions={
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setShowCreateModal(true)}
-        >
+        <Button variant="outline" size="sm" onClick={() => setShowCreateModal(true)}>
           <Plus className="h-4 w-4" />
           תזכורת חדשה
         </Button>
@@ -75,8 +71,8 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
         form={form}
         isSubmitting={isSubmitting}
         onClose={() => {
-          form.reset();
-          setShowCreateModal(false);
+          form.reset()
+          setShowCreateModal(false)
         }}
         onSubmit={onSubmit}
         clientBinders={clientBinders}
@@ -87,12 +83,9 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
         clientBusinesses={clientBusinesses}
       />
 
-      <ReminderDrawer
-        reminder={selectedReminder}
-        onClose={() => setSelectedReminder(null)}
-      />
+      <ReminderDrawer reminder={selectedReminder} onClose={() => setSelectedReminder(null)} />
     </Card>
-  );
-};
+  )
+}
 
-ClientRemindersCard.displayName = "ClientRemindersCard";
+ClientRemindersCard.displayName = 'ClientRemindersCard'

@@ -108,4 +108,3 @@ VAT:
 `dateColumn` is date-only and uses the existing `formatDate` utility.
 
 There is no `dateTimeColumn` yet. Use `textColumn` with explicit feature-side formatting when a table needs date-time display.
-

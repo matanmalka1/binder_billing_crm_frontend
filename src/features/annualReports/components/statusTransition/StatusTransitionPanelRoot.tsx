@@ -1,91 +1,80 @@
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ShieldCheck } from "lucide-react";
-import { annualReportsApi } from "../../api";
-import {
-  getAllowedTransitions,
-  annualReportsQK,
-  getStatusLabel,
-  getStatusVariant,
-} from "../../api";
-import { Badge } from "../../../../components/ui/primitives/Badge";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { Card } from "../../../../components/ui/primitives/Card";
-import { toast } from "../../../../utils/toast";
-import { showErrorToast } from "../../../../utils/utils";
-import type { StatusTransitionPanelProps, TransitionForm } from "../../types";
-import { AmendReportModal } from "./AmendReportModal";
-import { TransitionDetailsForm } from "./TransitionDetailsForm";
-import { TransitionTargetSelector } from "./TransitionTargetSelector";
-import { ReadinessCheckPanel } from "../panel/ReadinessCheckPanel";
-import {
-  buildTransitionPayload,
-  getEmptyTransitionForm,
-  isValidAmendReason,
-} from "./helpers";
+import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { ShieldCheck } from 'lucide-react'
+import { annualReportsApi } from '../../api'
+import { getAllowedTransitions, annualReportsQK, getStatusLabel, getStatusVariant } from '../../api'
+import { Badge } from '../../../../components/ui/primitives/Badge'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { Card } from '../../../../components/ui/primitives/Card'
+import { toast } from '../../../../utils/toast'
+import { showErrorToast } from '../../../../utils/utils'
+import type { StatusTransitionPanelProps, TransitionForm } from '../../types'
+import { AmendReportModal } from './AmendReportModal'
+import { TransitionDetailsForm } from './TransitionDetailsForm'
+import { TransitionTargetSelector } from './TransitionTargetSelector'
+import { ReadinessCheckPanel } from '../panel/ReadinessCheckPanel'
+import { buildTransitionPayload, getEmptyTransitionForm, isValidAmendReason } from './helpers'
 
 export const StatusTransitionPanel = ({
   report,
   onTransition,
   isLoading,
 }: StatusTransitionPanelProps) => {
-  const queryClient = useQueryClient();
-  const allowed = getAllowedTransitions(report.status);
-  const [selected, setSelected] = useState<(typeof allowed)[number] | null>(
-    null,
-  );
-  const [form, setForm] = useState<TransitionForm>(getEmptyTransitionForm);
-  const [amendOpen, setAmendOpen] = useState(false);
-  const [amendReason, setAmendReason] = useState("");
+  const queryClient = useQueryClient()
+  const allowed = getAllowedTransitions(report.status)
+  const [selected, setSelected] = useState<(typeof allowed)[number] | null>(null)
+  const [form, setForm] = useState<TransitionForm>(getEmptyTransitionForm)
+  const [amendOpen, setAmendOpen] = useState(false)
+  const [amendReason, setAmendReason] = useState('')
 
   const closeAmendModal = () => {
-    setAmendOpen(false);
-    setAmendReason("");
-  };
+    setAmendOpen(false)
+    setAmendReason('')
+  }
 
   const amendMutation = useMutation({
     mutationFn: (reason: string) => annualReportsApi.amend(report.id, reason),
     onSuccess: () => {
-      toast.success("דוח נשלח לתיקון");
-      queryClient.invalidateQueries({ queryKey: annualReportsQK.detail(report.id) });
-      queryClient.invalidateQueries({ queryKey: annualReportsQK.all });
-      closeAmendModal();
+      toast.success('דוח נשלח לתיקון')
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.detail(report.id) })
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.all })
+      closeAmendModal()
     },
-    onError: (error) => showErrorToast(error, "שגיאה בשליחת תיקון"),
-  });
+    onError: (error) => showErrorToast(error, 'שגיאה בשליחת תיקון'),
+  })
 
-  const [readinessOpen, setReadinessOpen] = useState(false);
+  const [readinessOpen, setReadinessOpen] = useState(false)
 
   const setField =
     (field: keyof TransitionForm) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setForm((prev) => ({ ...prev, [field]: event.target.value }));
-    };
+      setForm((prev) => ({ ...prev, [field]: event.target.value }))
+    }
 
   const handleSelect = (status: (typeof allowed)[number]) => {
-    setSelected((prev) => (prev === status ? null : status));
-    setForm(getEmptyTransitionForm());
-  };
+    setSelected((prev) => (prev === status ? null : status))
+    setForm(getEmptyTransitionForm())
+  }
 
   const handleAmendSubmit = () => {
-    const trimmedReason = amendReason.trim();
-    if (!isValidAmendReason(trimmedReason)) return;
-    amendMutation.mutate(trimmedReason);
-  };
+    const trimmedReason = amendReason.trim()
+    if (!isValidAmendReason(trimmedReason)) return
+    amendMutation.mutate(trimmedReason)
+  }
 
   const handleSubmit = () => {
-    if (!selected) return;
-    onTransition(buildTransitionPayload(selected, form));
-    setSelected(null);
-    setForm(getEmptyTransitionForm());
-  };
+    if (!selected) return
+    onTransition(buildTransitionPayload(selected, form))
+    setSelected(null)
+    setForm(getEmptyTransitionForm())
+  }
 
   if (allowed.length === 0) {
     return (
       <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center text-sm text-gray-500">
         אין מעברי סטטוס זמינים (הדוח {getStatusLabel(report.status)})
       </div>
-    );
+    )
   }
 
   return (
@@ -128,23 +117,14 @@ export const StatusTransitionPanel = ({
                 {getStatusLabel(report.status)}
               </Badge>
             </div>
-            {report.status === "submitted" && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setAmendOpen(true)}
-              >
+            {report.status === 'submitted' && (
+              <Button type="button" variant="outline" size="sm" onClick={() => setAmendOpen(true)}>
                 תיקון דוח
               </Button>
             )}
           </div>
 
-          <TransitionTargetSelector
-            allowed={allowed}
-            selected={selected}
-            onSelect={handleSelect}
-          />
+          <TransitionTargetSelector allowed={allowed} selected={selected} onSelect={handleSelect} />
 
           {selected && (
             <TransitionDetailsForm
@@ -153,8 +133,8 @@ export const StatusTransitionPanel = ({
               isLoading={isLoading}
               onFieldChange={setField}
               onCancel={() => {
-                setSelected(null);
-                setForm(getEmptyTransitionForm());
+                setSelected(null)
+                setForm(getEmptyTransitionForm())
               }}
               onSubmit={handleSubmit}
             />
@@ -162,5 +142,5 @@ export const StatusTransitionPanel = ({
         </div>
       </Card>
     </>
-  );
-};
+  )
+}

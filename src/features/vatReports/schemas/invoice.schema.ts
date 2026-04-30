@@ -1,14 +1,14 @@
-import { z } from "zod";
-import type { CreateVatInvoicePayload, UpdateVatInvoicePayload } from "../api";
-import { VAT_RATE_TYPES, DOCUMENT_TYPES } from "../constants";
+import { z } from 'zod'
+import type { CreateVatInvoicePayload, UpdateVatInvoicePayload } from '../api'
+import { VAT_RATE_TYPES, DOCUMENT_TYPES } from '../constants'
 
 const netAmountSchema = z
   .string()
   .trim()
-  .min(1, "חובה להזין סכום")
+  .min(1, 'חובה להזין סכום')
   .refine((v) => !isNaN(Number(v)) && Number(v) > 0, {
-    message: "סכום חייב להיות חיובי",
-  });
+    message: 'סכום חייב להיות חיובי',
+  })
 
 const invoiceCommonFields = {
   net_amount: netAmountSchema,
@@ -19,53 +19,46 @@ const invoiceCommonFields = {
   invoice_date: z.string().optional(),
   counterparty_name: z.string().trim().optional(),
   counterparty_id: z.string().trim().optional(),
-  counterparty_id_type: z
-    .enum(["il_business", "il_personal", "foreign", "anonymous"])
-    .optional(),
-};
+  counterparty_id_type: z.enum(['il_business', 'il_personal', 'foreign', 'anonymous']).optional(),
+}
 
 export type CounterpartyIdType = z.infer<
   NonNullable<typeof invoiceCommonFields.counterparty_id_type>
->;
+>
 
 export const isCounterpartyIdType = (
   value: string | null | undefined,
 ): value is CounterpartyIdType =>
-  value === "il_business" ||
-  value === "il_personal" ||
-  value === "foreign" ||
-  value === "anonymous";
+  value === 'il_business' || value === 'il_personal' || value === 'foreign' || value === 'anonymous'
 
 export const vatInvoiceRowSchema = z
   .object({
-    invoice_type: z.enum(["income", "expense"]),
+    invoice_type: z.enum(['income', 'expense']),
     ...invoiceCommonFields,
   })
   .superRefine((data, ctx) => {
     if (
-      data.invoice_type === "expense" &&
-      data.document_type === "tax_invoice" &&
+      data.invoice_type === 'expense' &&
+      data.document_type === 'tax_invoice' &&
       !data.counterparty_id
     ) {
       ctx.addIssue({
-        code: "custom",
-        message: "חובה להזין מספר עוסק של הספק",
-        path: ["counterparty_id"],
-      });
+        code: 'custom',
+        message: 'חובה להזין מספר עוסק של הספק',
+        path: ['counterparty_id'],
+      })
     }
-  });
+  })
 
-export type VatInvoiceRowValues = z.infer<typeof vatInvoiceRowSchema>;
+export type VatInvoiceRowValues = z.infer<typeof vatInvoiceRowSchema>
 
-export const vatInvoiceEditSchema = z.object(invoiceCommonFields);
+export const vatInvoiceEditSchema = z.object(invoiceCommonFields)
 
-export type VatInvoiceEditValues = z.infer<typeof vatInvoiceEditSchema>;
+export type VatInvoiceEditValues = z.infer<typeof vatInvoiceEditSchema>
 
-const inferCounterpartyIdType = (
-  counterpartyId?: string,
-): "il_business" | undefined => {
-  return counterpartyId ? "il_business" : undefined;
-};
+const inferCounterpartyIdType = (counterpartyId?: string): 'il_business' | undefined => {
+  return counterpartyId ? 'il_business' : undefined
+}
 
 const buildInvoicePayloadBase = (values: VatInvoiceEditValues) => ({
   net_amount: values.net_amount,
@@ -78,15 +71,12 @@ const buildInvoicePayloadBase = (values: VatInvoiceEditValues) => ({
   counterparty_id: values.counterparty_id || undefined,
   counterparty_id_type:
     values.counterparty_id_type || inferCounterpartyIdType(values.counterparty_id),
-});
+})
 
-export const toInvoiceEditPayload = (
-  values: VatInvoiceEditValues,
-): UpdateVatInvoicePayload => buildInvoicePayloadBase(values);
+export const toInvoiceEditPayload = (values: VatInvoiceEditValues): UpdateVatInvoicePayload =>
+  buildInvoicePayloadBase(values)
 
-export const toInvoiceRowPayload = (
-  values: VatInvoiceRowValues,
-): CreateVatInvoicePayload => ({
+export const toInvoiceRowPayload = (values: VatInvoiceRowValues): CreateVatInvoicePayload => ({
   invoice_type: values.invoice_type,
   ...buildInvoicePayloadBase(values),
-});
+})

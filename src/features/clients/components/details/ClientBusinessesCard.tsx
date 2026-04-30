@@ -1,48 +1,51 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import { Pencil, Plus, Snowflake, Trash2, Undo2 } from "lucide-react";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { Card } from "../../../../components/ui/primitives/Card";
-import { StatusBadge } from "../../../../components/ui/primitives/StatusBadge";
-import { RowActionItem, RowActionsMenu } from "@/components/ui/table";
-import { ConfirmDialog } from "../../../../components/ui/overlays/ConfirmDialog";
-import { Modal } from "../../../../components/ui/overlays/Modal";
-import { ModalFormActions } from "../../../../components/ui/overlays/ModalFormActions";
-import { Input } from "../../../../components/ui/inputs/Input";
-import { Select } from "../../../../components/ui/inputs/Select";
-import { Textarea } from "../../../../components/ui/inputs/Textarea";
-import { clientsApi, clientsQK } from "../../api";
-import type { BusinessResponse, UpdateBusinessPayload } from "../../api";
-import { BUSINESS_STATUS_LABELS } from "../../../businesses/constants";
-import { CLIENT_ROUTES } from "../../api/endpoints";
-import { formatDate } from "@/utils/utils";
-import { useBusinessActions } from "../../hooks/useBusinessActions";
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
+import { Pencil, Plus, Snowflake, Trash2, Undo2 } from 'lucide-react'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { Card } from '../../../../components/ui/primitives/Card'
+import { StatusBadge } from '../../../../components/ui/primitives/StatusBadge'
+import { RowActionItem, RowActionsMenu } from '@/components/ui/table'
+import { ConfirmDialog } from '../../../../components/ui/overlays/ConfirmDialog'
+import { Modal } from '../../../../components/ui/overlays/Modal'
+import { ModalFormActions } from '../../../../components/ui/overlays/ModalFormActions'
+import { Input } from '../../../../components/ui/inputs/Input'
+import { Select } from '../../../../components/ui/inputs/Select'
+import { Textarea } from '../../../../components/ui/inputs/Textarea'
+import { clientsApi, clientsQK } from '../../api'
+import type { BusinessResponse, UpdateBusinessPayload } from '../../api'
+import { BUSINESS_STATUS_LABELS } from '../../../businesses/constants'
+import { CLIENT_ROUTES } from '../../api/endpoints'
+import { formatDate } from '@/utils/utils'
+import { useBusinessActions } from '../../hooks/useBusinessActions'
 
-const BUSINESS_STATUS_VARIANTS: Record<BusinessResponse["status"], "success" | "warning" | "neutral"> = {
-  active: "success",
-  frozen: "warning",
-  closed: "neutral",
-};
+const BUSINESS_STATUS_VARIANTS: Record<
+  BusinessResponse['status'],
+  'success' | 'warning' | 'neutral'
+> = {
+  active: 'success',
+  frozen: 'warning',
+  closed: 'neutral',
+}
 
 const BUSINESS_STATUS_OPTIONS = [
-  { value: "active", label: BUSINESS_STATUS_LABELS.active },
-  { value: "frozen", label: BUSINESS_STATUS_LABELS.frozen },
-  { value: "closed", label: BUSINESS_STATUS_LABELS.closed },
-];
+  { value: 'active', label: BUSINESS_STATUS_LABELS.active },
+  { value: 'frozen', label: BUSINESS_STATUS_LABELS.frozen },
+  { value: 'closed', label: BUSINESS_STATUS_LABELS.closed },
+]
 
 interface Props {
-  clientId: number;
-  canEdit: boolean;
-  onAddBusiness: () => void;
+  clientId: number
+  canEdit: boolean
+  onAddBusiness: () => void
 }
 
 interface EditState {
-  business: BusinessResponse;
-  name: string;
-  notes: string;
-  status: BusinessResponse["status"];
-  closedAt: string;
+  business: BusinessResponse
+  name: string
+  notes: string
+  status: BusinessResponse['status']
+  closedAt: string
 }
 
 export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAddBusiness }) => {
@@ -50,41 +53,45 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
     queryKey: clientsQK.businessesAll(clientId),
     queryFn: () => clientsApi.listAllBusinessesForClient(clientId),
     enabled: clientId > 0,
-  });
+  })
 
-  const { updateBusiness, isUpdating, deleteBusiness, isDeleting } = useBusinessActions(clientId);
+  const { updateBusiness, isUpdating, deleteBusiness, isDeleting } = useBusinessActions(clientId)
 
-  const [editState, setEditState] = useState<EditState | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<BusinessResponse | null>(null);
+  const [editState, setEditState] = useState<EditState | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<BusinessResponse | null>(null)
 
-  const businesses = data?.items ?? [];
+  const businesses = data?.items ?? []
 
   const openEdit = (biz: BusinessResponse) =>
     setEditState({
       business: biz,
-      name: biz.business_name ?? "",
-      notes: biz.notes ?? "",
+      name: biz.business_name ?? '',
+      notes: biz.notes ?? '',
       status: biz.status,
-      closedAt: biz.closed_at ?? "",
-    });
+      closedAt: biz.closed_at ?? '',
+    })
 
   const submitEdit = async () => {
-    if (!editState) return;
+    if (!editState) return
     const payload: UpdateBusinessPayload = {
       business_name: editState.name || null,
       notes: editState.notes || null,
       status: editState.status,
-      closed_at: editState.status === "closed" ? editState.closedAt || null : null,
-    };
-    await updateBusiness(editState.business.id, payload);
-    setEditState(null);
-  };
+      closed_at: editState.status === 'closed' ? editState.closedAt || null : null,
+    }
+    await updateBusiness(editState.business.id, payload)
+    setEditState(null)
+  }
 
-  const updateBusinessStatus = (businessId: number, status: BusinessResponse["status"], closedAt?: string) =>
+  const updateBusinessStatus = (
+    businessId: number,
+    status: BusinessResponse['status'],
+    closedAt?: string,
+  ) =>
     updateBusiness(businessId, {
       status,
-      closed_at: status === "closed" ? closedAt ?? new Date().toISOString().slice(0, 10) : null,
-    });
+      closed_at: status === 'closed' ? (closedAt ?? new Date().toISOString().slice(0, 10)) : null,
+    })
 
   return (
     <>
@@ -93,7 +100,13 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
         className="shadow-sm"
         actions={
           canEdit ? (
-            <Button type="button" variant="outline" size="sm" onClick={onAddBusiness} className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onAddBusiness}
+              className="gap-2"
+            >
               <Plus className="h-4 w-4" />
               הוסף עסק
             </Button>
@@ -122,7 +135,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                   >
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium text-gray-900">
-                        {biz.business_name ?? "לא הוגדר"}
+                        {biz.business_name ?? 'לא הוגדר'}
                       </p>
                       <p className="mt-1 text-xs font-medium text-gray-500">
                         נפתח בתאריך {formatDate(biz.opened_at)}
@@ -130,7 +143,9 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                     </div>
                     <StatusBadge
                       status={biz.status}
-                      getLabel={(s) => BUSINESS_STATUS_LABELS[s as keyof typeof BUSINESS_STATUS_LABELS] ?? s}
+                      getLabel={(s) =>
+                        BUSINESS_STATUS_LABELS[s as keyof typeof BUSINESS_STATUS_LABELS] ?? s
+                      }
                       variantMap={BUSINESS_STATUS_VARIANTS}
                     />
                   </Link>
@@ -138,26 +153,30 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
 
                 {canEdit && (
                   <RowActionsMenu ariaLabel={`פעולות לעסק ${biz.business_name ?? biz.id}`}>
-                    <RowActionItem label="עריכה" icon={<Pencil className="h-4 w-4" />} onClick={() => openEdit(biz)} />
-                    {biz.status !== "active" && (
+                    <RowActionItem
+                      label="עריכה"
+                      icon={<Pencil className="h-4 w-4" />}
+                      onClick={() => openEdit(biz)}
+                    />
+                    {biz.status !== 'active' && (
                       <RowActionItem
                         label="העבר לפעיל"
                         icon={<Undo2 className="h-4 w-4" />}
-                        onClick={() => void updateBusinessStatus(biz.id, "active")}
+                        onClick={() => void updateBusinessStatus(biz.id, 'active')}
                       />
                     )}
-                    {biz.status !== "frozen" && (
+                    {biz.status !== 'frozen' && (
                       <RowActionItem
                         label="הקפא עסק"
                         icon={<Snowflake className="h-4 w-4" />}
-                        onClick={() => void updateBusinessStatus(biz.id, "frozen")}
+                        onClick={() => void updateBusinessStatus(biz.id, 'frozen')}
                       />
                     )}
-                    {biz.status !== "closed" && (
+                    {biz.status !== 'closed' && (
                       <RowActionItem
                         label="סגור עסק"
                         icon={<Trash2 className="h-4 w-4" />}
-                        onClick={() => void updateBusinessStatus(biz.id, "closed")}
+                        onClick={() => void updateBusinessStatus(biz.id, 'closed')}
                       />
                     )}
                     <RowActionItem
@@ -204,18 +223,18 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                   s
                     ? {
                         ...s,
-                        status: e.target.value as BusinessResponse["status"],
+                        status: e.target.value as BusinessResponse['status'],
                         closedAt:
-                          e.target.value === "closed"
+                          e.target.value === 'closed'
                             ? s.closedAt || new Date().toISOString().slice(0, 10)
-                            : "",
+                            : '',
                       }
                     : s,
                 )
               }
               disabled={isUpdating}
             />
-            {editState.status === "closed" && (
+            {editState.status === 'closed' && (
               <Input
                 label="תאריך סגירה"
                 type="date"
@@ -239,16 +258,16 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
       <ConfirmDialog
         open={!!deleteTarget}
         title="מחיקת עסק"
-        message={`האם למחוק את העסק "${deleteTarget?.business_name ?? ""}"? פעולה זו אינה ניתנת לביטול.`}
+        message={`האם למחוק את העסק "${deleteTarget?.business_name ?? ''}"? פעולה זו אינה ניתנת לביטול.`}
         confirmLabel="מחק"
         cancelLabel="ביטול"
         isLoading={isDeleting}
         onConfirm={() => {
-          if (deleteTarget) deleteBusiness(deleteTarget.id);
-          setDeleteTarget(null);
+          if (deleteTarget) deleteBusiness(deleteTarget.id)
+          setDeleteTarget(null)
         }}
         onCancel={() => setDeleteTarget(null)}
       />
     </>
-  );
-};
+  )
+}

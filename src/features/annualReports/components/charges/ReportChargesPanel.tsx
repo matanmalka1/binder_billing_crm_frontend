@@ -1,40 +1,40 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { getChargeStatusLabel } from "../../../../utils/enums";
-import { annualReportChargesApi, annualReportsQK } from "../../api";
-import { PAGE_SIZE_SM } from "@/constants/pagination.constants";
-import { formatCurrencyILS as fmt } from "@/utils/utils";
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { getChargeStatusLabel } from '../../../../utils/enums'
+import { annualReportChargesApi, annualReportsQK } from '../../api'
+import { PAGE_SIZE_SM } from '@/constants/pagination.constants'
+import { formatCurrencyILS as fmt } from '@/utils/utils'
 import {
   formatChargeCreatedAt,
   getReportChargesTotalPages,
   REPORT_CHARGES_TABLE_HEADERS,
   REPORT_CHARGES_TEXT,
-} from "./ReportChargesPanel.helpers";
+} from './ReportChargesPanel.helpers'
 
 interface Props {
-  reportId: number;
+  reportId: number
 }
 
 export const ReportChargesPanel: React.FC<Props> = ({ reportId }) => {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1)
 
   const { data, isLoading } = useQuery({
     queryKey: annualReportsQK.reportCharges(reportId, page, PAGE_SIZE_SM),
     queryFn: () => annualReportChargesApi.listCharges(reportId, page, PAGE_SIZE_SM),
     enabled: !!reportId,
-  });
+  })
 
   if (isLoading) {
-    return <p className="py-8 text-center text-sm text-gray-400">{REPORT_CHARGES_TEXT.loading}</p>;
+    return <p className="py-8 text-center text-sm text-gray-400">{REPORT_CHARGES_TEXT.loading}</p>
   }
 
-  const items = data?.items ?? [];
-  const total = data?.total ?? 0;
-  const totalPages = getReportChargesTotalPages(total);
+  const items = data?.items ?? []
+  const total = data?.total ?? 0
+  const totalPages = getReportChargesTotalPages(total)
 
   if (items.length === 0) {
-    return <p className="py-10 text-center text-sm text-gray-400">{REPORT_CHARGES_TEXT.empty}</p>;
+    return <p className="py-10 text-center text-sm text-gray-400">{REPORT_CHARGES_TEXT.empty}</p>
   }
 
   return (
@@ -59,7 +59,9 @@ export const ReportChargesPanel: React.FC<Props> = ({ reportId }) => {
                 </td>
                 <td className="px-4 py-3 font-medium text-gray-900">{fmt(charge.amount)}</td>
                 <td className="px-4 py-3 text-gray-600">{getChargeStatusLabel(charge.status)}</td>
-                <td className="px-4 py-3 text-gray-500">{formatChargeCreatedAt(charge.created_at)}</td>
+                <td className="px-4 py-3 text-gray-500">
+                  {formatChargeCreatedAt(charge.created_at)}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -76,7 +78,9 @@ export const ReportChargesPanel: React.FC<Props> = ({ reportId }) => {
           >
             {REPORT_CHARGES_TEXT.previous}
           </Button>
-          <span className="text-gray-500">{page} / {totalPages}</span>
+          <span className="text-gray-500">
+            {page} / {totalPages}
+          </span>
           <Button
             type="button"
             variant="outline"
@@ -89,7 +93,7 @@ export const ReportChargesPanel: React.FC<Props> = ({ reportId }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-ReportChargesPanel.displayName = "ReportChargesPanel";
+ReportChargesPanel.displayName = 'ReportChargesPanel'

@@ -1,12 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2, XCircle } from "lucide-react";
-import { annualReportTaxApi, annualReportsQK } from "../../api";
-import { cn } from "../../../../utils/utils";
-import { semanticMonoToneClasses } from "@/utils/semanticColors";
-import { clampPercent } from "./helpers";
+import { useQuery } from '@tanstack/react-query'
+import { CheckCircle2, XCircle } from 'lucide-react'
+import { annualReportTaxApi, annualReportsQK } from '../../api'
+import { cn } from '../../../../utils/utils'
+import { semanticMonoToneClasses } from '@/utils/semanticColors'
+import { clampPercent } from './helpers'
 
 interface ReadinessCheckPanelProps {
-  reportId: number;
+  reportId: number
 }
 
 export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ reportId }) => {
@@ -14,19 +14,19 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
     queryKey: annualReportsQK.readiness(reportId),
     queryFn: () => annualReportTaxApi.getReadiness(reportId),
     enabled: !!reportId,
-  });
+  })
 
-  if (isLoading) return <p className="text-sm text-gray-400 py-2">בודק מוכנות...</p>;
-  if (!data) return null;
+  if (isLoading) return <p className="text-sm text-gray-400 py-2">בודק מוכנות...</p>
+  if (!data) return null
 
-  const completion = clampPercent(data.completion_pct);
+  const completion = clampPercent(data.completion_pct)
 
   return (
     <div className="space-y-2">
       <div
         className={cn(
-          "flex items-center gap-2 text-sm font-medium",
-          data.is_ready ? semanticMonoToneClasses.positive : semanticMonoToneClasses.negative
+          'flex items-center gap-2 text-sm font-medium',
+          data.is_ready ? semanticMonoToneClasses.positive : semanticMonoToneClasses.negative,
         )}
       >
         {data.is_ready ? (
@@ -50,8 +50,8 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
         <div className="h-2 rounded-full bg-gray-200">
           <div
             className={cn(
-              "h-2 rounded-full transition-all",
-              data.is_ready ? "bg-positive-500" : "bg-warning-500"
+              'h-2 rounded-full transition-all',
+              data.is_ready ? 'bg-positive-500' : 'bg-warning-500',
             )}
             style={{ width: `${completion}%` }}
           />
@@ -69,5 +69,5 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
         </ul>
       )}
     </div>
-  );
-};
+  )
+}

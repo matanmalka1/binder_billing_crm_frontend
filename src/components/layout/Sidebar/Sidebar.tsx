@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, LogOut, User as UserIcon } from "lucide-react";
-import { useAuthStore } from "../../../store/auth.store";
-import { getRoleLabel } from "../../../utils/enums";
-import { cn } from "../../../utils/utils";
-import { SidebarGroup } from "./SidebarGroup";
-import { NAV_GROUPS } from "./sidebar.constants";
+import { useState } from 'react'
+import { ChevronLeft, ChevronRight, LogOut, User as UserIcon } from 'lucide-react'
+import { useAuthStore } from '../../../store/auth.store'
+import { getRoleLabel } from '../../../utils/enums'
+import { cn } from '../../../utils/utils'
+import { SidebarGroup } from './SidebarGroup'
+import { NAV_GROUPS } from './sidebar.constants'
 
 export interface SidebarProps {
-  isSidebarOpen: boolean;
-  toggleSidebar: () => void;
+  isSidebarOpen: boolean
+  toggleSidebar: () => void
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
@@ -16,22 +16,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     main: true,
     tax: true,
     settings: true,
-  });
-  const { user, logout } = useAuthStore();
+  })
+  const { user, logout } = useAuthStore()
 
   const handleLogout = () => {
-    void logout();
-  };
+    void logout()
+  }
 
   const toggleGroup = (key: string) => {
-    setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+    setExpanded((prev) => ({ ...prev, [key]: !prev[key] }))
+  }
 
   return (
     <aside
       className={cn(
-        "relative flex flex-col border-r border-white/5 bg-gradient-to-b from-[#101b2f] via-[#0c1526] to-[#0a0f1f] text-white shadow-xl shadow-black/30 transition-all duration-200",
-        isSidebarOpen ? "w-56" : "w-16",
+        'relative flex flex-col border-r border-white/5 bg-gradient-to-b from-[#101b2f] via-[#0c1526] to-[#0a0f1f] text-white shadow-xl shadow-black/30 transition-all duration-200',
+        isSidebarOpen ? 'w-56' : 'w-16',
       )}
     >
       <div className="flex h-16 shrink-0 items-center justify-between border-b border-white/5 px-4">
@@ -43,9 +43,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
         <button
           onClick={toggleSidebar}
           className="shrink-0 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
-          aria-label={isSidebarOpen ? "כווץ תפריט" : "הרחב תפריט"}
+          aria-label={isSidebarOpen ? 'כווץ תפריט' : 'הרחב תפריט'}
         >
-          {isSidebarOpen ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          {isSidebarOpen ? (
+            <ChevronRight className="h-4 w-4" />
+          ) : (
+            <ChevronLeft className="h-4 w-4" />
+          )}
         </button>
       </div>
 
@@ -70,7 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
               </div>
               <div className="min-w-0 text-right">
                 <p className="truncate text-sm font-medium leading-tight text-white">
-                  {user?.full_name || "אורח"}
+                  {user?.full_name || 'אורח'}
                 </p>
                 {user?.role && (
                   <p className="truncate text-xs leading-tight text-gray-400">
@@ -103,5 +107,5 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
         )}
       </div>
     </aside>
-  );
-};
+  )
+}

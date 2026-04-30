@@ -1,47 +1,44 @@
-import { type ReactNode } from "react";
-import { Card } from "../../../../components/ui/primitives/Card";
-import { DefinitionList } from "../../../../components/ui/layout/DefinitionList";
-import { cn } from "@/utils/utils";
+import { type ReactNode } from 'react'
+import { Card } from '../../../../components/ui/primitives/Card'
+import { DefinitionList } from '../../../../components/ui/layout/DefinitionList'
+import { cn } from '@/utils/utils'
 
-const EMPTY_VALUE = "לא הוגדר";
+const EMPTY_VALUE = 'לא הוגדר'
 
 type DefinitionItem = {
-  label: string;
-  value: ReactNode;
-};
+  label: string
+  value: ReactNode
+}
 
-const EmptyValue = () => <span className="font-medium text-gray-400">{EMPTY_VALUE}</span>;
+const EmptyValue = () => <span className="font-medium text-gray-400">{EMPTY_VALUE}</span>
 
 const displayValue = (value: ReactNode) => {
-  if (value === EMPTY_VALUE || value === "" || value == null) return <EmptyValue />;
-  return value;
-};
+  if (value === EMPTY_VALUE || value === '' || value == null) return <EmptyValue />
+  return value
+}
 
 const SectionCard = ({
   title,
   children,
   className,
 }: {
-  title: string;
-  children: ReactNode;
-  className?: string;
+  title: string
+  children: ReactNode
+  className?: string
 }) => (
-  <Card
-    title={title}
-    className={cn("shadow-sm", className)}
-  >
+  <Card title={title} className={cn('shadow-sm', className)}>
     {children}
   </Card>
-);
+)
 
 export const DefinitionSectionCard = ({
   title,
   items,
   columns,
 }: {
-  title: string;
-  items: DefinitionItem[];
-  columns: 2 | 3;
+  title: string
+  items: DefinitionItem[]
+  columns: 2 | 3
 }) => (
   <SectionCard title={title}>
     <DefinitionList
@@ -50,4 +47,4 @@ export const DefinitionSectionCard = ({
       className="gap-x-5 gap-y-3"
     />
   </SectionCard>
-);
+)

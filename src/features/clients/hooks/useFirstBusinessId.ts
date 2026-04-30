@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { clientsApi, clientsQK } from "../api";
+import { useQuery } from '@tanstack/react-query'
+import { clientsApi, clientsQK } from '../api'
 
 export const useFirstBusinessId = (clientId: number) => {
   const { data, isLoading } = useQuery({
@@ -11,7 +11,7 @@ export const useFirstBusinessId = (clientId: number) => {
       }),
     enabled: clientId > 0,
     staleTime: 60_000,
-  });
+  })
 
-  return { id: data?.items?.[0]?.id ?? null, isLoading };
-};
+  return { id: data?.items?.[0]?.id ?? null, isLoading }
+}

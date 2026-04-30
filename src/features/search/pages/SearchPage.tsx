@@ -1,39 +1,52 @@
-import { useRef, useState } from "react";
-import { useSearchDebounce } from "@/hooks/useSearchDebounce";
-import { Search as SearchIcon, FileSearch } from "lucide-react";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { ToolbarContainer } from "@/components/ui/layout/ToolbarContainer";
-import { Input } from "@/components/ui/inputs/Input";
-import { DataTable } from "@/components/ui/table/DataTable";
-import { Alert } from "@/components/ui/overlays/Alert";
-import { PaginationCard } from "@/components/ui/table/PaginationCard";
-import { StateCard } from "@/components/ui/feedback/StateCard";
+import { useRef, useState } from 'react'
+import { useSearchDebounce } from '@/hooks/useSearchDebounce'
+import { Search as SearchIcon, FileSearch } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { ToolbarContainer } from '@/components/ui/layout/ToolbarContainer'
+import { Input } from '@/components/ui/inputs/Input'
+import { DataTable } from '@/components/ui/table/DataTable'
+import { Alert } from '@/components/ui/overlays/Alert'
+import { PaginationCard } from '@/components/ui/table/PaginationCard'
+import { StateCard } from '@/components/ui/feedback/StateCard'
 import {
   DocumentResultsSection,
   searchColumns,
   SearchFiltersBar,
   useSearchPage,
   type SearchResult,
-} from "@/features/search";
+} from '@/features/search'
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 20
 
 export const Search: React.FC = () => {
-  const { error, filters, hasAnyFilter, handleFilterChange, handleReset, loading, results, documents, total } =
-    useSearchPage();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [queryDraft, setQueryDraft] = useSearchDebounce(filters.query, (v) => handleFilterChange("query", v));
+  const {
+    error,
+    filters,
+    hasAnyFilter,
+    handleFilterChange,
+    handleReset,
+    loading,
+    results,
+    documents,
+    total,
+  } = useSearchPage()
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [queryDraft, setQueryDraft] = useSearchDebounce(filters.query, (v) =>
+    handleFilterChange('query', v),
+  )
 
-  const hasAdvancedFilter = Boolean(filters.client_name || filters.id_number || filters.binder_number);
-  const [filtersOpen, setFiltersOpen] = useState(hasAdvancedFilter);
+  const hasAdvancedFilter = Boolean(
+    filters.client_name || filters.id_number || filters.binder_number,
+  )
+  const [filtersOpen, setFiltersOpen] = useState(hasAdvancedFilter)
 
-  const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / PAGE_SIZE))
 
   const handleResetAll = () => {
-    handleReset();
-    setFiltersOpen(false);
-    inputRef.current?.focus();
-  };
+    handleReset()
+    setFiltersOpen(false)
+    inputRef.current?.focus()
+  }
 
   return (
     <div className="space-y-6">
@@ -77,7 +90,7 @@ export const Search: React.FC = () => {
           icon={FileSearch}
           title="לא נמצאו תוצאות"
           message="נסה להרחיב את קריטריוני החיפוש או לאפס את הפילטרים"
-          action={{ label: "איפוס חיפוש", onClick: handleResetAll }}
+          action={{ label: 'איפוס חיפוש', onClick: handleResetAll }}
         />
       )}
 
@@ -85,8 +98,10 @@ export const Search: React.FC = () => {
         <>
           {!loading && (
             <p className="px-1 text-sm text-gray-500">
-              נמצאו{" "}
-              <strong className="text-gray-900">{(total + documents.length).toLocaleString("he-IL")}</strong>{" "}
+              נמצאו{' '}
+              <strong className="text-gray-900">
+                {(total + documents.length).toLocaleString('he-IL')}
+              </strong>{' '}
               תוצאות
             </p>
           )}
@@ -94,7 +109,7 @@ export const Search: React.FC = () => {
           <DataTable<SearchResult>
             data={results}
             columns={searchColumns}
-            getRowKey={(r) => `${r.result_type}-${r.client_id}-${r.binder_id ?? "none"}`}
+            getRowKey={(r) => `${r.result_type}-${r.client_id}-${r.binder_id ?? 'none'}`}
             isLoading={loading}
             emptyMessage="אין תוצאות"
           />
@@ -104,7 +119,7 @@ export const Search: React.FC = () => {
               page={filters.page}
               totalPages={totalPages}
               total={total}
-              onPageChange={(page) => handleFilterChange("page", String(page))}
+              onPageChange={(page) => handleFilterChange('page', String(page))}
             />
           )}
         </>
@@ -112,5 +127,5 @@ export const Search: React.FC = () => {
 
       {!loading && <DocumentResultsSection documents={documents} />}
     </div>
-  );
-};
+  )
+}

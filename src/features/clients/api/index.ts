@@ -1,6 +1,6 @@
-export { clientsApi } from "./clients.api";
-export { clientsQK } from "./queryKeys";
-export type { ISODateString } from "@/types";
+export { clientsApi } from './clients.api'
+export { clientsQK } from './queryKeys'
+export type { ISODateString } from '@/types'
 export type {
   ClientResponse,
   ActiveClientSummary,
@@ -30,4 +30,4 @@ export type {
   BindersCard,
   DocumentsCard,
   BusinessStatusCardResponse,
-} from "./contracts";
+} from './contracts'

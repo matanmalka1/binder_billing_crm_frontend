@@ -1,8 +1,8 @@
-export { notesApi } from "./notes.api";
-export { notesQK } from "./queryKeys";
+export { notesApi } from './notes.api'
+export { notesQK } from './queryKeys'
 export type {
   EntityNote,
   EntityNoteListResponse,
   CreateNotePayload,
   UpdateNotePayload,
-} from "./contracts";
+} from './contracts'

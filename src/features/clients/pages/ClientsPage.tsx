@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { StatsCard } from "@/components/ui/layout/StatsCard";
-import { Alert } from "@/components/ui/overlays/Alert";
-import { Button } from "@/components/ui/primitives/Button";
-import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
-import { DetailDrawer } from "@/components/ui/overlays/DetailDrawer";
-import { ModalFormActions } from "@/components/ui/overlays/ModalFormActions";
-import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { StatsCard } from '@/components/ui/layout/StatsCard'
+import { Alert } from '@/components/ui/overlays/Alert'
+import { Button } from '@/components/ui/primitives/Button'
+import { ConfirmDialog } from '@/components/ui/overlays/ConfirmDialog'
+import { DetailDrawer } from '@/components/ui/overlays/DetailDrawer'
+import { ModalFormActions } from '@/components/ui/overlays/ModalFormActions'
+import { PaginatedDataTable } from '@/components/ui/table/PaginatedDataTable'
 import {
   buildClientColumns,
   ClientEditForm,
@@ -15,18 +15,18 @@ import {
   CreateClientModal,
   DeletedClientDialog,
   useClientsPage,
-} from "@/features/clients";
-import type { ClientResponse } from "@/features/clients";
-import { CLIENT_ROUTES } from "@/features/clients";
-import { ImportExportModal } from "@/features/importExport";
+} from '@/features/clients'
+import type { ClientResponse } from '@/features/clients'
+import { CLIENT_ROUTES } from '@/features/clients'
+import { ImportExportModal } from '@/features/importExport'
 
-const EDIT_FORM_ID = "client-edit-form-list";
+const EDIT_FORM_ID = 'client-edit-form-list'
 
 export const Clients: React.FC = () => {
-  const navigate = useNavigate();
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showImportExport, setShowImportExport] = useState(false);
-  const [editingClient, setEditingClient] = useState<ClientResponse | null>(null);
+  const navigate = useNavigate()
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showImportExport, setShowImportExport] = useState(false)
+  const [editingClient, setEditingClient] = useState<ClientResponse | null>(null)
   const {
     activeActionKey,
     clients,
@@ -52,11 +52,11 @@ export const Clients: React.FC = () => {
     updateClient,
     updateLoading,
     can,
-  } = useClientsPage();
+  } = useClientsPage()
 
   const columns = buildClientColumns({
     onEditClient: can.editClients ? (client) => setEditingClient(client) : undefined,
-  });
+  })
 
   return (
     <div className="space-y-6">
@@ -77,32 +77,29 @@ export const Clients: React.FC = () => {
         }
       />
       {!can.editClients && (
-        <Alert
-          variant="info"
-          message="צפייה בלבד. יצירה ועריכה של לקוחות זמינה ליועצים בלבד."
-        />
+        <Alert variant="info" message="צפייה בלבד. יצירה ועריכה של לקוחות זמינה ליועצים בלבד." />
       )}
       <div className="grid grid-cols-3 gap-4">
         <StatsCard
           title="פעילים"
           value={stats.active}
           variant="green"
-          selected={filters.status === "active"}
-          onClick={() => handleFilterChange("status", filters.status === "active" ? "" : "active")}
+          selected={filters.status === 'active'}
+          onClick={() => handleFilterChange('status', filters.status === 'active' ? '' : 'active')}
         />
         <StatsCard
           title="מוקפאים"
           value={stats.frozen}
           variant="orange"
-          selected={filters.status === "frozen"}
-          onClick={() => handleFilterChange("status", filters.status === "frozen" ? "" : "frozen")}
+          selected={filters.status === 'frozen'}
+          onClick={() => handleFilterChange('status', filters.status === 'frozen' ? '' : 'frozen')}
         />
         <StatsCard
           title="סגורים"
           value={stats.closed}
           variant="neutral"
-          selected={filters.status === "closed"}
-          onClick={() => handleFilterChange("status", filters.status === "closed" ? "" : "closed")}
+          selected={filters.status === 'closed'}
+          onClick={() => handleFilterChange('status', filters.status === 'closed' ? '' : 'closed')}
         />
       </div>
       <ClientsFiltersBar
@@ -122,14 +119,14 @@ export const Clients: React.FC = () => {
         pageSize={filters.page_size}
         total={total}
         onPageChange={setPage}
-        onPageSizeChange={(size) => handleFilterChange("page_size", String(size))}
+        onPageSizeChange={(size) => handleFilterChange('page_size', String(size))}
         emptyState={{
-          title: "אין לקוחות להצגה",
+          title: 'אין לקוחות להצגה',
           message: can.createClients
-            ? "עדיין לא נוספו לקוחות. הוסף את הלקוח הראשון כדי להתחיל."
-            : "לא נמצאו לקוחות התואמים את הסינון הנוכחי.",
+            ? 'עדיין לא נוספו לקוחות. הוסף את הלקוח הראשון כדי להתחיל.'
+            : 'לא נמצאו לקוחות התואמים את הסינון הנוכחי.',
           action: can.createClients
-            ? { label: "לקוח חדש", onClick: () => setShowCreateModal(true) }
+            ? { label: 'לקוח חדש', onClick: () => setShowCreateModal(true) }
             : undefined,
         }}
       />
@@ -142,10 +139,10 @@ export const Clients: React.FC = () => {
       <ImportExportModal open={showImportExport} onClose={() => setShowImportExport(false)} />
       <ConfirmDialog
         open={Boolean(pendingAction)}
-        title={pendingAction?.confirm?.title ?? "אישור פעולה"}
-        message={pendingAction?.confirm?.message ?? "האם להמשיך?"}
-        confirmLabel={pendingAction?.confirm?.confirmLabel ?? "אישור"}
-        cancelLabel={pendingAction?.confirm?.cancelLabel ?? "ביטול"}
+        title={pendingAction?.confirm?.title ?? 'אישור פעולה'}
+        message={pendingAction?.confirm?.message ?? 'האם להמשיך?'}
+        confirmLabel={pendingAction?.confirm?.confirmLabel ?? 'אישור'}
+        cancelLabel={pendingAction?.confirm?.cancelLabel ?? 'ביטול'}
         isLoading={activeActionKey === pendingAction?.uiKey}
         onConfirm={confirmPendingAction}
         onCancel={cancelPendingAction}
@@ -157,8 +154,8 @@ export const Clients: React.FC = () => {
         onRestore={handleRestoreClient}
         onForceCreate={handleDismissDeletedDialog}
         onDismiss={() => {
-          handleDismissDeletedDialog();
-          setShowCreateModal(true);
+          handleDismissDeletedDialog()
+          setShowCreateModal(true)
         }}
         restoreLoading={restoreLoading}
         forceCreateLoading={false}
@@ -182,8 +179,8 @@ export const Clients: React.FC = () => {
             client={editingClient}
             formId={EDIT_FORM_ID}
             onSave={async (payload) => {
-              await updateClient(editingClient.id, payload);
-              setEditingClient(null);
+              await updateClient(editingClient.id, payload)
+              setEditingClient(null)
             }}
             onCancel={() => setEditingClient(null)}
             isLoading={updateLoading}
@@ -192,5 +189,5 @@ export const Clients: React.FC = () => {
         </DetailDrawer>
       )}
     </div>
-  );
-};
+  )
+}

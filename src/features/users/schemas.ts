@@ -1,23 +1,23 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 // ── Shared field validators ────────────────────────────────────────────────────
 
 const fullNameField = z
   .string()
   .trim()
-  .min(2, "שם מלא חייב להכיל לפחות 2 תווים")
-  .max(100, "שם מלא ארוך מדי");
+  .min(2, 'שם מלא חייב להכיל לפחות 2 תווים')
+  .max(100, 'שם מלא ארוך מדי')
 
-const emailField = z.string().trim().email("כתובת אימייל לא תקינה");
+const emailField = z.string().trim().email('כתובת אימייל לא תקינה')
 
 const phoneField = z
   .string()
   .trim()
-  .regex(/^0\d{1,2}-?\d{7}$/, "מספר טלפון לא תקין")
+  .regex(/^0\d{1,2}-?\d{7}$/, 'מספר טלפון לא תקין')
   .optional()
-  .or(z.literal(""));
+  .or(z.literal(''))
 
-const roleField = z.enum(["advisor", "secretary"]);
+const roleField = z.enum(['advisor', 'secretary'])
 
 // ── Schemas ───────────────────────────────────────────────────────────────────
 
@@ -26,28 +26,28 @@ export const createUserSchema = z.object({
   email: emailField,
   phone: phoneField,
   role: roleField,
-  password: z.string().min(8, "סיסמה חייבת להכיל לפחות 8 תווים"),
-});
+  password: z.string().min(8, 'סיסמה חייבת להכיל לפחות 8 תווים'),
+})
 
-export type CreateUserFormValues = z.infer<typeof createUserSchema>;
+export type CreateUserFormValues = z.infer<typeof createUserSchema>
 
 export const editUserSchema = z.object({
   full_name: fullNameField,
   email: emailField,
   phone: phoneField,
   role: roleField,
-});
+})
 
-export type EditUserFormValues = z.infer<typeof editUserSchema>;
+export type EditUserFormValues = z.infer<typeof editUserSchema>
 
 export const resetPasswordSchema = z
   .object({
-    new_password: z.string().min(8, "סיסמה חייבת להכיל לפחות 8 תווים"),
+    new_password: z.string().min(8, 'סיסמה חייבת להכיל לפחות 8 תווים'),
     confirm_password: z.string(),
   })
   .refine((data) => data.new_password === data.confirm_password, {
-    message: "הסיסמאות אינן תואמות",
-    path: ["confirm_password"],
-  });
+    message: 'הסיסמאות אינן תואמות',
+    path: ['confirm_password'],
+  })
 
-export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
+export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>

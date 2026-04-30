@@ -1,29 +1,26 @@
-import type { AdvancePaymentStatus } from "../types";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Select } from "../../../components/ui/inputs/Select";
-import { getAdvancePaymentStatusLabel } from "../../../utils/enums";
-import { YEAR_OPTIONS } from "../utils";
-import {
-  ADVANCE_PAYMENT_FREQUENCY_OPTIONS,
-  ADVANCE_PAYMENT_STATUS_FILTERS,
-} from "../constants";
-import { toFrequency } from "./advancePaymentComponent.utils";
+import type { AdvancePaymentStatus } from '../types'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Select } from '../../../components/ui/inputs/Select'
+import { getAdvancePaymentStatusLabel } from '../../../utils/enums'
+import { YEAR_OPTIONS } from '../utils'
+import { ADVANCE_PAYMENT_FREQUENCY_OPTIONS, ADVANCE_PAYMENT_STATUS_FILTERS } from '../constants'
+import { toFrequency } from './advancePaymentComponent.utils'
 import {
   HEADER_STATUS_ACTIVE_CLASS,
   HEADER_STATUS_INACTIVE_CLASS,
-} from "./advancePaymentComponent.constants";
+} from './advancePaymentComponent.constants'
 
 interface ClientAdvancePaymentsHeaderProps {
-  isAdvisor: boolean;
-  statusFilter: AdvancePaymentStatus[];
-  onToggleStatus: (status: AdvancePaymentStatus) => void;
-  year: number;
-  onYearChange: (year: number) => void;
-  onOpenCreate: () => void;
-  onGenerateSchedule: () => void;
-  generationFrequency: 1 | 2;
-  onGenerationFrequencyChange: (frequency: 1 | 2) => void;
-  isGenerating?: boolean;
+  isAdvisor: boolean
+  statusFilter: AdvancePaymentStatus[]
+  onToggleStatus: (status: AdvancePaymentStatus) => void
+  year: number
+  onYearChange: (year: number) => void
+  onOpenCreate: () => void
+  onGenerateSchedule: () => void
+  generationFrequency: 1 | 2
+  onGenerationFrequencyChange: (frequency: 1 | 2) => void
+  isGenerating?: boolean
 }
 
 export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderProps> = ({
@@ -41,7 +38,9 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
   <div className="flex items-center justify-between">
     {isAdvisor && (
       <div className="flex gap-2">
-        <Button variant="primary" size="sm" onClick={onOpenCreate}>הוסף מקדמה</Button>
+        <Button variant="primary" size="sm" onClick={onOpenCreate}>
+          הוסף מקדמה
+        </Button>
         <div className="w-32">
           <Select
             value={String(generationFrequency)}
@@ -50,14 +49,14 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
           />
         </div>
         <Button variant="outline" size="sm" onClick={onGenerateSchedule} disabled={isGenerating}>
-          {isGenerating ? "יוצר..." : "צור לוח מקדמות לשנה"}
+          {isGenerating ? 'יוצר...' : 'צור לוח מקדמות לשנה'}
         </Button>
       </div>
     )}
     <div className="flex items-center gap-2">
       <div className="flex flex-wrap gap-1">
         {ADVANCE_PAYMENT_STATUS_FILTERS.map((status) => {
-          const active = statusFilter.includes(status);
+          const active = statusFilter.includes(status)
           return (
             <Button
               key={status}
@@ -71,14 +70,18 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
             >
               {getAdvancePaymentStatusLabel(status)}
             </Button>
-          );
+          )
         })}
       </div>
       <div className="w-28">
-        <Select value={String(year)} onChange={(e) => onYearChange(Number(e.target.value))} options={YEAR_OPTIONS} />
+        <Select
+          value={String(year)}
+          onChange={(e) => onYearChange(Number(e.target.value))}
+          options={YEAR_OPTIONS}
+        />
       </div>
     </div>
   </div>
-);
+)
 
-ClientAdvancePaymentsHeader.displayName = "ClientAdvancePaymentsHeader";
+ClientAdvancePaymentsHeader.displayName = 'ClientAdvancePaymentsHeader'

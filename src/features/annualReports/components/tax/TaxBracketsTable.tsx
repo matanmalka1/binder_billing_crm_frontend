@@ -1,15 +1,15 @@
-import type { BracketBreakdownItem } from "../../api";
-import { formatCurrencyILS as fmt } from "@/utils/utils";
-import { fmtRange, fmtRate } from "./helpers";
+import type { BracketBreakdownItem } from '../../api'
+import { formatCurrencyILS as fmt } from '@/utils/utils'
+import { fmtRange, fmtRate } from './helpers'
 
 interface Props {
-  brackets: BracketBreakdownItem[];
+  brackets: BracketBreakdownItem[]
 }
 
 export const TaxBracketsTable: React.FC<Props> = ({ brackets }) => {
-  if (brackets.length === 0) return null;
+  if (brackets.length === 0) return null
 
-  const lastIndex = brackets.length - 1;
+  const lastIndex = brackets.length - 1
 
   return (
     <div className="mt-3">
@@ -28,10 +28,7 @@ export const TaxBracketsTable: React.FC<Props> = ({ brackets }) => {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {brackets.map((b, i) => (
-              <tr
-                key={i}
-                className={i === lastIndex ? "bg-warning-50 font-semibold" : "bg-white"}
-              >
+              <tr key={i} className={i === lastIndex ? 'bg-warning-50 font-semibold' : 'bg-white'}>
                 <td className="px-2 py-1.5 text-gray-900">{fmtRate(b.rate)}</td>
                 <td className="px-2 py-1.5 text-gray-600 tabular-nums" dir="ltr">
                   {fmtRange(b.from_amount, b.to_amount)}
@@ -48,5 +45,5 @@ export const TaxBracketsTable: React.FC<Props> = ({ brackets }) => {
         </table>
       </div>
     </div>
-  );
-};
+  )
+}

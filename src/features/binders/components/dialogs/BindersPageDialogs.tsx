@@ -1,47 +1,44 @@
-import { Input } from "@/components/ui/inputs/Input";
-import { Modal } from "@/components/ui/overlays/Modal";
-import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
-import { Button } from "@/components/ui/primitives/Button";
-import type { BinderResponse } from "../../types";
-import { BinderHandoverPanel } from "../sections/BinderHandoverPanel";
-import { Select } from "@/components/ui/inputs/Select";
-import {
-  NUMERIC_MONTH_OPTIONS,
-  PERIOD_YEAR_OPTIONS,
-} from "@/constants/periodOptions.constants";
+import { Input } from '@/components/ui/inputs/Input'
+import { Modal } from '@/components/ui/overlays/Modal'
+import { ConfirmDialog } from '@/components/ui/overlays/ConfirmDialog'
+import { Button } from '@/components/ui/primitives/Button'
+import type { BinderResponse } from '../../types'
+import { BinderHandoverPanel } from '../sections/BinderHandoverPanel'
+import { Select } from '@/components/ui/inputs/Select'
+import { NUMERIC_MONTH_OPTIONS, PERIOD_YEAR_OPTIONS } from '@/constants/periodOptions.constants'
 
 interface BindersPageDialogsProps {
-  confirmReturnForId: number | null;
-  confirmDeleteForId: number | null;
-  pickupPersonName: string;
-  setPickupPersonName: (value: string) => void;
-  isReturning: boolean;
-  isDeleting: boolean;
-  onConfirmReturn: () => void;
-  onCancelReturn: () => void;
-  onConfirmDelete: () => void;
-  onCancelDelete: () => void;
-  getBinderNumberLabel: (binderId: number | null) => string | null;
-  bulkReadyOpen: boolean;
-  onCloseBulkReady: () => void;
-  onConfirmBulkReady: () => void;
-  bulkReadyYear: number;
-  bulkReadyMonth: number;
-  setBulkReadyYear: (year: number) => void;
-  setBulkReadyMonth: (month: number) => void;
-  isMarkingReadyBulk: boolean;
-  dialogBinder: BinderResponse | null;
-  handoverOpen: boolean;
-  onCloseHandover: () => void;
+  confirmReturnForId: number | null
+  confirmDeleteForId: number | null
+  pickupPersonName: string
+  setPickupPersonName: (value: string) => void
+  isReturning: boolean
+  isDeleting: boolean
+  onConfirmReturn: () => void
+  onCancelReturn: () => void
+  onConfirmDelete: () => void
+  onCancelDelete: () => void
+  getBinderNumberLabel: (binderId: number | null) => string | null
+  bulkReadyOpen: boolean
+  onCloseBulkReady: () => void
+  onConfirmBulkReady: () => void
+  bulkReadyYear: number
+  bulkReadyMonth: number
+  setBulkReadyYear: (year: number) => void
+  setBulkReadyMonth: (month: number) => void
+  isMarkingReadyBulk: boolean
+  dialogBinder: BinderResponse | null
+  handoverOpen: boolean
+  onCloseHandover: () => void
   onSubmitHandover: (payload: {
-    binderIds: number[];
-    receivedByName: string;
-    handedOverAt: string;
-    untilPeriodYear: number;
-    untilPeriodMonth: number;
-    notes: string | null;
-  }) => void;
-  isHandingOver: boolean;
+    binderIds: number[]
+    receivedByName: string
+    handedOverAt: string
+    untilPeriodYear: number
+    untilPeriodMonth: number
+    notes: string | null
+  }) => void
+  isHandingOver: boolean
 }
 
 export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
@@ -77,7 +74,7 @@ export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
       message={
         confirmReturnForId !== null
           ? `האם להחזיר את קלסר ${getBinderNumberLabel(confirmReturnForId)}?`
-          : "האם להחזיר את הקלסר?"
+          : 'האם להחזיר את הקלסר?'
       }
       confirmLabel="החזר קלסר"
       cancelLabel="ביטול"
@@ -171,6 +168,6 @@ export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
       ) : null}
     </Modal>
   </>
-);
+)
 
-BindersPageDialogs.displayName = "BindersPageDialogs";
+BindersPageDialogs.displayName = 'BindersPageDialogs'

@@ -1,7 +1,7 @@
-import { CheckCircle2 } from "lucide-react";
-import { formatDateTime } from "../../../utils/utils";
-import { VAT_FILING_METHOD_LABELS } from "../constants";
-import type { VatFiledBannerProps } from "../types";
+import { CheckCircle2 } from 'lucide-react'
+import { formatDateTime } from '../../../utils/utils'
+import { VAT_FILING_METHOD_LABELS } from '../constants'
+import type { VatFiledBannerProps } from '../types'
 
 export const VatFiledBanner: React.FC<VatFiledBannerProps> = ({
   filedAt,
@@ -12,8 +12,8 @@ export const VatFiledBanner: React.FC<VatFiledBannerProps> = ({
   isAmendment,
   amendsItemId,
 }) => {
-  const methodLabel = filingMethod ? VAT_FILING_METHOD_LABELS[filingMethod] : null;
-  const byLabel = filedByName ?? (filedBy != null ? `#${filedBy}` : null);
+  const methodLabel = filingMethod ? VAT_FILING_METHOD_LABELS[filingMethod] : null
+  const byLabel = filedByName ?? (filedBy != null ? `#${filedBy}` : null)
 
   return (
     <div
@@ -23,12 +23,8 @@ export const VatFiledBanner: React.FC<VatFiledBannerProps> = ({
       <CheckCircle2 className="h-5 w-5 shrink-0 text-positive-600" />
       <p className="text-sm font-medium text-positive-800">
         הדוח הוגש ב‑{formatDateTime(filedAt)}
-        {byLabel && (
-          <span className="font-normal text-positive-700"> על ידי {byLabel}</span>
-        )}
-        {methodLabel && (
-          <span className="font-normal text-positive-600"> · {methodLabel}</span>
-        )}
+        {byLabel && <span className="font-normal text-positive-700"> על ידי {byLabel}</span>}
+        {methodLabel && <span className="font-normal text-positive-600"> · {methodLabel}</span>}
         {submissionReference && (
           <span className="font-normal text-positive-600"> · אסמכתא: {submissionReference}</span>
         )}
@@ -37,7 +33,7 @@ export const VatFiledBanner: React.FC<VatFiledBannerProps> = ({
         )}
       </p>
     </div>
-  );
-};
+  )
+}
 
-VatFiledBanner.displayName = "VatFiledBanner";
+VatFiledBanner.displayName = 'VatFiledBanner'

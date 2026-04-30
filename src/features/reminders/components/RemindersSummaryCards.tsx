@@ -1,11 +1,11 @@
-import { Bell, Calendar } from "lucide-react";
-import { StatsCard } from "../../../components/ui/layout/StatsCard";
+import { Bell, Calendar } from 'lucide-react'
+import { StatsCard } from '../../../components/ui/layout/StatsCard'
 
 interface RemindersSummaryCardsProps {
-  pendingCount: number;
-  sentCount: number;
-  activeFilter?: string;
-  onFilter?: (status: string) => void;
+  pendingCount: number
+  sentCount: number
+  activeFilter?: string
+  onFilter?: (status: string) => void
 }
 
 export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
@@ -17,24 +17,24 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
   const stats = [
     {
       icon: Bell,
-      variant: "blue" as const,
+      variant: 'blue' as const,
       count: pendingCount,
-      label: "תזכורות ממתינות",
-      filterValue: "pending",
+      label: 'תזכורות ממתינות',
+      filterValue: 'pending',
     },
     {
       icon: Calendar,
-      variant: "green" as const,
+      variant: 'green' as const,
       count: sentCount,
-      label: "תזכורות שנשלחו",
-      filterValue: "sent",
+      label: 'תזכורות שנשלחו',
+      filterValue: 'sent',
     },
-  ];
+  ]
 
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
       {stats.map(({ icon, variant, count, label, filterValue }) => {
-        const isActive = activeFilter === filterValue;
+        const isActive = activeFilter === filterValue
         return (
           <StatsCard
             key={label}
@@ -42,12 +42,12 @@ export const RemindersSummaryCards: React.FC<RemindersSummaryCardsProps> = ({
             value={count}
             icon={icon}
             variant={variant}
-            onClick={onFilter ? () => onFilter(isActive ? "" : filterValue) : undefined}
+            onClick={onFilter ? () => onFilter(isActive ? '' : filterValue) : undefined}
             selected={isActive}
             className="h-full w-full"
           />
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}

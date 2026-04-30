@@ -1,19 +1,19 @@
-import { useState, type ReactNode } from "react";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { cn, formatCurrencyILS as fmt } from "../../../../utils/utils";
+import { useState, type ReactNode } from 'react'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { cn, formatCurrencyILS as fmt } from '../../../../utils/utils'
 import {
   FinancialAddFormShell,
   FinancialAmountDescriptionFields,
   FinancialSelectField,
-} from "./FinancialLineFormParts";
-import { FIELD_PLACEHOLDERS } from "./financialConstants";
-import { useIncomeLineForm } from "./useFinancialLineForm";
+} from './FinancialLineFormParts'
+import { FIELD_PLACEHOLDERS } from './financialConstants'
+import { useIncomeLineForm } from './useFinancialLineForm'
 
 export interface AddLineFormProps {
-  typeOptions: Record<string, string>;
-  onAdd: (typeKey: string, amount: string, description?: string) => void;
-  isAdding: boolean;
-  label: string;
+  typeOptions: Record<string, string>
+  onAdd: (typeKey: string, amount: string, description?: string) => void
+  isAdding: boolean
+  label: string
 }
 
 export const AddLineForm: React.FC<AddLineFormProps> = ({
@@ -22,17 +22,17 @@ export const AddLineForm: React.FC<AddLineFormProps> = ({
   isAdding,
   label,
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const form = useIncomeLineForm(undefined, (payload) => {
-    onAdd(payload.source_type, payload.amount, payload.description);
-    form.reset();
-    setOpen(false);
-  });
+    onAdd(payload.source_type, payload.amount, payload.description)
+    form.reset()
+    setOpen(false)
+  })
 
   const close = () => {
-    form.reset();
-    setOpen(false);
-  };
+    form.reset()
+    setOpen(false)
+  }
 
   return (
     <FinancialAddFormShell
@@ -57,14 +57,14 @@ export const AddLineForm: React.FC<AddLineFormProps> = ({
         onDescriptionChange={form.setDescription}
       />
     </FinancialAddFormShell>
-  );
-};
+  )
+}
 
 interface AutoPopulateControlsProps {
-  showForceConfirm: boolean;
-  isPending: boolean;
-  onPopulate: (force: boolean) => void;
-  onCancelForce: () => void;
+  showForceConfirm: boolean
+  isPending: boolean
+  onPopulate: (force: boolean) => void
+  onCancelForce: () => void
 }
 
 export const AutoPopulateControls: React.FC<AutoPopulateControlsProps> = ({
@@ -105,12 +105,12 @@ export const AutoPopulateControls: React.FC<AutoPopulateControlsProps> = ({
       </Button>
     )}
   </div>
-);
+)
 
 interface FinancialSummaryCardsProps {
-  totalIncome: number;
-  totalExpenses: number;
-  taxableIncome: number;
+  totalIncome: number
+  totalExpenses: number
+  taxableIncome: number
 }
 
 export const FinancialSummaryCards: React.FC<FinancialSummaryCardsProps> = ({
@@ -129,36 +129,34 @@ export const FinancialSummaryCards: React.FC<FinancialSummaryCardsProps> = ({
     </div>
     <div
       className={cn(
-        "rounded-xl border p-4 text-center",
-        taxableIncome >= 0
-          ? "border-info-100 bg-info-50"
-          : "border-negative-100 bg-negative-50",
+        'rounded-xl border p-4 text-center',
+        taxableIncome >= 0 ? 'border-info-100 bg-info-50' : 'border-negative-100 bg-negative-50',
       )}
     >
       <p className="text-xs text-gray-500 mb-1">הכנסה חייבת</p>
       <p
         className={cn(
-          "text-lg font-bold",
-          taxableIncome >= 0 ? "text-info-700" : "text-negative-600",
+          'text-lg font-bold',
+          taxableIncome >= 0 ? 'text-info-700' : 'text-negative-600',
         )}
       >
         {fmt(taxableIncome)}
       </p>
     </div>
   </div>
-);
+)
 
 interface FinancialSectionProps {
-  icon: ReactNode;
-  title: string;
-  total: number;
-  titleClassName: string;
-  headerClassName: string;
-  totalClassName: string;
-  emptyMessage: string;
-  isEmpty: boolean;
-  children: ReactNode;
-  footer: ReactNode;
+  icon: ReactNode
+  title: string
+  total: number
+  titleClassName: string
+  headerClassName: string
+  totalClassName: string
+  emptyMessage: string
+  isEmpty: boolean
+  children: ReactNode
+  footer: ReactNode
 }
 
 export const FinancialSection: React.FC<FinancialSectionProps> = ({
@@ -174,15 +172,19 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
   footer,
 }) => (
   <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-    <div className={cn("flex items-center gap-2 border-b border-gray-100 px-5 py-3", headerClassName)}>
+    <div
+      className={cn('flex items-center gap-2 border-b border-gray-100 px-5 py-3', headerClassName)}
+    >
       {icon}
-      <h4 className={cn("text-sm font-semibold", titleClassName)}>{title}</h4>
-      <span className={cn("mr-auto text-xs font-medium", totalClassName)}>{fmt(total)}</span>
+      <h4 className={cn('text-sm font-semibold', titleClassName)}>{title}</h4>
+      <span className={cn('mr-auto text-xs font-medium', totalClassName)}>{fmt(total)}</span>
     </div>
     <div className="divide-y divide-gray-50 px-1">
-      {isEmpty ? <p className="px-4 py-6 text-center text-sm text-gray-400">{emptyMessage}</p> : null}
+      {isEmpty ? (
+        <p className="px-4 py-6 text-center text-sm text-gray-400">{emptyMessage}</p>
+      ) : null}
       {children}
     </div>
     <div className="px-4 pb-3 pt-2">{footer}</div>
   </div>
-);
+)

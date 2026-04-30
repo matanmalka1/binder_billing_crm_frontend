@@ -1,13 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { documentsApi, documentsQK } from "../api";
-import { Badge } from "../../../components/ui/primitives/Badge";
-import { STATUS_LABELS, STATUS_BADGE_VARIANT } from "../documents.constants";
-import { formatDate, formatFileSize } from "../../../utils/utils";
+import { useQuery } from '@tanstack/react-query'
+import { documentsApi, documentsQK } from '../api'
+import { Badge } from '../../../components/ui/primitives/Badge'
+import { STATUS_LABELS, STATUS_BADGE_VARIANT } from '../documents.constants'
+import { formatDate, formatFileSize } from '../../../utils/utils'
 
 interface DocumentVersionsPanelProps {
-  clientId: number;
-  documentType: string;
-  taxYear?: number;
+  clientId: number
+  documentType: string
+  taxYear?: number
 }
 
 export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
@@ -18,20 +18,16 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
   const { data, isLoading } = useQuery({
     queryKey: documentsQK.versions(clientId, documentType, taxYear),
     queryFn: () => documentsApi.getVersions(clientId, documentType, taxYear),
-  });
+  })
 
-  const items = data?.items ?? [];
+  const items = data?.items ?? []
 
   if (isLoading) {
-    return (
-      <div className="px-4 py-2 text-xs text-gray-400">טוען גרסאות...</div>
-    );
+    return <div className="px-4 py-2 text-xs text-gray-400">טוען גרסאות...</div>
   }
 
   if (items.length === 0) {
-    return (
-      <div className="px-4 py-2 text-xs text-gray-400">אין גרסאות קודמות</div>
-    );
+    return <div className="px-4 py-2 text-xs text-gray-400">אין גרסאות קודמות</div>
   }
 
   return (
@@ -46,7 +42,7 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
               v{v.version}
             </span>
             <span className="tabular-nums text-gray-400 shrink-0">{formatDate(v.uploaded_at)}</span>
-            <Badge variant={STATUS_BADGE_VARIANT[v.status] ?? "neutral"}>
+            <Badge variant={STATUS_BADGE_VARIANT[v.status] ?? 'neutral'}>
               {STATUS_LABELS[v.status] ?? v.status}
             </Badge>
             {v.original_filename && (
@@ -61,7 +57,7 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
         ))}
       </ul>
     </div>
-  );
-};
+  )
+}
 
-DocumentVersionsPanel.displayName = "DocumentVersionsPanel";
+DocumentVersionsPanel.displayName = 'DocumentVersionsPanel'

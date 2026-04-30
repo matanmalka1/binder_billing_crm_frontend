@@ -1,18 +1,18 @@
-import type { IncomeLineResponse } from "../../api";
+import type { IncomeLineResponse } from '../../api'
 import {
   FinancialAmountDescriptionFields,
   FinancialEditFormShell,
   FinancialSelectField,
-} from "./FinancialLineFormParts";
-import type { IncomeFormPayload } from "./financialHelpers";
-import { useIncomeLineForm } from "./useFinancialLineForm";
+} from './FinancialLineFormParts'
+import type { IncomeFormPayload } from './financialHelpers'
+import { useIncomeLineForm } from './useFinancialLineForm'
 
 interface EditIncomeLineFormProps {
-  line: IncomeLineResponse;
-  typeOptions: Record<string, string>;
-  isSaving: boolean;
-  onSave: (payload: IncomeFormPayload) => void;
-  onCancel: () => void;
+  line: IncomeLineResponse
+  typeOptions: Record<string, string>
+  isSaving: boolean
+  onSave: (payload: IncomeFormPayload) => void
+  onCancel: () => void
 }
 
 export const EditIncomeLineForm: React.FC<EditIncomeLineFormProps> = ({
@@ -22,7 +22,7 @@ export const EditIncomeLineForm: React.FC<EditIncomeLineFormProps> = ({
   onSave,
   onCancel,
 }) => {
-  const form = useIncomeLineForm(line, onSave);
+  const form = useIncomeLineForm(line, onSave)
 
   return (
     <FinancialEditFormShell
@@ -31,11 +31,7 @@ export const EditIncomeLineForm: React.FC<EditIncomeLineFormProps> = ({
       onSubmit={form.submit}
       onCancel={onCancel}
     >
-      <FinancialSelectField
-        value={form.typeKey}
-        onChange={form.setTypeKey}
-        options={typeOptions}
-      />
+      <FinancialSelectField value={form.typeKey} onChange={form.setTypeKey} options={typeOptions} />
       <FinancialAmountDescriptionFields
         amount={form.amount}
         onAmountChange={form.setAmount}
@@ -43,7 +39,7 @@ export const EditIncomeLineForm: React.FC<EditIncomeLineFormProps> = ({
         onDescriptionChange={form.setDescription}
       />
     </FinancialEditFormShell>
-  );
-};
+  )
+}
 
-EditIncomeLineForm.displayName = "EditIncomeLineForm";
+EditIncomeLineForm.displayName = 'EditIncomeLineForm'

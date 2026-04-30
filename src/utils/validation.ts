@@ -5,15 +5,15 @@
  * Both use the same Luhn-based algorithm.
  */
 export const validateIsraeliIdChecksum = (id: string): boolean => {
-  if (id.length !== 9 || !/^\d+$/.test(id)) return false;
-  let total = 0;
+  if (id.length !== 9 || !/^\d+$/.test(id)) return false
+  let total = 0
   for (let i = 0; i < 9; i++) {
-    let n = Number(id[i]);
+    let n = Number(id[i])
     if (i % 2 === 1) {
-      n *= 2;
-      if (n > 9) n -= 9;
+      n *= 2
+      if (n > 9) n -= 9
     }
-    total += n;
+    total += n
   }
-  return total % 10 === 0;
-};
+  return total % 10 === 0
+}

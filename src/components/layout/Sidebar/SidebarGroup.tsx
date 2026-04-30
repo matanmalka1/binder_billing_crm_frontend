@@ -1,13 +1,13 @@
-import { ChevronDown } from "lucide-react";
-import { cn } from "../../../utils/utils";
-import { SidebarItem } from "./SidebarItem";
-import type { NavGroup } from "./sidebar.constants";
+import { ChevronDown } from 'lucide-react'
+import { cn } from '../../../utils/utils'
+import { SidebarItem } from './SidebarItem'
+import type { NavGroup } from './sidebar.constants'
 
 interface SidebarGroupProps {
-  group: NavGroup;
-  isSidebarOpen: boolean;
-  isExpanded: boolean;
-  onToggle: () => void;
+  group: NavGroup
+  isSidebarOpen: boolean
+  isExpanded: boolean
+  onToggle: () => void
 }
 
 export const SidebarGroup: React.FC<SidebarGroupProps> = ({
@@ -30,8 +30,8 @@ export const SidebarGroup: React.FC<SidebarGroupProps> = ({
           </span>
           <ChevronDown
             className={cn(
-              "h-3 w-3 text-gray-600 transition-transform duration-200",
-              isExpanded ? "rotate-0" : "-rotate-90",
+              'h-3 w-3 text-gray-600 transition-transform duration-200',
+              isExpanded ? 'rotate-0' : '-rotate-90',
             )}
           />
         </button>
@@ -42,8 +42,8 @@ export const SidebarGroup: React.FC<SidebarGroupProps> = ({
       <div
         id={`nav-group-${group.key}`}
         className={cn(
-          "overflow-hidden transition-all duration-200",
-          isExpanded || !isSidebarOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
+          'overflow-hidden transition-all duration-200',
+          isExpanded || !isSidebarOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0',
         )}
       >
         <div className="space-y-1">
@@ -53,5 +53,5 @@ export const SidebarGroup: React.FC<SidebarGroupProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

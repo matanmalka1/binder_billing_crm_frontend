@@ -1,19 +1,19 @@
-import { Link } from "react-router-dom";
-import { ChevronLeft } from "lucide-react";
-import { cn } from "../../utils/utils";
-import { staggerDelay } from "../../utils/animation";
-import { SectionHeader } from "../ui/layout/SectionHeader";
+import { Link } from 'react-router-dom'
+import { ChevronLeft } from 'lucide-react'
+import { cn } from '../../utils/utils'
+import { staggerDelay } from '../../utils/animation'
+import { SectionHeader } from '../ui/layout/SectionHeader'
 
 export interface Breadcrumb {
-  label: string;
-  to: string;
+  label: string
+  to: string
 }
 
 export interface PageHeaderProps {
-  title: React.ReactNode;
-  description?: React.ReactNode;
-  breadcrumbs?: Breadcrumb[];
-  actions?: React.ReactNode;
+  title: React.ReactNode
+  description?: React.ReactNode
+  breadcrumbs?: Breadcrumb[]
+  actions?: React.ReactNode
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({
@@ -31,8 +31,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             <Link
               to={crumb.to}
               className={cn(
-                "font-medium transition-colors duration-200 hover:text-primary-600",
-                index === breadcrumbs.length - 1 ? "text-gray-900" : "text-gray-600",
+                'font-medium transition-colors duration-200 hover:text-primary-600',
+                index === breadcrumbs.length - 1 ? 'text-gray-900' : 'text-gray-600',
               )}
             >
               {crumb.label}
@@ -58,4 +58,4 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       }
     />
   </header>
-);
+)

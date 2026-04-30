@@ -1,5 +1,5 @@
-export { notificationsApi } from "./notifications.api";
-export { notificationsQK } from "./queryKeys";
+export { notificationsApi } from './notifications.api'
+export { notificationsQK } from './queryKeys'
 export type {
   NotificationSeverity,
   NotificationItem,
@@ -9,4 +9,4 @@ export type {
   ListNotificationsParams,
   SendNotificationPayload,
   SendNotificationResponse,
-} from "./contracts";
+} from './contracts'

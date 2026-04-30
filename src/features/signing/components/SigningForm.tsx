@@ -1,23 +1,23 @@
-import { CheckCircle2, Clock, ShieldCheck, XCircle } from "lucide-react";
-import type { SignerViewResponse } from "@/features/signatureRequests";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Textarea } from "../../../components/ui/inputs/Textarea";
-import { formatDate } from "../../../utils/utils";
-import type { SigningPageState } from "../types";
+import { CheckCircle2, Clock, ShieldCheck, XCircle } from 'lucide-react'
+import type { SignerViewResponse } from '@/features/signatureRequests'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Textarea } from '../../../components/ui/inputs/Textarea'
+import { formatDate } from '../../../utils/utils'
+import type { SigningPageState } from '../types'
 
 interface SigningFormProps {
-  data: SignerViewResponse;
-  pageState: SigningPageState;
-  isExpired: boolean;
-  declineReason: string;
-  onDeclineReasonChange: (value: string) => void;
-  onStartApprove: () => void;
-  onStartDecline: () => void;
-  onBack: () => void;
-  onConfirmApprove: () => void;
-  onConfirmDecline: () => void;
-  isApproving: boolean;
-  isDeclining: boolean;
+  data: SignerViewResponse
+  pageState: SigningPageState
+  isExpired: boolean
+  declineReason: string
+  onDeclineReasonChange: (value: string) => void
+  onStartApprove: () => void
+  onStartDecline: () => void
+  onBack: () => void
+  onConfirmApprove: () => void
+  onConfirmDecline: () => void
+  isApproving: boolean
+  isDeclining: boolean
 }
 
 export const SigningForm: React.FC<SigningFormProps> = ({
@@ -34,7 +34,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
   isApproving,
   isDeclining,
 }) => {
-  if (pageState === "confirming_approve") {
+  if (pageState === 'confirming_approve') {
     return (
       <div className="space-y-5">
         <div className="flex flex-col items-center gap-2 text-center">
@@ -42,9 +42,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
             <CheckCircle2 className="h-7 w-7 text-positive-700" />
           </div>
           <h2 className="text-lg font-semibold text-gray-900">אישור חתימה</h2>
-          <p className="text-sm text-gray-500">
-            האם אתה/ת בטוח/ה שברצונך לחתום על "{data.title}"?
-          </p>
+          <p className="text-sm text-gray-500">האם אתה/ת בטוח/ה שברצונך לחתום על "{data.title}"?</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -67,10 +65,10 @@ export const SigningForm: React.FC<SigningFormProps> = ({
           </Button>
         </div>
       </div>
-    );
+    )
   }
 
-  if (pageState === "confirming_decline") {
+  if (pageState === 'confirming_decline') {
     return (
       <div className="space-y-4">
         <div className="flex flex-col items-center gap-2 text-center">
@@ -78,9 +76,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
             <XCircle className="h-7 w-7 text-negative-500" />
           </div>
           <h2 className="text-lg font-semibold text-gray-900">דחיית בקשה</h2>
-          <p className="text-sm text-gray-500">
-            האם אתה/ת בטוח/ה שברצונך לדחות את בקשת החתימה?
-          </p>
+          <p className="text-sm text-gray-500">האם אתה/ת בטוח/ה שברצונך לדחות את בקשת החתימה?</p>
         </div>
         <Textarea
           label="סיבת דחייה (אופציונלי)"
@@ -110,7 +106,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
           </Button>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -130,8 +126,8 @@ export const SigningForm: React.FC<SigningFormProps> = ({
         {data.expires_at && (
           <div className="flex justify-between text-sm">
             <dt className="text-gray-500">תוקף הקישור</dt>
-            <dd className={`font-medium ${isExpired ? "text-negative-600" : "text-gray-900"}`}>
-              {isExpired ? "פג תוקף" : formatDate(data.expires_at)}
+            <dd className={`font-medium ${isExpired ? 'text-negative-600' : 'text-gray-900'}`}>
+              {isExpired ? 'פג תוקף' : formatDate(data.expires_at)}
             </dd>
           </div>
         )}
@@ -151,8 +147,8 @@ export const SigningForm: React.FC<SigningFormProps> = ({
           <div className="flex gap-2.5 rounded-xl border border-primary-100 bg-primary-50 p-3">
             <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
             <p className="text-xs leading-relaxed text-primary-700">
-              בלחיצה על "אני מאשר/ת וחותם/ת" הנך מאשר/ת את תוכן המסמך ומסכים/ה לחתימה
-              דיגיטלית מחייבת בהתאם לחוק חתימה אלקטרונית (התשס\"א-2001).
+              בלחיצה על "אני מאשר/ת וחותם/ת" הנך מאשר/ת את תוכן המסמך ומסכים/ה לחתימה דיגיטלית
+              מחייבת בהתאם לחוק חתימה אלקטרונית (התשס\"א-2001).
             </p>
           </div>
           <div className="flex gap-2">
@@ -179,5 +175,5 @@ export const SigningForm: React.FC<SigningFormProps> = ({
         </>
       )}
     </div>
-  );
-};
+  )
+}

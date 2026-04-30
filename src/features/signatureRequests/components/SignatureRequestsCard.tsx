@@ -1,36 +1,38 @@
-import { useState } from "react";
-import { FileSignature, Plus } from "lucide-react";
-import { Card } from "../../../components/ui/primitives/Card";
-import { Button } from "../../../components/ui/primitives/Button";
-import { StateCard } from "../../../components/ui/feedback/StateCard";
-import { Alert } from "../../../components/ui/overlays/Alert";
-import { SkeletonBlock } from "../../../components/ui/primitives/SkeletonBlock";
-import { SignatureRequestRow } from "./SignatureRequestRow";
-import { SignatureRequestAuditDrawer } from "./SignatureRequestAuditDrawer";
-import { CreateSignatureRequestModal } from "./CreateSignatureRequestModal";
-import { useClientSignatureRequests } from "../hooks/useClientSignatureRequests";
-import { useSignatureRequestActions } from "../hooks/useSignatureRequestActions";
-import { useSignatureRequestSigningUrls } from "../utils";
-import type { ClientResponse } from "@/features/clients";
+import { useState } from 'react'
+import { FileSignature, Plus } from 'lucide-react'
+import { Card } from '../../../components/ui/primitives/Card'
+import { Button } from '../../../components/ui/primitives/Button'
+import { StateCard } from '../../../components/ui/feedback/StateCard'
+import { Alert } from '../../../components/ui/overlays/Alert'
+import { SkeletonBlock } from '../../../components/ui/primitives/SkeletonBlock'
+import { SignatureRequestRow } from './SignatureRequestRow'
+import { SignatureRequestAuditDrawer } from './SignatureRequestAuditDrawer'
+import { CreateSignatureRequestModal } from './CreateSignatureRequestModal'
+import { useClientSignatureRequests } from '../hooks/useClientSignatureRequests'
+import { useSignatureRequestActions } from '../hooks/useSignatureRequestActions'
+import { useSignatureRequestSigningUrls } from '../utils'
+import type { ClientResponse } from '@/features/clients'
 
 interface Props {
-  client: ClientResponse;
-  businessId: number | null | undefined;
-  canManage: boolean;
+  client: ClientResponse
+  businessId: number | null | undefined
+  canManage: boolean
 }
 
 export const SignatureRequestsCard: React.FC<Props> = ({ client, businessId, canManage }) => {
-  const [showCreate, setShowCreate] = useState(false);
-  const [auditRequestId, setAuditRequestId] = useState<number | null>(null);
+  const [showCreate, setShowCreate] = useState(false)
+  const [auditRequestId, setAuditRequestId] = useState<number | null>(null)
 
-  const { items, total, isLoading, error } = useClientSignatureRequests({ clientId: client.id });
-  const { create, isCreating, send, isSending, cancel, isCanceling } = useSignatureRequestActions(client.id);
-  const { signingUrls, handleSend } = useSignatureRequestSigningUrls(send);
+  const { items, total, isLoading, error } = useClientSignatureRequests({ clientId: client.id })
+  const { create, isCreating, send, isSending, cancel, isCanceling } = useSignatureRequestActions(
+    client.id,
+  )
+  const { signingUrls, handleSend } = useSignatureRequestSigningUrls(send)
 
   return (
     <>
       <Card
-        title={`בקשות חתימה${total > 0 ? ` (${total})` : ""}`}
+        title={`בקשות חתימה${total > 0 ? ` (${total})` : ''}`}
         actions={
           canManage ? (
             <Button variant="outline" size="sm" onClick={() => setShowCreate(true)}>
@@ -55,7 +57,11 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, businessId, can
             <StateCard
               icon={FileSignature}
               message="אין בקשות חתימה עבור לקוח זה"
-              action={canManage ? { label: "יצירת בקשה ראשונה", onClick: () => setShowCreate(true) } : undefined}
+              action={
+                canManage
+                  ? { label: 'יצירת בקשה ראשונה', onClick: () => setShowCreate(true) }
+                  : undefined
+              }
               size="compact"
             />
           )}
@@ -97,6 +103,6 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, businessId, can
         onCreate={create}
       />
     </>
-  );
-};
-SignatureRequestsCard.displayName = "SignatureRequestsCard";
+  )
+}
+SignatureRequestsCard.displayName = 'SignatureRequestsCard'

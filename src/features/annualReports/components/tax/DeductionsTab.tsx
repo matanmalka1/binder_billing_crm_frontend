@@ -1,26 +1,28 @@
-import { useQuery } from "@tanstack/react-query";
-import { MoreHorizontal, Scissors } from "lucide-react";
-import { annualReportFinancialsApi, annualReportsQK } from "../../api";
-import { TaxCreditsPanel } from "./TaxCreditsPanel";
-import { EXPENSE_LABELS } from "../../report.constants";
-import { cn, formatCurrencyILS as fmt } from "../../../../utils/utils";
-import { semanticMonoToneClasses } from "@/utils/semanticColors";
-import { CATEGORY_ICONS } from "./constants";
-import { getRecognitionTone } from "./helpers";
+import { useQuery } from '@tanstack/react-query'
+import { MoreHorizontal, Scissors } from 'lucide-react'
+import { annualReportFinancialsApi, annualReportsQK } from '../../api'
+import { TaxCreditsPanel } from './TaxCreditsPanel'
+import { EXPENSE_LABELS } from '../../report.constants'
+import { cn, formatCurrencyILS as fmt } from '../../../../utils/utils'
+import { semanticMonoToneClasses } from '@/utils/semanticColors'
+import { CATEGORY_ICONS } from './constants'
+import { getRecognitionTone } from './helpers'
 
-interface Props { reportId: number; taxYear: number; }
+interface Props {
+  reportId: number
+  taxYear: number
+}
 
 export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
   const { data, isLoading } = useQuery({
     queryKey: annualReportsQK.financials(reportId),
     queryFn: () => annualReportFinancialsApi.getFinancials(reportId),
-  });
+  })
 
-  if (isLoading)
-    return <p className="py-8 text-center text-sm text-gray-400">טוען ניכויים...</p>;
+  if (isLoading) return <p className="py-8 text-center text-sm text-gray-400">טוען ניכויים...</p>
 
-  const expenses = data?.expense_lines ?? [];
-  const totalRecognized = expenses.reduce((s, e) => s + Number(e.recognized_amount), 0);
+  const expenses = data?.expense_lines ?? []
+  const totalRecognized = expenses.reduce((s, e) => s + Number(e.recognized_amount), 0)
 
   return (
     <div className="space-y-5">
@@ -33,7 +35,9 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
               <h3 className="text-sm font-semibold text-gray-800">ניכויים מוכרים</h3>
             </div>
             {expenses.length > 0 && (
-              <span className={cn("text-sm font-bold", semanticMonoToneClasses.negative)}>{fmt(totalRecognized)}</span>
+              <span className={cn('text-sm font-bold', semanticMonoToneClasses.negative)}>
+                {fmt(totalRecognized)}
+              </span>
             )}
           </div>
           <div className="divide-y divide-gray-50">
@@ -41,7 +45,7 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
               <p className="px-5 py-8 text-center text-sm text-gray-400">אין ניכויים להצגה</p>
             )}
             {expenses.map((e) => {
-              const Icon = CATEGORY_ICONS[e.category] ?? MoreHorizontal;
+              const Icon = CATEGORY_ICONS[e.category] ?? MoreHorizontal
               return (
                 <div key={e.id} className="flex items-center justify-between px-5 py-3">
                   <div className="flex items-center gap-3">
@@ -53,24 +57,25 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
                         {EXPENSE_LABELS[e.category] ?? e.category}
                       </p>
                       {Number(e.recognition_rate) < 100 && (
-                        <p className={cn("text-xs", getRecognitionTone(e.recognition_rate))}>
+                        <p className={cn('text-xs', getRecognitionTone(e.recognition_rate))}>
                           {Number(e.recognition_rate)}% מוכר
                         </p>
                       )}
                     </div>
                   </div>
-                  <span className={cn("text-sm font-semibold", semanticMonoToneClasses.negative)}>{fmt(e.recognized_amount)}</span>
+                  <span className={cn('text-sm font-semibold', semanticMonoToneClasses.negative)}>
+                    {fmt(e.recognized_amount)}
+                  </span>
                 </div>
-              );
+              )
             })}
           </div>
         </div>
 
         <TaxCreditsPanel reportId={reportId} taxYear={taxYear} />
       </div>
-
     </div>
-  );
-};
+  )
+}
 
-DeductionsTab.displayName = "DeductionsTab";
+DeductionsTab.displayName = 'DeductionsTab'

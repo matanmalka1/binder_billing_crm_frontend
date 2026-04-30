@@ -1,12 +1,10 @@
 export const VAT_ENDPOINTS = {
-  vatWorkItemLookup: "/vat/work-items/lookup",
-  vatWorkItems: "/vat/work-items",
+  vatWorkItemLookup: '/vat/work-items/lookup',
+  vatWorkItems: '/vat/work-items',
   vatWorkItemById: (id: number | string) => `/vat/work-items/${id}`,
-  vatWorkItemsByClient: (clientId: number | string) =>
-    `/vat/clients/${clientId}/work-items`,
+  vatWorkItemsByClient: (clientId: number | string) => `/vat/clients/${clientId}/work-items`,
   vatPeriodOptions: (clientId: number | string) => `/vat/clients/${clientId}/period-options`,
-  vatWorkItemMaterialsComplete: (id: number | string) =>
-    `/vat/work-items/${id}/materials-complete`,
+  vatWorkItemMaterialsComplete: (id: number | string) => `/vat/work-items/${id}/materials-complete`,
   vatWorkItemInvoices: (id: number | string) => `/vat/work-items/${id}/invoices`,
   vatWorkItemInvoiceById: (id: number | string, invoiceId: number | string) =>
     `/vat/work-items/${id}/invoices/${invoiceId}`,
@@ -16,4 +14,4 @@ export const VAT_ENDPOINTS = {
   vatWorkItemAudit: (id: number | string) => `/vat/work-items/${id}/audit`,
   vatClientSummary: (clientId: number | string) => `/vat/clients/${clientId}/summary`,
   vatClientExport: (clientId: number | string) => `/vat/clients/${clientId}/export`,
-} as const;
+} as const

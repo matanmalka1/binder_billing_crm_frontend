@@ -1,5 +1,5 @@
-export type ClientStatus = "active" | "frozen" | "closed";
+export type ClientStatus = 'active' | 'frozen' | 'closed'
 
-export const isClientClosed = (s?: ClientStatus | string | null): boolean => s === "closed";
+export const isClientClosed = (s?: ClientStatus | string | null): boolean => s === 'closed'
 export const isClientLockedForCreate = (s?: ClientStatus | string | null): boolean =>
-  s === "closed" || s === "frozen";
+  s === 'closed' || s === 'frozen'

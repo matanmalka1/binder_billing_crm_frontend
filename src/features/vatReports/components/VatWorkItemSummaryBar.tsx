@@ -1,62 +1,66 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ChevronLeft, Clock, FolderOpen, Info, AlertTriangle, User } from "lucide-react";
-import { formatDate } from "@/utils/utils";
-import { Badge } from "../../../components/ui/primitives/Badge";
-import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
-import { getVatWorkItemStatusLabel } from "../../../utils/enums";
-import { useRole } from "../../../hooks/useRole";
-import { useVatWorkItemActions } from "../hooks/useVatWorkItemActions";
-import { useActiveVatBinder } from "../hooks/useActiveVatBinder";
-import { VAT_DEADLINE_WARNING_DAYS, VAT_STATUS_BADGE_VARIANTS } from "../constants";
-import { VatProgressBar } from "./VatProgressBar";
-import { VatActionButtons } from "./VatActionButtons";
-import { VatExportButtons } from "./VatExportButtons";
-import { VatSendBackForm } from "./VatSendBackForm";
-import { VatFileModal } from "./VatFileModal";
-import { isFiled } from "../utils";
-import type { VatWorkItemSummaryBarProps } from "../types";
-import { formatVatPeriodTitle, getVatClientTitle } from "../view.helpers";
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { ChevronLeft, Clock, FolderOpen, Info, AlertTriangle, User } from 'lucide-react'
+import { formatDate } from '@/utils/utils'
+import { Badge } from '../../../components/ui/primitives/Badge'
+import { StatusBadge } from '../../../components/ui/primitives/StatusBadge'
+import { getVatWorkItemStatusLabel } from '../../../utils/enums'
+import { useRole } from '../../../hooks/useRole'
+import { useVatWorkItemActions } from '../hooks/useVatWorkItemActions'
+import { useActiveVatBinder } from '../hooks/useActiveVatBinder'
+import { VAT_DEADLINE_WARNING_DAYS, VAT_STATUS_BADGE_VARIANTS } from '../constants'
+import { VatProgressBar } from './VatProgressBar'
+import { VatActionButtons } from './VatActionButtons'
+import { VatExportButtons } from './VatExportButtons'
+import { VatSendBackForm } from './VatSendBackForm'
+import { VatFileModal } from './VatFileModal'
+import { isFiled } from '../utils'
+import type { VatWorkItemSummaryBarProps } from '../types'
+import { formatVatPeriodTitle, getVatClientTitle } from '../view.helpers'
 
-type AlertTone = "warning" | "error";
+type AlertTone = 'warning' | 'error'
 
-const ALERT_CLASSES: Record<AlertTone, { wrap: string; icon: string; Icon: typeof AlertTriangle }> = {
-  warning: {
-    wrap: "border-warning-200 bg-warning-50 text-warning-800",
-    icon: "text-warning-500",
-    Icon: AlertTriangle,
-  },
-  error: {
-    wrap: "border-negative-200 bg-negative-50 text-negative-800",
-    icon: "text-negative-500",
-    Icon: AlertTriangle,
-  },
-};
+const ALERT_CLASSES: Record<AlertTone, { wrap: string; icon: string; Icon: typeof AlertTriangle }> =
+  {
+    warning: {
+      wrap: 'border-warning-200 bg-warning-50 text-warning-800',
+      icon: 'text-warning-500',
+      Icon: AlertTriangle,
+    },
+    error: {
+      wrap: 'border-negative-200 bg-negative-50 text-negative-800',
+      icon: 'text-negative-500',
+      Icon: AlertTriangle,
+    },
+  }
 
-const AlertBanner: React.FC<{ tone: AlertTone; icon?: typeof AlertTriangle; children: React.ReactNode }> = ({
-  tone,
-  icon: IconOverride,
-  children,
-}) => {
-  const { wrap, icon, Icon } = ALERT_CLASSES[tone];
-  const FinalIcon = IconOverride ?? Icon;
+const AlertBanner: React.FC<{
+  tone: AlertTone
+  icon?: typeof AlertTriangle
+  children: React.ReactNode
+}> = ({ tone, icon: IconOverride, children }) => {
+  const { wrap, icon, Icon } = ALERT_CLASSES[tone]
+  const FinalIcon = IconOverride ?? Icon
   return (
     <div className={`flex items-start gap-2 rounded-lg border px-3 py-2 text-sm ${wrap}`}>
       <FinalIcon className={`mt-0.5 h-4 w-4 shrink-0 ${icon}`} />
       <span>{children}</span>
     </div>
-  );
-};
+  )
+}
 
-export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem, onFilingPendingChange }) => {
-  const { isAdvisor } = useRole();
+export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({
+  workItem,
+  onFilingPendingChange,
+}) => {
+  const { isAdvisor } = useRole()
   const { handleMaterialsComplete, handleReadyForReview, handleSendBack, isLoading } =
-    useVatWorkItemActions(workItem.id);
-  const [showSendBack, setShowSendBack] = useState(false);
-  const [showFileModal, setShowFileModal] = useState(false);
-  const filed = isFiled(workItem.status);
-  const { activeBinder } = useActiveVatBinder(workItem.client_record_id);
-  const titleClient = getVatClientTitle(workItem.client_name, workItem.client_record_id);
+    useVatWorkItemActions(workItem.id)
+  const [showSendBack, setShowSendBack] = useState(false)
+  const [showFileModal, setShowFileModal] = useState(false)
+  const filed = isFiled(workItem.status)
+  const { activeBinder } = useActiveVatBinder(workItem.client_record_id)
+  const titleClient = getVatClientTitle(workItem.client_name, workItem.client_record_id)
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm space-y-3" dir="rtl">
@@ -103,7 +107,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
         </div>
       </div>
 
-      {workItem.status === "pending_materials" && workItem.pending_materials_note && (
+      {workItem.status === 'pending_materials' && workItem.pending_materials_note && (
         <AlertBanner tone="warning" icon={Info}>
           {workItem.pending_materials_note}
         </AlertBanner>
@@ -118,10 +122,10 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
       {!workItem.is_overdue &&
         workItem.days_until_deadline != null &&
         workItem.days_until_deadline <= VAT_DEADLINE_WARNING_DAYS && (
-        <AlertBanner tone="warning" icon={Clock}>
-          נותרו {workItem.days_until_deadline} ימים להגשה
-        </AlertBanner>
-      )}
+          <AlertBanner tone="warning" icon={Clock}>
+            נותרו {workItem.days_until_deadline} ימים להגשה
+          </AlertBanner>
+        )}
 
       {workItem.is_overridden && (
         <AlertBanner tone="warning">
@@ -147,8 +151,8 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
                 loading={isLoading}
                 onCancel={() => setShowSendBack(false)}
                 onSubmit={async (note) => {
-                  await handleSendBack(note);
-                  setShowSendBack(false);
+                  await handleSendBack(note)
+                  setShowSendBack(false)
                 }}
               />
             </div>
@@ -175,7 +179,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ wo
         onFilingEnd={() => onFilingPendingChange?.(false)}
       />
     </div>
-  );
-};
+  )
+}
 
-VatWorkItemSummaryBar.displayName = "VatWorkItemSummaryBar";
+VatWorkItemSummaryBar.displayName = 'VatWorkItemSummaryBar'

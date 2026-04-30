@@ -1,25 +1,25 @@
-import { useState } from "react";
-import { MessageSquare, Plus } from "lucide-react";
-import { Card } from "../../../components/ui/primitives/Card";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Alert } from "../../../components/ui/overlays/Alert";
-import { StateCard } from "../../../components/ui/feedback/StateCard";
-import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
-import { CorrespondenceEntryItem } from "./CorrespondenceEntry";
-import { CorrespondenceModal } from "./CorrespondenceModal";
-import { useCorrespondence } from "../hooks/useCorrespondence";
-import type { CorrespondenceEntry } from "../api";
-import type { CorrespondenceFormValues } from "../schemas";
+import { useState } from 'react'
+import { MessageSquare, Plus } from 'lucide-react'
+import { Card } from '../../../components/ui/primitives/Card'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Alert } from '../../../components/ui/overlays/Alert'
+import { StateCard } from '../../../components/ui/feedback/StateCard'
+import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
+import { CorrespondenceEntryItem } from './CorrespondenceEntry'
+import { CorrespondenceModal } from './CorrespondenceModal'
+import { useCorrespondence } from '../hooks/useCorrespondence'
+import type { CorrespondenceEntry } from '../api'
+import type { CorrespondenceFormValues } from '../schemas'
 
 interface CorrespondenceCardProps {
-  businessId: number | undefined;
-  clientId?: number;
+  businessId: number | undefined
+  clientId?: number
 }
 
 export const CorrespondenceCard = ({ businessId, clientId }: CorrespondenceCardProps) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editing, setEditing] = useState<CorrespondenceEntry | null>(null);
-  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editing, setEditing] = useState<CorrespondenceEntry | null>(null)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null)
 
   const {
     entries,
@@ -33,27 +33,27 @@ export const CorrespondenceCard = ({ businessId, clientId }: CorrespondenceCardP
     deleteEntry,
     deletingId,
     contacts,
-  } = useCorrespondence(businessId, clientId);
+  } = useCorrespondence(businessId, clientId)
 
   const handleSubmit = async (data: CorrespondenceFormValues) => {
     if (editing) {
-      await updateEntry(editing.id, data);
+      await updateEntry(editing.id, data)
     } else {
-      await createEntry(data);
+      await createEntry(data)
     }
-    setModalOpen(false);
-    setEditing(null);
-  };
+    setModalOpen(false)
+    setEditing(null)
+  }
 
   const handleEdit = (entry: CorrespondenceEntry) => {
-    setEditing(entry);
-    setModalOpen(true);
-  };
+    setEditing(entry)
+    setModalOpen(true)
+  }
 
   const handleClose = () => {
-    setModalOpen(false);
-    setEditing(null);
-  };
+    setModalOpen(false)
+    setEditing(null)
+  }
 
   return (
     <>
@@ -75,9 +75,7 @@ export const CorrespondenceCard = ({ businessId, clientId }: CorrespondenceCardP
       >
         {error && <Alert variant="error" message={error} />}
 
-        {isLoading && (
-          <p className="py-4 text-center text-sm text-gray-500">טוען...</p>
-        )}
+        {isLoading && <p className="py-4 text-center text-sm text-gray-500">טוען...</p>}
 
         {!isLoading && entries.length === 0 && (
           <StateCard
@@ -124,14 +122,14 @@ export const CorrespondenceCard = ({ businessId, clientId }: CorrespondenceCardP
         isLoading={deletingId === confirmDeleteId}
         onConfirm={() => {
           if (confirmDeleteId !== null) {
-            deleteEntry(confirmDeleteId);
-            setConfirmDeleteId(null);
+            deleteEntry(confirmDeleteId)
+            setConfirmDeleteId(null)
           }
         }}
         onCancel={() => setConfirmDeleteId(null)}
       />
     </>
-  );
-};
+  )
+}
 
-CorrespondenceCard.displayName = "CorrespondenceCard";
+CorrespondenceCard.displayName = 'CorrespondenceCard'

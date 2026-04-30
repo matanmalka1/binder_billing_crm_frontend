@@ -1,40 +1,40 @@
-import { Link } from "react-router-dom";
-import type { LucideIcon } from "lucide-react";
-import { cn } from "../../../utils/utils";
-import { staggerAnimationDelayVars } from "../../../utils/animation";
-import { DashboardMetricCard } from "./DashboardPrimitives";
+import { Link } from 'react-router-dom'
+import type { LucideIcon } from 'lucide-react'
+import { cn } from '../../../utils/utils'
+import { staggerAnimationDelayVars } from '../../../utils/animation'
+import { DashboardMetricCard } from './DashboardPrimitives'
 
 export interface StatItem {
-  key: string;
-  title: string;
-  value: string | number;
-  description: string;
-  eyebrow?: string;
-  icon: LucideIcon;
-  variant: "blue" | "green" | "red" | "amber" | "purple";
-  urgent?: boolean;
-  href?: string;
-  progress?: number;
-  actionLabel?: string;
+  key: string
+  title: string
+  value: string | number
+  description: string
+  eyebrow?: string
+  icon: LucideIcon
+  variant: 'blue' | 'green' | 'red' | 'amber' | 'purple'
+  urgent?: boolean
+  href?: string
+  progress?: number
+  actionLabel?: string
 }
 
 interface DashboardStatsGridProps {
-  stats: StatItem[];
+  stats: StatItem[]
 }
 
 /* ── Single stat card ───────────────────────────────────────────────────── */
 
 interface StatCardProps {
-  stat: StatItem;
-  index: number;
+  stat: StatItem
+  index: number
 }
 
 const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
   const cardClass = cn(
-    "group relative transition-all duration-200",
-    "animate-fade-in h-full",
-    stat.href && "cursor-pointer",
-  );
+    'group relative transition-all duration-200',
+    'animate-fade-in h-full',
+    stat.href && 'cursor-pointer',
+  )
 
   const inner = (
     <div className="relative h-full">
@@ -50,7 +50,7 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
         actionLabel={stat.actionLabel}
       />
     </div>
-  );
+  )
 
   if (stat.href) {
     return (
@@ -61,7 +61,7 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
       >
         {inner}
       </Link>
-    );
+    )
   }
 
   return (
@@ -71,9 +71,9 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
     >
       {inner}
     </div>
-  );
-};
-StatCard.displayName = "StatCard";
+  )
+}
+StatCard.displayName = 'StatCard'
 
 /* ── Grid ───────────────────────────────────────────────────────────────── */
 
@@ -84,7 +84,7 @@ export const DashboardStatsGrid = ({ stats }: DashboardStatsGridProps) => {
         <StatCard key={stat.key} stat={stat} index={index} />
       ))}
     </div>
-  );
-};
+  )
+}
 
-DashboardStatsGrid.displayName = "DashboardStatsGrid";
+DashboardStatsGrid.displayName = 'DashboardStatsGrid'

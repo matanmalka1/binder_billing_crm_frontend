@@ -1,9 +1,9 @@
-import { CalendarClock, InboxIcon } from "lucide-react";
-import type { NormalizedTimelineEvent } from "../normalize";
-import { formatTimelineDate } from "../utils";
+import { CalendarClock, InboxIcon } from 'lucide-react'
+import type { NormalizedTimelineEvent } from '../normalize'
+import { formatTimelineDate } from '../utils'
 
 interface UpcomingDeadlinesCardProps {
-  deadlines: NormalizedTimelineEvent[];
+  deadlines: NormalizedTimelineEvent[]
 }
 
 const EmptyUpcomingDeadlines: React.FC = () => (
@@ -11,12 +11,10 @@ const EmptyUpcomingDeadlines: React.FC = () => (
     <InboxIcon className="mx-auto mb-2 h-5 w-5 text-gray-400" />
     <p className="text-sm font-medium text-gray-500">אין מועדים קרובים</p>
   </div>
-);
+)
 
-export const UpcomingDeadlinesCard: React.FC<UpcomingDeadlinesCardProps> = ({
-  deadlines,
-}) => {
-  const nextDeadline = deadlines[0];
+export const UpcomingDeadlinesCard: React.FC<UpcomingDeadlinesCardProps> = ({ deadlines }) => {
+  const nextDeadline = deadlines[0]
 
   return (
     <section className="rounded-2xl border border-gray-200/60 bg-white/95 p-4 shadow-sm">
@@ -66,7 +64,7 @@ export const UpcomingDeadlinesCard: React.FC<UpcomingDeadlinesCardProps> = ({
         </div>
       )}
     </section>
-  );
-};
+  )
+}
 
-UpcomingDeadlinesCard.displayName = "UpcomingDeadlinesCard";
+UpcomingDeadlinesCard.displayName = 'UpcomingDeadlinesCard'

@@ -1,70 +1,63 @@
-import { create } from "zustand";
-import {
-  devtools,
-  persist,
-  createJSONStorage,
-  type StateStorage,
-} from "zustand/middleware";
-import { authApi } from "../api/auth.api";
-import { AUTH_STORAGE_KEY } from "../api/client";
-import { getErrorMessage } from "../utils/utils";
-import type { AuthState } from "./auth.types";
+import { create } from 'zustand'
+import { devtools, persist, createJSONStorage, type StateStorage } from 'zustand/middleware'
+import { authApi } from '../api/auth.api'
+import { AUTH_STORAGE_KEY } from '../api/client'
+import { getErrorMessage } from '../utils/utils'
+import type { AuthState } from './auth.types'
 
-const getInitialTarget = (): "local" | "session" => {
-  if (typeof window === "undefined") return "local";
+const getInitialTarget = (): 'local' | 'session' => {
+  if (typeof window === 'undefined') return 'local'
   try {
-    if (localStorage.getItem(AUTH_STORAGE_KEY)) return "local";
-    if (sessionStorage.getItem(AUTH_STORAGE_KEY)) return "session";
+    if (localStorage.getItem(AUTH_STORAGE_KEY)) return 'local'
+    if (sessionStorage.getItem(AUTH_STORAGE_KEY)) return 'session'
   } catch {
     // fall back to local
   }
-  return "local";
-};
+  return 'local'
+}
 
-const storageTarget = { current: getInitialTarget() };
+const storageTarget = { current: getInitialTarget() }
 
 const dynamicStorage: StateStorage = {
   getItem: (name) => {
     try {
-      const localValue = localStorage.getItem(name);
+      const localValue = localStorage.getItem(name)
       if (localValue) {
-        return localValue;
+        return localValue
       }
 
-      const sessionValue = sessionStorage.getItem(name);
+      const sessionValue = sessionStorage.getItem(name)
       if (sessionValue) {
-        return sessionValue;
+        return sessionValue
       }
-      return null;
+      return null
     } catch {
-      return null;
+      return null
     }
   },
   setItem: (name, value) => {
     try {
-      const primary =
-        storageTarget.current === "local" ? localStorage : sessionStorage;
-      const secondary =
-        storageTarget.current === "local" ? sessionStorage : localStorage;
-      primary.setItem(name, value);
-      secondary.removeItem(name);
+      const primary = storageTarget.current === 'local' ? localStorage : sessionStorage
+      const secondary = storageTarget.current === 'local' ? sessionStorage : localStorage
+      primary.setItem(name, value)
+      secondary.removeItem(name)
     } catch {
       // ignore storage write failures
     }
   },
   removeItem: (name) => {
     try {
-      localStorage.removeItem(name);
+      localStorage.removeItem(name)
     } catch {
       // ignore storage errors
     }
     try {
-      sessionStorage.removeItem(name);
+      sessionStorage.removeItem(name)
     } catch {
       // ignore storage errors
     }
   },
-};
+}
 
 export const useAuthStore = create<AuthState>()(
   devtools(
@@ -76,32 +69,32 @@ export const useAuthStore = create<AuthState>()(
         error: null,
 
         login: async (email: string, password: string, rememberMe = false) => {
-          set({ isLoading: true, error: null });
-          storageTarget.current = rememberMe ? "local" : "session";
+          set({ isLoading: true, error: null })
+          storageTarget.current = rememberMe ? 'local' : 'session'
 
           try {
-            const response = await authApi.login({ email, password, rememberMe });
-            const { token, user } = response;
+            const response = await authApi.login({ email, password, rememberMe })
+            const { token, user } = response
 
             set({
               token,
               user,
               error: null,
               isLoading: false,
-            });
+            })
           } catch (error: unknown) {
             set({
               token: null,
               user: null,
-              error: getErrorMessage(error, "שגיאה בהתחברות"),
+              error: getErrorMessage(error, 'שגיאה בהתחברות'),
               isLoading: false,
-            });
+            })
           }
         },
 
         logout: async () => {
           try {
-            await authApi.logout();
+            await authApi.logout()
           } catch {
             // Even if cookie clearing fails, drop local session state
           } finally {
@@ -110,7 +103,7 @@ export const useAuthStore = create<AuthState>()(
               user: null,
               isLoading: false,
               error: null,
-            });
+            })
           }
         },
 
@@ -122,7 +115,7 @@ export const useAuthStore = create<AuthState>()(
             user: null,
             isLoading: false,
             error: null,
-          });
+          })
         },
       }),
       {
@@ -131,11 +124,11 @@ export const useAuthStore = create<AuthState>()(
         partialize: (state) => ({ token: state.token, user: state.user }),
         onRehydrateStorage: () => () => {
           try {
-            if (typeof window === "undefined") return;
+            if (typeof window === 'undefined') return
             if (localStorage.getItem(AUTH_STORAGE_KEY)) {
-              storageTarget.current = "local";
+              storageTarget.current = 'local'
             } else if (sessionStorage.getItem(AUTH_STORAGE_KEY)) {
-              storageTarget.current = "session";
+              storageTarget.current = 'session'
             }
           } catch {
             // keep existing target
@@ -143,6 +136,6 @@ export const useAuthStore = create<AuthState>()(
         },
       },
     ),
-    { name: "AuthStore" },
+    { name: 'AuthStore' },
   ),
-);
+)

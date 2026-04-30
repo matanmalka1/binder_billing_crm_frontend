@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { Receipt } from "lucide-react";
-import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
-import { formatVatAmount } from "../utils";
-import { useDeleteInvoice, useUpdateInvoice } from "../hooks/useVatInvoiceMutations";
-import { VatInvoiceEditRow } from "./VatInvoiceEditRow";
-import { VatInvoiceRow } from "./VatInvoiceRow";
-import type { VatInvoiceTableProps } from "../types";
-import { semanticMonoToneClasses } from "../../../utils/semanticColors";
+import { useState } from 'react'
+import { Receipt } from 'lucide-react'
+import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
+import { formatVatAmount } from '../utils'
+import { useDeleteInvoice, useUpdateInvoice } from '../hooks/useVatInvoiceMutations'
+import { VatInvoiceEditRow } from './VatInvoiceEditRow'
+import { VatInvoiceRow } from './VatInvoiceRow'
+import type { VatInvoiceTableProps } from '../types'
+import { semanticMonoToneClasses } from '../../../utils/semanticColors'
 
 export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
   invoices,
@@ -15,37 +15,37 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
   sectionType,
   emptyMessage,
 }) => {
-  const { deleteInvoice, isDeleting } = useDeleteInvoice(workItemId);
-  const { updateInvoice, isUpdating } = useUpdateInvoice(workItemId);
-  const [confirmId, setConfirmId] = useState<number | null>(null);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const { deleteInvoice, isDeleting } = useDeleteInvoice(workItemId)
+  const { updateInvoice, isUpdating } = useUpdateInvoice(workItemId)
+  const [confirmId, setConfirmId] = useState<number | null>(null)
+  const [editingId, setEditingId] = useState<number | null>(null)
 
-  const isExpense = sectionType === "expense";
-  const accentBorder = sectionType === "income" ? "border-positive-300" : "border-warning-300";
+  const isExpense = sectionType === 'expense'
+  const accentBorder = sectionType === 'income' ? 'border-positive-300' : 'border-warning-300'
 
-  const totalNet = invoices.reduce((s, i) => s + Number(i.net_amount ?? 0), 0);
-  const totalVat = invoices.reduce((s, i) => s + Number(i.vat_amount ?? 0), 0);
+  const totalNet = invoices.reduce((s, i) => s + Number(i.net_amount ?? 0), 0)
+  const totalVat = invoices.reduce((s, i) => s + Number(i.vat_amount ?? 0), 0)
   const totalDeductibleVat = invoices.reduce(
     (s, i) => s + Number(i.vat_amount ?? 0) * Number(i.deduction_rate ?? 0),
     0,
-  );
+  )
 
   // base cols: מספר תאריך ספק ח.פ סוגמסמך סוגעסקה %הכרה נטו מעמ נוצרעי נוצרב = 11
   // expense adds: קטגוריה + מעמלניכוי = +2
   // canEdit adds: actions = +1
-  const totalCols = 11 + (isExpense ? 2 : 0) + (canEdit ? 1 : 0);
+  const totalCols = 11 + (isExpense ? 2 : 0) + (canEdit ? 1 : 0)
 
   if (invoices.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-gray-200 bg-gray-50/50 py-10 text-center">
         <Receipt className="h-8 w-8 text-gray-300" />
-        <p className="text-sm font-medium text-gray-400">{emptyMessage ?? "אין חשבוניות עדיין"}</p>
+        <p className="text-sm font-medium text-gray-400">{emptyMessage ?? 'אין חשבוניות עדיין'}</p>
         <p className="text-xs text-gray-300">לחץ על &apos;הוסף חשבונית&apos; כדי להוסיף</p>
       </div>
-    );
+    )
   }
 
-  const thCls = "px-4 py-2.5 text-right";
+  const thCls = 'px-4 py-2.5 text-right'
 
   return (
     <>
@@ -105,10 +105,16 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                   </span>
                 </span>
               </td>
-              <td className="px-4 py-2.5 font-mono tabular-nums font-bold text-gray-800">{formatVatAmount(totalNet)}</td>
-              <td className="px-4 py-2.5 font-mono tabular-nums font-semibold text-gray-600">{formatVatAmount(totalVat)}</td>
+              <td className="px-4 py-2.5 font-mono tabular-nums font-bold text-gray-800">
+                {formatVatAmount(totalNet)}
+              </td>
+              <td className="px-4 py-2.5 font-mono tabular-nums font-semibold text-gray-600">
+                {formatVatAmount(totalVat)}
+              </td>
               {isExpense && (
-                <td className={`px-4 py-2.5 font-mono tabular-nums font-bold ${semanticMonoToneClasses.positive}`}>
+                <td
+                  className={`px-4 py-2.5 font-mono tabular-nums font-bold ${semanticMonoToneClasses.positive}`}
+                >
                   {formatVatAmount(totalDeductibleVat)}
                 </td>
               )}
@@ -126,14 +132,14 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
         isLoading={isDeleting}
         onConfirm={async () => {
           if (confirmId !== null) {
-            await deleteInvoice(confirmId);
-            setConfirmId(null);
+            await deleteInvoice(confirmId)
+            setConfirmId(null)
           }
         }}
         onCancel={() => setConfirmId(null)}
       />
     </>
-  );
-};
+  )
+}
 
-VatInvoiceTable.displayName = "VatInvoiceTable";
+VatInvoiceTable.displayName = 'VatInvoiceTable'

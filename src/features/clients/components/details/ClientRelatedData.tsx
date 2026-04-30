@@ -1,49 +1,39 @@
-import { type FC, type ReactNode } from "react";
-import { ChevronLeft, FolderOpen, Plus, Receipt } from "lucide-react";
-import { Link } from "react-router-dom";
-import { Badge } from "../../../../components/ui/primitives/Badge";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { Card } from "../../../../components/ui/primitives/Card";
-import type { LucideIcon } from "lucide-react";
-import type { ChargeResponse } from "@/features/charges";
-import type { BinderDetailResponse } from "@/features/binders";
-import { getChargeTypeLabel } from "@/features/charges";
+import { type FC, type ReactNode } from 'react'
+import { ChevronLeft, FolderOpen, Plus, Receipt } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Badge } from '../../../../components/ui/primitives/Badge'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { Card } from '../../../../components/ui/primitives/Card'
+import type { LucideIcon } from 'lucide-react'
+import type { ChargeResponse } from '@/features/charges'
+import type { BinderDetailResponse } from '@/features/binders'
+import { getChargeTypeLabel } from '@/features/charges'
 import {
   getChargeStatusLabel,
   getStatusLabel as getBinderStatusLabel,
-} from "../../../../utils/enums";
-import { formatBinderNumber } from "../../../../utils/utils";
+} from '../../../../utils/enums'
+import { formatBinderNumber } from '../../../../utils/utils'
 
 type StatPillProps = {
-  icon: LucideIcon;
-  iconColor: string;
-  count: number;
-  label: string;
-  href?: string;
-};
+  icon: LucideIcon
+  iconColor: string
+  count: number
+  label: string
+  href?: string
+}
 
-const StatPill: FC<StatPillProps> = ({
-  icon: Icon,
-  iconColor,
-  count,
-  label,
-  href,
-}) => {
+const StatPill: FC<StatPillProps> = ({ icon: Icon, iconColor, count, label, href }) => {
   const content = (
     <div className="flex min-h-16 items-center justify-between gap-3 rounded-lg border border-gray-200 bg-gray-50/70 px-4 py-3 transition-colors hover:border-primary-200 hover:bg-primary-50/40">
       <div className="min-w-0 text-right">
-        <div className="text-xl font-bold leading-none text-gray-900">
-          {count}
-        </div>
-        <div className="mt-1 text-xs font-medium text-gray-500">
-          סה״כ {label}
-        </div>
+        <div className="text-xl font-bold leading-none text-gray-900">{count}</div>
+        <div className="mt-1 text-xs font-medium text-gray-500">סה״כ {label}</div>
       </div>
       <div className={`shrink-0 rounded-md p-2 ${iconColor}`}>
         <Icon className="h-4 w-4" />
       </div>
     </div>
-  );
+  )
 
   return href ? (
     <Link to={href} className="block">
@@ -51,21 +41,21 @@ const StatPill: FC<StatPillProps> = ({
     </Link>
   ) : (
     content
-  );
-};
+  )
+}
 
 type RelatedItemsSectionProps<T> = {
-  title: string;
-  total: number;
-  allHref: string;
-  items: T[];
-  emptyText: string;
-  getKey: (item: T) => number;
-  getTitle: (item: T) => ReactNode;
-  getSubtitle: (item: T) => ReactNode;
-  getBadge?: (item: T) => ReactNode;
-  getItemHref: (item: T) => string;
-};
+  title: string
+  total: number
+  allHref: string
+  items: T[]
+  emptyText: string
+  getKey: (item: T) => number
+  getTitle: (item: T) => ReactNode
+  getSubtitle: (item: T) => ReactNode
+  getBadge?: (item: T) => ReactNode
+  getItemHref: (item: T) => string
+}
 
 const RelatedItemsSection = <T,>({
   title,
@@ -83,10 +73,7 @@ const RelatedItemsSection = <T,>({
     <div className="mb-4 flex items-center justify-between gap-3">
       <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
       {total > 0 && (
-        <Link
-          to={allHref}
-          className="text-xs font-medium text-primary-600 hover:underline"
-        >
+        <Link to={allHref} className="text-xs font-medium text-primary-600 hover:underline">
           הכל ({total})
         </Link>
       )}
@@ -122,19 +109,19 @@ const RelatedItemsSection = <T,>({
       </div>
     )}
   </section>
-);
+)
 
 type ClientRelatedDataProps = {
-  clientId: number;
-  binders: BinderDetailResponse[];
-  bindersTotal: number;
-  charges: ChargeResponse[];
-  chargesTotal: number;
-  canViewCharges: boolean;
-  canCreateCharge?: boolean;
-  onCreateCharge?: () => void;
-  onCreateBinder?: () => void;
-};
+  clientId: number
+  binders: BinderDetailResponse[]
+  bindersTotal: number
+  charges: ChargeResponse[]
+  chargesTotal: number
+  canViewCharges: boolean
+  canCreateCharge?: boolean
+  onCreateCharge?: () => void
+  onCreateBinder?: () => void
+}
 
 export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
   clientId,
@@ -149,28 +136,18 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
 }) => {
   const actions = (
     <div className="flex flex-wrap items-center gap-2">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={onCreateBinder}
-        className="text-xs"
-      >
+      <Button variant="outline" size="sm" onClick={onCreateBinder} className="text-xs">
         <Plus className="h-3.5 w-3.5" />
         הוסף קלסר
       </Button>
       {canCreateCharge && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onCreateCharge}
-          className="text-xs"
-        >
+        <Button variant="outline" size="sm" onClick={onCreateCharge} className="text-xs">
           <Plus className="h-3.5 w-3.5" />
           הוסף חיוב
         </Button>
       )}
     </div>
-  );
+  )
 
   return (
     <Card title="נתונים קשורים" actions={actions} className="shadow-sm">
@@ -204,9 +181,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
             getKey={(binder) => binder.id}
             getTitle={(binder) => formatBinderNumber(binder.binder_number)}
             getSubtitle={(binder) => getBinderStatusLabel(binder.status)}
-            getItemHref={(binder) =>
-              `/binders?client_record_id=${clientId}&binder_id=${binder.id}`
-            }
+            getItemHref={(binder) => `/binders?client_record_id=${clientId}&binder_id=${binder.id}`}
           />
           {canViewCharges && (
             <RelatedItemsSection
@@ -219,9 +194,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
               getTitle={(charge) => `חיוב #${charge.id}`}
               getSubtitle={(charge) => getChargeTypeLabel(charge.charge_type)}
               getBadge={(charge) => (
-                <Badge variant="neutral">
-                  {getChargeStatusLabel(charge.status)}
-                </Badge>
+                <Badge variant="neutral">{getChargeStatusLabel(charge.status)}</Badge>
               )}
               getItemHref={() => `/charges?client_record_id=${clientId}`}
             />
@@ -229,5 +202,5 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
         </div>
       </div>
     </Card>
-  );
-};
+  )
+}

@@ -1,16 +1,13 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { advancePaymentsApi, advancedPaymentsQK } from "../api";
-import type {
-  AdvancePaymentStatus,
-  CreateAdvancePaymentPayload,
-} from "../types";
-import { getErrorMessage, showErrorToast } from "../../../utils/utils";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { advancePaymentsApi, advancedPaymentsQK } from '../api'
+import type { AdvancePaymentStatus, CreateAdvancePaymentPayload } from '../types'
+import { getErrorMessage, showErrorToast } from '../../../utils/utils'
 
 interface UpdatePayload {
-  id: number;
-  paid_amount?: string | null;
-  expected_amount?: string | null;
-  status?: AdvancePaymentStatus;
+  id: number
+  paid_amount?: string | null
+  expected_amount?: string | null
+  status?: AdvancePaymentStatus
 }
 
 export const useAdvancePayments = (
@@ -19,15 +16,13 @@ export const useAdvancePayments = (
   statusFilter?: AdvancePaymentStatus[],
   page = 1,
 ) => {
-  const queryClient = useQueryClient();
-  const qk = advancedPaymentsQK.forClientYear(clientId, year);
-  const enabled = clientId > 0;
+  const queryClient = useQueryClient()
+  const qk = advancedPaymentsQK.forClientYear(clientId, year)
+  const enabled = clientId > 0
 
   const listQuery = useQuery({
     enabled,
-    queryKey: statusFilter?.length
-      ? [...qk, { status: statusFilter, page }]
-      : [...qk, page],
+    queryKey: statusFilter?.length ? [...qk, { status: statusFilter, page }] : [...qk, page],
     queryFn: () =>
       advancePaymentsApi.list({
         client_id: clientId,
@@ -37,60 +32,61 @@ export const useAdvancePayments = (
         ...(statusFilter?.length ? { status: statusFilter } : {}),
       }),
     retry: false,
-  });
+  })
 
   const updateMutation = useMutation({
     mutationFn: ({ id, ...payload }: UpdatePayload) =>
       advancePaymentsApi.update(clientId, id, payload),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: qk });
-      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all });
+      void queryClient.invalidateQueries({ queryKey: qk })
+      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all })
     },
-    onError: (err) => showErrorToast(err, "שגיאה בעדכון מקדמה"),
-  });
+    onError: (err) => showErrorToast(err, 'שגיאה בעדכון מקדמה'),
+  })
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateAdvancePaymentPayload) =>
       advancePaymentsApi.create(clientId, payload),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: qk });
+      void queryClient.invalidateQueries({ queryKey: qk })
     },
-    onError: (err) => showErrorToast(err, "שגיאה ביצירת מקדמה"),
-  });
+    onError: (err) => showErrorToast(err, 'שגיאה ביצירת מקדמה'),
+  })
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => advancePaymentsApi.delete(clientId, id),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: qk });
-      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all });
+      void queryClient.invalidateQueries({ queryKey: qk })
+      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all })
     },
-    onError: (err) => showErrorToast(err, "שגיאה במחיקת מקדמה"),
-  });
+    onError: (err) => showErrorToast(err, 'שגיאה במחיקת מקדמה'),
+  })
 
-  const rows = enabled ? (listQuery.data?.items ?? []) : [];
-  const totalExpected = rows.reduce((sum, row) => sum + Number(row.expected_amount ?? 0), 0);
-  const totalPaid = rows.reduce((sum, row) => sum + Number(row.paid_amount ?? 0), 0);
+  const rows = enabled ? (listQuery.data?.items ?? []) : []
+  const totalExpected = rows.reduce((sum, row) => sum + Number(row.expected_amount ?? 0), 0)
+  const totalPaid = rows.reduce((sum, row) => sum + Number(row.paid_amount ?? 0), 0)
 
-  const updatingId = updateMutation.isPending
-    ? (updateMutation.variables?.id ?? null)
-    : null;
+  const updatingId = updateMutation.isPending ? (updateMutation.variables?.id ?? null) : null
 
   return {
     rows,
     isLoading: enabled && listQuery.isPending,
-    error: enabled && listQuery.error
-      ? getErrorMessage(listQuery.error, "שגיאה בטעינת מקדמות")
-      : null,
+    error:
+      enabled && listQuery.error ? getErrorMessage(listQuery.error, 'שגיאה בטעינת מקדמות') : null,
     totalExpected,
     totalPaid,
     total: listQuery.data?.total ?? 0,
-    updateRow: (id: number, paid_amount: string | null, status?: AdvancePaymentStatus, expected_amount?: string | null) =>
-      updateMutation.mutateAsync({ id, paid_amount, status, expected_amount }),
+    updateRow: (
+      id: number,
+      paid_amount: string | null,
+      status?: AdvancePaymentStatus,
+      expected_amount?: string | null,
+    ) => updateMutation.mutateAsync({ id, paid_amount, status, expected_amount }),
     isUpdating: updateMutation.isPending,
     updatingId,
     create: createMutation.mutateAsync,
     isCreating: createMutation.isPending,
     deleteRow: (id: number) => deleteMutation.mutateAsync(id),
     isDeletingId: deleteMutation.isPending ? (deleteMutation.variables ?? null) : null,
-  };
-};
+  }
+}

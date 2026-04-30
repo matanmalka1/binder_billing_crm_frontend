@@ -1,62 +1,54 @@
-import { useQuery } from "@tanstack/react-query";
-import { signatureRequestsApi, signatureRequestsQK } from "../api";
+import { useQuery } from '@tanstack/react-query'
+import { signatureRequestsApi, signatureRequestsQK } from '../api'
 import {
   DetailDrawer,
   DrawerField,
   DrawerSection,
-} from "../../../components/ui/overlays/DetailDrawer";
-import { StatusBadge } from "../../../components/ui/primitives/StatusBadge";
-import { formatDate, formatDateTime } from "../../../utils/utils";
-import {
-  getSignatureRequestTypeLabel,
-  getSignatureRequestStatusLabel,
-} from "../../../utils/enums";
-import { signatureRequestStatusVariants } from "../utils";
+} from '../../../components/ui/overlays/DetailDrawer'
+import { StatusBadge } from '../../../components/ui/primitives/StatusBadge'
+import { formatDate, formatDateTime } from '../../../utils/utils'
+import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from '../../../utils/enums'
+import { signatureRequestStatusVariants } from '../utils'
 
 interface Props {
-  requestId: number | null;
-  onClose: () => void;
+  requestId: number | null
+  onClose: () => void
 }
 
 const EVENT_TYPE_LABELS: Record<string, string> = {
-  created: "נוצרה",
-  sent: "נשלחה",
-  viewed: "נצפתה",
-  signed: "נחתמה",
-  annual_report_signed: "דוח שנתי נחתם",
-  declined: "נדחתה",
-  canceled: "בוטלה",
-  expired: "פגה תוקף",
-};
+  created: 'נוצרה',
+  sent: 'נשלחה',
+  viewed: 'נצפתה',
+  signed: 'נחתמה',
+  annual_report_signed: 'דוח שנתי נחתם',
+  declined: 'נדחתה',
+  canceled: 'בוטלה',
+  expired: 'פגה תוקף',
+}
 
 const ACTOR_TYPE_LABELS: Record<string, string> = {
-  advisor: "יועץ",
-  secretary: "מזכירה",
-  signer: "חותם",
-  system: "מערכת",
-};
+  advisor: 'יועץ',
+  secretary: 'מזכירה',
+  signer: 'חותם',
+  system: 'מערכת',
+}
 
-export const SignatureRequestAuditDrawer: React.FC<Props> = ({
-  requestId,
-  onClose,
-}) => {
-  const open = requestId != null;
+export const SignatureRequestAuditDrawer: React.FC<Props> = ({ requestId, onClose }) => {
+  const open = requestId != null
 
   const { data, isLoading } = useQuery({
     queryKey: signatureRequestsQK.detail(requestId ?? 0),
     queryFn: () => signatureRequestsApi.getById(requestId!),
     enabled: open,
-  });
+  })
 
-  const events = data?.audit_trail ?? [];
+  const events = data?.audit_trail ?? []
 
   return (
     <DetailDrawer
       open={open}
-      title={data?.title ?? "בקשת חתימה"}
-      subtitle={
-        data ? getSignatureRequestTypeLabel(data.request_type) : undefined
-      }
+      title={data?.title ?? 'בקשת חתימה'}
+      subtitle={data ? getSignatureRequestTypeLabel(data.request_type) : undefined}
       onClose={onClose}
     >
       {isLoading && (
@@ -72,34 +64,26 @@ export const SignatureRequestAuditDrawer: React.FC<Props> = ({
           <DrawerSection title="פרטי הבקשה">
             <DrawerField
               label="סטטוס"
-              value={<StatusBadge status={data.status} getLabel={getSignatureRequestStatusLabel} variantMap={signatureRequestStatusVariants} />}
+              value={
+                <StatusBadge
+                  status={data.status}
+                  getLabel={getSignatureRequestStatusLabel}
+                  variantMap={signatureRequestStatusVariants}
+                />
+              }
             />
             <DrawerField label="חותם" value={data.signer_name} />
-            {data.signer_email && (
-              <DrawerField label='דוא"ל' value={data.signer_email} />
-            )}
-            {data.signer_phone && (
-              <DrawerField label="טלפון" value={data.signer_phone} />
-            )}
+            {data.signer_email && <DrawerField label='דוא"ל' value={data.signer_email} />}
+            {data.signer_phone && <DrawerField label="טלפון" value={data.signer_phone} />}
             <DrawerField label="נוצר" value={formatDateTime(data.created_at)} />
-            {data.sent_at && (
-              <DrawerField label="נשלח" value={formatDateTime(data.sent_at)} />
-            )}
-            {data.expires_at && (
-              <DrawerField label="תפוגה" value={formatDate(data.expires_at)} />
-            )}
-            {data.signed_at && (
-              <DrawerField label="נחתם" value={formatDateTime(data.signed_at)} />
-            )}
-            {data.decline_reason && (
-              <DrawerField label="סיבת דחייה" value={data.decline_reason} />
-            )}
+            {data.sent_at && <DrawerField label="נשלח" value={formatDateTime(data.sent_at)} />}
+            {data.expires_at && <DrawerField label="תפוגה" value={formatDate(data.expires_at)} />}
+            {data.signed_at && <DrawerField label="נחתם" value={formatDateTime(data.signed_at)} />}
+            {data.decline_reason && <DrawerField label="סיבת דחייה" value={data.decline_reason} />}
           </DrawerSection>
 
           <DrawerSection title="היסטוריית פעילות">
-            {events.length === 0 && (
-              <p className="py-3 text-sm text-gray-400">אין אירועים</p>
-            )}
+            {events.length === 0 && <p className="py-3 text-sm text-gray-400">אין אירועים</p>}
             <div className="divide-y divide-gray-50">
               {events.map((event) => (
                 <div key={event.id} className="py-2.5">
@@ -113,8 +97,8 @@ export const SignatureRequestAuditDrawer: React.FC<Props> = ({
                   </div>
                   <div className="mt-0.5 text-xs text-gray-500">
                     {ACTOR_TYPE_LABELS[event.actor_type] ?? event.actor_type}
-                    {event.actor_name ? ` — ${event.actor_name}` : ""}
-                    {event.notes ? ` · ${event.notes}` : ""}
+                    {event.actor_name ? ` — ${event.actor_name}` : ''}
+                    {event.notes ? ` · ${event.notes}` : ''}
                   </div>
                 </div>
               ))}
@@ -123,5 +107,5 @@ export const SignatureRequestAuditDrawer: React.FC<Props> = ({
         </>
       )}
     </DetailDrawer>
-  );
-};
+  )
+}

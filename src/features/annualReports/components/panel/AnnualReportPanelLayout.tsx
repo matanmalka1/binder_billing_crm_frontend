@@ -1,21 +1,21 @@
-import { Download, X } from "lucide-react";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { UnsavedChangesGuard } from "@/components/ui/feedback/UnsavedChangesGuard";
-import { useEscapeToClose } from "@/components/ui/overlays/useEscapeToClose";
-import { useUnsavedChangesGuard } from "@/components/ui/overlays/useUnsavedChangesGuard";
+import { Download, X } from 'lucide-react'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { UnsavedChangesGuard } from '@/components/ui/feedback/UnsavedChangesGuard'
+import { useEscapeToClose } from '@/components/ui/overlays/useEscapeToClose'
+import { useUnsavedChangesGuard } from '@/components/ui/overlays/useUnsavedChangesGuard'
 
 interface AnnualReportPanelLayoutProps {
-  open: boolean;
-  title: string;
-  subtitle?: string;
-  onClose: () => void;
-  onDelete: () => void;
-  onSave: () => void;
-  isDirty: boolean;
-  isSaving: boolean;
-  children: React.ReactNode;
-  onExportPdf?: () => void;
-  isExportingPdf?: boolean;
+  open: boolean
+  title: string
+  subtitle?: string
+  onClose: () => void
+  onDelete: () => void
+  onSave: () => void
+  isDirty: boolean
+  isSaving: boolean
+  children: React.ReactNode
+  onExportPdf?: () => void
+  isExportingPdf?: boolean
 }
 
 export const AnnualReportPanelLayout = ({
@@ -34,11 +34,11 @@ export const AnnualReportPanelLayout = ({
   const { showGuard, handleClose, handleContinue, handleDiscard } = useUnsavedChangesGuard({
     isDirty,
     onClose,
-  });
+  })
 
-  useEscapeToClose({ open, onClose: handleClose });
+  useEscapeToClose({ open, onClose: handleClose })
 
-  if (!open) return null;
+  if (!open) return null
 
   return (
     <>
@@ -51,9 +51,7 @@ export const AnnualReportPanelLayout = ({
           >
             <div>
               <h2 className="text-base font-semibold text-gray-900">{title}</h2>
-              {subtitle && (
-                <p className="mt-0.5 text-sm text-gray-500">{subtitle}</p>
-              )}
+              {subtitle && <p className="mt-0.5 text-sm text-gray-500">{subtitle}</p>}
             </div>
             <div className="flex items-center gap-2">
               {onExportPdf && (
@@ -85,7 +83,7 @@ export const AnnualReportPanelLayout = ({
                 disabled={!isDirty || isSaving}
                 className="bg-info-600 hover:bg-info-700"
               >
-                {isSaving ? "שומר..." : "שמור"}
+                {isSaving ? 'שומר...' : 'שמור'}
               </Button>
               <Button
                 type="button"
@@ -106,11 +104,9 @@ export const AnnualReportPanelLayout = ({
       </div>
 
       {/* Unsaved changes guard */}
-      {showGuard && (
-        <UnsavedChangesGuard onContinue={handleContinue} onDiscard={handleDiscard} />
-      )}
+      {showGuard && <UnsavedChangesGuard onContinue={handleContinue} onDiscard={handleDiscard} />}
     </>
-  );
-};
+  )
+}
 
-AnnualReportPanelLayout.displayName = "AnnualReportPanelLayout";
+AnnualReportPanelLayout.displayName = 'AnnualReportPanelLayout'

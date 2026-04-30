@@ -1,12 +1,12 @@
-import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Inbox } from "lucide-react";
-import { DataTable, type Column } from "../../../components/ui/table/DataTable";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Select } from "../../../components/ui/inputs/Select";
-import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
-import { taxDeadlinesApi, taxDeadlinesQK, getDeadlineTypeLabel } from "../api";
-import type { TaxDeadlineResponse } from "../api";
+import { useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { Inbox } from 'lucide-react'
+import { DataTable, type Column } from '../../../components/ui/table/DataTable'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Select } from '../../../components/ui/inputs/Select'
+import { ActiveFilterBadges } from '../../../components/ui/table/ActiveFilterBadges'
+import { taxDeadlinesApi, taxDeadlinesQK, getDeadlineTypeLabel } from '../api'
+import type { TaxDeadlineResponse } from '../api'
 import {
   CLIENT_DEADLINES_PAGE_SIZE,
   INITIAL_TIMELINE_FILTERS,
@@ -14,28 +14,28 @@ import {
   TAX_DEADLINE_STATUS_OPTIONS,
   getTaxDeadlineStatusLabel,
   getTaxDeadlineTypeLabel,
-} from "../constants";
+} from '../constants'
 import {
   filterTimelineDeadlines,
   getTaxDeadlinePeriodLabel,
   getTimelineYearOptions,
-} from "../utils";
-import type { TimelineFilters } from "../types";
-import { useClientDeadlineActions } from "../hooks/useClientDeadlineActions";
-import { TaxDeadlineRowActions } from "./TaxDeadlineRowActions";
-import { EditTaxDeadlineFormModal } from "./EditTaxDeadlineForm";
-import { DeadlineSummaryCards } from "./DeadlineSummaryCards";
+} from '../utils'
+import type { TimelineFilters } from '../types'
+import { useClientDeadlineActions } from '../hooks/useClientDeadlineActions'
+import { TaxDeadlineRowActions } from './TaxDeadlineRowActions'
+import { EditTaxDeadlineFormModal } from './EditTaxDeadlineForm'
+import { DeadlineSummaryCards } from './DeadlineSummaryCards'
 import {
   DeadlineAmountCell,
   DeadlineDateCell,
   DeadlineStatusBadge,
   DeadlineUrgencyBadge,
-} from "./TaxDeadlineTableParts";
-import { getDeadlineRowClassName } from "./taxDeadlineTableUtils";
-import { cn } from "../../../utils/utils";
+} from './TaxDeadlineTableParts'
+import { getDeadlineRowClassName } from './taxDeadlineTableUtils'
+import { cn } from '../../../utils/utils'
 
 interface FilingTimelineProps {
-  clientId: number;
+  clientId: number
 }
 
 const TimelineToolbar = ({
@@ -44,12 +44,12 @@ const TimelineToolbar = ({
   onChange,
   onReset,
 }: {
-  filters: TimelineFilters;
-  yearOptions: { value: string; label: string }[];
-  onChange: (next: Partial<TimelineFilters>) => void;
-  onReset: () => void;
+  filters: TimelineFilters
+  yearOptions: { value: string; label: string }[]
+  onChange: (next: Partial<TimelineFilters>) => void
+  onReset: () => void
 }) => {
-  const hasFilters = Boolean(filters.status || filters.type || filters.year || filters.overdueOnly);
+  const hasFilters = Boolean(filters.status || filters.type || filters.year || filters.overdueOnly)
 
   return (
     <div className="rounded-lg border border-gray-100 bg-white p-3">
@@ -80,8 +80,9 @@ const TimelineToolbar = ({
             aria-pressed={filters.overdueOnly}
             onClick={() => onChange({ overdueOnly: !filters.overdueOnly })}
             className={cn(
-              "h-10 whitespace-nowrap",
-              filters.overdueOnly && "border-negative-200 bg-negative-50 text-negative-700 ring-1 ring-negative-200",
+              'h-10 whitespace-nowrap',
+              filters.overdueOnly &&
+                'border-negative-200 bg-negative-50 text-negative-700 ring-1 ring-negative-200',
             )}
           >
             באיחור בלבד
@@ -91,16 +92,32 @@ const TimelineToolbar = ({
           <ActiveFilterBadges
             badges={[
               filters.status
-                ? { key: "status", label: getTaxDeadlineStatusLabel(filters.status), onRemove: () => onChange({ status: "" }) }
+                ? {
+                    key: 'status',
+                    label: getTaxDeadlineStatusLabel(filters.status),
+                    onRemove: () => onChange({ status: '' }),
+                  }
                 : null,
               filters.type
-                ? { key: "type", label: getTaxDeadlineTypeLabel(filters.type), onRemove: () => onChange({ type: "" }) }
+                ? {
+                    key: 'type',
+                    label: getTaxDeadlineTypeLabel(filters.type),
+                    onRemove: () => onChange({ type: '' }),
+                  }
                 : null,
               filters.year
-                ? { key: "year", label: `שנה: ${filters.year}`, onRemove: () => onChange({ year: "" }) }
+                ? {
+                    key: 'year',
+                    label: `שנה: ${filters.year}`,
+                    onRemove: () => onChange({ year: '' }),
+                  }
                 : null,
               filters.overdueOnly
-                ? { key: "overdueOnly", label: "באיחור בלבד", onRemove: () => onChange({ overdueOnly: false }) }
+                ? {
+                    key: 'overdueOnly',
+                    label: 'באיחור בלבד',
+                    onRemove: () => onChange({ overdueOnly: false }),
+                  }
                 : null,
             ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)}
             onReset={onReset}
@@ -108,39 +125,74 @@ const TimelineToolbar = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
-  const [filters, setFilters] = useState<TimelineFilters>(INITIAL_TIMELINE_FILTERS);
-  const actions = useClientDeadlineActions(clientId);
+  const [filters, setFilters] = useState<TimelineFilters>(INITIAL_TIMELINE_FILTERS)
+  const actions = useClientDeadlineActions(clientId)
   const listParams = useMemo(
     () => ({ client_record_id: clientId, page: 1, page_size: CLIENT_DEADLINES_PAGE_SIZE }),
     [clientId],
-  );
+  )
 
   const { data, isLoading } = useQuery({
     queryKey: taxDeadlinesQK.list(listParams),
     queryFn: () => taxDeadlinesApi.listTaxDeadlines(listParams),
-  });
+  })
 
-  const allDeadlines = useMemo(() => data?.items ?? [], [data?.items]);
-  const yearOptions = useMemo(() => getTimelineYearOptions(allDeadlines), [allDeadlines]);
-  const displayData = useMemo(() => filterTimelineDeadlines(allDeadlines, filters), [allDeadlines, filters]);
+  const allDeadlines = useMemo(() => data?.items ?? [], [data?.items])
+  const yearOptions = useMemo(() => getTimelineYearOptions(allDeadlines), [allDeadlines])
+  const displayData = useMemo(
+    () => filterTimelineDeadlines(allDeadlines, filters),
+    [allDeadlines, filters],
+  )
 
   const columns = useMemo<Column<TaxDeadlineResponse>[]>(
     () => [
-      { key: "due_date", header: "מועד", render: (deadline) => <DeadlineDateCell dueDate={deadline.due_date} /> },
-      { key: "urgency", header: "דחיפות", render: (deadline) => <DeadlineUrgencyBadge deadline={deadline} /> },
-      { key: "deadline_type", header: "סוג", render: (deadline) => <span className="text-sm text-gray-500">{getDeadlineTypeLabel(deadline.deadline_type)}</span> },
-      { key: "period", header: "תקופה", render: (deadline) => <span className="text-sm text-gray-500">{getTaxDeadlinePeriodLabel(deadline)}</span> },
-      { key: "payment_amount", header: "סכום", render: (deadline) => <DeadlineAmountCell amount={deadline.payment_amount} status={deadline.status} /> },
-      { key: "status", header: "סטטוס", render: (deadline) => <DeadlineStatusBadge status={deadline.status} /> },
       {
-        key: "actions",
-        header: "פעולות",
-        headerClassName: "w-16",
-        className: "w-16",
+        key: 'due_date',
+        header: 'מועד',
+        render: (deadline) => <DeadlineDateCell dueDate={deadline.due_date} />,
+      },
+      {
+        key: 'urgency',
+        header: 'דחיפות',
+        render: (deadline) => <DeadlineUrgencyBadge deadline={deadline} />,
+      },
+      {
+        key: 'deadline_type',
+        header: 'סוג',
+        render: (deadline) => (
+          <span className="text-sm text-gray-500">
+            {getDeadlineTypeLabel(deadline.deadline_type)}
+          </span>
+        ),
+      },
+      {
+        key: 'period',
+        header: 'תקופה',
+        render: (deadline) => (
+          <span className="text-sm text-gray-500">{getTaxDeadlinePeriodLabel(deadline)}</span>
+        ),
+      },
+      {
+        key: 'payment_amount',
+        header: 'סכום',
+        render: (deadline) => (
+          <DeadlineAmountCell amount={deadline.payment_amount} status={deadline.status} />
+        ),
+      },
+      {
+        key: 'status',
+        header: 'סטטוס',
+        render: (deadline) => <DeadlineStatusBadge status={deadline.status} />,
+      },
+      {
+        key: 'actions',
+        header: 'פעולות',
+        headerClassName: 'w-16',
+        className: 'w-16',
         render: (deadline) => (
           <TaxDeadlineRowActions
             deadline={deadline}
@@ -156,7 +208,7 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
       },
     ],
     [actions],
-  );
+  )
 
   return (
     <div className="space-y-4">
@@ -175,9 +227,9 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
         rowClassName={getDeadlineRowClassName}
         emptyState={{
           icon: Inbox,
-          title: "אין מועדים להצגה",
-          message: "לא נמצאו מועדי מס ללקוח",
-          variant: "illustration",
+          title: 'אין מועדים להצגה',
+          message: 'לא נמצאו מועדי מס ללקוח',
+          variant: 'illustration',
         }}
       />
       <EditTaxDeadlineFormModal
@@ -188,7 +240,7 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
         isSubmitting={actions.isUpdating}
       />
     </div>
-  );
-};
+  )
+}
 
-FilingTimeline.displayName = "FilingTimeline";
+FilingTimeline.displayName = 'FilingTimeline'

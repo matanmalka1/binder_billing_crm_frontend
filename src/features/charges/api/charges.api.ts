@@ -1,7 +1,7 @@
-import { api } from "@/api/client";
-import { CHARGE_ENDPOINTS } from "./endpoints";
-import { toQueryParams } from "@/api/queryParams";
-import { randomUUID } from "@/utils/random";
+import { api } from '@/api/client'
+import { CHARGE_ENDPOINTS } from './endpoints'
+import { toQueryParams } from '@/api/queryParams'
+import { randomUUID } from '@/utils/random'
 import type {
   ChargeResponse,
   ChargeAdvisorResponse,
@@ -10,54 +10,60 @@ import type {
   CreateChargePayload,
   BulkChargeActionPayload,
   BulkChargeActionResult,
-} from "./contracts";
+} from './contracts'
 
 export const chargesApi = {
   list: async (params: ChargesListParams): Promise<ChargesListResponse> => {
     const response = await api.get<ChargesListResponse>(CHARGE_ENDPOINTS.charges, {
       params: toQueryParams(params),
-    });
-    return response.data;
+    })
+    return response.data
   },
 
   getById: async (chargeId: number): Promise<ChargeResponse> => {
-    const response = await api.get<ChargeResponse>(CHARGE_ENDPOINTS.chargeById(chargeId));
-    return response.data;
+    const response = await api.get<ChargeResponse>(CHARGE_ENDPOINTS.chargeById(chargeId))
+    return response.data
   },
 
   create: async (payload: CreateChargePayload): Promise<ChargeAdvisorResponse> => {
-    const response = await api.post<ChargeAdvisorResponse>(CHARGE_ENDPOINTS.charges, payload);
-    return response.data;
+    const response = await api.post<ChargeAdvisorResponse>(CHARGE_ENDPOINTS.charges, payload)
+    return response.data
   },
 
   issue: async (chargeId: number): Promise<ChargeAdvisorResponse> => {
-    const response = await api.post<ChargeAdvisorResponse>(CHARGE_ENDPOINTS.chargeIssue(chargeId));
-    return response.data;
+    const response = await api.post<ChargeAdvisorResponse>(CHARGE_ENDPOINTS.chargeIssue(chargeId))
+    return response.data
   },
 
   markPaid: async (chargeId: number): Promise<ChargeAdvisorResponse> => {
-    const response = await api.post<ChargeAdvisorResponse>(CHARGE_ENDPOINTS.chargeMarkPaid(chargeId));
-    return response.data;
+    const response = await api.post<ChargeAdvisorResponse>(
+      CHARGE_ENDPOINTS.chargeMarkPaid(chargeId),
+    )
+    return response.data
   },
 
   cancel: async (chargeId: number, reason?: string): Promise<ChargeAdvisorResponse> => {
     const response = await api.post<ChargeAdvisorResponse>(
       CHARGE_ENDPOINTS.chargeCancel(chargeId),
       reason ? { reason } : undefined,
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   delete: async (chargeId: number): Promise<void> => {
-    await api.delete(CHARGE_ENDPOINTS.chargeById(chargeId));
+    await api.delete(CHARGE_ENDPOINTS.chargeById(chargeId))
   },
 
   bulkAction: async (payload: BulkChargeActionPayload): Promise<BulkChargeActionResult> => {
-    const response = await api.post<BulkChargeActionResult>(CHARGE_ENDPOINTS.chargesBulkAction, payload, {
-      headers: {
-        "X-Idempotency-Key": randomUUID(),
+    const response = await api.post<BulkChargeActionResult>(
+      CHARGE_ENDPOINTS.chargesBulkAction,
+      payload,
+      {
+        headers: {
+          'X-Idempotency-Key': randomUUID(),
+        },
       },
-    });
-    return response.data;
+    )
+    return response.data
   },
-};
+}

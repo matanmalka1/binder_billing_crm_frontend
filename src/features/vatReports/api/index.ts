@@ -1,6 +1,6 @@
-export { vatReportsApi } from "./vatReports.api";
-export { vatReportsQK } from "./queryKeys";
-export { VAT_ENDPOINTS } from "./endpoints";
+export { vatReportsApi } from './vatReports.api'
+export { vatReportsQK } from './queryKeys'
+export { VAT_ENDPOINTS } from './endpoints'
 export type {
   VatWorkItemResponse,
   VatWorkItemListResponse,
@@ -19,4 +19,4 @@ export type {
   VatAnnualSummary,
   VatClientSummaryResponse,
   FileVatReturnPayload,
-} from "./contracts";
+} from './contracts'

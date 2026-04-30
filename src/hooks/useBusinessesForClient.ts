@@ -1,12 +1,12 @@
-import { useEffect, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { clientsApi, clientsQK } from "@/features/clients";
-import type { BusinessResponse } from "@/features/clients";
+import { useEffect, useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { clientsApi, clientsQK } from '@/features/clients'
+import type { BusinessResponse } from '@/features/clients'
 
 interface UseBusinessesForClientOptions {
-  clientId: number | null | undefined;
-  enabled?: boolean;
-  onAutoSelect?: (business: BusinessResponse) => void;
+  clientId: number | null | undefined
+  enabled?: boolean
+  onAutoSelect?: (business: BusinessResponse) => void
 }
 
 export const useBusinessesForClient = ({
@@ -21,15 +21,15 @@ export const useBusinessesForClient = ({
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
-  });
+  })
 
-  const businesses = useMemo(() => data?.items ?? [], [data?.items]);
+  const businesses = useMemo(() => data?.items ?? [], [data?.items])
 
   useEffect(() => {
     if (businesses.length === 1 && onAutoSelect) {
-      onAutoSelect(businesses[0]);
+      onAutoSelect(businesses[0])
     }
-  }, [businesses, onAutoSelect]);
+  }, [businesses, onAutoSelect])
 
-  return { businesses, isLoading };
-};
+  return { businesses, isLoading }
+}

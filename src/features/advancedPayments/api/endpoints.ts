@@ -1,6 +1,5 @@
 export const ADVANCE_PAYMENT_ENDPOINTS = {
-  clientAdvancePayments: (clientId: number | string) =>
-    `/clients/${clientId}/advance-payments`,
+  clientAdvancePayments: (clientId: number | string) => `/clients/${clientId}/advance-payments`,
   clientAdvancePaymentById: (clientId: number | string, id: number | string) =>
     `/clients/${clientId}/advance-payments/${id}`,
   clientAdvancePaymentSuggest: (clientId: number | string) =>
@@ -9,5 +8,5 @@ export const ADVANCE_PAYMENT_ENDPOINTS = {
     `/clients/${clientId}/advance-payments/kpi`,
   clientAdvancePaymentsGenerate: (clientId: number | string) =>
     `/clients/${clientId}/advance-payments/generate`,
-  advancePaymentsOverview: "/advance-payments/overview",
-} as const;
+  advancePaymentsOverview: '/advance-payments/overview',
+} as const

@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { Alert } from "@/components/ui/overlays/Alert";
-import { Button } from "@/components/ui/primitives/Button";
-import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
-import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
-import { useAuthStore } from "@/store/auth.store";
+import { useMemo, useState } from 'react'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { Alert } from '@/components/ui/overlays/Alert'
+import { Button } from '@/components/ui/primitives/Button'
+import { ConfirmDialog } from '@/components/ui/overlays/ConfirmDialog'
+import { PaginatedDataTable } from '@/components/ui/table/PaginatedDataTable'
+import { useAuthStore } from '@/store/auth.store'
 import {
   AuditLogsDrawer,
   buildUserColumns,
@@ -14,11 +14,11 @@ import {
   useUsersPage,
   type UserResponse,
   UsersFiltersBar,
-} from "@/features/users";
+} from '@/features/users'
 
 export const Users: React.FC = () => {
-  const currentUserId = useAuthStore((s) => s.user?.id);
-  const [pendingToggle, setPendingToggle] = useState<UserResponse | null>(null);
+  const currentUserId = useAuthStore((s) => s.user?.id)
+  const [pendingToggle, setPendingToggle] = useState<UserResponse | null>(null)
   const {
     users,
     total,
@@ -44,7 +44,7 @@ export const Users: React.FC = () => {
     resetPassword,
     resetPasswordLoading,
     isAdvisor,
-  } = useUsersPage();
+  } = useUsersPage()
   const columns = useMemo(
     () =>
       buildUserColumns({
@@ -54,7 +54,7 @@ export const Users: React.FC = () => {
         currentUserId,
       }),
     [setEditUser, setResetUser, currentUserId],
-  );
+  )
 
   if (!isAdvisor) {
     return (
@@ -62,7 +62,7 @@ export const Users: React.FC = () => {
         <PageHeader title="ניהול משתמשים" description="ניהול חשבונות משתמשים במערכת" />
         <Alert variant="warning" message="גישה לניהול משתמשים זמינה ליועצים בלבד." />
       </div>
-    );
+    )
   }
 
   return (
@@ -92,11 +92,11 @@ export const Users: React.FC = () => {
         pageSize={filters.page_size}
         total={total}
         onPageChange={setPage}
-        onPageSizeChange={(size) => handleFilterChange("page_size", String(size))}
+        onPageSizeChange={(size) => handleFilterChange('page_size', String(size))}
         emptyState={{
-          title: "אין משתמשים להצגה",
-          message: "לא נמצאו משתמשים. הוסף משתמש חדש למערכת.",
-          action: { label: "משתמש חדש", onClick: () => setShowCreateModal(true) },
+          title: 'אין משתמשים להצגה',
+          message: 'לא נמצאו משתמשים. הוסף משתמש חדש למערכת.',
+          action: { label: 'משתמש חדש', onClick: () => setShowCreateModal(true) },
         }}
       />
       <CreateUserModal
@@ -122,23 +122,23 @@ export const Users: React.FC = () => {
       <AuditLogsDrawer open={showAuditLogs} onClose={() => setShowAuditLogs(false)} />
       <ConfirmDialog
         open={Boolean(pendingToggle)}
-        title={pendingToggle?.is_active ? "השבתת משתמש" : "הפעלת משתמש"}
+        title={pendingToggle?.is_active ? 'השבתת משתמש' : 'הפעלת משתמש'}
         message={
           pendingToggle?.is_active
             ? `האם להשבית את המשתמש ${pendingToggle?.full_name}? המשתמש לא יוכל להתחבר למערכת.`
             : `האם להפעיל את המשתמש ${pendingToggle?.full_name}?`
         }
-        confirmLabel={pendingToggle?.is_active ? "השבת" : "הפעל"}
+        confirmLabel={pendingToggle?.is_active ? 'השבת' : 'הפעל'}
         cancelLabel="ביטול"
         isLoading={toggleActiveLoading}
         onConfirm={() => {
           if (pendingToggle) {
-            toggleActive(pendingToggle);
-            setPendingToggle(null);
+            toggleActive(pendingToggle)
+            setPendingToggle(null)
           }
         }}
         onCancel={() => setPendingToggle(null)}
       />
     </div>
-  );
-};
+  )
+}

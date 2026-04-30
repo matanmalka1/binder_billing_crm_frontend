@@ -1,6 +1,6 @@
-import { getStatusLabel } from "../../api";
-import { cn } from "../../../../utils/utils";
-import type { TransitionTargetSelectorProps } from "../../types";
+import { getStatusLabel } from '../../api'
+import { cn } from '../../../../utils/utils'
+import type { TransitionTargetSelectorProps } from '../../types'
 
 export const TransitionTargetSelector = ({
   allowed,
@@ -17,10 +17,10 @@ export const TransitionTargetSelector = ({
             type="button"
             onClick={() => onSelect(status)}
             className={cn(
-              "rounded-lg border px-3.5 py-2 text-sm font-medium transition-all",
+              'rounded-lg border px-3.5 py-2 text-sm font-medium transition-all',
               selected === status
-                ? "border-primary-500 bg-primary-50 text-primary-700 shadow-sm ring-1 ring-primary-200"
-                : "border-gray-200 bg-white text-gray-700 hover:border-primary-300 hover:bg-primary-50/40 hover:text-primary-700",
+                ? 'border-primary-500 bg-primary-50 text-primary-700 shadow-sm ring-1 ring-primary-200'
+                : 'border-gray-200 bg-white text-gray-700 hover:border-primary-300 hover:bg-primary-50/40 hover:text-primary-700',
             )}
           >
             {getStatusLabel(status)}
@@ -28,5 +28,5 @@ export const TransitionTargetSelector = ({
         ))}
       </div>
     </div>
-  );
-};
+  )
+}

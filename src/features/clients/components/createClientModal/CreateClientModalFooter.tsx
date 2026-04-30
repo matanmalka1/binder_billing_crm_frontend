@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/primitives/Button";
-import { ModalFormActions } from "../../../../components/ui/overlays/ModalFormActions";
+import { Button } from '@/components/ui/primitives/Button'
+import { ModalFormActions } from '../../../../components/ui/overlays/ModalFormActions'
 
 interface Props {
-  isLastStep: boolean;
-  isLoading: boolean;
-  onClose: () => void;
-  onPrevious: () => void;
-  onSubmit: () => void;
-  onNext: () => void;
-  stepIndex: number;
+  isLastStep: boolean
+  isLoading: boolean
+  onClose: () => void
+  onPrevious: () => void
+  onSubmit: () => void
+  onNext: () => void
+  stepIndex: number
 }
 
 export const CreateClientModalFooter: React.FC<Props> = ({
@@ -30,7 +30,7 @@ export const CreateClientModalFooter: React.FC<Props> = ({
         isLoading={isLoading}
         submitLabel="צור לקוח"
       />
-    );
+    )
   }
 
   return (
@@ -47,5 +47,5 @@ export const CreateClientModalFooter: React.FC<Props> = ({
         הבא
       </Button>
     </div>
-  );
-};
+  )
+}

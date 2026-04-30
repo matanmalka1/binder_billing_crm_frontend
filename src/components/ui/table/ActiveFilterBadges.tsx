@@ -1,18 +1,18 @@
-import { Badge } from "../primitives/Badge";
+import { Badge } from '../primitives/Badge'
 
 export interface FilterBadge {
-  key: string;
-  label: string;
-  onRemove: () => void;
+  key: string
+  label: string
+  onRemove: () => void
 }
 
 interface Props {
-  badges: FilterBadge[];
-  onReset?: () => void;
+  badges: FilterBadge[]
+  onReset?: () => void
 }
 
 export const ActiveFilterBadges: React.FC<Props> = ({ badges, onReset }) => {
-  if (badges.length === 0) return null;
+  if (badges.length === 0) return null
   return (
     <div className="flex flex-wrap items-center gap-2 animate-fade-in">
       {badges.map((b) => (
@@ -30,5 +30,5 @@ export const ActiveFilterBadges: React.FC<Props> = ({ badges, onReset }) => {
         </button>
       )}
     </div>
-  );
-};
+  )
+}

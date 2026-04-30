@@ -1,13 +1,13 @@
-import type { Column } from "./DataTable";
+import type { Column } from './DataTable'
 
 interface BuildSelectionColumnParams<T> {
-  allIds: number[];
-  getId: (item: T) => number;
-  getItemAriaLabel: (item: T) => string;
-  onToggleAll?: (ids: number[]) => void;
-  onToggleSelect: (id: number) => void;
-  selectAllAriaLabel?: string;
-  selectedIds?: Set<number>;
+  allIds: number[]
+  getId: (item: T) => number
+  getItemAriaLabel: (item: T) => string
+  onToggleAll?: (ids: number[]) => void
+  onToggleSelect: (id: number) => void
+  selectAllAriaLabel?: string
+  selectedIds?: Set<number>
 }
 
 export const buildSelectionColumn = <T,>({
@@ -16,24 +16,24 @@ export const buildSelectionColumn = <T,>({
   getItemAriaLabel,
   onToggleAll,
   onToggleSelect,
-  selectAllAriaLabel = "בחר הכל",
+  selectAllAriaLabel = 'בחר הכל',
   selectedIds,
 }: BuildSelectionColumnParams<T>): Column<T> => {
-  const allSelected = allIds.length > 0 && allIds.every((id) => selectedIds?.has(id));
-  const someSelected = !allSelected && allIds.some((id) => selectedIds?.has(id));
+  const allSelected = allIds.length > 0 && allIds.every((id) => selectedIds?.has(id))
+  const someSelected = !allSelected && allIds.some((id) => selectedIds?.has(id))
 
   return {
-    key: "select",
-    header: "",
-    headerClassName: "w-10",
-    className: "w-10",
+    key: 'select',
+    header: '',
+    headerClassName: 'w-10',
+    className: 'w-10',
     headerRender: () => (
       <input
         type="checkbox"
         checked={allSelected}
         ref={(element) => {
           if (element) {
-            element.indeterminate = someSelected;
+            element.indeterminate = someSelected
           }
         }}
         onChange={() => onToggleAll?.(allIds)}
@@ -42,7 +42,7 @@ export const buildSelectionColumn = <T,>({
       />
     ),
     render: (item) => {
-      const id = getId(item);
+      const id = getId(item)
       return (
         <input
           type="checkbox"
@@ -52,7 +52,7 @@ export const buildSelectionColumn = <T,>({
           className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
           aria-label={getItemAriaLabel(item)}
         />
-      );
+      )
     },
-  };
-};
+  }
+}

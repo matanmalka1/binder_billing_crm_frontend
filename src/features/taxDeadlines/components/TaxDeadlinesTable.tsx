@@ -1,29 +1,29 @@
-import { useMemo } from "react";
-import { Inbox } from "lucide-react";
-import { DataTable, type Column } from "../../../components/ui/table/DataTable";
-import { TaxDeadlineRowActions } from "./TaxDeadlineRowActions";
-import type { TaxDeadlineResponse } from "../api";
-import { getDeadlineTypeLabel } from "../api";
-import { formatClientOfficeId } from "../../../utils/utils";
+import { useMemo } from 'react'
+import { Inbox } from 'lucide-react'
+import { DataTable, type Column } from '../../../components/ui/table/DataTable'
+import { TaxDeadlineRowActions } from './TaxDeadlineRowActions'
+import type { TaxDeadlineResponse } from '../api'
+import { getDeadlineTypeLabel } from '../api'
+import { formatClientOfficeId } from '../../../utils/utils'
 import {
   DeadlineAmountCell,
   DeadlineDateCell,
   DeadlineStatusBadge,
   DeadlineUrgencyBadge,
-} from "./TaxDeadlineTableParts";
-import { getDeadlineRowClassName } from "./taxDeadlineTableUtils";
-import { getTaxDeadlinePeriodLabel, groupTaxDeadlinesByMonth } from "../utils";
+} from './TaxDeadlineTableParts'
+import { getDeadlineRowClassName } from './taxDeadlineTableUtils'
+import { getTaxDeadlinePeriodLabel, groupTaxDeadlinesByMonth } from '../utils'
 
 interface TaxDeadlinesTableProps {
-  deadlines: TaxDeadlineResponse[];
-  onComplete?: (id: number) => void;
-  onReopen?: (id: number) => void;
-  completingId: number | null;
-  reopeningId?: number | null;
-  onRowClick?: (deadline: TaxDeadlineResponse) => void;
-  onEdit?: (deadline: TaxDeadlineResponse) => void;
-  onDelete?: (id: number) => void;
-  deletingId?: number | null;
+  deadlines: TaxDeadlineResponse[]
+  onComplete?: (id: number) => void
+  onReopen?: (id: number) => void
+  completingId: number | null
+  reopeningId?: number | null
+  onRowClick?: (deadline: TaxDeadlineResponse) => void
+  onEdit?: (deadline: TaxDeadlineResponse) => void
+  onDelete?: (id: number) => void
+  deletingId?: number | null
 }
 
 export const TaxDeadlinesTable = ({
@@ -40,7 +40,7 @@ export const TaxDeadlinesTable = ({
   const columns = useMemo<Column<TaxDeadlineResponse>[]>(
     () => [
       {
-        key: "office_client_number",
+        key: 'office_client_number',
         header: "מס' לקוח",
         render: (deadline) => (
           <span className="font-mono text-sm text-gray-500 tabular-nums">
@@ -49,8 +49,8 @@ export const TaxDeadlinesTable = ({
         ),
       },
       {
-        key: "client_name",
-        header: "לקוח",
+        key: 'client_name',
+        header: 'לקוח',
         render: (deadline) => (
           <span className="block max-w-[220px] truncate text-sm font-semibold text-gray-900">
             {deadline.client_name ?? `לקוח #${deadline.client_record_id}`}
@@ -58,44 +58,48 @@ export const TaxDeadlinesTable = ({
         ),
       },
       {
-        key: "deadline_type",
-        header: "סוג",
+        key: 'deadline_type',
+        header: 'סוג',
         render: (deadline) => (
-          <span className="text-sm text-gray-500">{getDeadlineTypeLabel(deadline.deadline_type)}</span>
+          <span className="text-sm text-gray-500">
+            {getDeadlineTypeLabel(deadline.deadline_type)}
+          </span>
         ),
       },
       {
-        key: "period",
-        header: "תקופה",
+        key: 'period',
+        header: 'תקופה',
         render: (deadline) => (
           <span className="text-sm text-gray-500">{getTaxDeadlinePeriodLabel(deadline)}</span>
         ),
       },
       {
-        key: "due_date",
-        header: "מועד",
+        key: 'due_date',
+        header: 'מועד',
         render: (deadline) => <DeadlineDateCell dueDate={deadline.due_date} />,
       },
       {
-        key: "urgency",
-        header: "דחיפות",
+        key: 'urgency',
+        header: 'דחיפות',
         render: (deadline) => <DeadlineUrgencyBadge deadline={deadline} />,
       },
       {
-        key: "payment_amount",
-        header: "סכום",
-        render: (deadline) => <DeadlineAmountCell amount={deadline.payment_amount} status={deadline.status} />,
+        key: 'payment_amount',
+        header: 'סכום',
+        render: (deadline) => (
+          <DeadlineAmountCell amount={deadline.payment_amount} status={deadline.status} />
+        ),
       },
       {
-        key: "status",
-        header: "סטטוס",
+        key: 'status',
+        header: 'סטטוס',
         render: (deadline) => <DeadlineStatusBadge status={deadline.status} />,
       },
       {
-        key: "actions",
-        header: "",
-        headerClassName: "w-10",
-        className: "w-10",
+        key: 'actions',
+        header: '',
+        headerClassName: 'w-10',
+        className: 'w-10',
         render: (deadline) => (
           <TaxDeadlineRowActions
             deadline={deadline}
@@ -111,9 +115,9 @@ export const TaxDeadlinesTable = ({
       },
     ],
     [completingId, deletingId, onComplete, onDelete, onEdit, onReopen, reopeningId],
-  );
+  )
 
-  const groups = useMemo(() => groupTaxDeadlinesByMonth(deadlines), [deadlines]);
+  const groups = useMemo(() => groupTaxDeadlinesByMonth(deadlines), [deadlines])
 
   if (deadlines.length === 0) {
     return (
@@ -123,12 +127,12 @@ export const TaxDeadlinesTable = ({
         getRowKey={(d) => d.id}
         emptyState={{
           icon: Inbox,
-          title: "אין מועדים להצגה",
-          message: "לא נמצאו מועדי מס התואמים לסינון הנוכחי",
-          variant: "illustration",
+          title: 'אין מועדים להצגה',
+          message: 'לא נמצאו מועדי מס התואמים לסינון הנוכחי',
+          variant: 'illustration',
         }}
       />
-    );
+    )
   }
 
   return (
@@ -151,7 +155,7 @@ export const TaxDeadlinesTable = ({
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-TaxDeadlinesTable.displayName = "TaxDeadlinesTable";
+TaxDeadlinesTable.displayName = 'TaxDeadlinesTable'

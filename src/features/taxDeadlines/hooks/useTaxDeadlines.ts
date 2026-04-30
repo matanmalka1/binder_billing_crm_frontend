@@ -1,54 +1,50 @@
-import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParamFilters } from "../../../hooks/useSearchParamFilters";
-import { useRole } from "../../../hooks/useRole";
-import { useForm } from "react-hook-form";
-import { taxDeadlinesApi, taxDeadlinesQK } from "../api";
-import { timelineQK } from "@/features/timeline";
-import { getHttpStatus, parsePositiveInt, showErrorToast } from "../../../utils/utils";
-import { toOptionalString } from "../../../utils/filters";
-import type {
-  TaxDeadlineFilters,
-  CreateTaxDeadlineForm,
-  GenerateTaxDeadlinesForm,
-} from "../types";
-import { toast } from "../../../utils/toast";
-import { getErrorMessage } from "../../../utils/utils";
-import { DUPLICATE_TAX_DEADLINE_MESSAGE } from "../constants";
-import { getCurrentTaxYear, toDeadlinePayloadPeriod, toDeadlinePayloadTaxYear } from "../utils";
-import { useTaxDeadlineActions } from "./useTaxDeadlineActions";
+import { useMemo, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSearchParamFilters } from '../../../hooks/useSearchParamFilters'
+import { useRole } from '../../../hooks/useRole'
+import { useForm } from 'react-hook-form'
+import { taxDeadlinesApi, taxDeadlinesQK } from '../api'
+import { timelineQK } from '@/features/timeline'
+import { getHttpStatus, parsePositiveInt, showErrorToast } from '../../../utils/utils'
+import { toOptionalString } from '../../../utils/filters'
+import type { TaxDeadlineFilters, CreateTaxDeadlineForm, GenerateTaxDeadlinesForm } from '../types'
+import { toast } from '../../../utils/toast'
+import { getErrorMessage } from '../../../utils/utils'
+import { DUPLICATE_TAX_DEADLINE_MESSAGE } from '../constants'
+import { getCurrentTaxYear, toDeadlinePayloadPeriod, toDeadlinePayloadTaxYear } from '../utils'
+import { useTaxDeadlineActions } from './useTaxDeadlineActions'
 
 export const useTaxDeadlines = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const invalidateAfterMutation = () => {
-    queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all });
-    queryClient.invalidateQueries({ queryKey: timelineQK.all });
-  };
-  const { isAdvisor } = useRole();
-  const { searchParams, setFilter, setSearchParams } = useSearchParamFilters();
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showGenerateModal, setShowGenerateModal] = useState(false);
-  const deadlineActions = useTaxDeadlineActions({ invalidateAfterMutation });
+    queryClient.invalidateQueries({ queryKey: taxDeadlinesQK.all })
+    queryClient.invalidateQueries({ queryKey: timelineQK.all })
+  }
+  const { isAdvisor } = useRole()
+  const { searchParams, setFilter, setSearchParams } = useSearchParamFilters()
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showGenerateModal, setShowGenerateModal] = useState(false)
+  const deadlineActions = useTaxDeadlineActions({ invalidateAfterMutation })
 
   const defaultDueTo = useMemo(() => {
-    const now = new Date();
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    return lastDay.toISOString().slice(0, 10);
-  }, []);
+    const now = new Date()
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+    return lastDay.toISOString().slice(0, 10)
+  }, [])
 
   const filters: TaxDeadlineFilters = useMemo(
     () => ({
-      client_name: searchParams.get("client_name") || searchParams.get("business_name") || "",
-      deadline_type: searchParams.get("deadline_type") || "",
-      status: searchParams.has("status") ? (searchParams.get("status") ?? "") : "pending",
-      due_from: searchParams.get("due_from") || "",
-      due_to: searchParams.has("due_to") ? (searchParams.get("due_to") ?? "") : defaultDueTo,
-      page: parsePositiveInt(searchParams.get("page"), 1),
-      page_size: parsePositiveInt(searchParams.get("page_size"), 20),
+      client_name: searchParams.get('client_name') || searchParams.get('business_name') || '',
+      deadline_type: searchParams.get('deadline_type') || '',
+      status: searchParams.has('status') ? (searchParams.get('status') ?? '') : 'pending',
+      due_from: searchParams.get('due_from') || '',
+      due_to: searchParams.has('due_to') ? (searchParams.get('due_to') ?? '') : defaultDueTo,
+      page: parsePositiveInt(searchParams.get('page'), 1),
+      page_size: parsePositiveInt(searchParams.get('page_size'), 20),
     }),
     [searchParams, defaultDueTo],
-  );
+  )
 
   const apiParams = useMemo(
     () => ({
@@ -61,110 +57,111 @@ export const useTaxDeadlines = () => {
       page_size: filters.page_size,
     }),
     [filters],
-  );
+  )
 
   const deadlinesQuery = useQuery({
     queryKey: taxDeadlinesQK.list(apiParams),
     queryFn: () => taxDeadlinesApi.listTaxDeadlines(apiParams),
-  });
+  })
 
   const createMutation = useMutation({
     mutationFn: (payload: {
-      client_record_id: number;
-      deadline_type: string;
-      due_date?: string;
-      period?: string | null;
-      tax_year?: number | null;
-      payment_amount?: string | null;
-      description?: string | null;
+      client_record_id: number
+      deadline_type: string
+      due_date?: string
+      period?: string | null
+      tax_year?: number | null
+      payment_amount?: string | null
+      description?: string | null
     }) => taxDeadlinesApi.createTaxDeadline(payload),
     onSuccess: (_data) => {
-      toast.success("מועד נוצר בהצלחה");
-      invalidateAfterMutation();
-      setShowCreateModal(false);
+      toast.success('מועד נוצר בהצלחה')
+      invalidateAfterMutation()
+      setShowCreateModal(false)
     },
     onError: (error) => {
       if (getHttpStatus(error) === 409) {
-        toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE);
-        return;
+        toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE)
+        return
       }
-      showErrorToast(error, "שגיאה ביצירת מועד");
+      showErrorToast(error, 'שגיאה ביצירת מועד')
     },
-  });
+  })
 
   const generateMutation = useMutation({
-    mutationFn: (payload: { client_record_id: number; year: number }) => taxDeadlinesApi.generateDeadlines(payload),
+    mutationFn: (payload: { client_record_id: number; year: number }) =>
+      taxDeadlinesApi.generateDeadlines(payload),
     onSuccess: ({ created_count }) => {
       if (created_count > 0) {
-        toast.success(`נוצרו ${created_count} מועדים בהצלחה`);
+        toast.success(`נוצרו ${created_count} מועדים בהצלחה`)
       } else {
-        toast.success("לא נוצרו מועדים חדשים");
+        toast.success('לא נוצרו מועדים חדשים')
       }
-      invalidateAfterMutation();
-      setShowGenerateModal(false);
+      invalidateAfterMutation()
+      setShowGenerateModal(false)
     },
-    onError: (error) => showErrorToast(error, "שגיאה ביצירת מועדים אוטומטית"),
-  });
+    onError: (error) => showErrorToast(error, 'שגיאה ביצירת מועדים אוטומטית'),
+  })
 
   const form = useForm<CreateTaxDeadlineForm>({
     defaultValues: {
-      client_id: "",
-      deadline_type: "",
-      due_date: "",
-      period: "",
-      payment_amount: "",
-      description: "",
+      client_id: '',
+      deadline_type: '',
+      due_date: '',
+      period: '',
+      payment_amount: '',
+      description: '',
     },
-  });
+  })
 
   const onSubmit = form.handleSubmit(async (values) => {
-    const duplicate = await deadlineActions.findDuplicateDeadline(values);
+    const duplicate = await deadlineActions.findDuplicateDeadline(values)
     if (duplicate) {
-      form.setError("period", { type: "manual", message: DUPLICATE_TAX_DEADLINE_MESSAGE });
-      toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE);
-      return;
+      form.setError('period', { type: 'manual', message: DUPLICATE_TAX_DEADLINE_MESSAGE })
+      toast.error(DUPLICATE_TAX_DEADLINE_MESSAGE)
+      return
     }
     await createMutation.mutateAsync({
       client_record_id: Number(values.client_id),
       deadline_type: values.deadline_type,
-      due_date: values.deadline_type === "vat" ? undefined : values.due_date,
+      due_date: values.deadline_type === 'vat' ? undefined : values.due_date,
       period: toDeadlinePayloadPeriod(values),
       tax_year: toDeadlinePayloadTaxYear(values),
       payment_amount: values.payment_amount ? values.payment_amount : null,
       description: values.description || null,
-    });
-    form.reset();
-  });
+    })
+    form.reset()
+  })
 
   const generateForm = useForm<GenerateTaxDeadlinesForm>({
     defaultValues: {
-      client_id: "",
+      client_id: '',
       year: String(getCurrentTaxYear()),
     },
-  });
+  })
 
   const onGenerateSubmit = generateForm.handleSubmit(async (values) => {
     await generateMutation.mutateAsync({
       client_record_id: Number(values.client_id),
       year: Number(values.year),
-    });
-    generateForm.reset({ client_id: "", year: values.year });
-  });
+    })
+    generateForm.reset({ client_id: '', year: values.year })
+  })
 
   const handleFilterChange = (key: string, value: string) => {
-    if (key === "client_name") {
-      setFilter("business_name", "");
+    if (key === 'client_name') {
+      setFilter('business_name', '')
     }
-    const next = new URLSearchParams(searchParams);
-    if (value) next.set(key, value);
-    else next.set(key, "");
-    next.set("page", "1");
-    setSearchParams(next);
-  };
+    const next = new URLSearchParams(searchParams)
+    if (value) next.set(key, value)
+    else next.set(key, '')
+    next.set('page', '1')
+    setSearchParams(next)
+  }
 
-  const deadlines = deadlinesQuery.data?.items ?? [];
-  const total = deadlinesQuery.data?.total ?? 0;
-  const totalPages = Math.max(1, Math.ceil(total / filters.page_size));
+  const deadlines = deadlinesQuery.data?.items ?? []
+  const total = deadlinesQuery.data?.total ?? 0
+  const totalPages = Math.max(1, Math.ceil(total / filters.page_size))
 
   return {
     // Data
@@ -175,7 +172,7 @@ export const useTaxDeadlines = () => {
     // State
     isLoading: deadlinesQuery.isPending,
     error: deadlinesQuery.error
-      ? getErrorMessage(deadlinesQuery.error, "שגיאה בטעינת מועדים")
+      ? getErrorMessage(deadlinesQuery.error, 'שגיאה בטעינת מועדים')
       : null,
     isCreating: createMutation.isPending,
     isUpdating: deadlineActions.isUpdating,
@@ -205,5 +202,5 @@ export const useTaxDeadlines = () => {
     // Permissions
     isAdvisor,
     isGenerating: generateMutation.isPending,
-  };
-};
+  }
+}

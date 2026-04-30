@@ -1,22 +1,22 @@
-import { Calendar, Download, Eye, FileText, History, RefreshCw, Trash2 } from "lucide-react";
-import { Badge } from "../../../components/ui/primitives/Badge";
-import { Button } from "../../../components/ui/primitives/Button";
-import { RowActionsMenu, RowActionItem, RowActionSeparator } from "@/components/ui/table";
-import { formatDate } from "../../../utils/utils";
-import { DOC_TYPE_LABELS } from "../documents.constants";
-import type { PermanentDocumentResponse } from "../api";
+import { Calendar, Download, Eye, FileText, History, RefreshCw, Trash2 } from 'lucide-react'
+import { Badge } from '../../../components/ui/primitives/Badge'
+import { Button } from '../../../components/ui/primitives/Button'
+import { RowActionsMenu, RowActionItem, RowActionSeparator } from '@/components/ui/table'
+import { formatDate } from '../../../utils/utils'
+import { DOC_TYPE_LABELS } from '../documents.constants'
+import type { PermanentDocumentResponse } from '../api'
 
 interface DocumentCardProps {
-  doc: PermanentDocumentResponse;
-  isAdvisor: boolean;
-  downloadingId: number | null;
-  replacingId: number | null;
-  deletingId: number | null;
-  onPreview: (doc: PermanentDocumentResponse) => void;
-  onDownload: (id: number) => void;
-  onReplace: (id: number) => void;
-  onDelete: (id: number) => void;
-  onToggleVersions: (id: number) => void;
+  doc: PermanentDocumentResponse
+  isAdvisor: boolean
+  downloadingId: number | null
+  replacingId: number | null
+  deletingId: number | null
+  onPreview: (doc: PermanentDocumentResponse) => void
+  onDownload: (id: number) => void
+  onReplace: (id: number) => void
+  onDelete: (id: number) => void
+  onToggleVersions: (id: number) => void
 }
 
 export const DocumentCard: React.FC<DocumentCardProps> = ({
@@ -46,13 +46,13 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
           <>
             <RowActionSeparator />
             <RowActionItem
-              label={replacingId === doc.id ? "מחליף..." : "החלף קובץ"}
+              label={replacingId === doc.id ? 'מחליף...' : 'החלף קובץ'}
               onClick={() => onReplace(doc.id)}
               icon={<RefreshCw className="h-4 w-4" />}
               disabled={replacingId === doc.id}
             />
             <RowActionItem
-              label={deletingId === doc.id ? "מוחק..." : "מחק"}
+              label={deletingId === doc.id ? 'מוחק...' : 'מחק'}
               onClick={() => onDelete(doc.id)}
               icon={<Trash2 className="h-4 w-4" />}
               danger
@@ -70,7 +70,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
       title={doc.original_filename ?? undefined}
     >
       <FileText className="h-3.5 w-3.5 shrink-0 text-gray-400" />
-      <span className="truncate">{doc.original_filename ?? "—"}</span>
+      <span className="truncate">{doc.original_filename ?? '—'}</span>
     </button>
 
     <div className="flex items-center justify-between gap-2 border-t border-gray-100 pt-2">
@@ -111,6 +111,6 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
       </Button>
     </div>
   </div>
-);
+)
 
-DocumentCard.displayName = "DocumentCard";
+DocumentCard.displayName = 'DocumentCard'

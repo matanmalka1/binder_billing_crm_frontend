@@ -1,14 +1,14 @@
-import { Clock, ArrowLeft } from "lucide-react";
-import { format, parseISO } from "date-fns";
-import { he } from "date-fns/locale";
-import { Card } from "../../../../components/ui/primitives/Card";
-import { Badge } from "../../../../components/ui/primitives/Badge";
-import type { StatusHistoryEntry } from "../../api";
-import { getStatusLabel, getStatusVariant } from "../../api";
-import { staggerDelay } from "../../../../utils/animation";
+import { Clock, ArrowLeft } from 'lucide-react'
+import { format, parseISO } from 'date-fns'
+import { he } from 'date-fns/locale'
+import { Card } from '../../../../components/ui/primitives/Card'
+import { Badge } from '../../../../components/ui/primitives/Badge'
+import type { StatusHistoryEntry } from '../../api'
+import { getStatusLabel, getStatusVariant } from '../../api'
+import { staggerDelay } from '../../../../utils/animation'
 
 interface StatusHistoryTimelineProps {
-  history: StatusHistoryEntry[];
+  history: StatusHistoryEntry[]
 }
 
 export const StatusHistoryTimeline: React.FC<StatusHistoryTimelineProps> = ({ history }) => {
@@ -17,10 +17,10 @@ export const StatusHistoryTimeline: React.FC<StatusHistoryTimelineProps> = ({ hi
       <Card title="היסטוריית סטטוס">
         <p className="text-sm text-gray-500">אין רשומות היסטוריה</p>
       </Card>
-    );
+    )
   }
 
-  const reversed = [...history].reverse();
+  const reversed = [...history].reverse()
 
   return (
     <Card title="היסטוריית סטטוס" subtitle={`${history.length} שינויים`}>
@@ -53,7 +53,7 @@ export const StatusHistoryTimeline: React.FC<StatusHistoryTimelineProps> = ({ hi
                   <span className="font-medium text-gray-700">משתמש #{entry.changed_by}</span>
                   <div className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    {format(parseISO(entry.occurred_at), "d MMM yyyy HH:mm", { locale: he })}
+                    {format(parseISO(entry.occurred_at), 'd MMM yyyy HH:mm', { locale: he })}
                   </div>
                 </div>
 
@@ -68,5 +68,5 @@ export const StatusHistoryTimeline: React.FC<StatusHistoryTimelineProps> = ({ hi
         </ul>
       </div>
     </Card>
-  );
-};
+  )
+}

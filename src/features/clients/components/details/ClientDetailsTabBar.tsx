@@ -1,36 +1,33 @@
-import { type FC } from "react";
-import { cn } from "../../../../utils/utils";
+import { type FC } from 'react'
+import { cn } from '../../../../utils/utils'
 import {
   CLIENT_DETAILS_TABS,
   CLIENT_DETAILS_TAB_LABELS,
   type ActiveClientDetailsTab,
-} from "../../constants";
+} from '../../constants'
 
 type ClientDetailsTabBarProps = {
-  activeTab: ActiveClientDetailsTab;
-  onTabChange: (tab: ActiveClientDetailsTab) => void;
-};
+  activeTab: ActiveClientDetailsTab
+  onTabChange: (tab: ActiveClientDetailsTab) => void
+}
 
-export const ClientDetailsTabBar: FC<ClientDetailsTabBarProps> = ({
-  activeTab,
-  onTabChange,
-}) => (
+export const ClientDetailsTabBar: FC<ClientDetailsTabBarProps> = ({ activeTab, onTabChange }) => (
   <div className="flex items-center gap-1 border-b border-gray-200">
     {CLIENT_DETAILS_TABS.map((tab) => {
-      const isActive = activeTab === tab;
+      const isActive = activeTab === tab
 
       return (
         <button
           key={tab}
           type="button"
-          aria-current={isActive ? "page" : undefined}
+          aria-current={isActive ? 'page' : undefined}
           onClick={() => onTabChange(tab)}
           className={cn(
-            "relative rounded-t-md px-4 py-2 text-sm font-medium transition-colors",
-            "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+            'relative rounded-t-md px-4 py-2 text-sm font-medium transition-colors',
+            'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
             isActive
-              ? "bg-white text-primary"
-              : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+              ? 'bg-white text-primary'
+              : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700',
           )}
         >
           {CLIENT_DETAILS_TAB_LABELS[tab]}
@@ -39,7 +36,7 @@ export const ClientDetailsTabBar: FC<ClientDetailsTabBarProps> = ({
             <span className="absolute inset-x-0 bottom-[-1px] h-[3px] rounded-t-full bg-primary" />
           )}
         </button>
-      );
+      )
     })}
   </div>
-);
+)

@@ -1,17 +1,17 @@
-import { useController, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "../../../../components/ui/overlays/Modal";
-import { DatePicker } from "../../../../components/ui/inputs/DatePicker";
-import { Input } from "../../../../components/ui/inputs/Input";
-import { ModalFormActions } from "../../../../components/ui/overlays/ModalFormActions";
-import type { CreateBusinessPayload, ISODateString } from "../../api";
-import { createBusinessSchema, type CreateBusinessFormValues } from "../../schemas";
+import { useController, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Modal } from '../../../../components/ui/overlays/Modal'
+import { DatePicker } from '../../../../components/ui/inputs/DatePicker'
+import { Input } from '../../../../components/ui/inputs/Input'
+import { ModalFormActions } from '../../../../components/ui/overlays/ModalFormActions'
+import type { CreateBusinessPayload, ISODateString } from '../../api'
+import { createBusinessSchema, type CreateBusinessFormValues } from '../../schemas'
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: (data: CreateBusinessPayload) => Promise<void>;
-  isLoading?: boolean;
+  open: boolean
+  onClose: () => void
+  onSubmit: (data: CreateBusinessPayload) => Promise<void>
+  isLoading?: boolean
 }
 
 export const CreateBusinessModal: React.FC<Props> = ({
@@ -29,27 +29,27 @@ export const CreateBusinessModal: React.FC<Props> = ({
   } = useForm<CreateBusinessFormValues>({
     resolver: zodResolver(createBusinessSchema),
     defaultValues: {
-      business_name: "",
+      business_name: '',
       opened_at: null,
     },
-  });
-  const { field: openedAtField } = useController({ name: "opened_at", control });
+  })
+  const { field: openedAtField } = useController({ name: 'opened_at', control })
 
   const handleClose = () => {
     if (!isLoading) {
-      reset();
-      onClose();
+      reset()
+      onClose()
     }
-  };
+  }
 
   const onFormSubmit = handleSubmit(async (data) => {
     const payload: CreateBusinessPayload = {
       business_name: data.business_name,
       opened_at: data.opened_at ? (data.opened_at as ISODateString) : null,
-    };
-    await onSubmit(payload);
-    reset();
-  });
+    }
+    await onSubmit(payload)
+    reset()
+  })
 
   return (
     <Modal
@@ -71,13 +71,13 @@ export const CreateBusinessModal: React.FC<Props> = ({
           placeholder="לדוגמה: מסעדת ישראל"
           error={errors.business_name?.message}
           disabled={isLoading}
-          {...register("business_name")}
+          {...register('business_name')}
         />
         <DatePicker
           label="תאריך פתיחת עסק"
           error={errors.opened_at?.message}
           disabled={isLoading}
-          value={openedAtField.value ?? ""}
+          value={openedAtField.value ?? ''}
           onChange={openedAtField.onChange}
           onBlur={openedAtField.onBlur}
           name={openedAtField.name}
@@ -85,5 +85,5 @@ export const CreateBusinessModal: React.FC<Props> = ({
         <p className="text-xs text-gray-500">* שדות חובה</p>
       </form>
     </Modal>
-  );
-};
+  )
+}

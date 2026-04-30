@@ -1,20 +1,20 @@
-import type { ReactNode, FC } from "react";
-import { PageLoading } from "./PageLoading";
-import { Alert } from "../overlays/Alert";
+import type { ReactNode, FC } from 'react'
+import { PageLoading } from './PageLoading'
+import { Alert } from '../overlays/Alert'
 
 interface PageStateGuardProps {
-  isLoading: boolean;
-  error: string | null;
-  header: ReactNode;
-  loadingMessage?: string;
-  children: ReactNode;
+  isLoading: boolean
+  error: string | null
+  header: ReactNode
+  loadingMessage?: string
+  children: ReactNode
 }
 
 export const PageStateGuard: FC<PageStateGuardProps> = ({
   isLoading,
   error,
   header,
-  loadingMessage = "טוען...",
+  loadingMessage = 'טוען...',
   children,
 }) => {
   return (
@@ -24,5 +24,5 @@ export const PageStateGuard: FC<PageStateGuardProps> = ({
       {error && <Alert variant="error" message={error} />}
       {!isLoading && !error && children}
     </div>
-  );
-};
+  )
+}

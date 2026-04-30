@@ -1,26 +1,24 @@
-import type { QueryClient } from "@tanstack/react-query";
-import type { VatWorkItemResponse } from "../api";
-import { vatReportsQK } from "../api/queryKeys";
+import type { QueryClient } from '@tanstack/react-query'
+import type { VatWorkItemResponse } from '../api'
+import { vatReportsQK } from '../api/queryKeys'
 
 interface InvalidateVatWorkItemOptions {
-  workItemId?: number;
-  clientRecordId?: number | null;
-  includeInvoices?: boolean;
-  includeAudit?: boolean;
+  workItemId?: number
+  clientRecordId?: number | null
+  includeInvoices?: boolean
+  includeAudit?: boolean
 }
 
-const getCachedClientRecordId = (
-  queryClient: QueryClient,
-  workItemId: number | undefined,
-) => {
-  if (!workItemId) return null;
-  return queryClient.getQueryData<VatWorkItemResponse>(
-    vatReportsQK.detail(workItemId),
-  )?.client_record_id ?? null;
-};
+const getCachedClientRecordId = (queryClient: QueryClient, workItemId: number | undefined) => {
+  if (!workItemId) return null
+  return (
+    queryClient.getQueryData<VatWorkItemResponse>(vatReportsQK.detail(workItemId))
+      ?.client_record_id ?? null
+  )
+}
 
 export const invalidateVatLists = (queryClient: QueryClient) =>
-  queryClient.invalidateQueries({ queryKey: vatReportsQK.lists() });
+  queryClient.invalidateQueries({ queryKey: vatReportsQK.lists() })
 
 export const invalidateVatWorkItem = async (
   queryClient: QueryClient,
@@ -31,8 +29,7 @@ export const invalidateVatWorkItem = async (
     includeAudit = true,
   }: InvalidateVatWorkItemOptions,
 ) => {
-  const resolvedClientRecordId =
-    clientRecordId ?? getCachedClientRecordId(queryClient, workItemId);
+  const resolvedClientRecordId = clientRecordId ?? getCachedClientRecordId(queryClient, workItemId)
 
   await Promise.all([
     invalidateVatLists(queryClient),
@@ -50,5 +47,5 @@ export const invalidateVatWorkItem = async (
           queryKey: vatReportsQK.clientSummary(resolvedClientRecordId),
         })
       : Promise.resolve(),
-  ]);
-};
+  ])
+}

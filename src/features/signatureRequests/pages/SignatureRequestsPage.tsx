@@ -1,12 +1,12 @@
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { FileSignature, ClipboardCheck, Clock, AlertCircle, Plus } from "lucide-react";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { PageStateGuard } from "@/components/ui/layout/PageStateGuard";
-import { DataTable } from "@/components/ui/table/DataTable";
-import { StatsCard } from "@/components/ui/layout/StatsCard";
-import { Button } from "@/components/ui/primitives/Button";
-import { StatusBadge } from "@/components/ui/primitives/StatusBadge";
+import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { FileSignature, ClipboardCheck, Clock, AlertCircle, Plus } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { PageStateGuard } from '@/components/ui/layout/PageStateGuard'
+import { DataTable } from '@/components/ui/table/DataTable'
+import { StatsCard } from '@/components/ui/layout/StatsCard'
+import { Button } from '@/components/ui/primitives/Button'
+import { StatusBadge } from '@/components/ui/primitives/StatusBadge'
 import {
   CreateSignatureRequestModal,
   SIGNATURE_REQUEST_TERMINAL_STATUSES,
@@ -16,56 +16,58 @@ import {
   usePendingSignatureRequests,
   useSignatureRequestActions,
   type SignatureRequestResponse,
-} from "@/features/signatureRequests";
-import { SignatureRequestRowActions } from "../components/SignatureRequestRowActions";
-import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from "@/utils/enums";
-import { formatClientOfficeId, formatDate } from "@/utils/utils";
+} from '@/features/signatureRequests'
+import { SignatureRequestRowActions } from '../components/SignatureRequestRowActions'
+import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from '@/utils/enums'
+import { formatClientOfficeId, formatDate } from '@/utils/utils'
 
 export const SignatureRequestsPage: React.FC = () => {
-  const { items, total, businessLookup, isLoading, error } = usePendingSignatureRequests();
-  const { send, isSending, cancel, isCanceling, create, isCreating } = useSignatureRequestActions();
+  const { items, total, businessLookup, isLoading, error } = usePendingSignatureRequests()
+  const { send, isSending, cancel, isCanceling, create, isCreating } = useSignatureRequestActions()
 
-  const [auditRequestId, setAuditRequestId] = useState<number | null>(null);
-  const [showAll, setShowAll] = useState(false);
-  const [showCreate, setShowCreate] = useState(false);
-  const { signingUrls, handleSend } = useSignatureRequestSigningUrls(send);
+  const [auditRequestId, setAuditRequestId] = useState<number | null>(null)
+  const [showAll, setShowAll] = useState(false)
+  const [showCreate, setShowCreate] = useState(false)
+  const { signingUrls, handleSend } = useSignatureRequestSigningUrls(send)
 
-  const draft = items.filter((r) => r.status === "draft").length;
-  const pending = items.filter((r) => r.status === "pending_signature").length;
-  const terminal = items.filter((r) => ["expired", "declined"].includes(r.status)).length;
+  const draft = items.filter((r) => r.status === 'draft').length
+  const pending = items.filter((r) => r.status === 'pending_signature').length
+  const terminal = items.filter((r) => ['expired', 'declined'].includes(r.status)).length
 
   const displayedItems = useMemo(
-    () => showAll ? items : items.filter((r) => !SIGNATURE_REQUEST_TERMINAL_STATUSES.has(r.status)),
+    () =>
+      showAll ? items : items.filter((r) => !SIGNATURE_REQUEST_TERMINAL_STATUSES.has(r.status)),
     [items, showAll],
-  );
+  )
 
   const columns = useMemo(
     () => [
       {
-        key: "office_client_number",
+        key: 'office_client_number',
         header: "מס' לקוח",
         render: (req: SignatureRequestResponse) => {
           return (
             <span className="font-mono text-sm text-gray-500 tabular-nums">
               {formatClientOfficeId(req.office_client_number)}
             </span>
-          );
+          )
         },
       },
       {
-        key: "title",
-        header: "כותרת",
+        key: 'title',
+        header: 'כותרת',
         render: (req: SignatureRequestResponse) => (
           <span className="font-semibold text-gray-900">{req.title}</span>
         ),
       },
       {
-        key: "client",
-        header: "לקוח",
+        key: 'client',
+        header: 'לקוח',
         render: (req: SignatureRequestResponse) => {
-          const bizId = req.business_id;
-          const entry = bizId != null ? businessLookup[bizId] : undefined;
-          const displayName = entry?.name ?? (bizId != null ? `עסק #${bizId}` : `לקוח #${req.client_record_id}`);
+          const bizId = req.business_id
+          const entry = bizId != null ? businessLookup[bizId] : undefined
+          const displayName =
+            entry?.name ?? (bizId != null ? `עסק #${bizId}` : `לקוח #${req.client_record_id}`)
 
           return (
             <Link
@@ -75,40 +77,46 @@ export const SignatureRequestsPage: React.FC = () => {
             >
               {displayName}
             </Link>
-          );
+          )
         },
       },
       {
-        key: "type",
-        header: "סוג",
+        key: 'type',
+        header: 'סוג',
         render: (req: SignatureRequestResponse) => (
           <span className="text-gray-500">{getSignatureRequestTypeLabel(req.request_type)}</span>
         ),
       },
       {
-        key: "signer",
-        header: "חותם",
+        key: 'signer',
+        header: 'חותם',
         render: (req: SignatureRequestResponse) => (
           <span className="text-gray-600">{req.signer_name}</span>
         ),
       },
       {
-        key: "status",
-        header: "סטטוס",
-        render: (req: SignatureRequestResponse) => <StatusBadge status={req.status} getLabel={getSignatureRequestStatusLabel} variantMap={signatureRequestStatusVariants} />,
+        key: 'status',
+        header: 'סטטוס',
+        render: (req: SignatureRequestResponse) => (
+          <StatusBadge
+            status={req.status}
+            getLabel={getSignatureRequestStatusLabel}
+            variantMap={signatureRequestStatusVariants}
+          />
+        ),
       },
       {
-        key: "created_at",
-        header: "נוצר",
+        key: 'created_at',
+        header: 'נוצר',
         render: (req: SignatureRequestResponse) => (
           <span className="tabular-nums text-gray-500">{formatDate(req.created_at)}</span>
         ),
       },
       {
-        key: "actions",
-        header: "",
-        headerClassName: "w-10",
-        className: "w-10",
+        key: 'actions',
+        header: '',
+        headerClassName: 'w-10',
+        className: 'w-10',
         render: (req: SignatureRequestResponse) => (
           <SignatureRequestRowActions
             request={req}
@@ -116,8 +124,12 @@ export const SignatureRequestsPage: React.FC = () => {
             isSending={isSending}
             isCanceling={isCanceling}
             canManage
-            onSend={async (id) => { void handleSend(id); }}
-            onCancel={async (id) => { void cancel(id); }}
+            onSend={async (id) => {
+              void handleSend(id)
+            }}
+            onCancel={async (id) => {
+              void cancel(id)
+            }}
             onAudit={setAuditRequestId}
             showOpenLink
             separateHistory
@@ -128,7 +140,7 @@ export const SignatureRequestsPage: React.FC = () => {
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [businessLookup, signingUrls, isSending, isCanceling],
-  );
+  )
 
   const header = (
     <PageHeader
@@ -141,10 +153,15 @@ export const SignatureRequestsPage: React.FC = () => {
         </Button>
       }
     />
-  );
+  )
 
   return (
-    <PageStateGuard isLoading={isLoading} error={error} header={header} loadingMessage="טוען בקשות חתימה...">
+    <PageStateGuard
+      isLoading={isLoading}
+      error={error}
+      header={header}
+      loadingMessage="טוען בקשות חתימה..."
+    >
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatsCard title='סה"כ' value={total} icon={FileSignature} variant="neutral" />
@@ -154,13 +171,8 @@ export const SignatureRequestsPage: React.FC = () => {
         </div>
 
         <div className="flex items-center justify-end">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowAll((v) => !v)}
-          >
-            {showAll ? "הסתר סגורות" : "הצג הכל"}
+          <Button type="button" variant="ghost" size="sm" onClick={() => setShowAll((v) => !v)}>
+            {showAll ? 'הסתר סגורות' : 'הצג הכל'}
           </Button>
         </div>
 
@@ -172,8 +184,10 @@ export const SignatureRequestsPage: React.FC = () => {
           isLoading={false}
           emptyState={{
             icon: FileSignature,
-            title: "אין בקשות חתימה",
-            message: showAll ? "אין בקשות חתימה להצגה" : "אין בקשות חתימה פעילות — לחץ על 'הצג הכל' לצפייה בארכיון",
+            title: 'אין בקשות חתימה',
+            message: showAll
+              ? 'אין בקשות חתימה להצגה'
+              : "אין בקשות חתימה פעילות — לחץ על 'הצג הכל' לצפייה בארכיון",
           }}
         />
       </div>
@@ -190,5 +204,5 @@ export const SignatureRequestsPage: React.FC = () => {
         onCreate={create}
       />
     </PageStateGuard>
-  );
-};
+  )
+}

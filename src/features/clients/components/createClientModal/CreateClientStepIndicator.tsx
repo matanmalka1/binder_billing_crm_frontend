@@ -1,7 +1,7 @@
-import { CREATE_CLIENT_STEPS } from "./createClientSteps";
+import { CREATE_CLIENT_STEPS } from './createClientSteps'
 
 interface Props {
-  stepIndex: number;
+  stepIndex: number
 }
 
 export const CreateClientStepIndicator: React.FC<Props> = ({ stepIndex }) => (
@@ -11,14 +11,14 @@ export const CreateClientStepIndicator: React.FC<Props> = ({ stepIndex }) => (
         key={step.key}
         className={`rounded-md border px-3 py-2 text-center text-sm font-medium ${
           index === stepIndex
-            ? "border-primary-600 bg-primary-50 text-primary-700"
+            ? 'border-primary-600 bg-primary-50 text-primary-700'
             : index < stepIndex
-              ? "border-green-200 bg-green-50 text-green-700"
-              : "border-gray-200 bg-gray-50 text-gray-500"
+              ? 'border-green-200 bg-green-50 text-green-700'
+              : 'border-gray-200 bg-gray-50 text-gray-500'
         }`}
       >
         {index + 1}. {step.label}
       </div>
     ))}
   </div>
-);
+)

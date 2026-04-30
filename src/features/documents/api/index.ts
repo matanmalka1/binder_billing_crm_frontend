@@ -1,5 +1,5 @@
-export { documentsApi } from "./documents.api";
-export { documentsQK } from "./queryKeys";
+export { documentsApi } from './documents.api'
+export { documentsQK } from './queryKeys'
 export type {
   PermanentDocumentResponse,
   PermanentDocumentListResponse,
@@ -7,4 +7,4 @@ export type {
   OperationalSignalsResponse,
   UploadDocumentPayload,
   ListDocumentsByClientParams,
-} from "./contracts";
+} from './contracts'

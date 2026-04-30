@@ -1,24 +1,24 @@
-import React from "react";
-import { AlertTriangle } from "lucide-react";
-import { StateCard } from "../ui/feedback/StateCard";
+import React from 'react'
+import { AlertTriangle } from 'lucide-react'
+import { StateCard } from '../ui/feedback/StateCard'
 
 interface AppLogger {
-  error: (event: string, context?: Record<string, unknown>) => void;
+  error: (event: string, context?: Record<string, unknown>) => void
 }
 
 interface AppErrorBoundaryProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 interface AppErrorBoundaryState {
-  hasError: boolean;
-  error: Error | null;
-  errorInfo: React.ErrorInfo | null;
+  hasError: boolean
+  error: Error | null
+  errorInfo: React.ErrorInfo | null
 }
 
 declare global {
   interface Window {
-    __APP_LOGGER__?: AppLogger;
+    __APP_LOGGER__?: AppLogger
   }
 }
 
@@ -27,12 +27,12 @@ export class AppErrorBoundary extends React.Component<
   AppErrorBoundaryState
 > {
   public constructor(props: AppErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
+    super(props)
+    this.state = { hasError: false, error: null, errorInfo: null }
   }
 
   public static getDerivedStateFromError(error: Error): Partial<AppErrorBoundaryState> {
-    return { hasError: true, error };
+    return { hasError: true, error }
   }
 
   public componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
@@ -41,27 +41,34 @@ export class AppErrorBoundary extends React.Component<
       message: error.message,
       stack: error.stack,
       componentStack: errorInfo.componentStack,
-    };
-
-    if (typeof window !== "undefined" && window.__APP_LOGGER__) {
-      window.__APP_LOGGER__.error("app_error_boundary", context);
-    } else {
-      console.error("app_error_boundary", context);
     }
 
-    this.setState({ error, errorInfo });
+    if (typeof window !== 'undefined' && window.__APP_LOGGER__) {
+      window.__APP_LOGGER__.error('app_error_boundary', context)
+    } else {
+      console.error('app_error_boundary', context)
+    }
+
+    this.setState({ error, errorInfo })
   }
 
-  private handleReload = (): void => { window.location.reload(); };
-  private handleGoHome = (): void => { window.location.href = "/"; };
-  private handleReset = (): void => { this.setState({ hasError: false, error: null, errorInfo: null }); };
+  private handleReload = (): void => {
+    window.location.reload()
+  }
+  private handleGoHome = (): void => {
+    window.location.href = '/'
+  }
+  private handleReset = (): void => {
+    this.setState({ hasError: false, error: null, errorInfo: null })
+  }
 
   public render(): React.ReactNode {
     if (this.state.hasError) {
-      const isDevelopment = import.meta.env.DEV;
-      const devDetails = isDevelopment && this.state.error
-        ? `${this.state.error.toString()}${this.state.error.stack ? `\n\n${this.state.error.stack}` : ""}`
-        : undefined;
+      const isDevelopment = import.meta.env.DEV
+      const devDetails =
+        isDevelopment && this.state.error
+          ? `${this.state.error.toString()}${this.state.error.stack ? `\n\n${this.state.error.stack}` : ''}`
+          : undefined
 
       return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
@@ -72,8 +79,8 @@ export class AppErrorBoundary extends React.Component<
               title="אירעה שגיאה בלתי צפויה"
               message="אנו מתנצלים על אי הנוחות. צוות הפיתוח קיבל התראה על הבעיה."
               details={devDetails}
-              action={{ label: "טען מחדש את הדף", onClick: this.handleReload }}
-              secondaryAction={{ label: "חזור לדף הבית", onClick: this.handleGoHome }}
+              action={{ label: 'טען מחדש את הדף', onClick: this.handleReload }}
+              secondaryAction={{ label: 'חזור לדף הבית', onClick: this.handleGoHome }}
             />
             {isDevelopment && (
               <div className="mt-3 text-center">
@@ -87,9 +94,9 @@ export class AppErrorBoundary extends React.Component<
             )}
           </div>
         </div>
-      );
+      )
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }

@@ -1,5 +1,5 @@
 interface PageLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
@@ -7,5 +7,5 @@ export const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
     <main className="flex-1 overflow-y-auto p-6 md:p-8">
       <div className="w-full h-full">{children}</div>
     </main>
-  );
-};
+  )
+}

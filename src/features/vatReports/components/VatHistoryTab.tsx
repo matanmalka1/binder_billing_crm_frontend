@@ -1,20 +1,20 @@
-import { useState } from "react";
-import { Button } from "../../../components/ui/primitives/Button";
-import { formatDateTime } from "../../../utils/utils";
-import { ACTION_LABELS, PAGE_SIZE } from "../history.constants";
-import { formatVatHistoryDetails } from "../history.utils";
-import { useVatHistory } from "../hooks/useVatHistory";
-import type { VatHistoryTabProps } from "../types";
+import { useState } from 'react'
+import { Button } from '../../../components/ui/primitives/Button'
+import { formatDateTime } from '../../../utils/utils'
+import { ACTION_LABELS, PAGE_SIZE } from '../history.constants'
+import { formatVatHistoryDetails } from '../history.utils'
+import { useVatHistory } from '../hooks/useVatHistory'
+import type { VatHistoryTabProps } from '../types'
 
 export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
-  const [page, setPage] = useState(0);
-  const { items, total, isFetching, isPending } = useVatHistory(workItemId, page, PAGE_SIZE);
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const maxPage = totalPages - 1;
-  const safePage = Math.min(page, maxPage);
+  const [page, setPage] = useState(0)
+  const { items, total, isFetching, isPending } = useVatHistory(workItemId, page, PAGE_SIZE)
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  const maxPage = totalPages - 1
+  const safePage = Math.min(page, maxPage)
 
-  if (isPending) return <p className="py-8 text-center text-sm text-gray-400">טוען...</p>;
-  if (total === 0) return <p className="py-8 text-center text-sm text-gray-400">אין היסטוריה</p>;
+  if (isPending) return <p className="py-8 text-center text-sm text-gray-400">טוען...</p>
+  if (total === 0) return <p className="py-8 text-center text-sm text-gray-400">אין היסטוריה</p>
 
   return (
     <div className="space-y-3">
@@ -60,7 +60,7 @@ export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
           >
             הקודם
           </Button>
-          <span>{isFetching ? "טוען..." : `עמוד ${safePage + 1} מתוך ${totalPages}`}</span>
+          <span>{isFetching ? 'טוען...' : `עמוד ${safePage + 1} מתוך ${totalPages}`}</span>
           <Button
             type="button"
             variant="ghost"
@@ -73,7 +73,7 @@ export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-VatHistoryTab.displayName = "VatHistoryTab";
+VatHistoryTab.displayName = 'VatHistoryTab'

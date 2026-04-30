@@ -1,41 +1,35 @@
-import { cn } from "../../../../utils/utils";
-import { semanticDotClasses, semanticMonoToneClasses } from "@/utils/semanticColors";
+import { cn } from '../../../../utils/utils'
+import { semanticDotClasses, semanticMonoToneClasses } from '@/utils/semanticColors'
 
-export type TimelineEventStatus = "done" | "warning" | "pending" | "overdue";
+export type TimelineEventStatus = 'done' | 'warning' | 'pending' | 'overdue'
 
 interface Props {
-  title: string;
-  description: string;
-  date: string;
-  status: TimelineEventStatus;
-  amount?: string;
+  title: string
+  description: string
+  date: string
+  status: TimelineEventStatus
+  amount?: string
 }
 
 const STATUS_DOT: Record<TimelineEventStatus, string> = {
   done: semanticDotClasses.positive,
   warning: semanticDotClasses.warning,
-  pending: "bg-gray-300",
+  pending: 'bg-gray-300',
   overdue: semanticDotClasses.negative,
-};
+}
 
 const STATUS_ICON: Record<TimelineEventStatus, string> = {
-  done: "✅",
-  warning: "🟡",
-  pending: "⬜",
-  overdue: "🔴",
-};
+  done: '✅',
+  warning: '🟡',
+  pending: '⬜',
+  overdue: '🔴',
+}
 
-export const TimelineEvent: React.FC<Props> = ({
-  title,
-  description,
-  date,
-  status,
-  amount,
-}) => (
+export const TimelineEvent: React.FC<Props> = ({ title, description, date, status, amount }) => (
   <div className="flex gap-3">
     {/* Dot + line */}
     <div className="flex flex-col items-center">
-      <span className={cn("h-3 w-3 shrink-0 rounded-full mt-1", STATUS_DOT[status])} />
+      <span className={cn('h-3 w-3 shrink-0 rounded-full mt-1', STATUS_DOT[status])} />
       <div className="w-px flex-1 bg-gray-200 mt-1" />
     </div>
 
@@ -49,14 +43,16 @@ export const TimelineEvent: React.FC<Props> = ({
           </p>
           <p className="text-xs text-gray-500 mt-0.5">{description}</p>
           {amount && (
-            <p className={cn(
-              "text-xs font-semibold mt-0.5",
-              status === "overdue"
-                ? semanticMonoToneClasses.negative
-                : status === "warning"
-                  ? semanticMonoToneClasses.warning
-                  : "text-gray-700"
-            )}>
+            <p
+              className={cn(
+                'text-xs font-semibold mt-0.5',
+                status === 'overdue'
+                  ? semanticMonoToneClasses.negative
+                  : status === 'warning'
+                    ? semanticMonoToneClasses.warning
+                    : 'text-gray-700',
+              )}
+            >
               {amount}
             </p>
           )}
@@ -65,4 +61,4 @@ export const TimelineEvent: React.FC<Props> = ({
       </div>
     </div>
   </div>
-);
+)

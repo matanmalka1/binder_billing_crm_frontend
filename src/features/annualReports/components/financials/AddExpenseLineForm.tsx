@@ -1,35 +1,32 @@
-import { useState } from "react";
-import { EXPENSE_LABELS } from "../../report.constants";
-import { FIELD_PLACEHOLDERS } from "./financialConstants";
+import { useState } from 'react'
+import { EXPENSE_LABELS } from '../../report.constants'
+import { FIELD_PLACEHOLDERS } from './financialConstants'
 import {
   ExpenseSupplementaryFields,
   FinancialAddFormShell,
   FinancialAmountDescriptionFields,
   FinancialSelectField,
-} from "./FinancialLineFormParts";
-import type { AddExpensePayload } from "./financialHelpers";
-import { useExpenseLineForm } from "./useFinancialLineForm";
+} from './FinancialLineFormParts'
+import type { AddExpensePayload } from './financialHelpers'
+import { useExpenseLineForm } from './useFinancialLineForm'
 
 interface AddExpenseLineFormProps {
-  onAdd: (payload: AddExpensePayload) => void;
-  isAdding: boolean;
+  onAdd: (payload: AddExpensePayload) => void
+  isAdding: boolean
 }
 
-export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({
-  onAdd,
-  isAdding,
-}) => {
-  const [open, setOpen] = useState(false);
+export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({ onAdd, isAdding }) => {
+  const [open, setOpen] = useState(false)
   const form = useExpenseLineForm(undefined, (payload) => {
-    onAdd(payload);
-    form.reset();
-    setOpen(false);
-  });
+    onAdd(payload)
+    form.reset()
+    setOpen(false)
+  })
 
   const close = () => {
-    form.reset();
-    setOpen(false);
-  };
+    form.reset()
+    setOpen(false)
+  }
 
   return (
     <FinancialAddFormShell
@@ -60,5 +57,5 @@ export const AddExpenseLineForm: React.FC<AddExpenseLineFormProps> = ({
         onDocumentReferenceChange={form.setDocumentReference}
       />
     </FinancialAddFormShell>
-  );
-};
+  )
+}

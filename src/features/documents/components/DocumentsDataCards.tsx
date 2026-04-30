@@ -1,47 +1,47 @@
-import { useMemo, useState } from "react";
-import { Plus } from "lucide-react";
-import { Alert } from "../../../components/ui/overlays/Alert";
-import { Modal } from "../../../components/ui/overlays/Modal";
-import { Button } from "../../../components/ui/primitives/Button";
-import { DocumentCard } from "./DocumentCard";
-import { DocumentsUploadCard } from "./DocumentsUploadCard";
-import { DocumentVersionsPanel } from "./DocumentVersionsPanel";
-import { DocumentPreviewModal } from "./DocumentPreviewModal";
-import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
+import { useMemo, useState } from 'react'
+import { Plus } from 'lucide-react'
+import { Alert } from '../../../components/ui/overlays/Alert'
+import { Modal } from '../../../components/ui/overlays/Modal'
+import { Button } from '../../../components/ui/primitives/Button'
+import { DocumentCard } from './DocumentCard'
+import { DocumentsUploadCard } from './DocumentsUploadCard'
+import { DocumentVersionsPanel } from './DocumentVersionsPanel'
+import { DocumentPreviewModal } from './DocumentPreviewModal'
+import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
 import type {
   OperationalSignalsResponse,
   PermanentDocumentResponse,
   UploadDocumentPayload,
-} from "../api";
-import { useAuthStore } from "../../../store/auth.store";
-import type { BusinessResponse } from "@/features/clients";
-import { UPLOAD_FORM_ID } from "./DocumentsDataCards.constants";
+} from '../api'
+import { useAuthStore } from '../../../store/auth.store'
+import type { BusinessResponse } from '@/features/clients'
+import { UPLOAD_FORM_ID } from './DocumentsDataCards.constants'
 import {
   filterDocuments,
   getCountLabel,
   getMissingDocumentsMessage,
-} from "./DocumentsDataCards.utils";
-import { useDocumentCardActions } from "./useDocumentCardActions";
-import { DocumentsDataCardsToolbar } from "./DocumentsDataCardsToolbar";
-import { DocumentsEmptyState } from "./DocumentsEmptyState";
+} from './DocumentsDataCards.utils'
+import { useDocumentCardActions } from './useDocumentCardActions'
+import { DocumentsDataCardsToolbar } from './DocumentsDataCardsToolbar'
+import { DocumentsEmptyState } from './DocumentsEmptyState'
 
 interface DocumentsDataCardsProps {
-  documents: PermanentDocumentResponse[];
-  signals: OperationalSignalsResponse;
-  taxYear: number | null;
-  onTaxYearChange: (year: number | null) => void;
-  businesses: BusinessResponse[];
-  businessesLoading: boolean;
+  documents: PermanentDocumentResponse[]
+  signals: OperationalSignalsResponse
+  taxYear: number | null
+  onTaxYearChange: (year: number | null) => void
+  businesses: BusinessResponse[]
+  businessesLoading: boolean
   submitUpload: (payload: {
-    document_type: UploadDocumentPayload["document_type"];
-    business_id?: number | null;
-    file: File;
-    tax_year?: number | null;
-  }) => Promise<boolean>;
-  uploadError: string | null;
-  uploading: boolean;
-  onDelete: (id: number) => Promise<void>;
-  onReplace: (id: number, file: File) => Promise<void>;
+    document_type: UploadDocumentPayload['document_type']
+    business_id?: number | null
+    file: File
+    tax_year?: number | null
+  }) => Promise<boolean>
+  uploadError: string | null
+  uploading: boolean
+  onDelete: (id: number) => Promise<void>
+  onReplace: (id: number, file: File) => Promise<void>
 }
 
 export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
@@ -57,16 +57,14 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
   onDelete,
   onReplace,
 }) => {
-  const role = useAuthStore((s) => s.user?.role);
-  const isAdvisor = role === "advisor";
+  const role = useAuthStore((s) => s.user?.role)
+  const isAdvisor = role === 'advisor'
 
-  const [uploadOpen, setUploadOpen] = useState(false);
-  const [uploadCanSubmit, setUploadCanSubmit] = useState(false);
-  const [expandedVersionsId, setExpandedVersionsId] = useState<number | null>(
-    null,
-  );
-  const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState("");
+  const [uploadOpen, setUploadOpen] = useState(false)
+  const [uploadCanSubmit, setUploadCanSubmit] = useState(false)
+  const [expandedVersionsId, setExpandedVersionsId] = useState<number | null>(null)
+  const [search, setSearch] = useState('')
+  const [filterType, setFilterType] = useState('')
 
   const {
     confirmDeleteId,
@@ -83,50 +81,38 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     handleDownloadClick,
     handlePreviewClick,
     closePreview,
-  } = useDocumentCardActions({ onDelete, onReplace });
+  } = useDocumentCardActions({ onDelete, onReplace })
 
   const closeUploadModal = () => {
-    setUploadOpen(false);
-    setUploadCanSubmit(false);
-  };
+    setUploadOpen(false)
+    setUploadCanSubmit(false)
+  }
 
   const handleToggleVersions = (id: number) => {
-    setExpandedVersionsId((prev) => (prev === id ? null : id));
-  };
+    setExpandedVersionsId((prev) => (prev === id ? null : id))
+  }
 
   const filteredDocuments = useMemo(
     () => filterDocuments(documents, search, filterType),
     [documents, filterType, search],
-  );
+  )
 
   const expandedDoc = useMemo(
-    () =>
-      expandedVersionsId !== null
-        ? documents.find((d) => d.id === expandedVersionsId)
-        : null,
+    () => (expandedVersionsId !== null ? documents.find((d) => d.id === expandedVersionsId) : null),
     [documents, expandedVersionsId],
-  );
+  )
 
-  const countLabel = getCountLabel(filteredDocuments.length, documents.length);
+  const countLabel = getCountLabel(filteredDocuments.length, documents.length)
 
   return (
     <div className="space-y-4">
       {signals.missing_documents.length > 0 && (
-        <Alert
-          variant="warning"
-          message={getMissingDocumentsMessage(signals.missing_documents)}
-        />
+        <Alert variant="warning" message={getMissingDocumentsMessage(signals.missing_documents)} />
       )}
 
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-base font-semibold text-gray-900">
-          מסמכים ({countLabel})
-        </h3>
-        <Button
-          size="sm"
-          onClick={() => setUploadOpen(true)}
-          className="gap-1.5 shrink-0"
-        >
+        <h3 className="text-base font-semibold text-gray-900">מסמכים ({countLabel})</h3>
+        <Button size="sm" onClick={() => setUploadOpen(true)} className="gap-1.5 shrink-0">
           <Plus className="h-4 w-4" />
           העלאת מסמך
         </Button>
@@ -180,11 +166,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         onClose={closeUploadModal}
         footer={
           <div className="flex items-center justify-end gap-2">
-            <Button
-              variant="outline"
-              onClick={closeUploadModal}
-              disabled={uploading}
-            >
+            <Button variant="outline" onClick={closeUploadModal} disabled={uploading}>
               ביטול
             </Button>
             <Button
@@ -213,12 +195,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         />
       </Modal>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        className="hidden"
-        onChange={handleFileChange}
-      />
+      <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
 
       <DocumentPreviewModal
         open={previewDoc !== null}
@@ -239,7 +216,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
         onCancel={() => setConfirmDeleteId(null)}
       />
     </div>
-  );
-};
+  )
+}
 
-DocumentsDataCards.displayName = "DocumentsDataCards";
+DocumentsDataCards.displayName = 'DocumentsDataCards'

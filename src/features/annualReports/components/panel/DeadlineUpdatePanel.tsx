@@ -1,18 +1,18 @@
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { annualReportStatusApi, annualReportsQK } from "../../api";
-import type { DeadlineType } from "../../api";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { Input } from "../../../../components/ui/inputs/Input";
-import { toast } from "../../../../utils/toast";
-import { formatDate } from "../../../../utils/utils";
-import { getDeadlineTypeLabel } from "@/features/taxDeadlines";
-import { DEADLINE_OPTIONS } from "./constants";
+import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { annualReportStatusApi, annualReportsQK } from '../../api'
+import type { DeadlineType } from '../../api'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { Input } from '../../../../components/ui/inputs/Input'
+import { toast } from '../../../../utils/toast'
+import { formatDate } from '../../../../utils/utils'
+import { getDeadlineTypeLabel } from '@/features/taxDeadlines'
+import { DEADLINE_OPTIONS } from './constants'
 
 interface Props {
-  reportId: number;
-  deadlineType: DeadlineType;
-  filingDeadline: string | null;
+  reportId: number
+  deadlineType: DeadlineType
+  filingDeadline: string | null
 }
 
 export const DeadlineUpdatePanel: React.FC<Props> = ({
@@ -20,24 +20,24 @@ export const DeadlineUpdatePanel: React.FC<Props> = ({
   deadlineType,
   filingDeadline,
 }) => {
-  const [selected, setSelected] = useState<DeadlineType>(deadlineType);
-  const [customNote, setCustomNote] = useState("");
-  const queryClient = useQueryClient();
+  const [selected, setSelected] = useState<DeadlineType>(deadlineType)
+  const [customNote, setCustomNote] = useState('')
+  const queryClient = useQueryClient()
 
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
       annualReportStatusApi.updateDeadline(reportId, {
         deadline_type: selected,
-        ...(selected === "custom" && customNote ? { custom_deadline_note: customNote } : {}),
+        ...(selected === 'custom' && customNote ? { custom_deadline_note: customNote } : {}),
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: annualReportsQK.detail(reportId) });
-      toast.success("מועד ההגשה עודכן בהצלחה");
+      queryClient.invalidateQueries({ queryKey: annualReportsQK.detail(reportId) })
+      toast.success('מועד ההגשה עודכן בהצלחה')
     },
     onError: () => {
-      toast.error("שגיאה בעדכון מועד ההגשה");
+      toast.error('שגיאה בעדכון מועד ההגשה')
     },
-  });
+  })
 
   return (
     <div className="space-y-3">
@@ -45,7 +45,7 @@ export const DeadlineUpdatePanel: React.FC<Props> = ({
         <span>מועד נוכחי: </span>
         <span className="font-medium text-gray-900">
           {getDeadlineTypeLabel(deadlineType)}
-          {filingDeadline ? ` (${formatDate(filingDeadline)})` : ""}
+          {filingDeadline ? ` (${formatDate(filingDeadline)})` : ''}
         </span>
       </div>
 
@@ -65,7 +65,7 @@ export const DeadlineUpdatePanel: React.FC<Props> = ({
         ))}
       </fieldset>
 
-      {selected === "custom" && (
+      {selected === 'custom' && (
         <Input
           type="text"
           value={customNote}
@@ -85,5 +85,5 @@ export const DeadlineUpdatePanel: React.FC<Props> = ({
         שמור
       </Button>
     </div>
-  );
-};
+  )
+}

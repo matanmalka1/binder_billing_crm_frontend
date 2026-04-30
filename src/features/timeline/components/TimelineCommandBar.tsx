@@ -1,57 +1,57 @@
-import { format, parseISO } from "date-fns";
-import { he } from "date-fns/locale";
-import { ChevronDown, Filter, RefreshCw, Search, X } from "lucide-react";
-import { Button } from "../../../components/ui/primitives/Button";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Select } from "../../../components/ui/inputs/Select";
-import { cn } from "../../../utils/utils";
-import type { EventTypeStat } from "../hooks/useClientTimelinePage";
-import type { TimelineFilterKey } from "../normalize";
+import { format, parseISO } from 'date-fns'
+import { he } from 'date-fns/locale'
+import { ChevronDown, Filter, RefreshCw, Search, X } from 'lucide-react'
+import { Button } from '../../../components/ui/primitives/Button'
+import { Input } from '../../../components/ui/inputs/Input'
+import { Select } from '../../../components/ui/inputs/Select'
+import { cn } from '../../../utils/utils'
+import type { EventTypeStat } from '../hooks/useClientTimelinePage'
+import type { TimelineFilterKey } from '../normalize'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface TimelineCommandBarProps {
-  total:               number;
-  hasActiveFilters:    boolean;
-  lastEventTimestamp:  string | null;
-  refreshing:          boolean;
-  onRefresh:           () => void;
-  searchTerm:          string;
-  onSearchChange:      (value: string) => void;
-  typeFilters:         TimelineFilterKey[];
-  onToggleTypeFilter:  (type: TimelineFilterKey) => void;
-  onClearFilters:      () => void;
-  onExpandAll:         () => void;
-  onCollapseAll:       () => void;
-  pageSize:            number;
-  onPageSizeChange:    (value: string) => void;
-  eventTypeStats:      EventTypeStat[];
+  total: number
+  hasActiveFilters: boolean
+  lastEventTimestamp: string | null
+  refreshing: boolean
+  onRefresh: () => void
+  searchTerm: string
+  onSearchChange: (value: string) => void
+  typeFilters: TimelineFilterKey[]
+  onToggleTypeFilter: (type: TimelineFilterKey) => void
+  onClearFilters: () => void
+  onExpandAll: () => void
+  onCollapseAll: () => void
+  pageSize: number
+  onPageSizeChange: (value: string) => void
+  eventTypeStats: EventTypeStat[]
 }
 
 const FILTER_LABELS: Record<TimelineFilterKey, string> = {
-  all: "הכל",
-  past: "עבר",
-  future: "עתידי",
-  finance: "כספים",
-  binders: "קלסרים",
-  documents: "מסמכים",
-  tax: "מיסים",
-  communication: "תקשורת",
-};
+  all: 'הכל',
+  past: 'עבר',
+  future: 'עתידי',
+  finance: 'כספים',
+  binders: 'קלסרים',
+  documents: 'מסמכים',
+  tax: 'מיסים',
+  communication: 'תקשורת',
+}
 
 const FILTER_ORDER: TimelineFilterKey[] = [
-  "all",
-  "past",
-  "future",
-  "finance",
-  "binders",
-  "documents",
-  "tax",
-  "communication",
-];
+  'all',
+  'past',
+  'future',
+  'finance',
+  'binders',
+  'documents',
+  'tax',
+  'communication',
+]
 
 const getFilterCount = (stats: EventTypeStat[], key: TimelineFilterKey): number =>
-  stats.find((stat) => stat.type === key)?.count ?? 0;
+  stats.find((stat) => stat.type === key)?.count ?? 0
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -73,15 +73,13 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
   eventTypeStats,
 }) => {
   const lastUpdated = lastEventTimestamp
-    ? format(parseISO(lastEventTimestamp), "d MMM HH:mm", { locale: he })
-    : null;
+    ? format(parseISO(lastEventTimestamp), 'd MMM HH:mm', { locale: he })
+    : null
 
   return (
     <div className="rounded-2xl border border-gray-200/60 bg-white/95 shadow-sm backdrop-blur-sm overflow-hidden">
-
       {/* ── Top row: search + controls ── */}
       <div className="flex flex-col gap-3 px-4 py-3 md:flex-row md:items-center border-b border-gray-100">
-
         {/* Search */}
         <div className="flex-1 relative">
           <Input
@@ -96,7 +94,7 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => onSearchChange("")}
+              onClick={() => onSearchChange('')}
               className="absolute left-3 top-1/2 -translate-y-1/2 p-0.5 text-gray-400 hover:text-gray-600 hover:bg-transparent"
             >
               <X className="h-3.5 w-3.5" />
@@ -107,7 +105,7 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
         {/* Right controls */}
         <div className="flex items-center gap-3 shrink-0">
           <span className="hidden sm:block text-xs text-gray-400 whitespace-nowrap">
-            {total.toLocaleString("he-IL")} אירועים
+            {total.toLocaleString('he-IL')} אירועים
           </span>
 
           {lastUpdated && (
@@ -126,7 +124,9 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
                 className="w-20 appearance-none pr-3 pl-7 text-sm"
               >
                 {[20, 50, 100, 200].map((n) => (
-                  <option key={n} value={n}>{n}</option>
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
                 ))}
               </Select>
               <ChevronDown className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
@@ -155,31 +155,33 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
         </span>
 
         {FILTER_ORDER.map((type) => {
-          const count = getFilterCount(eventTypeStats, type);
-          const isActive = typeFilters.includes(type);
+          const count = getFilterCount(eventTypeStats, type)
+          const isActive = typeFilters.includes(type)
           return (
             <button
               key={type}
               onClick={() => onToggleTypeFilter(type)}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium",
-                "transition-all duration-150 border",
+                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium',
+                'transition-all duration-150 border',
                 isActive
-                  ? "bg-primary-100 text-primary-800 border-primary-300 shadow-sm"
-                  : "bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-100",
+                  ? 'bg-primary-100 text-primary-800 border-primary-300 shadow-sm'
+                  : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-100',
               )}
             >
               {FILTER_LABELS[type]}
               {count > 0 && (
-                <span className={cn(
-                  "rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none",
-                  isActive ? "bg-white/50" : "bg-gray-200 text-gray-600",
-                )}>
+                <span
+                  className={cn(
+                    'rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none',
+                    isActive ? 'bg-white/50' : 'bg-gray-200 text-gray-600',
+                  )}
+                >
                   {count}
                 </span>
               )}
             </button>
-          );
+          )
         })}
 
         {hasActiveFilters && (
@@ -217,7 +219,7 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-TimelineCommandBar.displayName = "TimelineCommandBar";
+TimelineCommandBar.displayName = 'TimelineCommandBar'

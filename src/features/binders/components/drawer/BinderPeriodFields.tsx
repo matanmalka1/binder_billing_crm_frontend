@@ -1,17 +1,17 @@
-import { Controller, type UseFormReturn } from "react-hook-form";
-import { Select } from "@/components/ui/inputs/Select";
+import { Controller, type UseFormReturn } from 'react-hook-form'
+import { Select } from '@/components/ui/inputs/Select'
 import {
   BIMONTHLY_START_MONTH_VALUES,
   MONTH_OPTIONS,
   PERIOD_YEAR_OPTIONS,
-} from "@/constants/periodOptions.constants";
-import type { ReceiveBinderFormValues } from "../../schemas";
-import { PERIODIC_BINDER_TYPES } from "../../constants";
+} from '@/constants/periodOptions.constants'
+import type { ReceiveBinderFormValues } from '../../schemas'
+import { PERIODIC_BINDER_TYPES } from '../../constants'
 
 interface BinderPeriodFieldsProps {
-  form: UseFormReturn<ReceiveBinderFormValues>;
-  materialType: string;
-  vatType: "monthly" | "bimonthly" | "exempt" | null;
+  form: UseFormReturn<ReceiveBinderFormValues>
+  materialType: string
+  vatType: 'monthly' | 'bimonthly' | 'exempt' | null
 }
 
 export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
@@ -22,14 +22,13 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
   const {
     control,
     formState: { errors },
-  } = form;
+  } = form
 
-  const periodicMode = PERIODIC_BINDER_TYPES.has(materialType);
-  const bimonthlyVatMode = materialType === "vat" && vatType === "bimonthly";
-  const monthOptions = (bimonthlyVatMode
+  const periodicMode = PERIODIC_BINDER_TYPES.has(materialType)
+  const bimonthlyVatMode = materialType === 'vat' && vatType === 'bimonthly'
+  const monthOptions = bimonthlyVatMode
     ? MONTH_OPTIONS.filter((option) => BIMONTHLY_START_MONTH_VALUES.has(option.value))
     : MONTH_OPTIONS
-  );
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -40,12 +39,11 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
           <Select
             label="שנת דיווח"
             error={errors.period_year?.message}
-            options={[
-              { value: "", label: "בחר שנה...", disabled: true },
-              ...PERIOD_YEAR_OPTIONS,
-            ]}
-            value={field.value ? String(field.value) : ""}
-            onChange={(event) => field.onChange(event.target.value ? Number(event.target.value) : undefined)}
+            options={[{ value: '', label: 'בחר שנה...', disabled: true }, ...PERIOD_YEAR_OPTIONS]}
+            value={field.value ? String(field.value) : ''}
+            onChange={(event) =>
+              field.onChange(event.target.value ? Number(event.target.value) : undefined)
+            }
             onBlur={field.onBlur}
             name={field.name}
           />
@@ -58,14 +56,13 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
           control={control}
           render={({ field }) => (
             <Select
-              label={bimonthlyVatMode ? "חודש התחלה" : "חודש דיווח"}
+              label={bimonthlyVatMode ? 'חודש התחלה' : 'חודש דיווח'}
               error={errors.period_month_start?.message}
-              options={[
-                { value: "", label: "בחר חודש...", disabled: true },
-                ...monthOptions,
-              ]}
-              value={field.value ? String(field.value) : ""}
-              onChange={(event) => field.onChange(event.target.value ? Number(event.target.value) : null)}
+              options={[{ value: '', label: 'בחר חודש...', disabled: true }, ...monthOptions]}
+              value={field.value ? String(field.value) : ''}
+              onChange={(event) =>
+                field.onChange(event.target.value ? Number(event.target.value) : null)
+              }
               onBlur={field.onBlur}
               name={field.name}
             />
@@ -81,11 +78,8 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
             <Select
               label="חודש סיום"
               error={errors.period_month_end?.message}
-              options={[
-                { value: "", label: "ייבחר אוטומטית", disabled: true },
-                ...MONTH_OPTIONS,
-              ]}
-              value={field.value ? String(field.value) : ""}
+              options={[{ value: '', label: 'ייבחר אוטומטית', disabled: true }, ...MONTH_OPTIONS]}
+              value={field.value ? String(field.value) : ''}
               onChange={() => undefined}
               onBlur={field.onBlur}
               name={field.name}
@@ -95,7 +89,7 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-BinderPeriodFields.displayName = "BinderPeriodFields";
+BinderPeriodFields.displayName = 'BinderPeriodFields'

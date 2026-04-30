@@ -1,11 +1,11 @@
-import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
-import { AUTHORITY_CONTACT_TEXT } from "../constants";
+import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
+import { AUTHORITY_CONTACT_TEXT } from '../constants'
 
 interface AuthorityContactDeleteDialogProps {
-  confirmDeleteId: number | null;
-  deletingId: number | null;
-  onCancel: () => void;
-  onConfirm: (id: number) => void;
+  confirmDeleteId: number | null
+  deletingId: number | null
+  onCancel: () => void
+  onConfirm: (id: number) => void
 }
 
 export const AuthorityContactDeleteDialog: React.FC<AuthorityContactDeleteDialogProps> = ({
@@ -14,15 +14,15 @@ export const AuthorityContactDeleteDialog: React.FC<AuthorityContactDeleteDialog
   onCancel,
   onConfirm,
 }) => {
-  const isOpen = confirmDeleteId !== null;
+  const isOpen = confirmDeleteId !== null
 
   const handleConfirm = () => {
     if (confirmDeleteId === null) {
-      return;
+      return
     }
-    onConfirm(confirmDeleteId);
-    onCancel();
-  };
+    onConfirm(confirmDeleteId)
+    onCancel()
+  }
 
   return (
     <ConfirmDialog
@@ -35,5 +35,5 @@ export const AuthorityContactDeleteDialog: React.FC<AuthorityContactDeleteDialog
       onConfirm={handleConfirm}
       onCancel={onCancel}
     />
-  );
-};
+  )
+}

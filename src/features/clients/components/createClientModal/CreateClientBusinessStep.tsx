@@ -1,19 +1,15 @@
-import type {
-  ControllerRenderProps,
-  FieldErrors,
-  UseFormRegister,
-} from "react-hook-form";
-import { DatePicker } from "../../../../components/ui/inputs/DatePicker";
-import { Input } from "../../../../components/ui/inputs/Input";
-import type { CreateClientFormValues } from "../../schemas";
-import { stripNonDigits, stripNonPhone } from "./createClientFormUtils";
+import type { ControllerRenderProps, FieldErrors, UseFormRegister } from 'react-hook-form'
+import { DatePicker } from '../../../../components/ui/inputs/DatePicker'
+import { Input } from '../../../../components/ui/inputs/Input'
+import type { CreateClientFormValues } from '../../schemas'
+import { stripNonDigits, stripNonPhone } from './createClientFormUtils'
 
 interface Props {
-  businessOpenedAtField: ControllerRenderProps<CreateClientFormValues, "business_opened_at">;
-  disabled: boolean;
-  errors: FieldErrors<CreateClientFormValues>;
-  isCompany: boolean;
-  register: UseFormRegister<CreateClientFormValues>;
+  businessOpenedAtField: ControllerRenderProps<CreateClientFormValues, 'business_opened_at'>
+  disabled: boolean
+  errors: FieldErrors<CreateClientFormValues>
+  isCompany: boolean
+  register: UseFormRegister<CreateClientFormValues>
 }
 
 export const CreateClientBusinessStep: React.FC<Props> = ({
@@ -26,22 +22,20 @@ export const CreateClientBusinessStep: React.FC<Props> = ({
   <div className="space-y-4">
     <p className="text-xs text-gray-500">שדות מסומנים בכוכבית חובה.</p>
     <div className="space-y-4 border-t border-gray-200 pt-4">
-      <p className="text-sm font-medium text-gray-700">
-        {isCompany ? "פרטי התאגדות" : "פרטי עסק"}
-      </p>
+      <p className="text-sm font-medium text-gray-700">{isCompany ? 'פרטי התאגדות' : 'פרטי עסק'}</p>
       <div className="grid grid-cols-2 gap-4">
         <Input
           label="שם עסק *"
-          placeholder={isCompany ? "לדוגמה: חטיבת פעילות מרכזית" : "לדוגמה: מסעדת ישראל"}
+          placeholder={isCompany ? 'לדוגמה: חטיבת פעילות מרכזית' : 'לדוגמה: מסעדת ישראל'}
           error={errors.business_name?.message}
           disabled={disabled}
-          {...register("business_name")}
+          {...register('business_name')}
         />
         <DatePicker
-          label={isCompany ? "תאריך התאגדות / פתיחה" : "תאריך פתיחת עסק"}
+          label={isCompany ? 'תאריך התאגדות / פתיחה' : 'תאריך פתיחת עסק'}
           error={errors.business_opened_at?.message}
           disabled={disabled}
-          value={businessOpenedAtField.value ?? ""}
+          value={businessOpenedAtField.value ?? ''}
           onChange={businessOpenedAtField.onChange}
           onBlur={businessOpenedAtField.onBlur}
           name={businessOpenedAtField.name}
@@ -58,7 +52,7 @@ export const CreateClientBusinessStep: React.FC<Props> = ({
           error={errors.phone?.message}
           disabled={disabled}
           onInput={stripNonPhone}
-          {...register("phone")}
+          {...register('phone')}
         />
         <Input
           label="אימייל *"
@@ -66,28 +60,48 @@ export const CreateClientBusinessStep: React.FC<Props> = ({
           placeholder="name@example.com"
           error={errors.email?.message}
           disabled={disabled}
-          {...register("email")}
+          {...register('email')}
         />
       </div>
     </div>
     <div className="space-y-4 border-t border-gray-200 pt-4">
       <p className="text-sm font-medium text-gray-700">כתובת</p>
       <div className="grid grid-cols-2 gap-4">
-        <Input label="רחוב *" error={errors.address_street?.message} disabled={disabled} {...register("address_street")} />
-        <Input label="מספר בניין *" error={errors.address_building_number?.message} disabled={disabled} {...register("address_building_number")} />
+        <Input
+          label="רחוב *"
+          error={errors.address_street?.message}
+          disabled={disabled}
+          {...register('address_street')}
+        />
+        <Input
+          label="מספר בניין *"
+          error={errors.address_building_number?.message}
+          disabled={disabled}
+          {...register('address_building_number')}
+        />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <Input label="דירה *" error={errors.address_apartment?.message} disabled={disabled} {...register("address_apartment")} />
+        <Input
+          label="דירה *"
+          error={errors.address_apartment?.message}
+          disabled={disabled}
+          {...register('address_apartment')}
+        />
         <Input
           label="מיקוד *"
           placeholder="1234567"
           error={errors.address_zip_code?.message}
           disabled={disabled}
           onInput={stripNonDigits}
-          {...register("address_zip_code")}
+          {...register('address_zip_code')}
         />
       </div>
-      <Input label="עיר *" error={errors.address_city?.message} disabled={disabled} {...register("address_city")} />
+      <Input
+        label="עיר *"
+        error={errors.address_city?.message}
+        disabled={disabled}
+        {...register('address_city')}
+      />
     </div>
   </div>
-);
+)

@@ -1,53 +1,52 @@
-import type { FieldNamesMarkedBoolean } from "react-hook-form";
-import type { UpdateClientPayload } from "../api";
-import type { ClientEditFormValues } from "../schemas";
+import type { FieldNamesMarkedBoolean } from 'react-hook-form'
+import type { UpdateClientPayload } from '../api'
+import type { ClientEditFormValues } from '../schemas'
 
 const blankToNull = (value: string | null | undefined): string | null =>
-  value?.trim() ? value.trim() : null;
+  value?.trim() ? value.trim() : null
 
 const getLocalISODate = (): string => {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
 
-  return `${year}-${month}-${day}`;
-};
+  return `${year}-${month}-${day}`
+}
 
 export const buildClientUpdatePayload = (
   data: ClientEditFormValues,
   dirtyFields: FieldNamesMarkedBoolean<ClientEditFormValues>,
 ): UpdateClientPayload => {
-  const payload: UpdateClientPayload = {};
+  const payload: UpdateClientPayload = {}
 
-  if (dirtyFields.full_name) payload.full_name = data.full_name.trim();
-  if (dirtyFields.status) payload.status = data.status;
-  if (dirtyFields.phone) payload.phone = blankToNull(data.phone);
-  if (dirtyFields.email) payload.email = blankToNull(data.email);
-  if (dirtyFields.address_street) payload.address_street = blankToNull(data.address_street);
+  if (dirtyFields.full_name) payload.full_name = data.full_name.trim()
+  if (dirtyFields.status) payload.status = data.status
+  if (dirtyFields.phone) payload.phone = blankToNull(data.phone)
+  if (dirtyFields.email) payload.email = blankToNull(data.email)
+  if (dirtyFields.address_street) payload.address_street = blankToNull(data.address_street)
   if (dirtyFields.address_building_number) {
-    payload.address_building_number = blankToNull(data.address_building_number);
+    payload.address_building_number = blankToNull(data.address_building_number)
   }
-  if (dirtyFields.address_apartment) payload.address_apartment = blankToNull(data.address_apartment);
-  if (dirtyFields.address_city) payload.address_city = blankToNull(data.address_city);
-  if (dirtyFields.address_zip_code) payload.address_zip_code = blankToNull(data.address_zip_code);
-  if (dirtyFields.entity_type) payload.entity_type = data.entity_type || null;
+  if (dirtyFields.address_apartment) payload.address_apartment = blankToNull(data.address_apartment)
+  if (dirtyFields.address_city) payload.address_city = blankToNull(data.address_city)
+  if (dirtyFields.address_zip_code) payload.address_zip_code = blankToNull(data.address_zip_code)
+  if (dirtyFields.entity_type) payload.entity_type = data.entity_type || null
   if (dirtyFields.vat_reporting_frequency || dirtyFields.entity_type) {
-    payload.vat_reporting_frequency = data.entity_type === "osek_patur"
-      ? null
-      : data.vat_reporting_frequency || null;
+    payload.vat_reporting_frequency =
+      data.entity_type === 'osek_patur' ? null : data.vat_reporting_frequency || null
   }
   if (dirtyFields.advance_rate) {
-    const advanceRate = blankToNull(data.advance_rate);
-    payload.advance_rate = advanceRate;
-    payload.advance_rate_updated_at = advanceRate ? getLocalISODate() : null;
+    const advanceRate = blankToNull(data.advance_rate)
+    payload.advance_rate = advanceRate
+    payload.advance_rate_updated_at = advanceRate ? getLocalISODate() : null
   }
   if (dirtyFields.accountant_id) {
-    payload.accountant_id = data.accountant_id ? Number(data.accountant_id) : null;
+    payload.accountant_id = data.accountant_id ? Number(data.accountant_id) : null
   }
 
-  return payload;
-};
+  return payload
+}
 
 export const hasClientUpdatePayload = (payload: UpdateClientPayload): boolean =>
-  Object.keys(payload).length > 0;
+  Object.keys(payload).length > 0

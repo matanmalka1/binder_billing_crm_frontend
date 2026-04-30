@@ -4,4 +4,4 @@ export const BUSINESS_ENDPOINTS = {
     `/clients/${clientId}/businesses/${businessId}`,
   businessRestore: (clientId: number | string, businessId: number | string) =>
     `/clients/${clientId}/businesses/${businessId}/restore`,
-} as const;
+} as const

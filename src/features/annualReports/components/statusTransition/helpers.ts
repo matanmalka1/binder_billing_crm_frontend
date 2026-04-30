@@ -1,17 +1,17 @@
-import { EMPTY_FORM } from "../../utils";
-import type { TransitionForm } from "../../types";
-import type { AnnualReportStatus, StatusTransitionPayload } from "../../api";
-import { AMEND_REASON_MIN_LENGTH } from "./constants";
+import { EMPTY_FORM } from '../../utils'
+import type { TransitionForm } from '../../types'
+import type { AnnualReportStatus, StatusTransitionPayload } from '../../api'
+import { AMEND_REASON_MIN_LENGTH } from './constants'
 
-export const getEmptyTransitionForm = (): TransitionForm => ({ ...EMPTY_FORM });
+export const getEmptyTransitionForm = (): TransitionForm => ({ ...EMPTY_FORM })
 
 export const isValidAmendReason = (reason: string) =>
-  reason.trim().length >= AMEND_REASON_MIN_LENGTH;
+  reason.trim().length >= AMEND_REASON_MIN_LENGTH
 
 export const buildTransitionPayload = (
   status: AnnualReportStatus,
   form: TransitionForm,
-) : StatusTransitionPayload => ({
+): StatusTransitionPayload => ({
   status,
   note: form.note || null,
   ita_reference: form.itaRef || null,
@@ -19,4 +19,4 @@ export const buildTransitionPayload = (
   assessment_amount: form.assessmentAmount || null,
   refund_due: form.refundDue || null,
   tax_due: form.taxDue || null,
-});
+})

@@ -1,26 +1,24 @@
-import { Search } from "lucide-react";
-import { ActiveFilterBadges } from "../../../components/ui/table/ActiveFilterBadges";
-import { Input } from "../../../components/ui/inputs/Input";
-import { Select } from "../../../components/ui/inputs/Select";
+import { Search } from 'lucide-react'
+import { ActiveFilterBadges } from '../../../components/ui/table/ActiveFilterBadges'
+import { Input } from '../../../components/ui/inputs/Input'
+import { Select } from '../../../components/ui/inputs/Select'
 import {
   DOCUMENT_TYPE_OPTIONS,
   SEARCH_PLACEHOLDER,
   TAX_YEAR_OPTIONS,
-} from "./DocumentsDataCards.constants";
-import { getDocumentFilterBadges } from "./DocumentsDataCards.utils";
+} from './DocumentsDataCards.constants'
+import { getDocumentFilterBadges } from './DocumentsDataCards.utils'
 
 interface DocumentsDataCardsToolbarProps {
-  search: string;
-  onSearchChange: (search: string) => void;
-  filterType: string;
-  onFilterTypeChange: (documentType: string) => void;
-  taxYear: number | null;
-  onTaxYearChange: (year: number | null) => void;
+  search: string
+  onSearchChange: (search: string) => void
+  filterType: string
+  onFilterTypeChange: (documentType: string) => void
+  taxYear: number | null
+  onTaxYearChange: (year: number | null) => void
 }
 
-export const DocumentsDataCardsToolbar: React.FC<
-  DocumentsDataCardsToolbarProps
-> = ({
+export const DocumentsDataCardsToolbar: React.FC<DocumentsDataCardsToolbarProps> = ({
   search,
   onSearchChange,
   filterType,
@@ -35,12 +33,12 @@ export const DocumentsDataCardsToolbar: React.FC<
     onSearchChange,
     onFilterTypeChange,
     onTaxYearChange,
-  });
+  })
   const resetFilters = () => {
-    onSearchChange("");
-    onFilterTypeChange("");
-    onTaxYearChange(null);
-  };
+    onSearchChange('')
+    onFilterTypeChange('')
+    onTaxYearChange(null)
+  }
 
   return (
     <div className="space-y-2">
@@ -58,14 +56,12 @@ export const DocumentsDataCardsToolbar: React.FC<
           options={DOCUMENT_TYPE_OPTIONS}
         />
         <Select
-          value={taxYear ?? ""}
-          onChange={(e) =>
-            onTaxYearChange(e.target.value ? Number(e.target.value) : null)
-          }
+          value={taxYear ?? ''}
+          onChange={(e) => onTaxYearChange(e.target.value ? Number(e.target.value) : null)}
           options={TAX_YEAR_OPTIONS}
         />
       </div>
       <ActiveFilterBadges badges={activeFilterBadges} onReset={resetFilters} />
     </div>
-  );
-};
+  )
+}

@@ -1,5 +1,5 @@
 export const ANNUAL_REPORT_ENDPOINTS = {
-  annualReports: "/annual-reports",
+  annualReports: '/annual-reports',
   annualReportById: (id: number | string) => `/annual-reports/${id}`,
   annualReportTransition: (id: number | string) => `/annual-reports/${id}/transition`,
   annualReportSubmit: (id: number | string) => `/annual-reports/${id}/submit`,
@@ -15,8 +15,7 @@ export const ANNUAL_REPORT_ENDPOINTS = {
   annualReportFinancials: (id: number | string) => `/annual-reports/${id}/financials`,
   annualReportReadiness: (id: number | string) => `/annual-reports/${id}/readiness`,
   annualReportTaxCalculation: (id: number | string) => `/annual-reports/${id}/tax-calculation`,
-  annualReportAdvancesSummary: (id: number | string) =>
-    `/annual-reports/${id}/advances-summary`,
+  annualReportAdvancesSummary: (id: number | string) => `/annual-reports/${id}/advances-summary`,
   annualReportIncome: (id: number | string) => `/annual-reports/${id}/income`,
   annualReportIncomeById: (id: number | string, lineId: number | string) =>
     `/annual-reports/${id}/income/${lineId}`,
@@ -25,16 +24,13 @@ export const ANNUAL_REPORT_ENDPOINTS = {
     `/annual-reports/${id}/expenses/${lineId}`,
   annualReportAnnex: (id: number | string, schedule: string) =>
     `/annual-reports/${id}/annex/${schedule}`,
-  annualReportAnnexLine: (
-    id: number | string,
-    schedule: string,
-    lineId: number | string,
-  ) => `/annual-reports/${id}/annex/${schedule}/${lineId}`,
-  annualReportOverdue: "/annual-reports/overdue",
+  annualReportAnnexLine: (id: number | string, schedule: string, lineId: number | string) =>
+    `/annual-reports/${id}/annex/${schedule}/${lineId}`,
+  annualReportOverdue: '/annual-reports/overdue',
   clientAnnualReports: (clientId: number | string) => `/clients/${clientId}/annual-reports`,
   taxYearSummary: (taxYear: number | string) => `/tax-year/${taxYear}/summary`,
   taxYearReports: (taxYear: number | string) => `/tax-year/${taxYear}/reports`,
   annualReportTaxSave: (id: number | string) => `/annual-reports/${id}/tax-calculation/save`,
   annualReportAutoPopulate: (id: number | string) => `/annual-reports/${id}/auto-populate`,
   annualReportCharges: (id: number | string) => `/annual-reports/${id}/charges`,
-} as const;
+} as const

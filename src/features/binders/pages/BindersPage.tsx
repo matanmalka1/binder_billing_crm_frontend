@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/primitives/Button";
-import { PaginatedDataTable } from "@/components/ui/table/PaginatedDataTable";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { useMemo, useState } from 'react'
+import { Button } from '@/components/ui/primitives/Button'
+import { PaginatedDataTable } from '@/components/ui/table/PaginatedDataTable'
+import { PageHeader } from '@/components/layout/PageHeader'
 import {
   BinderDetailDrawer,
   buildBindersColumns,
@@ -9,13 +9,13 @@ import {
   ReceiveBinderDrawer,
   useBindersPage,
   useReceiveBinderDrawer,
-} from "@/features/binders";
-import { BindersPageDialogs } from "../components/dialogs/BindersPageDialogs";
-import { useBindersPageDialogs } from "../hooks/useBindersPageDialogs";
-import { getBinderNumberLabel } from "../utils";
+} from '@/features/binders'
+import { BindersPageDialogs } from '../components/dialogs/BindersPageDialogs'
+import { useBindersPageDialogs } from '../hooks/useBindersPageDialogs'
+import { getBinderNumberLabel } from '../utils'
 
 export const Binders: React.FC = () => {
-  const [receiveOpen, setReceiveOpen] = useState(false);
+  const [receiveOpen, setReceiveOpen] = useState(false)
 
   const {
     actionLoadingId,
@@ -42,7 +42,7 @@ export const Binders: React.FC = () => {
     isReturning,
     handoverBinders,
     isHandingOver,
-  } = useBindersPage();
+  } = useBindersPage()
 
   const dialogs = useBindersPageDialogs({
     getSelectedBinder: () => selectedBinder,
@@ -50,13 +50,13 @@ export const Binders: React.FC = () => {
     returnBinder,
     deleteBinder,
     handoverBinders,
-  });
+  })
 
   const receive = useReceiveBinderDrawer({
     onSuccess: () => setReceiveOpen(false),
-  });
+  })
 
-  const detailOpen = deepLinkBinderId !== undefined;
+  const detailOpen = deepLinkBinderId !== undefined
 
   const columns = useMemo(
     () =>
@@ -71,7 +71,7 @@ export const Binders: React.FC = () => {
         onHandover: (binder) => dialogs.openHandoverDialog(binder),
       }),
     [actionLoadingId, dialogs, markReady, revertReady, handleSelectBinder],
-  );
+  )
 
   return (
     <div className="space-y-6">
@@ -105,9 +105,9 @@ export const Binders: React.FC = () => {
         onPageChange={setPage}
         emptyMessage="אין קלסרים התואמים לסינון הנוכחי"
         emptyState={{
-          title: "לא נמצאו קלסרים",
-          message: "נסה לאפס את הסינון, או קלוט חומר חדש.",
-          action: { label: "קליטת חומר", onClick: () => setReceiveOpen(true) },
+          title: 'לא נמצאו קלסרים',
+          message: 'נסה לאפס את הסינון, או קלוט חומר חדש.',
+          action: { label: 'קליטת חומר', onClick: () => setReceiveOpen(true) },
         }}
       />
 
@@ -146,7 +146,9 @@ export const Binders: React.FC = () => {
         onRevertReady={selectedBinder ? () => void revertReady(selectedBinder.id) : undefined}
         onReturn={selectedBinder ? () => dialogs.openReturnDialog(selectedBinder.id) : undefined}
         onBulkReady={selectedBinder ? () => dialogs.openBulkReadyDialog(selectedBinder) : undefined}
-        onOpenHandover={selectedBinder ? () => dialogs.openHandoverDialog(selectedBinder) : undefined}
+        onOpenHandover={
+          selectedBinder ? () => dialogs.openHandoverDialog(selectedBinder) : undefined
+        }
         onDelete={selectedBinder ? () => dialogs.openDeleteDialog(selectedBinder.id) : undefined}
         actionLoading={selectedBinder ? actionLoadingId === selectedBinder.id : false}
       />
@@ -154,8 +156,8 @@ export const Binders: React.FC = () => {
       <ReceiveBinderDrawer
         open={receiveOpen}
         onClose={() => {
-          receive.handleReset();
-          setReceiveOpen(false);
+          receive.handleReset()
+          setReceiveOpen(false)
         }}
         form={receive.form}
         clientQuery={receive.clientQuery}
@@ -170,5 +172,5 @@ export const Binders: React.FC = () => {
         isSubmitting={receive.isSubmitting}
       />
     </div>
-  );
-};
+  )
+}

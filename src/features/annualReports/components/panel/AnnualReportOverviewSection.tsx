@@ -1,49 +1,61 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, ChevronUp, BarChart3 } from "lucide-react";
-import { Button } from "../../../../components/ui/primitives/Button";
-import { ReportAlertBanners } from "./ReportAlertBanners";
-import { ReportSummaryCards } from "./ReportSummaryCards";
-import { ReportMetaGrid } from "./ReportMetaGrid";
-import { AnnualReportDetailForm } from "../tax/AnnualReportDetailForm";
-import { ScheduleChecklist } from "../annex/ScheduleChecklist";
-import { AnnualPLSummary } from "../financials/AnnualPLSummary";
-import { ReportHistoryTable } from "./ReportHistoryTable";
-import { StatusHistoryTimeline } from "../statusTransition/StatusHistoryTimeline";
-import { annualReportsApi, annualReportsQK } from "../../api";
-import type { AnnualReportDetail } from "../../types";
-import type { AnnualReportFull, AnnualReportScheduleKey, ScheduleEntry } from "../../api";
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { ChevronDown, ChevronUp, BarChart3 } from 'lucide-react'
+import { Button } from '../../../../components/ui/primitives/Button'
+import { ReportAlertBanners } from './ReportAlertBanners'
+import { ReportSummaryCards } from './ReportSummaryCards'
+import { ReportMetaGrid } from './ReportMetaGrid'
+import { AnnualReportDetailForm } from '../tax/AnnualReportDetailForm'
+import { ScheduleChecklist } from '../annex/ScheduleChecklist'
+import { AnnualPLSummary } from '../financials/AnnualPLSummary'
+import { ReportHistoryTable } from './ReportHistoryTable'
+import { StatusHistoryTimeline } from '../statusTransition/StatusHistoryTimeline'
+import { annualReportsApi, annualReportsQK } from '../../api'
+import type { AnnualReportDetail } from '../../types'
+import type { AnnualReportFull, AnnualReportScheduleKey, ScheduleEntry } from '../../api'
 
 interface Props {
-  report: AnnualReportFull;
-  detail: AnnualReportDetail | null;
-  advances?: { balance_type: "due" | "refund" | "zero"; final_balance: number };
-  schedules: ScheduleEntry[];
-  onDetailSave: (data: Partial<AnnualReportDetail>) => void;
-  isSaving: boolean;
-  onScheduleComplete: (schedule: AnnualReportScheduleKey) => void;
-  onScheduleAdd: (schedule: AnnualReportScheduleKey, notes?: string) => void;
-  isScheduleLoading: boolean;
-  isScheduleAdding: boolean;
-  completingKey?: AnnualReportScheduleKey | null;
-  clientId: number;
-  onSelectReport?: (reportId: number) => void;
-  onDirtyChange?: (dirty: boolean) => void;
-  submitRef?: React.RefObject<(() => void) | null>;
+  report: AnnualReportFull
+  detail: AnnualReportDetail | null
+  advances?: { balance_type: 'due' | 'refund' | 'zero'; final_balance: number }
+  schedules: ScheduleEntry[]
+  onDetailSave: (data: Partial<AnnualReportDetail>) => void
+  isSaving: boolean
+  onScheduleComplete: (schedule: AnnualReportScheduleKey) => void
+  onScheduleAdd: (schedule: AnnualReportScheduleKey, notes?: string) => void
+  isScheduleLoading: boolean
+  isScheduleAdding: boolean
+  completingKey?: AnnualReportScheduleKey | null
+  clientId: number
+  onSelectReport?: (reportId: number) => void
+  onDirtyChange?: (dirty: boolean) => void
+  submitRef?: React.RefObject<(() => void) | null>
 }
 
 export const AnnualReportOverviewSection: React.FC<Props> = ({
-  report, detail, advances, schedules, onDetailSave, isSaving,
-  onScheduleComplete, onScheduleAdd, isScheduleLoading, isScheduleAdding,
-  completingKey, clientId, onSelectReport, onDirtyChange, submitRef,
+  report,
+  detail,
+  advances,
+  schedules,
+  onDetailSave,
+  isSaving,
+  onScheduleComplete,
+  onScheduleAdd,
+  isScheduleLoading,
+  isScheduleAdding,
+  completingKey,
+  clientId,
+  onSelectReport,
+  onDirtyChange,
+  submitRef,
 }) => {
-  const [plExpanded, setPlExpanded] = useState(false);
+  const [plExpanded, setPlExpanded] = useState(false)
 
   const { data: history } = useQuery({
     queryKey: annualReportsQK.statusHistory(report.id),
     queryFn: () => annualReportsApi.getHistory(report.id),
     enabled: !!report.id,
-  });
+  })
 
   return (
     <div className="space-y-6">
@@ -91,9 +103,11 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
             <BarChart3 className="h-4 w-4 text-gray-400" />
             <span>סיכום רווח והפסד</span>
           </div>
-          {plExpanded
-            ? <ChevronUp className="h-4 w-4 text-gray-400" />
-            : <ChevronDown className="h-4 w-4 text-gray-400" />}
+          {plExpanded ? (
+            <ChevronUp className="h-4 w-4 text-gray-400" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-gray-400" />
+          )}
         </Button>
         {plExpanded && (
           <div className="border-t border-gray-100 px-5 pb-5 pt-4">
@@ -104,7 +118,11 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
 
       <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
         <h3 className="mb-4 text-sm font-semibold text-gray-700">היסטוריית דוחות</h3>
-        <ReportHistoryTable clientId={clientId} currentReportId={report.id} onSelect={onSelectReport} />
+        <ReportHistoryTable
+          clientId={clientId}
+          currentReportId={report.id}
+          onSelect={onSelectReport}
+        />
       </div>
 
       <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -112,7 +130,7 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
         <StatusHistoryTimeline history={history?.items ?? []} />
       </div>
     </div>
-  );
-};
+  )
+}
 
-AnnualReportOverviewSection.displayName = "AnnualReportOverviewSection";
+AnnualReportOverviewSection.displayName = 'AnnualReportOverviewSection'

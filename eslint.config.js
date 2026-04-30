@@ -9,11 +9,7 @@ export default defineConfig([
   globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactRefresh.configs.vite,
-    ],
+    extends: [js.configs.recommended, tseslint.configs.recommended, reactRefresh.configs.vite],
     plugins: {
       'react-hooks': reactHooks,
     },
@@ -31,34 +27,48 @@ export default defineConfig([
   {
     files: ['src/features/**/*.{ts,tsx}'],
     rules: {
-      'no-restricted-imports': ['error', {
-        patterns: [
-          {
-            group: [
-              '*/features/*/components/*',
-              '*/features/*/hooks/*',
-              '*/features/*/schemas*',
-              '*/features/*/types*',
-              '*/features/*/utils*',
-              '*/features/*/constants*',
-              '*/features/*/api/*',
-            ],
-            message: 'Cross-feature deep-linking is forbidden. Import from the feature root index.ts barrel instead.',
-          },
-        ],
-      }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '*/features/*/components/*',
+                '*/features/*/hooks/*',
+                '*/features/*/schemas*',
+                '*/features/*/types*',
+                '*/features/*/utils*',
+                '*/features/*/constants*',
+                '*/features/*/api/*',
+              ],
+              message:
+                'Cross-feature deep-linking is forbidden. Import from the feature root index.ts barrel instead.',
+            },
+          ],
+        },
+      ],
     },
   },
   // Block B: src/components/ui/ must be pure — no API or React Query imports
   {
     files: ['src/components/ui/**/*.{ts,tsx}'],
     rules: {
-      'no-restricted-imports': ['error', {
-        patterns: [
-          { group: ['*/api/*', '@/api/*'], message: 'Pure UI components cannot import from api/. Move logic to a feature hook or shared component.' },
-          { group: ['@tanstack/react-query'], message: 'Pure UI components cannot use React Query. Move logic to a feature hook.' },
-        ],
-      }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['*/api/*', '@/api/*'],
+              message:
+                'Pure UI components cannot import from api/. Move logic to a feature hook or shared component.',
+            },
+            {
+              group: ['@tanstack/react-query'],
+              message: 'Pure UI components cannot use React Query. Move logic to a feature hook.',
+            },
+          ],
+        },
+      ],
     },
   },
 ])

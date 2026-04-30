@@ -1,29 +1,29 @@
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
-import { Button } from "../../../components/ui/primitives/Button";
-import { FormField } from "../../../components/ui/inputs/FormField";
-import { Input } from "../../../components/ui/inputs/Input";
-import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
-import { DatePicker } from "../../../components/ui/inputs/DatePicker";
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Plus } from 'lucide-react'
+import { Button } from '../../../components/ui/primitives/Button'
+import { FormField } from '../../../components/ui/inputs/FormField'
+import { Input } from '../../../components/ui/inputs/Input'
+import { SelectDropdown } from '../../../components/ui/inputs/SelectDropdown'
+import { DatePicker } from '../../../components/ui/inputs/DatePicker'
 import {
   vatInvoiceRowSchema,
   toInvoiceRowPayload,
   type VatInvoiceRowValues,
-} from "../schemas/invoice.schema";
+} from '../schemas/invoice.schema'
 import {
   DEFAULT_RATE_TYPE,
   DOCUMENT_TYPE_OPTIONS,
   VAT_EXPENSE_CATEGORY_OPTIONS,
   VAT_RATE_TYPE_OPTIONS,
-} from "../constants";
-import { getVatInvoiceDefaultValues } from "../utils";
-import type { VatInvoiceAddFormProps } from "../types";
+} from '../constants'
+import { getVatInvoiceDefaultValues } from '../utils'
+import type { VatInvoiceAddFormProps } from '../types'
 import {
   blockNonNumericKey,
   getDeductionRateHint,
   shouldRequireCounterpartyId,
-} from "../view.helpers";
+} from '../view.helpers'
 
 export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
   invoiceType,
@@ -44,18 +44,18 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
       ...getVatInvoiceDefaultValues(invoiceType),
       rate_type: DEFAULT_RATE_TYPE,
     },
-  });
+  })
 
-  const isExpense = invoiceType === "expense";
-  const selectedCategory = watch("expense_category");
-  const selectedDocumentType = watch("document_type");
-  const deductionRateHint = getDeductionRateHint(selectedCategory);
-  const requiresCounterpartyId = shouldRequireCounterpartyId(invoiceType, selectedDocumentType);
+  const isExpense = invoiceType === 'expense'
+  const selectedCategory = watch('expense_category')
+  const selectedDocumentType = watch('document_type')
+  const deductionRateHint = getDeductionRateHint(selectedCategory)
+  const requiresCounterpartyId = shouldRequireCounterpartyId(invoiceType, selectedDocumentType)
 
   const onSubmit = async (values: VatInvoiceRowValues) => {
-    const ok = await addInvoice(toInvoiceRowPayload(values));
-    if (ok) reset({ ...getVatInvoiceDefaultValues(invoiceType), rate_type: DEFAULT_RATE_TYPE });
-  };
+    const ok = await addInvoice(toInvoiceRowPayload(values))
+    if (ok) reset({ ...getVatInvoiceDefaultValues(invoiceType), rate_type: DEFAULT_RATE_TYPE })
+  }
 
   return (
     <form
@@ -67,7 +67,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
         {/* Required: amount */}
         <FormField label="סכום נטו ₪" error={errors.net_amount?.message} className="w-32 shrink-0">
           <Input
-            {...register("net_amount")}
+            {...register('net_amount')}
             placeholder="0.00"
             dir="ltr"
             inputMode="decimal"
@@ -77,12 +77,21 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
         </FormField>
 
         {/* Required: date */}
-        <FormField label="תאריך חשבונית" error={errors.invoice_date?.message} className="w-36 shrink-0">
+        <FormField
+          label="תאריך חשבונית"
+          error={errors.invoice_date?.message}
+          className="w-36 shrink-0"
+        >
           <Controller
             control={control}
             name="invoice_date"
             render={({ field }) => (
-              <DatePicker value={field.value} onChange={field.onChange} onBlur={field.onBlur} noWrapper />
+              <DatePicker
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                noWrapper
+              />
             )}
           />
         </FormField>
@@ -140,13 +149,10 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
               render={({ field }) => (
                 <SelectDropdown
                   name={field.name}
-                  value={field.value ?? ""}
+                  value={field.value ?? ''}
                   onChange={field.onChange}
                   onBlur={field.onBlur}
-                  options={[
-                    { value: "", label: "— בחר —" },
-                    ...DOCUMENT_TYPE_OPTIONS,
-                  ]}
+                  options={[{ value: '', label: '— בחר —' }, ...DOCUMENT_TYPE_OPTIONS]}
                 />
               )}
             />
@@ -155,12 +161,12 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 
         {/* Optional: invoice number */}
         <FormField label="מספר חשבונית" className="w-36 shrink-0">
-          <Input {...register("invoice_number")} placeholder="לא חובה" />
+          <Input {...register('invoice_number')} placeholder="לא חובה" />
         </FormField>
 
         {/* Optional: counterparty name */}
         <FormField label="שם ספק / לקוח" className="w-44 shrink-0">
-          <Input {...register("counterparty_name")} placeholder="לא חובה" />
+          <Input {...register('counterparty_name')} placeholder="לא חובה" />
         </FormField>
 
         {/* Conditional: counterparty ID (tax invoice expense only) */}
@@ -171,7 +177,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
             className="w-36 shrink-0"
           >
             <Input
-              {...register("counterparty_id")}
+              {...register('counterparty_id')}
               placeholder="9 ספרות"
               dir="ltr"
               inputMode="numeric"
@@ -199,7 +205,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
         </div>
       </div>
     </form>
-  );
-};
+  )
+}
 
-VatInvoiceAddForm.displayName = "VatInvoiceAddForm";
+VatInvoiceAddForm.displayName = 'VatInvoiceAddForm'

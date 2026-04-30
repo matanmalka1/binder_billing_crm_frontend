@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ComponentType } from 'react'
 import {
   Building2,
   Briefcase,
@@ -12,17 +12,17 @@ import {
   Smartphone,
   TrendingDown,
   Users,
-} from "lucide-react";
+} from 'lucide-react'
 
-export const DEFAULT_CREDIT_POINT_VALUE = 2_904;
+export const DEFAULT_CREDIT_POINT_VALUE = 2_904
 
 export const CREDIT_POINT_VALUE_BY_YEAR: Record<number, number> = {
   2024: 2_904,
   2025: 3_003,
   2026: 3_003,
-};
+}
 
-export const PENSION_DEDUCTION_RATE = 0.045;
+export const PENSION_DEDUCTION_RATE = 0.045
 
 export const CATEGORY_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   office_rent: Building2,
@@ -37,5 +37,4 @@ export const CATEGORY_ICONS: Record<string, ComponentType<{ className?: string }
   training: GraduationCap,
   bank_fees: Landmark,
   other: MoreHorizontal,
-};
-
+}

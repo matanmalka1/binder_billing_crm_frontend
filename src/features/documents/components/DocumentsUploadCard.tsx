@@ -1,40 +1,40 @@
-import { useEffect, useRef, useState } from "react";
-import { CloudUpload, X } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Select } from "../../../components/ui/inputs/Select";
-import type { UploadDocumentPayload } from "../api";
-import type { BusinessResponse } from "@/features/clients";
+import { useEffect, useRef, useState } from 'react'
+import { CloudUpload, X } from 'lucide-react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Select } from '../../../components/ui/inputs/Select'
+import type { UploadDocumentPayload } from '../api'
+import type { BusinessResponse } from '@/features/clients'
 import {
   documentsUploadDefaultValues,
   documentsUploadSchema,
   type DocumentsUploadFormValues,
-} from "../schemas";
-import { DOCUMENT_FILE_ACCEPT } from "../documents.constants";
-import { formatFileSize } from "../../../utils/utils";
-import { Button } from "../../../components/ui/primitives/Button";
+} from '../schemas'
+import { DOCUMENT_FILE_ACCEPT } from '../documents.constants'
+import { formatFileSize } from '../../../utils/utils'
+import { Button } from '../../../components/ui/primitives/Button'
 import {
   UPLOAD_DOCUMENT_TYPE_OPTIONS,
   UPLOAD_TAX_YEAR_OPTIONS,
-} from "./DocumentsDataCards.constants";
-import { getBusinessOptions } from "./DocumentsDataCards.utils";
-import { validateDocumentFile } from "./DocumentsUploadCard.helpers";
+} from './DocumentsDataCards.constants'
+import { getBusinessOptions } from './DocumentsDataCards.utils'
+import { validateDocumentFile } from './DocumentsUploadCard.helpers'
 
 interface DocumentsUploadCardProps {
-  businesses: BusinessResponse[];
-  businessesLoading: boolean;
+  businesses: BusinessResponse[]
+  businessesLoading: boolean
   submitUpload: (payload: {
-    document_type: UploadDocumentPayload["document_type"];
-    business_id?: number | null;
-    file: File;
-    tax_year?: number | null;
-  }) => Promise<boolean>;
-  uploadError: string | null;
-  uploading: boolean;
-  initialTaxYear?: number | null;
-  formId: string;
-  onSuccess?: () => void;
-  onCanSubmitChange?: (canSubmit: boolean) => void;
+    document_type: UploadDocumentPayload['document_type']
+    business_id?: number | null
+    file: File
+    tax_year?: number | null
+  }) => Promise<boolean>
+  uploadError: string | null
+  uploading: boolean
+  initialTaxYear?: number | null
+  formId: string
+  onSuccess?: () => void
+  onCanSubmitChange?: (canSubmit: boolean) => void
 }
 
 export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
@@ -60,56 +60,56 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
       tax_year: initialTaxYear ?? null,
     },
     resolver: zodResolver(documentsUploadSchema),
-  });
+  })
 
-  const [isDragging, setIsDragging] = useState(false);
-  const [fileError, setFileError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const selectedFile = watch("file");
-  const selectedDocType = watch("document_type");
-  const selectedBusinessId = watch("business_id");
-  const selectedTaxYear = watch("tax_year");
-  const canSubmit = Boolean(selectedDocType && selectedFile);
+  const [isDragging, setIsDragging] = useState(false)
+  const [fileError, setFileError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const selectedFile = watch('file')
+  const selectedDocType = watch('document_type')
+  const selectedBusinessId = watch('business_id')
+  const selectedTaxYear = watch('tax_year')
+  const canSubmit = Boolean(selectedDocType && selectedFile)
 
   useEffect(() => {
-    onCanSubmitChange?.(canSubmit);
-  }, [canSubmit, onCanSubmitChange]);
+    onCanSubmitChange?.(canSubmit)
+  }, [canSubmit, onCanSubmitChange])
 
   const applyFile = (file: File) => {
-    const error = validateDocumentFile(file);
-    setFileError(error);
+    const error = validateDocumentFile(file)
+    setFileError(error)
     if (error) {
-      return;
+      return
     }
 
-    setValue("file", file, { shouldValidate: true });
-  };
+    setValue('file', file, { shouldValidate: true })
+  }
 
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) applyFile(file);
-  };
+    e.preventDefault()
+    setIsDragging(false)
+    const file = e.dataTransfer.files?.[0]
+    if (file) applyFile(file)
+  }
 
   const onSubmit = handleSubmit(async (values) => {
-    if (!values.file) return;
+    if (!values.file) return
     const uploaded = await submitUpload({
       document_type: values.document_type,
       business_id: values.business_id,
       file: values.file,
       tax_year: values.tax_year ?? null,
-    });
+    })
     if (uploaded) {
-      reset({ ...documentsUploadDefaultValues, tax_year: initialTaxYear ?? null });
-      setFileError(null);
-      onSuccess?.();
+      reset({ ...documentsUploadDefaultValues, tax_year: initialTaxYear ?? null })
+      setFileError(null)
+      onSuccess?.()
     }
-  });
+  })
 
-  const showBusinessSelect = businesses.length > 1;
-  const documentTypeField = register("document_type");
-  const businessOptions = getBusinessOptions(businesses);
+  const showBusinessSelect = businesses.length > 1
+  const documentTypeField = register('document_type')
+  const businessOptions = getBusinessOptions(businesses)
 
   return (
     <form id={formId} onSubmit={onSubmit} className="space-y-4">
@@ -121,7 +121,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
           name={documentTypeField.name}
           onBlur={documentTypeField.onBlur}
           onChange={(e) =>
-            setValue("document_type", e.target.value as UploadDocumentPayload["document_type"], {
+            setValue('document_type', e.target.value as UploadDocumentPayload['document_type'], {
               shouldValidate: true,
             })
           }
@@ -130,9 +130,9 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
 
         <Select
           label="שנת מס (אופציונלי)"
-          value={selectedTaxYear ?? ""}
+          value={selectedTaxYear ?? ''}
           onChange={(e) =>
-            setValue("tax_year", e.target.value ? Number(e.target.value) : null, {
+            setValue('tax_year', e.target.value ? Number(e.target.value) : null, {
               shouldValidate: true,
             })
           }
@@ -142,9 +142,9 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
         {showBusinessSelect && (
           <Select
             label="שיוך עסקי"
-            value={selectedBusinessId ?? ""}
+            value={selectedBusinessId ?? ''}
             onChange={(e) =>
-              setValue("business_id", e.target.value ? Number(e.target.value) : null, {
+              setValue('business_id', e.target.value ? Number(e.target.value) : null, {
                 shouldValidate: true,
               })
             }
@@ -160,18 +160,21 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
           role="button"
           tabIndex={0}
           onClick={() => fileInputRef.current?.click()}
-          onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
+          onDragOver={(e) => {
+            e.preventDefault()
+            setIsDragging(true)
+          }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
           className={[
-            "flex min-h-16 cursor-pointer flex-col gap-2 rounded-xl border-2 border-dashed px-3 py-3 text-right transition-colors sm:flex-row sm:items-center sm:justify-between",
+            'flex min-h-16 cursor-pointer flex-col gap-2 rounded-xl border-2 border-dashed px-3 py-3 text-right transition-colors sm:flex-row sm:items-center sm:justify-between',
             isDragging
-              ? "border-primary-400 bg-primary-50"
+              ? 'border-primary-400 bg-primary-50'
               : selectedFile
-              ? "border-positive-400 bg-positive-50"
-              : "border-gray-200 bg-gray-50 hover:border-primary-300 hover:bg-gray-100",
-          ].join(" ")}
+                ? 'border-positive-400 bg-positive-50'
+                : 'border-gray-200 bg-gray-50 hover:border-primary-300 hover:bg-gray-100',
+          ].join(' ')}
         >
           {selectedFile ? (
             <>
@@ -182,10 +185,10 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
                   variant="ghost"
                   size="sm"
                   onClick={(e) => {
-                    e.stopPropagation();
-                    setValue("file", null, { shouldValidate: false });
-                    setFileError(null);
-                    if (fileInputRef.current) fileInputRef.current.value = "";
+                    e.stopPropagation()
+                    setValue('file', null, { shouldValidate: false })
+                    setFileError(null)
+                    if (fileInputRef.current) fileInputRef.current.value = ''
                   }}
                   className="rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
                   aria-label="הסר קובץ"
@@ -219,9 +222,9 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
           accept={DOCUMENT_FILE_ACCEPT}
           className="hidden"
           onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) applyFile(file);
-            e.target.value = "";
+            const file = e.target.files?.[0]
+            if (file) applyFile(file)
+            e.target.value = ''
           }}
         />
         {(fileError || errors.file?.message) && (
@@ -231,7 +234,7 @@ export const DocumentsUploadCard: React.FC<DocumentsUploadCardProps> = ({
 
       {uploadError && <p className="text-sm text-negative-600">{uploadError}</p>}
     </form>
-  );
-};
+  )
+}
 
-DocumentsUploadCard.displayName = "DocumentsUploadCard";
+DocumentsUploadCard.displayName = 'DocumentsUploadCard'

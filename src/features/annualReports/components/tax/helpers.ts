@@ -1,115 +1,110 @@
-import { formatCurrencyILS as fmt } from "@/utils/utils";
-import { semanticMonoToneClasses } from "@/utils/semanticColors";
+import { formatCurrencyILS as fmt } from '@/utils/utils'
+import { semanticMonoToneClasses } from '@/utils/semanticColors'
 import {
   CREDIT_POINT_VALUE_BY_YEAR,
   DEFAULT_CREDIT_POINT_VALUE,
   PENSION_DEDUCTION_RATE,
-} from "./constants";
-import type { AnnualReportFull } from "../../api";
+} from './constants'
+import type { AnnualReportFull } from '../../api'
 
 export interface CreditRow {
-  label: string;
-  description: string;
-  amount: number;
+  label: string
+  description: string
+  amount: number
 }
 
 export const toTaxInputValues = (detail: AnnualReportFull | undefined) => ({
-  creditPoints: detail?.credit_points != null ? String(detail.credit_points) : "",
-  pension: detail?.pension_contribution != null ? String(detail.pension_contribution) : "",
-  otherCredits: detail?.other_credits != null ? String(detail.other_credits) : "",
-});
+  creditPoints: detail?.credit_points != null ? String(detail.credit_points) : '',
+  pension: detail?.pension_contribution != null ? String(detail.pension_contribution) : '',
+  otherCredits: detail?.other_credits != null ? String(detail.other_credits) : '',
+})
 
 export const toReportDetailsPayload = (
   creditPoints: string,
   pension: string,
   otherCredits: string,
 ) => ({
-  credit_points: creditPoints !== "" ? Number(creditPoints) : undefined,
-  pension_contribution: pension !== "" ? pension : undefined,
-  other_credits: otherCredits !== "" ? otherCredits : undefined,
-});
+  credit_points: creditPoints !== '' ? Number(creditPoints) : undefined,
+  pension_contribution: pension !== '' ? pension : undefined,
+  other_credits: otherCredits !== '' ? otherCredits : undefined,
+})
 
 export const toTaxResultPayload = (liability: number) =>
   liability > 0
     ? { tax_due: String(liability), refund_due: null }
-    : { tax_due: null, refund_due: String(Math.abs(liability)) };
+    : { tax_due: null, refund_due: String(Math.abs(liability)) }
 
 export const getCreditPointValue = (taxYear: number) =>
-  CREDIT_POINT_VALUE_BY_YEAR[taxYear] ?? DEFAULT_CREDIT_POINT_VALUE;
+  CREDIT_POINT_VALUE_BY_YEAR[taxYear] ?? DEFAULT_CREDIT_POINT_VALUE
 
 export const getTotalCredits = (data: {
-  credit_points_value: string | number;
-  donation_credit: string | number;
-  other_credits?: string | number | null;
+  credit_points_value: string | number
+  donation_credit: string | number
+  other_credits?: string | number | null
 }) =>
-  Number(data.credit_points_value) +
-  Number(data.donation_credit) +
-  Number(data.other_credits ?? 0);
+  Number(data.credit_points_value) + Number(data.donation_credit) + Number(data.other_credits ?? 0)
 
 export const getLiabilityTone = (liability: number | null) => {
-  if (liability === null) return "";
-  return liability > 0 ? "text-negative-600" : "text-positive-600";
-};
+  if (liability === null) return ''
+  return liability > 0 ? 'text-negative-600' : 'text-positive-600'
+}
 
-export const fmtRate = (rate: string | number) =>
-  `${(Number(rate) * 100).toFixed(0)}%`;
+export const fmtRate = (rate: string | number) => `${(Number(rate) * 100).toFixed(0)}%`
 
 export const fmtRange = (from: string | number, to: string | number | null) =>
-  to === null ? `מעל ${fmt(from)}` : `${fmt(from)} – ${fmt(to)}`;
+  to === null ? `מעל ${fmt(from)}` : `${fmt(from)} – ${fmt(to)}`
 
 export const getRecognitionTone = (recognitionRate: string | number) =>
-  Number(recognitionRate) < 100 ? semanticMonoToneClasses.warning : "";
+  Number(recognitionRate) < 100 ? semanticMonoToneClasses.warning : ''
 
-export const buildCreditRows = (
-  detail: AnnualReportFull,
-  taxYear: number,
-): CreditRow[] => {
-  const cpv = getCreditPointValue(taxYear);
-  const creditPoints = detail.credit_points ?? 0;
-  const pensionContribution = Number(detail.pension_contribution ?? 0);
-  const rows: CreditRow[] = [{
-    label: "נקודות זיכוי בסיסיות",
-    description: `${creditPoints} נקודות × ₪${cpv.toLocaleString("he-IL")}`,
-    amount: creditPoints * cpv,
-  }];
+export const buildCreditRows = (detail: AnnualReportFull, taxYear: number): CreditRow[] => {
+  const cpv = getCreditPointValue(taxYear)
+  const creditPoints = detail.credit_points ?? 0
+  const pensionContribution = Number(detail.pension_contribution ?? 0)
+  const rows: CreditRow[] = [
+    {
+      label: 'נקודות זיכוי בסיסיות',
+      description: `${creditPoints} נקודות × ₪${cpv.toLocaleString('he-IL')}`,
+      amount: creditPoints * cpv,
+    },
+  ]
 
   if (pensionContribution > 0) {
     rows.push({
-      label: "הפקדות קרן השתלמות",
-      description: "ניכוי 4.5% עד השכר",
+      label: 'הפקדות קרן השתלמות',
+      description: 'ניכוי 4.5% עד השכר',
       amount: pensionContribution * PENSION_DEDUCTION_RATE,
-    });
+    })
   }
 
-  const lifeInsuranceCredit = (detail.life_insurance_credit_points ?? 0) * cpv;
+  const lifeInsuranceCredit = (detail.life_insurance_credit_points ?? 0) * cpv
   if (lifeInsuranceCredit > 0) {
     rows.push({
-      label: "ביטוח חיים / פנסיה",
-      description: "זיכוי 25% עד ₪12,060",
+      label: 'ביטוח חיים / פנסיה',
+      description: 'זיכוי 25% עד ₪12,060',
       amount: lifeInsuranceCredit,
-    });
+    })
   }
 
-  const tuitionCredit = (detail.tuition_credit_points ?? 0) * cpv;
+  const tuitionCredit = (detail.tuition_credit_points ?? 0) * cpv
   if (tuitionCredit > 0) {
     rows.push({
-      label: "שכר לימוד (ילדים)",
-      description: `₪${cpv.toLocaleString("he-IL")}/שנה`,
+      label: 'שכר לימוד (ילדים)',
+      description: `₪${cpv.toLocaleString('he-IL')}/שנה`,
       amount: tuitionCredit,
-    });
+    })
   }
 
-  const otherCredits = Number(detail.other_credits ?? 0);
+  const otherCredits = Number(detail.other_credits ?? 0)
   if (otherCredits > 0) {
     rows.push({
-      label: "זיכויים אחרים",
-      description: "זיכויים נוספים",
+      label: 'זיכויים אחרים',
+      description: 'זיכויים נוספים',
       amount: otherCredits,
-    });
+    })
   }
 
-  return rows;
-};
+  return rows
+}
 
-export const sumCreditRows = (rows: CreditRow[]) =>
-  rows.reduce((sum, row) => sum + row.amount, 0);
+export const sumCreditRows = (rows: CreditRow[]) => rows.reduce((sum, row) => sum + row.amount, 0)

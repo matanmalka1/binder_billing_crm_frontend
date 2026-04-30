@@ -1,20 +1,20 @@
-import { useMemo } from "react";
-import { Bell, CalendarClock } from "lucide-react";
-import { Alert } from "@/components/ui/overlays/Alert";
-import { ConfirmDialog } from "@/components/ui/overlays/ConfirmDialog";
+import { useMemo } from 'react'
+import { Bell, CalendarClock } from 'lucide-react'
+import { Alert } from '@/components/ui/overlays/Alert'
+import { ConfirmDialog } from '@/components/ui/overlays/ConfirmDialog'
 import {
   AttentionPanel,
   DashboardStatsGrid,
   SeasonSummaryWidget,
   useDashboardPage,
-} from "@/features/dashboard";
-import { DASHBOARD_COPY, DASHBOARD_LOADING_CARD_COUNT } from "../dashboardConstants";
-import { DashboardSurface } from "../components/DashboardPrimitives";
+} from '@/features/dashboard'
+import { DASHBOARD_COPY, DASHBOARD_LOADING_CARD_COUNT } from '../dashboardConstants'
+import { DashboardSurface } from '../components/DashboardPrimitives'
 import {
   attentionSectionsToPanelSections,
   quickActionsToPanelSections,
   type PanelSection,
-} from "../attentionPanelSections";
+} from '../attentionPanelSections'
 
 const StatsSkeleton = () => (
   <div className="grid animate-pulse grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -22,7 +22,7 @@ const StatsSkeleton = () => (
       <div key={i} className="h-32 rounded-xl bg-gray-100" />
     ))}
   </div>
-);
+)
 
 export const DashboardPage: React.FC = () => {
   const {
@@ -38,46 +38,44 @@ export const DashboardPage: React.FC = () => {
     quickActions,
     advisorToday,
     stats,
-  } = useDashboardPage();
+  } = useDashboardPage()
 
   const attentionSections = useMemo<PanelSection[]>(() => {
-    const base = attentionSectionsToPanelSections(attentionItems);
-    if (!isAdvisorView) return base;
+    const base = attentionSectionsToPanelSections(attentionItems)
+    if (!isAdvisorView) return base
 
     return [
       ...base,
       {
-        key: "deadlines",
-        title: "מועדי הגשה החודש",
+        key: 'deadlines',
+        title: 'מועדי הגשה החודש',
         icon: CalendarClock,
-        tone: "amber",
-        viewAllHref: "/tax/deadlines",
+        tone: 'amber',
+        viewAllHref: '/tax/deadlines',
         items: (advisorToday?.deadline_items ?? []).map((item) => ({
           id: `deadline-${item.id}`,
           label: item.label,
           sublabel: item.sublabel ?? undefined,
-          href: item.href ?? "/tax/deadlines",
-          meta: item.description
-            ? { description: item.description }
-            : undefined,
+          href: item.href ?? '/tax/deadlines',
+          meta: item.description ? { description: item.description } : undefined,
         })),
       },
       {
-        key: "open_reminders",
-        title: "תזכורות פתוחות",
+        key: 'open_reminders',
+        title: 'תזכורות פתוחות',
         icon: Bell,
-        tone: "blue",
-        viewAllHref: "/reminders",
+        tone: 'blue',
+        viewAllHref: '/reminders',
         items: (advisorToday?.reminder_items ?? []).map((item) => ({
           id: `reminder-${item.id}`,
           label: item.label,
           sublabel: item.sublabel ?? undefined,
-          href: item.href ?? "/reminders",
+          href: item.href ?? '/reminders',
         })),
       },
       ...(quickActions?.length ? quickActionsToPanelSections(quickActions) : []),
-    ];
-  }, [attentionItems, advisorToday, quickActions, isAdvisorView]);
+    ]
+  }, [attentionItems, advisorToday, quickActions, isAdvisorView])
 
   return (
     <DashboardSurface>
@@ -87,25 +85,25 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {denied && <Alert variant="warning" message={DASHBOARD_COPY.permissionDenied} />}
-      {dashboard.status === "error" && !denied && (
+      {dashboard.status === 'error' && !denied && (
         <Alert variant="error" message={dashboard.message} />
       )}
 
-      {dashboard.status === "loading" ? (
+      {dashboard.status === 'loading' ? (
         <StatsSkeleton />
-      ) : dashboard.status === "ok" ? (
+      ) : dashboard.status === 'ok' ? (
         <DashboardStatsGrid stats={stats} />
       ) : null}
 
       {isAdvisorView && <SeasonSummaryWidget />}
 
-      {dashboard.status === "loading" ? (
+      {dashboard.status === 'loading' ? (
         <div className="h-80 animate-pulse rounded-2xl bg-gray-100" />
       ) : isAdvisorView ? (
         <AttentionPanel
-        sections={attentionSections}
-        activeActionKey={activeQuickAction}
-        onAction={handleQuickAction}
+          sections={attentionSections}
+          activeActionKey={activeQuickAction}
+          onAction={handleQuickAction}
         />
       ) : (
         <AttentionPanel sections={attentionSections} />
@@ -122,5 +120,5 @@ export const DashboardPage: React.FC = () => {
         onCancel={cancelPendingAction}
       />
     </DashboardSurface>
-  );
-};
+  )
+}

@@ -1,15 +1,15 @@
-import { OverlayContainer } from "../layout/OverlayContainer";
-import { UnsavedChangesGuard } from "../feedback/UnsavedChangesGuard";
-import { useUnsavedChangesGuard } from "./useUnsavedChangesGuard";
+import { OverlayContainer } from '../layout/OverlayContainer'
+import { UnsavedChangesGuard } from '../feedback/UnsavedChangesGuard'
+import { useUnsavedChangesGuard } from './useUnsavedChangesGuard'
 
 interface ModalProps {
-  open: boolean;
-  title: React.ReactNode;
-  children: React.ReactNode;
-  footer: React.ReactNode;
-  onClose: () => void;
+  open: boolean
+  title: React.ReactNode
+  children: React.ReactNode
+  footer: React.ReactNode
+  onClose: () => void
   /** When true, closing shows a confirmation prompt before discarding */
-  isDirty?: boolean;
+  isDirty?: boolean
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -23,7 +23,7 @@ export const Modal: React.FC<ModalProps> = ({
   const { showGuard, handleClose, handleContinue, handleDiscard } = useUnsavedChangesGuard({
     isDirty,
     onClose,
-  });
+  })
 
   return (
     <>
@@ -37,14 +37,9 @@ export const Modal: React.FC<ModalProps> = ({
         {children}
       </OverlayContainer>
 
-      {showGuard && (
-        <UnsavedChangesGuard
-          onContinue={handleContinue}
-          onDiscard={handleDiscard}
-        />
-      )}
+      {showGuard && <UnsavedChangesGuard onContinue={handleContinue} onDiscard={handleDiscard} />}
     </>
-  );
-};
+  )
+}
 
-Modal.displayName = "Modal";
+Modal.displayName = 'Modal'

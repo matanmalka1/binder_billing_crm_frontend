@@ -1,2 +1,2 @@
-export { advancePaymentsApi } from "./advancedPayments.api";
-export { advancedPaymentsQK } from "./queryKeys";
+export { advancePaymentsApi } from './advancedPayments.api'
+export { advancedPaymentsQK } from './queryKeys'

@@ -1,23 +1,23 @@
-import { Trash2 } from "lucide-react";
-import { DetailDrawer } from "@/components/ui/overlays/DetailDrawer";
-import { Button } from "@/components/ui/primitives/Button";
-import type { BinderResponse } from "../../types";
-import { BinderActionsPanel } from "./BinderActionsPanel";
-import { BinderDetailsPanel } from "./BinderDetailsPanel";
-import { BinderHistorySection } from "../sections/BinderHistorySection";
-import { BinderIntakesSection } from "../sections/BinderIntakesSection";
+import { Trash2 } from 'lucide-react'
+import { DetailDrawer } from '@/components/ui/overlays/DetailDrawer'
+import { Button } from '@/components/ui/primitives/Button'
+import type { BinderResponse } from '../../types'
+import { BinderActionsPanel } from './BinderActionsPanel'
+import { BinderDetailsPanel } from './BinderDetailsPanel'
+import { BinderHistorySection } from '../sections/BinderHistorySection'
+import { BinderIntakesSection } from '../sections/BinderIntakesSection'
 
 interface BinderDetailDrawerProps {
-  open: boolean;
-  binder: BinderResponse | null;
-  onClose: () => void;
-  onMarkReady?: () => void;
-  onRevertReady?: () => void;
-  onReturn?: () => void;
-  onBulkReady?: () => void;
-  onOpenHandover?: () => void;
-  onDelete?: () => void;
-  actionLoading?: boolean;
+  open: boolean
+  binder: BinderResponse | null
+  onClose: () => void
+  onMarkReady?: () => void
+  onRevertReady?: () => void
+  onReturn?: () => void
+  onBulkReady?: () => void
+  onOpenHandover?: () => void
+  onDelete?: () => void
+  actionLoading?: boolean
 }
 
 export const BinderDetailDrawer: React.FC<BinderDetailDrawerProps> = ({
@@ -34,7 +34,7 @@ export const BinderDetailDrawer: React.FC<BinderDetailDrawerProps> = ({
 }) => (
   <DetailDrawer
     open={open}
-    title={binder ? `קלסר ${binder.binder_number}` : ""}
+    title={binder ? `קלסר ${binder.binder_number}` : ''}
     onClose={onClose}
     footer={
       binder && onDelete ? (
@@ -71,6 +71,6 @@ export const BinderDetailDrawer: React.FC<BinderDetailDrawerProps> = ({
       </>
     )}
   </DetailDrawer>
-);
+)
 
-BinderDetailDrawer.displayName = "BinderDetailDrawer";
+BinderDetailDrawer.displayName = 'BinderDetailDrawer'

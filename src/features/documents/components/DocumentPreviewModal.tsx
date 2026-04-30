@@ -1,14 +1,14 @@
-import { Download } from "lucide-react";
-import { OverlayContainer } from "../../../components/ui/layout/OverlayContainer";
-import { Button } from "../../../components/ui/primitives/Button";
+import { Download } from 'lucide-react'
+import { OverlayContainer } from '../../../components/ui/layout/OverlayContainer'
+import { Button } from '../../../components/ui/primitives/Button'
 
 interface DocumentPreviewModalProps {
-  open: boolean;
-  onClose: () => void;
-  url: string | null;
-  filename: string | null;
-  mimeType: string | null;
-  onDownload: () => void;
+  open: boolean
+  onClose: () => void
+  url: string | null
+  filename: string | null
+  mimeType: string | null
+  onDownload: () => void
 }
 
 export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
@@ -19,14 +19,14 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
   mimeType,
   onDownload,
 }) => {
-  const isPdf = mimeType === "application/pdf" || filename?.toLowerCase().endsWith(".pdf");
-  const isImage = mimeType?.startsWith("image/");
+  const isPdf = mimeType === 'application/pdf' || filename?.toLowerCase().endsWith('.pdf')
+  const isImage = mimeType?.startsWith('image/')
 
   return (
     <OverlayContainer
       open={open}
       variant="modal"
-      title={filename ?? "תצוגה מקדימה"}
+      title={filename ?? 'תצוגה מקדימה'}
       onClose={onClose}
       className="max-w-4xl w-full"
       footer={
@@ -44,13 +44,13 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
         <iframe
           src={url}
           className="h-[70vh] w-full rounded border border-gray-100"
-          title={filename ?? "document"}
+          title={filename ?? 'document'}
         />
       ) : isImage ? (
         <div className="flex justify-center">
           <img
             src={url}
-            alt={filename ?? "document"}
+            alt={filename ?? 'document'}
             className="max-h-[70vh] max-w-full object-contain rounded"
           />
         </div>
@@ -64,7 +64,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
         </div>
       )}
     </OverlayContainer>
-  );
-};
+  )
+}
 
-DocumentPreviewModal.displayName = "DocumentPreviewModal";
+DocumentPreviewModal.displayName = 'DocumentPreviewModal'

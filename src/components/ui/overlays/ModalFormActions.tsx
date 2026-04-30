@@ -1,27 +1,27 @@
-import type { ReactNode } from "react";
-import { Button } from "../primitives/Button";
+import type { ReactNode } from 'react'
+import { Button } from '../primitives/Button'
 
-type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "danger";
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
 
 interface ModalFormActionsProps {
-  cancelDisabled?: boolean;
-  cancelLabel?: ReactNode;
-  cancelVariant?: ButtonVariant;
-  isLoading?: boolean;
-  onCancel: () => void;
-  onSubmit?: () => void;
-  submitDisabled?: boolean;
-  submitForm?: string;
-  submitLabel: ReactNode;
-  submitLoading?: boolean;
-  submitType?: "button" | "submit";
-  submitVariant?: ButtonVariant;
+  cancelDisabled?: boolean
+  cancelLabel?: ReactNode
+  cancelVariant?: ButtonVariant
+  isLoading?: boolean
+  onCancel: () => void
+  onSubmit?: () => void
+  submitDisabled?: boolean
+  submitForm?: string
+  submitLabel: ReactNode
+  submitLoading?: boolean
+  submitType?: 'button' | 'submit'
+  submitVariant?: ButtonVariant
 }
 
 export const ModalFormActions: React.FC<ModalFormActionsProps> = ({
   cancelDisabled = false,
-  cancelLabel = "ביטול",
-  cancelVariant = "outline",
+  cancelLabel = 'ביטול',
+  cancelVariant = 'outline',
   isLoading = false,
   onCancel,
   onSubmit,
@@ -29,11 +29,10 @@ export const ModalFormActions: React.FC<ModalFormActionsProps> = ({
   submitForm,
   submitLabel,
   submitLoading = false,
-  submitType = "button",
-  submitVariant = "primary",
+  submitType = 'button',
+  submitVariant = 'primary',
 }) => {
-  const submitProps =
-    submitType === "submit" ? { form: submitForm } : { onClick: onSubmit };
+  const submitProps = submitType === 'submit' ? { form: submitForm } : { onClick: onSubmit }
 
   return (
     <div className="flex items-center justify-end gap-2">
@@ -55,5 +54,5 @@ export const ModalFormActions: React.FC<ModalFormActionsProps> = ({
         {submitLabel}
       </Button>
     </div>
-  );
-};
+  )
+}

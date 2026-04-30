@@ -1,23 +1,23 @@
-import { Check, Pencil, Trash2, X } from "lucide-react";
-import { Input } from "../../../../components/ui/inputs/Input";
-import { Button } from "../../../../components/ui/primitives/Button";
-import type { AnnexDataLine } from "../../api";
-import type { FieldDef } from "../../annex.constants";
-import { ANNEX_TEXT, FIELD_INPUT_CLASS, TABLE_ICON_CLASS } from "./annex.constants";
-import { getInputType, getLineFieldValue } from "./annex.helpers";
+import { Check, Pencil, Trash2, X } from 'lucide-react'
+import { Input } from '../../../../components/ui/inputs/Input'
+import { Button } from '../../../../components/ui/primitives/Button'
+import type { AnnexDataLine } from '../../api'
+import type { FieldDef } from '../../annex.constants'
+import { ANNEX_TEXT, FIELD_INPUT_CLASS, TABLE_ICON_CLASS } from './annex.constants'
+import { getInputType, getLineFieldValue } from './annex.helpers'
 
 interface AnnexDataTableProps {
-  lines: AnnexDataLine[];
-  fields: FieldDef[];
-  editingLineId: number | null;
-  formData: Record<string, string>;
-  isUpdating: boolean;
-  isDeleting: boolean;
-  onFormChange: (key: string, value: string) => void;
-  onStartEdit: (line: AnnexDataLine) => void;
-  onCancelEdit: () => void;
-  onSaveEdit: (lineId: number) => void;
-  onDelete: (lineId: number) => void;
+  lines: AnnexDataLine[]
+  fields: FieldDef[]
+  editingLineId: number | null
+  formData: Record<string, string>
+  isUpdating: boolean
+  isDeleting: boolean
+  onFormChange: (key: string, value: string) => void
+  onStartEdit: (line: AnnexDataLine) => void
+  onCancelEdit: () => void
+  onSaveEdit: (lineId: number) => void
+  onDelete: (lineId: number) => void
 }
 
 export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
@@ -47,7 +47,7 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
       </thead>
       <tbody>
         {lines.map((line) => {
-          const isEditing = editingLineId === line.id;
+          const isEditing = editingLineId === line.id
           return (
             <tr key={line.id} className="border-b border-gray-100 hover:bg-gray-50">
               {fields.map((field) => (
@@ -55,7 +55,7 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                   {isEditing ? (
                     <Input
                       type={getInputType(field.type)}
-                      value={formData[field.key] ?? ""}
+                      value={formData[field.key] ?? ''}
                       onChange={(event) => onFormChange(field.key, event.target.value)}
                       className={FIELD_INPUT_CLASS}
                     />
@@ -113,11 +113,11 @@ export const AnnexDataTable: React.FC<AnnexDataTableProps> = ({
                 </div>
               </td>
             </tr>
-          );
+          )
         })}
       </tbody>
     </table>
   </div>
-);
+)
 
-AnnexDataTable.displayName = "AnnexDataTable";
+AnnexDataTable.displayName = 'AnnexDataTable'

@@ -1,26 +1,31 @@
-import { useState } from "react";
-import { Send, Link2, Copy, Check, X, History } from "lucide-react";
-import { RowActionItem, RowActionLink, RowActionSeparator, RowActionsMenu } from "@/components/ui/table";
-import { ConfirmDialog } from "../../../components/ui/overlays/ConfirmDialog";
-import { toast } from "../../../utils/toast";
-import type { SignatureRequestResponse } from "../api";
-import { SIGNATURE_REQUEST_TERMINAL_STATUSES } from "../utils";
+import { useState } from 'react'
+import { Send, Link2, Copy, Check, X, History } from 'lucide-react'
+import {
+  RowActionItem,
+  RowActionLink,
+  RowActionSeparator,
+  RowActionsMenu,
+} from '@/components/ui/table'
+import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
+import { toast } from '../../../utils/toast'
+import type { SignatureRequestResponse } from '../api'
+import { SIGNATURE_REQUEST_TERMINAL_STATUSES } from '../utils'
 
 export interface SignatureRequestActionProps {
-  request: SignatureRequestResponse;
-  signingUrl?: string;
-  isSending: boolean;
-  isCanceling: boolean;
-  canManage: boolean;
-  onSend: (id: number) => Promise<unknown>;
-  onCancel: (id: number) => Promise<unknown>;
-  onAudit: (id: number) => void;
+  request: SignatureRequestResponse
+  signingUrl?: string
+  isSending: boolean
+  isCanceling: boolean
+  canManage: boolean
+  onSend: (id: number) => Promise<unknown>
+  onCancel: (id: number) => Promise<unknown>
+  onAudit: (id: number) => void
 }
 
 interface SignatureRequestRowActionsProps extends SignatureRequestActionProps {
-  showOpenLink?: boolean;
-  separateHistory?: boolean;
-  copySuccessMessage?: string | null;
+  showOpenLink?: boolean
+  separateHistory?: boolean
+  copySuccessMessage?: string | null
 }
 
 export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProps> = ({
@@ -34,28 +39,28 @@ export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProp
   onAudit,
   showOpenLink = false,
   separateHistory = false,
-  copySuccessMessage = "הקישור הועתק",
+  copySuccessMessage = 'הקישור הועתק',
 }) => {
-  const [copied, setCopied] = useState(false);
-  const [confirmCancel, setConfirmCancel] = useState(false);
+  const [copied, setCopied] = useState(false)
+  const [confirmCancel, setConfirmCancel] = useState(false)
 
-  const isDraft = request.status === "draft";
-  const isPending = request.status === "pending_signature";
-  const isTerminal = SIGNATURE_REQUEST_TERMINAL_STATUSES.has(request.status);
+  const isDraft = request.status === 'draft'
+  const isPending = request.status === 'pending_signature'
+  const isTerminal = SIGNATURE_REQUEST_TERMINAL_STATUSES.has(request.status)
 
   const handleCopy = async () => {
-    if (!signingUrl) return;
+    if (!signingUrl) return
     try {
-      await navigator.clipboard.writeText(signingUrl);
+      await navigator.clipboard.writeText(signingUrl)
     } catch {
-      return;
+      return
     }
-    setCopied(true);
+    setCopied(true)
     if (copySuccessMessage) {
-      toast.success(copySuccessMessage);
+      toast.success(copySuccessMessage)
     }
-    setTimeout(() => setCopied(false), 2000);
-  };
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   return (
     <>
@@ -80,9 +85,15 @@ export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProp
               />
             )}
             <RowActionItem
-              label={copied ? "הועתק!" : "העתק קישור"}
+              label={copied ? 'הועתק!' : 'העתק קישור'}
               onClick={() => void handleCopy()}
-              icon={copied ? <Check className="h-4 w-4 text-positive-700" /> : <Copy className="h-4 w-4" />}
+              icon={
+                copied ? (
+                  <Check className="h-4 w-4 text-positive-700" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )
+              }
             />
           </>
         )}
@@ -114,13 +125,13 @@ export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProp
         cancelLabel="חזור"
         isLoading={isCanceling}
         onConfirm={() => {
-          setConfirmCancel(false);
-          onCancel(request.id).catch(() => {});
+          setConfirmCancel(false)
+          onCancel(request.id).catch(() => {})
         }}
         onCancel={() => setConfirmCancel(false)}
       />
     </>
-  );
-};
+  )
+}
 
-SignatureRequestRowActions.displayName = "SignatureRequestRowActions";
+SignatureRequestRowActions.displayName = 'SignatureRequestRowActions'

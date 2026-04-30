@@ -1,50 +1,45 @@
-import type { ReactNode } from "react";
-import type { Column } from "./DataTable";
-import type {
-  StatusVariant,
-  StatusVariantMap,
-  TableCellValue,
-} from "./columnTypes";
+import type { ReactNode } from 'react'
+import type { Column } from './DataTable'
+import type { StatusVariant, StatusVariantMap, TableCellValue } from './columnTypes'
 import {
   renderDateText,
   renderMonoText,
   renderMutedText,
   renderStatusBadge,
-} from "./columnRenderers";
+} from './columnRenderers'
 
 interface ColumnBaseOptions {
-  key: string;
-  header: string;
-  className?: string;
-  headerClassName?: string;
+  key: string
+  header: string
+  className?: string
+  headerClassName?: string
 }
 
 interface TextColumnOptions<T> extends ColumnBaseOptions {
-  valueClassName?: string;
-  emptyValue?: ReactNode;
-  getValue: (item: T, index: number) => TableCellValue;
+  valueClassName?: string
+  emptyValue?: ReactNode
+  getValue: (item: T, index: number) => TableCellValue
 }
 
 interface DateColumnOptions<T> extends ColumnBaseOptions {
-  valueClassName?: string;
-  emptyValue?: ReactNode;
-  getValue: (item: T, index: number) => string | null | undefined;
+  valueClassName?: string
+  emptyValue?: ReactNode
+  getValue: (item: T, index: number) => string | null | undefined
 }
 
-interface StatusColumnOptions<T, TStatus extends string>
-  extends ColumnBaseOptions {
-  defaultVariant?: StatusVariant;
-  getLabel: (status: TStatus) => string;
-  getStatus: (item: T, index: number) => TStatus;
-  variantMap: StatusVariantMap;
+interface StatusColumnOptions<T, TStatus extends string> extends ColumnBaseOptions {
+  defaultVariant?: StatusVariant
+  getLabel: (status: TStatus) => string
+  getStatus: (item: T, index: number) => TStatus
+  variantMap: StatusVariantMap
 }
 
 interface ActionsColumnOptions<T> {
-  header?: string;
-  key?: string;
-  className?: string;
-  headerClassName?: string;
-  render: (item: T, index: number) => ReactNode;
+  header?: string
+  key?: string
+  className?: string
+  headerClassName?: string
+  render: (item: T, index: number) => ReactNode
 }
 
 export const textColumn = <T,>({
@@ -62,7 +57,7 @@ export const textColumn = <T,>({
   headerClassName,
   render: (item, index) =>
     renderMutedText({ value: getValue(item, index), className: valueClassName, emptyValue }),
-});
+})
 
 export const monoColumn = <T,>({
   key,
@@ -79,7 +74,7 @@ export const monoColumn = <T,>({
   headerClassName,
   render: (item, index) =>
     renderMonoText({ value: getValue(item, index), className: valueClassName, emptyValue }),
-});
+})
 
 export const dateColumn = <T,>({
   key,
@@ -96,7 +91,7 @@ export const dateColumn = <T,>({
   headerClassName,
   render: (item, index) =>
     renderDateText({ value: getValue(item, index), className: valueClassName, emptyValue }),
-});
+})
 
 export const statusColumn = <T, TStatus extends string>({
   key,
@@ -119,13 +114,13 @@ export const statusColumn = <T, TStatus extends string>({
       variantMap,
       defaultVariant,
     }),
-});
+})
 
 export const actionsColumn = <T,>({
-  key = "actions",
-  header = "פעולות",
-  className = "w-10",
-  headerClassName = "w-10",
+  key = 'actions',
+  header = 'פעולות',
+  className = 'w-10',
+  headerClassName = 'w-10',
   render,
 }: ActionsColumnOptions<T>): Column<T> => ({
   key,
@@ -133,4 +128,4 @@ export const actionsColumn = <T,>({
   className,
   headerClassName,
   render,
-});
+})

@@ -1,15 +1,15 @@
-import { Edit2, Trash2 } from "lucide-react";
-import { Badge } from "../../../components/ui/primitives/Badge";
-import { Button } from "../../../components/ui/primitives/Button";
-import type { CorrespondenceEntry as CorrespondenceEntryType } from "../api";
-import { formatDate } from "../../../utils/utils";
-import { CORRESPONDENCE_TYPE_CONFIG } from "../constants";
+import { Edit2, Trash2 } from 'lucide-react'
+import { Badge } from '../../../components/ui/primitives/Badge'
+import { Button } from '../../../components/ui/primitives/Button'
+import type { CorrespondenceEntry as CorrespondenceEntryType } from '../api'
+import { formatDate } from '../../../utils/utils'
+import { CORRESPONDENCE_TYPE_CONFIG } from '../constants'
 
 interface CorrespondenceEntryItemProps {
-  entry: CorrespondenceEntryType;
-  isDeleting: boolean;
-  onEdit: (entry: CorrespondenceEntryType) => void;
-  onDelete: (id: number) => void;
+  entry: CorrespondenceEntryType
+  isDeleting: boolean
+  onEdit: (entry: CorrespondenceEntryType) => void
+  onDelete: (id: number) => void
 }
 
 export const CorrespondenceEntryItem = ({
@@ -18,13 +18,15 @@ export const CorrespondenceEntryItem = ({
   onEdit,
   onDelete,
 }: CorrespondenceEntryItemProps) => {
-  const config = CORRESPONDENCE_TYPE_CONFIG[entry.correspondence_type];
-  const Icon = config.icon;
+  const config = CORRESPONDENCE_TYPE_CONFIG[entry.correspondence_type]
+  const Icon = config.icon
 
   return (
     <li className="flex gap-4 py-3 pl-2">
       <div className="relative shrink-0 pt-0.5">
-        <div className={`h-4 w-4 rounded-full border-2 border-white shadow-sm ${config.dotColor}`} />
+        <div
+          className={`h-4 w-4 rounded-full border-2 border-white shadow-sm ${config.dotColor}`}
+        />
       </div>
 
       <div className="flex-1 min-w-0 space-y-1">
@@ -69,7 +71,7 @@ export const CorrespondenceEntryItem = ({
         )}
       </div>
     </li>
-  );
-};
+  )
+}
 
-CorrespondenceEntryItem.displayName = "CorrespondenceEntryItem";
+CorrespondenceEntryItem.displayName = 'CorrespondenceEntryItem'

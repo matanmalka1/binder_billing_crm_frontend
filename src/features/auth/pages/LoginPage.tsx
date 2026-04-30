@@ -1,30 +1,26 @@
-import { useState } from "react";
-import { getYear } from "date-fns";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Navigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, ArrowLeft, LoaderCircle } from "lucide-react";
+import { useState } from 'react'
+import { getYear } from 'date-fns'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Navigate } from 'react-router-dom'
+import { Eye, EyeOff, Mail, Lock, ArrowLeft, LoaderCircle } from 'lucide-react'
 
-import { Input } from "@/components/ui/inputs/Input";
-import { Alert } from "@/components/ui/overlays/Alert";
-import { Button } from "@/components/ui/primitives/Button";
-import {
-  loginDefaultValues,
-  loginSchema,
-  type LoginFormValues,
-} from "@/features/auth";
-import { useAuthStore } from "@/store/auth.store";
-import { selectIsAuthenticated } from "@/store/auth.selectors";
-import { useShallow } from "zustand/react/shallow";
+import { Input } from '@/components/ui/inputs/Input'
+import { Alert } from '@/components/ui/overlays/Alert'
+import { Button } from '@/components/ui/primitives/Button'
+import { loginDefaultValues, loginSchema, type LoginFormValues } from '@/features/auth'
+import { useAuthStore } from '@/store/auth.store'
+import { selectIsAuthenticated } from '@/store/auth.selectors'
+import { useShallow } from 'zustand/react/shallow'
 
 export const Login: React.FC = () => {
-  const isAuthenticated = useAuthStore(selectIsAuthenticated);
-  const login = useAuthStore((s) => s.login);
-  const clearError = useAuthStore((s) => s.clearError);
+  const isAuthenticated = useAuthStore(selectIsAuthenticated)
+  const login = useAuthStore((s) => s.login)
+  const clearError = useAuthStore((s) => s.clearError)
   const { isLoading, error } = useAuthStore(
     useShallow((s) => ({ isLoading: s.isLoading, error: s.error })),
-  );
-  const [showPassword, setShowPassword] = useState(false);
+  )
+  const [showPassword, setShowPassword] = useState(false)
 
   const {
     formState: { errors },
@@ -33,32 +29,29 @@ export const Login: React.FC = () => {
   } = useForm<LoginFormValues>({
     defaultValues: loginDefaultValues,
     resolver: zodResolver(loginSchema),
-  });
+  })
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" replace />
   }
 
   const handleTogglePassword = () => {
-    setShowPassword((prev) => !prev);
-  };
+    setShowPassword((prev) => !prev)
+  }
 
   const onSubmit = handleSubmit(async (values) => {
-    clearError();
-    await login(values.email, values.password, true);
-  });
+    clearError()
+    await login(values.email, values.password, true)
+  })
 
   return (
     <div className="flex min-h-screen overflow-hidden bg-slate-950 text-right" dir="rtl">
-
       {/* ── Right panel — form ──────────────────────────────────────────── */}
       <div className="relative flex w-full flex-col items-center justify-center px-6 py-12 lg:w-[95%] bg-[#F7F6F2]">
-
         {/* Subtle top-right corner accent */}
         <div className="pointer-events-none absolute top-0 left-0 h-48 w-48 rounded-br-full bg-slate-100/70" />
 
         <div className="relative z-10 w-full max-w-md animate-fade-in">
-
           {/* Logo mark (mobile only) */}
           <div className="mb-10 flex items-center gap-3 lg:hidden">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-white">
@@ -72,9 +65,7 @@ export const Login: React.FC = () => {
             <h1 className="mb-1.5 text-3xl font-black tracking-tight text-slate-900">
               ברוכים השבים
             </h1>
-            <p className="text-sm text-slate-500">
-              התחברו לחשבון הניהול שלכם להמשיך
-            </p>
+            <p className="text-sm text-slate-500">התחברו לחשבון הניהול שלכם להמשיך</p>
           </div>
 
           {/* Form */}
@@ -88,11 +79,11 @@ export const Login: React.FC = () => {
               error={errors.email?.message}
               startIcon={<Mail className="h-4 w-4" />}
               className="rounded-xl border-slate-200 py-3 text-sm text-slate-900 placeholder:text-slate-300 focus:border-slate-400 focus:ring-slate-900/20 disabled:bg-slate-50"
-              {...register("email")}
+              {...register('email')}
             />
 
             <Input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               label="סיסמה"
               placeholder="••••••••"
               disabled={isLoading}
@@ -105,13 +96,13 @@ export const Login: React.FC = () => {
                   onClick={handleTogglePassword}
                   disabled={isLoading}
                   className="rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 disabled:cursor-not-allowed"
-                  aria-label={showPassword ? "הסתר סיסמה" : "הצג סיסמה"}
+                  aria-label={showPassword ? 'הסתר סיסמה' : 'הצג סיסמה'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               }
               className="rounded-xl border-slate-200 py-3 text-sm text-slate-900 placeholder:text-slate-300 focus:border-slate-400 focus:ring-slate-900/20 disabled:bg-slate-50"
-              {...register("password")}
+              {...register('password')}
             />
 
             <div className="min-h-[4.5rem]" aria-live="polite">
@@ -124,11 +115,7 @@ export const Login: React.FC = () => {
                   <span>בודקים את פרטי ההתחברות...</span>
                 </div>
               ) : error ? (
-                <Alert
-                  variant="error"
-                  message={error}
-                  className="rounded-xl"
-                />
+                <Alert variant="error" message={error} className="rounded-xl" />
               ) : null}
             </div>
 
@@ -156,13 +143,12 @@ export const Login: React.FC = () => {
 
       {/* ── Left panel — brand wall ─────────────────────────────────────── */}
       <div className="relative hidden overflow-hidden bg-slate-950 lg:flex lg:w-[48%] lg:flex-col lg:items-start lg:justify-between lg:p-14">
-
         {/* Dot-grid texture */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.07]"
           style={{
-            backgroundImage: "radial-gradient(circle, #94a3b8 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
+            backgroundImage: 'radial-gradient(circle, #94a3b8 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
           }}
         />
 
@@ -195,8 +181,10 @@ export const Login: React.FC = () => {
         <div className="relative z-10 space-y-6">
           <div className="h-px w-12 bg-slate-600" />
           <h2 className="text-4xl font-black leading-[1.15] tracking-tight text-white">
-            ניהול לקוחות,<br />
-            <span className="text-slate-400">קלסרים וחיובים</span><br />
+            ניהול לקוחות,
+            <br />
+            <span className="text-slate-400">קלסרים וחיובים</span>
+            <br />
             במקום אחד
           </h2>
           <p className="max-w-xs text-sm leading-relaxed text-slate-500">
@@ -205,7 +193,7 @@ export const Login: React.FC = () => {
 
           {/* Feature pills */}
           <div className="flex flex-wrap gap-2 pt-2">
-            {["קלסרים", "לקוחות", "חיובים", "מסמכים", "דוחות מס"].map((label) => (
+            {['קלסרים', 'לקוחות', 'חיובים', 'מסמכים', 'דוחות מס'].map((label) => (
               <span
                 key={label}
                 className="rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-400"
@@ -222,5 +210,5 @@ export const Login: React.FC = () => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}

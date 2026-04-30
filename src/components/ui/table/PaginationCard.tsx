@@ -1,26 +1,25 @@
-import { Card } from "../primitives/Card";
+import { Card } from '../primitives/Card'
 
 interface PaginationCardProps {
-  page: number;
-  totalPages: number;
-  total: number;
-  label?: string;
-  onPageChange: (nextPage: number) => void;
+  page: number
+  totalPages: number
+  total: number
+  label?: string
+  onPageChange: (nextPage: number) => void
 }
 
 export const PaginationCard: React.FC<PaginationCardProps> = ({
   page,
   totalPages,
   total,
-  label = "תוצאות",
+  label = 'תוצאות',
   onPageChange,
 }) => {
   return (
     <Card>
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between text-sm">
         <p className="text-gray-600">
-          עמוד {page} מתוך {totalPages} ({total.toLocaleString("he-IL")} {label}
-          )
+          עמוד {page} מתוך {totalPages} ({total.toLocaleString('he-IL')} {label})
         </p>
         <div className="flex items-center gap-2">
           <button
@@ -45,7 +44,6 @@ export const PaginationCard: React.FC<PaginationCardProps> = ({
           </button>
         </div>
       </div>
-
     </Card>
-  );
-};
+  )
+}
