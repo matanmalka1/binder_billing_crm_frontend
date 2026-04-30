@@ -17,7 +17,6 @@ import { Sidebar } from '../components/layout/Sidebar/Sidebar'
 import { PageLayout } from '../components/layout/PageLayout'
 import { RemindersPage } from '../features/reminders'
 import { Search } from '../features/search'
-import { SignatureRequestsPage } from '../features/signatureRequests'
 import { SigningPage } from '../features/signing'
 import { TaxDeadlines } from '../features/taxDeadlines'
 import { Users } from '../features/users'
@@ -132,7 +131,6 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax/vat/:id" element={<VatWorkItemDetail />} />
             <Route path="tax/vat-compliance" element={<VatComplianceReportView />} />
             <Route path="reminders" element={<RemindersPage />} />
-            <Route path="signature-requests" element={<SignatureRequestsPage />} />
           </Route>
         </Route>
 

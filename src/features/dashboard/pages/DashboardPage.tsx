@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Bell, CalendarClock } from 'lucide-react'
 import { Alert } from '@/components/ui/overlays/Alert'
 import { ConfirmDialog } from '@/components/ui/overlays/ConfirmDialog'
+import { SignatureRequestsDashboardPanel } from '@/features/signatureRequests'
 import {
   AttentionPanel,
   DashboardOnboardingEmptyState,
@@ -114,6 +115,8 @@ export const DashboardPage: React.FC = () => {
       ) : (
         <AttentionPanel sections={attentionSections} emptyChecks={attentionEmptyChecks} />
       )}
+
+      {isAdvisorView && !emptyState?.is_empty && <SignatureRequestsDashboardPanel compact />}
 
       <ConfirmDialog
         open={Boolean(pendingQuickAction)}

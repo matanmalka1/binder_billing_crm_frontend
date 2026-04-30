@@ -32,17 +32,6 @@ export const signatureRequestsApi = {
     return response.data
   },
 
-  listForBusiness: async (
-    businessId: number,
-    params?: { page?: number; page_size?: number; status?: string },
-  ): Promise<SignatureRequestListResponse> => {
-    const response = await api.get<SignatureRequestListResponse>(
-      SIGNATURE_REQUEST_ENDPOINTS.businessSignatureRequests(businessId),
-      { params },
-    )
-    return response.data
-  },
-
   listPending: async (params?: {
     page?: number
     page_size?: number

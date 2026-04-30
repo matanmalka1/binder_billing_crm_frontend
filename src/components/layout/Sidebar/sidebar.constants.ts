@@ -4,7 +4,6 @@ import {
   Briefcase,
   CalendarDays,
   ClipboardList,
-  FileSignature,
   FileSpreadsheet,
   LayoutDashboard,
   ReceiptText,
@@ -38,7 +37,6 @@ export const NAV_GROUPS: NavGroup[] = [
       { to: '/search', label: 'חיפוש', icon: Search },
       { to: '/charges', label: 'חיובים', icon: ReceiptText },
       { to: '/reminders', label: 'תזכורות', icon: Bell },
-      { to: '/signature-requests', label: 'בקשות חתימה', icon: FileSignature },
     ],
   },
   {
