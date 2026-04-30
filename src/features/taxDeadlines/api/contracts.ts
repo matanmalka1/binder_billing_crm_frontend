@@ -48,3 +48,25 @@ export interface DeadlineUrgentItem {
 }
 
 export type TaxDeadlineListResponse = PaginatedResponse<TaxDeadlineResponse>
+
+export interface DeadlineGroup {
+  group_key: string
+  deadline_type: string
+  period: string | null
+  tax_year: number | null
+  due_date: string
+  total_clients: number
+  pending_count: number
+  completed_count: number
+  canceled_count: number
+  overdue_count: number
+  total_amount: string | null
+  open_amount: string | null
+  worst_urgency: DeadlineUrgencyLevel
+}
+
+export interface GroupedDeadlineListResponse {
+  groups: DeadlineGroup[]
+  total_groups: number
+  total_client_deadlines: number
+}

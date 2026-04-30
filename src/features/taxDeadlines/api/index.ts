@@ -12,4 +12,6 @@ export type {
   TimelineEntry,
   DeadlineUrgentItem,
   DeadlineUrgencyLevel,
+  DeadlineGroup,
+  GroupedDeadlineListResponse,
 } from './contracts'

@@ -7,6 +7,7 @@ import type {
   TaxDeadlineListResponse,
   TimelineEntry,
   DeadlineUrgentItem,
+  GroupedDeadlineListResponse,
 } from './contracts'
 
 export const taxDeadlinesApi = {
@@ -112,6 +113,31 @@ export const taxDeadlinesApi = {
     const response = await api.post<{ created_count: number }>(
       TAX_DEADLINE_ENDPOINTS.taxDeadlinesGenerate,
       payload,
+    )
+    return response.data
+  },
+
+  listGroupedDeadlines: async (params: {
+    status?: string
+    deadline_type?: string
+    due_from?: string
+    due_to?: string
+    client_name?: string
+  }): Promise<GroupedDeadlineListResponse> => {
+    const response = await api.get<GroupedDeadlineListResponse>(
+      TAX_DEADLINE_ENDPOINTS.taxDeadlinesGrouped,
+      { params: toQueryParams(params) },
+    )
+    return response.data
+  },
+
+  listGroupClients: async (
+    groupKey: string,
+    params: { status?: string; page?: number; page_size?: number },
+  ): Promise<PaginatedResponse<TaxDeadlineResponse>> => {
+    const response = await api.get<PaginatedResponse<TaxDeadlineResponse>>(
+      TAX_DEADLINE_ENDPOINTS.taxDeadlinesGroupClients(groupKey),
+      { params: toQueryParams(params) },
     )
     return response.data
   },

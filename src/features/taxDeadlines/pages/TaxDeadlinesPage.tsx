@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { CalendarPlus, Plus } from 'lucide-react'
+import { formatDate } from '@/utils/utils'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { PaginationCard } from '@/components/ui/table/PaginationCard'
 import { PageLoading } from '@/components/ui/layout/PageLoading'
 import { Alert } from '@/components/ui/overlays/Alert'
 import { Button } from '@/components/ui/primitives/Button'
@@ -11,22 +11,18 @@ import {
   TaxDeadlineDrawer,
   TaxDeadlineForm,
   TaxDeadlinesFilters,
-  TaxDeadlinesTable,
   useTaxDeadlines,
   type TaxDeadlineResponse,
 } from '@/features/taxDeadlines'
-import { DeadlineSummaryCards } from '../components/DeadlineSummaryCards'
-import { TaxSubmissionStats, useTaxDashboard } from '@/features/taxDashboard'
+import { TaxDeadlinesGroupedTable } from '../components/TaxDeadlinesGroupedTable'
+import { DeadlineGroupSummaryCards } from '../components/DeadlineGroupSummaryCards'
+import { useGroupedDeadlines } from '../hooks/useGroupedDeadlines'
 
 export const TaxDeadlines: React.FC = () => {
   const {
-    filters,
-    isLoading,
-    error,
     isCreating,
     isGenerating,
     isUpdating,
-    handleFilterChange,
     handleComplete,
     handleReopen,
     handleEdit,
@@ -44,21 +40,19 @@ export const TaxDeadlines: React.FC = () => {
     onGenerateSubmit,
     editForm,
     onEditSubmit,
-    deadlines,
-    total,
-    totalPages,
     isAdvisor,
     showGenerateModal,
     setShowGenerateModal,
   } = useTaxDeadlines()
 
+  const { filters, groups, defaultWindow, isLoading, error, handleFilterChange } = useGroupedDeadlines()
+
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null)
-  const { currentYear, submissions } = useTaxDashboard()
 
   const header = (
     <PageHeader
-      title="מועדי הגשה ללקוח"
-      description={`ניהול מועדי מס ומעקב הגשה לשנת ${currentYear}`}
+      title="בקרת מועדים"
+      description="מעקב אחר מועדי מס לפי סוג, תקופה וכמות לקוחות מושפעים"
       actions={
         <div className="flex gap-2">
           {isAdvisor && (
@@ -82,7 +76,7 @@ export const TaxDeadlines: React.FC = () => {
     return (
       <div className="space-y-6">
         {header}
-        <PageLoading message="טוען מועדי מס..." rows={6} columns={7} />
+        <PageLoading message="טוען מועדי מס..." rows={6} columns={4} />
       </div>
     )
   }
@@ -100,18 +94,18 @@ export const TaxDeadlines: React.FC = () => {
     <div className="space-y-6">
       {header}
 
-      <TaxSubmissionStats
-        data={submissions}
-        activeFilter={filters.status}
-        onFilter={(status) => handleFilterChange('status', status)}
-      />
+      <DeadlineGroupSummaryCards groups={groups} />
 
-      <DeadlineSummaryCards deadlines={deadlines} />
+      <TaxDeadlinesFilters filters={{ ...filters, page: 1, page_size: 20 }} onChange={handleFilterChange} defaultStatus="pending" />
 
-      <TaxDeadlinesFilters filters={filters} onChange={handleFilterChange} />
+      {!filters.due_from && !filters.due_to && (
+        <p className="text-xs text-gray-400 -mt-2 px-1">
+          טווח ברירת מחדל: {formatDate(defaultWindow.from)} – {formatDate(defaultWindow.to)}
+        </p>
+      )}
 
-      <TaxDeadlinesTable
-        deadlines={deadlines}
+      <TaxDeadlinesGroupedTable
+        groups={groups}
         onComplete={isAdvisor ? handleComplete : undefined}
         onReopen={isAdvisor ? handleReopen : undefined}
         completingId={completingId}
@@ -121,16 +115,6 @@ export const TaxDeadlines: React.FC = () => {
         onDelete={isAdvisor ? handleDelete : undefined}
         deletingId={deletingId}
       />
-
-      {total > 0 && (
-        <PaginationCard
-          page={filters.page}
-          totalPages={totalPages}
-          total={total}
-          label="מועדים"
-          onPageChange={(page) => handleFilterChange('page', String(page))}
-        />
-      )}
 
       {isAdvisor && (
         <TaxDeadlineForm

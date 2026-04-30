@@ -17,9 +17,10 @@ import type { TaxDeadlineFilters } from '../types'
 interface TaxDeadlinesFiltersProps {
   filters: TaxDeadlineFilters
   onChange: (key: string, value: string) => void
+  defaultStatus?: string
 }
 
-export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersProps) => {
+export const TaxDeadlinesFilters = ({ filters, onChange, defaultStatus }: TaxDeadlinesFiltersProps) => {
   const [searchDraft, setSearchDraft] = useSearchDebounce(filters.client_name ?? '', (v) =>
     onChange('client_name', v),
   )
@@ -38,11 +39,11 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
       <div className="space-y-3">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
-            label="חיפוש לקוח"
+            label="חיפוש לקוח במועדים"
             type="text"
             value={searchDraft}
             onChange={(e) => setSearchDraft(e.target.value)}
-            placeholder="שם לקוח..."
+            placeholder="סנן קבוצות לפי שם לקוח..."
             startIcon={<Search className="h-4 w-4" />}
             endElement={
               searchDraft ? (
@@ -104,7 +105,7 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
                   onRemove: () => onChange('deadline_type', ''),
                 }
               : null,
-            filters.status
+            filters.status && filters.status !== defaultStatus
               ? {
                   key: 'status',
                   label: getTaxDeadlineStatusLabel(filters.status),
