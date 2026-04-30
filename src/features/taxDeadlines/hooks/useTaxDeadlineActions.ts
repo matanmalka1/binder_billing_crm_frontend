@@ -140,7 +140,7 @@ export const useTaxDeadlineActions = ({ invalidateAfterMutation }: UseTaxDeadlin
       id: editingDeadline.id,
       payload: {
         deadline_type: values.deadline_type || undefined,
-        due_date: values.due_date || undefined,
+        due_date: values.deadline_type === "vat" ? undefined : values.due_date || undefined,
         period: toDeadlinePayloadPeriod(values),
         tax_year: toDeadlinePayloadTaxYear(values),
         payment_amount: values.payment_amount ? values.payment_amount : null,

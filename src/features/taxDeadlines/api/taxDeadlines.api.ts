@@ -13,7 +13,7 @@ export const taxDeadlinesApi = {
   createTaxDeadline: async (payload: {
     client_record_id: number;
     deadline_type: string;
-    due_date: string;
+    due_date?: string;
     period?: string | null;
     tax_year?: number | null;
     payment_amount?: string | null;

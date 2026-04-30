@@ -10,7 +10,6 @@ export const GENERATE_TAX_DEADLINES_FORM_ID = "generate-tax-deadlines-form";
 export const REQUIRED_FIELD_MESSAGE = "שדה חובה";
 export const DUPLICATE_TAX_DEADLINE_MESSAGE = "קיים כבר מועד פעיל לאותו לקוח, סוג ותקופה";
 
-export const VAT_FILING_DUE_DAY = 19;
 export const CLIENT_DEADLINES_PAGE_SIZE = 100;
 
 export const INITIAL_TIMELINE_FILTERS: TimelineFilters = {

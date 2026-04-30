@@ -21,7 +21,7 @@ import type {
   EditTaxDeadlineForm,
   TaxDeadlineFormValues,
 } from "../types";
-import { computeVatDueDate, getCurrentTaxYear } from "../utils";
+import { getCurrentTaxYear } from "../utils";
 import type { VatType } from "@/features/clients";
 
 type SharedTaxDeadlineForm = UseFormReturn<CreateTaxDeadlineForm> | UseFormReturn<EditTaxDeadlineForm>;
@@ -53,15 +53,6 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
   const isAutoVatDueDate = deadlineType === "vat";
 
   useEffect(() => {
-    if (deadlineType !== "vat") return;
-    const dueDate = computeVatDueDate(period, vatType);
-    typedForm.setValue("due_date", dueDate, {
-      shouldDirty: true,
-      shouldValidate: shouldValidateDerivedFields,
-    });
-  }, [deadlineType, period, shouldValidateDerivedFields, typedForm, vatType]);
-
-  useEffect(() => {
     if (deadlineType !== "annual_report" || period) return;
     typedForm.setValue("period", String(getCurrentTaxYear()), {
       shouldDirty: false,
@@ -81,10 +72,10 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
       <Controller
         name="due_date"
         control={control}
-        rules={{ required: REQUIRED_FIELD_MESSAGE }}
+        rules={{ required: isAutoVatDueDate ? false : REQUIRED_FIELD_MESSAGE }}
         render={({ field }) => (
           <DatePicker
-            label="תאריך מועד *"
+            label={isAutoVatDueDate ? "תאריך מועד (יחושב אוטומטית)" : "תאריך מועד *"}
             error={errors.due_date?.message}
             value={field.value}
             onChange={field.onChange}

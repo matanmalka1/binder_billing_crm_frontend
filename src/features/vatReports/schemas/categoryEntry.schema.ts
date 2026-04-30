@@ -15,7 +15,6 @@ export const amountField = z
 
 export const categoryRowSchema = z.object({
   net_amount: amountField,
-  vat_amount: amountField,
 });
 
 export type CategoryRowValues = z.infer<typeof categoryRowSchema>;
@@ -25,7 +24,7 @@ export type CategoryEntryFormValues = {
   categories: Record<ExpenseCategoryKey, CategoryRowValues>;
 };
 
-const emptyRow = (): CategoryRowValues => ({ net_amount: "", vat_amount: "" });
+const emptyRow = (): CategoryRowValues => ({ net_amount: "" });
 
 export const categoryEntryDefaultValues = (): CategoryEntryFormValues => ({
   income: emptyRow(),
@@ -43,30 +42,26 @@ export const toCategoryInvoicePayloads = (
   const ts = Date.now();
 
   const incomeNet = Number(values.income.net_amount);
-  const incomeVat = Number(values.income.vat_amount);
-  if (incomeNet > 0 || incomeVat > 0) {
+  if (incomeNet > 0) {
     payloads.push({
       invoice_type: "income",
       invoice_number: `${period}-income-${ts}`,
       invoice_date: date,
       counterparty_name: "הכנסות",
       net_amount: incomeNet.toFixed(2),
-      vat_amount: incomeVat.toFixed(2),
     });
   }
 
   for (const cat of EXPENSE_CATEGORIES) {
     const row = values.categories[cat];
     const net = Number(row.net_amount);
-    const vat = Number(row.vat_amount);
-    if (net > 0 || vat > 0) {
+    if (net > 0) {
       payloads.push({
         invoice_type: "expense",
         invoice_number: `${period}-${cat}-${ts}`,
         invoice_date: date,
         counterparty_name: CATEGORY_LABELS[cat],
         net_amount: net.toFixed(2),
-        vat_amount: vat.toFixed(2),
         expense_category: cat,
       });
     }

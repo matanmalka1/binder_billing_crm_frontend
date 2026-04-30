@@ -3,14 +3,12 @@ import type { TaxDeadlineResponse } from "./api";
 import {
   HEBREW_MONTHS,
   HEBREW_SHORT_MONTHS,
-  VAT_FILING_DUE_DAY,
 } from "./constants";
 import type {
   CreateTaxDeadlineForm,
   EditTaxDeadlineForm,
   TimelineFilters,
 } from "./types";
-import type { VatType } from "@/features/clients";
 
 type DeadlinePeriodFields = Pick<TaxDeadlineResponse, "deadline_type" | "period" | "tax_year">;
 
@@ -27,22 +25,6 @@ export const toDeadlinePayloadPeriod = (
 export const toDeadlinePayloadTaxYear = (
   values: Pick<CreateTaxDeadlineForm | EditTaxDeadlineForm, "deadline_type" | "period">,
 ) => (isAnnualReportDeadline(values.deadline_type) ? getSelectedTaxYear(values.period) : null);
-
-export const computeVatDueDate = (period: string, vatType: VatType | null) => {
-  if (!period || vatType === "exempt") return "";
-
-  const [yearPart, monthPart] = period.split("-");
-  const year = Number(yearPart);
-  const month = Number(monthPart);
-  if (!Number.isInteger(year) || !Number.isInteger(month)) return "";
-
-  const filingMonthOffset = vatType === "bimonthly" ? 2 : 1;
-  const dueMonthIndex = month - 1 + filingMonthOffset;
-  const dueYear = year + Math.floor(dueMonthIndex / 12);
-  const dueMonth = (dueMonthIndex % 12) + 1;
-
-  return `${dueYear}-${String(dueMonth).padStart(2, "0")}-${String(VAT_FILING_DUE_DAY).padStart(2, "0")}`;
-};
 
 export const getDeadlineDaysLabel = (
   dueDate: string,

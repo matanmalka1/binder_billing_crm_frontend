@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { CreateVatInvoicePayload, UpdateVatInvoicePayload } from "../api";
-import { ISRAEL_VAT_RATE, VAT_RATE_TYPES, DOCUMENT_TYPES } from "../constants";
+import { VAT_RATE_TYPES, DOCUMENT_TYPES } from "../constants";
 
 const netAmountSchema = z
   .string()
@@ -67,14 +67,8 @@ const inferCounterpartyIdType = (
   return counterpartyId ? "il_business" : undefined;
 };
 
-const calcVatAmount = (netAmount: string, rateType?: string): string => {
-  if (rateType === "exempt" || rateType === "zero_rate") return "0.00";
-  return (Number(netAmount) * ISRAEL_VAT_RATE).toFixed(2);
-};
-
 const buildInvoicePayloadBase = (values: VatInvoiceEditValues) => ({
   net_amount: values.net_amount,
-  vat_amount: calcVatAmount(values.net_amount, values.rate_type),
   expense_category: values.expense_category || null,
   rate_type: values.rate_type || undefined,
   document_type: values.document_type || null,

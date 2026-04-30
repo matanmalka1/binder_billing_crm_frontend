@@ -72,7 +72,7 @@ export const useTaxDeadlines = () => {
     mutationFn: (payload: {
       client_record_id: number;
       deadline_type: string;
-      due_date: string;
+      due_date?: string;
       period?: string | null;
       tax_year?: number | null;
       payment_amount?: string | null;
@@ -127,7 +127,7 @@ export const useTaxDeadlines = () => {
     await createMutation.mutateAsync({
       client_record_id: Number(values.client_id),
       deadline_type: values.deadline_type,
-      due_date: values.due_date,
+      due_date: values.deadline_type === "vat" ? undefined : values.due_date,
       period: toDeadlinePayloadPeriod(values),
       tax_year: toDeadlinePayloadTaxYear(values),
       payment_amount: values.payment_amount ? values.payment_amount : null,

@@ -185,9 +185,6 @@ export const DEFAULT_RATE_TYPE = "standard" as const;
 export const VAT_EXCEPTIONAL_INVOICE_THRESHOLD = 25_000;
 export const VAT_EXCEPTIONAL_INVOICE_TOOLTIP = `חשבונית מעל ${VAT_EXCEPTIONAL_INVOICE_THRESHOLD.toLocaleString("en-US")} ₪ — נדרש דיווח מיוחד`;
 
-export const ISRAEL_VAT_RATE = 0.18;
-export const ISRAEL_VAT_RATE_PERCENT = 18;
-
 // Any field backed by a backend enum MUST use a Zod enum in the frontend schema.
 export const VAT_RATE_TYPES = ["standard", "exempt", "zero_rate"] as const;
 export const VAT_RATE_TYPE_OPTIONS = VAT_RATE_TYPES.map((rateType) => ({
