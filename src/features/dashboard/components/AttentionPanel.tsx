@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, CheckCircle2, ChevronDown, ShieldAlert } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, ChevronDown, ChevronUp, ShieldAlert } from 'lucide-react'
 import { cn } from '@/utils/utils'
 import type { ActionCommand } from '@/lib/actions/types'
 import type { PanelItem, PanelSection, AttentionTone } from '../attentionPanelSections'
 import { DashboardEmptyState, DashboardPanel, DashboardSectionHeader } from './DashboardPrimitives'
 
-const COLLAPSED_PREVIEW = 5
+const ATTENTION_BATCH_SIZE = 5
 
 const toneTab: Record<AttentionTone, string> = {
   amber: 'bg-amber-50 text-amber-700 border-amber-200',
@@ -157,30 +157,39 @@ export const AttentionPanel = ({
   activeActionKey = null,
   onAction = () => {},
 }: AttentionPanelProps) => {
-  const filledSections = sections.filter((s) => s.items.length > 0)
+  const filledSections = useMemo(() => sections.filter((s) => s.items.length > 0), [sections])
+  const sectionEntries = useMemo(
+    () =>
+      filledSections.map((section, index) => ({
+        section,
+        stateKey: `${section.key}:${index}`,
+      })),
+    [filledSections],
+  )
   const totalItems = filledSections.reduce((n, s) => n + s.items.length, 0)
 
-  const [activeTab, setActiveTab] = useState(() => filledSections[0]?.key ?? '')
-  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
+  const [activeTab, setActiveTab] = useState(() => sectionEntries[0]?.stateKey ?? '')
+  const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>({})
 
-  const activeSection = filledSections.find((s) => s.key === activeTab)
+  const activeEntry = sectionEntries.find((entry) => entry.stateKey === activeTab)
 
   useEffect(() => {
-    if (filledSections.length === 0) {
+    if (sectionEntries.length === 0) {
       setActiveTab('')
       return
     }
-    if (!filledSections.some((s) => s.key === activeTab)) {
-      setActiveTab(filledSections[0].key)
+    if (!sectionEntries.some((entry) => entry.stateKey === activeTab)) {
+      setActiveTab(sectionEntries[0].stateKey)
     }
-  }, [activeTab, filledSections])
+  }, [activeTab, sectionEntries])
 
-  const toggleGroup = (key: string) =>
-    setExpandedGroups((prev) => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
+  const toggleGroup = (section: PanelSection, stateKey: string) =>
+    setVisibleCounts((prev) => {
+      const current = prev[stateKey] ?? ATTENTION_BATCH_SIZE
+      const nextCount =
+        current >= section.items.length ? ATTENTION_BATCH_SIZE : current + ATTENTION_BATCH_SIZE
+
+      return { ...prev, [stateKey]: nextCount }
     })
 
   return (
@@ -209,13 +218,13 @@ export const AttentionPanel = ({
       ) : (
         <>
           <div className="flex gap-1 overflow-x-auto border-b border-gray-100 bg-gray-50/60 px-4 py-2.5">
-            {filledSections.map((section) => {
-              const isActive = activeTab === section.key
+            {sectionEntries.map(({ section, stateKey }) => {
+              const isActive = activeTab === stateKey
               const Icon = section.icon
               return (
                 <button
-                  key={section.key}
-                  onClick={() => setActiveTab(section.key)}
+                  key={stateKey}
+                  onClick={() => setActiveTab(stateKey)}
                   className={cn(
                     'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
                     isActive
@@ -245,13 +254,14 @@ export const AttentionPanel = ({
             })}
           </div>
 
-          {activeSection &&
+          {activeEntry &&
             (() => {
-              const expanded = expandedGroups.has(activeSection.key)
-              const visibleItems = expanded
-                ? activeSection.items
-                : activeSection.items.slice(0, COLLAPSED_PREVIEW)
-              const hiddenCount = activeSection.items.length - COLLAPSED_PREVIEW
+              const { section: activeSection, stateKey } = activeEntry
+              const visibleCount = visibleCounts[stateKey] ?? ATTENTION_BATCH_SIZE
+              const visibleItems = activeSection.items.slice(0, visibleCount)
+              const remainingCount = activeSection.items.length - visibleItems.length
+              const canCollapse = visibleItems.length > ATTENTION_BATCH_SIZE
+              const hasMore = remainingCount > 0
 
               return (
                 <>
@@ -267,29 +277,37 @@ export const AttentionPanel = ({
                     ))}
                   </div>
 
-                  {hiddenCount > 0 && (
-                    <button
-                      onClick={() => toggleGroup(activeSection.key)}
-                      className="flex w-full items-center justify-center gap-1.5 border-t border-gray-100 py-2.5 text-xs font-semibold text-gray-400 transition-colors hover:bg-slate-50 hover:text-gray-600"
-                    >
-                      <ChevronDown
-                        className={cn(
-                          'h-3.5 w-3.5 transition-transform duration-200',
-                          expanded && 'rotate-180',
-                        )}
-                      />
-                      {expanded ? 'הצג פחות' : `${hiddenCount} פריטים נוספים`}
-                    </button>
-                  )}
+                  {(hasMore || canCollapse) && (
+                    <div className="flex border-t border-gray-100">
+                      {canCollapse && (
+                        <button
+                          onClick={() =>
+                            setVisibleCounts((prev) => ({
+                              ...prev,
+                              [stateKey]: ATTENTION_BATCH_SIZE,
+                            }))
+                          }
+                          className={cn(
+                            'flex flex-1 items-center justify-center gap-1.5 py-2.5 text-xs font-semibold text-gray-400 transition-colors hover:bg-slate-50 hover:text-gray-600',
+                            hasMore && 'border-l border-gray-100',
+                          )}
+                        >
+                          <ChevronUp className="h-3.5 w-3.5" />
+                          הצג פחות
+                        </button>
+                      )}
 
-                  <div className="border-t border-gray-100 px-4 py-2.5">
-                    <Link
-                      to={activeSection.viewAllHref}
-                      className="text-xs font-semibold text-slate-600 transition-colors hover:text-blue-600"
-                    >
-                      הצג הכל ←
-                    </Link>
-                  </div>
+                      {hasMore && (
+                        <button
+                          onClick={() => toggleGroup(activeSection, stateKey)}
+                          className="flex flex-1 items-center justify-center gap-1.5 py-2.5 text-xs font-semibold text-gray-400 transition-colors hover:bg-slate-50 hover:text-gray-600"
+                        >
+                          <ChevronDown className="h-3.5 w-3.5" />
+                          {`הצג עוד ${Math.min(ATTENTION_BATCH_SIZE, remainingCount)}`}
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </>
               )
             })()}
