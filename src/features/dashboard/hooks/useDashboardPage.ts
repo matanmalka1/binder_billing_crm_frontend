@@ -7,6 +7,7 @@ import { getErrorMessage, getHttpStatus } from '../../../utils/utils'
 import type { ActionCommand } from '../../../lib/actions/types'
 import { useRole } from '../../../hooks/useRole'
 import { useActionRunner } from '@/features/actions'
+import { useUnifiedTasks } from '@/features/tasks'
 import type { StatItem } from '../components/DashboardStatsGrid'
 import { DASHBOARD_COPY } from '../dashboardConstants'
 import { buildDashboardStats } from '../dashboardStats'
@@ -39,6 +40,7 @@ export const useDashboardPage = () => {
     queryKey: isAdvisor ? dashboardQK.overview : dashboardQK.summary,
     queryFn: isAdvisor ? dashboardApi.getOverview : dashboardApi.getSummary,
   })
+  const unifiedTasksQuery = useUnifiedTasks(undefined, hasRole && isAdvisor)
 
   const {
     activeActionKey: activeQuickAction,
@@ -161,6 +163,7 @@ export const useDashboardPage = () => {
     pendingQuickAction,
     quickActions,
     advisorToday,
+    unifiedItems: unifiedTasksQuery.data ?? [],
     emptyState,
     attentionEmptyChecks,
     cancelPendingAction,

@@ -31,45 +31,11 @@ export const buildReminderPayload = (
   }
 
   switch (values.reminder_type) {
-    case 'tax_deadline_approaching':
-      return {
-        ...scheduling,
-        reminder_type: values.reminder_type,
-        client_record_id: clientRecordId,
-        tax_deadline_id: Number(values.tax_deadline_id),
-      }
-    case 'vat_filing':
-      return {
-        ...scheduling,
-        reminder_type: values.reminder_type,
-        tax_deadline_id: Number(values.tax_deadline_id),
-      }
-    case 'annual_report_deadline':
-      return {
-        ...scheduling,
-        reminder_type: values.reminder_type,
-        annual_report_id: Number(values.annual_report_id),
-      }
     case 'binder_idle':
       return {
         ...scheduling,
         reminder_type: values.reminder_type,
         binder_id: Number(values.binder_id),
-      }
-    case 'unpaid_charge':
-      return {
-        ...scheduling,
-        reminder_type: values.reminder_type,
-        client_record_id: clientRecordId,
-        business_id: businessId as number,
-        charge_id: Number(values.charge_id),
-      }
-    case 'advance_payment_due':
-      return {
-        ...scheduling,
-        reminder_type: values.reminder_type,
-        business_id: businessId as number,
-        advance_payment_id: Number(values.advance_payment_id),
       }
     case 'document_missing':
       return {

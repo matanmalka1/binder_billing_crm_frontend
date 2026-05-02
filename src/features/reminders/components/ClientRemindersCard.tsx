@@ -31,10 +31,6 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
     selectedReminder,
     setSelectedReminder,
     clientBinders,
-    clientCharges,
-    clientTaxDeadlines,
-    clientAnnualReports,
-    clientAdvancePayments,
     clientBusinesses,
   } = useReminders({ clientId, clientName })
 
@@ -76,10 +72,6 @@ export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
         }}
         onSubmit={onSubmit}
         clientBinders={clientBinders}
-        clientCharges={clientCharges}
-        clientTaxDeadlines={clientTaxDeadlines}
-        clientAnnualReports={clientAnnualReports}
-        clientAdvancePayments={clientAdvancePayments}
         clientBusinesses={clientBusinesses}
       />
 

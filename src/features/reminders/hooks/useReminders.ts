@@ -18,7 +18,6 @@ import {
   ACTIVE_REMINDER_STATUSES,
   ACTIVE_REMINDERS_PAGE_SIZE,
   DEFAULT_REMINDER_STATUS_FILTER,
-  DEFAULT_REMINDER_SOURCE_FILTER,
   DUPLICATE_REMINDER_MESSAGE,
   REMINDER_DUE_READY_FILTER,
   REMINDERS_PAGE_SIZE,
@@ -74,12 +73,10 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
       page,
       pageSize,
       dueFilter,
-      DEFAULT_REMINDER_SOURCE_FILTER,
     ),
     queryFn: () =>
       remindersApi.list({
         ...(clientId ? { client_record_id: clientId } : {}),
-        source: DEFAULT_REMINDER_SOURCE_FILTER,
         ...(statusFilter
           ? { status: statusFilter as import('../api/contracts').ReminderStatus }
           : {}),
@@ -91,15 +88,10 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   })
 
   const pendingCountQuery = useQuery({
-    queryKey: remindersQK.count(
-      clientId,
-      DEFAULT_REMINDER_STATUS_FILTER,
-      DEFAULT_REMINDER_SOURCE_FILTER,
-    ),
+    queryKey: remindersQK.count(clientId, DEFAULT_REMINDER_STATUS_FILTER),
     queryFn: () =>
       remindersApi.list({
         ...(clientId ? { client_record_id: clientId } : {}),
-        source: DEFAULT_REMINDER_SOURCE_FILTER,
         status: DEFAULT_REMINDER_STATUS_FILTER,
         page_size: 1,
       }),
@@ -107,11 +99,10 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   })
 
   const sentCountQuery = useQuery({
-    queryKey: remindersQK.count(clientId, 'sent', DEFAULT_REMINDER_SOURCE_FILTER),
+    queryKey: remindersQK.count(clientId, 'sent'),
     queryFn: () =>
       remindersApi.list({
         ...(clientId ? { client_record_id: clientId } : {}),
-        source: DEFAULT_REMINDER_SOURCE_FILTER,
         status: 'sent',
         page_size: 1,
       }),
@@ -134,12 +125,10 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
         undefined,
         undefined,
         undefined,
-        DEFAULT_REMINDER_SOURCE_FILTER,
       ),
       queryFn: () =>
         remindersApi.list({
           client_record_id: activeClientId,
-          source: DEFAULT_REMINDER_SOURCE_FILTER,
           status,
           page_size: ACTIVE_REMINDERS_PAGE_SIZE,
         }),

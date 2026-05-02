@@ -1,0 +1,25 @@
+import type { TaskType, TaskUrgency } from './api/contracts'
+
+export const taskTypeValues = [
+  'tax_deadline',
+  'vat_filing',
+  'annual_report',
+  'advance_payment',
+  'unpaid_charge',
+] as const
+
+export const taskUrgencyValues = ['overdue', 'approaching', 'upcoming'] as const
+
+export const taskTypeLabels: Record<TaskType, string> = {
+  tax_deadline: 'מועד מס',
+  vat_filing: 'דוח מע"מ',
+  annual_report: 'דוח שנתי',
+  advance_payment: 'מקדמה',
+  unpaid_charge: 'חיוב לא שולם',
+}
+
+export const taskUrgencyLabels: Record<TaskUrgency, string> = {
+  overdue: 'באיחור',
+  approaching: 'מתקרב',
+  upcoming: 'קרוב',
+}

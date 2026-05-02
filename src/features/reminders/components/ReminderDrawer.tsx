@@ -63,23 +63,9 @@ export const ReminderDrawer: React.FC<ReminderDrawerProps> = ({ reminder, onClos
           )}
         </DrawerSection>
 
-        {(reminder.binder_id ??
-          reminder.charge_id ??
-          reminder.tax_deadline_id ??
-          reminder.annual_report_id ??
-          reminder.advance_payment_id) && (
+        {reminder.binder_id && (
           <DrawerSection title="קישור לרשומה">
             {reminder.binder_id && <DrawerField label="קלסר" value={`#${reminder.binder_id}`} />}
-            {reminder.charge_id && <DrawerField label="חשבונית" value={`#${reminder.charge_id}`} />}
-            {reminder.tax_deadline_id && (
-              <DrawerField label="מועד מס" value={`#${reminder.tax_deadline_id}`} />
-            )}
-            {reminder.annual_report_id && (
-              <DrawerField label="דוח שנתי" value={`#${reminder.annual_report_id}`} />
-            )}
-            {reminder.advance_payment_id && (
-              <DrawerField label="מקדמה" value={`#${reminder.advance_payment_id}`} />
-            )}
           </DrawerSection>
         )}
       </>

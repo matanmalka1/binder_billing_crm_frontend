@@ -24,11 +24,7 @@ const baseFields = {
 
 // FK id fields that are irrelevant for a given type are present but optional/empty
 const unusedIds = {
-  tax_deadline_id: z.string().optional(),
   binder_id: z.string().optional(),
-  charge_id: z.string().optional(),
-  annual_report_id: z.string().optional(),
-  advance_payment_id: z.string().optional(),
 }
 
 const buildLinkedReminderSchema = <
@@ -48,12 +44,7 @@ const buildLinkedReminderSchema = <
   })
 
 export const createReminderSchema = z.discriminatedUnion('reminder_type', [
-  buildLinkedReminderSchema('tax_deadline_approaching', 'tax_deadline_id', 'מזהה מועד מס'),
-  buildLinkedReminderSchema('vat_filing', 'tax_deadline_id', 'מזהה מועד מע"מ'),
-  buildLinkedReminderSchema('annual_report_deadline', 'annual_report_id', 'מזהה דוח שנתי'),
-  buildLinkedReminderSchema('advance_payment_due', 'advance_payment_id', 'מזהה מקדמה'),
   buildLinkedReminderSchema('binder_idle', 'binder_id', 'מזהה תיק'),
-  buildLinkedReminderSchema('unpaid_charge', 'charge_id', 'מזהה חשבונית'),
   z.object({
     ...baseFields,
     reminder_type: z.literal('document_missing'),
@@ -77,9 +68,5 @@ export const createReminderDefaultValues = {
   target_date: '',
   days_before: DEFAULT_REMINDER_DAYS_BEFORE,
   message: '',
-  tax_deadline_id: '',
   binder_id: '',
-  charge_id: '',
-  annual_report_id: '',
-  advance_payment_id: '',
 }

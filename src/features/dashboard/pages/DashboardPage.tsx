@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Bell, CalendarClock } from 'lucide-react'
+import { CalendarClock } from 'lucide-react'
 import { Alert } from '@/components/ui/overlays/Alert'
 import { ConfirmDialog } from '@/components/ui/overlays/ConfirmDialog'
 import { SignatureRequestsDashboardPanel } from '@/features/signatureRequests'
@@ -17,6 +17,25 @@ import {
   quickActionsToPanelSections,
   type PanelSection,
 } from '../attentionPanelSections'
+import type { UnifiedItem } from '@/features/tasks'
+
+const getUnifiedItemHref = (item: UnifiedItem) => {
+  if (item.item_type === 'reminder') return '/reminders'
+
+  switch (item.source_type) {
+    case 'vat_filing':
+      return '/vat-reports'
+    case 'annual_report':
+      return '/annual-reports'
+    case 'advance_payment':
+      return '/advance-payments'
+    case 'unpaid_charge':
+      return '/charges'
+    case 'tax_deadline':
+    default:
+      return '/tax/deadlines'
+  }
+}
 
 const StatsSkeleton = () => (
   <div className="grid animate-pulse grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -38,10 +57,10 @@ export const DashboardPage: React.FC = () => {
     cancelPendingAction,
     pendingQuickAction,
     quickActions,
-    advisorToday,
     emptyState,
     attentionEmptyChecks,
     stats,
+    unifiedItems,
   } = useDashboardPage()
 
   const attentionSections = useMemo<PanelSection[]>(() => {
@@ -51,35 +70,21 @@ export const DashboardPage: React.FC = () => {
     return [
       ...base,
       {
-        key: 'deadlines',
+        key: 'unified_tasks',
         title: 'מה צריך לעשות עכשיו',
         icon: CalendarClock,
         tone: 'amber',
-        viewAllHref: '/tax/deadlines',
-        items: (advisorToday?.deadline_items ?? []).map((item) => ({
-          id: `deadline-${item.id}`,
-          label: item.label,
-          sublabel: item.sublabel ?? undefined,
-          href: item.href ?? '/tax/deadlines',
-          meta: item.description ? { description: item.description } : undefined,
-        })),
-      },
-      {
-        key: 'open_reminders',
-        title: 'תזכורות ידניות',
-        icon: Bell,
-        tone: 'blue',
         viewAllHref: '/reminders',
-        items: (advisorToday?.reminder_items ?? []).map((item) => ({
-          id: `reminder-${item.id}`,
+        items: unifiedItems.map((item) => ({
+          id: `${item.item_type}-${item.source_type}-${item.source_id}`,
           label: item.label,
-          sublabel: item.sublabel ?? undefined,
-          href: item.href ?? '/reminders',
+          sublabel: item.due_date,
+          href: getUnifiedItemHref(item),
         })),
       },
       ...(quickActions?.length ? quickActionsToPanelSections(quickActions) : []),
     ]
-  }, [attentionItems, advisorToday, quickActions, isAdvisorView])
+  }, [attentionItems, quickActions, isAdvisorView, unifiedItems])
 
   return (
     <DashboardSurface>

@@ -6,7 +6,6 @@ export const remindersQK = {
     page?: number,
     pageSize?: number,
     due?: string | null,
-    source?: string | null,
   ) =>
     [
       'reminders',
@@ -14,9 +13,8 @@ export const remindersQK = {
       clientId ?? 'all',
       status ?? 'pending',
       due ?? null,
-      source ?? 'all',
       { page, page_size: pageSize },
     ] as const,
-  count: (clientId?: number, status?: string, source?: string | null) =>
-    ['reminders', 'count', clientId ?? 'all', status ?? 'pending', source ?? 'all'] as const,
+  count: (clientId?: number, status?: string) =>
+    ['reminders', 'count', clientId ?? 'all', status ?? 'pending'] as const,
 } as const

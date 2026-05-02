@@ -13,10 +13,6 @@ import { DatePicker } from '../../../components/ui/inputs/DatePicker'
 import { Select } from '../../../components/ui/inputs/Select'
 import type { CreateReminderFormValues } from '../types'
 import type { BinderResponse } from '@/features/binders'
-import type { ChargeResponse } from '@/features/charges'
-import type { TaxDeadlineResponse } from '@/features/taxDeadlines'
-import type { AnnualReportFull } from '@/features/annualReports'
-import type { AdvancePaymentRow } from '@/features/advancedPayments'
 import type { BusinessResponse } from '@/features/clients'
 import { reminderTypeOptions } from '../types'
 import { ReminderLinkedFields } from './ReminderLinkedFields'
@@ -30,10 +26,6 @@ interface CreateReminderModalProps {
   fixedClientId?: number
   fixedClientName?: string
   clientBinders?: BinderResponse[]
-  clientCharges?: ChargeResponse[]
-  clientTaxDeadlines?: TaxDeadlineResponse[]
-  clientAnnualReports?: AnnualReportFull[]
-  clientAdvancePayments?: AdvancePaymentRow[]
   clientBusinesses?: BusinessResponse[]
 }
 
@@ -49,10 +41,6 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   fixedClientId,
   fixedClientName,
   clientBinders = [],
-  clientCharges = [],
-  clientTaxDeadlines = [],
-  clientAnnualReports = [],
-  clientAdvancePayments = [],
   clientBusinesses = [],
 }) => {
   const {
@@ -138,10 +126,6 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
         <ReminderLinkedFields
           form={form}
           clientBinders={clientBinders}
-          clientCharges={clientCharges}
-          clientTaxDeadlines={clientTaxDeadlines}
-          clientAnnualReports={clientAnnualReports}
-          clientAdvancePayments={clientAdvancePayments}
           clientBusinesses={clientBusinesses}
         />
 
