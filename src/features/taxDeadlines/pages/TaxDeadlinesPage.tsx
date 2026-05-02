@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { CalendarPlus, Plus } from 'lucide-react'
-import { formatDate } from '@/utils/utils'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { PageLoading } from '@/components/ui/layout/PageLoading'
 import { Alert } from '@/components/ui/overlays/Alert'
@@ -45,7 +44,7 @@ export const TaxDeadlines: React.FC = () => {
     setShowGenerateModal,
   } = useTaxDeadlines()
 
-  const { filters, groups, defaultWindow, isLoading, error, handleFilterChange } = useGroupedDeadlines()
+  const { filters, groups, isLoading, error, handleFilterChange } = useGroupedDeadlines()
 
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null)
 
@@ -97,12 +96,6 @@ export const TaxDeadlines: React.FC = () => {
       <DeadlineGroupSummaryCards groups={groups} />
 
       <TaxDeadlinesFilters filters={{ ...filters, page: 1, page_size: 20 }} onChange={handleFilterChange} defaultStatus="pending" />
-
-      {!filters.due_from && !filters.due_to && (
-        <p className="text-xs text-gray-400 -mt-2 px-1">
-          טווח ברירת מחדל: {formatDate(defaultWindow.from)} – {formatDate(defaultWindow.to)}
-        </p>
-      )}
 
       <TaxDeadlinesGroupedTable
         groups={groups}

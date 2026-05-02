@@ -43,7 +43,7 @@ export interface PanelSection {
   title: string
   icon: LucideIcon
   tone: AttentionTone
-  viewAllHref: string
+  viewAllHref?: string
   items: PanelItem[]
 }
 
@@ -69,11 +69,11 @@ const ATTENTION_SECTIONS: Array<{
 
 const KNOWN_ATTENTION_TYPES = new Set<AttentionItemType>(ATTENTION_SECTIONS.flatMap((s) => s.types))
 
-const getAttentionItemHref = (item: AttentionItem, fallback: string): string => {
+const getAttentionItemHref = (item: AttentionItem, fallback: string | undefined): string => {
   if (item.client_id && item.business_id)
     return `/clients/${item.client_id}/businesses/${item.business_id}`
   if (item.client_id) return `/clients/${item.client_id}`
-  return fallback
+  return fallback ?? '/'
 }
 
 const getChargeItemDescription = (item: AttentionItem): string | undefined => {

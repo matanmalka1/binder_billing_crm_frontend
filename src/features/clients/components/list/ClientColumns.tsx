@@ -84,7 +84,7 @@ export const buildClientColumns = ({
     }),
     dateColumn({
       key: 'created_at',
-      header: 'נוצר בתאריך',
+      header: 'נוצר',
       getValue: (client) => client.created_at,
     }),
     actionsColumn({

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useSearchParamFilters } from '../../../hooks/useSearchParamFilters'
 import { useRole } from '../../../hooks/useRole'
@@ -17,6 +17,16 @@ export const useGroupedDeadlines = () => {
     const end = new Date(today.getFullYear(), today.getMonth() + 3, today.getDate())
     const to = `${end.getFullYear()}-${String(end.getMonth() + 1).padStart(2, '0')}-${String(end.getDate()).padStart(2, '0')}`
     return { from, to }
+  }, [])
+
+  // Write default window to URL on mount so the view is bookmarkable
+  useEffect(() => {
+    if (searchParams.get('due_from') || searchParams.get('due_to')) return
+    const next = new URLSearchParams(searchParams)
+    next.set('due_from', defaultWindow.from)
+    next.set('due_to', defaultWindow.to)
+    setSearchParams(next, { replace: true })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const filters: Omit<TaxDeadlineFilters, 'page' | 'page_size'> = useMemo(
@@ -56,7 +66,6 @@ export const useGroupedDeadlines = () => {
 
   return {
     filters,
-    defaultWindow,
     groups: groupedQuery.data?.groups ?? [],
     totalGroups: groupedQuery.data?.total_groups ?? 0,
     totalClientDeadlines: groupedQuery.data?.total_client_deadlines ?? 0,

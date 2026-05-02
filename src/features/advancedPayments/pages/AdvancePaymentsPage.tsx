@@ -10,9 +10,8 @@ import {
   fmtCurrency,
 } from '@/features/advancedPayments'
 import { formatClientOfficeId } from '@/utils/utils'
-import { Alert } from '@/components/ui/overlays/Alert'
-import { DataTable, type Column } from '@/components/ui/table/DataTable'
-import { PaginationCard } from '@/components/ui/table/PaginationCard'
+import { PaginatedDataTable } from '@/components/ui/table/PaginatedDataTable'
+import { type Column } from '@/components/ui/table/DataTable'
 import { formatDate, parsePositiveInt } from '@/utils/utils'
 import { AdvancePaymentStatusBadge } from '../components/AdvancePaymentStatusBadge'
 import { getAdvancePaymentMonthLabel } from '../utils'
@@ -90,6 +89,7 @@ const columns: Column<AdvancePaymentOverviewRow>[] = [
 export const AdvancePayments: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+  const PAGE_SIZE = 20
 
   const year = parsePositiveInt(searchParams.get('year'), getYear(new Date()))
   const month = parsePositiveInt(searchParams.get('month'), 0)
@@ -134,30 +134,25 @@ export const AdvancePayments: React.FC = () => {
         onParamChange={setParam}
       />
 
-      {error && <Alert variant="error" message="שגיאה בטעינת מקדמות" />}
-
-      {!isLoading && (
-        <p className="text-sm text-gray-500">{total.toLocaleString('he-IL')} רשומות</p>
-      )}
-
-      <DataTable
+      <PaginatedDataTable
         columns={columns}
         data={rows}
         getRowKey={(row) => row.id}
         isLoading={isLoading}
-        onRowClick={(row) => navigate(`/clients/${row.client_record_id}/advance-payments`)}
+        error={error ? 'שגיאה בטעינת מקדמות' : undefined}
+        onRowClick={(row) => {
+          const params = new URLSearchParams()
+          if (month) params.set('month', String(month))
+          navigate(`/clients/${row.client_record_id}/advance-payments?${params.toString()}`)
+        }}
         emptyMessage="אין מקדמות לפי הסינון הנבחר"
+        page={page}
+        pageSize={PAGE_SIZE}
+        total={total}
+        label="מקדמות"
+        onPageChange={(p) => setParam('page', String(p))}
+        summary={!isLoading && <p className="text-sm text-gray-500">{total.toLocaleString('he-IL')} רשומות</p>}
       />
-
-      {totalPages > 1 && (
-        <PaginationCard
-          page={page}
-          totalPages={totalPages}
-          total={total}
-          label="מקדמות"
-          onPageChange={(p) => setParam('page', String(p))}
-        />
-      )}
     </div>
   )
 }

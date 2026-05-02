@@ -1,8 +1,9 @@
-import { Plus } from 'lucide-react'
+import { Plus, FileText } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { PageLoading } from '@/components/ui/layout/PageLoading'
 import { Alert } from '@/components/ui/overlays/Alert'
 import { Button } from '@/components/ui/primitives/Button'
+import { StateCard } from '@/components/ui/feedback/StateCard'
 import {
   AnnualReportsFiltersBar,
   CreateReportModal,
@@ -74,10 +75,13 @@ export const AnnualReportsPage: React.FC = () => {
       )}
 
       {!season.isLoading && !season.error && !season.summary && (
-        <div className="rounded-xl border border-dashed border-gray-300 py-16 text-center text-gray-500">
-          <p className="text-lg font-medium">עדיין אין דוחות שנתיים לשנת המס {taxYear}</p>
-          <p className="mt-1 text-sm">{`לחץ על "דוח שנתי ${taxYear}" כדי להתחיל`}</p>
-        </div>
+        <StateCard
+          icon={FileText}
+          variant="illustration"
+          title={`עדיין אין דוחות שנתיים לשנת המס ${taxYearLabel}`}
+          message={taxYear ? `לחץ על "דוח שנתי ${taxYear}" כדי להתחיל` : 'בחר שנת מס כדי להתחיל'}
+          action={taxYear ? { label: `דוח שנתי ${taxYear}`, onClick: openCreate } : undefined}
+        />
       )}
 
       <CreateReportModal open={showCreate} onClose={closeCreate} taxYear={taxYear} />

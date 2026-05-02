@@ -74,7 +74,6 @@ export const DashboardPage: React.FC = () => {
         title: 'מה צריך לעשות עכשיו',
         icon: CalendarClock,
         tone: 'amber',
-        viewAllHref: '/reminders',
         items: unifiedItems.map((item) => ({
           id: `${item.item_type}-${item.source_type}-${item.source_id}`,
           label: item.label,

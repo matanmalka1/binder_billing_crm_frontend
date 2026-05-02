@@ -76,14 +76,13 @@ export const Clients: React.FC = () => {
   useEffect(() => {
     if (searchParams.get('create') !== '1' || !can.createClients) return
     setShowCreateModal(true)
-  }, [can.createClients, searchParams])
-
-  const closeCreateModal = () => {
-    setShowCreateModal(false)
-    if (searchParams.get('create') !== '1') return
     const nextParams = new URLSearchParams(searchParams)
     nextParams.delete('create')
     navigate({ search: nextParams.toString() }, { replace: true })
+  }, [can.createClients, searchParams, navigate])
+
+  const closeCreateModal = () => {
+    setShowCreateModal(false)
   }
 
   return (

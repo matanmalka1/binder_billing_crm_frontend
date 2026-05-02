@@ -48,14 +48,13 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { to: '/tax/vat', label: 'מע"מ', icon: ClipboardList },
       { to: '/tax/advance-payments', label: 'מקדמות', icon: CalendarDays },
-      { to: '/tax/reports', label: 'דוחות שנתיים', icon: TableProperties, end: true },
-      { to: '/tax/deadlines', label: 'מועדים', icon: FileSpreadsheet },
-      { to: '/tax/dashboard', label: 'לוח מסים', icon: FileSpreadsheet },
+      { to: '/tax/reports', label: 'דוחות שנתיים', icon: TableProperties },
+      { to: '/tax/deadlines', label: 'בקרת מועדים', icon: FileSpreadsheet },
     ],
   },
   {
     key: 'office-ops',
-    label: 'תפעול משרד',
+    label: 'מסמכים ותפעול',
     items: [
       { to: '/binders', label: 'קלסרים', icon: Briefcase },
       { to: '/reminders', label: 'תזכורות', icon: Bell },
@@ -70,8 +69,8 @@ export const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    key: 'reports',
-    label: 'דוחות ניהול',
+    key: 'analytics',
+    label: 'ניתוחים',
     items: [
       { to: '/reports/vat-compliance', label: 'ציות מע"מ', icon: ClipboardList },
       { to: '/reports/annual-status', label: 'סטטוס דוחות שנתיים', icon: TableProperties },

@@ -47,17 +47,15 @@ export const VatWorkItems: React.FC = () => {
   const deadlineCounts = useMemo(() => getVatDeadlineCounts(workItems), [workItems])
 
   useEffect(() => {
-    if (urlParams.get('create') === '1') {
-      setShowCreateModal(true)
-    }
-  }, [urlParams])
-
-  const closeCreateModal = () => {
-    setShowCreateModal(false)
     if (urlParams.get('create') !== '1') return
+    setShowCreateModal(true)
     const nextParams = new URLSearchParams(urlParams)
     nextParams.delete('create')
     navigate({ search: nextParams.toString() }, { replace: true })
+  }, [urlParams, navigate])
+
+  const closeCreateModal = () => {
+    setShowCreateModal(false)
   }
 
   const columns = useMemo(
