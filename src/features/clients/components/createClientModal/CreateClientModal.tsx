@@ -150,6 +150,7 @@ export const CreateClientModal: React.FC<Props> = ({
           isRestoreLoading={restoreLoading}
           clearErrors={clearErrors}
           impactData={impactQuery.data}
+          impactError={impactQuery.isError}
           impactLoading={impactQuery.isLoading}
           isCompany={isCompany}
           isExempt={isExempt}

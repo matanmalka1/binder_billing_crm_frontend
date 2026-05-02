@@ -85,6 +85,12 @@ export interface CreateClientPayload {
   business_opened_at?: ISODateString | null
 }
 
+export interface ClientImpactPreviewPayload {
+  entity_type: EntityType
+  vat_reporting_frequency?: VatType | null
+  advance_rate?: string | null
+}
+
 export interface CreationImpactItem {
   label: string
   count: number

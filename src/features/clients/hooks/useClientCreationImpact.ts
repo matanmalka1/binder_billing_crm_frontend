@@ -1,14 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
-import { clientsApi, clientsQK, type CreateClientPayload } from '../api'
-import type { ClientCreationImpactResponse } from '../api/contracts'
+import { clientsApi, clientsQK } from '../api'
+import type { ClientCreationImpactResponse, ClientImpactPreviewPayload } from '../api/contracts'
 
-type ImpactParams = Pick<CreateClientPayload, 'entity_type' | 'vat_reporting_frequency'> & {
-  advance_rate?: string | null
-}
+type ImpactParams = ClientImpactPreviewPayload
+
+const buildImpactPreviewPayload = (params: ImpactParams): ClientImpactPreviewPayload => ({
+  entity_type: params.entity_type,
+  ...(params.entity_type !== 'osek_patur'
+    ? { vat_reporting_frequency: params.vat_reporting_frequency }
+    : {}),
+  ...(params.advance_rate ? { advance_rate: params.advance_rate } : {}),
+})
 
 export const useClientCreationImpact = (
   params: Partial<ImpactParams> | null,
-): { data: ClientCreationImpactResponse | undefined; isLoading: boolean } => {
+): {
+  data: ClientCreationImpactResponse | undefined
+  isError: boolean
+  isLoading: boolean
+} => {
   const enabled = !!(
     params?.entity_type &&
     (params.entity_type === 'osek_patur' || params?.vat_reporting_frequency)
@@ -20,11 +30,13 @@ export const useClientCreationImpact = (
       params?.advance_rate ?? null,
     ],
     queryFn: () =>
-      clientsApi.previewImpact({
-        entity_type: params!.entity_type!,
-        vat_reporting_frequency: params!.vat_reporting_frequency!,
-        advance_rate: params!.advance_rate ?? null,
-      } as CreateClientPayload),
+      clientsApi.previewImpact(
+        buildImpactPreviewPayload({
+          entity_type: params!.entity_type!,
+          vat_reporting_frequency: params!.vat_reporting_frequency,
+          advance_rate: params!.advance_rate,
+        }),
+      ),
     enabled,
     staleTime: 60_000,
   })

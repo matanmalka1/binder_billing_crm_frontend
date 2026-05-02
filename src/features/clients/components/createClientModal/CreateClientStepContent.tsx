@@ -28,6 +28,7 @@ interface Props {
   isRestoreLoading: boolean
   clearErrors: UseFormClearErrors<CreateClientFormValues>
   impactData?: ClientCreationImpactResponse
+  impactError: boolean
   impactLoading: boolean
   isCompany: boolean
   isExempt: boolean
@@ -50,6 +51,7 @@ export const CreateClientStepContent: React.FC<Props> = ({
   isRestoreLoading,
   clearErrors,
   impactData,
+  impactError,
   impactLoading,
   isCompany,
   isExempt,
@@ -96,6 +98,7 @@ export const CreateClientStepContent: React.FC<Props> = ({
       disabled={disabled}
       errors={errors}
       impactData={impactData}
+      impactError={impactError}
       impactLoading={impactLoading}
       isCompany={isCompany}
       isExempt={isExempt}

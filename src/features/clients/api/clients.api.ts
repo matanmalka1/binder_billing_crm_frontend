@@ -12,6 +12,7 @@ import type {
   BusinessStatusCardResponse,
   CreateClientResponse,
   CreateClientPayload,
+  ClientImpactPreviewPayload,
   UpdateClientPayload,
   CreateBusinessPayload,
   UpdateBusinessPayload,
@@ -120,16 +121,13 @@ export const clientsApi = {
     return response.data
   },
 
-  previewImpact: async (payload: CreateClientPayload): Promise<ClientCreationImpactResponse> => {
-    const { business_name, business_opened_at, ...clientPayload } = payload
+  previewImpact: async (
+    payload: ClientImpactPreviewPayload,
+  ): Promise<ClientCreationImpactResponse> => {
     const response = await api.post<ClientCreationImpactResponse>(
       CLIENT_ENDPOINTS.clientsPreviewImpact,
       {
-        client: clientPayload,
-        business: {
-          business_name,
-          opened_at: business_opened_at ?? null,
-        },
+        client: payload,
       },
     )
     return response.data
