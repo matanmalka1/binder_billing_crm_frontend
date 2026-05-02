@@ -2,6 +2,7 @@ import { ALL_TYPES_OPTION } from '@/constants/filterOptions.constants'
 import { reminderTypeLabels, statusLabels, type ReminderStatus, type ReminderType } from './types'
 
 export const DEFAULT_REMINDER_STATUS_FILTER = 'pending'
+export const DEFAULT_REMINDER_SOURCE_FILTER = 'manual'
 export const REMINDER_DUE_READY_FILTER = 'ready'
 export const REMINDER_DUE_FILTER_LABELS = {
   ready: 'ממתינות לפעולה עכשיו',

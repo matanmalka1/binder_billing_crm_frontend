@@ -58,7 +58,7 @@ export const RemindersPage: React.FC = () => {
   const header = (
     <PageHeader
       title="ניהול תזכורות"
-      description="תזכורות אוטומטיות למועדי מס, תיקים לא פעילים וחשבוניות שלא שולמו"
+      description="תזכורות ידניות שהמשתמש יצר למעקב אישי"
       actions={
         <Button
           variant="ghost"
@@ -113,7 +113,7 @@ export const RemindersPage: React.FC = () => {
         return (
           <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center text-gray-500">
             <p className="text-lg font-medium mb-2">אין תזכורות להצגה</p>
-            <p className="text-sm mb-4">צור תזכורת חדשה כדי להופיע כאן.</p>
+            <p className="text-sm mb-4">צור תזכורת ידנית חדשה כדי להופיע כאן.</p>
             <Button variant="ghost" className="gap-2" onClick={() => setShowCreateModal(true)}>
               תזכורת חדשה
               <Plus className="h-4 w-4" />

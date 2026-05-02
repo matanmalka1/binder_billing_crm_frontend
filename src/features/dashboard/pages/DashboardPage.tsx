@@ -52,7 +52,7 @@ export const DashboardPage: React.FC = () => {
       ...base,
       {
         key: 'deadlines',
-        title: 'מועדי הגשה החודש',
+        title: 'מה צריך לעשות עכשיו',
         icon: CalendarClock,
         tone: 'amber',
         viewAllHref: '/tax/deadlines',
@@ -66,7 +66,7 @@ export const DashboardPage: React.FC = () => {
       },
       {
         key: 'open_reminders',
-        title: 'תזכורות פתוחות',
+        title: 'תזכורות ידניות',
         icon: Bell,
         tone: 'blue',
         viewAllHref: '/reminders',

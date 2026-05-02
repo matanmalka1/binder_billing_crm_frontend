@@ -17,6 +17,7 @@ export const reminderStatusValues = ['pending', 'processing', 'sent', 'canceled'
 
 export type ReminderStatus = (typeof reminderStatusValues)[number]
 export type ReminderDueFilter = 'ready'
+export type ReminderSourceFilter = 'manual' | 'system' | 'all'
 
 export const reminderTypeLabels: Record<ReminderType, string> = {
   tax_deadline_approaching: 'מועד מס מתקרב',

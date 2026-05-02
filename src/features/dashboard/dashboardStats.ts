@@ -81,9 +81,9 @@ export const buildDashboardStats = (data: DashboardStatsData): StatItem[] => [
   },
   {
     key: 'ready_reminders',
-    title: 'תזכורות לטיפול',
+    title: 'תזכורות ידניות',
     value: `${data.open_reminders.toLocaleString('he-IL')} לטיפול עכשיו`,
-    description: 'תזכורות שמועד הטיפול שלהן הגיע',
+    description: 'תזכורות ידניות שמועד הטיפול שלהן הגיע',
     icon: Bell,
     variant: 'amber',
     urgent: data.open_reminders > 0,

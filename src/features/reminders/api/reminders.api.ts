@@ -7,6 +7,7 @@ import {
   type RemindersListResponse,
   type ReminderStatus,
   type ReminderDueFilter,
+  type ReminderSourceFilter,
 } from './contracts'
 
 export const remindersApi = {
@@ -15,6 +16,7 @@ export const remindersApi = {
     page_size?: number
     status?: ReminderStatus
     due?: ReminderDueFilter
+    source?: ReminderSourceFilter
     client_record_id?: number
     created_before?: string
   }): Promise<RemindersListResponse> => {
