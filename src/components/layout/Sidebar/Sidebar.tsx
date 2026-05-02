@@ -19,6 +19,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
     settings: true,
   })
   const { user, logout } = useAuthStore()
+  const visibleNavGroups = NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => !item.roles || item.roles.includes(user?.role ?? 'secretary')),
+  })).filter((group) => group.items.length > 0)
 
   const handleLogout = () => {
     void logout()
@@ -55,7 +59,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
       </div>
 
       <nav className="flex-1 overflow-y-auto px-2 py-5">
-        {NAV_GROUPS.map((group) => (
+        {visibleNavGroups.map((group) => (
           <SidebarGroup
             key={group.key}
             group={group}

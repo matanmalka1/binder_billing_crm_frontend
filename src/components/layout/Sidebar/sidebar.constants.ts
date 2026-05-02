@@ -19,6 +19,7 @@ export interface NavItem {
   label: string
   icon: ElementType
   end?: boolean
+  roles?: Array<'advisor' | 'secretary'>
 }
 
 export interface NavGroup {
@@ -32,38 +33,54 @@ export const NAV_GROUPS: NavGroup[] = [
     key: 'main',
     label: 'ראשי',
     items: [
-      { to: '/', label: 'לוח בקרה', icon: LayoutDashboard, end: true },
-      { to: '/clients', label: 'לקוחות', icon: Users },
-      { to: '/binders', label: 'קלסרים', icon: Briefcase },
+      { to: '/', label: 'לוח עבודה', icon: LayoutDashboard, end: true },
       { to: '/search', label: 'חיפוש', icon: Search },
-      { to: '/charges', label: 'חיובים', icon: ReceiptText },
+    ],
+  },
+  {
+    key: 'clients',
+    label: 'לקוחות',
+    items: [{ to: '/clients', label: 'לקוחות', icon: Users }],
+  },
+  {
+    key: 'tax-work',
+    label: 'עבודת מס',
+    items: [
+      { to: '/tax/vat', label: 'מע"מ', icon: ClipboardList },
+      { to: '/tax/advance-payments', label: 'מקדמות', icon: CalendarDays },
+      { to: '/tax/reports', label: 'דוחות שנתיים', icon: TableProperties, end: true },
+      { to: '/tax/deadlines', label: 'מועדים', icon: FileSpreadsheet },
+      { to: '/tax/dashboard', label: 'לוח מסים', icon: FileSpreadsheet },
+    ],
+  },
+  {
+    key: 'office-ops',
+    label: 'תפעול משרד',
+    items: [
+      { to: '/binders', label: 'קלסרים', icon: Briefcase },
       { to: '/reminders', label: 'תזכורות', icon: Bell },
     ],
   },
   {
-    key: 'tax',
-    label: 'מיסים',
+    key: 'finance',
+    label: 'כספים',
     items: [
-      { to: '/tax/dashboard', label: 'לוח מסים', icon: FileSpreadsheet },
-      { to: '/tax/vat', label: 'דוחות מע"מ (לקוח)', icon: ClipboardList },
-      { to: '/tax/reports', label: 'דוחות שנתיים', icon: TableProperties, end: true },
-      { to: '/tax/advance-payments', label: 'מקדמות', icon: CalendarDays },
-      { to: '/tax/deadlines', label: 'מועדים', icon: FileSpreadsheet },
+      { to: '/charges', label: 'חיובים', icon: ReceiptText },
+      { to: '/reports/aging', label: 'גיול חובות', icon: ChartColumn },
     ],
   },
   {
     key: 'reports',
-    label: 'דוחות',
+    label: 'דוחות ניהול',
     items: [
       { to: '/reports/vat-compliance', label: 'ציות מע"מ', icon: ClipboardList },
-      { to: '/reports/aging', label: 'דוח חובות לקוחות', icon: ChartColumn },
       { to: '/reports/annual-status', label: 'סטטוס דוחות שנתיים', icon: TableProperties },
       { to: '/reports/advance-payments', label: 'גביית מקדמות', icon: CalendarDays },
     ],
   },
   {
     key: 'settings',
-    label: 'הגדרות',
-    items: [{ to: '/settings/users', label: 'משתמשים', icon: Settings }],
+    label: 'ניהול',
+    items: [{ to: '/settings/users', label: 'משתמשים', icon: Settings, roles: ['advisor'] }],
   },
 ]

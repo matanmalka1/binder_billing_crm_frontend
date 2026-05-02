@@ -24,11 +24,11 @@ const getUnifiedItemHref = (item: UnifiedItem) => {
 
   switch (item.source_type) {
     case 'vat_filing':
-      return '/vat-reports'
+      return '/tax/vat'
     case 'annual_report':
-      return '/annual-reports'
+      return '/tax/reports'
     case 'advance_payment':
-      return '/advance-payments'
+      return '/tax/advance-payments'
     case 'unpaid_charge':
       return '/charges'
     case 'tax_deadline':

@@ -14,6 +14,7 @@ import { getChargeStatusLabel } from '../../../utils/enums'
 import { ChargeRowActions } from './ChargeRowActions'
 import { chargeStatusVariants } from '../constants'
 import type { ChargeAction } from '../types'
+import { ChargeClientCell } from './ChargeClientCell'
 
 interface BuildChargeColumnsParams {
   isAdvisor: boolean
@@ -52,14 +53,13 @@ export const buildChargeColumns = ({
       valueClassName: 'text-xs text-gray-400',
       getValue: (charge) => charge.id,
     }),
-    textColumn({
+    {
       key: 'client_record_id',
       header: 'לקוח',
       headerClassName: 'w-48',
       className: 'w-48 max-w-[12rem]',
-      valueClassName: 'font-semibold text-gray-900',
-      getValue: (charge) => charge.business_name ?? `לקוח #${charge.client_record_id}`,
-    }),
+      render: (charge) => <ChargeClientCell charge={charge} />,
+    },
     textColumn({
       key: 'charge_type',
       header: 'סוג',

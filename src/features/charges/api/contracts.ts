@@ -4,6 +4,7 @@ import type { PaginatedResponse } from '@/types'
 export interface ChargeResponse {
   id: number
   client_record_id: number
+  client_name: string | null
   office_client_number?: number | null
   business_id?: number | null
   business_name: string | null

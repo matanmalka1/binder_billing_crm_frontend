@@ -17,7 +17,7 @@ import { VAT_DEADLINE_WARNING_DAYS } from '../constants'
 import { getDuplicateClientIds, getVatDeadlineCounts } from '../view.helpers'
 
 export const VatWorkItems: React.FC = () => {
-  const [urlParams, setUrlParams] = useSearchParams()
+  const [urlParams] = useSearchParams()
 
   const {
     actionLoadingId,
@@ -49,11 +49,16 @@ export const VatWorkItems: React.FC = () => {
   useEffect(() => {
     if (urlParams.get('create') === '1') {
       setShowCreateModal(true)
-      const nextParams = new URLSearchParams(urlParams)
-      nextParams.delete('create')
-      setUrlParams(nextParams, { replace: true })
     }
-  }, [urlParams, setUrlParams])
+  }, [urlParams])
+
+  const closeCreateModal = () => {
+    setShowCreateModal(false)
+    if (urlParams.get('create') !== '1') return
+    const nextParams = new URLSearchParams(urlParams)
+    nextParams.delete('create')
+    navigate({ search: nextParams.toString() }, { replace: true })
+  }
 
   const columns = useMemo(
     () =>
@@ -165,7 +170,7 @@ export const VatWorkItems: React.FC = () => {
         open={showCreateModal}
         createError={createError}
         createLoading={createLoading}
-        onClose={() => setShowCreateModal(false)}
+        onClose={closeCreateModal}
         onSubmit={submitCreate}
         initialClientId={createClientId ? Number(createClientId) : undefined}
         initialPeriod={createPeriod ?? undefined}

@@ -25,7 +25,7 @@ const EDIT_FORM_ID = 'client-edit-form-list'
 
 export const Clients: React.FC = () => {
   const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showImportExport, setShowImportExport] = useState(false)
   const [editingClient, setEditingClient] = useState<ClientResponse | null>(null)
@@ -76,12 +76,15 @@ export const Clients: React.FC = () => {
   useEffect(() => {
     if (searchParams.get('create') !== '1' || !can.createClients) return
     setShowCreateModal(true)
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev)
-      next.delete('create')
-      return next
-    })
-  }, [can.createClients, searchParams, setSearchParams])
+  }, [can.createClients, searchParams])
+
+  const closeCreateModal = () => {
+    setShowCreateModal(false)
+    if (searchParams.get('create') !== '1') return
+    const nextParams = new URLSearchParams(searchParams)
+    nextParams.delete('create')
+    navigate({ search: nextParams.toString() }, { replace: true })
+  }
 
   return (
     <div className="space-y-6">
@@ -172,7 +175,7 @@ export const Clients: React.FC = () => {
       />
       <CreateClientModal
         open={showCreateModal && !deletedClientDialogOpen}
-        onClose={() => setShowCreateModal(false)}
+        onClose={closeCreateModal}
         onSubmit={createClient}
         onRestoreDeletedClient={async (clientId) => {
           const restored = await restoreDeletedClient(clientId)

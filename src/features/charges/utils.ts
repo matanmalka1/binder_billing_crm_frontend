@@ -78,4 +78,4 @@ export const getChargeAmountText = (charge: ChargeResponse): string => {
 }
 
 export const getChargeClientLabel = (charge: ChargeResponse): string =>
-  charge.business_name ?? `לקוח #${charge.client_record_id}`
+  charge.client_name ?? `לקוח #${charge.client_record_id}`

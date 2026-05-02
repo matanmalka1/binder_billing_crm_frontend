@@ -139,7 +139,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
       {activeTab === 'advance-payments' && <ClientAdvancePaymentsTab clientId={client.id} />}
       {activeTab === 'annual-reports' && <ClientAnnualReportsTab clientId={client.id} />}
 
-      {activeTab === 'finance' && (
+      {activeTab === 'reminders' && (
         <div className="space-y-6">
           <ClientRemindersCard clientId={client.id} clientName={client.full_name} />
           <NotificationsTab businessId={firstBusinessId ?? undefined} />
