@@ -3,6 +3,8 @@ import { FilterPanel } from '@/components/ui/filters/FilterPanel'
 import {
   CLIENT_SORT_BY_OPTIONS,
   CLIENT_STATUS_OPTIONS,
+  DEFAULT_CLIENT_SORT_BY,
+  DEFAULT_CLIENT_SORT_ORDER,
   getClientSortOrderOptions,
 } from '../../constants'
 import type { ClientsFiltersBarProps } from '../../types'
@@ -23,7 +25,12 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
 
   const fields = useMemo(
     () => [
-      { type: 'search' as const, key: 'search', label: 'חיפוש לקוח', placeholder: 'שם, ת.ז. / ח.פ.' },
+      {
+        type: 'search' as const,
+        key: 'search',
+        label: 'חיפוש לקוח',
+        placeholder: 'שם, ת.ז. / ח.פ.',
+      },
       { type: 'select' as const, key: 'status', label: 'סטטוס', options: STATUS_OPTIONS },
       ...(showAccountantFilter
         ? [
@@ -35,12 +42,19 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
             },
           ]
         : []),
-      { type: 'select' as const, key: 'sort_by', label: 'מיון לפי', options: CLIENT_SORT_BY_OPTIONS },
+      {
+        type: 'select' as const,
+        key: 'sort_by',
+        label: 'מיון לפי',
+        options: CLIENT_SORT_BY_OPTIONS,
+        defaultValue: DEFAULT_CLIENT_SORT_BY,
+      },
       {
         type: 'select' as const,
         key: 'sort_order',
         label: 'כיוון מיון',
         options: getClientSortOrderOptions(filters.sort_by),
+        defaultValue: DEFAULT_CLIENT_SORT_ORDER,
       },
     ],
     [showAccountantFilter, advisorOptions, filters.sort_by],

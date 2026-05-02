@@ -83,6 +83,22 @@ export const buildChargeColumns = ({
       getLabel: getChargeStatusLabel,
       variantMap: chargeStatusVariants,
     }),
+    dateColumn({
+      key: 'issued_at',
+      header: 'הונפק',
+      headerClassName: 'w-24',
+      className: 'w-24',
+      valueClassName: 'text-gray-500',
+      getValue: (charge) => charge.issued_at,
+    }),
+    dateColumn({
+      key: 'paid_at',
+      header: 'שולם',
+      headerClassName: 'w-24',
+      className: 'w-24',
+      valueClassName: 'text-gray-500',
+      getValue: (charge) => charge.paid_at,
+    }),
     monoColumn({
       key: 'amount',
       header: 'סכום',
@@ -93,7 +109,7 @@ export const buildChargeColumns = ({
     }),
     dateColumn({
       key: 'created_at',
-      header: 'תאריך',
+      header: 'נוצר',
       headerClassName: 'w-24',
       className: 'w-24',
       valueClassName: 'text-gray-400',

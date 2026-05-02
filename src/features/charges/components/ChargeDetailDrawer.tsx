@@ -166,9 +166,17 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
               label="תקופה"
               value={getChargePeriodLabel(charge.period, charge.months_covered)}
             />
+            {charge.description && <DrawerField label="תיאור" value={charge.description} />}
+            {charge.annual_report_id && (
+              <DrawerField label="דוח שנתי" value={`#${charge.annual_report_id}`} />
+            )}
             <DrawerField label="נוצר" value={formatDateTime(charge.created_at)} />
             <DrawerField label="הונפק" value={formatDateTime(charge.issued_at)} />
             <DrawerField label="שולם" value={formatDateTime(charge.paid_at)} />
+            <DrawerField label="בוטל" value={formatDateTime(charge.canceled_at)} />
+            {charge.cancellation_reason && (
+              <DrawerField label="סיבת ביטול" value={charge.cancellation_reason} />
+            )}
           </DrawerSection>
         )}
       </DetailDrawer>

@@ -1,8 +1,9 @@
 export interface AgingBucket {
-  current: number;
-  days_30: number;
-  days_60: number;
-  days_90_plus: number;
+  total_clients: number;
+  total_current: number;
+  total_30_days: number;
+  total_60_days: number;
+  total_90_plus: number;
 }
 
 export interface AgingReportItem {

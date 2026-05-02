@@ -88,7 +88,7 @@ export const Charges: React.FC = () => {
                 גיול חובות
               </Button>
             </div>
-            {isAdvisor && (
+            {isAdvisor && viewMode === 'charges' && (
               <Button variant="ghost" size="sm" onClick={() => setShowCreateModal(true)}>
                 חיוב חדש
                 <Plus className="h-3.5 w-3.5" />

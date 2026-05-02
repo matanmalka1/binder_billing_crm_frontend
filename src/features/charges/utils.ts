@@ -42,8 +42,18 @@ export const getChargePeriodLabel = (
   const match = CHARGE_PERIOD_PATTERN.exec(period)
   if (!match) return period
 
-  const startYear = Number(match[1])
-  const startMonthIndex = Number(match[2]) - 1
+  const [yearPart, monthPart] = period.split('-')
+  const startYear = Number(yearPart)
+  const startMonthIndex = Number(monthPart) - 1
+  if (
+    !Number.isInteger(startYear) ||
+    !Number.isInteger(startMonthIndex) ||
+    startMonthIndex < 0 ||
+    startMonthIndex >= MONTH_NAMES.length
+  ) {
+    return period
+  }
+
   const coverage = monthsCovered === 2 ? 2 : 1
   const startLabel = MONTH_NAMES[startMonthIndex]
 
