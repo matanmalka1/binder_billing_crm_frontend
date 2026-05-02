@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import type { AdvancePaymentStatus } from '../types'
 import { Button } from '../../../components/ui/primitives/Button'
 import { Select } from '../../../components/ui/inputs/Select'
+import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
 import { getAdvancePaymentStatusLabel } from '../../../utils/enums'
 import { YEAR_OPTIONS } from '../utils'
 import { ADVANCE_PAYMENT_FREQUENCY_OPTIONS, ADVANCE_PAYMENT_STATUS_FILTERS } from '../constants'
@@ -34,7 +36,10 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
   generationFrequency,
   onGenerationFrequencyChange,
   isGenerating,
-}) => (
+}) => {
+  const [confirmGenerate, setConfirmGenerate] = useState(false)
+
+  return (
   <div className="flex items-center justify-between">
     {isAdvisor && (
       <div className="flex gap-2">
@@ -48,9 +53,18 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
             options={ADVANCE_PAYMENT_FREQUENCY_OPTIONS}
           />
         </div>
-        <Button variant="outline" size="sm" onClick={onGenerateSchedule} disabled={isGenerating}>
+        <Button variant="outline" size="sm" onClick={() => setConfirmGenerate(true)} disabled={isGenerating}>
           {isGenerating ? 'יוצר...' : 'צור לוח מקדמות לשנה'}
         </Button>
+        <ConfirmDialog
+          open={confirmGenerate}
+          title="יצירת לוח מקדמות"
+          message={`ליצור מקדמות לשנת ${year}? מקדמות קיימות לא יושפעו.`}
+          confirmLabel="צור"
+          cancelLabel="ביטול"
+          onConfirm={() => { setConfirmGenerate(false); onGenerateSchedule() }}
+          onCancel={() => setConfirmGenerate(false)}
+        />
       </div>
     )}
     <div className="flex items-center gap-2">
@@ -82,6 +96,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
       </div>
     </div>
   </div>
-)
+  )
+}
 
 ClientAdvancePaymentsHeader.displayName = 'ClientAdvancePaymentsHeader'

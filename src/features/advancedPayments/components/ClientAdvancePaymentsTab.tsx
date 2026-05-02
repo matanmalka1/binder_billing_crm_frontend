@@ -58,6 +58,16 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
     onError: (err) => showErrorToast(err, 'שגיאה ביצירת לוח מקדמות'),
   })
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => deleteRow(id),
+    onSuccess: () => {
+      toast.success('מקדמה נמחקה בהצלחה')
+      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.forClientYear(clientId, year) })
+      setDrawerRow(null)
+    },
+    onError: (err) => showErrorToast(err, 'שגיאה במחיקת מקדמה'),
+  })
+
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: number; payload: UpdateAdvancePaymentPayload }) =>
       advancePaymentsApi.update(clientId, id, payload),
@@ -92,15 +102,6 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         showErrorToast(err, 'שגיאה ביצירת מקדמה')
       }
       throw err
-    }
-  }
-
-  const handleDeleteRow = async (id: number) => {
-    try {
-      await deleteRow(id)
-      toast.success('מקדמה נמחקה בהצלחה')
-    } catch (err) {
-      showErrorToast(err, 'שגיאה במחיקת מקדמה')
     }
   }
 
@@ -153,9 +154,11 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
         row={drawerRow}
         open={drawerRow !== null}
         isUpdating={updateMutation.isPending}
+        isDeleting={deleteMutation.isPending}
         canEdit={isAdvisor}
         onClose={() => setDrawerRow(null)}
         onSave={handleSave}
+        onDelete={isAdvisor ? (id) => deleteMutation.mutateAsync(id) : undefined}
       />
 
       {isAdvisor && (

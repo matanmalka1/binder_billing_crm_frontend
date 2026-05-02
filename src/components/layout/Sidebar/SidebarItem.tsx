@@ -17,7 +17,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, isSidebarOpen })
           'group relative flex flex-row-reverse items-center justify-start gap-3 rounded-xl px-4 py-2.5 text-right transition-colors',
           isActive
             ? 'bg-[#4f7dff] text-white shadow-[0_12px_28px_rgba(79,125,255,0.25)]'
-            : 'text-gray-400 hover:bg-white/5 hover:text-white',
+            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
         )
       }
     >

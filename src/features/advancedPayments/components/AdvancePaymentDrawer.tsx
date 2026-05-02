@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Trash2 } from 'lucide-react'
 import { DetailDrawer, DrawerField, DrawerSection } from '../../../components/ui/overlays/DetailDrawer'
 import { Input } from '../../../components/ui/inputs/Input'
 import { Select } from '../../../components/ui/inputs/Select'
@@ -15,19 +15,24 @@ interface AdvancePaymentDrawerProps {
   row: AdvancePaymentRow | null
   open: boolean
   isUpdating: boolean
+  isDeleting?: boolean
   canEdit: boolean
   onClose: () => void
   onSave: (id: number, payload: UpdateAdvancePaymentPayload) => Promise<void>
+  onDelete?: (id: number) => Promise<void>
 }
 
 export const AdvancePaymentDrawer: React.FC<AdvancePaymentDrawerProps> = ({
   row,
   open,
   isUpdating,
+  isDeleting = false,
   canEdit,
   onClose,
   onSave,
+  onDelete,
 }) => {
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const [paidAmount, setPaidAmount] = useState('')
   const [expectedAmount, setExpectedAmount] = useState('')
   const [status, setStatus] = useState<string>('')
@@ -43,6 +48,7 @@ export const AdvancePaymentDrawer: React.FC<AdvancePaymentDrawerProps> = ({
     setPaymentMethod(row.payment_method ?? '')
     setPaidAt(row.paid_at ? row.paid_at.split('T')[0] : '')
     setNotes(row.notes ?? '')
+    setConfirmDelete(false)
   }, [row])
 
   if (!row) return null
@@ -89,13 +95,44 @@ export const AdvancePaymentDrawer: React.FC<AdvancePaymentDrawerProps> = ({
       isDirty={isDirty}
       footer={
         canEdit ? (
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={onClose} disabled={isUpdating}>
-              ביטול
-            </Button>
-            <Button variant="primary" isLoading={isUpdating} onClick={handleSave}>
-              שמור
-            </Button>
+          <div className="flex items-center justify-between gap-2">
+            {onDelete && (
+              confirmDelete ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-error-600">למחוק?</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-error-600 hover:bg-error-50"
+                    isLoading={isDeleting}
+                    onClick={() => onDelete(row.id)}
+                  >
+                    כן, מחק
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(false)} disabled={isDeleting}>
+                    ביטול
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-400 hover:text-error-600 hover:bg-error-50"
+                  onClick={() => setConfirmDelete(true)}
+                  disabled={isUpdating}
+                >
+                  <Trash2 size={14} />
+                </Button>
+              )
+            )}
+            <div className="flex gap-2 mr-auto">
+              <Button variant="outline" onClick={onClose} disabled={isUpdating || isDeleting}>
+                ביטול
+              </Button>
+              <Button variant="primary" isLoading={isUpdating} onClick={handleSave} disabled={isDeleting}>
+                שמור
+              </Button>
+            </div>
           </div>
         ) : undefined
       }

@@ -54,7 +54,7 @@ export const AdvancePayments: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="מקדמות" description="סקירה לפי שנה וחודש" />
+      <PageHeader title="מקדמות" description="מעקב שנתי אחר תשלומים, פיגורים וגבייה" />
 
       <div className="flex items-center justify-between gap-4">
         <OverviewKPICards

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { CalendarPlus, Plus } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import type { UseFormReturn } from 'react-hook-form'
 import { Select } from '../../../components/ui/inputs/Select'
@@ -7,7 +6,6 @@ import { Select } from '../../../components/ui/inputs/Select'
 import { Modal } from '../../../components/ui/overlays/Modal'
 import { Input } from '../../../components/ui/inputs/Input'
 import { ModalFormActions } from '../../../components/ui/overlays/ModalFormActions'
-import { Button } from '../../../components/ui/primitives/Button'
 import { clientsApi, clientsQK, type VatType } from '@/features/clients'
 import {
   TAX_DEADLINE_FILTER_TYPE_OPTIONS,
@@ -52,14 +50,10 @@ const getYearOptions = () => {
 const ClientDeadlineControls = ({
   filters,
   onChange,
-  onCreateManual,
-  onGenerate,
   isAdvisor,
 }: {
   filters: ClientDeadlineFilters
   onChange: (key: keyof ClientDeadlineFilters, value: string) => void
-  onCreateManual: () => void
-  onGenerate: () => void
   isAdvisor: boolean
 }) => {
   const selectedYear = getFilterYear(filters)
@@ -74,27 +68,12 @@ const ClientDeadlineControls = ({
     <section className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         {isAdvisor && (
-          <>
-            <Button onClick={onCreateManual} size="sm" variant='ghost' className="whitespace-nowrap">
-              <Plus className="h-4 w-4" />
-              הוסף מקדמה
-            </Button>
-            <Select
-              value={filters.deadline_type}
-              onChange={(e) => onChange('deadline_type', e.target.value)}
-              options={TAX_DEADLINE_FILTER_TYPE_OPTIONS}
-              className="w-full py-1.5 sm:w-56"
-            />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onGenerate}
-              className="whitespace-nowrap"
-            >
-              <CalendarPlus className="h-4 w-4" />
-              צור לוח מקדמות לשנה
-            </Button>
-          </>
+          <Select
+            value={filters.deadline_type}
+            onChange={(e) => onChange('deadline_type', e.target.value)}
+            options={TAX_DEADLINE_FILTER_TYPE_OPTIONS}
+            className="w-full py-1.5 sm:w-56"
+          />
         )}
       </div>
 
@@ -263,8 +242,6 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
       <ClientDeadlineControls
         filters={filters}
         onChange={handleFilterChange}
-        onCreateManual={() => setShowCreateModal(true)}
-        onGenerate={() => setShowGenerateModal(true)}
         isAdvisor={isAdvisor}
       />
 
