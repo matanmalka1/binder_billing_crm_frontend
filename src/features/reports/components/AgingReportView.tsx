@@ -7,7 +7,11 @@ import { AgingReportHeader } from "./AgingReportHeader";
 import { AgingReportTable } from "./AgingReportTable";
 import { useAgingReport } from "../hooks/useAgingReport";
 
-export const AgingReportView: React.FC = () => {
+interface AgingReportViewProps {
+  embedded?: boolean
+}
+
+export const AgingReportView: React.FC<AgingReportViewProps> = ({ embedded = false }) => {
   const { asOfDate, setAsOfDate, exporting, handleExport, data, isLoading, error } =
     useAgingReport();
 
@@ -38,7 +42,7 @@ export const AgingReportView: React.FC = () => {
     </div>
   );
 
-  const header = (
+  const header = embedded ? undefined : (
     <PageHeader
       title="דוח חובות לקוחות"
       description="ניתוח חובות לפי גיל החוב"
@@ -50,8 +54,11 @@ export const AgingReportView: React.FC = () => {
     <PageStateGuard isLoading={isLoading} error={error} header={header} loadingMessage="טוען דוח...">
       {data && (
         <>
-          <div className="max-w-xs">
-            <DatePicker label="נכון לתאריך" value={asOfDate} onChange={setAsOfDate} />
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-xs">
+              <DatePicker label="נכון לתאריך" value={asOfDate} onChange={setAsOfDate} />
+            </div>
+            {embedded && actions}
           </div>
           <AgingReportHeader data={data} />
           <AgingReportTable items={data.items} />

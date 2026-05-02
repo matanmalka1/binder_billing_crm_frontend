@@ -33,16 +33,6 @@ interface Props {
   showVatFrequency: boolean
 }
 
-const buildRemindersTooltip = (items: ImpactItem[]): string => {
-  const vatItem = items.find((i) => i.label === 'מועדי מע"מ')
-  const advanceItem = items.find((i) => i.label === 'מועדי מקדמות')
-  const annualItem = items.find((i) => i.label === 'מועד הגשת דוח שנתי')
-  const parts: string[] = []
-  if (vatItem) parts.push(`${vatItem.count} תזכורות מע"מ`)
-  if (advanceItem) parts.push(`${advanceItem.count} תזכורות מקדמות`)
-  if (annualItem) parts.push(`${annualItem.count} תזכורת הגשת דוח שנתי`)
-  return parts.join('\n')
-}
 
 export const CreateClientTaxStep: React.FC<Props> = ({
   advisorOptions,
@@ -121,23 +111,15 @@ export const CreateClientTaxStep: React.FC<Props> = ({
         ) : impactData ? (
           <>
             <ul className="space-y-1">
-              {impactData.items.map((item) => {
-                const isReminders = item.label === 'תזכורות'
-                const tooltip = isReminders ? buildRemindersTooltip(impactData.items) : undefined
-                return (
-                  <li
-                    key={item.label}
-                    className="flex items-baseline gap-2 text-sm text-blue-700"
-                    title={tooltip}
-                  >
-                    <span className="font-medium">{item.count}</span>
-                    <span>{item.label}</span>
-                    {isReminders && tooltip && (
-                      <span className="text-xs text-blue-500 cursor-help" title={tooltip}>ⓘ</span>
-                    )}
-                  </li>
-                )
-              })}
+              {impactData.items.map((item) => (
+                <li
+                  key={item.label}
+                  className="flex items-baseline gap-2 text-sm text-blue-700"
+                >
+                  <span className="font-medium">{item.count}</span>
+                  <span>{item.label}</span>
+                </li>
+              ))}
             </ul>
             {impactData.note && <p className="mt-2 text-xs text-blue-600">{impactData.note}</p>}
             {impactData.years_scope === 2 && (

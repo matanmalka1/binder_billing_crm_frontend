@@ -1,18 +1,14 @@
-import { useSearchDebounce } from '../../../../hooks/useSearchDebounce'
-import { Search, X } from 'lucide-react'
-import { Input } from '../../../../components/ui/inputs/Input'
-import { Select } from '../../../../components/ui/inputs/Select'
-import { ToolbarContainer } from '../../../../components/ui/layout/ToolbarContainer'
-import { ActiveFilterBadges } from '../../../../components/ui/table/ActiveFilterBadges'
+import { useMemo } from 'react'
+import { FilterPanel } from '@/components/ui/filters/FilterPanel'
 import {
   CLIENT_SORT_BY_OPTIONS,
-  CLIENT_STATUS_LABELS,
   CLIENT_STATUS_OPTIONS,
   getClientSortOrderOptions,
 } from '../../constants'
 import type { ClientsFiltersBarProps } from '../../types'
 import { useAdvisorOptions } from '@/features/users'
 import { ALL_STATUSES_OPTION } from '@/constants/filterOptions.constants'
+import type { FilterBadge } from '@/components/ui/table/ActiveFilterBadges'
 
 const STATUS_OPTIONS = [ALL_STATUSES_OPTION, ...CLIENT_STATUS_OPTIONS]
 
@@ -22,102 +18,58 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
   onReset,
   showAccountantFilter = false,
 }) => {
-  const [searchDraft, setSearchDraft] = useSearchDebounce(filters.search, (v) =>
-    onFilterChange('search', v),
-  )
   const { options: advisorOptions, nameById } = useAdvisorOptions(showAccountantFilter)
-
-  const handleReset = () => {
-    setSearchDraft('')
-    onReset()
-  }
-
-  const activeStatus = filters.status ?? ''
   const activeAccountantId = filters.accountant_id ? String(filters.accountant_id) : ''
 
-  return (
-    <ToolbarContainer>
-      <div className="space-y-3">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          <Input
-            label="חיפוש לקוח"
-            value={searchDraft}
-            onChange={(e) => setSearchDraft(e.target.value)}
-            placeholder="שם, ת.ז. / ח.פ."
-            startIcon={<Search className="h-4 w-4" />}
-            endElement={
-              searchDraft ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchDraft('')
-                    onFilterChange('search', '')
-                  }}
-                  className="p-1 text-gray-400 hover:text-gray-600"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              ) : undefined
-            }
-          />
-          <Select
-            label="סטטוס"
-            value={activeStatus}
-            onChange={(e) => onFilterChange('status', e.target.value)}
-            options={STATUS_OPTIONS}
-          />
-          {showAccountantFilter && (
-            <Select
-              label="רואה חשבון"
-              value={activeAccountantId}
-              onChange={(e) => onFilterChange('accountant_id', e.target.value)}
-              options={[{ value: '', label: 'כל רואי החשבון' }, ...advisorOptions]}
-            />
-          )}
-          <Select
-            label="מיון לפי"
-            value={filters.sort_by}
-            onChange={(e) => onFilterChange('sort_by', e.target.value)}
-            options={CLIENT_SORT_BY_OPTIONS}
-          />
-          <Select
-            label="כיוון מיון"
-            value={filters.sort_order}
-            onChange={(e) => onFilterChange('sort_order', e.target.value)}
-            options={getClientSortOrderOptions(filters.sort_by)}
-          />
-        </div>
+  const fields = useMemo(
+    () => [
+      { type: 'search' as const, key: 'search', label: 'חיפוש לקוח', placeholder: 'שם, ת.ז. / ח.פ.' },
+      { type: 'select' as const, key: 'status', label: 'סטטוס', options: STATUS_OPTIONS },
+      ...(showAccountantFilter
+        ? [
+            {
+              type: 'select' as const,
+              key: 'accountant_id',
+              label: 'רואה חשבון',
+              options: [{ value: '', label: 'כל רואי החשבון' }, ...advisorOptions],
+            },
+          ]
+        : []),
+      { type: 'select' as const, key: 'sort_by', label: 'מיון לפי', options: CLIENT_SORT_BY_OPTIONS },
+      {
+        type: 'select' as const,
+        key: 'sort_order',
+        label: 'כיוון מיון',
+        options: getClientSortOrderOptions(filters.sort_by),
+      },
+    ],
+    [showAccountantFilter, advisorOptions, filters.sort_by],
+  )
 
-        <ActiveFilterBadges
-          badges={[
-            filters.search
-              ? {
-                  key: 'search',
-                  label: `חיפוש: ${filters.search}`,
-                  onRemove: () => {
-                    setSearchDraft('')
-                    onFilterChange('search', '')
-                  },
-                }
-              : null,
-            activeStatus
-              ? {
-                  key: 'status',
-                  label: `סטטוס: ${CLIENT_STATUS_LABELS[activeStatus as keyof typeof CLIENT_STATUS_LABELS]}`,
-                  onRemove: () => onFilterChange('status', ''),
-                }
-              : null,
-            activeAccountantId
-              ? {
-                  key: 'accountant_id',
-                  label: `רואה חשבון: ${nameById.get(Number(activeAccountantId)) ?? activeAccountantId}`,
-                  onRemove: () => onFilterChange('accountant_id', ''),
-                }
-              : null,
-          ].filter((b): b is NonNullable<typeof b> => b !== null)}
-          onReset={handleReset}
-        />
-      </div>
-    </ToolbarContainer>
+  const extraBadges: FilterBadge[] = activeAccountantId
+    ? [
+        {
+          key: 'accountant_id',
+          label: `רואה חשבון: ${nameById.get(Number(activeAccountantId)) ?? activeAccountantId}`,
+          onRemove: () => onFilterChange('accountant_id', ''),
+        },
+      ]
+    : []
+
+  return (
+    <FilterPanel
+      fields={fields}
+      values={{
+        search: filters.search ?? '',
+        status: filters.status ?? '',
+        accountant_id: activeAccountantId,
+        sort_by: filters.sort_by ?? '',
+        sort_order: filters.sort_order ?? '',
+      }}
+      onChange={(key, value) => onFilterChange(key as Parameters<typeof onFilterChange>[0], value)}
+      onReset={onReset}
+      gridClass="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5"
+      extraBadges={extraBadges}
+    />
   )
 }

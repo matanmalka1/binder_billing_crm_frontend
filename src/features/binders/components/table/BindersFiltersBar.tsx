@@ -1,15 +1,18 @@
-import { useSearchDebounce } from '@/hooks/useSearchDebounce'
-import { Select } from '@/components/ui/inputs/Select'
-import { Input } from '@/components/ui/inputs/Input'
-import { ToolbarContainer } from '@/components/ui/layout/ToolbarContainer'
-import { ActiveFilterBadges } from '@/components/ui/table/ActiveFilterBadges'
+import { FilterPanel } from '@/components/ui/filters/FilterPanel'
 import { StatsCard } from '@/components/ui/layout/StatsCard'
-import { Archive, CheckCircle2, FolderKanban, Search, Undo2, X, Boxes } from 'lucide-react'
+import { Archive, CheckCircle2, FolderKanban, Undo2, Boxes } from 'lucide-react'
 import { BINDER_STATUS_OPTIONS } from '../../constants'
 import type { BindersFiltersBarProps } from '../../types'
-import { cn, buildYearOptions } from '@/utils/utils'
+import { buildYearOptions } from '@/utils/utils'
 
 const YEAR_OPTIONS = [{ value: '', label: 'כל התקופות' }, ...buildYearOptions()]
+
+const FIELDS = [
+  { type: 'search' as const, key: 'query', label: 'חיפוש', placeholder: 'שם לקוח...' },
+  { type: 'search' as const, key: 'binder_number', label: 'מספר קלסר', placeholder: 'מספר קלסר מדויק...' },
+  { type: 'select' as const, key: 'status', label: 'סטטוס', options: BINDER_STATUS_OPTIONS },
+  { type: 'select' as const, key: 'year', label: 'תקופה', options: YEAR_OPTIONS },
+]
 
 export const BindersFiltersBar = ({
   filters,
@@ -17,188 +20,46 @@ export const BindersFiltersBar = ({
   onFilterChange,
   onReset,
 }: BindersFiltersBarProps) => {
-  const [searchDraft, setSearchDraft] = useSearchDebounce(filters.query ?? '', (v: string) =>
-    onFilterChange('query', v),
-  )
-
-  const handleReset = () => {
-    setSearchDraft('')
-    onReset()
-  }
-
   const statusPills = [
-    {
-      key: '',
-      label: 'סה"כ קלסרים',
-      count: counters.total,
-      icon: FolderKanban,
-      variant: 'blue' as const,
-    },
-    {
-      key: 'in_office',
-      label: 'במשרד',
-      count: counters.in_office,
-      icon: Archive,
-      variant: 'orange' as const,
-    },
-    {
-      key: 'closed_in_office',
-      label: 'סגור במשרד',
-      count: counters.closed_in_office,
-      icon: Boxes,
-      variant: 'orange' as const,
-    },
-    {
-      key: 'ready_for_pickup',
-      label: 'מוכן לאיסוף',
-      count: counters.ready_for_pickup,
-      icon: CheckCircle2,
-      variant: 'green' as const,
-    },
-    {
-      key: 'returned',
-      label: 'הוחזר',
-      count: counters.returned,
-      icon: Undo2,
-      variant: 'neutral' as const,
-    },
-    {
-      key: 'archived_in_office',
-      label: 'ארכיון במשרד',
-      count: counters.archived_in_office,
-      icon: Archive,
-      variant: 'neutral' as const,
-    },
+    { key: '', label: 'סה"כ קלסרים', count: counters.total, icon: FolderKanban, variant: 'blue' as const },
+    { key: 'in_office', label: 'במשרד', count: counters.in_office, icon: Archive, variant: 'orange' as const },
+    { key: 'closed_in_office', label: 'סגור במשרד', count: counters.closed_in_office, icon: Boxes, variant: 'orange' as const },
+    { key: 'ready_for_pickup', label: 'מוכן לאיסוף', count: counters.ready_for_pickup, icon: CheckCircle2, variant: 'green' as const },
+    { key: 'returned', label: 'הוחזר', count: counters.returned, icon: Undo2, variant: 'neutral' as const },
+    { key: 'archived_in_office', label: 'ארכיון במשרד', count: counters.archived_in_office, icon: Archive, variant: 'neutral' as const },
   ] as const
 
-  return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-2 gap-3 xl:grid-cols-6">
-        {statusPills.map((pill) => {
-          const isActive = (filters.status ?? '') === pill.key
-          return (
-            <StatsCard
-              key={pill.key || 'total'}
-              title={pill.label}
-              value={pill.count}
-              icon={pill.icon}
-              variant={pill.variant}
-              onClick={() => onFilterChange('status', pill.key)}
-              selected={isActive}
-              className="h-full w-full text-right"
-            />
-          )
-        })}
-      </div>
-
-      <ToolbarContainer>
-        <div className="space-y-3">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-            <Input
-              label="חיפוש"
-              type="text"
-              value={searchDraft}
-              onChange={(e) => setSearchDraft(e.target.value)}
-              placeholder="שם לקוח..."
-              startIcon={<Search className="h-4 w-4" />}
-              endElement={
-                searchDraft ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchDraft('')
-                      onFilterChange('query', '')
-                    }}
-                    className="p-1 text-gray-400 hover:text-gray-600"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                ) : undefined
-              }
-            />
-            <Input
-              label="מספר קלסר"
-              type="text"
-              value={filters.binder_number ?? ''}
-              onChange={(e) => onFilterChange('binder_number', e.target.value)}
-              placeholder="מספר קלסר מדויק..."
-              startIcon={<Search className="h-4 w-4" />}
-              endElement={
-                filters.binder_number ? (
-                  <button
-                    type="button"
-                    onClick={() => onFilterChange('binder_number', '')}
-                    className="p-1 text-gray-400 hover:text-gray-600"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                ) : undefined
-              }
-            />
-            <Select
-              label="סטטוס"
-              value={filters.status ?? ''}
-              onChange={(e) => onFilterChange('status', e.target.value)}
-              options={BINDER_STATUS_OPTIONS}
-              className={cn(filters.status && 'border-primary-400 ring-1 ring-primary-200')}
-            />
-            <Select
-              label="תקופה"
-              value={filters.year ?? ''}
-              onChange={(e) => onFilterChange('year', e.target.value)}
-              options={YEAR_OPTIONS}
-              className={cn(filters.year && 'border-primary-400 ring-1 ring-primary-200')}
-            />
-          </div>
-
-          <ActiveFilterBadges
-            badges={[
-              filters.query
-                ? {
-                    key: 'query',
-                    label: `חיפוש: ${filters.query}`,
-                    onRemove: () => {
-                      setSearchDraft('')
-                      onFilterChange('query', '')
-                    },
-                  }
-                : null,
-              filters.binder_number
-                ? {
-                    key: 'binder_number',
-                    label: `קלסר: ${filters.binder_number}`,
-                    onRemove: () => onFilterChange('binder_number', ''),
-                  }
-                : null,
-              filters.status
-                ? {
-                    key: 'status',
-                    label:
-                      BINDER_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ??
-                      filters.status,
-                    onRemove: () => onFilterChange('status', ''),
-                  }
-                : null,
-              filters.year
-                ? {
-                    key: 'year',
-                    label: filters.year,
-                    onRemove: () => onFilterChange('year', ''),
-                  }
-                : null,
-              filters.client_record_id
-                ? {
-                    key: 'client_record_id',
-                    label: `לקוח #${filters.client_record_id}`,
-                    onRemove: () => onFilterChange('client_record_id', ''),
-                  }
-                : null,
-            ].filter((b): b is NonNullable<typeof b> => b !== null)}
-            onReset={handleReset}
-          />
-        </div>
-      </ToolbarContainer>
+  const pills = (
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-6">
+      {statusPills.map((pill) => (
+        <StatsCard
+          key={pill.key || 'total'}
+          title={pill.label}
+          value={pill.count}
+          icon={pill.icon}
+          variant={pill.variant}
+          onClick={() => onFilterChange('status', pill.key)}
+          selected={(filters.status ?? '') === pill.key}
+          className="h-full w-full text-right"
+        />
+      ))}
     </div>
+  )
+
+  return (
+    <FilterPanel
+      fields={FIELDS}
+      values={{
+        query: filters.query ?? '',
+        binder_number: filters.binder_number ?? '',
+        status: filters.status ?? '',
+        year: filters.year ?? '',
+      }}
+      onChange={onFilterChange}
+      onReset={onReset}
+      gridClass="grid-cols-1 sm:grid-cols-4"
+      above={pills}
+    />
   )
 }
 

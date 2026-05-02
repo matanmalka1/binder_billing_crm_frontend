@@ -1,16 +1,7 @@
-import { useSearchDebounce } from '../../../hooks/useSearchDebounce'
-import { Search, X } from 'lucide-react'
-import { Input } from '../../../components/ui/inputs/Input'
-import { Select } from '../../../components/ui/inputs/Select'
-import { DatePicker } from '../../../components/ui/inputs/DatePicker'
-import { ToolbarContainer } from '../../../components/ui/layout/ToolbarContainer'
-import { ActiveFilterBadges } from '../../../components/ui/table/ActiveFilterBadges'
-import { cn } from '../../../utils/utils'
+import { FilterPanel } from '@/components/ui/filters/FilterPanel'
 import {
   TAX_DEADLINE_FILTER_TYPE_OPTIONS,
   TAX_DEADLINE_STATUS_OPTIONS,
-  getTaxDeadlineStatusLabel,
-  getTaxDeadlineTypeLabel,
 } from '../constants'
 import type { TaxDeadlineFilters } from '../types'
 
@@ -20,118 +11,38 @@ interface TaxDeadlinesFiltersProps {
   defaultStatus?: string
 }
 
-export const TaxDeadlinesFilters = ({ filters, onChange, defaultStatus }: TaxDeadlinesFiltersProps) => {
-  const [searchDraft, setSearchDraft] = useSearchDebounce(filters.client_name ?? '', (v) =>
-    onChange('client_name', v),
-  )
+const FIELDS = [
+  {
+    type: 'search' as const,
+    key: 'client_name',
+    label: 'חיפוש לקוח במועדים',
+    placeholder: 'סנן קבוצות לפי שם לקוח...',
+  },
+  { type: 'select' as const, key: 'deadline_type', label: 'סוג מועד', options: TAX_DEADLINE_FILTER_TYPE_OPTIONS },
+  { type: 'select' as const, key: 'status', label: 'סטטוס', options: TAX_DEADLINE_STATUS_OPTIONS },
+  { type: 'date-range' as const, fromKey: 'due_from', toKey: 'due_to', fromLabel: 'מתאריך', toLabel: 'עד תאריך' },
+]
 
-  const handleReset = () => {
-    setSearchDraft('')
-    onChange('client_name', '')
-    onChange('deadline_type', '')
-    onChange('status', '')
-    onChange('due_from', '')
-    onChange('due_to', '')
-  }
-
-  return (
-    <ToolbarContainer>
-      <div className="space-y-3">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <Input
-            label="חיפוש לקוח במועדים"
-            type="text"
-            value={searchDraft}
-            onChange={(e) => setSearchDraft(e.target.value)}
-            placeholder="סנן קבוצות לפי שם לקוח..."
-            startIcon={<Search className="h-4 w-4" />}
-            endElement={
-              searchDraft ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchDraft('')
-                    onChange('client_name', '')
-                  }}
-                  className="p-1 text-gray-400 hover:text-gray-600"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              ) : undefined
-            }
-          />
-          <Select
-            label="סוג מועד"
-            value={filters.deadline_type}
-            onChange={(e) => onChange('deadline_type', e.target.value)}
-            options={TAX_DEADLINE_FILTER_TYPE_OPTIONS}
-            className={cn(filters.deadline_type && 'border-primary-400 ring-1 ring-primary-200')}
-          />
-          <Select
-            label="סטטוס"
-            value={filters.status}
-            onChange={(e) => onChange('status', e.target.value)}
-            options={TAX_DEADLINE_STATUS_OPTIONS}
-            className={cn(filters.status && 'border-primary-400 ring-1 ring-primary-200')}
-          />
-          <DatePicker
-            label="מתאריך"
-            value={filters.due_from}
-            onChange={(v) => onChange('due_from', v)}
-          />
-          <DatePicker
-            label="עד תאריך"
-            value={filters.due_to}
-            onChange={(v) => onChange('due_to', v)}
-          />
-        </div>
-
-        <ActiveFilterBadges
-          badges={[
-            filters.client_name
-              ? {
-                  key: 'client_name',
-                  label: `לקוח: ${filters.client_name}`,
-                  onRemove: () => {
-                    setSearchDraft('')
-                    onChange('client_name', '')
-                  },
-                }
-              : null,
-            filters.deadline_type
-              ? {
-                  key: 'deadline_type',
-                  label: getTaxDeadlineTypeLabel(filters.deadline_type),
-                  onRemove: () => onChange('deadline_type', ''),
-                }
-              : null,
-            filters.status && filters.status !== defaultStatus
-              ? {
-                  key: 'status',
-                  label: getTaxDeadlineStatusLabel(filters.status),
-                  onRemove: () => onChange('status', ''),
-                }
-              : null,
-            filters.due_from
-              ? {
-                  key: 'due_from',
-                  label: `מתאריך: ${filters.due_from}`,
-                  onRemove: () => onChange('due_from', ''),
-                }
-              : null,
-            filters.due_to
-              ? {
-                  key: 'due_to',
-                  label: `עד: ${filters.due_to}`,
-                  onRemove: () => onChange('due_to', ''),
-                }
-              : null,
-          ].filter((b): b is NonNullable<typeof b> => b !== null)}
-          onReset={handleReset}
-        />
-      </div>
-    </ToolbarContainer>
-  )
-}
+export const TaxDeadlinesFilters = ({ filters, onChange, defaultStatus }: TaxDeadlinesFiltersProps) => (
+  <FilterPanel
+    fields={FIELDS}
+    values={{
+      client_name: filters.client_name ?? '',
+      deadline_type: filters.deadline_type ?? '',
+      status: filters.status ?? '',
+      due_from: filters.due_from ?? '',
+      due_to: filters.due_to ?? '',
+    }}
+    onChange={onChange}
+    onReset={() => {
+      onChange('client_name', '')
+      onChange('deadline_type', '')
+      onChange('status', defaultStatus ?? '')
+      onChange('due_from', '')
+      onChange('due_to', '')
+    }}
+    gridClass="grid-cols-1 sm:grid-cols-3"
+  />
+)
 
 TaxDeadlinesFilters.displayName = 'TaxDeadlinesFilters'
