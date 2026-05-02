@@ -3,6 +3,7 @@ import {
   Bell,
   Briefcase,
   CalendarDays,
+  CheckSquare,
   ClipboardList,
   FileSpreadsheet,
   ChartColumn,
@@ -33,7 +34,7 @@ export const NAV_GROUPS: NavGroup[] = [
     key: 'main',
     label: 'ראשי',
     items: [
-      { to: '/', label: 'לוח עבודה', icon: LayoutDashboard, end: true },
+      { to: '/', label: 'לוח בקרה', icon: LayoutDashboard, end: true },
       { to: '/search', label: 'חיפוש', icon: Search },
     ],
   },
@@ -58,6 +59,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { to: '/binders', label: 'קלסרים', icon: Briefcase },
       { to: '/reminders', label: 'תזכורות', icon: Bell },
+      { to: '/tasks', label: 'משימות', icon: CheckSquare },
     ],
   },
   {

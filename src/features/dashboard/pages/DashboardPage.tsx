@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { CalendarClock } from 'lucide-react'
+import { formatDate } from '@/utils/utils'
 import { Alert } from '@/components/ui/overlays/Alert'
 import { ConfirmDialog } from '@/components/ui/overlays/ConfirmDialog'
 import { SignatureRequestsDashboardPanel } from '@/features/signatureRequests'
@@ -15,6 +16,7 @@ import { DashboardSurface } from '../components/DashboardPrimitives'
 import {
   attentionSectionsToPanelSections,
   quickActionsToPanelSections,
+  type AttentionTone,
   type PanelSection,
 } from '../attentionPanelSections'
 import type { UnifiedItem } from '@/features/tasks'
@@ -76,9 +78,13 @@ export const DashboardPage: React.FC = () => {
         tone: 'amber',
         items: unifiedItems.map((item) => ({
           id: `${item.item_type}-${item.source_type}-${item.source_id}`,
-          label: item.label,
-          sublabel: item.due_date,
+          label: item.client_name ?? item.label,
+          sublabel: item.label,
           href: getUnifiedItemHref(item),
+          meta: {
+            tag: formatDate(item.due_date),
+            tagTone: (item.urgency === 'overdue' ? 'red' : item.urgency === 'approaching' ? 'amber' : 'blue') as AttentionTone,
+          },
         })),
       },
       ...(quickActions?.length ? quickActionsToPanelSections(quickActions) : []),

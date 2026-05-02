@@ -24,6 +24,7 @@ export const unifiedItemSchema = z.object({
   due_date: z.string(),
   urgency: z.string().optional().nullable(),
   client_record_id: z.number().int().optional().nullable(),
+  client_name: z.string().optional().nullable(),
   business_id: z.number().int().optional().nullable(),
 })
 

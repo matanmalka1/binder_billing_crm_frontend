@@ -12,9 +12,6 @@ import {
   RemindersSummaryCards,
   useReminders,
 } from '@/features/reminders'
-import type { ReminderStatus } from '../types'
-import { DEFAULT_REMINDER_STATUS_FILTER } from '../constants'
-
 export const RemindersPage: React.FC = () => {
   const {
     reminders,
