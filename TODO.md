@@ -1,5 +1,14 @@
 # Frontend Redesign — Task Board
 
+## אפיון
+
+- [x] **0.1** צור אפיון מסכים וסידור ניווט: `SCREEN_SPEC.md`
+- [x] **0.2** עדכן routes ו-sidebar לפי האפיון
+- [x] **0.3** צור redirects זמניים לנתיבים ששונו
+- [x] **0.4** הסר כפילויות מה-sidebar והשאר רק מסכי עבודה או דוחות ניהול מובהקים
+- [x] **0.5** הסר routes עצמאיים למסכים כפולים
+- [x] **0.6** העבר דוחות ניהול ל-sidebar תחת `דוחות` והסר אותם כטאבים ממסכי עבודה
+
 ## שלב 1 — תשתית משותפת
 
 - [x] **1.1** צור `<FilterPanel fields={[...]} />` והחלף את כל 9 filter bars
@@ -22,7 +31,7 @@
 - [ ] **3.1** החלט: `tasks` — page or הסר מה-sidebar
 - [ ] **3.2** החלט: `taxProfile` — embed or standalone page
 - [ ] **3.3** החלט: `notifications` — list page or embed-only
-- [ ] **3.4** החלט: `taxDashboard` — integrate into main dashboard or standalone
+- [ ] **3.4** החלט: `taxDashboard` — מוצג זמנית כ-page תחת `/tax/dashboard`; להחליט אם להשאיר או לשלב בלוח הבקרה הראשי
 
 ## שלב 4 — תיקונים נקודתיים
 

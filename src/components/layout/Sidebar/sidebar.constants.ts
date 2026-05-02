@@ -5,6 +5,7 @@ import {
   CalendarDays,
   ClipboardList,
   FileSpreadsheet,
+  ChartColumn,
   LayoutDashboard,
   ReceiptText,
   Search,
@@ -43,11 +44,21 @@ export const NAV_GROUPS: NavGroup[] = [
     key: 'tax',
     label: 'מיסים',
     items: [
+      { to: '/tax/dashboard', label: 'לוח מסים', icon: FileSpreadsheet },
       { to: '/tax/vat', label: 'דוחות מע"מ (לקוח)', icon: ClipboardList },
       { to: '/tax/reports', label: 'דוחות שנתיים', icon: TableProperties, end: true },
       { to: '/tax/advance-payments', label: 'מקדמות', icon: CalendarDays },
       { to: '/tax/deadlines', label: 'מועדים', icon: FileSpreadsheet },
-      { to: '/tax/vat-compliance', label: 'דוח ציות מע"מ', icon: ClipboardList },
+    ],
+  },
+  {
+    key: 'reports',
+    label: 'דוחות',
+    items: [
+      { to: '/reports/vat-compliance', label: 'ציות מע"מ', icon: ClipboardList },
+      { to: '/reports/aging', label: 'דוח חובות לקוחות', icon: ChartColumn },
+      { to: '/reports/annual-status', label: 'סטטוס דוחות שנתיים', icon: TableProperties },
+      { to: '/reports/advance-payments', label: 'גביית מקדמות', icon: CalendarDays },
     ],
   },
   {

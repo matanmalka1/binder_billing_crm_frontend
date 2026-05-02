@@ -19,9 +19,15 @@ import { RemindersPage } from '../features/reminders'
 import { Search } from '../features/search'
 import { SigningPage } from '../features/signing'
 import { TaxDeadlines } from '../features/taxDeadlines'
+import { TaxDashboardPage } from '../features/taxDashboard'
 import { Users } from '../features/users'
 import { VatWorkItemDetail, VatWorkItems } from '../features/vatReports'
-import { VatComplianceReportView } from '../features/reports'
+import {
+  AdvancePaymentReportView,
+  AgingReportView,
+  AnnualReportStatusView,
+  VatComplianceReportView,
+} from '../features/reports'
 
 const AuthExpiredNavigationHandler: React.FC = () => {
   const navigate = useNavigate()
@@ -123,13 +129,21 @@ export const AppRoutes: React.FC = () => {
             <Route path="search" element={<Search />} />
             <Route path="charges" element={<Charges />} />
             <Route path="tax" element={<Navigate to="/tax/deadlines" replace />} />
+            <Route path="tax/dashboard" element={<TaxDashboardPage />} />
             <Route path="tax/reports" element={<AnnualReportsPage />} />
             <Route path="tax/reports/:reportId" element={<AnnualReportDetail />} />
             <Route path="tax/deadlines" element={<TaxDeadlines />} />
             <Route path="tax/advance-payments" element={<AdvancePayments />} />
             <Route path="tax/vat" element={<VatWorkItems />} />
             <Route path="tax/vat/:id" element={<VatWorkItemDetail />} />
-            <Route path="tax/vat-compliance" element={<VatComplianceReportView />} />
+            <Route
+              path="tax/vat-compliance"
+              element={<Navigate to="/reports/vat-compliance" replace />}
+            />
+            <Route path="reports/vat-compliance" element={<VatComplianceReportView />} />
+            <Route path="reports/aging" element={<AgingReportView />} />
+            <Route path="reports/annual-status" element={<AnnualReportStatusView />} />
+            <Route path="reports/advance-payments" element={<AdvancePaymentReportView />} />
             <Route path="reminders" element={<RemindersPage />} />
           </Route>
         </Route>

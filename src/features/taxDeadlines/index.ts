@@ -15,6 +15,7 @@ export { TaxDeadlinesFilters } from './components/TaxDeadlinesFilters'
 export { TaxDeadlinesTable } from './components/TaxDeadlinesTable'
 export { useTaxDeadlines } from './hooks/useTaxDeadlines'
 export { TaxDeadlines } from './pages/TaxDeadlinesPage'
+export { getDeadlineDaysLabelShort, getTaxDeadlinePeriodLabel } from './utils'
 export type {
   TaxDeadlineResponse,
   TaxDeadlineListResponse,

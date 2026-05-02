@@ -15,6 +15,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
   const [expanded, setExpanded] = useState<Record<string, boolean>>({
     main: true,
     tax: true,
+    reports: true,
     settings: true,
   })
   const { user, logout } = useAuthStore()
