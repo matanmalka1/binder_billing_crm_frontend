@@ -1,4 +1,4 @@
-import { TrendingUp, Banknote, CheckCircle } from 'lucide-react'
+import { TrendingUp, Banknote, CheckCircle, Clock } from 'lucide-react'
 import { StatsCard } from '../../../components/ui/layout/StatsCard'
 import { fmtCurrency } from '../utils'
 import { getCollectionPercent } from './advancePaymentComponent.utils'
@@ -8,6 +8,7 @@ interface OverviewKPICardsProps {
   totalExpected: string | number | null
   totalPaid: string | number | null
   collectionRate: number | null
+  overdueCount?: number
 }
 
 export const OverviewKPICards: React.FC<OverviewKPICardsProps> = ({
@@ -15,11 +16,12 @@ export const OverviewKPICards: React.FC<OverviewKPICardsProps> = ({
   totalExpected,
   totalPaid,
   collectionRate,
+  overdueCount,
 }) => {
   const pct = getCollectionPercent(collectionRate, true)
 
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
       <StatsCard
         title="סה״כ צפוי"
         value={fmtCurrency(totalExpected)}
@@ -40,6 +42,12 @@ export const OverviewKPICards: React.FC<OverviewKPICardsProps> = ({
         icon={TrendingUp}
         variant="purple"
         progress={pct ?? undefined}
+      />
+      <StatsCard
+        title="באיחור"
+        value={overdueCount != null ? String(overdueCount) : '—'}
+        icon={Clock}
+        variant="red"
       />
     </div>
   )

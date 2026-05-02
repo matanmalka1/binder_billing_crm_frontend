@@ -1,5 +1,5 @@
 import { DataTable } from '../../../components/ui/table/DataTable'
-import type { AdvancePaymentRow, AdvancePaymentStatus } from '../types'
+import type { AdvancePaymentRow } from '../types'
 import { buildAdvancePaymentColumns } from './AdvancePaymentColumns'
 import { CalendarDays } from 'lucide-react'
 
@@ -8,15 +8,9 @@ interface AdvancePaymentTableProps {
   isLoading: boolean
   showBusinessName?: boolean
   canEdit?: boolean
-  updatingId?: number | null
-  deletingId?: number | null
-  onUpdate?: (
-    id: number,
-    paid_amount: string | null,
-    status: AdvancePaymentStatus,
-    expected_amount: string | null,
-  ) => void
+  onRowClick?: (row: AdvancePaymentRow) => void
   onDelete?: (id: number) => void
+  deletingId?: number | null
 }
 
 export const AdvancePaymentTable: React.FC<AdvancePaymentTableProps> = ({
@@ -24,20 +18,16 @@ export const AdvancePaymentTable: React.FC<AdvancePaymentTableProps> = ({
   isLoading,
   showBusinessName = false,
   canEdit = false,
-  updatingId = null,
-  deletingId = null,
-  onUpdate,
+  onRowClick,
   onDelete,
+  deletingId = null,
 }) => (
   <DataTable
     data={rows}
-    columns={buildAdvancePaymentColumns(
-      canEdit && onUpdate && onDelete
-        ? { canEdit: true, showBusinessName, updatingId, deletingId, onUpdate, onDelete }
-        : { canEdit: false, showBusinessName },
-    )}
+    columns={buildAdvancePaymentColumns({ canEdit, showBusinessName, deletingId, onDelete })}
     getRowKey={(row) => row.id}
     isLoading={isLoading}
+    onRowClick={onRowClick}
     emptyState={{
       icon: CalendarDays,
       title: 'אין מקדמות לשנה זו',

@@ -1,4 +1,5 @@
-export type AdvancePaymentStatus = 'pending' | 'paid' | 'partial' | 'overdue'
+export type AdvancePaymentStatus = 'pending' | 'paid' | 'partial'
+export type AdvancePaymentTimingStatus = 'on_time' | 'overdue'
 export type AdvancePaymentMethod =
   | 'bank_transfer'
   | 'credit_card'
@@ -22,6 +23,11 @@ export interface AdvancePaymentRow {
   annual_report_id: number | null
   notes: string | null
   delta: string | null
+  reported_turnover: string | null
+  live_turnover: string | null
+  missing_turnover: boolean
+  timing_status: AdvancePaymentTimingStatus
+  paid_late: boolean
   created_at: string
   updated_at: string | null
 }
@@ -65,7 +71,12 @@ export interface AdvancePaymentOverviewRow {
   paid_amount: string | null
   delta: string | null
   status: AdvancePaymentStatus
+  timing_status: AdvancePaymentTimingStatus
   due_date: string
+  payment_method: AdvancePaymentMethod | null
+  reported_turnover: string | null
+  live_turnover: string | null
+  missing_turnover: boolean
 }
 
 export interface ListAdvancePaymentsOverviewParams {
@@ -84,6 +95,17 @@ export interface AdvancePaymentOverviewResponse {
   total_expected: string | null
   total_paid: string | null
   collection_rate: number | null
+}
+
+export interface MonthBatchSummary {
+  year: number
+  month: number
+  client_count: number
+  missing_turnover_count: number
+  overdue_count: number
+  total_expected: string | null
+  total_paid: string | null
+  collection_rate: number
 }
 
 export interface AdvancePaymentSuggestionResponse {

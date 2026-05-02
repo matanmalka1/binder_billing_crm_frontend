@@ -9,4 +9,5 @@ export const ADVANCE_PAYMENT_ENDPOINTS = {
   clientAdvancePaymentsGenerate: (clientId: number | string) =>
     `/clients/${clientId}/advance-payments/generate`,
   advancePaymentsOverview: '/advance-payments/overview',
+  advancePaymentsBatches: '/advance-payments/overview/batches',
 } as const

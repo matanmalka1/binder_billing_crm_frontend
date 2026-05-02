@@ -11,6 +11,7 @@ import type {
   AdvancePaymentOverviewResponse,
   AdvancePaymentSuggestionResponse,
   AnnualKPIResponse,
+  MonthBatchSummary,
 } from '../types'
 
 export const advancePaymentsApi = {
@@ -90,6 +91,14 @@ export const advancePaymentsApi = {
   getAnnualKPIs: async (clientId: number, year: number): Promise<AnnualKPIResponse> => {
     const response = await api.get<AnnualKPIResponse>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentsKPI(clientId),
+      { params: toQueryParams({ year }) },
+    )
+    return response.data
+  },
+
+  getBatches: async (year: number): Promise<MonthBatchSummary[]> => {
+    const response = await api.get<MonthBatchSummary[]>(
+      ADVANCE_PAYMENT_ENDPOINTS.advancePaymentsBatches,
       { params: toQueryParams({ year }) },
     )
     return response.data

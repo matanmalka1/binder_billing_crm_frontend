@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { AdvancePaymentStatus } from '../types'
+import type { AdvancePaymentRow, AdvancePaymentStatus, UpdateAdvancePaymentPayload } from '../types'
 import { useAdvancePayments } from '../hooks/useAdvancePayments'
 import { useAdvanceRateInsights } from '../hooks/useAdvanceRateInsights'
 import { useRole } from '../../../hooks/useRole'
@@ -10,6 +10,7 @@ import { getHttpStatus, showErrorToast } from '../../../utils/utils'
 import { ClientAdvancePaymentsHeader } from './ClientAdvancePaymentsHeader'
 import { AdvancePaymentTable } from './AdvancePaymentTable'
 import { AdvancePaymentsKPICards } from './AdvancePaymentsKPICards'
+import { AdvancePaymentDrawer } from './AdvancePaymentDrawer'
 import { CreateAdvancePaymentModal } from './CreateAdvancePaymentModal'
 import { PaginationCard } from '../../../components/ui/table/PaginationCard'
 import { CLIENT_ADVANCE_PAYMENT_PAGE_SIZE } from './advancePaymentComponent.constants'
@@ -25,6 +26,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const [statusFilter, setStatusFilter] = useState<AdvancePaymentStatus[]>([])
   const [page, setPage] = useState(1)
   const [modalOpen, setModalOpen] = useState(false)
+  const [drawerRow, setDrawerRow] = useState<AdvancePaymentRow | null>(null)
   const [generationFrequency, setGenerationFrequency] = useState<1 | 2>(1)
   const { isAdvisor } = useRole()
 
@@ -35,12 +37,9 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
     total,
     create,
     isCreating,
-    updateRow,
-    updatingId,
     deleteRow,
-    isDeletingId,
   } = useAdvancePayments(clientId, year, statusFilter, page)
-  const { vatType } = useAdvanceRateInsights(clientId)
+  const { vatType, advanceRate } = useAdvanceRateInsights(clientId)
 
   useEffect(() => {
     if (vatType === 'bimonthly') setGenerationFrequency(2)
@@ -59,24 +58,26 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
     onError: (err) => showErrorToast(err, 'שגיאה ביצירת לוח מקדמות'),
   })
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: UpdateAdvancePaymentPayload }) =>
+      advancePaymentsApi.update(clientId, id, payload),
+    onSuccess: () => {
+      toast.success('מקדמה עודכנה בהצלחה')
+      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.forClientYear(clientId, year) })
+      setDrawerRow(null)
+    },
+    onError: (err) => showErrorToast(err, 'שגיאה בעדכון מקדמה'),
+  })
+
   const totalPages = getTotalPages(total, CLIENT_ADVANCE_PAYMENT_PAGE_SIZE)
+
   const handleStatusToggle = (status: AdvancePaymentStatus) => {
     setPage(1)
     setStatusFilter((prev) => toggleAdvancePaymentStatusFilter(prev, status))
   }
 
-  const handleUpdateRow = async (
-    id: number,
-    paid_amount: string | null,
-    status?: AdvancePaymentStatus,
-    expected_amount?: string | null,
-  ) => {
-    try {
-      await updateRow(id, paid_amount, status, expected_amount)
-      toast.success('מקדמה עודכנה בהצלחה')
-    } catch (err) {
-      showErrorToast(err, 'שגיאה בעדכון מקדמה')
-    }
+  const handleSave = async (id: number, payload: UpdateAdvancePaymentPayload) => {
+    await updateMutation.mutateAsync({ id, payload })
   }
 
   const handleCreate = async (...args: Parameters<typeof create>) => {
@@ -105,30 +106,37 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
 
   return (
     <div className="space-y-6">
-      <ClientAdvancePaymentsHeader
-        isAdvisor={isAdvisor}
-        statusFilter={statusFilter}
-        onToggleStatus={handleStatusToggle}
-        year={year}
-        onYearChange={(nextYear) => {
-          setPage(1)
-          setYear(nextYear)
-        }}
-        onOpenCreate={() => setModalOpen(true)}
-        onGenerateSchedule={() => generateMutation.mutate()}
-        generationFrequency={generationFrequency}
-        onGenerationFrequencyChange={setGenerationFrequency}
-        isGenerating={generateMutation.isPending}
-      />
+      <div className="flex items-center justify-between gap-2">
+        <ClientAdvancePaymentsHeader
+          isAdvisor={isAdvisor}
+          statusFilter={statusFilter}
+          onToggleStatus={handleStatusToggle}
+          year={year}
+          onYearChange={(nextYear) => {
+            setPage(1)
+            setYear(nextYear)
+          }}
+          onOpenCreate={() => setModalOpen(true)}
+          onGenerateSchedule={() => generateMutation.mutate()}
+          generationFrequency={generationFrequency}
+          onGenerationFrequencyChange={setGenerationFrequency}
+          isGenerating={generateMutation.isPending}
+        />
+        {advanceRate != null && (
+          <span className="text-sm text-gray-500 shrink-0">
+            אחוז מקדמות:{' '}
+            <span className="font-semibold text-gray-800">{advanceRate}%</span>
+          </span>
+        )}
+      </div>
+
       <AdvancePaymentsKPICards clientId={clientId} year={year} />
+
       <AdvancePaymentTable
         rows={rows}
         isLoading={isLoading}
-        canEdit={isAdvisor}
-        updatingId={updatingId}
-        deletingId={isDeletingId}
-        onUpdate={handleUpdateRow}
-        onDelete={handleDeleteRow}
+        canEdit={false}
+        onRowClick={(row) => setDrawerRow(row)}
       />
 
       {totalPages > 1 && (
@@ -140,6 +148,15 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
           onPageChange={setPage}
         />
       )}
+
+      <AdvancePaymentDrawer
+        row={drawerRow}
+        open={drawerRow !== null}
+        isUpdating={updateMutation.isPending}
+        canEdit={isAdvisor}
+        onClose={() => setDrawerRow(null)}
+        onSave={handleSave}
+      />
 
       {isAdvisor && (
         <CreateAdvancePaymentModal

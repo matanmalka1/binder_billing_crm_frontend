@@ -79,7 +79,6 @@ export const ADVANCE_PAYMENT_STATUS_LABELS: Record<string, string> = {
   pending: 'ממתין',
   paid: 'שולם',
   partial: 'חלקי',
-  overdue: 'באיחור',
 }
 
 export const getAdvancePaymentStatusLabel = makeLabelGetter(ADVANCE_PAYMENT_STATUS_LABELS)
@@ -90,9 +89,19 @@ export const ADVANCE_PAYMENT_STATUS_VARIANTS: Record<
 > = {
   paid: 'success',
   partial: 'warning',
-  overdue: 'error',
   pending: 'neutral',
 }
+
+export const ADVANCE_PAYMENT_METHOD_LABELS: Record<string, string> = {
+  bank_transfer: 'העברה בנקאית',
+  credit_card: 'כרטיס אשראי',
+  check: "צ'ק",
+  direct_debit: 'הוראת קבע',
+  cash: 'מזומן',
+  other: 'אחר',
+}
+
+export const getAdvancePaymentMethodLabel = makeLabelGetter(ADVANCE_PAYMENT_METHOD_LABELS)
 
 // ── User role ──────────────────────────────────────────────────────────────
 

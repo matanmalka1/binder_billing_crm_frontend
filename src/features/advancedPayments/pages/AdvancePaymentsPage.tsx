@@ -1,157 +1,115 @@
+import { useState } from 'react'
 import { getYear } from 'date-fns'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { PageHeader } from '@/components/layout/PageHeader'
-import {
-  AdvancePaymentsFiltersBar,
-  OverviewKPICards,
-  useAdvancePaymentsOverview,
-  type AdvancePaymentOverviewRow,
-  type AdvancePaymentStatus,
-  fmtCurrency,
-} from '@/features/advancedPayments'
-import { formatClientOfficeId } from '@/utils/utils'
-import { PaginatedDataTable } from '@/components/ui/table/PaginatedDataTable'
-import { type Column } from '@/components/ui/table/DataTable'
-import { formatDate, parsePositiveInt } from '@/utils/utils'
-import { AdvancePaymentStatusBadge } from '../components/AdvancePaymentStatusBadge'
-import { getAdvancePaymentMonthLabel } from '../utils'
+import { Select } from '@/components/ui/inputs/Select'
+import { useAdvancePaymentBatches } from '../hooks/useAdvancePaymentBatches'
+import { OverviewKPICards } from '../components/OverviewKPICards'
+import { AdvancePaymentBatchRow } from '../components/AdvancePaymentBatchRow'
+import { AdvancePaymentDrawer } from '../components/AdvancePaymentDrawer'
+import { advancePaymentsApi, advancedPaymentsQK } from '../api'
+import type { AdvancePaymentOverviewRow, UpdateAdvancePaymentPayload } from '../types'
+import { parsePositiveInt } from '@/utils/utils'
+import { toast } from '../../../utils/toast'
+import { showErrorToast } from '../../../utils/utils'
+import { useRole } from '../../../hooks/useRole'
 
-const columns: Column<AdvancePaymentOverviewRow>[] = [
-  {
-    key: 'office_client_number',
-    header: "מס' לקוח",
-    render: (row) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {formatClientOfficeId(row.office_client_number)}
-      </span>
-    ),
-  },
-  {
-    key: 'business_name',
-    header: 'לקוח',
-    render: (row) => (
-      <span className="text-sm font-semibold text-gray-900">{row.business_name}</span>
-    ),
-  },
-  {
-    key: 'period',
-    header: 'חודש',
-    render: (row) => (
-      <span className="text-sm text-gray-700">
-        {getAdvancePaymentMonthLabel(row.period, row.period_months_count)}
-      </span>
-    ),
-  },
-  {
-    key: 'due_date',
-    header: 'תאריך תשלום',
-    render: (row) => (
-      <span className="text-sm text-gray-500 tabular-nums">{formatDate(row.due_date)}</span>
-    ),
-  },
-  {
-    key: 'expected_amount',
-    header: 'סכום צפוי',
-    render: (row) => (
-      <span className="font-mono text-sm font-medium text-gray-700 tabular-nums">
-        {fmtCurrency(row.expected_amount)}
-      </span>
-    ),
-  },
-  {
-    key: 'paid_amount',
-    header: 'שולם',
-    render: (row) => (
-      <span className="font-mono text-sm font-semibold text-positive-700 tabular-nums">
-        {fmtCurrency(row.paid_amount)}
-      </span>
-    ),
-  },
-  {
-    key: 'delta',
-    header: 'יתרה',
-    render: (row) => {
-      if (row.delta == null) return <span className="text-gray-400 text-sm tabular-nums">—</span>
-      const n = Number(row.delta)
-      const color = n < 0 ? 'text-negative-600' : 'text-gray-700'
-      return (
-        <span className={`font-mono text-sm tabular-nums ${color}`}>{fmtCurrency(row.delta)}</span>
-      )
-    },
-  },
-  {
-    key: 'status',
-    header: 'סטטוס',
-    render: (row) => <AdvancePaymentStatusBadge status={row.status} />,
-  },
-]
+const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => {
+  const y = getYear(new Date()) - 1 + i
+  return { value: String(y), label: String(y) }
+})
 
 export const AdvancePayments: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
-  const PAGE_SIZE = 20
+  const queryClient = useQueryClient()
+  const { isAdvisor } = useRole()
 
   const year = parsePositiveInt(searchParams.get('year'), getYear(new Date()))
-  const month = parsePositiveInt(searchParams.get('month'), 0)
-  const statusFilter = (searchParams.get('status') ?? '') as AdvancePaymentStatus | ''
-  const page = parsePositiveInt(searchParams.get('page'), 1)
 
-  const setParam = (key: string, value: string) => {
-    const next = new URLSearchParams(searchParams)
-    if (value) next.set(key, value)
-    else next.delete(key)
-    if (key !== 'page') next.delete('page')
-    setSearchParams(next)
-  }
+  const [drawerRow, setDrawerRow] = useState<AdvancePaymentOverviewRow | null>(null)
 
-  const { rows, total, totalPages, isLoading, error, kpiData } = useAdvancePaymentsOverview({
-    year,
-    month,
-    statusFilter,
-    page,
+  const { batches, isLoading } = useAdvancePaymentBatches(year)
+
+  const totalExpected = batches.reduce((s, b) => s + Number(b.total_expected ?? 0), 0)
+  const totalPaid = batches.reduce((s, b) => s + Number(b.total_paid ?? 0), 0)
+  const collectionRate = totalExpected > 0 ? Math.round((totalPaid / totalExpected) * 100) : 0
+  const overdueTotal = batches.reduce((s, b) => s + b.overdue_count, 0)
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: UpdateAdvancePaymentPayload }) =>
+      advancePaymentsApi.update(drawerRow!.client_record_id, id, payload),
+    onSuccess: () => {
+      toast.success('מקדמה עודכנה')
+      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all })
+      setDrawerRow(null)
+    },
+    onError: (err) => showErrorToast(err, 'שגיאה בעדכון מקדמה'),
   })
+
+  const handleSave = async (id: number, payload: UpdateAdvancePaymentPayload) => {
+    await updateMutation.mutateAsync({ id, payload })
+  }
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="מקדמות"
-        description="סקירה לפי שנה, חודש וסטטוס"
-      />
+      <PageHeader title="מקדמות" description="סקירה לפי שנה וחודש" />
 
-      {!isLoading && kpiData && (
+      <div className="flex items-center justify-between gap-4">
         <OverviewKPICards
           year={year}
-          totalExpected={kpiData.total_expected}
-          totalPaid={kpiData.total_paid}
-          collectionRate={kpiData.collection_rate}
+          totalExpected={String(totalExpected)}
+          totalPaid={String(totalPaid)}
+          collectionRate={collectionRate}
+          overdueCount={overdueTotal}
         />
+        <div className="shrink-0 w-32">
+          <Select
+            value={String(year)}
+            onChange={(e) => {
+              const next = new URLSearchParams(searchParams)
+              next.set('year', e.target.value)
+              setSearchParams(next)
+            }}
+            options={YEAR_OPTIONS}
+          />
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-14 rounded-lg bg-gray-100 animate-pulse" />
+          ))}
+        </div>
+      ) : batches.length === 0 ? (
+        <p className="text-center text-gray-500 py-12">אין מקדמות לשנה {year}</p>
+      ) : (
+        <div className="space-y-2">
+          {batches.map((batch) => (
+            <AdvancePaymentBatchRow
+              key={`${batch.year}-${batch.month}`}
+              batch={batch}
+              onRowClick={(row) => {
+                if (isAdvisor) {
+                  setDrawerRow(row)
+                } else {
+                  navigate(`/clients/${row.client_record_id}/advance-payments`)
+                }
+              }}
+            />
+          ))}
+        </div>
       )}
 
-      <AdvancePaymentsFiltersBar
-        year={year}
-        month={month}
-        status={statusFilter}
-        onParamChange={setParam}
-      />
-
-      <PaginatedDataTable
-        columns={columns}
-        data={rows}
-        getRowKey={(row) => row.id}
-        isLoading={isLoading}
-        error={error ? 'שגיאה בטעינת מקדמות' : undefined}
-        onRowClick={(row) => {
-          const params = new URLSearchParams()
-          if (month) params.set('month', String(month))
-          navigate(`/clients/${row.client_record_id}/advance-payments?${params.toString()}`)
-        }}
-        emptyMessage="אין מקדמות לפי הסינון הנבחר"
-        page={page}
-        pageSize={PAGE_SIZE}
-        total={total}
-        label="מקדמות"
-        onPageChange={(p) => setParam('page', String(p))}
-        summary={!isLoading && <p className="text-sm text-gray-500">{total.toLocaleString('he-IL')} רשומות</p>}
+      <AdvancePaymentDrawer
+        row={drawerRow as never}
+        open={drawerRow !== null}
+        isUpdating={updateMutation.isPending}
+        canEdit={isAdvisor}
+        onClose={() => setDrawerRow(null)}
+        onSave={handleSave}
       />
     </div>
   )
