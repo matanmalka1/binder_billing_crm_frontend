@@ -35,9 +35,7 @@ export const MissingDocumentsNotice: React.FC<MissingDocumentsNoticeProps> = ({
           <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
           <div className="min-w-0">
             <p className="text-sm font-semibold text-emerald-950">כל מסמכי החובה קיימים</p>
-            <p className="mt-1 text-sm text-emerald-800">
-              אין כרגע מסמכים חסרים בפרטי הלקוח.
-            </p>
+            <p className="mt-1 text-sm text-emerald-800">אין כרגע מסמכים חסרים בפרטי הלקוח.</p>
           </div>
         </div>
       </Card>

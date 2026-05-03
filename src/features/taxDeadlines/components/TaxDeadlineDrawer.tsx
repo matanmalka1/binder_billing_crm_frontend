@@ -63,7 +63,10 @@ export const TaxDeadlineDrawer: React.FC<TaxDeadlineDrawerProps> = ({ deadline, 
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    navigate(getTaxDeadlineSourcePath(deadline) ?? `/clients/${deadline.client_record_id}/vat`)
+                    navigate(
+                      getTaxDeadlineSourcePath(deadline) ??
+                        `/clients/${deadline.client_record_id}/vat`,
+                    )
                     onClose()
                   }}
                 >

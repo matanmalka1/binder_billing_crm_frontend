@@ -33,7 +33,6 @@ interface Props {
   showVatFrequency: boolean
 }
 
-
 export const CreateClientTaxStep: React.FC<Props> = ({
   advisorOptions,
   advisorsLoading,
@@ -73,9 +72,9 @@ export const CreateClientTaxStep: React.FC<Props> = ({
                 ? 'טוען...'
                 : impactError
                   ? 'לא ניתן לטעון את תקרת הפטור כרגע'
-                : impactData?.vat_exempt_ceiling
-                  ? formatShekelAmount(impactData.vat_exempt_ceiling)
-                  : 'לא נמצאה תקרת פטור בהגדרות המערכת'}
+                  : impactData?.vat_exempt_ceiling
+                    ? formatShekelAmount(impactData.vat_exempt_ceiling)
+                    : 'לא נמצאה תקרת פטור בהגדרות המערכת'}
             </div>
             <p className="mt-1 text-xs text-gray-400">נגזר אוטומטית לפי הגדרת המערכת</p>
           </div>
@@ -112,10 +111,7 @@ export const CreateClientTaxStep: React.FC<Props> = ({
           <>
             <ul className="space-y-1">
               {impactData.items.map((item) => (
-                <li
-                  key={item.label}
-                  className="flex items-baseline gap-2 text-sm text-blue-700"
-                >
+                <li key={item.label} className="flex items-baseline gap-2 text-sm text-blue-700">
                   <span className="font-medium">{item.count}</span>
                   <span>{item.label}</span>
                 </li>
@@ -131,8 +127,8 @@ export const CreateClientTaxStep: React.FC<Props> = ({
             {isExempt
               ? 'ייווצר קלסר ודוח שנתי. מועדי מע"מ תקופתיים לא ייווצרו'
               : isCompany
-              ? 'ייווצר קלסר, מועדי מע"מ לפי תדירות ודוח שנתי לחברה'
-              : 'ייווצר קלסר, מועדי מע"מ לפי תדירות ודוח שנתי'}
+                ? 'ייווצר קלסר, מועדי מע"מ לפי תדירות ודוח שנתי לחברה'
+                : 'ייווצר קלסר, מועדי מע"מ לפי תדירות ודוח שנתי'}
           </p>
         )}
       </div>

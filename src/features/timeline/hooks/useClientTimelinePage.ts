@@ -69,10 +69,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
 
   // ── Derived timeline model ─────────────────────────────────────────────────
 
-  const { historicalEvents } = useMemo(
-    () => normalizeTimelineEvents(events),
-    [events],
-  )
+  const { historicalEvents } = useMemo(() => normalizeTimelineEvents(events), [events])
 
   const eventTypeStats = useMemo<EventTypeStat[]>(() => {
     const counts: Partial<Record<TimelineFilterKey, number>> = {

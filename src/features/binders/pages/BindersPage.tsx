@@ -82,7 +82,7 @@ export const Binders: React.FC = () => {
         actions={
           <Button variant="ghost" size="sm" onClick={() => setReceiveOpen(true)}>
             קליטת חומר
-             <Plus className="h-3.5 w-3.5" />
+            <Plus className="h-3.5 w-3.5" />
           </Button>
         }
       />

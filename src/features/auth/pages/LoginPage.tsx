@@ -188,12 +188,12 @@ export const Login: React.FC = () => {
             במקום אחד
           </h2>
           <p className="max-w-xs text-sm leading-relaxed text-slate-500">
-            פלטפורמת הניהול הפנים ארגונית של יוסף מאיר  מרוכזת, מאובטחת, ויעילה.
+            פלטפורמת הניהול הפנים ארגונית של יוסף מאיר מרוכזת, מאובטחת, ויעילה.
           </p>
 
           {/* Feature pills */}
           <div className="flex flex-wrap gap-2 pt-2">
-            {['לקוחות','קלסרים', 'חיובים', 'מסמכים', 'דוחות מס'].map((label) => (
+            {['לקוחות', 'קלסרים', 'חיובים', 'מסמכים', 'דוחות מס'].map((label) => (
               <span
                 key={label}
                 className="rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-400"

@@ -47,7 +47,13 @@ export const useCreateReport = (taxYear?: number, onSuccess?: () => void) => {
     const advances = parseFloat(advancesPaid ?? '') || 0
     const credits = parseFloat(creditPoints ?? '') || 0
     const year = parseInt(taxYearStr ?? '') || taxYear || 0
-    return { tax_year: year, gross_income: income, expenses: exp, advances_paid: advances, credit_points: credits }
+    return {
+      tax_year: year,
+      gross_income: income,
+      expenses: exp,
+      advances_paid: advances,
+      credit_points: credits,
+    }
   }, [grossIncome, expenses, advancesPaid, creditPoints, taxYearStr, taxYear])
 
   const { data: previewData } = useQuery({

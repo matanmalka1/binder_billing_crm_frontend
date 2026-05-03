@@ -161,7 +161,10 @@ const ClientGenerateDeadlinesModal = ({
   form: UseFormReturn<GenerateTaxDeadlinesForm>
   isSubmitting: boolean
 }) => {
-  const { register, formState: { errors } } = form
+  const {
+    register,
+    formState: { errors },
+  } = form
   return (
     <Modal
       open={open}

@@ -21,13 +21,7 @@ export const TAB_LABELS: Record<ActiveTab, string> = {
 
 export const CURRENT_YEAR = new Date().getFullYear()
 
-export const SECTION_KEYS = [
-  'overview',
-  'financials',
-  'tax',
-  'deductions',
-  'timeline',
-] as const
+export const SECTION_KEYS = ['overview', 'financials', 'tax', 'deductions', 'timeline'] as const
 
 export type SectionKey = (typeof SECTION_KEYS)[number]
 

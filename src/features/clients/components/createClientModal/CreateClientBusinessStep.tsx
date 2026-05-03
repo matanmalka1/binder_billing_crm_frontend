@@ -22,7 +22,9 @@ export const CreateClientBusinessStep: React.FC<Props> = ({
   <div className="space-y-4">
     <p className="text-xs text-gray-500">שדות מסומנים בכוכבית חובה.</p>
     <div className="space-y-4 border-t border-gray-200 pt-4">
-      <p className="text-sm font-medium text-gray-700">{isCompany ? 'פרטי חברה ויצירת קשר' : 'פרטי עסק'}</p>
+      <p className="text-sm font-medium text-gray-700">
+        {isCompany ? 'פרטי חברה ויצירת קשר' : 'פרטי עסק'}
+      </p>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Input

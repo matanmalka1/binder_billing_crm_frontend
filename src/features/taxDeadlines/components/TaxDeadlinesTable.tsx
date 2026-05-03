@@ -96,7 +96,9 @@ export const TaxDeadlinesTable = ({
             {
               key: 'urgency',
               header: 'דחיפות',
-              render: (deadline: TaxDeadlineResponse) => <DeadlineUrgencyBadge deadline={deadline} />,
+              render: (deadline: TaxDeadlineResponse) => (
+                <DeadlineUrgencyBadge deadline={deadline} />
+              ),
             },
           ]
         : []),

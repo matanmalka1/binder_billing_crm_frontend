@@ -21,7 +21,10 @@ import type {
   AdvancePaymentStatus,
   CreateAdvancePaymentPayload,
 } from '../types'
-import { ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL, ADVANCE_PAYMENT_FREQUENCY_OPTIONS } from '../constants'
+import {
+  ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL,
+  ADVANCE_PAYMENT_FREQUENCY_OPTIONS,
+} from '../constants'
 import { parsePositiveInt } from '@/utils/utils'
 import { toast } from '../../../utils/toast'
 import { showErrorToast } from '../../../utils/utils'
@@ -81,8 +84,7 @@ export const AdvancePayments: React.FC = () => {
       return next
     })
 
-  const toggleAll = () =>
-    setOpenBatches(allExpanded ? new Set() : new Set(allKeys))
+  const toggleAll = () => setOpenBatches(allExpanded ? new Set() : new Set(allKeys))
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: number; payload: UpdateAdvancePaymentPayload }) =>
@@ -268,15 +270,33 @@ export const AdvancePayments: React.FC = () => {
             <table className="w-full text-right border-collapse min-w-[960px]">
               <thead className="sticky top-0 z-10">
                 <tr className="border-b border-gray-100 bg-gray-50">
-                  <th className="px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-16">מס׳</th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-[22%]">שם לקוח</th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-28">תאריך יעד</th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">מחזור</th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">צפוי</th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">שולם</th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">יתרה</th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-24">אחוז מקדמה</th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-center align-middle w-24">סטטוס</th>
+                  <th className="px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-16">
+                    מס׳
+                  </th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-[22%]">
+                    שם לקוח
+                  </th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-28">
+                    תאריך יעד
+                  </th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">
+                    מחזור
+                  </th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">
+                    צפוי
+                  </th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">
+                    שולם
+                  </th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">
+                    יתרה
+                  </th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-24">
+                    אחוז מקדמה
+                  </th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-center align-middle w-24">
+                    סטטוס
+                  </th>
                   <th className="px-3 py-1.5 align-middle w-10" />
                 </tr>
               </thead>
@@ -284,18 +304,18 @@ export const AdvancePayments: React.FC = () => {
                 {batches.map((batch) => {
                   const key = `${batch.year}-${batch.month}`
                   return (
-                  <AdvancePaymentBatchRow
-                    key={key}
-                    batch={batch}
-                    search={search}
-                    statusFilter={statusFilter}
-                    periodFilter={periodFilter}
-                    open={openBatches.has(key)}
-                    onToggle={() => toggleBatch(key)}
-                    onRowClick={handleRowClick}
-                  />
-                )})}
-
+                    <AdvancePaymentBatchRow
+                      key={key}
+                      batch={batch}
+                      search={search}
+                      statusFilter={statusFilter}
+                      periodFilter={periodFilter}
+                      open={openBatches.has(key)}
+                      onToggle={() => toggleBatch(key)}
+                      onRowClick={handleRowClick}
+                    />
+                  )
+                })}
               </tbody>
             </table>
           </div>
@@ -316,11 +336,17 @@ export const AdvancePayments: React.FC = () => {
       <Modal
         open={createPickerOpen && createClientId === null}
         title="הוסף מקדמה — בחר לקוח"
-        onClose={() => { setCreatePickerOpen(false); createPicker.resetClientPicker() }}
+        onClose={() => {
+          setCreatePickerOpen(false)
+          createPicker.resetClientPicker()
+        }}
         footer={
           <Button
             variant="outline"
-            onClick={() => { setCreatePickerOpen(false); createPicker.resetClientPicker() }}
+            onClick={() => {
+              setCreatePickerOpen(false)
+              createPicker.resetClientPicker()
+            }}
           >
             ביטול
           </Button>
@@ -342,7 +368,11 @@ export const AdvancePayments: React.FC = () => {
           clientId={createClientId}
           year={year}
           isCreating={createMutation.isPending}
-          onClose={() => { setCreateClientId(null); setCreatePickerOpen(false); createPicker.resetClientPicker() }}
+          onClose={() => {
+            setCreateClientId(null)
+            setCreatePickerOpen(false)
+            createPicker.resetClientPicker()
+          }}
           onCreate={(payload) => createMutation.mutateAsync(payload)}
         />
       )}
@@ -351,12 +381,18 @@ export const AdvancePayments: React.FC = () => {
       <Modal
         open={genPickerOpen}
         title="צור לוח מקדמות שנתי"
-        onClose={() => { setGenPickerOpen(false); genPicker.resetClientPicker() }}
+        onClose={() => {
+          setGenPickerOpen(false)
+          genPicker.resetClientPicker()
+        }}
         footer={
           <div className="flex justify-end gap-2">
             <Button
               variant="outline"
-              onClick={() => { setGenPickerOpen(false); genPicker.resetClientPicker() }}
+              onClick={() => {
+                setGenPickerOpen(false)
+                genPicker.resetClientPicker()
+              }}
             >
               ביטול
             </Button>

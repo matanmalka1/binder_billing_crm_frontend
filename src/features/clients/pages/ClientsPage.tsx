@@ -99,7 +99,7 @@ export const Clients: React.FC = () => {
               {can.createClients && (
                 <Button variant="ghost" size="sm" onClick={() => setShowCreateModal(true)}>
                   לקוח חדש
-                   <Plus className="h-3.5 w-3.5" />
+                  <Plus className="h-3.5 w-3.5" />
                 </Button>
               )}
             </div>

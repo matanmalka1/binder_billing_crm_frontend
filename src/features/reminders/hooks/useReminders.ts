@@ -67,13 +67,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   )
 
   const remindersQuery = useQuery({
-    queryKey: remindersQK.list(
-      clientId,
-      statusFilter,
-      page,
-      pageSize,
-      dueFilter,
-    ),
+    queryKey: remindersQK.list(clientId, statusFilter, page, pageSize, dueFilter),
     queryFn: () =>
       remindersApi.list({
         ...(clientId ? { client_record_id: clientId } : {}),
@@ -119,13 +113,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
 
   const activeReminderQueries = useQueries({
     queries: ACTIVE_REMINDER_STATUSES.map((status) => ({
-      queryKey: remindersQK.list(
-        activeClientId,
-        status,
-        undefined,
-        undefined,
-        undefined,
-      ),
+      queryKey: remindersQK.list(activeClientId, status, undefined, undefined, undefined),
       queryFn: () =>
         remindersApi.list({
           client_record_id: activeClientId,

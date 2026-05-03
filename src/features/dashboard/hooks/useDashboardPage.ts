@@ -40,7 +40,10 @@ export const useDashboardPage = () => {
     queryKey: isAdvisor ? dashboardQK.overview : dashboardQK.summary,
     queryFn: isAdvisor ? dashboardApi.getOverview : dashboardApi.getSummary,
   })
-  const unifiedTasksQuery = useUnifiedTasks(undefined, hasRole && isAdvisor)
+  const unifiedTasksQuery = useUnifiedTasks(
+    { exclude_source_types: ['vat_filing', 'annual_report'] },
+    hasRole && isAdvisor,
+  )
 
   const {
     activeActionKey: activeQuickAction,
@@ -124,9 +127,7 @@ export const useDashboardPage = () => {
   const isAdvisorView = dashboard.status === 'ok' && dashboard.data?.role_view === 'advisor'
   const quickActions = isOverviewData(dashboard.data) ? dashboard.data.quick_actions : undefined
   const advisorToday = isOverviewData(dashboard.data) ? dashboard.data.advisor_today : undefined
-  const emptyState = dashboard.data
-    ? { is_empty: dashboard.data.total_clients === 0 }
-    : undefined
+  const emptyState = dashboard.data ? { is_empty: dashboard.data.total_clients === 0 } : undefined
   const attentionEmptyChecks = isOverviewData(dashboard.data)
     ? dashboard.data.attention_empty_checks
     : []

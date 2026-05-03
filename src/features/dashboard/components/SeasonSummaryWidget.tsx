@@ -17,10 +17,7 @@ export const SeasonSummaryWidget: React.FC = () => {
     const filingSeasonYear = stats?.filingSeasonYear
     return (
       <DashboardPanel className="border-dashed">
-        <Link
-          to="/tax/reports"
-          className="group block p-5 transition-colors hover:bg-slate-50/70"
-        >
+        <Link to="/tax/reports" className="group block p-5 transition-colors hover:bg-slate-50/70">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex min-w-0 gap-3">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">

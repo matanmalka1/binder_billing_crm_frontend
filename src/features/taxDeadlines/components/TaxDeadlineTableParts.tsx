@@ -35,11 +35,7 @@ const URGENCY_TEXT_CLASS: Record<DeadlineUrgencyLevel, string> = {
   none: 'text-gray-400',
 }
 
-export const DeadlineDateWithUrgencyCell = ({
-  deadline,
-}: {
-  deadline: DeadlineDisplayFields
-}) => {
+export const DeadlineDateWithUrgencyCell = ({ deadline }: { deadline: DeadlineDisplayFields }) => {
   const daysRemaining = calculateDaysRemaining(deadline.due_date)
   const urgencyText =
     deadline.status !== 'pending'

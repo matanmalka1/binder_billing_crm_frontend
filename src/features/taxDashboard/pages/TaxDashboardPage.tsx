@@ -95,10 +95,7 @@ export const TaxDashboardPage: React.FC = () => {
     useTaxDashboard()
 
   const header = (
-    <PageHeader
-      title="לוח מסים"
-      description={`סקירת הגשות ומועדים לשנת ${currentYear}`}
-    />
+    <PageHeader title="לוח מסים" description={`סקירת הגשות ומועדים לשנת ${currentYear}`} />
   )
 
   const filteredUpcoming = useMemo(() => {

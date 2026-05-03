@@ -24,7 +24,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
   const { user, logout } = useAuthStore()
   const visibleNavGroups = NAV_GROUPS.map((group) => ({
     ...group,
-    items: group.items.filter((item) => !item.roles || item.roles.includes(user?.role ?? 'secretary')),
+    items: group.items.filter(
+      (item) => !item.roles || item.roles.includes(user?.role ?? 'secretary'),
+    ),
   })).filter((group) => group.items.length > 0)
 
   const handleLogout = () => {

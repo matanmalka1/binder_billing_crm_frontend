@@ -110,7 +110,10 @@ export const buildAdvancePaymentColumns = (
             variant="ghost"
             size="sm"
             className="px-1 py-1 text-gray-400 hover:text-error-600 hover:bg-error-50"
-            onClick={(e) => { e.stopPropagation(); onDelete(row.id) }}
+            onClick={(e) => {
+              e.stopPropagation()
+              onDelete(row.id)
+            }}
             aria-label="מחק"
           >
             <Trash2 size={14} />

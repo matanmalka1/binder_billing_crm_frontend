@@ -1,8 +1,5 @@
 import { FilterPanel } from '@/components/ui/filters/FilterPanel'
-import {
-  TAX_DEADLINE_FILTER_TYPE_OPTIONS,
-  TAX_DEADLINE_STATUS_OPTIONS,
-} from '../constants'
+import { TAX_DEADLINE_FILTER_TYPE_OPTIONS, TAX_DEADLINE_STATUS_OPTIONS } from '../constants'
 import type { TaxDeadlineFilters } from '../types'
 
 interface TaxDeadlinesFiltersProps {
@@ -18,12 +15,27 @@ const FIELDS = [
     label: 'חיפוש לקוח במועדים',
     placeholder: 'סנן קבוצות לפי שם לקוח...',
   },
-  { type: 'select' as const, key: 'deadline_type', label: 'סוג מועד', options: TAX_DEADLINE_FILTER_TYPE_OPTIONS },
+  {
+    type: 'select' as const,
+    key: 'deadline_type',
+    label: 'סוג מועד',
+    options: TAX_DEADLINE_FILTER_TYPE_OPTIONS,
+  },
   { type: 'select' as const, key: 'status', label: 'סטטוס', options: TAX_DEADLINE_STATUS_OPTIONS },
-  { type: 'date-range' as const, fromKey: 'due_from', toKey: 'due_to', fromLabel: 'מתאריך', toLabel: 'עד תאריך' },
+  {
+    type: 'date-range' as const,
+    fromKey: 'due_from',
+    toKey: 'due_to',
+    fromLabel: 'מתאריך',
+    toLabel: 'עד תאריך',
+  },
 ]
 
-export const TaxDeadlinesFilters = ({ filters, onChange, defaultStatus }: TaxDeadlinesFiltersProps) => (
+export const TaxDeadlinesFilters = ({
+  filters,
+  onChange,
+  defaultStatus,
+}: TaxDeadlinesFiltersProps) => (
   <FilterPanel
     fields={FIELDS}
     values={{

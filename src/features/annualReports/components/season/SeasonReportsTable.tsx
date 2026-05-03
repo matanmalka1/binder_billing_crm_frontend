@@ -128,9 +128,7 @@ export const SeasonReportsTable: React.FC<SeasonReportsTableProps> = ({
     getRowKey={(r) => r.id}
     isLoading={isLoading}
     onRowClick={onSelect}
-    emptyMessage={
-      taxYear ? `עדיין אין דוחות שנתיים לשנת המס ${taxYear}` : 'אין דוחות לשנה זו'
-    }
+    emptyMessage={taxYear ? `עדיין אין דוחות שנתיים לשנת המס ${taxYear}` : 'אין דוחות לשנה זו'}
     rowClassName={(r) => {
       const days = daysUntil(r.filing_deadline)
       const overdue = days !== null && days < 0 && !TERMINAL_STATUSES.has(r.status)

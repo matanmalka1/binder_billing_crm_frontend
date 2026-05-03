@@ -15,8 +15,18 @@ interface AdvancePaymentsFiltersBarProps {
 
 const FIELDS = [
   { type: 'select' as const, key: 'year', label: 'שנת מס', options: YEAR_OPTIONS },
-  { type: 'select' as const, key: 'month', label: 'חודש', options: ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS },
-  { type: 'select' as const, key: 'status', label: 'סטטוס', options: ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL },
+  {
+    type: 'select' as const,
+    key: 'month',
+    label: 'חודש',
+    options: ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS,
+  },
+  {
+    type: 'select' as const,
+    key: 'status',
+    label: 'סטטוס',
+    options: ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL,
+  },
 ]
 
 export const AdvancePaymentsFiltersBar = ({

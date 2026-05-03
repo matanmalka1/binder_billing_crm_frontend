@@ -1,8 +1,4 @@
-import {
-  RotateCcw,
-  ShieldAlert,
-  UserRoundX,
-} from 'lucide-react'
+import { RotateCcw, ShieldAlert, UserRoundX } from 'lucide-react'
 import {
   useWatch,
   type Control,
@@ -133,7 +129,10 @@ export const CreateClientIdentityStep: React.FC<Props> = ({
         </div>
       )}
       {activeConflicts.length > 0 && (
-        <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700" dir="rtl">
+        <div
+          className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700"
+          dir="rtl"
+        >
           <p className="font-medium mb-1">
             {isCompany ? 'ח.פ' : 'ת.ז'} זה כבר קיים במערכת — לא ניתן לפתוח לקוח כפול.
           </p>

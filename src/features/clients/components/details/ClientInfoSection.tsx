@@ -91,7 +91,9 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({ client, sideCont
     },
     {
       label: 'עדכון מקדמה',
-      value: client.advance_rate_updated_at ? formatDate(client.advance_rate_updated_at) : EMPTY_VALUE,
+      value: client.advance_rate_updated_at
+        ? formatDate(client.advance_rate_updated_at)
+        : EMPTY_VALUE,
     },
     { label: 'סניף מע"מ', value: officeByType('vat_branch') ?? EMPTY_VALUE },
     { label: 'סניף ביטוח לאומי', value: officeByType('national_insurance') ?? EMPTY_VALUE },

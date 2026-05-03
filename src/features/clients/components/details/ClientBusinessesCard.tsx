@@ -110,20 +110,13 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
         }
       >
         {isLoading ? (
-          <p className="px-1 py-4 text-sm text-gray-500">
-            טוען...
-          </p>
+          <p className="px-1 py-4 text-sm text-gray-500">טוען...</p>
         ) : businesses.length === 0 ? (
-          <p className="px-1 py-4 text-sm text-gray-500">
-            אין עסקים רשומים
-          </p>
+          <p className="px-1 py-4 text-sm text-gray-500">אין עסקים רשומים</p>
         ) : (
           <ul className="divide-y divide-gray-100">
             {businesses.map((biz) => (
-              <li
-                key={biz.id}
-                className="flex items-center gap-3 py-3"
-              >
+              <li key={biz.id} className="flex items-center gap-3 py-3">
                 <div className="min-w-0 flex-1">
                   <Link
                     to={CLIENT_ROUTES.businessDetail(clientId, biz.id)}

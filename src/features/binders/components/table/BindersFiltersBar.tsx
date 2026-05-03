@@ -9,7 +9,12 @@ const YEAR_OPTIONS = [{ value: '', label: 'כל התקופות' }, ...buildYearO
 
 const FIELDS = [
   { type: 'search' as const, key: 'query', label: 'חיפוש', placeholder: 'שם לקוח...' },
-  { type: 'search' as const, key: 'binder_number', label: 'מספר קלסר', placeholder: 'מספר קלסר מדויק...' },
+  {
+    type: 'search' as const,
+    key: 'binder_number',
+    label: 'מספר קלסר',
+    placeholder: 'מספר קלסר מדויק...',
+  },
   { type: 'select' as const, key: 'status', label: 'סטטוס', options: BINDER_STATUS_OPTIONS },
   { type: 'select' as const, key: 'year', label: 'תקופה', options: YEAR_OPTIONS },
 ]
@@ -21,12 +26,48 @@ export const BindersFiltersBar = ({
   onReset,
 }: BindersFiltersBarProps) => {
   const statusPills = [
-    { key: '', label: 'סה"כ קלסרים', count: counters.total, icon: FolderKanban, variant: 'blue' as const },
-    { key: 'in_office', label: 'במשרד', count: counters.in_office, icon: Archive, variant: 'orange' as const },
-    { key: 'closed_in_office', label: 'סגור במשרד', count: counters.closed_in_office, icon: Boxes, variant: 'orange' as const },
-    { key: 'ready_for_pickup', label: 'מוכן לאיסוף', count: counters.ready_for_pickup, icon: CheckCircle2, variant: 'green' as const },
-    { key: 'returned', label: 'הוחזר', count: counters.returned, icon: Undo2, variant: 'neutral' as const },
-    { key: 'archived_in_office', label: 'ארכיון במשרד', count: counters.archived_in_office, icon: Archive, variant: 'neutral' as const },
+    {
+      key: '',
+      label: 'סה"כ קלסרים',
+      count: counters.total,
+      icon: FolderKanban,
+      variant: 'blue' as const,
+    },
+    {
+      key: 'in_office',
+      label: 'במשרד',
+      count: counters.in_office,
+      icon: Archive,
+      variant: 'orange' as const,
+    },
+    {
+      key: 'closed_in_office',
+      label: 'סגור במשרד',
+      count: counters.closed_in_office,
+      icon: Boxes,
+      variant: 'orange' as const,
+    },
+    {
+      key: 'ready_for_pickup',
+      label: 'מוכן לאיסוף',
+      count: counters.ready_for_pickup,
+      icon: CheckCircle2,
+      variant: 'green' as const,
+    },
+    {
+      key: 'returned',
+      label: 'הוחזר',
+      count: counters.returned,
+      icon: Undo2,
+      variant: 'neutral' as const,
+    },
+    {
+      key: 'archived_in_office',
+      label: 'ארכיון במשרד',
+      count: counters.archived_in_office,
+      icon: Archive,
+      variant: 'neutral' as const,
+    },
   ] as const
 
   const pills = (

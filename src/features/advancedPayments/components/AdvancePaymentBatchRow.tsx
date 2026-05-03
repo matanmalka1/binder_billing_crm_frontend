@@ -82,9 +82,11 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
         <td colSpan={COL_COUNT} className="px-3 py-1.5">
           <div className="flex items-center gap-3">
             <span className="text-gray-400 flex-shrink-0">
-              {open
-                ? <ChevronDown className="h-3.5 w-3.5" />
-                : <ChevronLeft className="h-3.5 w-3.5" />}
+              {open ? (
+                <ChevronDown className="h-3.5 w-3.5" />
+              ) : (
+                <ChevronLeft className="h-3.5 w-3.5" />
+              )}
             </span>
             <span className="font-semibold text-sm text-gray-800 min-w-[100px]">
               {monthName} {batch.year}
@@ -94,7 +96,10 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
               <span className="font-medium text-gray-700">{batch.client_count} לקוחות</span>
               <span className="text-gray-300">·</span>
               <span>
-                צפוי: <span className="font-medium text-gray-700">{fmtCurrency(batch.total_expected)}</span>
+                צפוי:{' '}
+                <span className="font-medium text-gray-700">
+                  {fmtCurrency(batch.total_expected)}
+                </span>
               </span>
               <span className="text-gray-300">·</span>
               {/* Mini progress */}
@@ -142,9 +147,7 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
                 <tr
                   key={row.id}
                   className={`border-t border-gray-100 cursor-pointer transition-colors ${
-                    isOverdue
-                      ? 'bg-red-50/30 hover:bg-red-50/60'
-                      : 'hover:bg-blue-50/40'
+                    isOverdue ? 'bg-red-50/30 hover:bg-red-50/60' : 'hover:bg-blue-50/40'
                   }`}
                   onClick={() => onRowClick(row)}
                 >
@@ -171,7 +174,9 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
                   </td>
 
                   {/* תאריך יעד */}
-                  <td className={`px-3 py-1.5 text-sm tabular-nums whitespace-nowrap align-middle ${isOverdue ? 'text-red-500 font-medium' : 'text-gray-500'}`}>
+                  <td
+                    className={`px-3 py-1.5 text-sm tabular-nums whitespace-nowrap align-middle ${isOverdue ? 'text-red-500 font-medium' : 'text-gray-500'}`}
+                  >
                     {formatDate(row.due_date)}
                   </td>
 
@@ -209,7 +214,11 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
 
                   {/* אחוז מקדמה */}
                   <td className="px-3 py-1.5 text-sm tabular-nums text-gray-600 text-left align-middle">
-                    {row.advance_rate != null ? `${Number(row.advance_rate).toFixed(2)}%` : <span className="text-gray-300">—</span>}
+                    {row.advance_rate != null ? (
+                      `${Number(row.advance_rate).toFixed(2)}%`
+                    ) : (
+                      <span className="text-gray-300">—</span>
+                    )}
                   </td>
 
                   {/* סטטוס */}

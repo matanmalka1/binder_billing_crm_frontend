@@ -7,5 +7,6 @@ export const TAX_DEADLINE_ENDPOINTS = {
   taxDeadlinesTimeline: '/tax-deadlines/timeline',
   taxDeadlinesGenerate: '/tax-deadlines/generate',
   taxDeadlinesGrouped: '/tax-deadlines/grouped',
-  taxDeadlinesGroupClients: (groupKey: string) => `/tax-deadlines/grouped/${encodeURIComponent(groupKey)}/clients`,
+  taxDeadlinesGroupClients: (groupKey: string) =>
+    `/tax-deadlines/grouped/${encodeURIComponent(groupKey)}/clients`,
 } as const

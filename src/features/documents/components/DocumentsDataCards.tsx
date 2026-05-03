@@ -15,10 +15,7 @@ import type {
 import { useAuthStore } from '../../../store/auth.store'
 import type { BusinessResponse } from '@/features/clients'
 import { UPLOAD_FORM_ID } from './DocumentsDataCards.constants'
-import {
-  filterDocuments,
-  getCountLabel,
-} from './DocumentsDataCards.utils'
+import { filterDocuments, getCountLabel } from './DocumentsDataCards.utils'
 import { useDocumentCardActions } from './useDocumentCardActions'
 import { DocumentsDataCardsToolbar } from './DocumentsDataCardsToolbar'
 import { DocumentsEmptyState } from './DocumentsEmptyState'
@@ -105,7 +102,12 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-base font-semibold text-gray-900">מסמכים ({countLabel})</h3>
-        <Button variant="ghost" size="sm" onClick={() => setUploadOpen(true)} className="gap-1.5 shrink-0">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setUploadOpen(true)}
+          className="gap-1.5 shrink-0"
+        >
           <Plus className="h-4 w-4" />
           העלאת מסמך
         </Button>

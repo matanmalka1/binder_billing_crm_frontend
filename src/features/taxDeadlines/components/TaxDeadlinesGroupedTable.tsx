@@ -3,12 +3,25 @@ import { useQuery } from '@tanstack/react-query'
 import { ChevronDown, ChevronLeft, Inbox, Users } from 'lucide-react'
 import { Card } from '../../../components/ui/primitives/Card'
 import { Badge } from '../../../components/ui/primitives/Badge'
-import { taxDeadlinesApi, taxDeadlinesQK, getDeadlineTypeLabel, formatCurrency, getUrgencyColor, calculateDaysRemaining } from '../api'
+import {
+  taxDeadlinesApi,
+  taxDeadlinesQK,
+  getDeadlineTypeLabel,
+  formatCurrency,
+  getUrgencyColor,
+  calculateDaysRemaining,
+} from '../api'
 import type { DeadlineGroup, TaxDeadlineResponse, DeadlineUrgencyLevel } from '../api'
 import { getTaxDeadlinePeriodLabel, getDeadlineDaysLabelShort } from '../utils'
 import { cn } from '../../../utils/utils'
 
-const DaysRemainingLabel = ({ dueDate, urgency }: { dueDate: string; urgency: DeadlineUrgencyLevel }) => {
+const DaysRemainingLabel = ({
+  dueDate,
+  urgency,
+}: {
+  dueDate: string
+  urgency: DeadlineUrgencyLevel
+}) => {
   if (urgency === 'none') return null
   const days = calculateDaysRemaining(dueDate)
   const label = getDeadlineDaysLabelShort(days, false)
@@ -141,7 +154,9 @@ const ClientsSubTable = ({
           >
             הקודם
           </button>
-          <span>{page} / {totalPages}</span>
+          <span>
+            {page} / {totalPages}
+          </span>
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
@@ -177,12 +192,18 @@ const GroupRow = ({
   const allDone = group.pending_count === 0 && group.completed_count === group.total_clients
 
   return (
-    <Card className={cn(
-      'overflow-hidden p-0 transition-shadow',
-      group.overdue_count > 0 && 'border-r-4 border-negative-500',
-      group.worst_urgency === 'critical' && !group.overdue_count && 'border-r-4 border-negative-400',
-      group.worst_urgency === 'warning' && !group.overdue_count && 'border-r-4 border-warning-400',
-    )}>
+    <Card
+      className={cn(
+        'overflow-hidden p-0 transition-shadow',
+        group.overdue_count > 0 && 'border-r-4 border-negative-500',
+        group.worst_urgency === 'critical' &&
+          !group.overdue_count &&
+          'border-r-4 border-negative-400',
+        group.worst_urgency === 'warning' &&
+          !group.overdue_count &&
+          'border-r-4 border-warning-400',
+      )}
+    >
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
@@ -220,7 +241,9 @@ const GroupRow = ({
             </Badge>
           )}
           {allDone && (
-            <Badge variant="success" className="text-xs">הושלם</Badge>
+            <Badge variant="success" className="text-xs">
+              הושלם
+            </Badge>
           )}
         </span>
 

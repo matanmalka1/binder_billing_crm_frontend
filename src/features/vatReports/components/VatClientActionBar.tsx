@@ -23,16 +23,18 @@ export const VatClientActionBar = ({
   <section>
     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div className="flex md:order-2">
-        <Button onClick={onCreateClick} size="sm" variant="ghost" className="w-full justify-center sm:w-auto">
+        <Button
+          onClick={onCreateClick}
+          size="sm"
+          variant="ghost"
+          className="w-full justify-center sm:w-auto"
+        >
           <Plus className="h-4 w-4" />
           פתיחת תיק מע״מ
         </Button>
       </div>
 
-      <div
-        className="flex flex-col gap-2 sm:flex-row sm:items-center md:order-1"
-        dir="ltr"
-      >
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center md:order-1" dir="ltr">
         {isAdvisor && (
           <div className="flex justify-start">
             <VatExportButtons clientId={clientId} year={selectedYear} />

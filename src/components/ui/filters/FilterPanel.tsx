@@ -8,14 +8,7 @@ import { ActiveFilterBadges } from '@/components/ui/table/ActiveFilterBadges'
 import { ClientFilterControl } from '@/components/shared/client/ClientFilterControl'
 import type { FilterBadge } from '@/components/ui/table/ActiveFilterBadges'
 import { cn } from '@/utils/utils'
-import {
-  useState,
-  useEffect,
-  useRef,
-  useImperativeHandle,
-  forwardRef,
-  useCallback,
-} from 'react'
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef, useCallback } from 'react'
 
 // ─── Field Definitions ───────────────────────────────────────────────────────
 

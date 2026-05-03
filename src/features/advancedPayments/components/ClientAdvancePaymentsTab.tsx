@@ -30,14 +30,12 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const { isAdvisor } = useRole()
 
   const queryClient = useQueryClient()
-  const {
-    rows,
-    isLoading,
-    total,
-    create,
-    isCreating,
-    deleteRow,
-  } = useAdvancePayments(clientId, year, statusFilter, page)
+  const { rows, isLoading, total, create, isCreating, deleteRow } = useAdvancePayments(
+    clientId,
+    year,
+    statusFilter,
+    page,
+  )
   const { vatType, advanceRate } = useAdvanceRateInsights(clientId)
 
   const generationFrequency: 1 | 2 = vatType === 'bimonthly' ? 2 : 1
@@ -58,7 +56,9 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
     mutationFn: (id: number) => deleteRow(id),
     onSuccess: () => {
       toast.success('מקדמה נמחקה בהצלחה')
-      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.forClientYear(clientId, year) })
+      void queryClient.invalidateQueries({
+        queryKey: advancedPaymentsQK.forClientYear(clientId, year),
+      })
       setDrawerRow(null)
     },
     onError: (err) => showErrorToast(err, 'שגיאה במחיקת מקדמה'),
@@ -69,7 +69,9 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
       advancePaymentsApi.update(clientId, id, payload),
     onSuccess: () => {
       toast.success('מקדמה עודכנה בהצלחה')
-      void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.forClientYear(clientId, year) })
+      void queryClient.invalidateQueries({
+        queryKey: advancedPaymentsQK.forClientYear(clientId, year),
+      })
       setDrawerRow(null)
     },
     onError: (err) => showErrorToast(err, 'שגיאה בעדכון מקדמה'),

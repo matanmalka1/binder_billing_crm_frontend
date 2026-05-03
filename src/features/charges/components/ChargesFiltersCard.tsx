@@ -14,7 +14,12 @@ interface ChargesFiltersCardProps {
 const FIELDS = [
   { type: 'client-picker' as const, idKey: 'client_record_id', nameKey: 'client_name' },
   { type: 'select' as const, key: 'status', label: 'סטטוס', options: CHARGE_STATUS_OPTIONS },
-  { type: 'select' as const, key: 'charge_type', label: 'סוג חיוב', options: CHARGE_TYPE_OPTIONS_WITH_ALL },
+  {
+    type: 'select' as const,
+    key: 'charge_type',
+    label: 'סוג חיוב',
+    options: CHARGE_TYPE_OPTIONS_WITH_ALL,
+  },
 ]
 
 export const ChargesFiltersCard = ({

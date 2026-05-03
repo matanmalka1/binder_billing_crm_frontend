@@ -27,8 +27,18 @@ export const VatWorkItemsFiltersCard = ({
     () => [
       { type: 'client-picker' as const, idKey: 'clientSearch' },
       { type: 'select' as const, key: 'period', label: 'תקופה', options: periodOptions },
-      { type: 'select' as const, key: 'status', label: 'סטטוס', options: VAT_WORK_ITEMS_STATUS_OPTIONS },
-      { type: 'select' as const, key: 'period_type', label: 'סוג דיווח', options: VAT_PERIOD_TYPE_SELECT_OPTIONS },
+      {
+        type: 'select' as const,
+        key: 'status',
+        label: 'סטטוס',
+        options: VAT_WORK_ITEMS_STATUS_OPTIONS,
+      },
+      {
+        type: 'select' as const,
+        key: 'period_type',
+        label: 'סוג דיווח',
+        options: VAT_PERIOD_TYPE_SELECT_OPTIONS,
+      },
     ],
     [periodOptions],
   )

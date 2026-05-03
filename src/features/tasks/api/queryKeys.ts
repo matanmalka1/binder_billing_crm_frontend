@@ -3,6 +3,7 @@ import type { TasksParams } from './contracts'
 const normalizeParams = (params?: TasksParams) => ({
   client_record_id: params?.client_record_id ?? 'all',
   business_id: params?.business_id ?? 'all',
+  exclude_source_types: params?.exclude_source_types?.join(',') ?? 'none',
 })
 
 export const tasksQK = {

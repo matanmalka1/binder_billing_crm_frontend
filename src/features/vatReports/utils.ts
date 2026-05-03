@@ -4,21 +4,17 @@ import type { VatInvoiceRowValues } from './schemas/invoice.schema'
 import { semanticMonoToneClasses } from '../../utils/semanticColors'
 import type { BackendAction } from '@/lib/actions/types'
 
-const hasVatAction = (
-  actions: BackendAction[] | null | undefined,
-  key: string,
-): boolean => actions?.some((action) => action.key === key) ?? false
+const hasVatAction = (actions: BackendAction[] | null | undefined, key: string): boolean =>
+  actions?.some((action) => action.key === key) ?? false
 
-export const canMarkMaterialsComplete = (
-  actions: BackendAction[] | null | undefined,
-): boolean => hasVatAction(actions, 'materials_complete')
+export const canMarkMaterialsComplete = (actions: BackendAction[] | null | undefined): boolean =>
+  hasVatAction(actions, 'materials_complete')
 
 export const canAddInvoice = (actions: BackendAction[] | null | undefined): boolean =>
   hasVatAction(actions, 'add_invoice')
 
-export const canMarkReadyForReview = (
-  actions: BackendAction[] | null | undefined,
-): boolean => hasVatAction(actions, 'ready_for_review')
+export const canMarkReadyForReview = (actions: BackendAction[] | null | undefined): boolean =>
+  hasVatAction(actions, 'ready_for_review')
 
 export const canSendBack = (actions: BackendAction[] | null | undefined): boolean =>
   hasVatAction(actions, 'send_back')

@@ -39,7 +39,9 @@ export const buildCreateClientPayload = (data: CreateClientFormValues): CreateCl
       data.entity_type === 'osek_patur' ? undefined : data.vat_reporting_frequency,
     advance_rate: data.advance_rate?.trim() ? data.advance_rate.trim() : null,
     accountant_id: data.accountant_id ? Number(data.accountant_id) : null,
-    business_name: data.business_name?.trim() || (data.entity_type !== 'company_ltd' ? data.full_name.trim() : ''),
+    business_name:
+      data.business_name?.trim() ||
+      (data.entity_type !== 'company_ltd' ? data.full_name.trim() : ''),
     business_opened_at: (data.business_opened_at || null) as ISODateString | null,
   }
 }

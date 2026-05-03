@@ -54,7 +54,12 @@ export const TasksPage: React.FC = () => {
   }
 
   return (
-    <PageStateGuard isLoading={isLoading} error={error} header={header} loadingMessage="טוען משימות...">
+    <PageStateGuard
+      isLoading={isLoading}
+      error={error}
+      header={header}
+      loadingMessage="טוען משימות..."
+    >
       <TasksSummaryCards
         items={allItems}
         urgencyFilter={urgencyFilter}

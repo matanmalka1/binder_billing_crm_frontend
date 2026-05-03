@@ -26,7 +26,7 @@ export const useGroupedDeadlines = () => {
     next.set('due_from', defaultWindow.from)
     next.set('due_to', defaultWindow.to)
     setSearchParams(next, { replace: true })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const filters: Omit<TaxDeadlineFilters, 'page' | 'page_size'> = useMemo(
@@ -70,9 +70,7 @@ export const useGroupedDeadlines = () => {
     totalGroups: groupedQuery.data?.total_groups ?? 0,
     totalClientDeadlines: groupedQuery.data?.total_client_deadlines ?? 0,
     isLoading: groupedQuery.isPending,
-    error: groupedQuery.error
-      ? getErrorMessage(groupedQuery.error, 'שגיאה בטעינת מועדים')
-      : null,
+    error: groupedQuery.error ? getErrorMessage(groupedQuery.error, 'שגיאה בטעינת מועדים') : null,
     handleFilterChange,
     isAdvisor,
   }

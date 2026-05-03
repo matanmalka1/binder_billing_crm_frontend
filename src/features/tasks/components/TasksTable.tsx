@@ -51,7 +51,9 @@ export const TasksTable: React.FC<TasksTableProps> = ({ items, isLoading }) => {
       render: (item: UnifiedItem) => {
         const urgency = item.urgency ?? 'upcoming'
         return (
-          <Badge variant={taskUrgencyVariant[urgency as keyof typeof taskUrgencyVariant] ?? 'neutral'}>
+          <Badge
+            variant={taskUrgencyVariant[urgency as keyof typeof taskUrgencyVariant] ?? 'neutral'}
+          >
             {taskUrgencyLabels[urgency as keyof typeof taskUrgencyLabels] ?? urgency}
           </Badge>
         )

@@ -60,7 +60,9 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
             <div className="flex items-center bg-gray-100 rounded-xl p-1">
               <span className="px-3 py-1.5 text-sm text-gray-500">
                 תדירות:{' '}
-                <span className="font-semibold text-gray-800">{FREQUENCY_LABEL[generationFrequency]}</span>
+                <span className="font-semibold text-gray-800">
+                  {FREQUENCY_LABEL[generationFrequency]}
+                </span>
                 <span className="text-gray-400 text-xs mr-1">(לפי פרופיל מע״מ)</span>
               </span>
               <button
@@ -79,7 +81,10 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
               message={`ליצור מקדמות ${FREQUENCY_LABEL[generationFrequency]} לשנת ${year}? מקדמות קיימות לא יושפעו.`}
               confirmLabel="צור"
               cancelLabel="ביטול"
-              onConfirm={() => { setConfirmGenerate(false); onGenerateSchedule() }}
+              onConfirm={() => {
+                setConfirmGenerate(false)
+                onGenerateSchedule()
+              }}
               onCancel={() => setConfirmGenerate(false)}
             />
           </>
@@ -95,8 +100,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
           </div>
           {advanceRate != null && (
             <span className="text-sm text-gray-500">
-              אחוז מקדמות:{' '}
-              <span className="font-semibold text-gray-800">{advanceRate}%</span>
+              אחוז מקדמות: <span className="font-semibold text-gray-800">{advanceRate}%</span>
             </span>
           )}
         </div>
