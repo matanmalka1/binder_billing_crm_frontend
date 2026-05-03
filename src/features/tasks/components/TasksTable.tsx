@@ -3,19 +3,12 @@ import { format, parseISO } from 'date-fns'
 import { he } from 'date-fns/locale'
 import { DataTable } from '@/components/ui/table/DataTable'
 import { Badge } from '@/components/ui/primitives/Badge'
-import type { BadgeVariant } from '@/components/ui/primitives/Badge'
 import type { UnifiedItem } from '../api/contracts'
-import { taskTypeLabels, taskUrgencyLabels } from '../constants'
+import { taskTypeLabels, taskUrgencyLabels, taskUrgencyVariant } from '../constants'
 
 interface TasksTableProps {
   items: UnifiedItem[]
   isLoading?: boolean
-}
-
-const urgencyVariant: Record<string, BadgeVariant> = {
-  overdue: 'error',
-  approaching: 'warning',
-  upcoming: 'info',
 }
 
 const typeLabel = (sourceType: string): string =>
@@ -58,7 +51,7 @@ export const TasksTable: React.FC<TasksTableProps> = ({ items, isLoading }) => {
       render: (item: UnifiedItem) => {
         const urgency = item.urgency ?? 'upcoming'
         return (
-          <Badge variant={urgencyVariant[urgency] ?? 'neutral'}>
+          <Badge variant={taskUrgencyVariant[urgency as keyof typeof taskUrgencyVariant] ?? 'neutral'}>
             {taskUrgencyLabels[urgency as keyof typeof taskUrgencyLabels] ?? urgency}
           </Badge>
         )

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { DetailDrawer } from '../../../components/ui/overlays/DetailDrawer'
 import { Badge } from '../../../components/ui/primitives/Badge'
 import { Button } from '../../../components/ui/primitives/Button'
+import { SkeletonBlock } from '../../../components/ui/primitives/SkeletonBlock'
 import { usersApi, usersQK } from '../api'
 import { formatDateTime } from '../../../utils/utils'
 import { PAGE_SIZE_SM as PAGE_SIZE } from '@/constants/pagination.constants'
@@ -52,7 +53,7 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({ open, onClose 
       {isPending && (
         <div className="space-y-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-14 rounded-lg bg-gray-100 animate-pulse" />
+            <SkeletonBlock key={i} width="w-full" height="h-14" rounded="xl" />
           ))}
         </div>
       )}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { getYear } from 'date-fns'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Search, SlidersHorizontal, X, PlusCircle, Calendar } from 'lucide-react'
+import { Search, SlidersHorizontal, X, PlusCircle, Calendar, ChevronsUpDown } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Select } from '@/components/ui/inputs/Select'
 import { Modal } from '@/components/ui/overlays/Modal'
@@ -47,6 +47,7 @@ export const AdvancePayments: React.FC = () => {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<AdvancePaymentStatus | ''>('')
   const [periodFilter, setPeriodFilter] = useState<null | 1 | 2>(null)
+  const [openBatches, setOpenBatches] = useState<Set<string>>(new Set())
 
   // Create flow: pick client → open CreateAdvancePaymentModal
   const [createPickerOpen, setCreatePickerOpen] = useState(false)
@@ -69,6 +70,19 @@ export const AdvancePayments: React.FC = () => {
   const overdueTotal = batches.reduce((s, b) => s + b.overdue_count, 0)
 
   const hasActiveFilters = search !== '' || statusFilter !== '' || periodFilter !== null
+
+  const allKeys = batches.map((b) => `${b.year}-${b.month}`)
+  const allExpanded = allKeys.length > 0 && allKeys.every((k) => openBatches.has(k))
+
+  const toggleBatch = (key: string) =>
+    setOpenBatches((prev) => {
+      const next = new Set(prev)
+      next.has(key) ? next.delete(key) : next.add(key)
+      return next
+    })
+
+  const toggleAll = () =>
+    setOpenBatches(allExpanded ? new Set() : new Set(allKeys))
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: number; payload: UpdateAdvancePaymentPayload }) =>
@@ -229,6 +243,18 @@ export const AdvancePayments: React.FC = () => {
 
       {/* Grouped Table */}
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+        {batches.length > 0 && (
+          <div className="flex justify-end px-4 py-2 border-b border-gray-100">
+            <button
+              type="button"
+              onClick={toggleAll}
+              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 transition-colors"
+            >
+              <ChevronsUpDown className="h-3.5 w-3.5" />
+              {allExpanded ? 'כווץ הכול' : 'הרחב הכול'}
+            </button>
+          </div>
+        )}
         {isLoading ? (
           <div className="space-y-3 p-4">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -239,32 +265,37 @@ export const AdvancePayments: React.FC = () => {
           <p className="text-center text-gray-500 py-12 text-sm">אין מקדמות לשנה {year}</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-right border-collapse min-w-[900px]">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-20">מס׳ לקוח</th>
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">שם עסק</th>
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">תאריך יעד</th>
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide text-left">מחזור</th>
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide text-left">צפוי</th>
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide text-left">שולם</th>
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide text-left">יתרה</th>
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide text-left">אחוז מקדמה</th>
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">סטטוס</th>
-                  <th className="px-5 py-3 w-12" />
+            <table className="w-full text-right border-collapse min-w-[960px]">
+              <thead className="sticky top-0 z-10">
+                <tr className="border-b border-gray-100 bg-gray-50">
+                  <th className="px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-16">מס׳</th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-[22%]">שם לקוח</th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-28">תאריך יעד</th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">מחזור</th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">צפוי</th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">שולם</th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">יתרה</th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-24">אחוז מקדמה</th>
+                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-center align-middle w-24">סטטוס</th>
+                  <th className="px-3 py-1.5 align-middle w-10" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {batches.map((batch) => (
+                {batches.map((batch) => {
+                  const key = `${batch.year}-${batch.month}`
+                  return (
                   <AdvancePaymentBatchRow
-                    key={`${batch.year}-${batch.month}`}
+                    key={key}
                     batch={batch}
                     search={search}
                     statusFilter={statusFilter}
                     periodFilter={periodFilter}
+                    open={openBatches.has(key)}
+                    onToggle={() => toggleBatch(key)}
                     onRowClick={handleRowClick}
                   />
-                ))}
+                )})}
+
               </tbody>
             </table>
           </div>

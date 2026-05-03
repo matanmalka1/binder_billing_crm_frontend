@@ -1,3 +1,4 @@
+import type { BadgeVariant } from '@/components/ui/primitives/Badge'
 import type { TaskType, TaskUrgency } from './api/contracts'
 
 export const taskTypeValues = [
@@ -22,4 +23,10 @@ export const taskUrgencyLabels: Record<TaskUrgency, string> = {
   overdue: 'באיחור',
   approaching: 'מתקרב',
   upcoming: 'קרוב',
+}
+
+export const taskUrgencyVariant: Record<TaskUrgency, BadgeVariant> = {
+  overdue: 'error',
+  approaching: 'warning',
+  upcoming: 'info',
 }

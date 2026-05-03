@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { ChevronDown, ChevronLeft, AlertTriangle, MoreVertical, Loader2 } from 'lucide-react'
+import { ChevronDown, ChevronLeft, AlertTriangle, ExternalLink, Edit } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { MONTH_NAMES } from '@/constants/periodOptions.constants'
 import type { MonthBatchSummary, AdvancePaymentOverviewRow, AdvancePaymentStatus } from '../types'
@@ -7,6 +7,8 @@ import { advancePaymentsApi, advancedPaymentsQK } from '../api'
 import { fmtCurrency } from '../utils'
 import { formatDate, formatClientOfficeId } from '../../../utils/utils'
 import { AdvancePaymentStatusBadge } from './AdvancePaymentStatusBadge'
+import { RowActionsMenu, RowActionItem } from '../../../components/ui/table/RowActions'
+import { SkeletonBlock } from '../../../components/ui/primitives/SkeletonBlock'
 
 const COL_COUNT = 10
 
@@ -15,20 +17,33 @@ interface AdvancePaymentBatchRowProps {
   search: string
   statusFilter: AdvancePaymentStatus | ''
   periodFilter: 1 | 2 | null
+  open: boolean
+  onToggle: () => void
   onRowClick: (row: AdvancePaymentOverviewRow) => void
 }
+
+const SkeletonRow = () => (
+  <tr className="border-t border-gray-100">
+    {Array.from({ length: COL_COUNT }).map((_, i) => (
+      <td key={i} className="px-4 py-3">
+        <SkeletonBlock width={i === 1 ? 'w-32' : 'w-20'} height="h-3" />
+      </td>
+    ))}
+  </tr>
+)
 
 export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
   batch,
   search,
   statusFilter,
   periodFilter,
+  open,
+  onToggle,
   onRowClick,
 }) => {
-  const [open, setOpen] = useState(false)
   const monthName = MONTH_NAMES[batch.month - 1]
-
   const statusParam = statusFilter ? [statusFilter] : undefined
+  const collectionPct = Math.min(Math.max(batch.collection_rate, 0), 100)
 
   const { data, isLoading } = useQuery({
     queryKey: advancedPaymentsQK.overview({
@@ -59,40 +74,45 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
 
   return (
     <>
+      {/* Group header */}
       <tr
-        className="bg-gray-50/70 cursor-pointer hover:bg-gray-100/80 transition-colors select-none"
-        onClick={() => setOpen((v) => !v)}
+        className="cursor-pointer select-none bg-gray-50 hover:bg-gray-100/80 transition-colors border-t border-gray-200"
+        onClick={onToggle}
       >
-        <td colSpan={COL_COUNT} className="px-5 py-2.5">
+        <td colSpan={COL_COUNT} className="px-3 py-1.5">
           <div className="flex items-center gap-3">
-            <span className="text-blue-600 flex-shrink-0">
-              {open ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronLeft className="h-4 w-4" />
-              )}
+            <span className="text-gray-400 flex-shrink-0">
+              {open
+                ? <ChevronDown className="h-3.5 w-3.5" />
+                : <ChevronLeft className="h-3.5 w-3.5" />}
             </span>
-            <span className="font-bold text-sm text-gray-900 min-w-[90px]">
+            <span className="font-semibold text-sm text-gray-800 min-w-[100px]">
               {monthName} {batch.year}
             </span>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 items-center text-xs text-gray-500">
+
+            <div className="flex items-center gap-3 text-sm text-gray-500">
+              <span className="font-medium text-gray-700">{batch.client_count} לקוחות</span>
+              <span className="text-gray-300">·</span>
               <span>
-                <span className="font-semibold text-gray-800">{batch.client_count}</span> לקוחות
+                צפוי: <span className="font-medium text-gray-700">{fmtCurrency(batch.total_expected)}</span>
               </span>
-              <span className="w-px h-3 bg-gray-200 hidden sm:block" />
-              <span>
-                צפוי:{' '}
-                <span className="font-semibold text-gray-800">{fmtCurrency(batch.total_expected)}</span>
-              </span>
-              <span className="w-px h-3 bg-gray-200 hidden sm:block" />
-              <span>
-                גבייה: <span className="font-semibold text-gray-800">{batch.collection_rate.toFixed(0)}%</span>
+              <span className="text-gray-300">·</span>
+              {/* Mini progress */}
+              <span className="flex items-center gap-1.5">
+                <span className="font-medium text-gray-700">{collectionPct.toFixed(0)}%</span>
+                <span className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                  <span
+                    className="h-full rounded-full bg-blue-400 block transition-all duration-500"
+                    style={{ width: `${collectionPct}%` }}
+                  />
+                </span>
               </span>
               {batch.missing_turnover_count > 0 && (
                 <>
-                  <span className="w-px h-3 bg-gray-200 hidden sm:block" />
-                  <span className="text-red-600">
-                    חוסרים: <span className="font-semibold">{batch.missing_turnover_count}</span>
+                  <span className="text-gray-300">·</span>
+                  <span className="flex items-center gap-1 text-amber-600 font-medium">
+                    <AlertTriangle className="h-3 w-3" />
+                    {batch.missing_turnover_count} חסרי מחזור
                   </span>
                 </>
               )}
@@ -104,81 +124,119 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
       {open && (
         <>
           {isLoading ? (
-            <tr>
-              <td colSpan={COL_COUNT} className="py-8 text-center">
-                <Loader2 className="h-5 w-5 animate-spin text-gray-400 mx-auto" />
-              </td>
-            </tr>
+            <>
+              <SkeletonRow />
+              <SkeletonRow />
+              <SkeletonRow />
+            </>
           ) : sorted.length === 0 ? (
             <tr>
-              <td colSpan={COL_COUNT} className="py-6 text-center text-sm text-gray-400">
+              <td colSpan={COL_COUNT} className="py-5 text-center text-sm text-gray-400">
                 אין תוצאות
               </td>
             </tr>
           ) : (
-            sorted.map((row) => (
-              <tr
-                key={row.id}
-                className="border-t border-gray-100 hover:bg-blue-50/30 cursor-pointer transition-colors"
-                onClick={() => onRowClick(row)}
-              >
-                <td className="px-5 py-3.5 text-sm text-gray-400 tabular-nums">
-                  {formatClientOfficeId(row.office_client_number)}
-                </td>
-                <td className="px-5 py-3.5">
-                  <div className="font-medium text-sm text-gray-900">{row.business_name}</div>
-                  {row.missing_turnover && (
-                    <div className="mt-0.5 inline-flex items-center gap-1 text-[10px] text-red-600 font-bold bg-red-50 px-1.5 py-0.5 rounded-full">
-                      <AlertTriangle className="h-2.5 w-2.5" />
-                      חסר מחזור
-                    </div>
-                  )}
-                </td>
-                <td className="px-5 py-3.5 text-sm text-gray-500 tabular-nums">
-                  {formatDate(row.due_date)}
-                </td>
-                <td className="px-5 py-3.5 text-sm tabular-nums text-gray-700 text-left">
-                  {row.reported_turnover ? (
-                    fmtCurrency(row.reported_turnover)
-                  ) : row.live_turnover ? (
-                    <span className="text-gray-400">{fmtCurrency(row.live_turnover)}</span>
-                  ) : (
-                    <span className="text-gray-300">—</span>
-                  )}
-                </td>
-                <td className="px-5 py-3.5 text-sm font-semibold tabular-nums text-gray-900 text-left">
-                  {fmtCurrency(row.expected_amount)}
-                </td>
-                <td className="px-5 py-3.5 text-sm tabular-nums text-gray-700 text-left">
-                  {fmtCurrency(row.paid_amount)}
-                </td>
-                <td className="px-5 py-3.5 text-sm tabular-nums font-medium text-left">
-                  {row.delta == null ? (
-                    <span className="text-gray-300">—</span>
-                  ) : (
-                    <span className={Number(row.delta) > 0 ? 'text-red-600 font-bold' : 'text-gray-700'}>
-                      {fmtCurrency(row.delta)}
-                    </span>
-                  )}
-                </td>
-                <td className="px-5 py-3.5 text-sm text-gray-400 tabular-nums text-left">—</td>
-                <td className="px-5 py-3.5">
-                  <AdvancePaymentStatusBadge status={row.status} />
-                </td>
-                <td className="px-5 py-3.5">
-                  <button
-                    type="button"
-                    className="p-1.5 rounded-full text-gray-400 hover:text-blue-600 hover:bg-gray-100 transition-all"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onRowClick(row)
-                    }}
-                  >
-                    <MoreVertical className="h-4 w-4" />
-                  </button>
-                </td>
-              </tr>
-            ))
+            sorted.map((row) => {
+              const isOverdue = row.timing_status === 'overdue'
+              return (
+                <tr
+                  key={row.id}
+                  className={`border-t border-gray-100 cursor-pointer transition-colors ${
+                    isOverdue
+                      ? 'bg-red-50/30 hover:bg-red-50/60'
+                      : 'hover:bg-blue-50/40'
+                  }`}
+                  onClick={() => onRowClick(row)}
+                >
+                  {/* # לקוח */}
+                  <td className="px-3 py-1.5 text-sm text-gray-400 tabular-nums align-middle">
+                    {formatClientOfficeId(row.office_client_number)}
+                  </td>
+
+                  {/* שם עסק */}
+                  <td className="px-3 py-1.5 align-middle">
+                    <Link
+                      to={`/clients/${row.client_record_id}/advance-payments`}
+                      className="text-sm font-medium text-gray-900 hover:text-blue-600 hover:underline leading-snug block"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {row.business_name}
+                    </Link>
+                    {row.missing_turnover && (
+                      <span className="inline-flex items-center gap-1 mt-0.5 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
+                        <AlertTriangle className="h-2.5 w-2.5" />
+                        חסר מחזור
+                      </span>
+                    )}
+                  </td>
+
+                  {/* תאריך יעד */}
+                  <td className={`px-3 py-1.5 text-sm tabular-nums whitespace-nowrap align-middle ${isOverdue ? 'text-red-500 font-medium' : 'text-gray-500'}`}>
+                    {formatDate(row.due_date)}
+                  </td>
+
+                  {/* מחזור */}
+                  <td className="px-3 py-1.5 text-sm tabular-nums text-left align-middle">
+                    {row.reported_turnover ? (
+                      <span className="text-gray-700">{fmtCurrency(row.reported_turnover)}</span>
+                    ) : row.live_turnover ? (
+                      <span className="text-gray-400 italic">{fmtCurrency(row.live_turnover)}</span>
+                    ) : (
+                      <span className="text-gray-300">—</span>
+                    )}
+                  </td>
+
+                  {/* צפוי */}
+                  <td className="px-3 py-1.5 text-sm font-semibold tabular-nums text-gray-800 text-left align-middle">
+                    {fmtCurrency(row.expected_amount)}
+                  </td>
+
+                  {/* שולם */}
+                  <td className="px-3 py-1.5 text-sm tabular-nums text-gray-600 text-left align-middle">
+                    {fmtCurrency(row.paid_amount)}
+                  </td>
+
+                  {/* יתרה */}
+                  <td className="px-3 py-1.5 text-sm tabular-nums text-left align-middle">
+                    {row.delta == null ? (
+                      <span className="text-gray-300">—</span>
+                    ) : Number(row.delta) > 0 ? (
+                      <span className="font-semibold text-red-500">{fmtCurrency(row.delta)}</span>
+                    ) : (
+                      <span className="text-gray-500">{fmtCurrency(row.delta)}</span>
+                    )}
+                  </td>
+
+                  {/* אחוז מקדמה */}
+                  <td className="px-3 py-1.5 text-sm tabular-nums text-gray-600 text-left align-middle">
+                    {row.advance_rate != null ? `${Number(row.advance_rate).toFixed(2)}%` : <span className="text-gray-300">—</span>}
+                  </td>
+
+                  {/* סטטוס */}
+                  <td className="px-3 py-1.5 text-center align-middle">
+                    <AdvancePaymentStatusBadge status={row.status} />
+                  </td>
+
+                  {/* פעולות */}
+                  <td className="px-3 py-1.5 align-middle" onClick={(e) => e.stopPropagation()}>
+                    <RowActionsMenu ariaLabel={`פעולות למקדמה ${row.id}`}>
+                      <RowActionItem
+                        label="עדכן תשלום"
+                        icon={<Edit className="h-3.5 w-3.5" />}
+                        onClick={() => onRowClick(row)}
+                      />
+                      <RowActionItem
+                        label="עבור ללקוח"
+                        icon={<ExternalLink className="h-3.5 w-3.5" />}
+                        onClick={() =>
+                          window.open(`/clients/${row.client_record_id}/advance-payments`, '_self')
+                        }
+                      />
+                    </RowActionsMenu>
+                  </td>
+                </tr>
+              )
+            })
           )}
         </>
       )}

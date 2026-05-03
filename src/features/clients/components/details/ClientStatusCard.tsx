@@ -14,6 +14,7 @@ import { CLIENT_ROUTES } from '../../api/endpoints'
 import { vatReportsApi, vatReportsQK } from '@/features/vatReports'
 import { useFirstBusinessId } from '../../hooks/useFirstBusinessId'
 import { fmtCurrency as fmt } from '@/utils/utils'
+import { SkeletonBlock } from '@/components/ui/primitives/SkeletonBlock'
 interface Props {
   clientId: number
 }
@@ -119,7 +120,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
         </div>
         <div className="grid grid-cols-2 gap-1 md:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-12 animate-pulse rounded-md bg-gray-100" />
+            <SkeletonBlock key={i} width="w-full" height="h-12" rounded="md" />
           ))}
         </div>
       </section>

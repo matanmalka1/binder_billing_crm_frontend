@@ -77,6 +77,7 @@ export interface AdvancePaymentOverviewRow {
   reported_turnover: string | null
   live_turnover: string | null
   missing_turnover: boolean
+  advance_rate: string | null
 }
 
 export interface ListAdvancePaymentsOverviewParams {
