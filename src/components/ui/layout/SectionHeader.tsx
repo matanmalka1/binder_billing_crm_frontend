@@ -32,7 +32,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
   >
     <div>
       {size === 'lg' ? (
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-black">{title}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-black">{title}</h1>
       ) : size === 'md' ? (
         <h2 className="text-xl font-bold tracking-tight text-gray-900">{title}</h2>
       ) : size === 'xs' ? (
@@ -44,7 +44,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
         <p
           className={cn(
             'text-gray-600',
-            size === 'lg' ? 'mt-3 text-base md:text-lg max-w-3xl leading-relaxed' : 'mt-1 text-sm',
+            size === 'lg' ? 'mt-1.5 text-base md:text-lg max-w-3xl leading-relaxed' : 'mt-1 text-sm',
           )}
         >
           {subtitle}

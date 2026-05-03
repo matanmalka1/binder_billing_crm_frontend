@@ -12,7 +12,7 @@ export type ActiveClientDetailsTab =
   | 'communication'
   | 'reminders'
 export type ClientIdNumberType = Exclude<ClientResponse['id_number_type'], null>
-export type ClientSortBy = 'full_name' | 'created_at' | 'status'
+export type ClientSortBy = 'full_name' | 'created_at' | 'status' | 'entity_type'
 export type ClientSortOrder = 'asc' | 'desc'
 
 export const CLIENT_DETAILS_TABS: ActiveClientDetailsTab[] = [
@@ -140,6 +140,7 @@ export const CLIENT_SORT_BY_OPTIONS: { value: ClientSortBy; label: string }[] = 
   { value: 'full_name', label: 'שם לקוח' },
   { value: 'created_at', label: 'תאריך יצירה' },
   { value: 'status', label: 'סטטוס' },
+  { value: 'entity_type', label: 'סוג יישות' },
 ]
 
 export const CLIENT_SORT_ORDER_OPTIONS: { value: ClientSortOrder; label: string }[] = [
@@ -151,6 +152,7 @@ const SORT_ORDER_LABELS: Record<ClientSortBy, Record<ClientSortOrder, string>> =
   full_name: { asc: 'שם לקוח: א׳ → ת׳', desc: 'שם לקוח: ת׳ → א׳' },
   created_at: { asc: 'תאריך יצירה: ישן → חדש', desc: 'תאריך יצירה: חדש → ישן' },
   status: { asc: 'סדר עולה', desc: 'סדר יורד' },
+  entity_type: { asc: 'סוג יישות: א׳ → ת׳', desc: 'סוג יישות: ת׳ → א׳' },
 }
 
 export const getClientSortOrderOptions = (

@@ -62,7 +62,7 @@ export const Clients: React.FC = () => {
   })
 
   const hasActiveFilters = Boolean(filters.search || filters.status || filters.accountant_id)
-  const isEmptyState = !loading && total === 0 && !hasActiveFilters
+  const isEmptyState = !loading && !error && total === 0 && !hasActiveFilters
   const emptyStateTitle = isEmptyState ? 'אין לקוחות במערכת עדיין' : 'לא נמצאו לקוחות'
   const emptyStateMessage =
     isEmptyState && can.createClients
