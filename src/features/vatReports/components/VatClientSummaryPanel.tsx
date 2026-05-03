@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { CheckCircle2, ExternalLink, MinusCircle, ReceiptText, WalletCards } from 'lucide-react'
+import { Activity, CheckCircle2, ExternalLink, MinusCircle, ReceiptText, WalletCards } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '../../../components/ui/primitives/Badge'
 import { Button } from '../../../components/ui/primitives/Button'
@@ -55,42 +55,55 @@ interface YearGroupProps {
   onRowClick: (row: VatPeriodRow) => void
 }
 
-const YearSummary = ({ annual }: { annual: VatAnnualSummary }) => (
-  <section className="space-y-3">
-    <div className="mb-3">
-      <div>
-        <h3 className="text-sm font-semibold text-gray-900">סיכום מע״מ לשנת {annual.year}</h3>
-        <p className="mt-0.5 text-xs text-gray-500">נתוני התקופות שהוקלדו והוגשו עבור הלקוח</p>
+const YearSummary = ({ annual }: { annual: VatAnnualSummary }) => {
+  const avgNetVat =
+    annual.periods_count > 0
+      ? (Number(annual.net_vat) / annual.periods_count).toFixed(2)
+      : null
+
+  return (
+    <section className="space-y-3">
+      <div className="mb-3">
+        <div>
+          <h3 className="text-sm font-semibold text-gray-900">סיכום מע״מ לשנת {annual.year}</h3>
+          <p className="mt-0.5 text-xs text-gray-500">נתוני התקופות שהוקלדו והוגשו עבור הלקוח</p>
+        </div>
       </div>
-    </div>
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <StatsCard
-        title="תקופות שהוגשו"
-        value={`${annual.filed_count} מתוך ${annual.periods_count}`}
-        icon={CheckCircle2}
-        variant="green"
-      />
-      <StatsCard
-        title="מע״מ עסקאות"
-        value={fmt(annual.total_output_vat)}
-        icon={ReceiptText}
-        variant="neutral"
-      />
-      <StatsCard
-        title="מע״מ תשומות"
-        value={fmt(annual.total_input_vat)}
-        icon={MinusCircle}
-        variant="neutral"
-      />
-      <StatsCard
-        title="מע״מ נטו לתשלום"
-        value={fmt(annual.net_vat)}
-        icon={WalletCards}
-        variant={Number(annual.net_vat) >= 0 ? 'red' : 'green'}
-      />
-    </div>
-  </section>
-)
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        <StatsCard
+          title="תקופות שהוגשו"
+          value={`${annual.filed_count} מתוך ${annual.periods_count}`}
+          icon={CheckCircle2}
+          variant="green"
+        />
+        <StatsCard
+          title="מע״מ עסקאות"
+          value={fmt(annual.total_output_vat)}
+          icon={ReceiptText}
+          variant="neutral"
+        />
+        <StatsCard
+          title="מע״מ תשומות"
+          value={fmt(annual.total_input_vat)}
+          icon={MinusCircle}
+          variant="neutral"
+        />
+        <StatsCard
+          title="מע״מ נטו לתשלום"
+          value={fmt(annual.net_vat)}
+          icon={WalletCards}
+          variant={Number(annual.net_vat) >= 0 ? 'red' : 'green'}
+        />
+        <StatsCard
+          title="מע״מ ממוצע לתקופה"
+          value={avgNetVat !== null ? fmt(avgNetVat) : '—'}
+          icon={Activity}
+          variant="neutral"
+        />
+      </div>
+    </section>
+  )
+}
 
 const YearGroup: React.FC<YearGroupProps> = ({ annual, rows, onRowClick }) => {
   const isBimonthly = annual.periods_count <= 6
