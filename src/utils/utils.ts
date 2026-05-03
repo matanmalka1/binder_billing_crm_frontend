@@ -79,13 +79,18 @@ export const fmtCurrency = (n: string | number | null | undefined): string => {
   return `₪${numeric.toLocaleString('he-IL', { minimumFractionDigits: 0 })}`
 }
 
+const toILSNumeric = (value: string | number | null | undefined): number | null => {
+  if (value == null || value === '') return null
+  const numeric = Number(value)
+  return Number.isNaN(numeric) ? null : numeric
+}
+
 export const formatCurrencyILS = (
   value: string | number | null | undefined,
   maximumFractionDigits = 0,
 ): string => {
-  if (value == null || value === '') return '—'
-  const numeric = Number(value)
-  if (Number.isNaN(numeric)) return '—'
+  const numeric = toILSNumeric(value)
+  if (numeric === null) return '—'
   return numeric.toLocaleString('he-IL', {
     style: 'currency',
     currency: 'ILS',
@@ -97,9 +102,8 @@ export const formatCompactCurrencyILS = (
   value: string | number | null | undefined,
   fractionDigits = 2,
 ): string => {
-  if (value == null || value === '') return '—'
-  const numeric = Number(value)
-  if (Number.isNaN(numeric)) return '—'
+  const numeric = toILSNumeric(value)
+  if (numeric === null) return '—'
   return numeric
     .toLocaleString('he-IL', {
       style: 'currency',

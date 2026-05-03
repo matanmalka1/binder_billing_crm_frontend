@@ -50,6 +50,22 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
   const isDeleting = deletingId === deadline.id
   const isMutating = completingId !== null || reopeningId !== null || deletingId !== null
 
+  const deleteConfirmDialog = (
+    <ConfirmDialog
+      open={confirmDelete}
+      title="מחיקת מועד"
+      message="האם למחוק את המועד? פעולה זו אינה הפיכה."
+      confirmLabel="מחק"
+      cancelLabel="ביטול"
+      isLoading={isDeleting}
+      onConfirm={() => {
+        setConfirmDelete(false)
+        onDelete?.(deadline.id)
+      }}
+      onCancel={() => setConfirmDelete(false)}
+    />
+  )
+
   if (clientScoped) {
     const hasSecondary = canEdit || canDelete
     return (
@@ -120,19 +136,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
           )}
         </div>
 
-        <ConfirmDialog
-          open={confirmDelete}
-          title="מחיקת מועד"
-          message="האם למחוק את המועד? פעולה זו אינה הפיכה."
-          confirmLabel="מחק"
-          cancelLabel="ביטול"
-          isLoading={isDeleting}
-          onConfirm={() => {
-            setConfirmDelete(false)
-            onDelete?.(deadline.id)
-          }}
-          onCancel={() => setConfirmDelete(false)}
-        />
+        {deleteConfirmDialog}
       </>
     )
   }
@@ -191,19 +195,7 @@ export const TaxDeadlineRowActions: React.FC<TaxDeadlineRowActionsProps> = ({
         )}
       </RowActionsMenu>
 
-      <ConfirmDialog
-        open={confirmDelete}
-        title="מחיקת מועד"
-        message="האם למחוק את המועד? פעולה זו אינה הפיכה."
-        confirmLabel="מחק"
-        cancelLabel="ביטול"
-        isLoading={isDeleting}
-        onConfirm={() => {
-          setConfirmDelete(false)
-          onDelete?.(deadline.id)
-        }}
-        onCancel={() => setConfirmDelete(false)}
-      />
+      {deleteConfirmDialog}
     </>
   )
 }

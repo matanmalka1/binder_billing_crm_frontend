@@ -61,30 +61,22 @@ export const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => ({
 
 export const PERIOD_YEAR_OPTIONS = buildYearOptions()
 
-export const getReportingPeriodMonthLabel = (
+const getPeriodLabel = (
+  names: typeof MONTH_NAMES | typeof MONTH_SHORT_NAMES,
   period: string,
-  periodMonthsCount: 1 | 2 = 1,
+  periodMonthsCount: 1 | 2,
 ): string => {
   const month = Number(period.split('-')[1])
   const monthIndex = Number.isInteger(month) && month >= 1 && month <= 12 ? month - 1 : null
   if (monthIndex === null) return period
-  if (periodMonthsCount === 1) return MONTH_NAMES[monthIndex]
-
+  if (periodMonthsCount === 1) return names[monthIndex]
   const endMonthIndex = monthIndex + periodMonthsCount - 1
-  if (endMonthIndex >= MONTH_NAMES.length) return period
-  return `${MONTH_NAMES[monthIndex]}-${MONTH_NAMES[endMonthIndex]}`
+  if (endMonthIndex >= names.length) return period
+  return `${names[monthIndex]}-${names[endMonthIndex]}`
 }
 
-export const getReportingPeriodShortMonthLabel = (
-  period: string,
-  periodMonthsCount: 1 | 2 = 1,
-): string => {
-  const month = Number(period.split('-')[1])
-  const monthIndex = Number.isInteger(month) && month >= 1 && month <= 12 ? month - 1 : null
-  if (monthIndex === null) return period
-  if (periodMonthsCount === 1) return MONTH_SHORT_NAMES[monthIndex]
+export const getReportingPeriodMonthLabel = (period: string, periodMonthsCount: 1 | 2 = 1): string =>
+  getPeriodLabel(MONTH_NAMES, period, periodMonthsCount)
 
-  const endMonthIndex = monthIndex + periodMonthsCount - 1
-  if (endMonthIndex >= MONTH_SHORT_NAMES.length) return period
-  return `${MONTH_SHORT_NAMES[monthIndex]}-${MONTH_SHORT_NAMES[endMonthIndex]}`
-}
+export const getReportingPeriodShortMonthLabel = (period: string, periodMonthsCount: 1 | 2 = 1): string =>
+  getPeriodLabel(MONTH_SHORT_NAMES, period, periodMonthsCount)

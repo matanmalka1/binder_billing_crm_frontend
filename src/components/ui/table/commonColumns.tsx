@@ -42,39 +42,27 @@ interface ActionsColumnOptions<T> {
   render: (item: T, index: number) => ReactNode
 }
 
-export const textColumn = <T,>({
-  key,
-  header,
-  className,
-  headerClassName,
-  valueClassName,
-  emptyValue,
-  getValue,
-}: TextColumnOptions<T>): Column<T> => ({
-  key,
-  header,
-  className,
-  headerClassName,
-  render: (item, index) =>
-    renderMutedText({ value: getValue(item, index), className: valueClassName, emptyValue }),
-})
+const makeTextColumn =
+  <T,>(renderFn: typeof renderMutedText) =>
+  ({
+    key,
+    header,
+    className,
+    headerClassName,
+    valueClassName,
+    emptyValue,
+    getValue,
+  }: TextColumnOptions<T>): Column<T> => ({
+    key,
+    header,
+    className,
+    headerClassName,
+    render: (item, index) =>
+      renderFn({ value: getValue(item, index), className: valueClassName, emptyValue }),
+  })
 
-export const monoColumn = <T,>({
-  key,
-  header,
-  className,
-  headerClassName,
-  valueClassName,
-  emptyValue,
-  getValue,
-}: TextColumnOptions<T>): Column<T> => ({
-  key,
-  header,
-  className,
-  headerClassName,
-  render: (item, index) =>
-    renderMonoText({ value: getValue(item, index), className: valueClassName, emptyValue }),
-})
+export const textColumn = makeTextColumn(renderMutedText)
+export const monoColumn = makeTextColumn(renderMonoText)
 
 export const dateColumn = <T,>({
   key,
