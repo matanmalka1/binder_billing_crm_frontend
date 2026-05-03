@@ -37,7 +37,7 @@ export const useTaxDeadlines = () => {
     () => ({
       client_name: searchParams.get('client_name') || searchParams.get('business_name') || '',
       deadline_type: searchParams.get('deadline_type') || '',
-      status: searchParams.has('status') ? (searchParams.get('status') ?? '') : 'pending',
+      status: searchParams.get('status') || '',
       due_from: searchParams.get('due_from') || '',
       due_to: searchParams.has('due_to') ? (searchParams.get('due_to') ?? '') : defaultDueTo,
       page: parsePositiveInt(searchParams.get('page'), 1),

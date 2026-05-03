@@ -5,7 +5,6 @@ import type { TaxDeadlineFilters } from '../types'
 interface TaxDeadlinesFiltersProps {
   filters: TaxDeadlineFilters
   onChange: (key: string, value: string) => void
-  defaultStatus?: string
 }
 
 const FIELDS = [
@@ -31,11 +30,7 @@ const FIELDS = [
   },
 ]
 
-export const TaxDeadlinesFilters = ({
-  filters,
-  onChange,
-  defaultStatus,
-}: TaxDeadlinesFiltersProps) => (
+export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersProps) => (
   <FilterPanel
     fields={FIELDS}
     values={{
@@ -49,7 +44,7 @@ export const TaxDeadlinesFilters = ({
     onReset={() => {
       onChange('client_name', '')
       onChange('deadline_type', '')
-      onChange('status', defaultStatus ?? '')
+      onChange('status', '')
       onChange('due_from', '')
       onChange('due_to', '')
     }}

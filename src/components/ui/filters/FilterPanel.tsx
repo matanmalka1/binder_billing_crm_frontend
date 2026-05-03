@@ -7,7 +7,7 @@ import { ToolbarContainer } from '@/components/ui/layout/ToolbarContainer'
 import { ActiveFilterBadges } from '@/components/ui/table/ActiveFilterBadges'
 import { ClientFilterControl } from '@/components/shared/client/ClientFilterControl'
 import type { FilterBadge } from '@/components/ui/table/ActiveFilterBadges'
-import { cn } from '@/utils/utils'
+import { cn, formatDate } from '@/utils/utils'
 import { useState, useEffect, useRef, useImperativeHandle, forwardRef, useCallback } from 'react'
 
 // ─── Field Definitions ───────────────────────────────────────────────────────
@@ -205,7 +205,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       if (v)
         badges.push({
           key: field.key,
-          label: `${field.label}: ${v}`,
+          label: `${field.label}: ${formatDate(v)}`,
           onRemove: () => onChange(field.key, ''),
         })
     } else if (field.type === 'date-range') {
@@ -214,13 +214,13 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       if (from)
         badges.push({
           key: field.fromKey,
-          label: `${field.fromLabel}: ${from}`,
+          label: `${field.fromLabel}: ${formatDate(from)}`,
           onRemove: () => onChange(field.fromKey, ''),
         })
       if (to)
         badges.push({
           key: field.toKey,
-          label: `${field.toLabel}: ${to}`,
+          label: `${field.toLabel}: ${formatDate(to)}`,
           onRemove: () => onChange(field.toKey, ''),
         })
     } else if (field.type === 'client-picker') {

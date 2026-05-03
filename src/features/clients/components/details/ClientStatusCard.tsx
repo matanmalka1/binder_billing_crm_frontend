@@ -6,7 +6,7 @@ import { clientsApi, clientsQK } from '../../api'
 import { CLIENT_ROUTES } from '../../api/endpoints'
 import { vatReportsApi, vatReportsQK } from '@/features/vatReports'
 import { useFirstBusinessId } from '../../hooks/useFirstBusinessId'
-import { fmtCurrency as fmt } from '@/utils/utils'
+import { fmtCurrency as fmt, formatDate } from '@/utils/utils'
 import { SkeletonBlock } from '@/components/ui/primitives/SkeletonBlock'
 interface Props {
   clientId: number
@@ -131,7 +131,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
     : 'אין דוח'
 
   const arSecondary = annual_report.filing_deadline
-    ? `הגשה: ${annual_report.filing_deadline}`
+    ? `הגשה: ${formatDate(annual_report.filing_deadline)}`
     : annual_report.refund_due != null
       ? `החזר: ${fmt(annual_report.refund_due)}`
       : annual_report.tax_due != null
