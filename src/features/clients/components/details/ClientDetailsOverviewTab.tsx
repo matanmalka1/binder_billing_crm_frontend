@@ -42,6 +42,8 @@ export type ClientDetailsOverviewTabProps = {
   activeTab: ActiveClientDetailsTab
   isEditing: boolean
   onEditClose: () => void
+  taxYear: number
+  onTaxYearChange: (year: number) => void
 }
 
 export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
@@ -54,6 +56,8 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
   activeTab,
   isEditing,
   onEditClose,
+  taxYear,
+  onTaxYearChange,
 }) => {
   const { id: firstBusinessId } = useFirstBusinessId(client.id)
   const navigate = useNavigate()
@@ -79,6 +83,8 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
         <>
           <ClientInfoSection
             client={client}
+            taxYear={taxYear}
+            onTaxYearChange={onTaxYearChange}
             sideContent={<ClientNotesCard clientId={client.id} canEdit={canEditClients} />}
           />
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(260px,0.65fr)_minmax(0,1.6fr)]">

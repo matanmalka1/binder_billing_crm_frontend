@@ -48,6 +48,7 @@ export const useClientsPage = () => {
   const filters = {
     search: searchParams.get('search') ?? '',
     status: (searchParams.get('status') as ListClientsParams['status']) ?? undefined,
+    entity_type: (searchParams.get('entity_type') as ListClientsParams['entity_type']) ?? undefined,
     accountant_id: can.editClients
       ? parsePositiveInt(searchParams.get('accountant_id'), 0) || undefined
       : undefined,
@@ -60,6 +61,7 @@ export const useClientsPage = () => {
   const apiParams: ListClientsParams = {
     search: filters.search || undefined,
     status: filters.status,
+    entity_type: filters.entity_type,
     accountant_id: filters.accountant_id,
     sort_by: filters.sort_by,
     sort_order: filters.sort_order,
@@ -156,7 +158,7 @@ export const useClientsPage = () => {
   })
 
   const handleFilterChange = (
-    name: 'accountant_id' | 'page_size' | 'search' | 'status' | 'sort_by' | 'sort_order',
+    name: 'accountant_id' | 'entity_type' | 'page_size' | 'search' | 'status' | 'sort_by' | 'sort_order',
     value: string,
   ) => setFilter(name, value)
 

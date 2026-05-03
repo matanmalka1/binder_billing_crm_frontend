@@ -5,6 +5,7 @@ import {
   CLIENT_STATUS_OPTIONS,
   DEFAULT_CLIENT_SORT_BY,
   DEFAULT_CLIENT_SORT_ORDER,
+  ENTITY_TYPE_OPTIONS,
   getClientSortOrderOptions,
 } from '../../constants'
 import type { ClientsFiltersBarProps } from '../../types'
@@ -32,6 +33,12 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
         placeholder: 'שם, ת.ז. / ח.פ.',
       },
       { type: 'select' as const, key: 'status', label: 'סטטוס', options: STATUS_OPTIONS },
+      {
+        type: 'select' as const,
+        key: 'entity_type',
+        label: 'סוג יישות',
+        options: [{ value: '', label: 'כל הסוגים' }, ...ENTITY_TYPE_OPTIONS],
+      },
       ...(showAccountantFilter
         ? [
             {
@@ -76,13 +83,14 @@ export const ClientsFiltersBar: React.FC<ClientsFiltersBarProps> = ({
       values={{
         search: filters.search ?? '',
         status: filters.status ?? '',
+        entity_type: filters.entity_type ?? '',
         accountant_id: activeAccountantId,
         sort_by: filters.sort_by ?? '',
         sort_order: filters.sort_order ?? '',
       }}
       onChange={(key, value) => onFilterChange(key as Parameters<typeof onFilterChange>[0], value)}
       onReset={onReset}
-      gridClass="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5"
+      gridClass="grid-cols-1 sm:grid-cols-2 lg:grid-cols-6"
       extraBadges={extraBadges}
     />
   )

@@ -35,12 +35,15 @@ export const DefinitionSectionCard = ({
   title,
   items,
   columns,
+  headerAction,
 }: {
   title: string
   items: DefinitionItem[]
   columns: 2 | 3
+  headerAction?: ReactNode
 }) => (
   <SectionCard title={title}>
+    {headerAction && <div className="mb-3">{headerAction}</div>}
     <DefinitionList
       columns={columns}
       items={items.map((item) => ({ ...item, value: displayValue(item.value) }))}

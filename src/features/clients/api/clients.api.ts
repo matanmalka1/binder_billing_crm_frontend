@@ -32,8 +32,10 @@ export const clientsApi = {
     return response.data
   },
 
-  getById: async (clientId: number): Promise<ClientResponse> => {
-    const response = await api.get<ClientResponse>(CLIENT_ENDPOINTS.clientById(clientId))
+  getById: async (clientId: number, taxYear?: number): Promise<ClientResponse> => {
+    const response = await api.get<ClientResponse>(CLIENT_ENDPOINTS.clientById(clientId), {
+      params: taxYear ? { tax_year: taxYear } : undefined,
+    })
     return response.data
   },
 

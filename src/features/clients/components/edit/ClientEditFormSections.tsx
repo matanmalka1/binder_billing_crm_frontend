@@ -206,6 +206,13 @@ export const ClientTaxProfileSection = ({
           }
           help="מתעדכן רק כשקיים מקור עדכון במערכת."
         />
+        <Input
+          label="מחזור שנתי (₪)"
+          placeholder="500000"
+          error={errors.annual_revenue?.message}
+          disabled={isLoading}
+          {...register('annual_revenue')}
+        />
       </div>
     </section>
   )

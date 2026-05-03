@@ -22,10 +22,18 @@ export interface ClientResponse {
   vat_exempt_ceiling: string | null
   advance_rate: string | null
   advance_rate_updated_at: string | null
+  annual_revenue: string | null
   accountant_id: number | null
   created_at: string
   updated_at: string | null
   active_binder_number: string | null
+  annual_turnover: AnnualTurnover | null
+}
+
+export interface AnnualTurnover {
+  amount: string | null
+  source: 'reported' | 'manual' | 'none'
+  year: number
 }
 
 export interface ActiveClientSummary {
@@ -58,7 +66,9 @@ export type ClientListResponse = PaginatedResponse<ClientResponse> & { stats: Cl
 export interface ListClientsParams {
   search?: string
   status?: ClientStatus
+  entity_type?: EntityType
   accountant_id?: number
+  tax_year?: number
   sort_by?: 'full_name' | 'created_at' | 'status'
   sort_order?: 'asc' | 'desc'
   page?: number
@@ -126,6 +136,7 @@ export interface UpdateClientPayload {
   vat_reporting_frequency?: VatType | null
   advance_rate?: string | null
   advance_rate_updated_at?: string | null
+  annual_revenue?: string | null
   accountant_id?: number | null
 }
 

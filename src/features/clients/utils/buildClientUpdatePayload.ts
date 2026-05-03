@@ -41,6 +41,9 @@ export const buildClientUpdatePayload = (
     payload.advance_rate = advanceRate
     payload.advance_rate_updated_at = advanceRate ? getLocalISODate() : null
   }
+  if (dirtyFields.annual_revenue) {
+    payload.annual_revenue = blankToNull(data.annual_revenue)
+  }
   if (dirtyFields.accountant_id) {
     payload.accountant_id = data.accountant_id ? Number(data.accountant_id) : null
   }
