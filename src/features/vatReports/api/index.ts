@@ -19,4 +19,8 @@ export type {
   VatAnnualSummary,
   VatClientSummaryResponse,
   FileVatReturnPayload,
+  VatWorkItemGroupSummary,
+  VatWorkItemGroupsResponse,
+  VatWorkItemGroupItemsResponse,
+  VatWorkItemGroupItemsParams,
 } from './contracts'

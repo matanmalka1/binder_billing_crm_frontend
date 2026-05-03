@@ -7,6 +7,9 @@ import type {
   VatWorkItemListResponse,
   VatWorkItemsListParams,
   VatWorkItemLookupResponse,
+  VatWorkItemGroupsResponse,
+  VatWorkItemGroupItemsResponse,
+  VatWorkItemGroupItemsParams,
   CreateVatWorkItemPayload,
   VatPeriodOptionsResponse,
   VatInvoiceResponse,
@@ -134,6 +137,21 @@ export const vatReportsApi = {
   getClientSummary: async (clientId: number): Promise<VatClientSummaryResponse> => {
     const response = await api.get<VatClientSummaryResponse>(
       VAT_ENDPOINTS.vatClientSummary(clientId),
+    )
+    return response.data
+  },
+
+  listGroups: async (params: Omit<VatWorkItemGroupItemsParams, 'page' | 'page_size'> & { period_type?: string } = {}): Promise<VatWorkItemGroupsResponse> => {
+    const response = await api.get<VatWorkItemGroupsResponse>(VAT_ENDPOINTS.vatWorkItemGroups, {
+      params: toQueryParams(params),
+    })
+    return response.data
+  },
+
+  listGroupItems: async (period: string, params: VatWorkItemGroupItemsParams = {}): Promise<VatWorkItemGroupItemsResponse> => {
+    const response = await api.get<VatWorkItemGroupItemsResponse>(
+      VAT_ENDPOINTS.vatWorkItemGroupItems(period),
+      { params: toQueryParams(params) },
     )
     return response.data
   },

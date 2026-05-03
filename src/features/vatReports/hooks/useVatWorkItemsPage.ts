@@ -1,10 +1,9 @@
 import { useCallback, useState } from 'react'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
-import { usePaginatedList } from '../../../hooks/usePaginatedList'
 import { useSearchParamFilters } from '../../../hooks/useSearchParamFilters'
 import { vatReportsApi } from '../api'
 import type { CreateVatWorkItemPayload, VatWorkItemsListParams } from '../api'
-import { getErrorMessage, parsePositiveInt, showErrorToast } from '../../../utils/utils'
+import { getErrorMessage, showErrorToast } from '../../../utils/utils'
 import { toast } from '../../../utils/toast'
 import { toOptionalString } from '../../../utils/filters'
 import { useRole } from '../../../hooks/useRole'
@@ -30,26 +29,15 @@ export const useVatWorkItemsPage = () => {
 
   const filters = {
     status: searchParams.get('status') ?? '',
-    period: searchParams.get('period') ?? '',
+    year: searchParams.get('year') ?? '',
     period_type: toVatPeriodTypeFilter(searchParams.get('period_type')),
     clientSearch: searchParams.get('clientSearch') ?? '',
-    page: parsePositiveInt(searchParams.get('page'), 1),
-    page_size: parsePositiveInt(searchParams.get('page_size'), 20),
   }
 
-  const apiParams: VatWorkItemsListParams = {
+  const statsBase: VatWorkItemsListParams = {
     status: toOptionalString(filters.status),
-    page: filters.page,
-    page_size: filters.page_size,
-    period: toOptionalString(filters.period),
     period_type: toOptionalVatPeriodTypeFilter(filters.period_type),
     client_name: toOptionalString(filters.clientSearch),
-  }
-
-  const statsBase = {
-    period: apiParams.period,
-    period_type: apiParams.period_type,
-    client_name: apiParams.client_name,
     page: 1,
     page_size: 1,
   }
@@ -58,6 +46,7 @@ export const useVatWorkItemsPage = () => {
     queries: statsStatuses.map((status) => ({
       queryKey: vatReportsQK.list({ ...statsBase, status }),
       queryFn: () => vatReportsApi.list({ ...statsBase, status }),
+      staleTime: 30_000,
     })),
   })
 
@@ -72,19 +61,6 @@ export const useVatWorkItemsPage = () => {
   const statsTyping = getStatsTotal(VAT_WORK_ITEMS_STATS_STATUS_GROUPS.typing)
   const statsReview = getStatsTotal(VAT_WORK_ITEMS_STATS_STATUS_GROUPS.review)
   const statsFiled = getStatsTotal(VAT_WORK_ITEMS_STATS_STATUS_GROUPS.filed)
-
-  const {
-    items: rawItems,
-    total,
-    loading,
-    error,
-  } = usePaginatedList({
-    queryKey: vatReportsQK.list(apiParams),
-    queryFn: () => vatReportsApi.list(apiParams),
-    errorMessage: 'שגיאה בטעינת תיקי מע"מ',
-  })
-
-  const workItems = rawItems
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateVatWorkItemPayload) => vatReportsApi.create(payload),
@@ -182,15 +158,13 @@ export const useVatWorkItemsPage = () => {
 
   return {
     actionLoadingId,
-    workItems,
     createError: createMutation.error
       ? getErrorMessage(createMutation.error, 'שגיאה ביצירת תיק מע"מ')
       : null,
     createLoading: createMutation.isPending,
-    error,
     filters,
     isAdvisor,
-    loading,
+    loading: statsQueries.some((q) => q.isLoading),
     runAction,
     sendBackWithNote,
     setFilter,
@@ -200,6 +174,5 @@ export const useVatWorkItemsPage = () => {
     statsReview,
     statsTyping,
     submitCreate,
-    total,
   }
 }

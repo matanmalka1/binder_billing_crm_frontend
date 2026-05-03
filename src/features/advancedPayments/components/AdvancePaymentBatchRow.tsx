@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronLeft, AlertTriangle, ExternalLink, Edit } from 'lucide-react'
+import { ChevronDown, AlertTriangle, ExternalLink, Edit } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { MONTH_NAMES } from '@/constants/periodOptions.constants'
@@ -76,33 +76,27 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
     <>
       {/* Group header */}
       <tr
-        className="cursor-pointer select-none bg-gray-50 hover:bg-gray-100/80 transition-colors border-t border-gray-200"
+        className="cursor-pointer select-none border-y border-gray-200 bg-gray-50 hover:bg-gray-100/60 transition-colors"
         onClick={onToggle}
       >
-        <td colSpan={COL_COUNT} className="px-3 py-1.5">
-          <div className="flex items-center gap-3">
-            <span className="text-gray-400 flex-shrink-0">
-              {open ? (
-                <ChevronDown className="h-3.5 w-3.5" />
-              ) : (
-                <ChevronLeft className="h-3.5 w-3.5" />
-              )}
-            </span>
-            <span className="font-semibold text-sm text-gray-800 min-w-[100px]">
-              {monthName} {batch.year}
-            </span>
-
-            <div className="flex items-center gap-3 text-sm text-gray-500">
-              <span className="font-medium text-gray-700">{batch.client_count} לקוחות</span>
-              <span className="text-gray-300">·</span>
+        <td colSpan={COL_COUNT} className="px-4 py-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <ChevronDown
+                className={`h-4 w-4 text-gray-500 transition-transform flex-shrink-0 ${open ? '' : '-rotate-90'}`}
+              />
+              <span className="text-sm font-semibold text-gray-800">
+                {monthName} {batch.year}
+              </span>
+              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
+                {batch.client_count} לקוחות
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
               <span>
                 צפוי:{' '}
-                <span className="font-medium text-gray-700">
-                  {fmtCurrency(batch.total_expected)}
-                </span>
+                <span className="font-medium text-gray-700">{fmtCurrency(batch.total_expected)}</span>
               </span>
-              <span className="text-gray-300">·</span>
-              {/* Mini progress */}
               <span className="flex items-center gap-1.5">
                 <span className="font-medium text-gray-700">{collectionPct.toFixed(0)}%</span>
                 <span className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
@@ -113,13 +107,10 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
                 </span>
               </span>
               {batch.missing_turnover_count > 0 && (
-                <>
-                  <span className="text-gray-300">·</span>
-                  <span className="flex items-center gap-1 text-amber-600 font-medium">
-                    <AlertTriangle className="h-3 w-3" />
-                    {batch.missing_turnover_count} חסרי מחזור
-                  </span>
-                </>
+                <span className="flex items-center gap-1 text-amber-600 font-medium">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  {batch.missing_turnover_count} חסרי מחזור
+                </span>
               )}
             </div>
           </div>

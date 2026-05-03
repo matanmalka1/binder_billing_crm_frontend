@@ -1,4 +1,5 @@
 export * from './Badge'
+export * from './GroupSection'
 export * from './Button'
 export * from './Card'
 export * from './IconLabel'

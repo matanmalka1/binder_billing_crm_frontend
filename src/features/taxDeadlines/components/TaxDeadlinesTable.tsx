@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { Inbox } from 'lucide-react'
+import { GroupSection } from '../../../components/ui/primitives/GroupSection'
 import { DataTable, type Column } from '../../../components/ui/table/DataTable'
 import { TaxDeadlineRowActions } from './TaxDeadlineRowActions'
 import type { TaxDeadlineResponse } from '../api'
@@ -152,13 +153,7 @@ export const TaxDeadlinesTable = ({
   return (
     <div className="space-y-4">
       {groups.map((group) => (
-        <div key={group.key}>
-          <div className="mb-2 flex items-center gap-2 px-1">
-            <span className="text-sm font-semibold text-gray-600">{group.label}</span>
-            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
-              {group.items.length}
-            </span>
-          </div>
+        <GroupSection key={group.key} label={group.label} count={group.items.length}>
           <DataTable
             data={group.items}
             columns={columns}
@@ -166,7 +161,7 @@ export const TaxDeadlinesTable = ({
             onRowClick={onRowClick}
             rowClassName={getDeadlineRowClassName}
           />
-        </div>
+        </GroupSection>
       ))}
     </div>
   )

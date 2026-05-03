@@ -1,3 +1,4 @@
+import { GroupSection } from "../../../components/ui/primitives/GroupSection";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { DataTable, type Column } from "../../../components/ui/table/DataTable";
 import type { AnnualReportClientEntry, AnnualReportStatusGroup } from "../api";
@@ -58,25 +59,21 @@ const clientColumns: Column<AnnualReportClientEntry>[] = [
 ];
 
 export const AnnualReportStatusTable: React.FC<Props> = ({ statuses }) => (
-  <div className="space-y-6">
+  <div className="space-y-4">
     {statuses.map((group) => (
-      <div
+      <GroupSection
         key={group.status}
-        className="rounded-xl border border-gray-200 overflow-hidden"
+        label={<Badge variant={getStatusVariant(group.status)}>{getStatusLabel(group.status)}</Badge>}
+        count={group.count}
+        countLabel="לקוחות"
       >
-        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 border-b border-gray-200">
-          <Badge variant={getStatusVariant(group.status)}>
-            {getStatusLabel(group.status)}
-          </Badge>
-          <span className="text-sm text-gray-500">{group.count} לקוחות</span>
-        </div>
         <DataTable
           data={group.clients}
           columns={clientColumns}
           getRowKey={(r) => r.client_record_id}
           emptyMessage="אין לקוחות בסטטוס זה"
         />
-      </div>
+      </GroupSection>
     ))}
   </div>
 );

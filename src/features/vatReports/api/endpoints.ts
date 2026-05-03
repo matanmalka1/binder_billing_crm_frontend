@@ -14,4 +14,6 @@ export const VAT_ENDPOINTS = {
   vatWorkItemAudit: (id: number | string) => `/vat/work-items/${id}/audit`,
   vatClientSummary: (clientId: number | string) => `/vat/clients/${clientId}/summary`,
   vatClientExport: (clientId: number | string) => `/vat/clients/${clientId}/export`,
+  vatWorkItemGroups: '/vat/work-items/groups',
+  vatWorkItemGroupItems: (period: string) => `/vat/work-items/groups/${period}/items`,
 } as const

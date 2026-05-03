@@ -1,33 +1,30 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
-import { AlertTriangle, Clock, FileText, Hourglass, CheckCircle2, Plus } from 'lucide-react'
+import { Clock, FileText, Hourglass, CheckCircle2, Plus } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import {
   buildVatWorkItemColumns,
   useVatWorkItemsPage,
+  useVatWorkItemGroups,
   VatWorkItemsCreateModal,
   VatWorkItemsFiltersCard,
-  VatWorkItemsGroupedTable,
+  VatWorkItemsGroupedCards,
 } from '@/features/vatReports'
+import type { VatWorkItemResponse } from '@/features/vatReports'
 import { Alert } from '@/components/ui/overlays/Alert'
-import { Badge } from '@/components/ui/primitives/Badge'
 import { Button } from '@/components/ui/primitives/Button'
 import { StatsCard } from '@/components/ui/layout/StatsCard'
-import { VAT_DEADLINE_WARNING_DAYS } from '../constants'
-import { getDuplicateClientIds, getVatDeadlineCounts } from '../view.helpers'
 
 export const VatWorkItems: React.FC = () => {
   const [urlParams] = useSearchParams()
 
   const {
     actionLoadingId,
-    workItems,
     createError,
     createLoading,
-    error,
     filters,
     isAdvisor,
-    loading,
+    loading: statsLoading,
     runAction,
     setFilter,
     setSearchParams,
@@ -36,15 +33,19 @@ export const VatWorkItems: React.FC = () => {
     statsReview,
     statsTyping,
     submitCreate,
-    total,
   } = useVatWorkItemsPage()
+
+  const { groups, isLoading: groupsLoading, error: groupsError } = useVatWorkItemGroups({
+    period_type: filters.period_type ?? undefined,
+    status: filters.status || undefined,
+    client_name: filters.clientSearch || undefined,
+    year: filters.year ? Number(filters.year) : undefined,
+  })
 
   const navigate = useNavigate()
   const [showCreateModal, setShowCreateModal] = useState(false)
   const createClientId = urlParams.get('client_id')
   const createPeriod = urlParams.get('period')
-  const duplicateClientIds = useMemo(() => getDuplicateClientIds(workItems), [workItems])
-  const deadlineCounts = useMemo(() => getVatDeadlineCounts(workItems), [workItems])
 
   useEffect(() => {
     if (urlParams.get('create') !== '1') return
@@ -58,15 +59,24 @@ export const VatWorkItems: React.FC = () => {
     setShowCreateModal(false)
   }
 
+  const handleClearFilters = useCallback(
+    () => setSearchParams(new URLSearchParams()),
+    [setSearchParams],
+  )
+
+  const handleRowClick = useCallback(
+    (item: VatWorkItemResponse) => navigate(`/tax/vat/${item.id}`),
+    [navigate],
+  )
+
   const columns = useMemo(
     () =>
       buildVatWorkItemColumns({
-        isLoading: loading,
+        isLoading: false,
         isDisabled: actionLoadingId !== null,
-        duplicateClientIds,
         runAction,
       }),
-    [loading, actionLoadingId, duplicateClientIds, runAction],
+    [actionLoadingId, runAction],
   )
 
   return (
@@ -91,7 +101,7 @@ export const VatWorkItems: React.FC = () => {
         />
       )}
 
-      {!loading && workItems.length > 0 && (
+      {!statsLoading && groups.length > 0 && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatsCard
             title="ממתין לחומרים"
@@ -110,49 +120,18 @@ export const VatWorkItems: React.FC = () => {
         </div>
       )}
 
-      {!loading &&
-        workItems.length > 0 &&
-        (deadlineCounts.overdue > 0 || deadlineCounts.urgent > 0) && (
-          <div className="flex flex-wrap gap-2" dir="rtl">
-            {deadlineCounts.overdue > 0 && (
-              <Badge
-                variant="error"
-                className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium"
-              >
-                <AlertTriangle className="h-3.5 w-3.5" />
-                {deadlineCounts.overdue} תיקים בחריגת מועד
-              </Badge>
-            )}
-            {deadlineCounts.urgent > 0 && (
-              <Badge
-                variant="warning"
-                className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium"
-              >
-                <Clock className="h-3.5 w-3.5" />
-                {deadlineCounts.urgent} תיקים — נותרו עד {VAT_DEADLINE_WARNING_DAYS} ימים
-              </Badge>
-            )}
-          </div>
-        )}
-
       <VatWorkItemsFiltersCard
         filters={filters}
         onFilterChange={setFilter}
-        onClear={() => setSearchParams(new URLSearchParams())}
+        onClear={handleClearFilters}
       />
 
-      <VatWorkItemsGroupedTable
-        data={workItems}
+      <VatWorkItemsGroupedCards
+        groups={groups}
         columns={columns}
-        isLoading={loading}
-        error={error}
-        onRowClick={(item) => navigate(`/tax/vat/${item.id}`)}
-        page={filters.page}
-        pageSize={filters.page_size}
-        total={total}
-        label='תיקי מע"מ'
-        onPageChange={(page) => setFilter('page', String(page))}
-        emptyMessage='אין תיקי מע"מ להצגה'
+        isLoading={groupsLoading}
+        error={groupsError}
+        onRowClick={handleRowClick}
         emptyState={{
           title: 'לא נמצאו תיקי מע"מ',
           message: isAdvisor ? 'נסה לשנות את הסינון או לפתוח תיק חדש' : 'נסה לשנות את הסינון',

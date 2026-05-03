@@ -161,6 +161,31 @@ export interface VatPeriodRow {
   filed_at: string | null
 }
 
+export interface VatWorkItemGroupSummary {
+  period: string
+  period_type: string | null
+  total_count: number
+  filed_count: number
+  pending_count: number
+}
+
+export interface VatWorkItemGroupsResponse {
+  groups: VatWorkItemGroupSummary[]
+}
+
+export interface VatWorkItemGroupItemsParams {
+  page?: number
+  page_size?: number
+  status?: string
+  client_name?: string
+}
+
+export interface VatWorkItemGroupItemsResponse {
+  items: VatWorkItemResponse[]
+  total: number
+  period: string
+}
+
 export interface VatAnnualSummary {
   year: number
   total_output_vat: string

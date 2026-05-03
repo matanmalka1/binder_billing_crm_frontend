@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
-import { ChevronDown, ChevronLeft } from 'lucide-react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import { GroupSection } from '@/components/ui/primitives/GroupSection'
 import { formatClientOfficeId } from '@/utils/utils'
 import type { Reminder } from '../types'
 import { groupRemindersByClient } from '../utils'
@@ -26,73 +26,54 @@ export const RemindersByClientList: React.FC<RemindersByClientListProps> = ({
   onRowClick,
 }) => {
   const groups = useMemo(() => groupRemindersByClient(reminders), [reminders])
-  const [collapsedKeys, setCollapsedKeys] = useState<Set<string>>(new Set())
-
-  const toggleCollapsed = (key: string) => {
-    setCollapsedKeys((current) => {
-      const next = new Set(current)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
-    })
-  }
 
   return (
     <div className="space-y-4">
       {groups.map((group) => {
-        const collapsed = collapsedKeys.has(group.key)
-        const Icon = collapsed ? ChevronLeft : ChevronDown
+        const subInfo = [
+          group.officeClientNumber != null
+            ? `מס' לקוח: ${formatClientOfficeId(group.officeClientNumber)}`
+            : null,
+          group.clientIdNumber ? `ת.ז / ח.פ: ${group.clientIdNumber}` : null,
+        ]
+          .filter(Boolean)
+          .join(' · ')
+
+        const label = group.clientRecordId != null ? (
+          <Link
+            to={`/clients/${group.clientRecordId}`}
+            className="truncate hover:underline"
+          >
+            {group.clientName}
+          </Link>
+        ) : (
+          group.clientName
+        )
+
+        const meta = subInfo ? (
+          <span className="text-xs text-gray-500">{subInfo}</span>
+        ) : undefined
 
         return (
-          <section
+          <GroupSection
             key={group.key}
-            className="overflow-hidden rounded-xl border border-gray-200 bg-white"
+            label={label}
+            count={group.reminders.length}
+            countLabel="תזכורות"
+            meta={meta}
+            collapsible
           >
-            <header className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 bg-gray-50 px-4 py-3">
-              <div className="min-w-0">
-                {group.clientRecordId != null ? (
-                  <Link
-                    to={`/clients/${group.clientRecordId}`}
-                    className="block truncate text-sm font-semibold text-gray-800 hover:underline"
-                  >
-                    {group.clientName}
-                  </Link>
-                ) : (
-                  <h2 className="truncate text-sm font-semibold text-gray-800">
-                    {group.clientName}
-                  </h2>
-                )}
-                <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500">
-                  <span>{group.reminders.length} תזכורות</span>
-                  {group.officeClientNumber != null && (
-                    <span>מס' לקוח: {formatClientOfficeId(group.officeClientNumber)}</span>
-                  )}
-                  {group.clientIdNumber && <span>ת.ז / ח.פ: {group.clientIdNumber}</span>}
-                </div>
-              </div>
-              <button
-                type="button"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-600 hover:bg-gray-100"
-                onClick={() => toggleCollapsed(group.key)}
-                aria-expanded={!collapsed}
-                aria-label={collapsed ? 'פתח תזכורות לקוח' : 'קפל תזכורות לקוח'}
-              >
-                <Icon className="h-4 w-4" />
-              </button>
-            </header>
-            {!collapsed && (
-              <RemindersTable
-                reminders={group.reminders}
-                cancelingId={cancelingId}
-                markingSentId={markingSentId}
-                onCancel={onCancel}
-                onMarkSent={onMarkSent}
-                onViewDetails={onViewDetails}
-                onRowClick={onRowClick}
-                showClient={false}
-              />
-            )}
-          </section>
+            <RemindersTable
+              reminders={group.reminders}
+              cancelingId={cancelingId}
+              markingSentId={markingSentId}
+              onCancel={onCancel}
+              onMarkSent={onMarkSent}
+              onViewDetails={onViewDetails}
+              onRowClick={onRowClick}
+              showClient={false}
+            />
+          </GroupSection>
         )
       })}
     </div>

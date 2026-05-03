@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { FilterPanel } from '@/components/ui/filters/FilterPanel'
-import { MONTH_NAMES } from '../../../utils/utils'
 import { VAT_PERIOD_TYPE_SELECT_OPTIONS, VAT_WORK_ITEMS_STATUS_OPTIONS } from '../constants'
 import type { VatWorkItemsFiltersCardProps } from '../types'
 
@@ -9,24 +8,21 @@ export const VatWorkItemsFiltersCard = ({
   onClear,
   onFilterChange,
 }: VatWorkItemsFiltersCardProps) => {
-  const periodOptions = useMemo(
-    () => [
-      { value: '', label: 'כל התקופות' },
-      ...Array.from({ length: 24 }, (_, i) => {
-        const d = new Date(new Date().getFullYear(), new Date().getMonth() - i, 1)
-        return {
-          value: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`,
-          label: `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`,
-        }
+  const yearOptions = useMemo(() => {
+    const currentYear = new Date().getFullYear()
+    return [
+      { value: '', label: 'כל השנים' },
+      ...Array.from({ length: 5 }, (_, i) => {
+        const y = currentYear - i
+        return { value: String(y), label: String(y) }
       }),
-    ],
-    [],
-  )
+    ]
+  }, [])
 
   const fields = useMemo(
     () => [
       { type: 'client-picker' as const, idKey: 'clientSearch' },
-      { type: 'select' as const, key: 'period', label: 'תקופה', options: periodOptions },
+      { type: 'select' as const, key: 'year', label: 'שנה', options: yearOptions },
       {
         type: 'select' as const,
         key: 'status',
@@ -40,7 +36,7 @@ export const VatWorkItemsFiltersCard = ({
         options: VAT_PERIOD_TYPE_SELECT_OPTIONS,
       },
     ],
-    [periodOptions],
+    [yearOptions],
   )
 
   return (
@@ -48,7 +44,7 @@ export const VatWorkItemsFiltersCard = ({
       fields={fields}
       values={{
         clientSearch: filters.clientSearch ?? '',
-        period: filters.period ?? '',
+        year: filters.year ?? '',
         status: filters.status ?? '',
         period_type: filters.period_type ?? '',
       }}

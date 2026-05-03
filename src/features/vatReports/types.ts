@@ -10,7 +10,7 @@ import type { ExpenseCategoryRow } from './vatBreakdown.utils'
 
 export type VatWorkItemsFilters = PagedFilters<{
   status: string
-  period: string
+  year: string
   period_type: string
   clientSearch: string
 }>
@@ -133,7 +133,7 @@ export interface VatWorkItemsCreateModalProps {
 }
 
 export interface VatWorkItemsFiltersCardProps {
-  filters: VatWorkItemsFilters
+  filters: Pick<VatWorkItemsFilters, 'status' | 'year' | 'period_type' | 'clientSearch'>
   onClear: () => void
   onFilterChange: (key: string, value: string) => void
 }
