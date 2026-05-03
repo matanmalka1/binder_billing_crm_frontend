@@ -18,7 +18,6 @@ export interface DocumentSearchResult {
   document_type: string
   original_filename: string | null
   tax_year: number | null
-  status: string
 }
 
 export interface SearchResponse {
@@ -34,6 +33,10 @@ export interface SearchParams {
   client_name?: string
   id_number?: string
   binder_number?: string
+  client_status?: string
+  entity_type?: string
+  binder_status?: string
+  filename?: string
   page?: number
   page_size?: number
 }

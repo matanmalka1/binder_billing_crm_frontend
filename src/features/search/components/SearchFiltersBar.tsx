@@ -1,7 +1,15 @@
 import { RotateCcw, SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react'
 import { Input } from '../../../components/ui/inputs/Input'
+import { Select } from '../../../components/ui/inputs/Select'
 import { Button } from '../../../components/ui/primitives/Button'
-import type { SearchFiltersBarProps } from '../types'
+import { CLIENT_STATUS_OPTIONS, ENTITY_TYPE_OPTIONS } from '../../clients/constants'
+import { BINDER_STATUS_OPTIONS } from '../../binders'
+import { SEARCH_ADVANCED_FILTER_KEYS, type SearchFiltersBarProps } from '../types'
+
+const withEmptyOption = (label: string, options: { value: string; label: string }[]) => [
+  { value: '', label },
+  ...options,
+]
 
 export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
   filters,
@@ -10,9 +18,7 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
   isOpen,
   onToggle,
 }) => {
-  const advancedCount = [filters.client_name, filters.id_number, filters.binder_number].filter(
-    Boolean,
-  ).length
+  const advancedCount = SEARCH_ADVANCED_FILTER_KEYS.filter((k) => Boolean(filters[k])).length
 
   return (
     <div>
@@ -56,6 +62,24 @@ export const SearchFiltersBar: React.FC<SearchFiltersBarProps> = ({
               value={filters.binder_number}
               onChange={(e) => onFilterChange('binder_number', e.target.value)}
               placeholder="לדוגמה: 12345"
+            />
+            <Select
+              label="סטטוס לקוח"
+              value={filters.client_status}
+              onChange={(e) => onFilterChange('client_status', e.target.value)}
+              options={withEmptyOption('כל הסטטוסים', CLIENT_STATUS_OPTIONS)}
+            />
+            <Select
+              label="סוג עסק"
+              value={filters.entity_type}
+              onChange={(e) => onFilterChange('entity_type', e.target.value)}
+              options={withEmptyOption('כל הסוגים', ENTITY_TYPE_OPTIONS)}
+            />
+            <Select
+              label="סטטוס קלסר"
+              value={filters.binder_status}
+              onChange={(e) => onFilterChange('binder_status', e.target.value)}
+              options={withEmptyOption('כל הסטטוסים', BINDER_STATUS_OPTIONS)}
             />
           </div>
 

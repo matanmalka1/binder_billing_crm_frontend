@@ -1,4 +1,5 @@
-import { Menu } from 'lucide-react'
+import { Menu, Search } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { NotificationBell } from './NotificationBell'
 
 interface NavbarProps {
@@ -22,7 +23,14 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
         <span className="text-xl font-bold text-gray-900">יוסף מאיר מערכת ניהול</span>
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-4">
+        <Link
+          to="/search"
+          className="p-2 rounded-md hover:bg-gray-100 text-gray-600"
+          aria-label="חיפוש"
+        >
+          <Search className="w-5 h-5" />
+        </Link>
         <NotificationBell />
       </div>
     </header>

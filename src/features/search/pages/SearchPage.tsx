@@ -58,7 +58,7 @@ export const Search: React.FC = () => {
           type="text"
           value={queryDraft}
           onChange={(e) => setQueryDraft(e.target.value)}
-          placeholder="חיפוש חופשי — שם לקוח, מספר קלסר..."
+          placeholder="חיפוש חופשי — שם לקוח, מספר קלסר, שם קובץ..."
           startIcon={<SearchIcon className="h-4 w-4" />}
           autoFocus
         />
@@ -125,7 +125,13 @@ export const Search: React.FC = () => {
         </>
       )}
 
-      {!loading && <DocumentResultsSection documents={documents} />}
+      {!loading && (
+        <DocumentResultsSection
+          documents={documents}
+          filenameFilter={filters.filename ?? ''}
+          onFilenameChange={handleFilterChange}
+        />
+      )}
     </div>
   )
 }

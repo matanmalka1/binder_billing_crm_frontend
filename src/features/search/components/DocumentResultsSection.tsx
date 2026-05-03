@@ -1,30 +1,48 @@
 import { FileText, ExternalLink } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Badge } from '../../../components/ui/primitives/Badge'
-import { DOC_TYPE_LABELS, STATUS_LABELS, STATUS_BADGE_VARIANT } from '@/features/documents'
+import { Input } from '../../../components/ui/inputs/Input'
+import { DOC_TYPE_LABELS } from '@/features/documents'
 import type { DocumentSearchResult } from '../api'
+import type { SearchFilters } from '../types'
 import { cn, formatClientOfficeId } from '../../../utils/utils'
 
 const DOCUMENT_SEARCH_LIMIT = 50
 
 interface DocumentResultsSectionProps {
   documents: DocumentSearchResult[]
+  filenameFilter: string
+  onFilenameChange: (name: keyof SearchFilters, value: string) => void
 }
 
-export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ documents }) => {
-  if (documents.length === 0) return null
+export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({
+  documents,
+  filenameFilter,
+  onFilenameChange,
+}) => {
+  if (documents.length === 0 && !filenameFilter) return null
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2 px-1">
+      <div className="flex items-center gap-3 px-1">
         <FileText className="h-4 w-4 text-purple-600" />
         <span className="text-sm font-semibold text-gray-800">מסמכים</span>
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-100 px-1.5 text-xs font-semibold text-purple-700">
-          {documents.length}
-        </span>
+        {documents.length > 0 && (
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-100 px-1.5 text-xs font-semibold text-purple-700">
+            {documents.length}
+          </span>
+        )}
         {documents.length >= DOCUMENT_SEARCH_LIMIT && (
           <span className="text-xs text-gray-400">מוצגים {DOCUMENT_SEARCH_LIMIT} ראשונים</span>
         )}
+        <div className="mr-auto w-56">
+          <Input
+            type="text"
+            value={filenameFilter}
+            onChange={(e) => onFilenameChange('filename', e.target.value)}
+            placeholder="חיפוש לפי שם קובץ..."
+
+          />
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -36,7 +54,6 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
               <th className="px-4 py-2.5">סוג מסמך</th>
               <th className="px-4 py-2.5">שם קובץ</th>
               <th className="px-4 py-2.5">שנת מס</th>
-              <th className="px-4 py-2.5">סטטוס</th>
               <th className="px-4 py-2.5" />
             </tr>
           </thead>
@@ -55,14 +72,6 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({ 
                 </td>
                 <td className="px-4 py-3 text-gray-600">
                   {doc.tax_year ?? <span className="text-gray-300">—</span>}
-                </td>
-                <td className="px-4 py-3">
-                  <Badge
-                    variant={STATUS_BADGE_VARIANT[doc.status] ?? 'neutral'}
-                    className="text-xs"
-                  >
-                    {STATUS_LABELS[doc.status] ?? 'סטטוס לא ידוע'}
-                  </Badge>
                 </td>
                 <td className="px-4 py-3">
                   <Link

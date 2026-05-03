@@ -12,3 +12,13 @@ export interface SearchFiltersBarProps {
   isOpen: boolean
   onToggle: () => void
 }
+
+export const SEARCH_ADVANCED_FILTER_KEYS: (keyof SearchFilters)[] = [
+  'client_name',
+  'id_number',
+  'binder_number',
+  'client_status',
+  'entity_type',
+  'binder_status',
+  'filename',
+]
