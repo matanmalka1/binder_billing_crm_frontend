@@ -1,5 +1,6 @@
 import { type FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { BriefcaseBusiness, Edit2, Fingerprint } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Alert } from '@/components/ui/overlays/Alert'
@@ -7,6 +8,7 @@ import { PageStateGuard } from '@/components/ui/layout/PageStateGuard'
 import { Badge } from '@/components/ui/primitives/Badge'
 import { Button } from '@/components/ui/primitives/Button'
 import { formatPlainIdentifier } from '@/utils/utils'
+import { DOC_TYPE_LABELS, documentsApi, documentsQK } from '@/features/documents'
 import { CLIENT_ROUTES } from '../api/endpoints'
 import {
   CLIENT_STATUS_BADGE_VARIANTS,
@@ -55,6 +57,43 @@ const buildClientHeader = (client: ClientResponse) => ({
   description: undefined,
 })
 
+const ClientHeaderMissingDocuments: FC<{ clientId: number; active: boolean }> = ({
+  clientId,
+  active,
+}) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: documentsQK.clientSignals(clientId),
+    queryFn: () => documentsApi.getSignalsByClient(clientId),
+    enabled: active && clientId > 0,
+    staleTime: 30_000,
+    retry: 1,
+  })
+
+  if (!active || isLoading || isError) return null
+
+  const missingDocuments = data?.missing_documents ?? []
+  if (missingDocuments.length === 0) return null
+
+  const labels = missingDocuments.map(
+    (documentType) => DOC_TYPE_LABELS[documentType] ?? documentType,
+  )
+
+  return (
+    <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+      <span className="font-semibold text-amber-800">
+        חסרים {missingDocuments.length} מסמכים בפרטי הלקוח
+      </span>
+      <span className="text-gray-500">{labels.join(' · ')}</span>
+      <Link
+        to={`/clients/${clientId}/documents`}
+        className="font-bold text-amber-800 underline-offset-4 hover:underline"
+      >
+        מעבר למסמכים
+      </Link>
+    </span>
+  )
+}
+
 export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = 'details' }) => {
   const { clientId } = useParams<{ clientId: string }>()
   const clientIdNum = clientId ? Number(clientId) : null
@@ -98,7 +137,11 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = 'details' }
           <PageHeader
             size="md"
             title={clientHeader?.title ?? client?.full_name ?? 'פרטי לקוח'}
-            description={clientHeader?.description}
+            description={
+              client && initialTab === 'details' ? (
+                <ClientHeaderMissingDocuments clientId={client.id} active />
+              ) : undefined
+            }
             actions={
               can.editClients && initialTab === 'details' ? (
                 <Button

@@ -21,7 +21,7 @@ import { ChargesCreateModal } from '@/features/charges'
 import { ClientTimelineTab } from '@/features/timeline'
 import { ClientAnnualReportsTab } from '@/features/annualReports'
 import { ClientAdvancePaymentsTab } from '@/features/advancedPayments'
-import { ClientDocumentsTab, MissingDocumentsNotice } from '@/features/documents'
+import { ClientDocumentsTab } from '@/features/documents'
 import { ClientNotesCard } from '@/features/notes'
 import { FilingTimeline } from '@/features/taxDeadlines'
 import { VatClientSummaryPanel } from '@/features/vatReports'
@@ -87,10 +87,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
             onTaxYearChange={onTaxYearChange}
             sideContent={<ClientNotesCard clientId={client.id} canEdit={canEditClients} />}
           />
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(260px,0.65fr)_minmax(0,1.6fr)]">
-            <MissingDocumentsNotice clientId={client.id} />
-            <ClientStatusCard clientId={client.id} />
-          </div>
+          <ClientStatusCard clientId={client.id} />
           <ClientBusinessesCard
             clientId={client.id}
             canEdit={canEditClients}
