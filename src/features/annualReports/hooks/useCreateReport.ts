@@ -58,7 +58,11 @@ export const useCreateReport = (taxYear?: number, onSuccess?: () => void) => {
     placeholderData: (prev) => prev,
   })
 
-  const preview = previewData ?? { net_profit: 0, estimated_tax: 0, balance: 0 }
+  const preview = {
+    netProfit: previewData?.net_profit ?? 0,
+    estimatedTax: previewData?.estimated_tax ?? 0,
+    balance: previewData?.balance ?? 0,
+  }
 
   const mutation = useMutation({
     mutationFn: (payload: CreateAnnualReportPayload) => annualReportsApi.createReport(payload),

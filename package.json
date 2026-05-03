@@ -21,8 +21,6 @@
     "jscpd:report": "jscpd --config .jscpd.json --reporters console,json --output ./reports/jscpd src"
   },
   "dependencies": {
-    "@dnd-kit/core": "^6.3.1",
-    "@dnd-kit/sortable": "^10.0.0",
     "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/vite": "^4.2.1",
     "@tanstack/react-query": "^5.90.21",
@@ -52,9 +50,11 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
     "jscpd": "^4.0.8",
+    "knip": "^6.11.0",
     "prettier": "^3.8.3",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^4.1.5"
   }
 }

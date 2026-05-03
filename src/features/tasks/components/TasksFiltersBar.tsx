@@ -1,6 +1,6 @@
 import { Select } from '@/components/ui/inputs/Select'
 import { Button } from '@/components/ui/primitives/Button'
-import { taskTypeLabels, taskUrgencyLabels, taskTypeValues, taskUrgencyValues } from '../constants'
+import { taskTypeLabels, taskTypeValues } from '../constants'
 
 interface TasksFiltersBarProps {
   typeFilter: string | null
