@@ -4,7 +4,6 @@ import { useClientTimelinePage } from '../hooks/useClientTimelinePage'
 import { TimelineCommandBar } from './TimelineCommandBar'
 import { TimelineCard } from './TimelineCard'
 import { groupEventsByDate, type EventGroup } from './timelineGrouping'
-import { UpcomingDeadlinesCard } from './UpcomingDeadlinesCard'
 import { PaginationCard } from '../../../components/ui/table/PaginationCard'
 import { PageLoading } from '../../../components/ui/layout/PageLoading'
 import { Alert } from '../../../components/ui/overlays/Alert'
@@ -47,7 +46,6 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }
     filters,
     eventTypeStats,
     summary,
-    filteredUpcomingDeadlines,
     activeActionKey,
     handleAction,
     pendingAction,
@@ -111,8 +109,6 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }
         onPageSizeChange={setPageSize}
         eventTypeStats={eventTypeStats}
       />
-
-      <UpcomingDeadlinesCard deadlines={filteredUpcomingDeadlines} />
 
       <TimelineCard
         events={filteredEvents}

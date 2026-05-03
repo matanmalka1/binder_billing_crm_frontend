@@ -69,18 +69,17 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
 
   // ── Derived timeline model ─────────────────────────────────────────────────
 
-  const { historicalEvents, upcomingDeadlines } = useMemo(
+  const { historicalEvents } = useMemo(
     () => normalizeTimelineEvents(events),
     [events],
   )
 
   const eventTypeStats = useMemo<EventTypeStat[]>(() => {
     const counts: Partial<Record<TimelineFilterKey, number>> = {
-      all: historicalEvents.length + upcomingDeadlines.length,
+      all: historicalEvents.length,
       past: historicalEvents.length,
-      future: upcomingDeadlines.length,
     }
-    for (const event of [...historicalEvents, ...upcomingDeadlines]) {
+    for (const event of historicalEvents) {
       for (const key of event.filterKeys) {
         counts[key] = (counts[key] ?? 0) + 1
       }
@@ -89,7 +88,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
       type: type as TimelineFilterKey,
       count: count ?? 0,
     }))
-  }, [historicalEvents, upcomingDeadlines])
+  }, [historicalEvents])
 
   const lastEventTimestamp = useMemo<string | null>(() => {
     if (historicalEvents.length === 0) return null
@@ -116,17 +115,6 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
       )
     })
   }, [historicalEvents, searchTerm, typeFilters, hasActiveFilters, hasGroupedFilter])
-
-  const filteredUpcomingDeadlines = useMemo<NormalizedTimelineEvent[]>(() => {
-    const query = searchTerm.trim().toLowerCase()
-
-    return upcomingDeadlines.filter((event) => {
-      return (
-        eventMatchesFilters(event, typeFilters, hasGroupedFilter) &&
-        eventMatchesSearch(event, query)
-      )
-    })
-  }, [upcomingDeadlines, searchTerm, typeFilters, hasGroupedFilter])
 
   // ── Actions ────────────────────────────────────────────────────────────────
 
@@ -201,7 +189,6 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     setPage,
     setPageSize,
 
-    filteredUpcomingDeadlines,
     filteredEvents,
     eventTypeStats,
 

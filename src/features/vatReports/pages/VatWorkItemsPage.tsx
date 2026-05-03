@@ -7,11 +7,11 @@ import {
   useVatWorkItemsPage,
   VatWorkItemsCreateModal,
   VatWorkItemsFiltersCard,
+  VatWorkItemsGroupedTable,
 } from '@/features/vatReports'
 import { Alert } from '@/components/ui/overlays/Alert'
 import { Badge } from '@/components/ui/primitives/Badge'
 import { Button } from '@/components/ui/primitives/Button'
-import { PaginatedDataTable } from '@/components/ui/table/PaginatedDataTable'
 import { StatsCard } from '@/components/ui/layout/StatsCard'
 import { VAT_DEADLINE_WARNING_DAYS } from '../constants'
 import { getDuplicateClientIds, getVatDeadlineCounts } from '../view.helpers'
@@ -141,10 +141,9 @@ export const VatWorkItems: React.FC = () => {
         onClear={() => setSearchParams(new URLSearchParams())}
       />
 
-      <PaginatedDataTable
+      <VatWorkItemsGroupedTable
         data={workItems}
         columns={columns}
-        getRowKey={(item) => item.id}
         isLoading={loading}
         error={error}
         onRowClick={(item) => navigate(`/tax/vat/${item.id}`)}
@@ -153,7 +152,6 @@ export const VatWorkItems: React.FC = () => {
         total={total}
         label='תיקי מע"מ'
         onPageChange={(page) => setFilter('page', String(page))}
-        onPageSizeChange={(pageSize) => setFilter('page_size', String(pageSize))}
         emptyMessage='אין תיקי מע"מ להצגה'
         emptyState={{
           title: 'לא נמצאו תיקי מע"מ',
