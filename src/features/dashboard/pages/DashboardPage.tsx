@@ -58,7 +58,7 @@ export const DashboardPage: React.FC = () => {
         tone: 'amber',
         items: unifiedItems.map(mapUnifiedItemToPanelItem),
       },
-      ...(quickActions?.length ? quickActionsToPanelSections(quickActions) : []),
+      ...quickActionsToPanelSections(quickActions ?? []),
     ]
   }, [attentionItems, quickActions, isAdvisorView, unifiedItems])
 

@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { BarChart2, Plus } from 'lucide-react'
+import { BarChart2, Check, Clock, Plus } from 'lucide-react'
 import { useClientAnnualReportsTab } from '../../hooks/useClientAnnualReportsTab'
+import type { AnnualReportFull } from '../../api'
+import { STATUS_LABELS } from '../../api'
 import { PageLoading } from '../../../../components/ui/layout/PageLoading'
 import { Alert } from '../../../../components/ui/overlays/Alert'
 import { Button } from '../../../../components/ui/primitives/Button'
-import { cn } from '../../../../utils/utils'
+import { cn, formatDate } from '../../../../utils/utils'
 import { semanticSignalBadgeClasses } from '@/utils/semanticColors'
 import { ClientYearComparisonModal } from './ClientYearComparisonModal'
 import { CreateReportModal } from './CreateReportModal'
@@ -12,6 +14,50 @@ import { AnnualReportFullPanel } from '../panel/AnnualReportFullPanel'
 
 interface ClientAnnualReportsTabProps {
   clientId: number
+}
+
+const AnnualReportStatusBanner: React.FC<{
+  selectedYear: number
+  report: AnnualReportFull | null
+}> = ({ selectedYear, report }) => {
+  const submitted = Boolean(report?.submitted_at)
+  const Icon = submitted ? Check : Clock
+  const statusLabel = report ? STATUS_LABELS[report.status] : 'לא קיים דוח'
+  return (
+    <div
+      className={cn(
+        'mb-4 rounded-xl border bg-white px-5 py-4',
+        submitted ? 'border-positive-200' : 'border-warning-200',
+      )}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div
+          className={cn(
+            'flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
+            submitted ? 'bg-positive-50 text-positive-700' : 'bg-warning-50 text-warning-700',
+          )}
+        >
+          <Icon className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1 text-right">
+          <p
+            className={cn(
+              'text-base font-bold',
+              submitted ? 'text-positive-700' : 'text-warning-700',
+            )}
+          >
+            {submitted ? `דוח שנתי ${selectedYear} הוגש בהצלחה` : `דוח שנתי ${selectedYear} עדיין לא הוגש`}
+          </p>
+          <p className="mt-1 text-sm font-medium text-gray-500">
+            {submitted
+              ? `תאריך הגשה: ${formatDate(report?.submitted_at ?? null)}`
+              : `מועד הגשה: ${formatDate(report?.filing_deadline ?? null)}`}
+          </p>
+          <p className="mt-1 text-xs font-semibold text-gray-500">סטטוס: {statusLabel}</p>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ clientId }) => {
@@ -27,6 +73,7 @@ export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ 
   } = useClientAnnualReportsTab(clientId)
   const [showComparison, setShowComparison] = useState(false)
   const [showCreate, setShowCreate] = useState(false)
+  const canCompareYears = new Set(allReports.map((report) => report.tax_year)).size >= 2
 
   if (isPending) return <PageLoading message="טוען דוחות שנתיים..." />
   if (errorMessage) return <Alert variant="error" message={errorMessage} />
@@ -34,10 +81,12 @@ export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ 
   return (
     <>
       <div className="flex justify-end mb-2 gap-2">
-        <Button variant="ghost" size="sm" onClick={() => setShowComparison(true)}>
-          <BarChart2 className="h-4 w-4" />
-          השוואה בין שנים
-        </Button>
+        {canCompareYears && (
+          <Button variant="ghost" size="sm" onClick={() => setShowComparison(true)}>
+            <BarChart2 className="h-4 w-4" />
+            השוואה בין שנים
+          </Button>
+        )}
         <Button variant="ghost" size="sm" onClick={() => setShowCreate(true)}>
           <Plus className="h-4 w-4" />
           דוח חדש
@@ -65,6 +114,7 @@ export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ 
         </div>
 
         <div className="flex-1 min-w-0">
+          <AnnualReportStatusBanner selectedYear={selectedYear} report={selectedReport ?? null} />
           {selectedReport ? (
             <AnnualReportFullPanel reportId={selectedReport.id} backPath={`/clients/${clientId}`} />
           ) : (
@@ -85,7 +135,7 @@ export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ 
       </div>
 
       <ClientYearComparisonModal
-        open={showComparison}
+        open={canCompareYears && showComparison}
         onClose={() => setShowComparison(false)}
         reports={allReports}
       />

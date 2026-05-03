@@ -147,9 +147,8 @@ export const quickActionsToPanelSections = (rawActions: BackendAction[]): PanelS
   ]
 
   return ordered
-    .filter((cat) => grouped.has(cat))
     .map((cat) => {
-      const catActions = grouped.get(cat)!
+      const catActions = grouped.get(cat) ?? []
       const meta = QA_CATEGORY_META[cat] ?? DEFAULT_META
 
       return {

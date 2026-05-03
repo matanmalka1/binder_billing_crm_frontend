@@ -160,16 +160,15 @@ export const AttentionPanel = ({
   activeActionKey = null,
   onAction = () => {},
 }: AttentionPanelProps) => {
-  const filledSections = useMemo(() => sections.filter((s) => s.items.length > 0), [sections])
   const sectionEntries = useMemo(
     () =>
-      filledSections.map((section, index) => ({
+      sections.map((section, index) => ({
         section,
         stateKey: `${section.key}:${index}`,
       })),
-    [filledSections],
+    [sections],
   )
-  const totalItems = filledSections.reduce((n, s) => n + s.items.length, 0)
+  const totalItems = sections.reduce((n, s) => n + s.items.length, 0)
 
   const [activeTab, setActiveTab] = useState(() => sectionEntries[0]?.stateKey ?? '')
   const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>({})
@@ -211,7 +210,7 @@ export const AttentionPanel = ({
         />
       </div>
 
-      {totalItems === 0 ? (
+      {sectionEntries.length === 0 ? (
         <div className="px-5 py-6">
           <DashboardEmptyState
             icon={CheckCircle2}
@@ -284,15 +283,24 @@ export const AttentionPanel = ({
               return (
                 <>
                   <div key={activeSection.key} className="divide-y divide-gray-100">
-                    {visibleItems.map((item) => (
-                      <RowCard
-                        key={item.id}
-                        item={item}
-                        tone={activeSection.tone}
-                        activeActionKey={activeActionKey}
-                        onAction={onAction}
+                    {visibleItems.length > 0 ? (
+                      visibleItems.map((item) => (
+                        <RowCard
+                          key={item.id}
+                          item={item}
+                          tone={activeSection.tone}
+                          activeActionKey={activeActionKey}
+                          onAction={onAction}
+                        />
+                      ))
+                    ) : (
+                      <DashboardEmptyState
+                        icon={CheckCircle2}
+                        title="אין פריטים בקטגוריה"
+                        description="אין משימות פתוחות כרגע"
+                        className="py-8"
                       />
-                    ))}
+                    )}
                   </div>
 
                   {(hasMore || canCollapse) && (

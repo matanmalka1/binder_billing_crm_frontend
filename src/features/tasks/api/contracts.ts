@@ -26,6 +26,7 @@ export const unifiedItemSchema = z.object({
   client_record_id: z.number().int().optional().nullable(),
   client_name: z.string().optional().nullable(),
   business_id: z.number().int().optional().nullable(),
+  payload: z.record(z.string(), z.unknown()).optional().nullable(),
 })
 
 export type DeadlineTask = z.infer<typeof deadlineTaskSchema>

@@ -25,6 +25,13 @@ const formatPeriod = (value: string): string => {
   return /^\d{4}-\d{2}$/.test(value) ? getReportingPeriodMonthLabel(value) : value
 }
 
+const getPayloadString = (item: UnifiedItem, key: string): string | null => {
+  const value = item.payload?.[key]
+  if (typeof value === 'string') return value
+  if (typeof value === 'number') return String(value)
+  return null
+}
+
 const getLabelDetail = (label: string): string | null => {
   const detail = label.split(':').slice(1).join(':').trim()
   if (!detail) return null
@@ -49,6 +56,12 @@ const getTaskSubtitle = (item: UnifiedItem): string => {
   if (item.item_type === 'reminder') return 'תזכורת'
 
   const sourceLabel = getSourceLabel(item)
+  const period = getPayloadString(item, 'period')
+  if (period) return `${sourceLabel} · ${formatPeriod(period)}`
+
+  const taxYear = getPayloadString(item, 'tax_year')
+  if (taxYear) return `${sourceLabel} · ${taxYear}`
+
   const detail = getLabelDetail(item.label)
   if (detail) return `${sourceLabel} · ${detail}`
 
