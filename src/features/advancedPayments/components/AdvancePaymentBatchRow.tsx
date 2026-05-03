@@ -1,150 +1,188 @@
 import { useState } from 'react'
-import { ChevronDown, ChevronLeft, AlertTriangle, Clock } from 'lucide-react'
+import { ChevronDown, ChevronLeft, AlertTriangle, MoreVertical, Loader2 } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { MONTH_NAMES } from '@/constants/periodOptions.constants'
-import type { MonthBatchSummary, AdvancePaymentOverviewRow } from '../types'
+import type { MonthBatchSummary, AdvancePaymentOverviewRow, AdvancePaymentStatus } from '../types'
 import { advancePaymentsApi, advancedPaymentsQK } from '../api'
 import { fmtCurrency } from '../utils'
 import { formatDate, formatClientOfficeId } from '../../../utils/utils'
 import { AdvancePaymentStatusBadge } from './AdvancePaymentStatusBadge'
-import { AdvancePaymentTimingBadge } from './AdvancePaymentTimingBadge'
-import { Loader2 } from 'lucide-react'
+
+const COL_COUNT = 10
 
 interface AdvancePaymentBatchRowProps {
   batch: MonthBatchSummary
+  search: string
+  statusFilter: AdvancePaymentStatus | ''
+  periodFilter: 1 | 2 | null
   onRowClick: (row: AdvancePaymentOverviewRow) => void
 }
 
 export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
   batch,
+  search,
+  statusFilter,
+  periodFilter,
   onRowClick,
 }) => {
   const [open, setOpen] = useState(false)
   const monthName = MONTH_NAMES[batch.month - 1]
 
+  const statusParam = statusFilter ? [statusFilter] : undefined
+
   const { data, isLoading } = useQuery({
-    queryKey: advancedPaymentsQK.overview({ year: batch.year, month: batch.month, page_size: 200 }),
+    queryKey: advancedPaymentsQK.overview({
+      year: batch.year,
+      month: batch.month,
+      page_size: 200,
+      status: statusParam,
+    }),
     queryFn: () =>
-      advancePaymentsApi.overview({ year: batch.year, month: batch.month, page_size: 200 }),
+      advancePaymentsApi.overview({
+        year: batch.year,
+        month: batch.month,
+        page_size: 200,
+        status: statusParam,
+      }),
     enabled: open,
   })
 
   const rows = data?.items ?? []
-  const missingFirst = [...rows].sort((a, b) => (b.missing_turnover ? 1 : 0) - (a.missing_turnover ? 1 : 0))
+  const filtered = rows.filter((r) => {
+    if (search && !r.business_name.toLowerCase().includes(search.toLowerCase())) return false
+    if (periodFilter !== null && r.period_months_count !== periodFilter) return false
+    return true
+  })
+  const sorted = [...filtered].sort(
+    (a, b) => (b.missing_turnover ? 1 : 0) - (a.missing_turnover ? 1 : 0),
+  )
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
-      <button
-        type="button"
-        className="w-full flex items-center gap-3 px-4 py-3 bg-white hover:bg-gray-50 transition-colors text-right"
+    <>
+      <tr
+        className="bg-gray-50/70 cursor-pointer hover:bg-gray-100/80 transition-colors select-none"
         onClick={() => setOpen((v) => !v)}
       >
-        <span className="text-gray-400">
-          {open ? <ChevronDown className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </span>
-
-        <span className="font-semibold text-gray-900 min-w-[80px]">
-          {monthName} {batch.year}
-        </span>
-
-        <span className="text-sm text-gray-500">{batch.client_count} לקוחות</span>
-
-        {batch.missing_turnover_count > 0 && (
-          <span className="flex items-center gap-1 text-sm text-warning-700 bg-warning-50 border border-warning-200 rounded px-2 py-0.5">
-            <AlertTriangle className="h-3.5 w-3.5" />
-            {batch.missing_turnover_count} חסרי מחזור
-          </span>
-        )}
-
-        {batch.overdue_count > 0 && (
-          <span className="flex items-center gap-1 text-sm text-error-700 bg-error-50 border border-error-200 rounded px-2 py-0.5">
-            <Clock className="h-3.5 w-3.5" />
-            {batch.overdue_count} באיחור
-          </span>
-        )}
-
-        <span className="mr-auto flex items-center gap-4 text-sm tabular-nums">
-          <span className="text-gray-500">צפוי: <span className="font-medium text-gray-800">{fmtCurrency(batch.total_expected)}</span></span>
-          <span className="text-gray-500">שולם: <span className="font-medium text-positive-700">{fmtCurrency(batch.total_paid)}</span></span>
-          <span className="text-gray-500">גבייה: <span className="font-semibold">{batch.collection_rate.toFixed(0)}%</span></span>
-        </span>
-      </button>
+        <td colSpan={COL_COUNT} className="px-5 py-2.5">
+          <div className="flex items-center gap-3">
+            <span className="text-blue-600 flex-shrink-0">
+              {open ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </span>
+            <span className="font-bold text-sm text-gray-900 min-w-[90px]">
+              {monthName} {batch.year}
+            </span>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 items-center text-xs text-gray-500">
+              <span>
+                <span className="font-semibold text-gray-800">{batch.client_count}</span> לקוחות
+              </span>
+              <span className="w-px h-3 bg-gray-200 hidden sm:block" />
+              <span>
+                צפוי:{' '}
+                <span className="font-semibold text-gray-800">{fmtCurrency(batch.total_expected)}</span>
+              </span>
+              <span className="w-px h-3 bg-gray-200 hidden sm:block" />
+              <span>
+                גבייה: <span className="font-semibold text-gray-800">{batch.collection_rate.toFixed(0)}%</span>
+              </span>
+              {batch.missing_turnover_count > 0 && (
+                <>
+                  <span className="w-px h-3 bg-gray-200 hidden sm:block" />
+                  <span className="text-red-600">
+                    חוסרים: <span className="font-semibold">{batch.missing_turnover_count}</span>
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        </td>
+      </tr>
 
       {open && (
-        <div className="border-t border-gray-100">
+        <>
           {isLoading ? (
-            <div className="flex justify-center py-6">
-              <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
-            </div>
+            <tr>
+              <td colSpan={COL_COUNT} className="py-8 text-center">
+                <Loader2 className="h-5 w-5 animate-spin text-gray-400 mx-auto" />
+              </td>
+            </tr>
+          ) : sorted.length === 0 ? (
+            <tr>
+              <td colSpan={COL_COUNT} className="py-6 text-center text-sm text-gray-400">
+                אין תוצאות
+              </td>
+            </tr>
           ) : (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-gray-50 text-gray-500 text-xs">
-                  <th className="px-4 py-2 text-right font-medium">מס׳ לקוח</th>
-                  <th className="px-4 py-2 text-right font-medium">שם עסק</th>
-                  <th className="px-4 py-2 text-right font-medium">תאריך יעד</th>
-                  <th className="px-4 py-2 text-right font-medium">מחזור</th>
-                  <th className="px-4 py-2 text-right font-medium">צפוי</th>
-                  <th className="px-4 py-2 text-right font-medium">שולם</th>
-                  <th className="px-4 py-2 text-right font-medium">יתרה</th>
-                  <th className="px-4 py-2 text-right font-medium">סטטוס</th>
-                </tr>
-              </thead>
-              <tbody>
-                {missingFirst.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="border-t border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
-                    onClick={() => onRowClick(row)}
+            sorted.map((row) => (
+              <tr
+                key={row.id}
+                className="border-t border-gray-100 hover:bg-blue-50/30 cursor-pointer transition-colors"
+                onClick={() => onRowClick(row)}
+              >
+                <td className="px-5 py-3.5 text-sm text-gray-400 tabular-nums">
+                  {formatClientOfficeId(row.office_client_number)}
+                </td>
+                <td className="px-5 py-3.5">
+                  <div className="font-medium text-sm text-gray-900">{row.business_name}</div>
+                  {row.missing_turnover && (
+                    <div className="mt-0.5 inline-flex items-center gap-1 text-[10px] text-red-600 font-bold bg-red-50 px-1.5 py-0.5 rounded-full">
+                      <AlertTriangle className="h-2.5 w-2.5" />
+                      חסר מחזור
+                    </div>
+                  )}
+                </td>
+                <td className="px-5 py-3.5 text-sm text-gray-500 tabular-nums">
+                  {formatDate(row.due_date)}
+                </td>
+                <td className="px-5 py-3.5 text-sm tabular-nums text-gray-700 text-left">
+                  {row.reported_turnover ? (
+                    fmtCurrency(row.reported_turnover)
+                  ) : row.live_turnover ? (
+                    <span className="text-gray-400">{fmtCurrency(row.live_turnover)}</span>
+                  ) : (
+                    <span className="text-gray-300">—</span>
+                  )}
+                </td>
+                <td className="px-5 py-3.5 text-sm font-semibold tabular-nums text-gray-900 text-left">
+                  {fmtCurrency(row.expected_amount)}
+                </td>
+                <td className="px-5 py-3.5 text-sm tabular-nums text-gray-700 text-left">
+                  {fmtCurrency(row.paid_amount)}
+                </td>
+                <td className="px-5 py-3.5 text-sm tabular-nums font-medium text-left">
+                  {row.delta == null ? (
+                    <span className="text-gray-300">—</span>
+                  ) : (
+                    <span className={Number(row.delta) > 0 ? 'text-red-600 font-bold' : 'text-gray-700'}>
+                      {fmtCurrency(row.delta)}
+                    </span>
+                  )}
+                </td>
+                <td className="px-5 py-3.5 text-sm text-gray-400 tabular-nums text-left">—</td>
+                <td className="px-5 py-3.5">
+                  <AdvancePaymentStatusBadge status={row.status} />
+                </td>
+                <td className="px-5 py-3.5">
+                  <button
+                    type="button"
+                    className="p-1.5 rounded-full text-gray-400 hover:text-blue-600 hover:bg-gray-100 transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onRowClick(row)
+                    }}
                   >
-                    <td className="px-4 py-2.5 font-mono text-gray-500 tabular-nums">
-                      {formatClientOfficeId(row.office_client_number)}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-gray-900">{row.business_name}</span>
-                        {row.missing_turnover && (
-                          <span className="flex items-center gap-1 text-xs text-warning-700 bg-warning-50 border border-warning-200 rounded px-1.5 py-0.5">
-                            <AlertTriangle className="h-3 w-3" />
-                            חסר מחזור
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-4 py-2.5 text-gray-500 tabular-nums">{formatDate(row.due_date)}</td>
-                    <td className="px-4 py-2.5 tabular-nums text-gray-700">
-                      {row.reported_turnover
-                        ? fmtCurrency(row.reported_turnover)
-                        : row.live_turnover
-                          ? <span className="text-gray-500">{fmtCurrency(row.live_turnover)}</span>
-                          : <span className="text-gray-300">—</span>
-                      }
-                    </td>
-                    <td className="px-4 py-2.5 font-mono tabular-nums text-gray-700">{fmtCurrency(row.expected_amount)}</td>
-                    <td className="px-4 py-2.5 font-mono tabular-nums text-positive-700 font-semibold">{fmtCurrency(row.paid_amount)}</td>
-                    <td className="px-4 py-2.5 font-mono tabular-nums">
-                      {row.delta == null ? (
-                        <span className="text-gray-300">—</span>
-                      ) : (
-                        <span className={Number(row.delta) > 0 ? 'text-error-600' : 'text-gray-700'}>
-                          {fmtCurrency(row.delta)}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <div className="flex items-center gap-1.5">
-                        <AdvancePaymentStatusBadge status={row.status} />
-                        <AdvancePaymentTimingBadge timingStatus={row.timing_status} />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    <MoreVertical className="h-4 w-4" />
+                  </button>
+                </td>
+              </tr>
+            ))
           )}
-        </div>
+        </>
       )}
-    </div>
+    </>
   )
 }
 

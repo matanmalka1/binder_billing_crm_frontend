@@ -1,16 +1,11 @@
 import { useState } from 'react'
+import { PlusCircle, Calendar, SlidersHorizontal } from 'lucide-react'
 import type { AdvancePaymentStatus } from '../types'
-import { Button } from '../../../components/ui/primitives/Button'
 import { Select } from '../../../components/ui/inputs/Select'
 import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
 import { getAdvancePaymentStatusLabel } from '../../../utils/enums'
 import { YEAR_OPTIONS } from '../utils'
-import { ADVANCE_PAYMENT_FREQUENCY_OPTIONS, ADVANCE_PAYMENT_STATUS_FILTERS } from '../constants'
-import { toFrequency } from './advancePaymentComponent.utils'
-import {
-  HEADER_STATUS_ACTIVE_CLASS,
-  HEADER_STATUS_INACTIVE_CLASS,
-} from './advancePaymentComponent.constants'
+import { ADVANCE_PAYMENT_STATUS_FILTERS } from '../constants'
 
 interface ClientAdvancePaymentsHeaderProps {
   isAdvisor: boolean
@@ -21,9 +16,17 @@ interface ClientAdvancePaymentsHeaderProps {
   onOpenCreate: () => void
   onGenerateSchedule: () => void
   generationFrequency: 1 | 2
-  onGenerationFrequencyChange: (frequency: 1 | 2) => void
   isGenerating?: boolean
+  advanceRate?: number | null
 }
+
+const FREQUENCY_LABEL: Record<1 | 2, string> = {
+  1: 'חודשי',
+  2: 'דו-חודשי',
+}
+
+const STATUS_ACTIVE = 'bg-blue-600 text-white border-blue-600'
+const STATUS_INACTIVE = 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
 
 export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderProps> = ({
   isAdvisor,
@@ -34,68 +37,97 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
   onOpenCreate,
   onGenerateSchedule,
   generationFrequency,
-  onGenerationFrequencyChange,
   isGenerating,
+  advanceRate,
 }) => {
   const [confirmGenerate, setConfirmGenerate] = useState(false)
 
   return (
-  <div className="flex items-center justify-between">
-    {isAdvisor && (
-      <div className="flex gap-2">
-        <Button variant="ghost" size="sm" onClick={onOpenCreate}>
-          הוסף מקדמה
-        </Button>
-        <div className="w-32">
-          <Select
-            value={String(generationFrequency)}
-            onChange={(e) => onGenerationFrequencyChange(toFrequency(e.target.value))}
-            options={ADVANCE_PAYMENT_FREQUENCY_OPTIONS}
-          />
-        </div>
-        <Button variant="outline" size="sm" onClick={() => setConfirmGenerate(true)} disabled={isGenerating}>
-          {isGenerating ? 'יוצר...' : 'צור לוח מקדמות לשנה'}
-        </Button>
-        <ConfirmDialog
-          open={confirmGenerate}
-          title="יצירת לוח מקדמות"
-          message={`ליצור מקדמות לשנת ${year}? מקדמות קיימות לא יושפעו.`}
-          confirmLabel="צור"
-          cancelLabel="ביטול"
-          onConfirm={() => { setConfirmGenerate(false); onGenerateSchedule() }}
-          onCancel={() => setConfirmGenerate(false)}
-        />
-      </div>
-    )}
-    <div className="flex items-center gap-2">
-      <div className="flex flex-wrap gap-1">
-        {ADVANCE_PAYMENT_STATUS_FILTERS.map((status) => {
-          const active = statusFilter.includes(status)
-          return (
-            <Button
-              key={status}
+    <div className="space-y-4">
+      {/* Action row */}
+      <div className="flex flex-wrap items-center gap-3">
+        {isAdvisor && (
+          <>
+            <button
               type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => onToggleStatus(status)}
-              className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                active ? HEADER_STATUS_ACTIVE_CLASS : HEADER_STATUS_INACTIVE_CLASS
-              }`}
+              onClick={onOpenCreate}
+              className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 active:scale-[0.98] transition-all shadow-sm"
             >
-              {getAdvancePaymentStatusLabel(status)}
-            </Button>
-          )
-        })}
+              <PlusCircle className="h-4 w-4" />
+              הוסף מקדמה
+            </button>
+            <div className="h-8 w-px bg-gray-200 hidden sm:block" />
+            <div className="flex items-center bg-gray-100 rounded-xl p-1">
+              <span className="px-3 py-1.5 text-sm text-gray-500">
+                תדירות:{' '}
+                <span className="font-semibold text-gray-800">{FREQUENCY_LABEL[generationFrequency]}</span>
+                <span className="text-gray-400 text-xs mr-1">(לפי פרופיל מע״מ)</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setConfirmGenerate(true)}
+                disabled={isGenerating}
+                className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-white hover:shadow-sm rounded-lg transition-all disabled:opacity-50"
+              >
+                <Calendar className="h-3.5 w-3.5" />
+                {isGenerating ? 'יוצר...' : 'צור לוח שנתי'}
+              </button>
+            </div>
+            <ConfirmDialog
+              open={confirmGenerate}
+              title="יצירת לוח מקדמות"
+              message={`ליצור מקדמות ${FREQUENCY_LABEL[generationFrequency]} לשנת ${year}? מקדמות קיימות לא יושפעו.`}
+              confirmLabel="צור"
+              cancelLabel="ביטול"
+              onConfirm={() => { setConfirmGenerate(false); onGenerateSchedule() }}
+              onCancel={() => setConfirmGenerate(false)}
+            />
+          </>
+        )}
       </div>
-      <div className="w-28">
-        <Select
-          value={String(year)}
-          onChange={(e) => onYearChange(Number(e.target.value))}
-          options={YEAR_OPTIONS}
-        />
+
+      {/* Filter bar */}
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-gray-700">
+            <SlidersHorizontal className="h-4 w-4 text-blue-600" />
+            <span className="font-semibold text-sm">סינון</span>
+          </div>
+          {advanceRate != null && (
+            <span className="text-sm text-gray-500">
+              אחוז מקדמות:{' '}
+              <span className="font-semibold text-gray-800">{advanceRate}%</span>
+            </span>
+          )}
+        </div>
+        <div className="flex flex-wrap items-center gap-2 mt-3">
+          <div className="flex flex-wrap gap-1.5">
+            {ADVANCE_PAYMENT_STATUS_FILTERS.map((status) => {
+              const active = statusFilter.includes(status)
+              return (
+                <button
+                  key={status}
+                  type="button"
+                  onClick={() => onToggleStatus(status)}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
+                    active ? STATUS_ACTIVE : STATUS_INACTIVE
+                  }`}
+                >
+                  {getAdvancePaymentStatusLabel(status)}
+                </button>
+              )
+            })}
+          </div>
+          <div className="mr-auto w-28">
+            <Select
+              value={String(year)}
+              onChange={(e) => onYearChange(Number(e.target.value))}
+              options={YEAR_OPTIONS}
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
   )
 }
 

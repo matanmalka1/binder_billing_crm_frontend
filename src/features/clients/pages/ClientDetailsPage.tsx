@@ -33,25 +33,26 @@ const ClientHeaderMetaItem: FC<{ icon: React.ReactNode; label: React.ReactNode }
 
 const buildClientHeader = (client: ClientResponse) => ({
   title: (
-    <span className="flex min-w-0 flex-wrap items-center gap-3">
+    <span className="flex min-w-0 flex-wrap items-center gap-2">
       <span className="truncate">{client.full_name}</span>
       <Badge variant={CLIENT_STATUS_BADGE_VARIANTS[client.status]}>
         {getClientStatusLabel(client.status)}
       </Badge>
+      <span className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1 text-sm font-normal text-gray-500 mr-1">
+        <ClientHeaderMetaItem
+          icon={<Fingerprint className="h-3.5 w-3.5" />}
+          label={formatPlainIdentifier(client.id_number, 'לא הוגדר')}
+        />
+        {client.entity_type && (
+          <ClientHeaderMetaItem
+            icon={<BriefcaseBusiness className="h-3.5 w-3.5" />}
+            label={getEntityTypeLabel(client.entity_type)}
+          />
+        )}
+      </span>
     </span>
   ),
-  description: (
-    <span className="flex min-w-0 flex-wrap items-center gap-x-6 gap-y-2">
-      <ClientHeaderMetaItem
-        icon={<Fingerprint className="h-4 w-4" />}
-        label={`ת.ז / ח.פ : ${formatPlainIdentifier(client.id_number, 'לא הוגדר')}`}
-      />
-      <ClientHeaderMetaItem
-        icon={<BriefcaseBusiness className="h-4 w-4" />}
-        label={`סוג ישות: ${client.entity_type ? getEntityTypeLabel(client.entity_type) : '—'}`}
-      />
-    </span>
-  ),
+  description: undefined,
 })
 
 export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = 'details' }) => {
@@ -94,6 +95,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = 'details' }
             <Alert variant="info" message="צפייה בלבד. עריכת פרטי לקוח זמינה ליועצים בלבד." />
           )}
           <PageHeader
+            size="md"
             title={clientHeader?.title ?? client?.full_name ?? 'פרטי לקוח'}
             description={clientHeader?.description}
             actions={

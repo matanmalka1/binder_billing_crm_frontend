@@ -14,6 +14,7 @@ export interface PageHeaderProps {
   description?: React.ReactNode
   breadcrumbs?: Breadcrumb[]
   actions?: React.ReactNode
+  size?: 'md' | 'lg'
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({
@@ -21,6 +22,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   description,
   breadcrumbs,
   actions,
+  size = 'lg',
 }) => (
   <header className="space-y-4 animate-fade-in">
     {breadcrumbs && breadcrumbs.length > 0 && (
@@ -45,7 +47,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
     <SectionHeader
       title={title}
       subtitle={description}
-      size="lg"
+      size={size}
       actions={
         actions ? (
           <div

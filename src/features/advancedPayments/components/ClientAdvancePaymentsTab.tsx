@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { AdvancePaymentRow, AdvancePaymentStatus, UpdateAdvancePaymentPayload } from '../types'
 import { useAdvancePayments } from '../hooks/useAdvancePayments'
@@ -27,7 +27,6 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const [page, setPage] = useState(1)
   const [modalOpen, setModalOpen] = useState(false)
   const [drawerRow, setDrawerRow] = useState<AdvancePaymentRow | null>(null)
-  const [generationFrequency, setGenerationFrequency] = useState<1 | 2>(1)
   const { isAdvisor } = useRole()
 
   const queryClient = useQueryClient()
@@ -41,10 +40,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   } = useAdvancePayments(clientId, year, statusFilter, page)
   const { vatType, advanceRate } = useAdvanceRateInsights(clientId)
 
-  useEffect(() => {
-    if (vatType === 'bimonthly') setGenerationFrequency(2)
-    else if (vatType === 'monthly') setGenerationFrequency(1)
-  }, [vatType])
+  const generationFrequency: 1 | 2 = vatType === 'bimonthly' ? 2 : 1
 
   const generateMutation = useMutation({
     mutationFn: () => advancePaymentsApi.generateSchedule(clientId, year, generationFrequency),
@@ -107,29 +103,21 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-2">
-        <ClientAdvancePaymentsHeader
-          isAdvisor={isAdvisor}
-          statusFilter={statusFilter}
-          onToggleStatus={handleStatusToggle}
-          year={year}
-          onYearChange={(nextYear) => {
-            setPage(1)
-            setYear(nextYear)
-          }}
-          onOpenCreate={() => setModalOpen(true)}
-          onGenerateSchedule={() => generateMutation.mutate()}
-          generationFrequency={generationFrequency}
-          onGenerationFrequencyChange={setGenerationFrequency}
-          isGenerating={generateMutation.isPending}
-        />
-        {advanceRate != null && (
-          <span className="text-sm text-gray-500 shrink-0">
-            אחוז מקדמות:{' '}
-            <span className="font-semibold text-gray-800">{advanceRate}%</span>
-          </span>
-        )}
-      </div>
+      <ClientAdvancePaymentsHeader
+        isAdvisor={isAdvisor}
+        statusFilter={statusFilter}
+        onToggleStatus={handleStatusToggle}
+        year={year}
+        onYearChange={(nextYear) => {
+          setPage(1)
+          setYear(nextYear)
+        }}
+        onOpenCreate={() => setModalOpen(true)}
+        onGenerateSchedule={() => generateMutation.mutate()}
+        generationFrequency={generationFrequency}
+        isGenerating={generateMutation.isPending}
+        advanceRate={advanceRate}
+      />
 
       <AdvancePaymentsKPICards clientId={clientId} year={year} />
 

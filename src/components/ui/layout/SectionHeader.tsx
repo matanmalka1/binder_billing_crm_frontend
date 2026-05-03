@@ -7,9 +7,10 @@ interface SectionHeaderProps {
   /**
    * xs  — DrawerSection label (uppercase, tracking-wide)
    * sm  — Card header
+   * md  — Compact page header (h2, bold, text-xl)
    * lg  — PageHeader (h1, bold)
    */
-  size?: 'xs' | 'sm' | 'lg'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   border?: 'bottom' | 'none'
   className?: string
 }
@@ -32,6 +33,8 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
     <div>
       {size === 'lg' ? (
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-black">{title}</h1>
+      ) : size === 'md' ? (
+        <h2 className="text-xl font-bold tracking-tight text-gray-900">{title}</h2>
       ) : size === 'xs' ? (
         <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">{title}</p>
       ) : (
@@ -41,8 +44,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
         <p
           className={cn(
             'text-gray-600',
-            size === 'lg' ? 'mt-3' : 'mt-1',
-            size === 'lg' ? 'text-base md:text-lg max-w-3xl leading-relaxed' : 'text-sm',
+            size === 'lg' ? 'mt-3 text-base md:text-lg max-w-3xl leading-relaxed' : 'mt-1 text-sm',
           )}
         >
           {subtitle}
