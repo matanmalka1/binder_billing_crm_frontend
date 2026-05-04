@@ -1,49 +1,48 @@
-import { ChevronDown, AlertTriangle, ExternalLink, Edit } from 'lucide-react'
+import { AlertTriangle, ExternalLink, Edit } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { MONTH_NAMES } from '@/constants/periodOptions.constants'
+import { MonthlyAccordionGroup } from '@/components/ui/table/MonthlyAccordionGroup'
+import { TableSkeleton } from '@/components/ui/table/TableSkeleton'
 import type { MonthBatchSummary, AdvancePaymentOverviewRow, AdvancePaymentStatus } from '../types'
 import { advancePaymentsApi, advancedPaymentsQK } from '../api'
 import { fmtCurrency } from '../utils'
 import { formatDate, formatClientOfficeId } from '../../../utils/utils'
 import { AdvancePaymentStatusBadge } from './AdvancePaymentStatusBadge'
 import { RowActionsMenu, RowActionItem } from '../../../components/ui/table/RowActions'
-import { SkeletonBlock } from '../../../components/ui/primitives/SkeletonBlock'
 
 const COL_COUNT = 10
 
+const TABLE_HEADERS = [
+  { label: 'מס׳', className: 'px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-16' },
+  { label: 'שם לקוח', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-[22%]' },
+  { label: 'תאריך יעד', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-28' },
+  { label: 'מחזור', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]' },
+  { label: 'צפוי', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]' },
+  { label: 'שולם', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]' },
+  { label: 'יתרה', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]' },
+  { label: 'אחוז מקדמה', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-24' },
+  { label: 'סטטוס', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-center align-middle w-24' },
+  { label: '', className: 'px-3 py-1.5 align-middle w-10' },
+]
+
 interface AdvancePaymentBatchRowProps {
   batch: MonthBatchSummary
+  isCurrent: boolean
   search: string
   statusFilter: AdvancePaymentStatus | ''
   periodFilter: 1 | 2 | null
-  open: boolean
-  onToggle: () => void
   onRowClick: (row: AdvancePaymentOverviewRow) => void
 }
 
-const SkeletonRow = () => (
-  <tr className="border-t border-gray-100">
-    {Array.from({ length: COL_COUNT }).map((_, i) => (
-      <td key={i} className="px-4 py-3">
-        <SkeletonBlock width={i === 1 ? 'w-32' : 'w-20'} height="h-3" />
-      </td>
-    ))}
-  </tr>
-)
-
-export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
+const BatchContent = ({
   batch,
   search,
   statusFilter,
   periodFilter,
-  open,
-  onToggle,
   onRowClick,
-}) => {
-  const monthName = MONTH_NAMES[batch.month - 1]
+}: Omit<AdvancePaymentBatchRowProps, 'isCurrent'>) => {
   const statusParam = statusFilter ? [statusFilter] : undefined
-  const collectionPct = Math.min(Math.max(batch.collection_rate, 0), 100)
 
   const { data, isLoading } = useQuery({
     queryKey: advancedPaymentsQK.overview({
@@ -59,13 +58,25 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
         page_size: 200,
         status: statusParam,
       }),
-    enabled: open,
+    staleTime: 30_000,
   })
+
+  if (isLoading) return <TableSkeleton rows={3} columns={COL_COUNT} />
 
   const rows = data?.items ?? []
   const filtered = rows.filter((r) => {
-    if (search && !r.business_name.toLowerCase().includes(search.toLowerCase())) return false
+    if (search) {
+      const q = search.toLowerCase()
+      const matchName = r.business_name.toLowerCase().includes(q)
+      const matchId = r.id_number?.includes(q) ?? false
+      if (!matchName && !matchId) return false
+    }
     if (periodFilter !== null && r.period_months_count !== periodFilter) return false
+    if (periodFilter === 2) {
+      const startMonth = parseInt(r.period.substring(5, 7))
+      const canonicalStart = startMonth % 2 === 0 ? startMonth - 1 : startMonth
+      if (canonicalStart !== batch.month) return false
+    }
     return true
   })
   const sorted = [...filtered].sort(
@@ -73,59 +84,17 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
   )
 
   return (
-    <>
-      {/* Group header */}
-      <tr
-        className="cursor-pointer select-none border-y border-gray-200 bg-gray-50 hover:bg-gray-100/60 transition-colors"
-        onClick={onToggle}
-      >
-        <td colSpan={COL_COUNT} className="px-4 py-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <ChevronDown
-                className={`h-4 w-4 text-gray-500 transition-transform flex-shrink-0 ${open ? '' : '-rotate-90'}`}
-              />
-              <span className="text-sm font-semibold text-gray-800">
-                {monthName} {batch.year}
-              </span>
-              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
-                {batch.client_count} לקוחות
-              </span>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
-              <span>
-                צפוי:{' '}
-                <span className="font-medium text-gray-700">{fmtCurrency(batch.total_expected)}</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="font-medium text-gray-700">{collectionPct.toFixed(0)}%</span>
-                <span className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                  <span
-                    className="h-full rounded-full bg-blue-400 block transition-all duration-500"
-                    style={{ width: `${collectionPct}%` }}
-                  />
-                </span>
-              </span>
-              {batch.missing_turnover_count > 0 && (
-                <span className="flex items-center gap-1 text-amber-600 font-medium">
-                  <AlertTriangle className="h-3.5 w-3.5" />
-                  {batch.missing_turnover_count} חסרי מחזור
-                </span>
-              )}
-            </div>
-          </div>
-        </td>
-      </tr>
-
-      {open && (
-        <>
-          {isLoading ? (
-            <>
-              <SkeletonRow />
-              <SkeletonRow />
-              <SkeletonRow />
-            </>
-          ) : sorted.length === 0 ? (
+    <div className="overflow-x-auto">
+      <table className="w-full text-right border-collapse min-w-[960px]">
+        <thead>
+          <tr className="border-b border-gray-100 bg-gray-50">
+            {TABLE_HEADERS.map((h) => (
+              <th key={h.label} className={h.className}>{h.label}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100">
+          {sorted.length === 0 ? (
             <tr>
               <td colSpan={COL_COUNT} className="py-5 text-center text-sm text-gray-400">
                 אין תוצאות
@@ -142,12 +111,9 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
                   }`}
                   onClick={() => onRowClick(row)}
                 >
-                  {/* # לקוח */}
                   <td className="px-3 py-1.5 text-sm text-gray-400 tabular-nums align-middle">
                     {formatClientOfficeId(row.office_client_number)}
                   </td>
-
-                  {/* שם עסק */}
                   <td className="px-3 py-1.5 align-middle">
                     <Link
                       to={`/clients/${row.client_record_id}/advance-payments`}
@@ -163,15 +129,9 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
                       </span>
                     )}
                   </td>
-
-                  {/* תאריך יעד */}
-                  <td
-                    className={`px-3 py-1.5 text-sm tabular-nums whitespace-nowrap align-middle ${isOverdue ? 'text-red-500 font-medium' : 'text-gray-500'}`}
-                  >
+                  <td className={`px-3 py-1.5 text-sm tabular-nums whitespace-nowrap align-middle ${isOverdue ? 'text-red-500 font-medium' : 'text-gray-500'}`}>
                     {formatDate(row.due_date)}
                   </td>
-
-                  {/* מחזור */}
                   <td className="px-3 py-1.5 text-sm tabular-nums text-left align-middle">
                     {row.reported_turnover ? (
                       <span className="text-gray-700">{fmtCurrency(row.reported_turnover)}</span>
@@ -181,18 +141,12 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
                       <span className="text-gray-300">—</span>
                     )}
                   </td>
-
-                  {/* צפוי */}
                   <td className="px-3 py-1.5 text-sm font-semibold tabular-nums text-gray-800 text-left align-middle">
                     {fmtCurrency(row.expected_amount)}
                   </td>
-
-                  {/* שולם */}
                   <td className="px-3 py-1.5 text-sm tabular-nums text-gray-600 text-left align-middle">
                     {fmtCurrency(row.paid_amount)}
                   </td>
-
-                  {/* יתרה */}
                   <td className="px-3 py-1.5 text-sm tabular-nums text-left align-middle">
                     {row.delta == null ? (
                       <span className="text-gray-300">—</span>
@@ -202,8 +156,6 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
                       <span className="text-gray-500">{fmtCurrency(row.delta)}</span>
                     )}
                   </td>
-
-                  {/* אחוז מקדמה */}
                   <td className="px-3 py-1.5 text-sm tabular-nums text-gray-600 text-left align-middle">
                     {row.advance_rate != null ? (
                       `${Number(row.advance_rate).toFixed(2)}%`
@@ -211,13 +163,9 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
                       <span className="text-gray-300">—</span>
                     )}
                   </td>
-
-                  {/* סטטוס */}
                   <td className="px-3 py-1.5 text-center align-middle">
                     <AdvancePaymentStatusBadge status={row.status} />
                   </td>
-
-                  {/* פעולות */}
                   <td className="px-3 py-1.5 align-middle" onClick={(e) => e.stopPropagation()}>
                     <RowActionsMenu ariaLabel={`פעולות למקדמה ${row.id}`}>
                       <RowActionItem
@@ -238,9 +186,52 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
               )
             })
           )}
-        </>
-      )}
-    </>
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
+  batch,
+  isCurrent,
+  search,
+  statusFilter,
+  periodFilter,
+  onRowClick,
+}) => {
+  const startName = MONTH_NAMES[batch.month - 1]
+  // batch.month is always a canonical odd month (1,3,5,7,9,11) when periodFilter===2
+  const title =
+    periodFilter === 2
+      ? `${startName}–${MONTH_NAMES[batch.month]} ${batch.year}`
+      : `${startName} ${batch.year}`
+  const summary = `${batch.client_count} לקוחות · ${batch.pending_count} ממתינים`
+
+  const badge =
+    batch.missing_turnover_count > 0 ? (
+      <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600">
+        <AlertTriangle className="h-3 w-3" />
+        {batch.missing_turnover_count} חסרי מחזור
+      </span>
+    ) : undefined
+
+  return (
+    <MonthlyAccordionGroup
+      title={title}
+      summary={summary}
+      isCurrent={isCurrent}
+      defaultOpen={isCurrent}
+      badges={badge}
+    >
+      <BatchContent
+        batch={batch}
+        search={search}
+        statusFilter={statusFilter}
+        periodFilter={periodFilter}
+        onRowClick={onRowClick}
+      />
+    </MonthlyAccordionGroup>
   )
 }
 

@@ -65,6 +65,7 @@ export interface AdvancePaymentOverviewRow {
   client_record_id: number
   office_client_number?: number | null
   business_name: string
+  id_number?: string | null
   period: string
   period_months_count: 1 | 2
   expected_amount: string | null
@@ -104,6 +105,7 @@ export interface MonthBatchSummary {
   client_count: number
   missing_turnover_count: number
   overdue_count: number
+  pending_count: number
   total_expected: string | null
   total_paid: string | null
   collection_rate: number

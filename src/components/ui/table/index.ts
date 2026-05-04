@@ -1,4 +1,5 @@
 export * from './ActiveFilterBadges'
+export * from './MonthlyAccordionGroup'
 export * from './BulkSelectionToolbar'
 export * from './DataTable'
 export * from './PaginatedDataTable'

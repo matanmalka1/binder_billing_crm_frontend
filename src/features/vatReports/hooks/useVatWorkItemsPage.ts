@@ -29,7 +29,7 @@ export const useVatWorkItemsPage = () => {
 
   const filters = {
     status: searchParams.get('status') ?? '',
-    year: searchParams.get('year') ?? '',
+    year: searchParams.get('year') ?? String(new Date().getFullYear()),
     period_type: toVatPeriodTypeFilter(searchParams.get('period_type')),
     clientSearch: searchParams.get('clientSearch') ?? '',
   }

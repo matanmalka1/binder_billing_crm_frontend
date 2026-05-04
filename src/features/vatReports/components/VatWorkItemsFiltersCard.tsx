@@ -19,10 +19,12 @@ export const VatWorkItemsFiltersCard = ({
     ]
   }, [])
 
+  const currentYear = String(new Date().getFullYear())
+
   const fields = useMemo(
     () => [
       { type: 'client-picker' as const, idKey: 'clientSearch' },
-      { type: 'select' as const, key: 'year', label: 'שנה', options: yearOptions },
+      { type: 'select' as const, key: 'year', label: 'שנה', options: yearOptions, defaultValue: currentYear },
       {
         type: 'select' as const,
         key: 'status',

@@ -2,9 +2,9 @@ import { AlertTriangle } from 'lucide-react'
 import { monoColumn, statusColumn, textColumn, type Column } from '../../../components/ui/table'
 import type { VatWorkItemResponse } from '../api'
 import { getVatWorkItemStatusLabel } from '../../../utils/enums'
-import { formatClientOfficeId, formatDate, formatDateTime } from '@/utils/utils'
+import { formatClientOfficeId, formatDate } from '@/utils/utils'
 import { VAT_DEADLINE_WARNING_DAYS, VAT_STATUS_BADGE_VARIANTS } from '../constants'
-import { formatVatAmount } from '../utils'
+import { formatVatAmountLtrSafe } from '../utils'
 import { VatWorkItemRowActions } from './VatWorkItemRowActions'
 import type { ColumnOpts } from '../types'
 import { Badge } from '../../../components/ui/primitives/Badge'
@@ -38,16 +38,11 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     header: 'ת.ז / ח.פ',
     getValue: (item) => item.client_id_number,
   }),
-  {
-    key: 'period',
-    header: 'תקופה',
-    render: (item) => (
-      <span className="font-mono text-sm font-medium text-gray-700">{item.period}</span>
-    ),
-  },
   statusColumn({
     key: 'status',
     header: 'סטטוס',
+    headerClassName: 'text-center',
+    className: 'text-center',
     getStatus: (item) => item.status,
     getLabel: getVatWorkItemStatusLabel,
     variantMap: VAT_STATUS_BADGE_VARIANTS,
@@ -61,12 +56,14 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
       return (
         <span
           className={`inline-flex items-center gap-1 font-mono text-sm font-semibold tabular-nums ${
-            Number(amount) >= 0
-              ? semanticMonoToneClasses.negative
-              : semanticMonoToneClasses.positive
+            Number(amount) === 0
+              ? 'text-gray-400'
+              : Number(amount) > 0
+                ? semanticMonoToneClasses.negative
+                : semanticMonoToneClasses.positive
           }`}
         >
-          {formatVatAmount(amount)}
+          {formatVatAmountLtrSafe(amount)}
           {item.is_overridden && (
             <Badge variant="warning" className="px-1 py-0.5 text-xs font-medium">
               עוקף
@@ -99,13 +96,13 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     key: 'updated_at',
     header: 'עדכון אחרון',
     valueClassName: 'text-gray-400 tabular-nums',
-    getValue: (item) => formatDateTime(item.updated_at),
+    getValue: (item) => formatDate(item.updated_at),
   }),
   textColumn({
     key: 'filed_at',
     header: 'הוגש ב',
     valueClassName: 'tabular-nums',
-    getValue: (item) => (item.filed_at ? formatDateTime(item.filed_at) : null),
+    getValue: (item) => (item.filed_at ? formatDate(item.filed_at) : null),
   }),
   {
     key: 'actions',

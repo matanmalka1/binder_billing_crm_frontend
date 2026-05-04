@@ -1,12 +1,13 @@
-import { useState } from 'react'
-import { getYear } from 'date-fns'
+import { useState, useMemo } from 'react'
+import { getYear, getMonth } from 'date-fns'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Search, SlidersHorizontal, X, PlusCircle, Calendar, ChevronsUpDown } from 'lucide-react'
+import { PlusCircle, Calendar } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { Select } from '@/components/ui/inputs/Select'
 import { Modal } from '@/components/ui/overlays/Modal'
 import { Button } from '@/components/ui/primitives/Button'
+import { FilterPanel } from '@/components/ui/filters/FilterPanel'
+import { MonthlyAccordionList } from '@/components/ui/table/MonthlyAccordionGroup'
 import { ClientPickerField } from '@/components/shared/client/ClientPickerField'
 import { useClientPickerState } from '@/components/shared/client/useClientPickerState'
 import { useAdvancePaymentBatches } from '../hooks/useAdvancePaymentBatches'
@@ -21,21 +22,25 @@ import type {
   AdvancePaymentStatus,
   CreateAdvancePaymentPayload,
 } from '../types'
-import {
-  ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL,
-} from '../constants'
+import { ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL } from '../constants'
 import { parsePositiveInt } from '@/utils/utils'
 import { toast } from '../../../utils/toast'
 import { showErrorToast } from '../../../utils/utils'
 import { useRole } from '../../../hooks/useRole'
 import { YEAR_OPTIONS } from '../utils'
 
-const PERIOD_LABELS: Record<string, string> = {
-  all: 'כל הסוגים',
-  '1': 'חודשי',
-  '2': 'דו-חודשי',
-}
-const PERIOD_CYCLE: Array<null | 1 | 2> = [null, 1, 2]
+const PERIOD_OPTIONS = [
+  { value: '', label: 'כל הסוגים' },
+  { value: '1', label: 'חודשי' },
+  { value: '2', label: 'דו-חודשי' },
+]
+
+const FILTER_FIELDS = [
+  { type: 'search' as const, key: 'search', label: 'לקוח', placeholder: 'שם לקוח, ת.ז, ח.פ...' },
+  { type: 'select' as const, key: 'year', label: 'שנה', options: YEAR_OPTIONS, defaultValue: String(new Date().getFullYear()) },
+  { type: 'select' as const, key: 'status', label: 'סטטוס', options: ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL },
+  { type: 'select' as const, key: 'period', label: 'סוג דיווח', options: PERIOD_OPTIONS },
+]
 
 export const AdvancePayments: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -43,15 +48,14 @@ export const AdvancePayments: React.FC = () => {
   const queryClient = useQueryClient()
   const { isAdvisor } = useRole()
 
-  const year = parsePositiveInt(searchParams.get('year'), getYear(new Date()))
+  const today = new Date()
+  const todayYear = getYear(today)
+  const todayMonth = getMonth(today) + 1
+  const year = parsePositiveInt(searchParams.get('year'), todayYear)
 
   const [drawerRow, setDrawerRow] = useState<AdvancePaymentOverviewRow | null>(null)
-  const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState<AdvancePaymentStatus | ''>('')
-  const [periodFilter, setPeriodFilter] = useState<null | 1 | 2>(null)
-  const [openBatches, setOpenBatches] = useState<Set<string>>(new Set())
+  const [filters, setFilters] = useState({ search: '', status: '', period: '' })
 
-  // Create flow: pick client → open CreateAdvancePaymentModal
   const [createPickerOpen, setCreatePickerOpen] = useState(false)
   const [createClientId, setCreateClientId] = useState<number | null>(null)
   const createPicker = useClientPickerState({
@@ -59,7 +63,6 @@ export const AdvancePayments: React.FC = () => {
     onClear: () => setCreateClientId(null),
   })
 
-  // Generate schedule flow
   const [genPickerOpen, setGenPickerOpen] = useState(false)
   const genPicker = useClientPickerState()
 
@@ -70,23 +73,22 @@ export const AdvancePayments: React.FC = () => {
   const collectionRate = totalExpected > 0 ? Math.round((totalPaid / totalExpected) * 100) : 0
   const overdueTotal = batches.reduce((s, b) => s + b.overdue_count, 0)
 
-  const hasActiveFilters = search !== '' || statusFilter !== '' || periodFilter !== null
+  const handleFilterChange = (key: string, value: string) => {
+    if (key === 'year') {
+      const next = new URLSearchParams(searchParams)
+      next.set('year', value)
+      setSearchParams(next)
+      return
+    }
+    setFilters((prev) => ({ ...prev, [key]: value }))
+  }
 
-  const allKeys = batches.map((b) => `${b.year}-${b.month}`)
-  const allExpanded = allKeys.length > 0 && allKeys.every((k) => openBatches.has(k))
-
-  const toggleBatch = (key: string) =>
-    setOpenBatches((prev) => {
-      const next = new Set(prev)
-      if (next.has(key)) {
-        next.delete(key)
-      } else {
-        next.add(key)
-      }
-      return next
-    })
-
-  const toggleAll = () => setOpenBatches(allExpanded ? new Set() : new Set(allKeys))
+  const handleFilterReset = () => {
+    setFilters({ search: '', status: '', period: '' })
+    const next = new URLSearchParams(searchParams)
+    next.delete('year')
+    setSearchParams(next)
+  }
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: number; payload: UpdateAdvancePaymentPayload }) =>
@@ -113,8 +115,7 @@ export const AdvancePayments: React.FC = () => {
   })
 
   const generateMutation = useMutation({
-    mutationFn: () =>
-      advancePaymentsApi.generateSchedule(genPicker.selectedClient!.id, year),
+    mutationFn: () => advancePaymentsApi.generateSchedule(genPicker.selectedClient!.id, year),
     onSuccess: (data) => {
       toast.success(data.created > 0 ? `נוצרו ${data.created} מקדמות` : 'הכול קיים')
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all })
@@ -136,22 +137,50 @@ export const AdvancePayments: React.FC = () => {
     }
   }
 
-  const clearFilters = () => {
-    setSearch('')
-    setStatusFilter('')
-    setPeriodFilter(null)
-  }
+  const periodFilter = filters.period === '' ? null : (Number(filters.period) as 1 | 2)
+  const statusFilter = filters.status as AdvancePaymentStatus | ''
 
-  const cyclePeriodFilter = () => {
-    const idx = PERIOD_CYCLE.indexOf(periodFilter)
-    setPeriodFilter(PERIOD_CYCLE[(idx + 1) % PERIOD_CYCLE.length])
-  }
-
-  const periodLabel = periodFilter === null ? 'כל הסוגים' : PERIOD_LABELS[String(periodFilter)]
+  const displayBatches = useMemo(() => {
+    if (periodFilter !== 2) return batches
+    const map = new Map<number, (typeof batches)[0]>()
+    for (const b of batches) {
+      const canon = b.month % 2 === 0 ? b.month - 1 : b.month
+      const existing = map.get(canon)
+      if (existing) {
+        map.set(canon, {
+          ...existing,
+          client_count: existing.client_count + b.client_count,
+          pending_count: existing.pending_count + b.pending_count,
+          overdue_count: existing.overdue_count + b.overdue_count,
+          missing_turnover_count: existing.missing_turnover_count + b.missing_turnover_count,
+        })
+      } else {
+        map.set(canon, { ...b, month: canon })
+      }
+    }
+    return [...map.values()].sort((a, b) => a.month - b.month)
+  }, [batches, periodFilter])
 
   return (
     <div className="space-y-6">
-      <PageHeader title="מקדמות" description="מעקב שנתי אחר תשלומים, פיגורים וגבייה" />
+      <PageHeader
+        title="מקדמות מס הכנסה"
+        description="מעקב שנתי אחר תשלומים, פיגורים וגבייה"
+        actions={
+          isAdvisor ? (
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" onClick={() => setGenPickerOpen(true)}>
+                צור לוח שנתי
+                <Calendar className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => setCreatePickerOpen(true)}>
+                הוסף מקדמה
+                <PlusCircle className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : undefined
+        }
+      />
 
       <OverviewKPICards
         year={year}
@@ -161,168 +190,36 @@ export const AdvancePayments: React.FC = () => {
         overdueCount={overdueTotal}
       />
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap items-center gap-3">
-        {isAdvisor && (
-          <button
-            type="button"
-            onClick={() => setCreatePickerOpen(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 active:scale-[0.98] transition-all shadow-sm"
-          >
-            <PlusCircle className="h-4 w-4" />
-            הוסף מקדמה
-          </button>
-        )}
-        <div className="h-8 w-px bg-gray-200 hidden sm:block" />
-        <div className="flex items-center bg-gray-100 rounded-xl p-1 gap-1">
-          <button
-            type="button"
-            onClick={cyclePeriodFilter}
-            className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
-              periodFilter !== null
-                ? 'bg-white shadow-sm text-blue-600 font-semibold'
-                : 'text-gray-700 hover:bg-white hover:shadow-sm'
-            }`}
-          >
-            {periodLabel}
-          </button>
-          {isAdvisor && (
-            <button
-              type="button"
-              onClick={() => setGenPickerOpen(true)}
-              className="px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-white hover:shadow-sm rounded-lg transition-all flex items-center gap-1.5"
-            >
-              <Calendar className="h-3.5 w-3.5" />
-              צור לוח שנתי
-            </button>
-          )}
-        </div>
-      </div>
+      <FilterPanel
+        fields={FILTER_FIELDS}
+        values={{ ...filters, year: String(year) }}
+        onChange={handleFilterChange}
+        onReset={handleFilterReset}
+        gridClass="grid-cols-1 sm:grid-cols-4"
+      />
 
-      {/* Filter Bar */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2 text-gray-700">
-            <SlidersHorizontal className="h-4 w-4 text-blue-600" />
-            <span className="font-semibold text-sm">סינון מתקדם</span>
-          </div>
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
-            >
-              <X className="h-3.5 w-3.5" />
-              ניקוי מסננים
-            </button>
-          )}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="relative">
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="חיפוש לפי שם עסק..."
-              className="w-full pr-9 pl-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-gray-400"
+      <MonthlyAccordionList
+        isLoading={isLoading}
+        isEmpty={!isLoading && batches.length === 0}
+        emptyState={{ message: `אין מקדמות לשנה ${year}` }}
+        skeletonCols={10}
+      >
+        {displayBatches.map((batch) => {
+          const isCurrent =
+            batch.year === todayYear && batch.month === todayMonth && year === todayYear
+          return (
+            <AdvancePaymentBatchRow
+              key={`${batch.year}-${batch.month}`}
+              batch={batch}
+              isCurrent={isCurrent}
+              search={filters.search}
+              statusFilter={statusFilter}
+              periodFilter={periodFilter}
+              onRowClick={handleRowClick}
             />
-          </div>
-          <Select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as AdvancePaymentStatus | '')}
-            options={ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL}
-          />
-          <Select
-            value={String(year)}
-            onChange={(e) => {
-              const next = new URLSearchParams(searchParams)
-              next.set('year', e.target.value)
-              setSearchParams(next)
-            }}
-            options={YEAR_OPTIONS}
-          />
-        </div>
-      </div>
-
-      {/* Grouped Table */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-        {batches.length > 0 && (
-          <div className="flex justify-end px-4 py-2 border-b border-gray-100">
-            <button
-              type="button"
-              onClick={toggleAll}
-              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 transition-colors"
-            >
-              <ChevronsUpDown className="h-3.5 w-3.5" />
-              {allExpanded ? 'כווץ הכול' : 'הרחב הכול'}
-            </button>
-          </div>
-        )}
-        {isLoading ? (
-          <div className="space-y-3 p-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-10 rounded-lg bg-gray-100 animate-pulse" />
-            ))}
-          </div>
-        ) : batches.length === 0 ? (
-          <p className="text-center text-gray-500 py-12 text-sm">אין מקדמות לשנה {year}</p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-collapse min-w-[960px]">
-              <thead className="sticky top-0 z-10">
-                <tr className="border-b border-gray-100 bg-gray-50">
-                  <th className="px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-16">
-                    מס׳
-                  </th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-[22%]">
-                    שם לקוח
-                  </th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-28">
-                    תאריך יעד
-                  </th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">
-                    מחזור
-                  </th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">
-                    צפוי
-                  </th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">
-                    שולם
-                  </th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]">
-                    יתרה
-                  </th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-24">
-                    אחוז מקדמה
-                  </th>
-                  <th className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-center align-middle w-24">
-                    סטטוס
-                  </th>
-                  <th className="px-3 py-1.5 align-middle w-10" />
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {batches.map((batch) => {
-                  const key = `${batch.year}-${batch.month}`
-                  return (
-                    <AdvancePaymentBatchRow
-                      key={key}
-                      batch={batch}
-                      search={search}
-                      statusFilter={statusFilter}
-                      periodFilter={periodFilter}
-                      open={openBatches.has(key)}
-                      onToggle={() => toggleBatch(key)}
-                      onRowClick={handleRowClick}
-                    />
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+          )
+        })}
+      </MonthlyAccordionList>
 
       {/* Drawer */}
       <AdvancePaymentDrawer

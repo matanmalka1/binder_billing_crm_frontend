@@ -42,9 +42,9 @@ interface ActionsColumnOptions<T> {
   render: (item: T, index: number) => ReactNode
 }
 
-const makeTextColumn =
-  <T,>(renderFn: typeof renderMutedText) =>
-  ({
+const makeTextColumnFn =
+  (renderFn: typeof renderMutedText) =>
+  <T,>({
     key,
     header,
     className,
@@ -61,8 +61,8 @@ const makeTextColumn =
       renderFn({ value: getValue(item, index), className: valueClassName, emptyValue }),
   })
 
-export const textColumn = makeTextColumn(renderMutedText)
-export const monoColumn = makeTextColumn(renderMonoText)
+export const textColumn = makeTextColumnFn(renderMutedText)
+export const monoColumn = makeTextColumnFn(renderMonoText)
 
 export const dateColumn = <T,>({
   key,
