@@ -4,6 +4,7 @@ export { AttentionPanel } from './components/AttentionPanel'
 export { DashboardOnboardingEmptyState } from './components/DashboardOnboardingEmptyState'
 export { DashboardStatsGrid } from './components/DashboardStatsGrid'
 export { SeasonSummaryWidget } from './components/SeasonSummaryWidget'
+export { VatInsightsRow } from './components/VatInsightsRow'
 export { useDashboardPage } from './hooks/useDashboardPage'
 export { DashboardPage } from './pages/DashboardPage'
 export type {

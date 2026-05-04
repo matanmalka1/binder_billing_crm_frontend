@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
-import { ArrowLeft, Inbox } from 'lucide-react'
+import { ChevronLeft, Inbox } from 'lucide-react'
 import { cn } from '@/utils/utils'
 
 type Tone = 'neutral' | 'blue' | 'green' | 'amber' | 'red' | 'purple'
@@ -136,7 +136,7 @@ interface DashboardMetricCardProps {
   value: string | number
   description: string
   eyebrow?: string
-  icon: LucideIcon
+  icon?: LucideIcon
   tone: Tone
   urgent?: boolean
   progress?: number
@@ -149,7 +149,6 @@ export const DashboardMetricCard = ({
   value,
   description,
   eyebrow,
-  icon: Icon,
   tone,
   urgent,
   progress,
@@ -158,52 +157,40 @@ export const DashboardMetricCard = ({
 }: DashboardMetricCardProps) => (
   <div
     className={cn(
-      'flex h-full flex-col rounded-xl border bg-white p-3 text-right shadow-sm transition-all duration-200',
-      'group-hover:-translate-y-0.5 group-hover:shadow-md',
-      urgent ? 'border-red-200 bg-red-50/30' : 'border-gray-200',
+      'flex h-40 flex-col justify-between rounded-xl border bg-white p-4 text-right shadow-sm transition-all duration-200',
+      'group-hover:shadow-md',
+      urgent ? 'border-red-200 bg-red-50/30' : 'border-slate-200',
       className,
     )}
   >
-    <div className="flex items-start justify-between gap-2">
-      <div className="min-w-0">
-        {eyebrow && (
-          <p className="mb-0.5 truncate text-[10px] font-semibold text-gray-400">{eyebrow}</p>
-        )}
-        <h3 className="truncate text-xs font-bold text-gray-800">{title}</h3>
-      </div>
-      <span
-        className={cn(
-          'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
-          toneClasses[urgent ? 'red' : tone].icon,
-        )}
-      >
-        <Icon className="h-4 w-4" />
-      </span>
-    </div>
-    <div className="mt-3">
-      <p className="text-2xl font-bold tabular-nums text-gray-950">{value}</p>
-      <p className="mt-0.5 line-clamp-2 min-h-7 text-[11px] leading-3.5 text-gray-500">
-        {description}
+    <div>
+      {eyebrow && (
+        <p className="mb-0.5 truncate text-[10px] font-semibold text-gray-400">{eyebrow}</p>
+      )}
+      <h3 className="mb-2 truncate text-sm font-bold text-slate-600">{title}</h3>
+      <p className={cn('text-xl font-bold tabular-nums', urgent ? 'text-red-600' : 'text-primary')}>
+        {value}
       </p>
+      <p className="mt-1 line-clamp-2 text-xs text-slate-500">{description}</p>
     </div>
-    {progress !== undefined && (
-      <div className="mt-2 h-1 overflow-hidden rounded-full bg-gray-100">
-        <div
-          className={cn('h-full rounded-full', toneClasses[urgent ? 'red' : tone].bar)}
-          style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}
-        />
-      </div>
-    )}
-    <div className="mt-auto pt-2">
+    <div className="space-y-1.5">
+      {progress !== undefined && (
+        <div className="h-1 overflow-hidden rounded-full bg-gray-100">
+          <div
+            className={cn('h-full rounded-full', toneClasses[urgent ? 'red' : tone].bar)}
+            style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}
+          />
+        </div>
+      )}
       {actionLabel && (
         <span
           className={cn(
-            'inline-flex items-center gap-1 text-xs font-semibold',
-            urgent ? 'text-red-700' : 'text-slate-600',
+            'inline-flex items-center gap-1 text-xs font-bold hover:underline',
+            urgent ? 'text-red-700' : 'text-primary',
           )}
         >
           {actionLabel}
-          <ArrowLeft className="h-3.5 w-3.5" />
+          <ChevronLeft className="h-3.5 w-3.5" />
         </span>
       )}
     </div>

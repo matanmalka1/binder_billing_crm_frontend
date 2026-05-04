@@ -13,6 +13,7 @@ interface BaseAttentionItem {
 
 export interface UnpaidChargeAttentionItem extends BaseAttentionItem {
   item_type: 'unpaid_charge'
+  charge_id: number
   business_name: string | null
   charge_subject: string
   charge_date: string | null
@@ -92,7 +93,13 @@ export interface VatDashboardPeriodStat {
   completion_percent: number
 }
 
+export interface VatSegmentStat {
+  label: string
+  count: number
+}
+
 export interface VatDashboardStats {
   monthly: VatDashboardPeriodStat
   bimonthly: VatDashboardPeriodStat
+  segmentation: VatSegmentStat[]
 }

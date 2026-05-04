@@ -1,34 +1,9 @@
 import type { KeyboardEvent } from 'react'
 import { formatClientOfficeId, getReportingPeriodMonthLabel } from '@/utils/utils'
 import { semanticMonoToneClasses } from '@/utils/semanticColors'
-import { DEDUCTION_RATES, VAT_DEADLINE_WARNING_DAYS, VAT_NUMERIC_KEYS } from './constants'
-import type { VatPeriodRow, VatWorkItemResponse } from './api'
+import { DEDUCTION_RATES, VAT_NUMERIC_KEYS } from './constants'
+import type { VatPeriodRow } from './api'
 
-export const getDuplicateClientIds = (items: VatWorkItemResponse[]): Set<number> => {
-  const counts = new Map<number, number>()
-  items.forEach((item) => {
-    counts.set(item.client_record_id, (counts.get(item.client_record_id) ?? 0) + 1)
-  })
-  return new Set(
-    [...counts.entries()].filter(([, count]) => count > 1).map(([clientId]) => clientId),
-  )
-}
-
-export const getVatDeadlineCounts = (items: VatWorkItemResponse[]) =>
-  items.reduce(
-    (counts, item) => {
-      if (item.is_overdue) {
-        counts.overdue += 1
-      } else if (
-        item.days_until_deadline != null &&
-        item.days_until_deadline <= VAT_DEADLINE_WARNING_DAYS
-      ) {
-        counts.urgent += 1
-      }
-      return counts
-    },
-    { overdue: 0, urgent: 0 },
-  )
 
 export const formatVatPeriodTitle = (period: string, periodType: string | null): string => {
   const [year] = period.split('-')

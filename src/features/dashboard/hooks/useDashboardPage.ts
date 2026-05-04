@@ -154,6 +154,8 @@ export const useDashboardPage = () => {
     cancelPendingActionBase()
   }, [cancelPendingActionBase])
 
+  const vatStats = dashboardQuery.data?.vat_stats
+
   return {
     activeQuickAction,
     attentionItems,
@@ -170,5 +172,6 @@ export const useDashboardPage = () => {
     cancelPendingAction,
     isAdvisorView,
     stats,
+    vatStats,
   }
 }

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, CheckCircle2, ChevronDown, ChevronUp, ShieldAlert } from 'lucide-react'
+import { CheckCircle2, ChevronDown, ChevronUp, ShieldAlert } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/utils/utils'
 import type { ActionCommand } from '@/lib/actions/types'
 import type { AttentionEmptyCheck } from '../api'
@@ -9,25 +10,11 @@ import { DashboardEmptyState, DashboardPanel, DashboardSectionHeader } from './D
 
 const ATTENTION_BATCH_SIZE = 5
 
-const toneTab: Record<AttentionTone, string> = {
-  amber: 'bg-amber-50 text-amber-700 border-amber-200',
-  green: 'bg-green-50 text-green-700 border-green-200',
-  red: 'bg-red-50 text-red-700 border-red-200',
-  blue: 'bg-blue-50 text-blue-700 border-blue-200',
-}
-
 const toneIcon: Record<AttentionTone, string> = {
-  amber: 'bg-amber-50 text-amber-600',
-  green: 'bg-green-50 text-green-600',
-  red: 'bg-red-50 text-red-600',
-  blue: 'bg-blue-50 text-blue-600',
-}
-
-const toneAccent: Record<AttentionTone, string> = {
-  amber: 'border-r-amber-300',
-  green: 'border-r-green-300',
-  red: 'border-r-red-400',
-  blue: 'border-r-blue-300',
+  amber: 'bg-orange-100 text-orange-600',
+  green: 'bg-green-100 text-green-600',
+  red: 'bg-red-100 text-red-600',
+  blue: 'bg-blue-100 text-blue-600',
 }
 
 const tonePill: Record<AttentionTone, string> = {
@@ -37,114 +24,103 @@ const tonePill: Record<AttentionTone, string> = {
   blue: 'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
 }
 
-const toneBtn: Record<AttentionTone, string> = {
-  amber: 'bg-amber-500 hover:bg-amber-600 text-white',
-  green: 'bg-green-600 hover:bg-green-700 text-white',
-  red: 'bg-red-600 hover:bg-red-700 text-white',
-  blue: 'bg-blue-600 hover:bg-blue-700 text-white',
-}
-
-interface RowCardProps {
+interface TaskCardProps {
   item: PanelItem
   tone: AttentionTone
+  sectionIcon: LucideIcon
   activeActionKey: string | null
   onAction: (action: ActionCommand) => void
 }
 
-const RowCard = ({ item, tone, activeActionKey, onAction }: RowCardProps) => {
+const TaskCard = ({ item, tone, sectionIcon: SectionIcon, activeActionKey, onAction }: TaskCardProps) => {
   const action = item.actions?.[0] ?? null
   const { meta } = item
   const badgeTone = meta?.badgeTone ?? tone
-  const tagTone = meta?.tagTone ?? tone
 
-  // In RTL context: first child renders on the RIGHT, last child on the LEFT
-  // So: text block first (right), action/arrow last (left)
-  const rowInner = (
+  const cardContent = (
     <>
-      {/* RIGHT: text */}
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
-          <p className="truncate text-sm font-bold text-gray-900">{item.label}</p>
-          {meta?.badge && (
-            <span
-              className={cn(
-                'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold',
-                tonePill[badgeTone],
-              )}
-            >
-              {meta.badge}
-            </span>
+      {/* RIGHT: icon + text */}
+      <div className="flex min-w-0 flex-1 items-center gap-6">
+        <div className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-lg', toneIcon[tone])}>
+          <SectionIcon className="h-4 w-4" />
+        </div>
+        <div className="min-w-0">
+          <div className="mb-1 flex items-center gap-3">
+            <p className="truncate text-sm font-bold text-gray-900">{item.label}</p>
+            {meta?.badge && (
+              <span className={cn('shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase', tonePill[badgeTone])}>
+                {meta.badge}
+              </span>
+            )}
+          </div>
+          {item.sublabel && <p className="truncate text-sm text-gray-500">{item.sublabel}</p>}
+          {meta?.description && (
+            <p className="mt-0.5 truncate text-xs text-slate-400">{meta.description}</p>
           )}
         </div>
-        <div className="mt-0.5 flex items-center gap-2">
-          {item.sublabel && <span className="truncate text-xs text-gray-500">{item.sublabel}</span>}
-          {meta?.tag && (
-            <span
-              className={cn(
-                'shrink-0 rounded-md px-2 py-0.5 text-[10px] font-semibold',
-                tonePill[tagTone],
-              )}
-            >
-              {meta.tag}
-            </span>
-          )}
-        </div>
-        {meta?.description && (
-          <p className="mt-1 truncate text-xs font-medium text-gray-600">{meta.description}</p>
-        )}
       </div>
 
-      {/* LEFT: action button or arrow */}
-      {action ? (
-        (() => {
-          const isLoading = activeActionKey === action.action.uiKey
-          const isDisabled = activeActionKey !== null && !isLoading
-          const btnTone =
-            action.urgency === 'overdue' ? 'red' : action.urgency === 'upcoming' ? 'amber' : tone
-          return (
-            <button
-              disabled={isDisabled || isLoading}
-              onClick={() => onAction(action.action)}
-              className={cn(
-                'shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
-                isLoading
-                  ? 'cursor-wait bg-gray-100 text-gray-400'
-                  : isDisabled
-                    ? 'cursor-not-allowed bg-gray-100 text-gray-300'
-                    : toneBtn[btnTone],
-              )}
-            >
-              {isLoading ? (
-                <span className="flex items-center gap-1.5">
-                  <span className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  מבצע...
-                </span>
-              ) : (
-                action.label
-              )}
-            </button>
-          )
-        })()
-      ) : (
-        <ArrowLeft className="h-3.5 w-3.5 shrink-0 text-gray-300 transition-colors group-hover:text-blue-400" />
-      )}
+      {/* LEFT: amount + tag + action */}
+      <div className="flex shrink-0 items-center gap-6">
+        {meta?.amount && (
+          <div className="text-right">
+            <p className="mb-1 text-[10px] uppercase tracking-wide text-gray-400">סכום</p>
+            <p className="text-sm font-bold tabular-nums text-gray-900">{meta.amount}</p>
+          </div>
+        )}
+        {meta?.tag && (
+          <div className="text-right">
+            <p className="mb-1 text-[10px] uppercase tracking-wide text-gray-400">מועד</p>
+            <p className={cn('text-sm font-bold', badgeTone === 'red' ? 'text-red-600' : 'text-gray-900')}>
+              {meta.tag}
+            </p>
+          </div>
+        )}
+        {action && (
+          (() => {
+            const isLoading = activeActionKey === action.action.uiKey
+            const isDisabled = activeActionKey !== null && !isLoading
+            return (
+              <button
+                disabled={isDisabled || isLoading}
+                onClick={(e) => { e.preventDefault(); onAction(action.action) }}
+                className={cn(
+                  'shrink-0 rounded-xl px-5 py-2 text-sm font-semibold transition-colors',
+                  isLoading
+                    ? 'cursor-wait bg-gray-100 text-gray-400'
+                    : isDisabled
+                      ? 'cursor-not-allowed bg-gray-100 text-gray-300'
+                      : 'bg-primary/10 text-primary hover:bg-primary/20',
+                )}
+              >
+                {isLoading ? (
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    מבצע...
+                  </span>
+                ) : (
+                  action.label
+                )}
+              </button>
+            )
+          })()
+        )}
+      </div>
     </>
   )
 
-  const baseClass = cn(
-    'flex items-center gap-3 border-r-2 bg-white px-4 py-3 transition-colors',
-    toneAccent[tone],
-  )
+  const baseClass =
+    'flex items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-white p-6 transition-all hover:border-blue-200 hover:shadow-md'
 
-  if (action) {
-    return <div className={baseClass}>{rowInner}</div>
+  if (!action) {
+    return (
+      <Link to={item.href} className={cn('group', baseClass)}>
+        {cardContent}
+      </Link>
+    )
   }
 
-  return (
-    <Link to={item.href} className={cn('group', baseClass, 'hover:bg-slate-50/80')}>
-      {rowInner}
-    </Link>
-  )
+  return <div className={baseClass}>{cardContent}</div>
 }
 
 interface AttentionPanelProps {
@@ -225,7 +201,7 @@ export const AttentionPanel = ({
                   key={check.key}
                   className="flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2 text-xs font-semibold text-green-700"
                 >
-                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  <CheckCircle2 className="h-3 w-3" />
                   {check.label}
                 </div>
               ))}
@@ -234,38 +210,28 @@ export const AttentionPanel = ({
         </div>
       ) : (
         <>
-          <div className="flex gap-1 overflow-x-auto border-b border-gray-100 bg-gray-50/60 px-4 py-2.5">
+          {/* Summary tiles */}
+          <div className="grid grid-cols-2 gap-4 border-b border-gray-100 p-6 sm:grid-cols-3 md:grid-cols-5">
             {sectionEntries.map(({ section, stateKey }) => {
               const isActive = activeTab === stateKey
-              const Icon = section.icon
+              const count = section.items.length
               return (
                 <button
                   key={stateKey}
                   onClick={() => setActiveTab(stateKey)}
                   className={cn(
-                    'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
+                    'rounded-xl border p-4 text-center transition-all',
                     isActive
-                      ? 'bg-white shadow-sm text-gray-900'
-                      : 'text-gray-500 hover:text-gray-700',
+                      ? 'border-primary/20 bg-primary/5 ring-1 ring-primary/20'
+                      : 'border-slate-100 bg-slate-50 hover:border-slate-200',
                   )}
                 >
-                  <span
-                    className={cn(
-                      'flex h-4 w-4 items-center justify-center rounded',
-                      toneIcon[section.tone],
-                    )}
-                  >
-                    <Icon className="h-2.5 w-2.5" />
-                  </span>
-                  {section.title}
-                  <span
-                    className={cn(
-                      'rounded-full px-1.5 py-0.5 text-[10px] font-bold',
-                      isActive ? cn('border', toneTab[section.tone]) : 'bg-gray-200 text-gray-600',
-                    )}
-                  >
-                    {section.items.length}
-                  </span>
+                  <p className={cn('mb-1 text-[10px]', isActive ? 'text-primary' : 'text-gray-500')}>
+                    {section.title}
+                  </p>
+                  <p className={cn('text-xl font-bold tabular-nums', isActive ? 'text-primary' : count === 0 ? 'text-slate-400' : 'text-gray-800')}>
+                    {count}
+                  </p>
                 </button>
               )
             })}
@@ -282,13 +248,14 @@ export const AttentionPanel = ({
 
               return (
                 <>
-                  <div key={activeSection.key} className="divide-y divide-gray-100">
+                  <div key={activeSection.key} className="space-y-4 p-6">
                     {visibleItems.length > 0 ? (
                       visibleItems.map((item) => (
-                        <RowCard
+                        <TaskCard
                           key={item.id}
                           item={item}
                           tone={activeSection.tone}
+                          sectionIcon={activeSection.icon}
                           activeActionKey={activeActionKey}
                           onAction={onAction}
                         />
@@ -318,7 +285,7 @@ export const AttentionPanel = ({
                             hasMore && 'border-l border-gray-100',
                           )}
                         >
-                          <ChevronUp className="h-3.5 w-3.5" />
+                            <ChevronUp className="h-3 w-3" />
                           הצג פחות
                         </button>
                       )}
@@ -328,7 +295,7 @@ export const AttentionPanel = ({
                           onClick={() => toggleGroup(activeSection, stateKey)}
                           className="flex flex-1 items-center justify-center gap-1.5 py-2.5 text-xs font-semibold text-gray-400 transition-colors hover:bg-slate-50 hover:text-gray-600"
                         >
-                          <ChevronDown className="h-3.5 w-3.5" />
+                          <ChevronDown className="h-3 w-3" />
                           {`הצג עוד ${Math.min(ATTENTION_BATCH_SIZE, remainingCount)}`}
                         </button>
                       )}

@@ -12,6 +12,7 @@ import {
 } from '@/features/dashboard'
 import { DASHBOARD_COPY, DASHBOARD_LOADING_CARD_COUNT } from '../dashboardConstants'
 import { DashboardSurface } from '../components/DashboardPrimitives'
+import { VatInsightsRow } from '../components/VatInsightsRow'
 import {
   attentionSectionsToPanelSections,
   quickActionsToPanelSections,
@@ -43,6 +44,7 @@ export const DashboardPage: React.FC = () => {
     attentionEmptyChecks,
     stats,
     unifiedItems,
+    vatStats,
   } = useDashboardPage()
 
   const attentionSections = useMemo<PanelSection[]>(() => {
@@ -96,6 +98,8 @@ export const DashboardPage: React.FC = () => {
       ) : (
         <AttentionPanel sections={attentionSections} emptyChecks={attentionEmptyChecks} />
       )}
+
+      {vatStats && !emptyState?.is_empty && <VatInsightsRow vatStats={vatStats} />}
 
       {isAdvisorView && !emptyState?.is_empty && <SignatureRequestsDashboardPanel compact />}
 

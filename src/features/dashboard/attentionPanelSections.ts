@@ -1,6 +1,7 @@
 import { Bell, DollarSign, Zap } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { mapActions } from '@/lib/actions/mapActions'
+import { formatDate } from '@/utils/utils'
 import type { AttentionItem, AttentionItemType } from './api'
 import type { BackendAction, ActionCommand } from '@/lib/actions/types'
 
@@ -34,6 +35,7 @@ export interface PanelItem {
     badge?: string // small badge (e.g. "באיחור")
     badgeTone?: AttentionTone
     description?: string // secondary line below sublabel
+    amount?: string // monetary amount (e.g. charge total)
   }
   actions?: PanelItemAction[]
 }
@@ -70,6 +72,7 @@ const ATTENTION_SECTIONS: Array<{
 const KNOWN_ATTENTION_TYPES = new Set<AttentionItemType>(ATTENTION_SECTIONS.flatMap((s) => s.types))
 
 const getAttentionItemHref = (item: AttentionItem, fallback: string | undefined): string => {
+  if (item.item_type === 'unpaid_charge') return `/charges?charge_id=${item.charge_id}`
   if (item.client_id && item.business_id)
     return `/clients/${item.client_id}/businesses/${item.business_id}`
   if (item.client_id) return `/clients/${item.client_id}`
@@ -78,7 +81,16 @@ const getAttentionItemHref = (item: AttentionItem, fallback: string | undefined)
 
 const getChargeItemDescription = (item: AttentionItem): string | undefined => {
   if (item.item_type !== 'unpaid_charge') return undefined
-  return item.charge_subject ?? undefined
+  const parts = [
+    item.charge_subject,
+    item.charge_date ? `תאריך חיוב ${formatDate(item.charge_date)}` : null,
+  ]
+  return parts.filter(Boolean).join(' · ') || undefined
+}
+
+const getChargeAmount = (item: AttentionItem): string | undefined => {
+  if (item.item_type !== 'unpaid_charge') return undefined
+  return item.charge_amount ?? undefined
 }
 
 export const attentionSectionsToPanelSections = (items: AttentionItem[]): PanelSection[] => {
@@ -100,6 +112,7 @@ export const attentionSectionsToPanelSections = (items: AttentionItem[]): PanelS
           tag: i.item_type === 'unpaid_charges' ? 'מרובות' : undefined,
           tagTone: 'amber' as AttentionTone,
           description: getChargeItemDescription(i),
+          amount: getChargeAmount(i),
         },
       })),
   }))

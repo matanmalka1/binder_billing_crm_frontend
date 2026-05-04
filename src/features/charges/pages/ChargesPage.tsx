@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -17,7 +17,7 @@ import {
 import { getChargeRowClassName, getChargesEmptyState } from '../helpers'
 
 export const Charges: React.FC = () => {
-  const [, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [selectedChargeId, setSelectedChargeId] = useState<number | null>(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const {
@@ -56,6 +56,21 @@ export const Charges: React.FC = () => {
       }),
     [isAdvisor, actionLoadingId, runAction, selectedIds, toggleSelect, toggleSelectAll, allIds],
   )
+  const chargeIdParam = searchParams.get('charge_id')
+
+  useEffect(() => {
+    const chargeId = Number(chargeIdParam)
+    if (Number.isInteger(chargeId) && chargeId > 0) {
+      setSelectedChargeId(chargeId)
+    }
+  }, [chargeIdParam])
+
+  const closeChargeDetail = () => {
+    setSelectedChargeId(null)
+    const next = new URLSearchParams(searchParams)
+    next.delete('charge_id')
+    setSearchParams(next)
+  }
 
   return (
     <div className="space-y-6">
@@ -118,7 +133,7 @@ export const Charges: React.FC = () => {
         emptyState={getChargesEmptyState(isAdvisor, () => setShowCreateModal(true))}
       />
 
-      <ChargeDetailDrawer chargeId={selectedChargeId} onClose={() => setSelectedChargeId(null)} />
+      <ChargeDetailDrawer chargeId={selectedChargeId} onClose={closeChargeDetail} />
       <ChargesCreateModal
         open={showCreateModal}
         createError={createError}
