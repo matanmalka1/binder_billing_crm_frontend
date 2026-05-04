@@ -1,4 +1,5 @@
 import { BIMONTHLY_START_MONTH_VALUES } from '@/constants/periodOptions.constants'
+import { getAdvancePaymentMonthLabel } from '../utils'
 import type { CreateAdvancePaymentFormValues } from '../schemas'
 import type { AdvancePaymentStatus, CreateAdvancePaymentPayload } from '../types'
 import { MONTH_OPTIONS } from '../utils'
@@ -32,7 +33,10 @@ export const toggleAdvancePaymentStatusFilter = (
 
 export const getAdvancePaymentMonthOptions = (periodMonthsCount: 1 | 2) =>
   periodMonthsCount === 2
-    ? MONTH_OPTIONS.filter((option) => BIMONTHLY_START_MONTH_VALUES.has(option.value))
+    ? MONTH_OPTIONS.filter((option) => BIMONTHLY_START_MONTH_VALUES.has(option.value)).map((option) => ({
+        ...option,
+        label: getAdvancePaymentMonthLabel(`2026-${String(option.value).padStart(2, '0')}`, 2),
+      }))
     : MONTH_OPTIONS
 
 export const getValidBimonthlyMonth = (month: number) =>

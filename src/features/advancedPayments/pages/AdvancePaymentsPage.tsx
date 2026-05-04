@@ -23,7 +23,6 @@ import type {
 } from '../types'
 import {
   ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL,
-  ADVANCE_PAYMENT_FREQUENCY_OPTIONS,
 } from '../constants'
 import { parsePositiveInt } from '@/utils/utils'
 import { toast } from '../../../utils/toast'
@@ -62,7 +61,6 @@ export const AdvancePayments: React.FC = () => {
 
   // Generate schedule flow
   const [genPickerOpen, setGenPickerOpen] = useState(false)
-  const [genFrequency, setGenFrequency] = useState<1 | 2>(1)
   const genPicker = useClientPickerState()
 
   const { batches, isLoading } = useAdvancePaymentBatches(year)
@@ -80,7 +78,11 @@ export const AdvancePayments: React.FC = () => {
   const toggleBatch = (key: string) =>
     setOpenBatches((prev) => {
       const next = new Set(prev)
-      next.has(key) ? next.delete(key) : next.add(key)
+      if (next.has(key)) {
+        next.delete(key)
+      } else {
+        next.add(key)
+      }
       return next
     })
 
@@ -112,7 +114,7 @@ export const AdvancePayments: React.FC = () => {
 
   const generateMutation = useMutation({
     mutationFn: () =>
-      advancePaymentsApi.generateSchedule(genPicker.selectedClient!.id, year, genFrequency),
+      advancePaymentsApi.generateSchedule(genPicker.selectedClient!.id, year),
     onSuccess: (data) => {
       toast.success(data.created > 0 ? `נוצרו ${data.created} מקדמות` : 'הכול קיים')
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all })
@@ -415,12 +417,7 @@ export const AdvancePayments: React.FC = () => {
             onSelect={genPicker.handleSelectClient}
             onClear={genPicker.handleClearClient}
           />
-          <Select
-            label="תדירות"
-            value={String(genFrequency)}
-            onChange={(e) => setGenFrequency(Number(e.target.value) as 1 | 2)}
-            options={ADVANCE_PAYMENT_FREQUENCY_OPTIONS}
-          />
+          <p className="text-sm text-gray-500">התדירות תיקבע לפי סוג הדיווח בפרופיל הלקוח.</p>
         </div>
       </Modal>
     </div>

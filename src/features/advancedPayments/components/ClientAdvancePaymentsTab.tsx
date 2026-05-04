@@ -41,7 +41,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   const generationFrequency: 1 | 2 = vatType === 'bimonthly' ? 2 : 1
 
   const generateMutation = useMutation({
-    mutationFn: () => advancePaymentsApi.generateSchedule(clientId, year, generationFrequency),
+    mutationFn: () => advancePaymentsApi.generateSchedule(clientId, year),
     onSuccess: (data) => {
       const msg = data.created > 0 ? `נוצרו ${data.created} מקדמות` : 'הכול קיים'
       toast.success(msg)
@@ -156,6 +156,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
           open={modalOpen}
           clientId={clientId}
           year={year}
+          defaultPeriodMonthsCount={generationFrequency}
           isCreating={isCreating}
           onClose={() => setModalOpen(false)}
           onCreate={handleCreate}

@@ -186,6 +186,7 @@ const GroupRow = ({
   const periodLabel = getTaxDeadlinePeriodLabel({
     deadline_type: group.deadline_type,
     period: group.period,
+    period_months_count: group.period_months_count,
     tax_year: group.tax_year,
   })
 

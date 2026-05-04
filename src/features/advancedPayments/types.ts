@@ -42,7 +42,7 @@ export interface ListAdvancePaymentsParams {
 
 export interface CreateAdvancePaymentPayload {
   period: string
-  period_months_count: 1 | 2
+  period_months_count?: 1 | 2
   due_date: string
   expected_amount?: string | null
   paid_amount?: string | null

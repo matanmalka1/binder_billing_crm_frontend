@@ -19,6 +19,7 @@ export interface TaxDeadlineResponse {
   completed_by: number | null
   advance_payment_id: number | null
   vat_work_item_id: number | null
+  period_months_count?: 1 | 2 | null
   created_at: string
   urgency_level: DeadlineUrgencyLevel
   available_actions?: BackendAction[]
@@ -54,6 +55,7 @@ export interface DeadlineGroup {
   group_key: string
   deadline_type: string
   period: string | null
+  period_months_count?: 1 | 2 | null
   tax_year: number | null
   due_date: string
   total_clients: number

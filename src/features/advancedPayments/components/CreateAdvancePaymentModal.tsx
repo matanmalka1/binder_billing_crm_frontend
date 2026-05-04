@@ -32,6 +32,7 @@ interface CreateAdvancePaymentModalProps {
   open: boolean
   clientId: number
   year: number
+  defaultPeriodMonthsCount?: 1 | 2
   isCreating: boolean
   onClose: () => void
   onCreate: (payload: CreateAdvancePaymentPayload) => Promise<unknown>
@@ -41,6 +42,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
   open,
   clientId,
   year,
+  defaultPeriodMonthsCount,
   isCreating,
   onClose,
   onCreate,
@@ -60,6 +62,11 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
   const periodMonthsCount = watch('period_months_count')
   const month = watch('month')
   const monthOptions = getAdvancePaymentMonthOptions(periodMonthsCount)
+
+  useEffect(() => {
+    if (!open || defaultPeriodMonthsCount == null) return
+    setValue('period_months_count', defaultPeriodMonthsCount, { shouldValidate: true })
+  }, [defaultPeriodMonthsCount, open, setValue])
 
   useEffect(() => {
     if (periodMonthsCount !== 2) return

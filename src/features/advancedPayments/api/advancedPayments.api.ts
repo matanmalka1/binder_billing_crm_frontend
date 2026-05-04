@@ -77,7 +77,7 @@ export const advancePaymentsApi = {
   getSuggestion: async (
     clientId: number,
     year: number,
-    periodMonthsCount: 1 | 2,
+    periodMonthsCount?: 1 | 2,
   ): Promise<AdvancePaymentSuggestionResponse> => {
     const response = await api.get<AdvancePaymentSuggestionResponse>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentSuggest(clientId),
@@ -107,11 +107,11 @@ export const advancePaymentsApi = {
   generateSchedule: async (
     clientId: number,
     year: number,
-    periodMonthsCount: 1 | 2,
+    periodMonthsCount?: 1 | 2,
   ): Promise<{ created: number; skipped: number }> => {
     const response = await api.post<{ created: number; skipped: number }>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentsGenerate(clientId),
-      { year, period_months_count: periodMonthsCount },
+      periodMonthsCount == null ? { year } : { year, period_months_count: periodMonthsCount },
     )
     return response.data
   },

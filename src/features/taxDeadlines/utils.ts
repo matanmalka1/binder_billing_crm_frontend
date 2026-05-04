@@ -1,9 +1,13 @@
 import { calculateDaysRemaining } from './api'
 import type { TaxDeadlineResponse } from './api'
-import { HEBREW_MONTHS, HEBREW_SHORT_MONTHS } from './constants'
+import { getReportingPeriodShortMonthLabel } from '@/constants/periodOptions.constants'
+import { HEBREW_MONTHS } from './constants'
 import type { CreateTaxDeadlineForm, EditTaxDeadlineForm, TimelineFilters } from './types'
 
-type DeadlinePeriodFields = Pick<TaxDeadlineResponse, 'deadline_type' | 'period' | 'tax_year'>
+type DeadlinePeriodFields = Pick<
+  TaxDeadlineResponse,
+  'deadline_type' | 'period' | 'period_months_count' | 'tax_year'
+>
 
 export const isAnnualReportDeadline = (deadlineType: string) => deadlineType === 'annual_report'
 
@@ -58,7 +62,8 @@ export const getTaxDeadlinePeriodLabel = (deadline: DeadlinePeriodFields): strin
   if (!periodMatch) return deadline.period
 
   const year = periodMatch[1]
-  const month = HEBREW_SHORT_MONTHS[Number(periodMatch[2]) - 1]
+  const periodMonthsCount = deadline.period_months_count ?? 1
+  const month = getReportingPeriodShortMonthLabel(deadline.period, periodMonthsCount)
 
   return month ? `${month} ${year}` : deadline.period
 }
