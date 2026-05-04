@@ -201,9 +201,8 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
   onRowClick,
 }) => {
   const startName = MONTH_NAMES[batch.month - 1]
-  // batch.month is always a canonical odd month (1,3,5,7,9,11) when periodFilter===2
   const title =
-    periodFilter === 2
+    batch.period_months_count === 2
       ? `${startName}–${MONTH_NAMES[batch.month]} ${batch.year}`
       : `${startName} ${batch.year}`
   const summary = `${batch.client_count} לקוחות · ${batch.pending_count} ממתינים`

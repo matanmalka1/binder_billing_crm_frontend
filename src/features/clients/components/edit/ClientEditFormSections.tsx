@@ -4,6 +4,7 @@ import { Select } from '../../../../components/ui/inputs/Select'
 import { useAdvisorOptions } from '@/features/users'
 import type { ClientResponse } from '../../api'
 import {
+  ADVANCE_PAYMENT_FREQUENCY_OPTIONS,
   CLIENT_ID_NUMBER_TYPE_LABELS,
   CLIENT_STATUS_OPTIONS,
   ENTITY_TYPE_OPTIONS,
@@ -16,6 +17,10 @@ type EntityTypeField = ControllerRenderProps<ClientEditFormValues, 'entity_type'
 type VatReportingFrequencyField = ControllerRenderProps<
   ClientEditFormValues,
   'vat_reporting_frequency'
+>
+type AdvancePaymentFrequencyField = ControllerRenderProps<
+  ClientEditFormValues,
+  'advance_payment_frequency'
 >
 type StatusField = ControllerRenderProps<ClientEditFormValues, 'status'>
 type AccountantIdField = ControllerRenderProps<ClientEditFormValues, 'accountant_id'>
@@ -155,9 +160,11 @@ export const ClientTaxProfileSection = ({
   register,
   isOsekPatur,
   vatReportingFrequencyField,
+  advancePaymentFrequencyField,
 }: SharedSectionProps & {
   isOsekPatur: boolean
   vatReportingFrequencyField: VatReportingFrequencyField
+  advancePaymentFrequencyField: AdvancePaymentFrequencyField
 }) => {
   return (
     <section className="space-y-4">
@@ -192,6 +199,15 @@ export const ClientTaxProfileSection = ({
             help="ערך מערכת/תצורה, לא שדה ידני."
           />
         )}
+        <Select
+          label="תדירות מקדמות מס הכנסה"
+          disabled={isLoading}
+          options={[{ value: '', label: 'לא הוגדר' }, ...ADVANCE_PAYMENT_FREQUENCY_OPTIONS]}
+          value={advancePaymentFrequencyField.value ?? ''}
+          onChange={advancePaymentFrequencyField.onChange}
+          onBlur={advancePaymentFrequencyField.onBlur}
+          name={advancePaymentFrequencyField.name}
+        />
         <Input
           label="אחוז מקדמה %"
           placeholder="8.5"

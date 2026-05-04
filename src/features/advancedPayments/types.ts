@@ -102,6 +102,7 @@ export interface AdvancePaymentOverviewResponse {
 export interface MonthBatchSummary {
   year: number
   month: number
+  period_months_count: 1 | 2
   client_count: number
   missing_turnover_count: number
   overdue_count: number

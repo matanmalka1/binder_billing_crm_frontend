@@ -1,7 +1,7 @@
 import { useWatch, type Control, type FieldErrors, type UseFormRegister } from 'react-hook-form'
 import { Input } from '../../../../components/ui/inputs/Input'
 import { Select } from '../../../../components/ui/inputs/Select'
-import { CREATE_CLIENT_VAT_OPTIONS } from '../../constants'
+import { ADVANCE_PAYMENT_FREQUENCY_OPTIONS, CREATE_CLIENT_VAT_OPTIONS } from '../../constants'
 import type { CreateClientFormValues } from '../../schemas'
 import { formatShekelAmount } from '@/utils/utils'
 import { stripNonDecimal } from './createClientFormUtils'
@@ -48,6 +48,7 @@ export const CreateClientTaxStep: React.FC<Props> = ({
   showVatFrequency,
 }) => {
   const vatFrequencyValue = useWatch({ control, name: 'vat_reporting_frequency' })
+  const advancePaymentFrequencyValue = useWatch({ control, name: 'advance_payment_frequency' })
   const accountantValue = useWatch({ control, name: 'accountant_id' })
 
   return (
@@ -63,6 +64,14 @@ export const CreateClientTaxStep: React.FC<Props> = ({
           {...register('vat_reporting_frequency')}
         />
       )}
+      <Select
+        label="תדירות מקדמות מס הכנסה *"
+        error={errors.advance_payment_frequency?.message}
+        disabled={disabled}
+        options={[{ value: '', label: 'בחר תדירות מקדמות' }, ...ADVANCE_PAYMENT_FREQUENCY_OPTIONS]}
+        value={advancePaymentFrequencyValue ?? ''}
+        {...register('advance_payment_frequency')}
+      />
       <div className="grid grid-cols-2 gap-4">
         {isExempt && (
           <div>

@@ -17,8 +17,8 @@ export interface ClientResponse {
   address_city: string | null
   address_zip_code: string | null
   office_client_number: number | null
-  // Tax profile fields (formerly BusinessTaxProfile)
   vat_reporting_frequency: VatType | null
+  advance_payment_frequency: AdvancePaymentFrequency | null
   vat_exempt_ceiling: string | null
   advance_rate: string | null
   advance_rate_updated_at: string | null
@@ -88,6 +88,7 @@ export interface CreateClientPayload {
   address_city: string
   address_zip_code?: string | null
   vat_reporting_frequency?: VatType | null
+  advance_payment_frequency?: AdvancePaymentFrequency | null
   advance_rate?: string | null
   advance_rate_updated_at?: string | null
   accountant_id?: number | null
@@ -98,6 +99,7 @@ export interface CreateClientPayload {
 export interface ClientImpactPreviewPayload {
   entity_type: EntityType
   vat_reporting_frequency?: VatType | null
+  advance_payment_frequency?: AdvancePaymentFrequency | null
   advance_rate?: string | null
 }
 
@@ -134,6 +136,7 @@ export interface UpdateClientPayload {
   address_zip_code?: string | null
   entity_type?: EntityType | null
   vat_reporting_frequency?: VatType | null
+  advance_payment_frequency?: AdvancePaymentFrequency | null
   advance_rate?: string | null
   advance_rate_updated_at?: string | null
   annual_revenue?: string | null
@@ -144,6 +147,7 @@ export type EntityType = 'osek_patur' | 'osek_murshe' | 'company_ltd' | 'employe
 export type BusinessStatus = 'active' | 'frozen' | 'closed'
 export type ClientStatus = 'active' | 'frozen' | 'closed'
 export type VatType = 'monthly' | 'bimonthly' | 'exempt'
+export type AdvancePaymentFrequency = 'monthly' | 'bimonthly'
 
 export interface BusinessResponse {
   id: number

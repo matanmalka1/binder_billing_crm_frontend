@@ -36,6 +36,9 @@ export const buildClientUpdatePayload = (
     payload.vat_reporting_frequency =
       data.entity_type === 'osek_patur' ? null : data.vat_reporting_frequency || null
   }
+  if (dirtyFields.advance_payment_frequency) {
+    payload.advance_payment_frequency = data.advance_payment_frequency || null
+  }
   if (dirtyFields.advance_rate) {
     const advanceRate = blankToNull(data.advance_rate)
     payload.advance_rate = advanceRate

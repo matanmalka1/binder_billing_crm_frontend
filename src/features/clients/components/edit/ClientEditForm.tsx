@@ -40,6 +40,7 @@ const getClientDefaultValues = (client: ClientResponse): ClientEditFormValues =>
   address_zip_code: client.address_zip_code ?? '',
   entity_type: client.entity_type ?? null,
   vat_reporting_frequency: client.vat_reporting_frequency ?? null,
+  advance_payment_frequency: client.advance_payment_frequency ?? null,
   advance_rate: client.advance_rate ?? '',
   annual_revenue: client.annual_revenue ?? '',
   accountant_id: client.accountant_id != null ? String(client.accountant_id) : '',
@@ -74,6 +75,10 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
   const isOsekPatur = entityTypeField.value === 'osek_patur'
   const { field: vatReportingFrequencyField } = useController({
     name: 'vat_reporting_frequency',
+    control,
+  })
+  const { field: advancePaymentFrequencyField } = useController({
+    name: 'advance_payment_frequency',
     control,
   })
 
@@ -154,6 +159,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
           register={register}
           isOsekPatur={isOsekPatur}
           vatReportingFrequencyField={vatReportingFrequencyField}
+          advancePaymentFrequencyField={advancePaymentFrequencyField}
         />
         <ClientOfficeSection
           client={client}

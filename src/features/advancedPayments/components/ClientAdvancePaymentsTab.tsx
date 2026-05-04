@@ -36,9 +36,9 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
     statusFilter,
     page,
   )
-  const { vatType, advanceRate } = useAdvanceRateInsights(clientId)
+  const { advancePaymentFrequency, advanceRate } = useAdvanceRateInsights(clientId)
 
-  const generationFrequency: 1 | 2 = vatType === 'bimonthly' ? 2 : 1
+  const generationFrequency: 1 | 2 = advancePaymentFrequency === 'bimonthly' ? 2 : 1
 
   const generateMutation = useMutation({
     mutationFn: () => advancePaymentsApi.generateSchedule(clientId, year),

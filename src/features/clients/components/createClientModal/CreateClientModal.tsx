@@ -53,6 +53,7 @@ export const CreateClientModal: React.FC<Props> = ({
 
   const currentEntityType = watch('entity_type')
   const currentVatFrequency = watch('vat_reporting_frequency')
+  const currentAdvancePaymentFrequency = watch('advance_payment_frequency')
   const currentAdvanceRate = watch('advance_rate')
   const currentIdNumber = watch('id_number')
   const { options: advisorOptions, isLoading: advisorsLoading } = useAdvisorOptions()
@@ -66,10 +67,11 @@ export const CreateClientModal: React.FC<Props> = ({
   const hasDeletedConflict = Boolean(deletedClient)
 
   const impactQuery = useClientCreationImpact(
-    currentEntityType && (isExempt || currentVatFrequency)
+    currentEntityType && (isExempt || currentVatFrequency) && currentAdvancePaymentFrequency
       ? {
           entity_type: currentEntityType,
           vat_reporting_frequency: currentVatFrequency,
+          advance_payment_frequency: currentAdvancePaymentFrequency,
           advance_rate: currentAdvanceRate,
         }
       : null,
@@ -79,7 +81,14 @@ export const CreateClientModal: React.FC<Props> = ({
 
   useEffect(() => {
     setValue('vat_reporting_frequency', null, { shouldValidate: false })
+    setValue('advance_payment_frequency', null, { shouldValidate: false })
   }, [currentEntityType, setValue])
+
+  useEffect(() => {
+    if (currentVatFrequency === 'monthly' || currentVatFrequency === 'bimonthly') {
+      setValue('advance_payment_frequency', currentVatFrequency, { shouldValidate: false })
+    }
+  }, [currentVatFrequency, setValue])
 
   useEffect(() => {
     if (!open) {

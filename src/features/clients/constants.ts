@@ -1,5 +1,5 @@
 import { makeLabelGetter } from '../../utils/labels'
-import type { ClientResponse, ClientStatus, EntityType, VatType } from './api'
+import type { AdvancePaymentFrequency, ClientResponse, ClientStatus, EntityType, VatType } from './api'
 
 export type ActiveClientDetailsTab =
   | 'details'
@@ -135,6 +135,18 @@ export const CREATE_CLIENT_ENTITY_OPTIONS = CREATE_ENTITY_TYPES.map((type) => ({
 export const CREATE_CLIENT_VAT_OPTIONS = VAT_REPORTING_FREQUENCY_OPTIONS.filter(
   (option) => option.value !== 'exempt',
 )
+
+export const ADVANCE_PAYMENT_FREQUENCY_VALUES = ['monthly', 'bimonthly'] as const satisfies readonly AdvancePaymentFrequency[]
+
+export const ADVANCE_PAYMENT_FREQUENCY_LABELS: Record<AdvancePaymentFrequency, string> = {
+  monthly: 'חודשי',
+  bimonthly: 'דו-חודשי',
+}
+
+export const ADVANCE_PAYMENT_FREQUENCY_OPTIONS = ADVANCE_PAYMENT_FREQUENCY_VALUES.map((v) => ({
+  value: v,
+  label: ADVANCE_PAYMENT_FREQUENCY_LABELS[v],
+}))
 
 export const CLIENT_SORT_BY_OPTIONS: { value: ClientSortBy; label: string }[] = [
   { value: 'full_name', label: 'שם לקוח' },

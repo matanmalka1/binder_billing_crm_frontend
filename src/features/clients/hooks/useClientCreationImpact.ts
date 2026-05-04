@@ -9,6 +9,9 @@ const buildImpactPreviewPayload = (params: ImpactParams): ClientImpactPreviewPay
   ...(params.entity_type !== 'osek_patur'
     ? { vat_reporting_frequency: params.vat_reporting_frequency }
     : {}),
+  ...(params.advance_payment_frequency
+    ? { advance_payment_frequency: params.advance_payment_frequency }
+    : {}),
   ...(params.advance_rate ? { advance_rate: params.advance_rate } : {}),
 })
 
@@ -21,12 +24,14 @@ export const useClientCreationImpact = (
 } => {
   const enabled = !!(
     params?.entity_type &&
-    (params.entity_type === 'osek_patur' || params?.vat_reporting_frequency)
+    (params.entity_type === 'osek_patur' || params?.vat_reporting_frequency) &&
+    params?.advance_payment_frequency
   )
 
   return useQuery({
     queryKey: [
       ...clientsQK.creationImpact(params?.entity_type, params?.vat_reporting_frequency),
+      params?.advance_payment_frequency ?? null,
       params?.advance_rate ?? null,
     ],
     queryFn: () =>
@@ -34,6 +39,7 @@ export const useClientCreationImpact = (
         buildImpactPreviewPayload({
           entity_type: params!.entity_type!,
           vat_reporting_frequency: params!.vat_reporting_frequency,
+          advance_payment_frequency: params!.advance_payment_frequency,
           advance_rate: params!.advance_rate,
         }),
       ),

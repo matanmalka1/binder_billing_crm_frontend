@@ -37,6 +37,7 @@ export const buildCreateClientPayload = (data: CreateClientFormValues): CreateCl
     address_zip_code: data.address_zip_code?.trim() || null,
     vat_reporting_frequency:
       data.entity_type === 'osek_patur' ? undefined : data.vat_reporting_frequency,
+    advance_payment_frequency: data.advance_payment_frequency ?? null,
     advance_rate: data.advance_rate?.trim() ? data.advance_rate.trim() : null,
     accountant_id: data.accountant_id ? Number(data.accountant_id) : null,
     business_name:

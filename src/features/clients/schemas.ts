@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { validateIsraeliIdChecksum } from '../../utils/validation'
 import {
+  ADVANCE_PAYMENT_FREQUENCY_VALUES,
   CREATE_CLIENT_VALIDATION_MESSAGES,
   CREATE_ENTITY_TYPES,
   CLIENT_STATUSES,
@@ -39,6 +40,10 @@ export const createClientSchema = z
       .enum(VAT_TYPES, { message: 'יש לציין תדירות דיווח מע"מ' })
       .optional()
       .nullable(),
+    advance_payment_frequency: z
+      .enum(ADVANCE_PAYMENT_FREQUENCY_VALUES, { message: 'יש לציין תדירות מקדמות' })
+      .nullable()
+      .optional(),
     advance_rate: z
       .string()
       .trim()
@@ -60,6 +65,14 @@ export const createClientSchema = z
     const isCompany = data.entity_type === 'company_ltd'
     const isExempt = data.entity_type === 'osek_patur'
     const trimmedId = data.id_number.trim()
+
+    if (data.advance_payment_frequency == null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['advance_payment_frequency'],
+        message: 'יש לציין תדירות מקדמות',
+      })
+    }
 
     if (isExempt && data.vat_reporting_frequency != null) {
       ctx.addIssue({
@@ -130,6 +143,7 @@ export const clientEditSchema = z.object({
   address_zip_code: z.string().trim().optional().or(z.literal('')),
   entity_type: z.enum(ENTITY_TYPES).nullable().optional(),
   vat_reporting_frequency: z.enum(VAT_TYPES).nullable().optional(),
+  advance_payment_frequency: z.enum(ADVANCE_PAYMENT_FREQUENCY_VALUES).nullable().optional(),
   advance_rate: z.string().optional().nullable(),
   annual_revenue: z
     .string()
