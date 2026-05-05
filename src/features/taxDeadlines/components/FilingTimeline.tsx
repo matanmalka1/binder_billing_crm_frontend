@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import type { UseFormReturn } from 'react-hook-form'
 import { Select } from '../../../components/ui/inputs/Select'
-
+import { Button } from '../../../components/ui/primitives/Button'
 import { Modal } from '../../../components/ui/overlays/Modal'
 import { Input } from '../../../components/ui/inputs/Input'
 import { ModalFormActions } from '../../../components/ui/overlays/ModalFormActions'
@@ -14,8 +14,7 @@ import {
   REQUIRED_FIELD_MESSAGE,
 } from '../constants'
 import { useClientTaxDeadlines } from '../hooks/useClientTaxDeadlines'
-import { TaxDeadlinesTable } from './TaxDeadlinesTable'
-import { DeadlineSummaryCards } from './DeadlineSummaryCards'
+import { ClientDeadlineCards } from './ClientDeadlineCards'
 import { TaxDeadlineDrawer } from './TaxDeadlineDrawer'
 import { EditTaxDeadlineFormModal } from './EditTaxDeadlineForm'
 import { TaxDeadlineCommonFields, TaxDeadlineModalFooter } from './TaxDeadlineFormParts'
@@ -51,10 +50,14 @@ const ClientDeadlineControls = ({
   filters,
   onChange,
   isAdvisor,
+  onCreateClick,
+  onGenerateClick,
 }: {
   filters: ClientDeadlineFilters
   onChange: (key: keyof ClientDeadlineFilters, value: string) => void
   isAdvisor: boolean
+  onCreateClick?: () => void
+  onGenerateClick?: () => void
 }) => {
   const selectedYear = getFilterYear(filters)
   const yearOptions = getYearOptions()
@@ -65,20 +68,29 @@ const ClientDeadlineControls = ({
   }
 
   return (
-    <section className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        {isAdvisor && (
-          <Select
-            value={filters.deadline_type}
-            onChange={(e) => onChange('deadline_type', e.target.value)}
-            options={TAX_DEADLINE_FILTER_TYPE_OPTIONS}
-            className="w-full py-1.5 sm:w-56"
-          />
-        )}
-      </div>
-
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
-        <div className="w-full sm:w-32">
+    <section className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-3 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+      {/* Filters group */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-1">
+          {STATUS_FILTERS.map((status) => {
+            const isActive = filters.status === status.value
+            return (
+              <button
+                key={status.value || 'all'}
+                type="button"
+                onClick={() => onChange('status', status.value)}
+                className={`whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-semibold transition-colors ${
+                  isActive
+                    ? 'border border-primary-200 bg-white text-primary-700 shadow-sm'
+                    : 'border border-transparent text-gray-600 hover:bg-white hover:text-gray-900'
+                }`}
+              >
+                {status.label}
+              </button>
+            )
+          })}
+        </div>
+        <div className="w-28 shrink-0">
           <Select
             value={String(selectedYear)}
             onChange={(e) => handleYearChange(e.target.value)}
@@ -86,24 +98,29 @@ const ClientDeadlineControls = ({
             className="w-full py-1.5"
           />
         </div>
-        <div className="hidden h-9 w-px bg-gray-100 sm:block" />
-        <div className="flex flex-wrap gap-2 sm:justify-end">
-          {STATUS_FILTERS.map((status) => (
-            <button
-              key={status.value || 'all'}
-              type="button"
-              onClick={() => onChange('status', status.value)}
-              className={`whitespace-nowrap rounded-md border px-4 py-2 text-sm font-semibold transition-colors ${
-                filters.status === status.value
-                  ? 'border-primary-500 bg-primary-50 text-primary-700'
-                  : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              {status.label}
-            </button>
-          ))}
-        </div>
+        {isAdvisor && (
+          <div className="w-44 shrink-0">
+            <Select
+              value={filters.deadline_type}
+              onChange={(e) => onChange('deadline_type', e.target.value)}
+              options={TAX_DEADLINE_FILTER_TYPE_OPTIONS}
+              className="w-full py-1.5"
+            />
+          </div>
+        )}
       </div>
+
+      {/* Advisor actions */}
+      {isAdvisor && (
+        <div className="flex shrink-0 items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onGenerateClick}>
+            צור מועדים
+          </Button>
+          <Button variant="primary" size="sm" onClick={onCreateClick}>
+            הוסף מועד
+          </Button>
+        </div>
+      )}
     </section>
   )
 }
@@ -230,6 +247,7 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
     handleEdit,
     handleDelete,
     onEditSubmit,
+    handleResetFilters,
   } = useClientTaxDeadlines(clientId)
 
   const clientQuery = useQuery({
@@ -240,14 +258,19 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
 
   return (
     <div className="space-y-4">
-      <DeadlineSummaryCards deadlines={deadlines} />
+      <ClientDeadlineControls
+        filters={filters}
+        onChange={handleFilterChange}
+        isAdvisor={isAdvisor}
+        onCreateClick={() => setShowCreateModal(true)}
+        onGenerateClick={() => setShowGenerateModal(true)}
+      />
 
-      <ClientDeadlineControls filters={filters} onChange={handleFilterChange} isAdvisor={isAdvisor} />
-
-      <TaxDeadlinesTable
+      <ClientDeadlineCards
         deadlines={deadlines}
         isLoading={isLoading}
-        clientScoped
+        filters={filters}
+        onResetFilters={handleResetFilters}
         completingId={completingId}
         reopeningId={reopeningId}
         deletingId={deletingId}

@@ -9,7 +9,7 @@ import { getTaxDeadlineSourcePath } from '../sourcePath'
 
 const SOURCE_LINK_LABELS: Record<string, string> = {
   vat: 'פתח דוח מע״מ',
-  advance_payment: 'פתח מקדמות',
+  advance_payment: 'פתח מקדמה',
   annual_report: 'פתח דוח שנתי',
 }
 
