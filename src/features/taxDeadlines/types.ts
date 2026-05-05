@@ -27,10 +27,3 @@ export interface GenerateTaxDeadlinesForm {
   client_id: string
   year: string
 }
-
-export interface TimelineFilters {
-  status: string
-  type: string
-  year: string
-  overdueOnly: boolean
-}

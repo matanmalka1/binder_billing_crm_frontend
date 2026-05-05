@@ -25,5 +25,4 @@ export const ADVANCE_PAYMENT_METHOD_OPTIONS: { value: AdvancePaymentMethod; labe
   ['bank_transfer', 'credit_card', 'check', 'direct_debit', 'cash', 'other'] as AdvancePaymentMethod[]
 ).map((method) => ({ value: method, label: getAdvancePaymentMethodLabel(method) }))
 
-
 export const ADVANCE_PAYMENT_FREQUENCY_OPTIONS = MONTHS_COVERED_OPTIONS

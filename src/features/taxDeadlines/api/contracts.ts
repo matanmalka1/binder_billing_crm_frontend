@@ -25,19 +25,6 @@ export interface TaxDeadlineResponse {
   available_actions?: BackendAction[]
 }
 
-export interface TimelineEntry {
-  id: number
-  client_record_id: number
-  deadline_type: string
-  period: string | null
-  due_date: string
-  status: string
-  days_remaining: number
-  urgency_level: DeadlineUrgencyLevel
-  milestone_label: string
-  payment_amount: string | null
-}
-
 export interface DeadlineUrgentItem {
   id: number
   client_record_id: number

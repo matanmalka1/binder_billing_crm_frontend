@@ -2,7 +2,7 @@ import { calculateDaysRemaining } from './api'
 import type { TaxDeadlineResponse } from './api'
 import { getReportingPeriodShortMonthLabel } from '@/constants/periodOptions.constants'
 import { HEBREW_MONTHS } from './constants'
-import type { CreateTaxDeadlineForm, EditTaxDeadlineForm, TimelineFilters } from './types'
+import type { CreateTaxDeadlineForm, EditTaxDeadlineForm } from './types'
 
 type DeadlinePeriodFields = Pick<TaxDeadlineResponse, 'deadline_type' | 'period' | 'period_months_count' | 'tax_year'>
 
@@ -90,59 +90,6 @@ export const groupTaxDeadlinesByMonth = (deadlines: TaxDeadlineResponse[]) => {
     items,
   }))
 }
-
-export const getDeadlineSummary = (deadlines: TaxDeadlineResponse[]) =>
-  deadlines.reduce(
-    (summary, deadline) => {
-      const isPending = deadline.status === 'pending'
-
-      if (isPending) {
-        summary.pending += 1
-        if (deadline.urgency_level === 'overdue') summary.overdue += 1
-        if (deadline.payment_amount !== null) {
-          summary.totalOpen += Number(deadline.payment_amount)
-        }
-      }
-
-      if (deadline.status === 'completed') summary.completed += 1
-
-      return summary
-    },
-    { overdue: 0, pending: 0, completed: 0, totalOpen: 0 },
-  )
-
-const getDeadlineSortRank = (deadline: TaxDeadlineResponse) => {
-  if (deadline.status !== 'pending') return 2
-  return deadline.urgency_level === 'overdue' ? 0 : 1
-}
-
-export const sortTaxDeadlines = (deadlines: TaxDeadlineResponse[]) =>
-  [...deadlines].sort((a, b) => {
-    const rankDelta = getDeadlineSortRank(a) - getDeadlineSortRank(b)
-    if (rankDelta !== 0) return rankDelta
-    return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-  })
-
-export const getTimelineYearOptions = (deadlines: TaxDeadlineResponse[]) => {
-  const years = Array.from(new Set(deadlines.map((deadline) => new Date(deadline.due_date).getFullYear())))
-    .filter((year) => Number.isFinite(year))
-    .sort((a, b) => b - a)
-
-  return [{ value: '', label: 'כל השנים' }, ...years.map((year) => ({ value: String(year), label: String(year) }))]
-}
-
-export const filterTimelineDeadlines = (deadlines: TaxDeadlineResponse[], filters: TimelineFilters) =>
-  sortTaxDeadlines(
-    deadlines.filter((deadline) => {
-      if (filters.status && deadline.status !== filters.status) return false
-      if (filters.type && deadline.deadline_type !== filters.type) return false
-      if (filters.year && new Date(deadline.due_date).getFullYear() !== Number(filters.year)) return false
-      if (filters.overdueOnly) {
-        return deadline.status === 'pending' && deadline.urgency_level === 'overdue'
-      }
-      return true
-    }),
-  )
 
 export const findMatchingDuplicateDeadline = (
   deadlines: TaxDeadlineResponse[],

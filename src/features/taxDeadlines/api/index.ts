@@ -4,7 +4,6 @@ export { getDeadlineTypeLabel, getUrgencyColor, formatCurrency, calculateDaysRem
 export type {
   TaxDeadlineResponse,
   TaxDeadlineListResponse,
-  TimelineEntry,
   DeadlineUrgentItem,
   DeadlineUrgencyLevel,
   DeadlineGroup,
