@@ -39,7 +39,7 @@ export const VatWorkItems: React.FC = () => {
   const { groups, isLoading: groupsLoading, error: groupsError } = useVatWorkItemGroups({
     period_type: filters.period_type ?? undefined,
     status: filters.status || undefined,
-    client_name: filters.clientSearch || undefined,
+    client_name: filters.clientSearchName || undefined,
     year: filters.year ? Number(filters.year) : undefined,
   })
 

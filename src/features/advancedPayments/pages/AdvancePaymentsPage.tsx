@@ -27,7 +27,7 @@ import { parsePositiveInt } from '@/utils/utils'
 import { toast } from '../../../utils/toast'
 import { showErrorToast } from '../../../utils/utils'
 import { useRole } from '../../../hooks/useRole'
-import { YEAR_OPTIONS } from '../utils'
+import { getOperationalTaxYear, getOperationalYearOptions } from '@/constants/periodOptions.constants'
 
 const PERIOD_OPTIONS = [
   { value: '', label: 'כל הסוגים' },
@@ -37,7 +37,7 @@ const PERIOD_OPTIONS = [
 
 const FILTER_FIELDS = [
   { type: 'search' as const, key: 'search', label: 'לקוח', placeholder: 'שם לקוח, ת.ז, ח.פ...' },
-  { type: 'select' as const, key: 'year', label: 'שנה', options: YEAR_OPTIONS, defaultValue: String(new Date().getFullYear()) },
+  { type: 'select' as const, key: 'year', label: 'שנה', options: getOperationalYearOptions(), defaultValue: String(getOperationalTaxYear()) },
   { type: 'select' as const, key: 'status', label: 'סטטוס', options: ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL },
   { type: 'select' as const, key: 'period', label: 'סוג דיווח', options: PERIOD_OPTIONS },
 ]

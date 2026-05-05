@@ -2,43 +2,25 @@ import { useMemo } from 'react'
 import { FilterPanel } from '@/components/ui/filters/FilterPanel'
 import { VAT_PERIOD_TYPE_SELECT_OPTIONS, VAT_WORK_ITEMS_STATUS_OPTIONS } from '../constants'
 import type { VatWorkItemsFiltersCardProps } from '../types'
+import { getOperationalTaxYear, getOperationalYearOptions } from '@/constants/periodOptions.constants'
 
 export const VatWorkItemsFiltersCard = ({
   filters,
   onClear,
   onFilterChange,
 }: VatWorkItemsFiltersCardProps) => {
-  const yearOptions = useMemo(() => {
-    const currentYear = new Date().getFullYear()
-    return [
-      { value: '', label: 'כל השנים' },
-      ...Array.from({ length: 5 }, (_, i) => {
-        const y = currentYear - i
-        return { value: String(y), label: String(y) }
-      }),
-    ]
-  }, [])
-
-  const currentYear = String(new Date().getFullYear())
-
   const fields = useMemo(
-    () => [
-      { type: 'client-picker' as const, idKey: 'clientSearch' },
-      { type: 'select' as const, key: 'year', label: 'שנה', options: yearOptions, defaultValue: currentYear },
-      {
-        type: 'select' as const,
-        key: 'status',
-        label: 'סטטוס',
-        options: VAT_WORK_ITEMS_STATUS_OPTIONS,
-      },
-      {
-        type: 'select' as const,
-        key: 'period_type',
-        label: 'סוג דיווח',
-        options: VAT_PERIOD_TYPE_SELECT_OPTIONS,
-      },
-    ],
-    [yearOptions],
+    () => {
+      const yearOptions = [{ value: '', label: 'כל השנים' }, ...getOperationalYearOptions()]
+      const defaultYear = String(getOperationalTaxYear())
+      return [
+        { type: 'client-picker' as const, idKey: 'clientSearch', nameKey: 'clientSearchName' },
+        { type: 'select' as const, key: 'year', label: 'שנה', options: yearOptions, defaultValue: defaultYear },
+        { type: 'select' as const, key: 'status', label: 'סטטוס', options: VAT_WORK_ITEMS_STATUS_OPTIONS },
+        { type: 'select' as const, key: 'period_type', label: 'סוג דיווח', options: VAT_PERIOD_TYPE_SELECT_OPTIONS },
+      ]
+    },
+    [],
   )
 
   return (
@@ -46,6 +28,7 @@ export const VatWorkItemsFiltersCard = ({
       fields={fields}
       values={{
         clientSearch: filters.clientSearch ?? '',
+        clientSearchName: filters.clientSearchName ?? '',
         year: filters.year ?? '',
         status: filters.status ?? '',
         period_type: filters.period_type ?? '',

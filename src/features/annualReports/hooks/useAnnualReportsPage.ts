@@ -2,12 +2,13 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSeasonDashboard } from './useSeasonDashboard'
 import type { AnnualReportsFilters } from '../components/shared/AnnualReportsFiltersBar'
+import { getActiveReportTaxYear } from '@/constants/periodOptions.constants'
 
 const DEFAULT_FILTERS: AnnualReportsFilters = {
   client_id: '',
   client_name: '',
   status: '',
-  year: '',
+  year: String(getActiveReportTaxYear()),
 }
 
 export const useAnnualReportsPage = () => {

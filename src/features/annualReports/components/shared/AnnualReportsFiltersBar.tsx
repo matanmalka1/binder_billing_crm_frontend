@@ -1,8 +1,8 @@
 import { FilterPanel } from '@/components/ui/filters/FilterPanel'
 import { STATUS_LABELS } from '../../api/utils'
 import type { AnnualReportStatus } from '../../api/contracts'
-import { YEAR_OPTIONS } from '../../../../utils/utils'
 import { ALL_STATUSES_OPTION, ALL_YEARS_OPTION } from '@/constants/filterOptions.constants'
+import { getActiveReportYearOptions } from '@/constants/periodOptions.constants'
 
 export interface AnnualReportsFilters {
   client_id: string
@@ -25,12 +25,15 @@ const STATUS_OPTIONS = [
   })),
 ]
 
-const YEAR_FILTER_OPTIONS = [ALL_YEARS_OPTION, ...YEAR_OPTIONS]
-
-const FIELDS = [
+const getFields = () => [
   { type: 'client-picker' as const, idKey: 'client_id', nameKey: 'client_name' },
   { type: 'select' as const, key: 'status', label: 'סטטוס', options: STATUS_OPTIONS },
-  { type: 'select' as const, key: 'year', label: 'שנת מס', options: YEAR_FILTER_OPTIONS },
+  {
+    type: 'select' as const,
+    key: 'year',
+    label: 'שנת מס',
+    options: [ALL_YEARS_OPTION, ...getActiveReportYearOptions()],
+  },
 ]
 
 export const AnnualReportsFiltersBar: React.FC<AnnualReportsFiltersBarProps> = ({
@@ -39,7 +42,7 @@ export const AnnualReportsFiltersBar: React.FC<AnnualReportsFiltersBarProps> = (
   onReset,
 }) => (
   <FilterPanel
-    fields={FIELDS}
+    fields={getFields()}
     values={filters}
     onChange={(key, value) => onFilterChange(key as keyof AnnualReportsFilters, value)}
     onReset={onReset}

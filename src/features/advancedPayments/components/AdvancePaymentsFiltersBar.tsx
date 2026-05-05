@@ -1,5 +1,5 @@
 import { FilterPanel } from '@/components/ui/filters/FilterPanel'
-import { YEAR_OPTIONS } from '../utils'
+import { getOperationalYearOptions } from '@/constants/periodOptions.constants'
 import {
   ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL,
   ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS,
@@ -14,7 +14,7 @@ interface AdvancePaymentsFiltersBarProps {
 }
 
 const FIELDS = [
-  { type: 'select' as const, key: 'year', label: 'שנת מס', options: YEAR_OPTIONS },
+  { type: 'select' as const, key: 'year', label: 'שנת מס', options: getOperationalYearOptions() },
   {
     type: 'select' as const,
     key: 'month',

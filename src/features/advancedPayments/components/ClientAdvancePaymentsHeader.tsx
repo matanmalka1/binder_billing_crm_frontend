@@ -4,7 +4,7 @@ import type { AdvancePaymentStatus } from '../types'
 import { Select } from '../../../components/ui/inputs/Select'
 import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
 import { getAdvancePaymentStatusLabel } from '../../../utils/enums'
-import { YEAR_OPTIONS } from '../utils'
+import { getOperationalYearOptions } from '@/constants/periodOptions.constants'
 import { ADVANCE_PAYMENT_STATUS_FILTERS } from '../constants'
 
 interface ClientAdvancePaymentsHeaderProps {
@@ -126,7 +126,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
             <Select
               value={String(year)}
               onChange={(e) => onYearChange(Number(e.target.value))}
-              options={YEAR_OPTIONS}
+              options={getOperationalYearOptions()}
             />
           </div>
         </div>

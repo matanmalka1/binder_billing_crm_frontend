@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { getOperationalTaxYear } from '@/constants/periodOptions.constants'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { AdvancePaymentRow, AdvancePaymentStatus, UpdateAdvancePaymentPayload } from '../types'
 import { useAdvancePayments } from '../hooks/useAdvancePayments'
@@ -21,8 +22,7 @@ interface ClientAdvancePaymentsTabProps {
 }
 
 export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> = ({ clientId }) => {
-  const currentYear = new Date().getFullYear()
-  const [year, setYear] = useState(currentYear)
+  const [year, setYear] = useState(getOperationalTaxYear)
   const [statusFilter, setStatusFilter] = useState<AdvancePaymentStatus[]>([])
   const [page, setPage] = useState(1)
   const [modalOpen, setModalOpen] = useState(false)

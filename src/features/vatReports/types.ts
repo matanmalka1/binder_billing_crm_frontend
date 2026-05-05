@@ -13,6 +13,7 @@ export type VatWorkItemsFilters = PagedFilters<{
   year: string
   period_type: string
   clientSearch: string
+  clientSearchName: string
 }>
 
 export type VatWorkItemAction = 'materialsComplete' | 'readyForReview' | 'sendBack'
@@ -133,7 +134,7 @@ export interface VatWorkItemsCreateModalProps {
 }
 
 export interface VatWorkItemsFiltersCardProps {
-  filters: Pick<VatWorkItemsFilters, 'status' | 'year' | 'period_type' | 'clientSearch'>
+  filters: Pick<VatWorkItemsFilters, 'status' | 'year' | 'period_type' | 'clientSearch' | 'clientSearchName'>
   onClear: () => void
   onFilterChange: (key: string, value: string) => void
 }

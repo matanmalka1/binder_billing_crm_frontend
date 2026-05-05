@@ -12,6 +12,7 @@ import { invalidateVatWorkItem } from './useVatInvalidation'
 import type { VatWorkItemAction } from '../types'
 import { VAT_WORK_ITEMS_STATS_STATUS_GROUPS } from '../constants'
 import { toOptionalVatPeriodTypeFilter, toVatPeriodTypeFilter } from '../filterUtils'
+import { getOperationalTaxYear } from '@/constants/periodOptions.constants'
 
 const statsStatuses = [
   ...VAT_WORK_ITEMS_STATS_STATUS_GROUPS.pending,
@@ -29,15 +30,16 @@ export const useVatWorkItemsPage = () => {
 
   const filters = {
     status: searchParams.get('status') ?? '',
-    year: searchParams.get('year') ?? String(new Date().getFullYear()),
+    year: searchParams.get('year') ?? String(getOperationalTaxYear()),
     period_type: toVatPeriodTypeFilter(searchParams.get('period_type')),
     clientSearch: searchParams.get('clientSearch') ?? '',
+    clientSearchName: searchParams.get('clientSearchName') ?? '',
   }
 
   const statsBase: VatWorkItemsListParams = {
     status: toOptionalString(filters.status),
     period_type: toOptionalVatPeriodTypeFilter(filters.period_type),
-    client_name: toOptionalString(filters.clientSearch),
+    client_name: toOptionalString(filters.clientSearchName),
     page: 1,
     page_size: 1,
   }

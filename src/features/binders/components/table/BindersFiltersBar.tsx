@@ -3,11 +3,9 @@ import { StatsCard } from '@/components/ui/layout/StatsCard'
 import { Archive, CheckCircle2, FolderKanban, Undo2, Boxes } from 'lucide-react'
 import { BINDER_STATUS_OPTIONS } from '../../constants'
 import type { BindersFiltersBarProps } from '../../types'
-import { buildYearOptions } from '@/utils/utils'
+import { getOperationalYearOptions } from '@/constants/periodOptions.constants'
 
-const YEAR_OPTIONS = [{ value: '', label: 'כל התקופות' }, ...buildYearOptions()]
-
-const FIELDS = [
+const getFields = () => [
   { type: 'search' as const, key: 'query', label: 'חיפוש', placeholder: 'שם לקוח...' },
   {
     type: 'search' as const,
@@ -16,7 +14,12 @@ const FIELDS = [
     placeholder: 'מספר קלסר מדויק...',
   },
   { type: 'select' as const, key: 'status', label: 'סטטוס', options: BINDER_STATUS_OPTIONS },
-  { type: 'select' as const, key: 'year', label: 'תקופה', options: YEAR_OPTIONS },
+  {
+    type: 'select' as const,
+    key: 'year',
+    label: 'שנה',
+    options: [{ value: '', label: 'כל התקופות' }, ...getOperationalYearOptions()],
+  },
 ]
 
 export const BindersFiltersBar = ({
@@ -89,7 +92,7 @@ export const BindersFiltersBar = ({
 
   return (
     <FilterPanel
-      fields={FIELDS}
+      fields={getFields()}
       values={{
         query: filters.query ?? '',
         binder_number: filters.binder_number ?? '',
