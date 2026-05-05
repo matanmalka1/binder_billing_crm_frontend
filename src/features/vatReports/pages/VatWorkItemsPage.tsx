@@ -10,6 +10,7 @@ import {
   VatWorkItemsFiltersCard,
   VatWorkItemsGroupedCards,
 } from '@/features/vatReports'
+import { buildVatEmptyStateTitle } from '@/features/vatReports/filterUtils'
 import type { VatWorkItemResponse } from '@/features/vatReports'
 import { Alert } from '@/components/ui/overlays/Alert'
 import { Button } from '@/components/ui/primitives/Button'
@@ -133,7 +134,7 @@ export const VatWorkItems: React.FC = () => {
         error={groupsError}
         onRowClick={handleRowClick}
         emptyState={{
-          title: 'לא נמצאו תיקי מע"מ',
+          title: buildVatEmptyStateTitle(filters),
           message: isAdvisor ? 'נסה לשנות את הסינון או לפתוח תיק חדש' : 'נסה לשנות את הסינון',
           action: isAdvisor
             ? { label: 'תיק חדש', onClick: () => setShowCreateModal(true) }
