@@ -85,12 +85,6 @@ export const CreateClientModal: React.FC<Props> = ({
   }, [currentEntityType, setValue])
 
   useEffect(() => {
-    if (currentVatFrequency === 'monthly' || currentVatFrequency === 'bimonthly') {
-      setValue('advance_payment_frequency', currentVatFrequency, { shouldValidate: false })
-    }
-  }, [currentVatFrequency, setValue])
-
-  useEffect(() => {
     if (!open) {
       reset()
       setStepIndex(0)

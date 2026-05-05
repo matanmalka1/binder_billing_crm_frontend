@@ -51,7 +51,7 @@ const FILTER_FIELDS = [
     label: 'סטטוס',
     options: ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL,
   },
-  { type: 'select' as const, key: 'period', label: 'סוג דיווח', options: PERIOD_OPTIONS },
+  { type: 'select' as const, key: 'period', label: 'תקופת מקדמה', options: PERIOD_OPTIONS },
 ]
 
 export const AdvancePayments: React.FC = () => {
@@ -152,7 +152,7 @@ export const AdvancePayments: React.FC = () => {
     mutationFn: (periodMonthsCount: 1 | 2) =>
       advancePaymentsApi.generateSchedule(genClientId, year, periodMonthsCount),
     onSuccess: (data) => {
-      toast.success(data.created > 0 ? `נוצרו ${data.created} מקדמות` : 'הכול קיים')
+      toast.success(data.created > 0 ? `נוצרו ${data.created} מקדמות, דולגו ${data.skipped}` : 'לא נוצרו מקדמות חדשות')
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all })
       setGenPickerOpen(false)
       genPicker.resetClientPicker()
@@ -388,6 +388,7 @@ export const AdvancePayments: React.FC = () => {
                       : 'תדירות מקדמות לא הוגדרה'}
             </p>
           )}
+          <p className="text-sm text-gray-500">ייווצרו רק מקדמות שתאריך היעד שלהן מהיום והלאה</p>
         </div>
       </Modal>
     </div>

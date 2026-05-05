@@ -46,7 +46,7 @@ export interface CreateAdvancePaymentPayload {
 }
 
 export interface UpdateAdvancePaymentPayload {
-  paid_amount?: string | null
+  paid_amount?: string
   expected_amount?: string | null
   status?: AdvancePaymentStatus
   paid_at?: string | null

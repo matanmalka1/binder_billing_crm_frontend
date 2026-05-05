@@ -91,10 +91,16 @@ export const advancePaymentsApi = {
     clientId: number,
     year: number,
     periodMonthsCount?: 1 | 2,
+    referenceDate?: string,
   ): Promise<{ created: number; skipped: number }> => {
+    const payload = {
+      year,
+      ...(periodMonthsCount == null ? {} : { period_months_count: periodMonthsCount }),
+      ...(referenceDate == null ? {} : { reference_date: referenceDate }),
+    }
     const response = await api.post<{ created: number; skipped: number }>(
       ADVANCE_PAYMENT_ENDPOINTS.clientAdvancePaymentsGenerate(clientId),
-      periodMonthsCount == null ? { year } : { year, period_months_count: periodMonthsCount },
+      payload,
     )
     return response.data
   },

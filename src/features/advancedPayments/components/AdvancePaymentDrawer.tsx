@@ -10,6 +10,7 @@ import { ADVANCE_PAYMENT_STATUS_OPTIONS, ADVANCE_PAYMENT_METHOD_OPTIONS } from '
 import { fmtCurrency, getAdvancePaymentMonthLabel } from '../utils'
 import { formatDate } from '../../../utils/utils'
 import { toEditableAmount } from './advancePaymentComponent.utils'
+import { toast } from '../../../utils/toast'
 
 interface AdvancePaymentDrawerProps {
   row: AdvancePaymentRow | null
@@ -63,7 +64,23 @@ export const AdvancePaymentDrawer: React.FC<AdvancePaymentDrawerProps> = ({
 
   const handleSave = async () => {
     const payload: UpdateAdvancePaymentPayload = {}
-    if (paidAmount !== toEditableAmount(row.paid_amount)) payload.paid_amount = paidAmount === '' ? null : paidAmount
+    const numericPaid = Number(paidAmount || 0)
+    const numericExpected = Number(expectedAmount)
+
+    if (!Number.isFinite(numericPaid) || numericPaid < 0) {
+      toast.error('סכום ששולם חייב להיות מספר תקין שאינו שלילי')
+      return
+    }
+    if ((status === 'paid' || status === 'partial') && numericPaid <= 0) {
+      toast.error('סטטוס שולם או חלקי מחייב סכום ששולם גדול מאפס')
+      return
+    }
+    if (status === 'paid' && expectedAmount !== '' && Number.isFinite(numericExpected) && numericPaid < numericExpected) {
+      toast.error('סכום ששולם נמוך מהסכום הצפוי. יש לבחור סטטוס חלקי')
+      return
+    }
+
+    if (paidAmount !== toEditableAmount(row.paid_amount)) payload.paid_amount = paidAmount === '' ? '0' : paidAmount
     if (expectedAmount !== toEditableAmount(row.expected_amount))
       payload.expected_amount = expectedAmount === '' ? null : expectedAmount
     if (status !== row.status) payload.status = status as UpdateAdvancePaymentPayload['status']
@@ -79,7 +96,7 @@ export const AdvancePaymentDrawer: React.FC<AdvancePaymentDrawerProps> = ({
   const turnoverLabel = row.reported_turnover
     ? `${fmtCurrency(row.reported_turnover)} (מאושר)`
     : row.live_turnover
-      ? `${fmtCurrency(row.live_turnover)} (לייב מדוח מע"מ)`
+      ? `${fmtCurrency(row.live_turnover)} (מחזור חי מדוח מע"מ)`
       : null
 
   const title = getAdvancePaymentMonthLabel(row.period, row.period_months_count)

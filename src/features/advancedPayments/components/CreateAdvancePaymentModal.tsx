@@ -131,7 +131,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
           control={control}
           render={({ field }) => (
             <Select
-              label="תדירות"
+              label="תדירות מקדמות"
               value={String(field.value)}
               onChange={(e) => field.onChange(toFrequency(e.target.value))}
               options={ADVANCE_PAYMENT_FREQUENCY_OPTIONS}

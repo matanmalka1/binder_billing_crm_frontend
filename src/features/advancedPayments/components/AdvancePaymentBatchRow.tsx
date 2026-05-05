@@ -28,7 +28,7 @@ const TABLE_HEADERS = [
     className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-28',
   },
   {
-    label: 'מחזור',
+    label: 'מחזור מדווח',
     className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]',
   },
   {

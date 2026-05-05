@@ -85,7 +85,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
               <ConfirmDialog
                 open={confirmGenerate}
                 title="יצירת לוח מקדמות"
-                message={`ליצור מקדמות ${FREQUENCY_LABEL[generationFrequency]} לשנת ${year}? מקדמות קיימות לא יושפעו.`}
+                message={`ליצור מקדמות ${FREQUENCY_LABEL[generationFrequency]} לשנת ${year}? ייווצרו רק מקדמות שתאריך היעד שלהן מהיום והלאה. מקדמות קיימות לא יושפעו.`}
                 confirmLabel="צור"
                 cancelLabel="ביטול"
                 onConfirm={() => {
