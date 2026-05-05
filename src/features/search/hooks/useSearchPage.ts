@@ -24,9 +24,7 @@ export const useSearchPage = () => {
     [searchParams],
   )
 
-  const hasAnyFilter =
-    Boolean(filters.query) ||
-    SEARCH_ADVANCED_FILTER_KEYS.some((k) => Boolean(filters[k]))
+  const hasAnyFilter = Boolean(filters.query) || SEARCH_ADVANCED_FILTER_KEYS.some((k) => Boolean(filters[k]))
 
   const searchQuery = useQuery({
     queryKey: searchQK.results(filters),
@@ -66,9 +64,7 @@ export const useSearchPage = () => {
   }, [setSearchParams])
 
   return {
-    error: searchQuery.error
-      ? getErrorMessage(searchQuery.error, 'שגיאה בטעינת תוצאות חיפוש')
-      : null,
+    error: searchQuery.error ? getErrorMessage(searchQuery.error, 'שגיאה בטעינת תוצאות חיפוש') : null,
     filters,
     hasAnyFilter,
     handleFilterChange,

@@ -24,10 +24,7 @@ export const receiveBinderSchema = z
     business_id: z.number({ error: 'נא לבחור עסק' }).positive('נא לבחור עסק').nullable().optional(),
     binder_type: z.enum(MATERIAL_TYPES, { error: 'נא לבחור סוג חומר' }),
     annual_report_id: z.number().positive('נא לבחור דוח שנתי').nullable().optional(),
-    period_year: z
-      .number({ error: 'נא לבחור שנת דיווח' })
-      .int('נא לבחור שנת דיווח')
-      .min(2000, 'נא לבחור שנת דיווח'),
+    period_year: z.number({ error: 'נא לבחור שנת דיווח' }).int('נא לבחור שנת דיווח').min(2000, 'נא לבחור שנת דיווח'),
     period_month_start: z.number().int().min(1).max(12).nullable().optional(),
     period_month_end: z.number().int().min(1).max(12).nullable().optional(),
     received_at: z

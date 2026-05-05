@@ -28,10 +28,7 @@ export const remindersApi = {
   },
 
   create: async (data: CreateReminderRequest): Promise<Reminder> => {
-    const response = await api.post<Reminder>(
-      REMINDER_ENDPOINTS.reminders,
-      createReminderRequestSchema.parse(data),
-    )
+    const response = await api.post<Reminder>(REMINDER_ENDPOINTS.reminders, createReminderRequestSchema.parse(data))
     return response.data
   },
 

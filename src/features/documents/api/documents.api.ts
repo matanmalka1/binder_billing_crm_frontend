@@ -30,33 +30,22 @@ export const documentsApi = {
   },
 
   getSignalsByClient: async (clientId: number): Promise<OperationalSignalsResponse> => {
-    const response = await api.get<OperationalSignalsResponse>(
-      DOCUMENT_ENDPOINTS.documentSignalsByClient(clientId),
-    )
+    const response = await api.get<OperationalSignalsResponse>(DOCUMENT_ENDPOINTS.documentSignalsByClient(clientId))
     return response.data
   },
 
-  getVersions: async (
-    clientId: number,
-    documentType: string,
-    taxYear?: number,
-  ): Promise<DocumentVersionsResponse> => {
-    const response = await api.get<DocumentVersionsResponse>(
-      DOCUMENT_ENDPOINTS.documentVersionsByClient(clientId),
-      {
-        params: toQueryParams({
-          document_type: documentType,
-          ...(taxYear != null ? { tax_year: taxYear } : {}),
-        }),
-      },
-    )
+  getVersions: async (clientId: number, documentType: string, taxYear?: number): Promise<DocumentVersionsResponse> => {
+    const response = await api.get<DocumentVersionsResponse>(DOCUMENT_ENDPOINTS.documentVersionsByClient(clientId), {
+      params: toQueryParams({
+        document_type: documentType,
+        ...(taxYear != null ? { tax_year: taxYear } : {}),
+      }),
+    })
     return response.data
   },
 
   listByAnnualReport: async (reportId: number): Promise<DocumentVersionsResponse> => {
-    const response = await api.get<DocumentVersionsResponse>(
-      DOCUMENT_ENDPOINTS.documentsByAnnualReport(reportId),
-    )
+    const response = await api.get<DocumentVersionsResponse>(DOCUMENT_ENDPOINTS.documentsByAnnualReport(reportId))
     return response.data
   },
 
@@ -76,11 +65,9 @@ export const documentsApi = {
     if (payload.annual_report_id != null) {
       formData.append('annual_report_id', String(payload.annual_report_id))
     }
-    const response = await api.post<PermanentDocumentResponse>(
-      DOCUMENT_ENDPOINTS.documentsUpload,
-      formData,
-      { headers: { 'Content-Type': 'multipart/form-data' } },
-    )
+    const response = await api.post<PermanentDocumentResponse>(DOCUMENT_ENDPOINTS.documentsUpload, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
     return response.data
   },
 
@@ -91,11 +78,9 @@ export const documentsApi = {
   replaceDocument: async (id: number, file: File): Promise<PermanentDocumentResponse> => {
     const formData = new FormData()
     formData.append('file', file)
-    const response = await api.put<PermanentDocumentResponse>(
-      DOCUMENT_ENDPOINTS.documentReplace(id),
-      formData,
-      { headers: { 'Content-Type': 'multipart/form-data' } },
-    )
+    const response = await api.put<PermanentDocumentResponse>(DOCUMENT_ENDPOINTS.documentReplace(id), formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
     return response.data
   },
 }

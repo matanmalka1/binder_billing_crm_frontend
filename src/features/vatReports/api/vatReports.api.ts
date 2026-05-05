@@ -30,12 +30,9 @@ export const vatReportsApi = {
   },
 
   lookup: async (clientId: number, period: string): Promise<VatWorkItemLookupResponse | null> => {
-    const response = await api.get<VatWorkItemLookupResponse | null>(
-      VAT_ENDPOINTS.vatWorkItemLookup,
-      {
-        params: toQueryParams({ client_record_id: clientId, period }),
-      },
-    )
+    const response = await api.get<VatWorkItemLookupResponse | null>(VAT_ENDPOINTS.vatWorkItemLookup, {
+      params: toQueryParams({ client_record_id: clientId, period }),
+    })
     return response.data
   },
 
@@ -50,26 +47,19 @@ export const vatReportsApi = {
   },
 
   getPeriodOptions: async (clientId: number, year?: number): Promise<VatPeriodOptionsResponse> => {
-    const response = await api.get<VatPeriodOptionsResponse>(
-      VAT_ENDPOINTS.vatPeriodOptions(clientId),
-      {
-        params: toQueryParams({ year }),
-      },
-    )
+    const response = await api.get<VatPeriodOptionsResponse>(VAT_ENDPOINTS.vatPeriodOptions(clientId), {
+      params: toQueryParams({ year }),
+    })
     return response.data
   },
 
   markMaterialsComplete: async (id: number): Promise<VatWorkItemResponse> => {
-    const response = await api.post<VatWorkItemResponse>(
-      VAT_ENDPOINTS.vatWorkItemMaterialsComplete(id),
-    )
+    const response = await api.post<VatWorkItemResponse>(VAT_ENDPOINTS.vatWorkItemMaterialsComplete(id))
     return response.data
   },
 
   markReadyForReview: async (id: number): Promise<VatWorkItemResponse> => {
-    const response = await api.post<VatWorkItemResponse>(
-      VAT_ENDPOINTS.vatWorkItemReadyForReview(id),
-    )
+    const response = await api.post<VatWorkItemResponse>(VAT_ENDPOINTS.vatWorkItemReadyForReview(id))
     return response.data
   },
 
@@ -80,10 +70,7 @@ export const vatReportsApi = {
     return response.data
   },
 
-  fileVatReturn: async (
-    id: number,
-    payload: FileVatReturnPayload,
-  ): Promise<VatWorkItemResponse> => {
+  fileVatReturn: async (id: number, payload: FileVatReturnPayload): Promise<VatWorkItemResponse> => {
     const response = await api.post<VatWorkItemResponse>(VAT_ENDPOINTS.vatWorkItemFile(id), payload)
     return response.data
   },
@@ -94,10 +81,7 @@ export const vatReportsApi = {
   },
 
   addInvoice: async (id: number, payload: CreateVatInvoicePayload): Promise<VatInvoiceResponse> => {
-    const response = await api.post<VatInvoiceResponse>(
-      VAT_ENDPOINTS.vatWorkItemInvoices(id),
-      payload,
-    )
+    const response = await api.post<VatInvoiceResponse>(VAT_ENDPOINTS.vatWorkItemInvoices(id), payload)
     return response.data
   },
 
@@ -106,10 +90,7 @@ export const vatReportsApi = {
     invoiceId: number,
     payload: UpdateVatInvoicePayload,
   ): Promise<VatInvoiceResponse> => {
-    const response = await api.patch<VatInvoiceResponse>(
-      VAT_ENDPOINTS.vatWorkItemInvoiceById(id, invoiceId),
-      payload,
-    )
+    const response = await api.patch<VatInvoiceResponse>(VAT_ENDPOINTS.vatWorkItemInvoiceById(id, invoiceId), payload)
     return response.data
   },
 
@@ -128,39 +109,35 @@ export const vatReportsApi = {
   },
 
   listByClient: async (clientId: number): Promise<VatWorkItemListResponse> => {
-    const response = await api.get<VatWorkItemListResponse>(
-      VAT_ENDPOINTS.vatWorkItemsByClient(clientId),
-    )
+    const response = await api.get<VatWorkItemListResponse>(VAT_ENDPOINTS.vatWorkItemsByClient(clientId))
     return response.data
   },
 
   getClientSummary: async (clientId: number): Promise<VatClientSummaryResponse> => {
-    const response = await api.get<VatClientSummaryResponse>(
-      VAT_ENDPOINTS.vatClientSummary(clientId),
-    )
+    const response = await api.get<VatClientSummaryResponse>(VAT_ENDPOINTS.vatClientSummary(clientId))
     return response.data
   },
 
-  listGroups: async (params: Omit<VatWorkItemGroupItemsParams, 'page' | 'page_size'> & { period_type?: string } = {}): Promise<VatWorkItemGroupsResponse> => {
+  listGroups: async (
+    params: Omit<VatWorkItemGroupItemsParams, 'page' | 'page_size'> & { period_type?: string } = {},
+  ): Promise<VatWorkItemGroupsResponse> => {
     const response = await api.get<VatWorkItemGroupsResponse>(VAT_ENDPOINTS.vatWorkItemGroups, {
       params: toQueryParams(params),
     })
     return response.data
   },
 
-  listGroupItems: async (period: string, params: VatWorkItemGroupItemsParams = {}): Promise<VatWorkItemGroupItemsResponse> => {
-    const response = await api.get<VatWorkItemGroupItemsResponse>(
-      VAT_ENDPOINTS.vatWorkItemGroupItems(period),
-      { params: toQueryParams(params) },
-    )
+  listGroupItems: async (
+    period: string,
+    params: VatWorkItemGroupItemsParams = {},
+  ): Promise<VatWorkItemGroupItemsResponse> => {
+    const response = await api.get<VatWorkItemGroupItemsResponse>(VAT_ENDPOINTS.vatWorkItemGroupItems(period), {
+      params: toQueryParams(params),
+    })
     return response.data
   },
 
-  exportClientVat: async (
-    clientId: number,
-    format: 'excel' | 'pdf',
-    year: number,
-  ): Promise<void> => {
+  exportClientVat: async (clientId: number, format: 'excel' | 'pdf', year: number): Promise<void> => {
     const response = await api.get<Blob>(VAT_ENDPOINTS.vatClientExport(clientId), {
       params: toQueryParams({ format, year }),
       responseType: 'blob',
@@ -170,9 +147,7 @@ export const vatReportsApi = {
     const ext = format === 'excel' ? 'xlsx' : 'pdf'
     const filename = filenameMatch?.[1] || `vat_client_${clientId}_${year}.${ext}`
     const mimeType =
-      format === 'excel'
-        ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        : 'application/pdf'
+      format === 'excel' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf'
     const contentType = response.headers['content-type']
     downloadBlob(response.data, filename, typeof contentType === 'string' ? contentType : mimeType)
   },

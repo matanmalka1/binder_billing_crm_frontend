@@ -8,10 +8,7 @@ import type { LucideIcon } from 'lucide-react'
 import type { ChargeResponse } from '@/features/charges'
 import type { BinderDetailResponse } from '@/features/binders'
 import { getChargeTypeLabel } from '@/features/charges'
-import {
-  getChargeStatusLabel,
-  getStatusLabel as getBinderStatusLabel,
-} from '../../../../utils/enums'
+import { getChargeStatusLabel, getStatusLabel as getBinderStatusLabel } from '../../../../utils/enums'
 import { formatBinderNumber } from '../../../../utils/utils'
 
 type StatPillProps = {
@@ -92,14 +89,10 @@ const RelatedItemsSection = <T,>({
           >
             <div className="min-w-0 text-right">
               <div className="flex min-w-0 flex-wrap items-center gap-2">
-                <span className="truncate text-sm font-semibold text-gray-900">
-                  {getTitle(item)}
-                </span>
+                <span className="truncate text-sm font-semibold text-gray-900">{getTitle(item)}</span>
                 {getBadge?.(item)}
               </div>
-              <div className="mt-1 truncate text-xs font-medium text-gray-500">
-                {getSubtitle(item)}
-              </div>
+              <div className="mt-1 truncate text-xs font-medium text-gray-500">{getSubtitle(item)}</div>
             </div>
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-gray-500 transition-colors group-hover:bg-white group-hover:text-primary-700">
               <ChevronLeft className="h-4 w-4" />
@@ -193,9 +186,7 @@ export const ClientRelatedData: FC<ClientRelatedDataProps> = ({
               getKey={(charge) => charge.id}
               getTitle={(charge) => `חיוב #${charge.id}`}
               getSubtitle={(charge) => getChargeTypeLabel(charge.charge_type)}
-              getBadge={(charge) => (
-                <Badge variant="neutral">{getChargeStatusLabel(charge.status)}</Badge>
-              )}
+              getBadge={(charge) => <Badge variant="neutral">{getChargeStatusLabel(charge.status)}</Badge>}
               getItemHref={() => `/charges?client_record_id=${clientId}`}
             />
           )}

@@ -12,29 +12,18 @@ export const correspondenceApi = {
     clientId: number,
     params?: { page?: number; page_size?: number; business_id?: number },
   ): Promise<CorrespondenceListResponse> => {
-    const response = await api.get<CorrespondenceListResponse>(
-      CORRESPONDENCE_ENDPOINTS.correspondenceList(clientId),
-      { params },
-    )
+    const response = await api.get<CorrespondenceListResponse>(CORRESPONDENCE_ENDPOINTS.correspondenceList(clientId), {
+      params,
+    })
     return response.data
   },
 
-  create: async (
-    clientId: number,
-    payload: CreateCorrespondencePayload,
-  ): Promise<CorrespondenceEntry> => {
-    const response = await api.post<CorrespondenceEntry>(
-      CORRESPONDENCE_ENDPOINTS.correspondenceList(clientId),
-      payload,
-    )
+  create: async (clientId: number, payload: CreateCorrespondencePayload): Promise<CorrespondenceEntry> => {
+    const response = await api.post<CorrespondenceEntry>(CORRESPONDENCE_ENDPOINTS.correspondenceList(clientId), payload)
     return response.data
   },
 
-  update: async (
-    clientId: number,
-    id: number,
-    payload: UpdateCorrespondencePayload,
-  ): Promise<CorrespondenceEntry> => {
+  update: async (clientId: number, id: number, payload: UpdateCorrespondencePayload): Promise<CorrespondenceEntry> => {
     const response = await api.patch<CorrespondenceEntry>(
       CORRESPONDENCE_ENDPOINTS.correspondenceById(clientId, id),
       payload,

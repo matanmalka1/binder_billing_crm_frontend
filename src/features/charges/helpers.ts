@@ -2,11 +2,7 @@ import type { DataTableProps } from '@/components/ui/table'
 import { formatCompactCurrencyILS, parsePositiveInt } from '@/utils/utils'
 import { toOptionalNumber, toOptionalString } from '@/utils/filters'
 import { chargesApi, type ChargeStatusStat, type ChargesListParams } from './api'
-import {
-  CHARGE_PERIOD_YEAR_SPAN,
-  CHARGE_STATUS_OPTIONS,
-  CHARGE_TYPE_OPTIONS_WITH_ALL,
-} from './constants'
+import { CHARGE_PERIOD_YEAR_SPAN, CHARGE_STATUS_OPTIONS, CHARGE_TYPE_OPTIONS_WITH_ALL } from './constants'
 import type { ChargeAction, ChargesFilters } from './types'
 import { getChargePeriodLabel } from './utils'
 
@@ -50,12 +46,7 @@ export const buildChargeFilterBadges = (
 ) =>
   [
     getFilterBadge('status', filters.status, CHARGE_STATUS_OPTIONS, onFilterChange),
-    getFilterBadge(
-      'charge_type',
-      filters.charge_type,
-      CHARGE_TYPE_OPTIONS_WITH_ALL,
-      onFilterChange,
-    ),
+    getFilterBadge('charge_type', filters.charge_type, CHARGE_TYPE_OPTIONS_WITH_ALL, onFilterChange),
   ].filter((badge): badge is NonNullable<typeof badge> => badge !== null)
 
 export const runChargeActionRequest = (chargeId: number, action: ChargeAction, reason?: string) => {

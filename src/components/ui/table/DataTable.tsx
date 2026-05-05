@@ -55,8 +55,7 @@ export const DataTable = <T,>({
 
     event.preventDefault()
     const currentRow = event.currentTarget
-    const sibling =
-      event.key === 'ArrowDown' ? currentRow.nextElementSibling : currentRow.previousElementSibling
+    const sibling = event.key === 'ArrowDown' ? currentRow.nextElementSibling : currentRow.previousElementSibling
 
     if (sibling instanceof HTMLTableRowElement) {
       sibling.focus()

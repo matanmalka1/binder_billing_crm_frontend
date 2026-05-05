@@ -28,10 +28,7 @@ const MetaField: React.FC<{ label: string; value: string }> = ({ label, value })
 
 // ── Status transition ─────────────────────────────────────────────────────────
 
-const StatusTransition: React.FC<{ oldStatus: string; newStatus: string }> = ({
-  oldStatus,
-  newStatus,
-}) => (
+const StatusTransition: React.FC<{ oldStatus: string; newStatus: string }> = ({ oldStatus, newStatus }) => (
   <MetaRow className="bg-info-50 border-info-100 flex items-center gap-2">
     <span className="px-2 py-0.5 rounded bg-info-100 text-info-700 font-medium text-[11px]">
       {getTimelineStatusLabel(oldStatus)}
@@ -45,12 +42,8 @@ const StatusTransition: React.FC<{ oldStatus: string; newStatus: string }> = ({
 
 // ── Metadata panel ────────────────────────────────────────────────────────────
 
-const EventMetadata: React.FC<{ metadata: TimelineEventMetadata; eventType: string }> = ({
-  metadata,
-  eventType,
-}) => {
-  const { old_status, new_status, amount, trigger, channel, provider, external_invoice_id } =
-    metadata
+const EventMetadata: React.FC<{ metadata: TimelineEventMetadata; eventType: string }> = ({ metadata, eventType }) => {
+  const { old_status, new_status, amount, trigger, channel, provider, external_invoice_id } = metadata
 
   return (
     <>
@@ -132,28 +125,16 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
   activeActionKey,
 }) => {
   const colors = getEventColor(ev.event_type)
-  const displayDate = ev.isDateOnly
-    ? formatTimelineDate(ev.displayTimestamp)
-    : formatTimestamp(ev.displayTimestamp)
+  const displayDate = ev.isDateOnly ? formatTimelineDate(ev.displayTimestamp) : formatTimestamp(ev.displayTimestamp)
   const primaryAction = ev.actionsList[0]
   const isQuiet = ev.importance === 'quiet'
 
   return (
-    <li
-      className="relative flex gap-4 animate-fade-in"
-      style={{ animationDelay: staggerDelay(index) }}
-    >
+    <li className="relative flex gap-4 animate-fade-in" style={{ animationDelay: staggerDelay(index) }}>
       {/* Timeline dot */}
       <div className="relative z-10 flex-shrink-0 mt-3.5">
-        <div
-          className={cn(
-            'h-[10px] w-[10px] rounded-full border-2 bg-white shadow-sm',
-            colors.dotBorder,
-          )}
-        >
-          <div
-            className={cn('absolute inset-0 m-auto h-[4px] w-[4px] rounded-full', colors.dotBg)}
-          />
+        <div className={cn('h-[10px] w-[10px] rounded-full border-2 bg-white shadow-sm', colors.dotBorder)}>
+          <div className={cn('absolute inset-0 m-auto h-[4px] w-[4px] rounded-full', colors.dotBg)} />
         </div>
       </div>
 
@@ -180,36 +161,23 @@ export const TimelineEventItem: React.FC<TimelineEventItemProps> = ({
                   isQuiet ? 'bg-gray-100 text-gray-600' : cn(colors.badgeBg, colors.badgeText),
                 )}
               >
-                <span className={isQuiet ? 'text-gray-500' : colors.iconColor}>
-                  {getEventIcon(ev.event_type)}
-                </span>
+                <span className={isQuiet ? 'text-gray-500' : colors.iconColor}>{getEventIcon(ev.event_type)}</span>
                 {ev.title}
               </span>
             </div>
 
-            <time
-              dateTime={ev.displayTimestamp}
-              className="text-xs text-gray-400 font-mono tabular-nums flex-shrink-0"
-            >
+            <time dateTime={ev.displayTimestamp} className="text-xs text-gray-400 font-mono tabular-nums flex-shrink-0">
               {displayDate}
             </time>
           </div>
 
           {/* Description */}
           {ev.secondary && (
-            <p
-              className={cn('text-sm leading-relaxed', isQuiet ? 'text-gray-500' : 'text-gray-700')}
-            >
-              {ev.secondary}
-            </p>
+            <p className={cn('text-sm leading-relaxed', isQuiet ? 'text-gray-500' : 'text-gray-700')}>{ev.secondary}</p>
           )}
 
           {/* Related IDs */}
-          <RelatedIds
-            binderId={ev.binder_id}
-            chargeId={ev.charge_id}
-            relatedEntity={ev.relatedEntity}
-          />
+          <RelatedIds binderId={ev.binder_id} chargeId={ev.charge_id} relatedEntity={ev.relatedEntity} />
 
           {/* Metadata */}
           {ev.metadata && <EventMetadata metadata={ev.metadata} eventType={ev.event_type} />}

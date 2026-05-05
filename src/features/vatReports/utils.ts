@@ -16,8 +16,7 @@ export const canAddInvoice = (actions: BackendAction[] | null | undefined): bool
 export const canMarkReadyForReview = (actions: BackendAction[] | null | undefined): boolean =>
   hasVatAction(actions, 'ready_for_review')
 
-export const canSendBack = (actions: BackendAction[] | null | undefined): boolean =>
-  hasVatAction(actions, 'send_back')
+export const canSendBack = (actions: BackendAction[] | null | undefined): boolean => hasVatAction(actions, 'send_back')
 
 export const canFile = (actions: BackendAction[] | null | undefined): boolean =>
   hasVatAction(actions, 'file_vat_return')
@@ -62,9 +61,7 @@ export const toDateInputValue = (dateStr: string): string => {
 export const getVatCategoryLabel = (category: string | null): string =>
   CATEGORY_LABELS[category ?? ''] ?? category ?? 'כללי'
 
-export const getVatInvoiceDefaultValues = (
-  invoiceType: 'income' | 'expense',
-): VatInvoiceRowValues => ({
+export const getVatInvoiceDefaultValues = (invoiceType: 'income' | 'expense'): VatInvoiceRowValues => ({
   invoice_type: invoiceType,
   net_amount: '',
   expense_category: invoiceType === 'expense' ? EXPENSE_CATEGORIES[0] : undefined,

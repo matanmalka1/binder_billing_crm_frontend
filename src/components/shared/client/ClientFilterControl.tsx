@@ -21,12 +21,7 @@ export const ClientFilterControl: React.FC<ClientFilterControlProps> = ({
 }) => (
   <div>
     {selectedClient ? (
-      <SelectedClientDisplay
-        name={selectedClient.name}
-        id={selectedClient.id}
-        onClear={onClear}
-        label={label}
-      />
+      <SelectedClientDisplay name={selectedClient.name} id={selectedClient.id} onClear={onClear} label={label} />
     ) : (
       <ClientSearchInput
         label={label}

@@ -8,11 +8,7 @@ export interface TableSkeletonProps {
   className?: string
 }
 
-export const TableSkeleton: React.FC<TableSkeletonProps> = ({
-  rows = 5,
-  columns = 6,
-  className,
-}) => (
+export const TableSkeleton: React.FC<TableSkeletonProps> = ({ rows = 5, columns = 6, className }) => (
   <Card className={className} variant="elevated">
     <div className="overflow-x-auto">
       <table className="w-full">

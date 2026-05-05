@@ -14,14 +14,8 @@ import { formatDate, formatPlainIdentifier, formatShekelAmount } from '@/utils/u
 import type { ClientEditFormValues } from '../../schemas'
 
 type EntityTypeField = ControllerRenderProps<ClientEditFormValues, 'entity_type'>
-type VatReportingFrequencyField = ControllerRenderProps<
-  ClientEditFormValues,
-  'vat_reporting_frequency'
->
-type AdvancePaymentFrequencyField = ControllerRenderProps<
-  ClientEditFormValues,
-  'advance_payment_frequency'
->
+type VatReportingFrequencyField = ControllerRenderProps<ClientEditFormValues, 'vat_reporting_frequency'>
+type AdvancePaymentFrequencyField = ControllerRenderProps<ClientEditFormValues, 'advance_payment_frequency'>
 type StatusField = ControllerRenderProps<ClientEditFormValues, 'status'>
 type AccountantIdField = ControllerRenderProps<ClientEditFormValues, 'accountant_id'>
 
@@ -35,9 +29,7 @@ type SharedSectionProps = {
 const ReadonlyField = ({ label, value, help }: { label: string; value: string; help?: string }) => (
   <div className="space-y-1">
     <p className="text-xs font-medium text-gray-500">{label}</p>
-    <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500">
-      {value}
-    </p>
+    <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500">{value}</p>
     {help ? <p className="text-xs text-gray-500">{help}</p> : null}
   </div>
 )
@@ -54,12 +46,7 @@ export const ClientIdentitySection = ({
   <section className="space-y-4">
     <h3 className="text-lg font-semibold text-gray-900">זהות משפטית</h3>
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <Input
-        label="שם מלא *"
-        error={errors.full_name?.message}
-        disabled={isLoading}
-        {...register('full_name')}
-      />
+      <Input label="שם מלא *" error={errors.full_name?.message} disabled={isLoading} {...register('full_name')} />
       <Select
         label="סוג ישות"
         disabled={isLoading}
@@ -79,9 +66,7 @@ export const ClientIdentitySection = ({
       />
       <ReadonlyField
         label="סוג מזהה"
-        value={
-          client.id_number_type ? CLIENT_ID_NUMBER_TYPE_LABELS[client.id_number_type] : 'לא הוגדר'
-        }
+        value={client.id_number_type ? CLIENT_ID_NUMBER_TYPE_LABELS[client.id_number_type] : 'לא הוגדר'}
         help="שינוי סוג מזהה דורש תיקון רשומה."
       />
     </div>
@@ -217,9 +202,7 @@ export const ClientTaxProfileSection = ({
         />
         <ReadonlyField
           label="תאריך עדכון מקדמה"
-          value={
-            client.advance_rate_updated_at ? formatDate(client.advance_rate_updated_at) : 'לא זמין'
-          }
+          value={client.advance_rate_updated_at ? formatDate(client.advance_rate_updated_at) : 'לא זמין'}
           help="מתעדכן רק כשקיים מקור עדכון במערכת."
         />
         <Input
@@ -275,10 +258,7 @@ export const ClientOfficeSection = ({
         label="רואה חשבון מלווה"
         error={errors.accountant_id?.message}
         disabled={isLoading || advisorsLoading}
-        options={[
-          { value: '', label: advisorsLoading ? 'טוען רואי חשבון...' : 'לא הוגדר' },
-          ...advisorOptions,
-        ]}
+        options={[{ value: '', label: advisorsLoading ? 'טוען רואי חשבון...' : 'לא הוגדר' }, ...advisorOptions]}
         value={accountantIdField.value ?? ''}
         onChange={accountantIdField.onChange}
         onBlur={accountantIdField.onBlur}

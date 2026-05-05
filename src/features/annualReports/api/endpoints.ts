@@ -6,8 +6,7 @@ export const ANNUAL_REPORT_ENDPOINTS = {
   annualReportTransitionStatus: (id: number | string) => `/annual-reports/${id}/status`,
   annualReportDeadline: (id: number | string) => `/annual-reports/${id}/deadline`,
   annualReportSchedules: (id: number | string) => `/annual-reports/${id}/schedules`,
-  annualReportSchedulesComplete: (id: number | string) =>
-    `/annual-reports/${id}/schedules/complete`,
+  annualReportSchedulesComplete: (id: number | string) => `/annual-reports/${id}/schedules/complete`,
   annualReportHistory: (id: number | string) => `/annual-reports/${id}/history`,
   annualReportDetails: (id: number | string) => `/annual-reports/${id}/details`,
   annualReportAmend: (id: number | string) => `/annual-reports/${id}/amend`,
@@ -17,13 +16,10 @@ export const ANNUAL_REPORT_ENDPOINTS = {
   annualReportTaxCalculation: (id: number | string) => `/annual-reports/${id}/tax-calculation`,
   annualReportAdvancesSummary: (id: number | string) => `/annual-reports/${id}/advances-summary`,
   annualReportIncome: (id: number | string) => `/annual-reports/${id}/income`,
-  annualReportIncomeById: (id: number | string, lineId: number | string) =>
-    `/annual-reports/${id}/income/${lineId}`,
+  annualReportIncomeById: (id: number | string, lineId: number | string) => `/annual-reports/${id}/income/${lineId}`,
   annualReportExpenses: (id: number | string) => `/annual-reports/${id}/expenses`,
-  annualReportExpenseById: (id: number | string, lineId: number | string) =>
-    `/annual-reports/${id}/expenses/${lineId}`,
-  annualReportAnnex: (id: number | string, schedule: string) =>
-    `/annual-reports/${id}/annex/${schedule}`,
+  annualReportExpenseById: (id: number | string, lineId: number | string) => `/annual-reports/${id}/expenses/${lineId}`,
+  annualReportAnnex: (id: number | string, schedule: string) => `/annual-reports/${id}/annex/${schedule}`,
   annualReportAnnexLine: (id: number | string, schedule: string, lineId: number | string) =>
     `/annual-reports/${id}/annex/${schedule}/${lineId}`,
   annualReportOverdue: '/annual-reports/overdue',

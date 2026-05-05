@@ -49,9 +49,7 @@ export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
       </TD>
       <TD>
         {inv.document_type ? (
-          <Badge variant="neutral">
-            {DOCUMENT_TYPE_LABELS[inv.document_type] ?? inv.document_type}
-          </Badge>
+          <Badge variant="neutral">{DOCUMENT_TYPE_LABELS[inv.document_type] ?? inv.document_type}</Badge>
         ) : (
           '—'
         )}
@@ -68,9 +66,7 @@ export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
           <span className="inline-flex items-center gap-1.5">
             <span className={`h-2 w-2 rounded-full ${catColor || 'bg-gray-300'}`} />
             <span className="text-xs text-gray-600">
-              {inv.expense_category
-                ? (CATEGORY_LABELS[inv.expense_category] ?? inv.expense_category)
-                : '—'}
+              {inv.expense_category ? (CATEGORY_LABELS[inv.expense_category] ?? inv.expense_category) : '—'}
             </span>
           </span>
         </TD>
@@ -88,18 +84,11 @@ export const VatInvoiceRow: React.FC<VatInvoiceRowProps> = ({
         </TD>
       )}
       <TD className="font-mono text-xs text-gray-400">#{inv.created_by}</TD>
-      <TD className="whitespace-nowrap text-xs tabular-nums text-gray-400">
-        {formatDateTime(inv.created_at)}
-      </TD>
+      <TD className="whitespace-nowrap text-xs tabular-nums text-gray-400">{formatDateTime(inv.created_at)}</TD>
       {canEdit && (
         <td className="px-2 py-2">
           <RowActionsMenu ariaLabel={`פעולות לחשבונית ${inv.id}`}>
-            <RowActionItem
-              label="עריכה"
-              onClick={onEdit}
-              disabled={editingAny}
-              icon={<Pencil className="h-4 w-4" />}
-            />
+            <RowActionItem label="עריכה" onClick={onEdit} disabled={editingAny} icon={<Pencil className="h-4 w-4" />} />
             <RowActionSeparator />
             <RowActionItem
               label="מחק"

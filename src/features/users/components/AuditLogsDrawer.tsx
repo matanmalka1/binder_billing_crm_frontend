@@ -60,21 +60,14 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({ open, onClose 
 
       {isError && <p className="text-sm text-negative-600">שגיאה בטעינת לוג הביקורת</p>}
 
-      {!isPending && !isError && logs.length === 0 && (
-        <p className="text-sm text-gray-500">אין רשומות להצגה</p>
-      )}
+      {!isPending && !isError && logs.length === 0 && <p className="text-sm text-gray-500">אין רשומות להצגה</p>}
 
       {!isPending && !isError && logs.length > 0 && (
         <div className="space-y-3">
           {logs.map((log) => (
-            <div
-              key={log.id}
-              className="rounded-lg border border-gray-100 bg-gray-50 p-3 space-y-1"
-            >
+            <div key={log.id} className="rounded-lg border border-gray-100 bg-gray-50 p-3 space-y-1">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-medium text-gray-800">
-                  {auditActionLabel[log.action] ?? log.action}
-                </span>
+                <span className="text-sm font-medium text-gray-800">{auditActionLabel[log.action] ?? log.action}</span>
                 <Badge variant={log.status === 'success' ? 'success' : 'error'}>
                   {log.status === 'success' ? 'הצלחה' : 'כישלון'}
                 </Badge>
@@ -86,12 +79,7 @@ export const AuditLogsDrawer: React.FC<AuditLogsDrawerProps> = ({ open, onClose 
           ))}
 
           {hasMore && (
-            <Button
-              variant="outline"
-              fullWidth
-              onClick={() => setPage((p) => p + 1)}
-              disabled={isPending}
-            >
+            <Button variant="outline" fullWidth onClick={() => setPage((p) => p + 1)} disabled={isPending}>
               טען עוד ({total - page * PAGE_SIZE} נותרו)
             </Button>
           )}

@@ -29,18 +29,11 @@ type ClientInfoSectionProps = {
 
 const EMPTY_VALUE = '—'
 
-export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
-  client,
-  taxYear,
-  onTaxYearChange,
-  sideContent,
-}) => {
+export const ClientInfoSection: FC<ClientInfoSectionProps> = ({ client, taxYear, onTaxYearChange, sideContent }) => {
   const { nameById } = useAdvisorOptions()
   const { officeByType } = useClientAuthorityContacts(client.id, client.address_city)
 
-  const idNumberTypeLabel = client.id_number_type
-    ? getClientIdNumberTypeLabel(client.id_number_type)
-    : EMPTY_VALUE
+  const idNumberTypeLabel = client.id_number_type ? getClientIdNumberTypeLabel(client.id_number_type) : EMPTY_VALUE
 
   const identityItems = [
     { label: 'שם מלא / שם משפטי', value: client.full_name },
@@ -107,22 +100,19 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
     },
     {
       label: `מחזור שנתי (${taxYear})`,
-      value: !client.annual_turnover || client.annual_turnover.source === 'none'
-        ? EMPTY_VALUE
-        : (
+      value:
+        !client.annual_turnover || client.annual_turnover.source === 'none' ? (
+          EMPTY_VALUE
+        ) : (
           <span className="flex items-center gap-1.5">
             {formatShekelAmount(client.annual_turnover.amount)}
-            <span className="text-xs text-gray-400">
-              ({TURNOVER_SOURCE_LABELS[client.annual_turnover.source]})
-            </span>
+            <span className="text-xs text-gray-400">({TURNOVER_SOURCE_LABELS[client.annual_turnover.source]})</span>
           </span>
         ),
     },
     {
       label: 'עדכון מקדמה',
-      value: client.advance_rate_updated_at
-        ? formatDate(client.advance_rate_updated_at)
-        : EMPTY_VALUE,
+      value: client.advance_rate_updated_at ? formatDate(client.advance_rate_updated_at) : EMPTY_VALUE,
     },
     { label: 'סניף מע"מ', value: officeByType('vat_branch') ?? EMPTY_VALUE },
     { label: 'סניף ביטוח לאומי', value: officeByType('national_insurance') ?? EMPTY_VALUE },
@@ -138,9 +128,7 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
     { label: 'סטטוס לקוח', value: getClientStatusLabel(client.status) },
     {
       label: 'רואה חשבון מלווה',
-      value: client.accountant_id
-        ? (nameById.get(client.accountant_id) ?? 'לא נמצא שם משתמש')
-        : EMPTY_VALUE,
+      value: client.accountant_id ? (nameById.get(client.accountant_id) ?? 'לא נמצא שם משתמש') : EMPTY_VALUE,
     },
     { label: 'נוצר בתאריך', value: formatDate(client.created_at) },
     {
@@ -171,7 +159,9 @@ export const ClientInfoSection: FC<ClientInfoSectionProps> = ({
                   className="rounded border border-gray-200 bg-white px-2 py-0.5 text-sm text-gray-700 focus:outline-none"
                 >
                   {YEAR_OPTIONS.map((y) => (
-                    <option key={y} value={y}>{y}</option>
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
                   ))}
                 </select>
               </div>

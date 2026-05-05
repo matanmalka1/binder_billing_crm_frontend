@@ -6,14 +6,7 @@ import { PaginationCard } from './PaginationCard'
 
 type BasePaginatedDataTableProps<T> = Pick<
   DataTableProps<T>,
-  | 'className'
-  | 'columns'
-  | 'data'
-  | 'emptyMessage'
-  | 'emptyState'
-  | 'getRowKey'
-  | 'onRowClick'
-  | 'rowClassName'
+  'className' | 'columns' | 'data' | 'emptyMessage' | 'emptyState' | 'getRowKey' | 'onRowClick' | 'rowClassName'
 >
 
 export interface PaginatedDataTableProps<T> extends BasePaginatedDataTableProps<T> {

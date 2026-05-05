@@ -1,10 +1,6 @@
 import { formatCurrencyILS as fmt } from '@/utils/utils'
 import { semanticMonoToneClasses } from '@/utils/semanticColors'
-import {
-  CREDIT_POINT_VALUE_BY_YEAR,
-  DEFAULT_CREDIT_POINT_VALUE,
-  PENSION_DEDUCTION_RATE,
-} from './constants'
+import { CREDIT_POINT_VALUE_BY_YEAR, DEFAULT_CREDIT_POINT_VALUE, PENSION_DEDUCTION_RATE } from './constants'
 import type { AnnualReportFull } from '../../api'
 
 export interface CreditRow {
@@ -19,11 +15,7 @@ export const toTaxInputValues = (detail: AnnualReportFull | undefined) => ({
   otherCredits: detail?.other_credits != null ? String(detail.other_credits) : '',
 })
 
-export const toReportDetailsPayload = (
-  creditPoints: string,
-  pension: string,
-  otherCredits: string,
-) => ({
+export const toReportDetailsPayload = (creditPoints: string, pension: string, otherCredits: string) => ({
   credit_points: creditPoints !== '' ? Number(creditPoints) : undefined,
   pension_contribution: pension !== '' ? pension : undefined,
   other_credits: otherCredits !== '' ? otherCredits : undefined,
@@ -41,8 +33,7 @@ export const getTotalCredits = (data: {
   credit_points_value: string | number
   donation_credit: string | number
   other_credits?: string | number | null
-}) =>
-  Number(data.credit_points_value) + Number(data.donation_credit) + Number(data.other_credits ?? 0)
+}) => Number(data.credit_points_value) + Number(data.donation_credit) + Number(data.other_credits ?? 0)
 
 export const getLiabilityTone = (liability: number | null) => {
   if (liability === null) return ''

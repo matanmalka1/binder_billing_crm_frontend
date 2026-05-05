@@ -4,12 +4,7 @@ interface ClientPickerFieldProps {
   selectedClient: { id: number; name: string } | null
   clientQuery: string
   onQueryChange: (query: string) => void
-  onSelect: (client: {
-    id: number
-    name: string
-    id_number: string
-    client_status?: string | null
-  }) => void
+  onSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void
   onClear: () => void
   error?: string
   label?: string
@@ -27,12 +22,7 @@ export const ClientPickerField: React.FC<ClientPickerFieldProps> = ({
   placeholder = 'חפש לפי שם, ת"ז / ח.פ...',
 }) =>
   selectedClient ? (
-    <SelectedClientDisplay
-      name={selectedClient.name}
-      id={selectedClient.id}
-      onClear={onClear}
-      label={label}
-    />
+    <SelectedClientDisplay name={selectedClient.name} id={selectedClient.id} onClear={onClear} label={label} />
   ) : (
     <ClientSearchInput
       label={label}

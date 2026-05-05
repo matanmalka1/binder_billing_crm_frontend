@@ -93,8 +93,7 @@ export const DatePickerCalendar: React.FC<DatePickerCalendarProps> = ({
               'w-9 h-9 rounded-lg text-sm font-normal transition-colors',
               'hover:bg-primary-50 hover:text-primary-700',
             ),
-            selected:
-              '[&>button]:bg-primary-600 [&>button]:text-white [&>button]:hover:bg-primary-700',
+            selected: '[&>button]:bg-primary-600 [&>button]:text-white [&>button]:hover:bg-primary-700',
             today: '[&>button]:font-semibold [&>button]:text-primary-600',
             outside: 'opacity-30',
             disabled: 'opacity-30 cursor-not-allowed',

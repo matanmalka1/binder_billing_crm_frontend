@@ -17,11 +17,7 @@ export const daysUntil = (dateStr: string | null): number | null => {
   return differenceInCalendarDays(parseISO(dateStr), new Date())
 }
 
-type FlagFieldName =
-  | 'has_rental_income'
-  | 'has_capital_gains'
-  | 'has_foreign_income'
-  | 'has_depreciation'
+type FlagFieldName = 'has_rental_income' | 'has_capital_gains' | 'has_foreign_income' | 'has_depreciation'
 
 export const FLAG_FIELDS: { name: FlagFieldName; label: string }[] = [
   { name: 'has_rental_income', label: 'הכנסת שכירות (נספח ב)' },

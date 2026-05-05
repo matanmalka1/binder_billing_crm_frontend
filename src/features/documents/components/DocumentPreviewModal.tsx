@@ -41,18 +41,10 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
       {!url ? (
         <div className="flex items-center justify-center py-16 text-sm text-gray-400">טוען...</div>
       ) : isPdf ? (
-        <iframe
-          src={url}
-          className="h-[70vh] w-full rounded border border-gray-100"
-          title={filename ?? 'document'}
-        />
+        <iframe src={url} className="h-[70vh] w-full rounded border border-gray-100" title={filename ?? 'document'} />
       ) : isImage ? (
         <div className="flex justify-center">
-          <img
-            src={url}
-            alt={filename ?? 'document'}
-            className="max-h-[70vh] max-w-full object-contain rounded"
-          />
+          <img src={url} alt={filename ?? 'document'} className="max-h-[70vh] max-w-full object-contain rounded" />
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center gap-4 py-16 text-sm text-gray-500">

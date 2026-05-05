@@ -26,10 +26,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ label, count, pct, color }) =
       </span>
     </div>
     <div className="h-2 overflow-hidden rounded-full bg-gray-100">
-      <div
-        className={cn('h-full rounded-full transition-all', color)}
-        style={{ width: `${pct}%` }}
-      />
+      <div className={cn('h-full rounded-full transition-all', color)} style={{ width: `${pct}%` }} />
     </div>
   </div>
 )

@@ -18,10 +18,7 @@ import { CLIENT_ROUTES } from '../../api/endpoints'
 import { formatDate } from '@/utils/utils'
 import { useBusinessActions } from '../../hooks/useBusinessActions'
 
-const BUSINESS_STATUS_VARIANTS: Record<
-  BusinessResponse['status'],
-  'success' | 'warning' | 'neutral'
-> = {
+const BUSINESS_STATUS_VARIANTS: Record<BusinessResponse['status'], 'success' | 'warning' | 'neutral'> = {
   active: 'success',
   frozen: 'warning',
   closed: 'neutral',
@@ -79,11 +76,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
     setEditState(null)
   }
 
-  const updateBusinessStatus = (
-    businessId: number,
-    status: BusinessResponse['status'],
-    closedAt?: string,
-  ) =>
+  const updateBusinessStatus = (businessId: number, status: BusinessResponse['status'], closedAt?: string) =>
     updateBusiness(businessId, {
       status,
       closed_at: status === 'closed' ? (closedAt ?? new Date().toISOString().slice(0, 10)) : null,
@@ -96,13 +89,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
         className="shadow-none"
         actions={
           canEdit ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={onAddBusiness}
-              className="gap-2"
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={onAddBusiness} className="gap-2">
               <Plus className="h-4 w-4" />
               הוסף עסק
             </Button>
@@ -123,18 +110,12 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                     className="flex min-w-0 items-center justify-between gap-4"
                   >
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-gray-900">
-                        {biz.business_name ?? 'לא הוגדר'}
-                      </p>
-                      <p className="mt-1 text-xs font-medium text-gray-500">
-                        נפתח בתאריך {formatDate(biz.opened_at)}
-                      </p>
+                      <p className="truncate text-sm font-medium text-gray-900">{biz.business_name ?? 'לא הוגדר'}</p>
+                      <p className="mt-1 text-xs font-medium text-gray-500">נפתח בתאריך {formatDate(biz.opened_at)}</p>
                     </div>
                     <StatusBadge
                       status={biz.status}
-                      getLabel={(s) =>
-                        BUSINESS_STATUS_LABELS[s as keyof typeof BUSINESS_STATUS_LABELS] ?? s
-                      }
+                      getLabel={(s) => BUSINESS_STATUS_LABELS[s as keyof typeof BUSINESS_STATUS_LABELS] ?? s}
                       variantMap={BUSINESS_STATUS_VARIANTS}
                     />
                   </Link>
@@ -142,11 +123,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
 
                 {canEdit && (
                   <RowActionsMenu ariaLabel={`פעולות לעסק ${biz.business_name ?? biz.id}`}>
-                    <RowActionItem
-                      label="עריכה"
-                      icon={<Pencil className="h-4 w-4" />}
-                      onClick={() => openEdit(biz)}
-                    />
+                    <RowActionItem label="עריכה" icon={<Pencil className="h-4 w-4" />} onClick={() => openEdit(biz)} />
                     {biz.status !== 'active' && (
                       <RowActionItem
                         label="העבר לפעיל"
@@ -214,9 +191,7 @@ export const ClientBusinessesCard: React.FC<Props> = ({ clientId, canEdit, onAdd
                         ...s,
                         status: e.target.value as BusinessResponse['status'],
                         closedAt:
-                          e.target.value === 'closed'
-                            ? s.closedAt || new Date().toISOString().slice(0, 10)
-                            : '',
+                          e.target.value === 'closed' ? s.closedAt || new Date().toISOString().slice(0, 10) : '',
                       }
                     : s,
                 )

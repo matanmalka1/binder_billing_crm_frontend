@@ -85,12 +85,7 @@ export const DashboardSectionHeader = ({
   <div className={cn('flex items-center justify-between gap-4', className)}>
     <div className="flex min-w-0 items-center gap-3">
       {Icon && (
-        <span
-          className={cn(
-            'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl',
-            toneClasses[tone].icon,
-          )}
-        >
+        <span className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-xl', toneClasses[tone].icon)}>
           <Icon className="h-4 w-4" />
         </span>
       )}
@@ -121,12 +116,7 @@ interface DashboardPanelProps {
 }
 
 export const DashboardPanel = ({ children, className }: DashboardPanelProps) => (
-  <section
-    className={cn(
-      'overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm',
-      className,
-    )}
-  >
+  <section className={cn('overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm', className)}>
     {children}
   </section>
 )
@@ -164,13 +154,9 @@ export const DashboardMetricCard = ({
     )}
   >
     <div>
-      {eyebrow && (
-        <p className="mb-0.5 truncate text-[10px] font-semibold text-gray-400">{eyebrow}</p>
-      )}
+      {eyebrow && <p className="mb-0.5 truncate text-[10px] font-semibold text-gray-400">{eyebrow}</p>}
       <h3 className="mb-2 truncate text-sm font-bold text-slate-600">{title}</h3>
-      <p className={cn('text-xl font-bold tabular-nums', urgent ? 'text-red-600' : 'text-primary')}>
-        {value}
-      </p>
+      <p className={cn('text-xl font-bold tabular-nums', urgent ? 'text-red-600' : 'text-primary')}>{value}</p>
       <p className="mt-1 line-clamp-2 text-xs text-slate-500">{description}</p>
     </div>
     <div className="space-y-1.5">
@@ -204,12 +190,7 @@ interface DashboardBadgeProps {
   className?: string
 }
 
-export const DashboardBadge = ({
-  children,
-  tone = 'neutral',
-  strong,
-  className,
-}: DashboardBadgeProps) => (
+export const DashboardBadge = ({ children, tone = 'neutral', strong, className }: DashboardBadgeProps) => (
   <span
     className={cn(
       'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold',
@@ -236,9 +217,7 @@ export const DashboardEmptyState = ({
   icon: Icon = Inbox,
   className,
 }: DashboardEmptyStateProps) => (
-  <div
-    className={cn('flex flex-col items-center justify-center gap-2 py-10 text-center', className)}
-  >
+  <div className={cn('flex flex-col items-center justify-center gap-2 py-10 text-center', className)}>
     <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
       <Icon className="h-5 w-5" />
     </span>

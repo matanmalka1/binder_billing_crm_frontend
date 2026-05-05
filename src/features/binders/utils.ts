@@ -1,8 +1,7 @@
 import { MONTH_NAMES } from '@/utils/utils'
 import type { BinderResponse } from './types'
 
-export const canMarkReady = (status: string): boolean =>
-  status === 'in_office' || status === 'closed_in_office'
+export const canMarkReady = (status: string): boolean => status === 'in_office' || status === 'closed_in_office'
 
 export const canRevertReady = (status: string): boolean => status === 'ready_for_pickup'
 

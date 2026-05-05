@@ -10,12 +10,7 @@ interface AuthorityContactRowProps {
   onDelete: (id: number) => void
 }
 
-export const AuthorityContactRow: React.FC<AuthorityContactRowProps> = ({
-  contact,
-  isDeleting,
-  onEdit,
-  onDelete,
-}) => (
+export const AuthorityContactRow: React.FC<AuthorityContactRowProps> = ({ contact, isDeleting, onEdit, onDelete }) => (
   <div className="flex items-start justify-between gap-4 rounded-lg border border-gray-200 p-4 hover:bg-gray-50 transition-colors">
     <div className="flex-1 space-y-1.5">
       <div className="flex items-center gap-2">
@@ -44,11 +39,7 @@ export const AuthorityContactRow: React.FC<AuthorityContactRowProps> = ({
         )}
       </div>
 
-      {contact.notes && (
-        <p className="mt-1.5 border-t border-gray-100 pt-1.5 text-sm text-gray-500">
-          {contact.notes}
-        </p>
-      )}
+      {contact.notes && <p className="mt-1.5 border-t border-gray-100 pt-1.5 text-sm text-gray-500">{contact.notes}</p>}
     </div>
 
     <div className="flex shrink-0 gap-1">

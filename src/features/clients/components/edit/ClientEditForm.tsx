@@ -6,10 +6,7 @@ import { ConfirmDialog } from '../../../../components/ui/overlays/ConfirmDialog'
 import type { ClientResponse, UpdateClientPayload } from '../../api'
 import { clientEditSchema, type ClientEditFormValues } from '../../schemas'
 import { buildClientEditImpactMessage } from '../../utils/clientEditImpact'
-import {
-  buildClientUpdatePayload,
-  hasClientUpdatePayload,
-} from '../../utils/buildClientUpdatePayload'
+import { buildClientUpdatePayload, hasClientUpdatePayload } from '../../utils/buildClientUpdatePayload'
 import {
   ClientContactSection,
   ClientIdentitySection,
@@ -99,12 +96,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
     const payload = buildClientUpdatePayload(data, dirtyFields)
     if (!hasClientUpdatePayload(payload)) return
 
-    const msg = buildClientEditImpactMessage(
-      client.status,
-      data.status,
-      client.entity_type,
-      data.entity_type,
-    )
+    const msg = buildClientEditImpactMessage(client.status, data.status, client.entity_type, data.entity_type)
     if (msg) {
       setPendingData(payload)
       setImpactMessage(msg)
@@ -146,12 +138,7 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
           register={register}
           entityTypeField={entityTypeField}
         />
-        <ClientContactSection
-          client={client}
-          errors={errors}
-          isLoading={isLoading}
-          register={register}
-        />
+        <ClientContactSection client={client} errors={errors} isLoading={isLoading} register={register} />
         <ClientTaxProfileSection
           client={client}
           errors={errors}
@@ -176,19 +163,12 @@ export const ClientEditForm: React.FC<ClientEditFormProps> = ({
               <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
                 ביטול
               </Button>
-              <Button
-                type="submit"
-                variant="primary"
-                isLoading={isLoading}
-                disabled={isLoading || !isDirty}
-              >
+              <Button type="submit" variant="primary" isLoading={isLoading} disabled={isLoading || !isDirty}>
                 שמור שינויים
               </Button>
             </div>
 
-            {!isDirty && (
-              <p className="text-center text-sm text-gray-500">לא בוצעו שינויים בטופס</p>
-            )}
+            {!isDirty && <p className="text-center text-sm text-gray-500">לא בוצעו שינויים בטופס</p>}
           </>
         )}
       </form>

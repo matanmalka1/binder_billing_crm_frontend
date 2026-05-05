@@ -25,11 +25,7 @@ export const SearchRowActions: React.FC<SearchRowActionsProps> = ({ result }) =>
 
   return (
     <RowActionsMenu ariaLabel="פעולות">
-      <RowActionItem
-        label="פירוט"
-        onClick={() => navigate(url)}
-        icon={<ExternalLink className="h-4 w-4" />}
-      />
+      <RowActionItem label="פירוט" onClick={() => navigate(url)} icon={<ExternalLink className="h-4 w-4" />} />
     </RowActionsMenu>
   )
 }

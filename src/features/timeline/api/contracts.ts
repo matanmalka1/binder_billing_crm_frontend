@@ -6,10 +6,7 @@ export type TimelineBinderStatus = 'none' | 'in_office' | 'ready_for_pickup' | '
 
 export type TimelineNotificationChannel = 'whatsapp' | 'email' | 'sms'
 
-export type TimelineNotificationTrigger =
-  | 'binder_received'
-  | 'binder_ready_for_pickup'
-  | 'manual_payment_reminder'
+export type TimelineNotificationTrigger = 'binder_received' | 'binder_ready_for_pickup' | 'manual_payment_reminder'
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 

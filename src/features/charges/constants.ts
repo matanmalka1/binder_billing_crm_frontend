@@ -41,9 +41,9 @@ export const CHARGE_STATUS_OPTIONS: { value: string; label: string }[] = [
   })),
 ]
 
-export const CHARGE_TYPE_OPTIONS: { value: string; label: string }[] = Object.entries(
-  CHARGE_TYPE_LABELS,
-).map(([value, label]) => ({ value, label }))
+export const CHARGE_TYPE_OPTIONS: { value: string; label: string }[] = Object.entries(CHARGE_TYPE_LABELS).map(
+  ([value, label]) => ({ value, label }),
+)
 
 export const CHARGE_TYPE_OPTIONS_WITH_ALL: { value: string; label: string }[] = [
   ALL_TYPES_OPTION,

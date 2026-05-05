@@ -24,9 +24,7 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, businessId, can
   const [auditRequestId, setAuditRequestId] = useState<number | null>(null)
 
   const { items, total, isLoading, error } = useClientSignatureRequests({ clientId: client.id })
-  const { create, isCreating, send, isSending, cancel, isCanceling } = useSignatureRequestActions(
-    client.id,
-  )
+  const { create, isCreating, send, isSending, cancel, isCanceling } = useSignatureRequestActions(client.id)
   const { signingUrls, handleSend } = useSignatureRequestSigningUrls(send)
 
   return (
@@ -57,11 +55,7 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, businessId, can
             <StateCard
               icon={FileSignature}
               message="אין בקשות חתימה עבור לקוח זה"
-              action={
-                canManage
-                  ? { label: 'יצירת בקשה ראשונה', onClick: () => setShowCreate(true) }
-                  : undefined
-              }
+              action={canManage ? { label: 'יצירת בקשה ראשונה', onClick: () => setShowCreate(true) } : undefined}
               size="compact"
             />
           )}
@@ -86,10 +80,7 @@ export const SignatureRequestsCard: React.FC<Props> = ({ client, businessId, can
         </div>
       </Card>
 
-      <SignatureRequestAuditDrawer
-        requestId={auditRequestId}
-        onClose={() => setAuditRequestId(null)}
-      />
+      <SignatureRequestAuditDrawer requestId={auditRequestId} onClose={() => setAuditRequestId(null)} />
 
       <CreateSignatureRequestModal
         open={showCreate}

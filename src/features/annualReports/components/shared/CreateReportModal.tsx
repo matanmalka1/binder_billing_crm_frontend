@@ -1,9 +1,5 @@
 import { useEffect } from 'react'
-import {
-  ClientPickerField,
-  createClientIdPickerHandlers,
-  useClientPickerState,
-} from '@/components/shared/client'
+import { ClientPickerField, createClientIdPickerHandlers, useClientPickerState } from '@/components/shared/client'
 import { Input, Textarea } from '@/components/ui/inputs'
 import { Modal, ModalFormActions } from '@/components/ui/overlays'
 import { useCreateReport } from '../../hooks/useCreateReport'
@@ -14,12 +10,7 @@ import {
   EXTENSION_REASON_OPTIONS,
   TAX_YEAR_LIMITS,
 } from './annualReports.constants'
-import {
-  FinancialFields,
-  RequiredAppendices,
-  SelectOptions,
-  TaxPreview,
-} from './CreateReportModalParts'
+import { FinancialFields, RequiredAppendices, SelectOptions, TaxPreview } from './CreateReportModalParts'
 
 interface CreateReportModalProps {
   open: boolean
@@ -41,9 +32,7 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
     handleClearClient,
     handleClientQueryChange,
     resetClientPicker,
-  } = useClientPickerState(
-    createClientIdPickerHandlers((value, options) => setValue('client_id', value, options)),
-  )
+  } = useClientPickerState(createClientIdPickerHandlers((value, options) => setValue('client_id', value, options)))
 
   useEffect(() => {
     if (open) return
@@ -63,12 +52,7 @@ export const CreateReportModal: React.FC<CreateReportModalProps> = ({ open, onCl
       title="דוח שנתי חדש"
       onClose={handleClose}
       footer={
-        <ModalFormActions
-          onCancel={handleClose}
-          onSubmit={onSubmit}
-          isLoading={isSubmitting}
-          submitLabel="צור דוח"
-        />
+        <ModalFormActions onCancel={handleClose} onSubmit={onSubmit} isLoading={isSubmitting} submitLabel="צור דוח" />
       }
     >
       <form onSubmit={onSubmit} className="space-y-4">

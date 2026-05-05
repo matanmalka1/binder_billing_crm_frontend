@@ -6,11 +6,7 @@ import { FormField } from '../../../components/ui/inputs/FormField'
 import { Input } from '../../../components/ui/inputs/Input'
 import { SelectDropdown } from '../../../components/ui/inputs/SelectDropdown'
 import { DatePicker } from '../../../components/ui/inputs/DatePicker'
-import {
-  vatInvoiceRowSchema,
-  toInvoiceRowPayload,
-  type VatInvoiceRowValues,
-} from '../schemas/invoice.schema'
+import { vatInvoiceRowSchema, toInvoiceRowPayload, type VatInvoiceRowValues } from '../schemas/invoice.schema'
 import {
   DEFAULT_RATE_TYPE,
   DOCUMENT_TYPE_OPTIONS,
@@ -19,11 +15,7 @@ import {
 } from '../constants'
 import { getVatInvoiceDefaultValues } from '../utils'
 import type { VatInvoiceAddFormProps } from '../types'
-import {
-  blockNonNumericKey,
-  getDeductionRateHint,
-  shouldRequireCounterpartyId,
-} from '../view.helpers'
+import { blockNonNumericKey, getDeductionRateHint, shouldRequireCounterpartyId } from '../view.helpers'
 
 export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
   invoiceType,
@@ -77,21 +69,12 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
         </FormField>
 
         {/* Required: date */}
-        <FormField
-          label="תאריך חשבונית"
-          error={errors.invoice_date?.message}
-          className="w-36 shrink-0"
-        >
+        <FormField label="תאריך חשבונית" error={errors.invoice_date?.message} className="w-36 shrink-0">
           <Controller
             control={control}
             name="invoice_date"
             render={({ field }) => (
-              <DatePicker
-                value={field.value}
-                onChange={field.onChange}
-                onBlur={field.onBlur}
-                noWrapper
-              />
+              <DatePicker value={field.value} onChange={field.onChange} onBlur={field.onBlur} noWrapper />
             )}
           />
         </FormField>
@@ -115,11 +98,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 
         {/* Expense-only: category */}
         {isExpense && (
-          <FormField
-            label="קטגוריה"
-            error={errors.expense_category?.message}
-            className="w-44 shrink-0"
-          >
+          <FormField label="קטגוריה" error={errors.expense_category?.message} className="w-44 shrink-0">
             <Controller
               control={control}
               name="expense_category"
@@ -138,11 +117,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 
         {/* Expense-only: document type */}
         {isExpense && (
-          <FormField
-            label="סוג מסמך"
-            error={errors.document_type?.message}
-            className="w-40 shrink-0"
-          >
+          <FormField label="סוג מסמך" error={errors.document_type?.message} className="w-40 shrink-0">
             <Controller
               control={control}
               name="document_type"
@@ -171,11 +146,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
 
         {/* Conditional: counterparty ID (tax invoice expense only) */}
         {requiresCounterpartyId && (
-          <FormField
-            label="מספר עוסק של הספק"
-            error={errors.counterparty_id?.message}
-            className="w-36 shrink-0"
-          >
+          <FormField label="מספר עוסק של הספק" error={errors.counterparty_id?.message} className="w-36 shrink-0">
             <Input
               {...register('counterparty_id')}
               placeholder="9 ספרות"
@@ -189,9 +160,7 @@ export const VatInvoiceAddForm: React.FC<VatInvoiceAddFormProps> = ({
         {/* Deduction rate hint inline with submit */}
         <div className="flex items-end gap-3 pb-0.5">
           {isExpense && deductionRateHint && (
-            <span className={`text-xs font-medium ${deductionRateHint.className}`}>
-              {deductionRateHint.label}
-            </span>
+            <span className={`text-xs font-medium ${deductionRateHint.className}`}>{deductionRateHint.label}</span>
           )}
           <Button type="submit" variant="ghost" size="sm" isLoading={isAdding}>
             <Plus className="h-3.5 w-3.5" />

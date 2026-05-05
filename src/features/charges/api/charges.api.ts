@@ -36,9 +36,7 @@ export const chargesApi = {
   },
 
   markPaid: async (chargeId: number): Promise<ChargeAdvisorResponse> => {
-    const response = await api.post<ChargeAdvisorResponse>(
-      CHARGE_ENDPOINTS.chargeMarkPaid(chargeId),
-    )
+    const response = await api.post<ChargeAdvisorResponse>(CHARGE_ENDPOINTS.chargeMarkPaid(chargeId))
     return response.data
   },
 
@@ -55,15 +53,11 @@ export const chargesApi = {
   },
 
   bulkAction: async (payload: BulkChargeActionPayload): Promise<BulkChargeActionResult> => {
-    const response = await api.post<BulkChargeActionResult>(
-      CHARGE_ENDPOINTS.chargesBulkAction,
-      payload,
-      {
-        headers: {
-          'X-Idempotency-Key': randomUUID(),
-        },
+    const response = await api.post<BulkChargeActionResult>(CHARGE_ENDPOINTS.chargesBulkAction, payload, {
+      headers: {
+        'X-Idempotency-Key': randomUUID(),
       },
-    )
+    })
     return response.data
   },
 }

@@ -16,9 +16,7 @@ interface BuildColumnsOptions {
   onDelete?: (id: number) => void
 }
 
-export const buildAdvancePaymentColumns = (
-  options: BuildColumnsOptions = {},
-): Column<AdvancePaymentRow>[] => {
+export const buildAdvancePaymentColumns = (options: BuildColumnsOptions = {}): Column<AdvancePaymentRow>[] => {
   const { canEdit = false, showBusinessName = false, deletingId, onDelete } = options
 
   const base: Column<AdvancePaymentRow>[] = [
@@ -63,9 +61,7 @@ export const buildAdvancePaymentColumns = (
     {
       key: 'due_date',
       header: 'תאריך תשלום',
-      render: (row) => (
-        <span className="text-sm text-gray-500 tabular-nums">{formatDate(row.due_date)}</span>
-      ),
+      render: (row) => <span className="text-sm text-gray-500 tabular-nums">{formatDate(row.due_date)}</span>,
     },
     {
       key: 'delta',

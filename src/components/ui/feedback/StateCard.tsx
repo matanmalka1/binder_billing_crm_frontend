@@ -33,12 +33,7 @@ export const StateCard: React.FC<StateCardProps> = ({
 
   return (
     <Card className={cn(!isError && 'border-dashed', className)} variant="elevated">
-      <div
-        className={cn(
-          'flex flex-col items-center justify-center px-6 text-center',
-          isCompact ? 'py-4' : 'py-12',
-        )}
-      >
+      <div className={cn('flex flex-col items-center justify-center px-6 text-center', isCompact ? 'py-4' : 'py-12')}>
         <div
           className={cn(
             'relative animate-scale-in',
@@ -100,9 +95,7 @@ export const StateCard: React.FC<StateCardProps> = ({
 
         {details && (
           <div className="text-start bg-gray-50 rounded-lg p-4 border border-gray-200 mb-4 w-full">
-            <div className="text-xs font-mono text-negative-600 whitespace-pre-wrap break-all">
-              {details}
-            </div>
+            <div className="text-xs font-mono text-negative-600 whitespace-pre-wrap break-all">{details}</div>
           </div>
         )}
 

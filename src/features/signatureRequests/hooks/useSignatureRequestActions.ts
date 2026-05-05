@@ -34,13 +34,7 @@ export const useSignatureRequestActions = (clientId?: number) => {
   })
 
   const sendMutation = useMutation({
-    mutationFn: ({
-      id,
-      expiryDays,
-    }: {
-      id: number
-      expiryDays?: number
-    }): Promise<SendSignatureRequestResponse> =>
+    mutationFn: ({ id, expiryDays }: { id: number; expiryDays?: number }): Promise<SendSignatureRequestResponse> =>
       signatureRequestsApi.send(id, { expiry_days: expiryDays }),
     onSuccess: () => {
       toast.success('בקשת החתימה נשלחה')
@@ -50,8 +44,7 @@ export const useSignatureRequestActions = (clientId?: number) => {
   })
 
   const cancelMutation = useMutation({
-    mutationFn: ({ id, reason }: { id: number; reason?: string }) =>
-      signatureRequestsApi.cancel(id, { reason }),
+    mutationFn: ({ id, reason }: { id: number; reason?: string }) => signatureRequestsApi.cancel(id, { reason }),
     onSuccess: () => {
       toast.success('בקשת החתימה בוטלה')
       invalidate()

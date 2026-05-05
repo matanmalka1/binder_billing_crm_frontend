@@ -12,12 +12,7 @@ interface AuthorityContactModalProps {
   onClose: () => void
 }
 
-export const AuthorityContactModal: React.FC<AuthorityContactModalProps> = ({
-  open,
-  clientId,
-  existing,
-  onClose,
-}) => {
+export const AuthorityContactModal: React.FC<AuthorityContactModalProps> = ({ open, clientId, existing, onClose }) => {
   const { form, onSubmit, isSaving } = useAuthorityContactForm(clientId, onClose, existing)
 
   return (

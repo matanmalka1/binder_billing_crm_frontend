@@ -18,10 +18,7 @@ const SEVERITY_STYLES: Record<NotificationSeverity, string> = {
 
 export const SeverityBadge: React.FC<SeverityBadgeProps> = ({ severity }) => (
   <span
-    className={cn(
-      'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
-      SEVERITY_STYLES[severity],
-    )}
+    className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium', SEVERITY_STYLES[severity])}
   >
     {SEVERITY_LABELS[severity]}
   </span>

@@ -40,12 +40,7 @@ const AnnualReportStatusBanner: React.FC<{
           <Icon className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1 text-right">
-          <p
-            className={cn(
-              'text-base font-bold',
-              submitted ? 'text-positive-700' : 'text-warning-700',
-            )}
-          >
+          <p className={cn('text-base font-bold', submitted ? 'text-positive-700' : 'text-warning-700')}>
             {submitted ? `דוח שנתי ${selectedYear} הוגש בהצלחה` : `דוח שנתי ${selectedYear} עדיין לא הוגש`}
           </p>
           <p className="mt-1 text-sm font-medium text-gray-500">
@@ -120,12 +115,7 @@ export const ClientAnnualReportsTab: React.FC<ClientAnnualReportsTabProps> = ({ 
           ) : (
             <div className="rounded-xl border border-dashed border-gray-300 py-12 text-center text-gray-500">
               <p className="text-base font-medium">אין דוח לשנת מס {selectedYear}</p>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="mt-3"
-                onClick={() => setShowCreate(true)}
-              >
+              <Button variant="ghost" size="sm" className="mt-3" onClick={() => setShowCreate(true)}>
                 <Plus className="h-4 w-4" />
                 צור דוח חדש
               </Button>

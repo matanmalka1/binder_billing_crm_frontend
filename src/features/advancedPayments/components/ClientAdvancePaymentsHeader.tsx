@@ -59,10 +59,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
             <div className="h-8 w-px bg-gray-200 hidden sm:block" />
             <div className="flex items-center bg-gray-100 rounded-xl p-1">
               <span className="px-3 py-1.5 text-sm text-gray-500">
-                תדירות:{' '}
-                <span className="font-semibold text-gray-800">
-                  {FREQUENCY_LABEL[generationFrequency]}
-                </span>
+                תדירות: <span className="font-semibold text-gray-800">{FREQUENCY_LABEL[generationFrequency]}</span>
                 <span className="text-gray-400 text-xs mr-1">(לפי פרופיל מע״מ)</span>
               </span>
               <button

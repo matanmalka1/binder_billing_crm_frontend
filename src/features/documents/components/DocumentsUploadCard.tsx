@@ -5,18 +5,11 @@ import { useForm } from 'react-hook-form'
 import { Select } from '../../../components/ui/inputs/Select'
 import type { UploadDocumentPayload } from '../api'
 import type { BusinessResponse } from '@/features/clients'
-import {
-  documentsUploadDefaultValues,
-  documentsUploadSchema,
-  type DocumentsUploadFormValues,
-} from '../schemas'
+import { documentsUploadDefaultValues, documentsUploadSchema, type DocumentsUploadFormValues } from '../schemas'
 import { DOCUMENT_FILE_ACCEPT } from '../documents.constants'
 import { formatFileSize } from '../../../utils/utils'
 import { Button } from '../../../components/ui/primitives/Button'
-import {
-  UPLOAD_DOCUMENT_TYPE_OPTIONS,
-  UPLOAD_TAX_YEAR_OPTIONS,
-} from './DocumentsDataCards.constants'
+import { UPLOAD_DOCUMENT_TYPE_OPTIONS, UPLOAD_TAX_YEAR_OPTIONS } from './DocumentsDataCards.constants'
 import { getBusinessOptions } from './DocumentsDataCards.utils'
 import { validateDocumentFile } from './DocumentsUploadCard.helpers'
 

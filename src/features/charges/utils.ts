@@ -11,32 +11,23 @@ const CHARGE_ACTION_KEYS: Record<ChargeAction, string> = {
   cancel: 'cancel_charge',
 }
 
-export const hasChargeAction = (
-  actions: BackendAction[] | null | undefined,
-  key: string,
-): boolean => actions?.some((action) => action.key === key) ?? false
+export const hasChargeAction = (actions: BackendAction[] | null | undefined, key: string): boolean =>
+  actions?.some((action) => action.key === key) ?? false
 
-export const canRunChargeAction = (
-  actions: BackendAction[] | null | undefined,
-  action: ChargeAction,
-): boolean => hasChargeAction(actions, CHARGE_ACTION_KEYS[action])
+export const canRunChargeAction = (actions: BackendAction[] | null | undefined, action: ChargeAction): boolean =>
+  hasChargeAction(actions, CHARGE_ACTION_KEYS[action])
 
-export const canIssue = (actions: BackendAction[] | null | undefined): boolean =>
-  canRunChargeAction(actions, 'issue')
+export const canIssue = (actions: BackendAction[] | null | undefined): boolean => canRunChargeAction(actions, 'issue')
 
 export const canMarkPaid = (actions: BackendAction[] | null | undefined): boolean =>
   canRunChargeAction(actions, 'markPaid')
 
-export const canCancel = (actions: BackendAction[] | null | undefined): boolean =>
-  canRunChargeAction(actions, 'cancel')
+export const canCancel = (actions: BackendAction[] | null | undefined): boolean => canRunChargeAction(actions, 'cancel')
 
 export const canDeleteCharge = (actions: BackendAction[] | null | undefined): boolean =>
   hasChargeAction(actions, 'delete_charge')
 
-export const getChargePeriodLabel = (
-  period: string | null,
-  monthsCovered: number | null,
-): string => {
+export const getChargePeriodLabel = (period: string | null, monthsCovered: number | null): string => {
   if (!period) return '—'
 
   const match = CHARGE_PERIOD_PATTERN.exec(period)

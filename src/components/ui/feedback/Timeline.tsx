@@ -24,11 +24,7 @@ interface TimelineEntryProps {
   className?: string
 }
 
-export const TimelineEntry: React.FC<TimelineEntryProps> = ({
-  children,
-  animationDelay,
-  className,
-}) => (
+export const TimelineEntry: React.FC<TimelineEntryProps> = ({ children, animationDelay, className }) => (
   <li
     className={cn('relative pr-10 animate-fade-in', className)}
     style={animationDelay ? { animationDelay } : undefined}

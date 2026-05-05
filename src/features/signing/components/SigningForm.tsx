@@ -45,22 +45,10 @@ export const SigningForm: React.FC<SigningFormProps> = ({
           <p className="text-sm text-gray-500">האם אתה/ת בטוח/ה שברצונך לחתום על "{data.title}"?</p>
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onBack}
-            className="flex-1"
-            disabled={isApproving}
-          >
+          <Button variant="outline" size="sm" onClick={onBack} className="flex-1" disabled={isApproving}>
             חזרה
           </Button>
-          <Button
-            variant="primary"
-            size="md"
-            isLoading={isApproving}
-            onClick={onConfirmApprove}
-            className="flex-[2]"
-          >
+          <Button variant="primary" size="md" isLoading={isApproving} onClick={onConfirmApprove} className="flex-[2]">
             כן, אני חותם/ת
           </Button>
         </div>
@@ -86,13 +74,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
           rows={3}
         />
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onBack}
-            className="flex-1"
-            disabled={isDeclining}
-          >
+          <Button variant="outline" size="sm" onClick={onBack} className="flex-1" disabled={isDeclining}>
             חזרה
           </Button>
           <Button
@@ -113,9 +95,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
     <div className="space-y-5">
       <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
         <h2 className="font-semibold text-gray-900">{data.title}</h2>
-        {data.description && (
-          <p className="mt-2 text-sm leading-relaxed text-gray-700">{data.description}</p>
-        )}
+        {data.description && <p className="mt-2 text-sm leading-relaxed text-gray-700">{data.description}</p>}
       </div>
 
       <dl className="space-y-2">
@@ -136,9 +116,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
       {isExpired && (
         <div className="flex gap-2.5 rounded-xl border border-negative-200 bg-negative-50 p-3">
           <Clock className="mt-0.5 h-4 w-4 shrink-0 text-negative-500" />
-          <p className="text-sm text-negative-700">
-            קישור זה פג תוקפו. לא ניתן לחתום. פנה למשרד לחידוש הבקשה.
-          </p>
+          <p className="text-sm text-negative-700">קישור זה פג תוקפו. לא ניתן לחתום. פנה למשרד לחידוש הבקשה.</p>
         </div>
       )}
 
@@ -147,8 +125,8 @@ export const SigningForm: React.FC<SigningFormProps> = ({
           <div className="flex gap-2.5 rounded-xl border border-primary-100 bg-primary-50 p-3">
             <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
             <p className="text-xs leading-relaxed text-primary-700">
-              בלחיצה על "אני מאשר/ת וחותם/ת" הנך מאשר/ת את תוכן המסמך ומסכים/ה לחתימה דיגיטלית
-              מחייבת בהתאם לחוק חתימה אלקטרונית (התשס\"א-2001).
+              בלחיצה על "אני מאשר/ת וחותם/ת" הנך מאשר/ת את תוכן המסמך ומסכים/ה לחתימה דיגיטלית מחייבת בהתאם לחוק חתימה
+              אלקטרונית (התשס\"א-2001).
             </p>
           </div>
           <div className="flex gap-2">
@@ -161,13 +139,7 @@ export const SigningForm: React.FC<SigningFormProps> = ({
               <XCircle className="h-4 w-4" />
               דחייה
             </Button>
-            <Button
-              variant="primary"
-              size="md"
-              isLoading={isApproving}
-              onClick={onStartApprove}
-              className="flex-[2]"
-            >
+            <Button variant="primary" size="md" isLoading={isApproving} onClick={onStartApprove} className="flex-[2]">
               <CheckCircle2 className="h-4 w-4" />
               אני מאשר/ת וחותם/ת
             </Button>

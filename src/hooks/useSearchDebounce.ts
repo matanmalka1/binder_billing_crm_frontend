@@ -5,11 +5,7 @@ import { useDebounce } from 'use-debounce'
  * Manages a local draft value for a search input with debounced commit.
  * Syncs back when the external value resets (e.g. URL-driven reset).
  */
-export const useSearchDebounce = (
-  externalValue: string,
-  onCommit: (value: string) => void,
-  delay = 350,
-) => {
+export const useSearchDebounce = (externalValue: string, onCommit: (value: string) => void, delay = 350) => {
   const [draft, setDraft] = useState(externalValue)
   const [debounced] = useDebounce(draft, delay)
 

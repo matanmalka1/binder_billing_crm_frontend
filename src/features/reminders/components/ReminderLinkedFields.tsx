@@ -41,13 +41,7 @@ export const ReminderLinkedFields: React.FC<ReminderLinkedFieldsProps> = ({
             ))}
           </Select>
         ) : (
-          <Input
-            type="number"
-            min={1}
-            label="מזהה תיק"
-            error={e.binder_id?.message}
-            {...register('binder_id')}
-          />
+          <Input type="number" min={1} label="מזהה תיק" error={e.binder_id?.message} {...register('binder_id')} />
         ))}
 
       {reminderType === 'document_missing' &&
@@ -61,13 +55,7 @@ export const ReminderLinkedFields: React.FC<ReminderLinkedFieldsProps> = ({
             ))}
           </Select>
         ) : (
-          <Input
-            type="number"
-            min={1}
-            label="מזהה עסק *"
-            error={e.business_id?.message}
-            {...register('business_id')}
-          />
+          <Input type="number" min={1} label="מזהה עסק *" error={e.business_id?.message} {...register('business_id')} />
         ))}
 
       {reminderType === 'custom' && (

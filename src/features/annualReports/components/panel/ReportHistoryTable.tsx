@@ -76,9 +76,7 @@ export const ReportHistoryTable: React.FC<Props> = ({ clientId, currentReportId,
             return (
               <span
                 className={
-                  Number(r.final_balance) > 0
-                    ? semanticMonoToneClasses.negative
-                    : semanticMonoToneClasses.positive
+                  Number(r.final_balance) > 0 ? semanticMonoToneClasses.negative : semanticMonoToneClasses.positive
                 }
               >
                 {getFinalBalanceText(r.final_balance)}
@@ -89,27 +87,19 @@ export const ReportHistoryTable: React.FC<Props> = ({ clientId, currentReportId,
         {
           key: 'submitted_at',
           header: 'תאריך הגשה',
-          render: (r) => (
-            <span className="text-gray-500 text-xs">{formatDate(r.submitted_at) ?? '—'}</span>
-          ),
+          render: (r) => <span className="text-gray-500 text-xs">{formatDate(r.submitted_at) ?? '—'}</span>,
         },
         {
           key: 'status',
           header: 'סטטוס',
-          render: (r) => (
-            <Badge variant={getStatusVariant(r.status)}>{getStatusLabel(r.status)}</Badge>
-          ),
+          render: (r) => <Badge variant={getStatusVariant(r.status)}>{getStatusLabel(r.status)}</Badge>,
         },
         {
           key: 'actions',
           header: '',
           render: (r) => (
             <RowActionsMenu ariaLabel={`פעולות לדוח ${r.id}`}>
-              <RowActionItem
-                label="צפה"
-                onClick={() => onSelect?.(r.id)}
-                icon={<Eye className="h-4 w-4" />}
-              />
+              <RowActionItem label="צפה" onClick={() => onSelect?.(r.id)} icon={<Eye className="h-4 w-4" />} />
             </RowActionsMenu>
           ),
         },

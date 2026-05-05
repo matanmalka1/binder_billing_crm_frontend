@@ -24,11 +24,7 @@ const VatStatusBadge: React.FC<{ material: BinderIntakeMaterialResponse; clientI
   const navigate = useNavigate()
   const period =
     material.period_year && material.period_month_start && material.period_month_end
-      ? toBinderPeriodValue(
-          material.period_year,
-          material.period_month_start,
-          material.period_month_end,
-        )
+      ? toBinderPeriodValue(material.period_year, material.period_month_start, material.period_month_end)
       : null
 
   const { data: lookup } = useQuery({
@@ -111,15 +107,11 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({
               {intake.materials.length > 0 && (
                 <div className="mt-1 flex flex-col gap-1">
                   {intake.materials.map((m) => {
-                    const period = formatStructuredBinderPeriod(
-                      m.period_year,
-                      m.period_month_start,
-                      m.period_month_end,
-                    )
+                    const period = formatStructuredBinderPeriod(m.period_year, m.period_month_start, m.period_month_end)
                     const businessName =
                       m.business_id != null
-                        ? (businesses.find((business) => business.id === m.business_id)
-                            ?.business_name ?? `עסק #${m.business_id}`)
+                        ? (businesses.find((business) => business.id === m.business_id)?.business_name ??
+                          `עסק #${m.business_id}`)
                         : null
                     const annualReport =
                       m.annual_report_id != null
@@ -132,15 +124,10 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({
                       >
                         <div className="flex items-center gap-1">
                           <span className="text-gray-400 w-20 shrink-0">סוג חומר</span>
-                          <span className="text-gray-700 font-medium">
-                            {getBinderTypeLabel(m.material_type)}
-                          </span>
-                          {m.material_type === 'vat' &&
-                            m.period_year &&
-                            m.period_month_start &&
-                            m.period_month_end && (
-                              <VatStatusBadge material={m} clientId={clientId} />
-                            )}
+                          <span className="text-gray-700 font-medium">{getBinderTypeLabel(m.material_type)}</span>
+                          {m.material_type === 'vat' && m.period_year && m.period_month_start && m.period_month_end && (
+                            <VatStatusBadge material={m} clientId={clientId} />
+                          )}
                         </div>
                         {businessName && (
                           <div className="flex items-center gap-1">
@@ -190,9 +177,7 @@ export const BinderIntakesSection: React.FC<BinderIntakesSectionProps> = ({
               )}
 
               {intake.notes && (
-                <p className="mt-1.5 text-xs text-gray-600 border-t border-gray-100 pt-1.5">
-                  {intake.notes}
-                </p>
+                <p className="mt-1.5 text-xs text-gray-600 border-t border-gray-100 pt-1.5">{intake.notes}</p>
               )}
             </TimelineEntry>
           ))}

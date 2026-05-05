@@ -88,10 +88,7 @@ export const VatWorkItemsGroupedTable: React.FC<VatWorkItemsGroupedTableProps> =
     })
   }
 
-  const handleRowKeyDown = (
-    event: KeyboardEvent<HTMLTableRowElement>,
-    item: VatWorkItemResponse,
-  ) => {
+  const handleRowKeyDown = (event: KeyboardEvent<HTMLTableRowElement>, item: VatWorkItemResponse) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
       onRowClick(item)
@@ -101,9 +98,7 @@ export const VatWorkItemsGroupedTable: React.FC<VatWorkItemsGroupedTableProps> =
 
     event.preventDefault()
     const sibling =
-      event.key === 'ArrowDown'
-        ? event.currentTarget.nextElementSibling
-        : event.currentTarget.previousElementSibling
+      event.key === 'ArrowDown' ? event.currentTarget.nextElementSibling : event.currentTarget.previousElementSibling
     if (sibling instanceof HTMLTableRowElement) sibling.focus()
   }
 
@@ -159,15 +154,10 @@ export const VatWorkItemsGroupedTable: React.FC<VatWorkItemsGroupedTableProps> =
                             aria-expanded={!isCollapsed}
                           >
                             <ChevronDown
-                              className={cn(
-                                'h-4 w-4 text-gray-500 transition-transform',
-                                isCollapsed && '-rotate-90',
-                              )}
+                              className={cn('h-4 w-4 text-gray-500 transition-transform', isCollapsed && '-rotate-90')}
                             />
                             {formatVatPeriodTitle(group.period, group.periodType)}
-                            <span className="text-xs font-medium text-gray-500">
-                              {group.items.length} תיקים
-                            </span>
+                            <span className="text-xs font-medium text-gray-500">{group.items.length} תיקים</span>
                           </button>
                           <div className="flex flex-wrap gap-1.5">
                             {getStatusSummary(group.items).map(([status, count]) => (
@@ -189,10 +179,7 @@ export const VatWorkItemsGroupedTable: React.FC<VatWorkItemsGroupedTableProps> =
                           tabIndex={0}
                         >
                           {columns.map((column) => (
-                            <td
-                              key={column.key}
-                              className={cn('px-3 py-2.5 align-middle', column.className)}
-                            >
+                            <td key={column.key} className={cn('px-3 py-2.5 align-middle', column.className)}>
                               {column.render(item, index)}
                             </td>
                           ))}

@@ -14,15 +14,7 @@ export const useIncomeExpenseMutations = (reportId: number) => {
   }
 
   const addIncome = useMutation({
-    mutationFn: ({
-      type_key,
-      amount,
-      description,
-    }: {
-      type_key: string
-      amount: number
-      description?: string
-    }) =>
+    mutationFn: ({ type_key, amount, description }: { type_key: string; amount: number; description?: string }) =>
       annualReportFinancialsApi.addIncomeLine(reportId, {
         source_type: type_key as IncomeSourceType,
         amount: String(amount),
@@ -50,8 +42,7 @@ export const useIncomeExpenseMutations = (reportId: number) => {
         category: payload.category,
         amount: String(payload.amount),
         description: payload.description,
-        recognition_rate:
-          payload.recognition_rate != null ? String(payload.recognition_rate) : undefined,
+        recognition_rate: payload.recognition_rate != null ? String(payload.recognition_rate) : undefined,
         supporting_document_ref: payload.supporting_document_ref,
       }),
     onSuccess: () => {

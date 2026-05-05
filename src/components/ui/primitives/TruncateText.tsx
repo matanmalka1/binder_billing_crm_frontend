@@ -7,11 +7,7 @@ interface TruncateTextProps {
   className?: string
 }
 
-export const TruncateText: React.FC<TruncateTextProps> = ({
-  text,
-  maxWidth = 'max-w-xs',
-  className,
-}) => (
+export const TruncateText: React.FC<TruncateTextProps> = ({ text, maxWidth = 'max-w-xs', className }) => (
   <span className={cn('block truncate text-sm', maxWidth, className)} title={text}>
     {text}
   </span>

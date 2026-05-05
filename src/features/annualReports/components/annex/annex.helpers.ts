@@ -24,9 +24,9 @@ export const buildScheduleOptions = (available: AnnualReportScheduleKey[], place
 export const getCompletedCount = (schedules: ScheduleEntry[]) =>
   schedules.filter((schedule) => schedule.is_complete).length
 
-export const toggleExpandedSchedule = (
-  expanded: Record<string, boolean>,
-  key: AnnualReportScheduleKey,
-) => ({ ...expanded, [key]: !expanded[key] })
+export const toggleExpandedSchedule = (expanded: Record<string, boolean>, key: AnnualReportScheduleKey) => ({
+  ...expanded,
+  [key]: !expanded[key],
+})
 
 export const normalizeNotes = (notes: string) => notes.trim() || undefined

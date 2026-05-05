@@ -5,8 +5,7 @@ import type { StatusVariantMap, TableCellValue } from './columnTypes'
 
 const EMPTY_VALUE = '—'
 
-const isEmptyValue = (value: TableCellValue): value is null | undefined | '' =>
-  value == null || value === ''
+const isEmptyValue = (value: TableCellValue): value is null | undefined | '' => value == null || value === ''
 
 interface TextRendererProps {
   value: TableCellValue

@@ -61,8 +61,7 @@ export const getEventIcon = (eventType: string): ReactNode =>
 
 // ── Date helpers ──────────────────────────────────────────────────────────────
 
-export const formatTimestamp = (timestamp: string): string =>
-  format(parseISO(timestamp), 'HH:mm', { locale: he })
+export const formatTimestamp = (timestamp: string): string => format(parseISO(timestamp), 'HH:mm', { locale: he })
 
 export const formatTimelineDate = (timestamp: string): string =>
   format(parseISO(timestamp), 'd MMMM yyyy', { locale: he })

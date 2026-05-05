@@ -87,8 +87,7 @@ export const Badge: React.FC<BadgeProps> = ({
       className={cn(
         'px-2.5 py-0.5 rounded-full text-xs font-medium',
         variantClasses[variant],
-        onClick &&
-          'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500',
+        onClick && 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500',
         className,
       )}
       onClick={onClick}

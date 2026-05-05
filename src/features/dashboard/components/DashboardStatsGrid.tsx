@@ -65,10 +65,7 @@ const StatCard: React.FC<StatCardProps> = ({ stat, index }) => {
   }
 
   return (
-    <div
-      className={`${cardClass} [animation-delay:var(--enter-delay)]`}
-      style={staggerAnimationDelayVars(index, 60)}
-    >
+    <div className={`${cardClass} [animation-delay:var(--enter-delay)]`} style={staggerAnimationDelayVars(index, 60)}>
       {inner}
     </div>
   )

@@ -118,11 +118,7 @@ export const AnnualReportOverviewSection: React.FC<Props> = ({
 
       <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
         <h3 className="mb-4 text-sm font-semibold text-gray-700">היסטוריית דוחות</h3>
-        <ReportHistoryTable
-          clientId={clientId}
-          currentReportId={report.id}
-          onSelect={onSelectReport}
-        />
+        <ReportHistoryTable clientId={clientId} currentReportId={report.id} onSelect={onSelectReport} />
       </div>
 
       <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">

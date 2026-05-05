@@ -1,8 +1,4 @@
-import type {
-  TimelineBinderStatus,
-  TimelineNotificationChannel,
-  TimelineNotificationTrigger,
-} from './api/contracts'
+import type { TimelineBinderStatus, TimelineNotificationChannel, TimelineNotificationTrigger } from './api/contracts'
 import { BINDER_STATUS_LABELS } from '../../utils/enums'
 
 // ── Label maps ────────────────────────────────────────────────────────────────

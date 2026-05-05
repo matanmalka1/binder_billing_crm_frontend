@@ -1,15 +1,5 @@
-import type {
-  Control,
-  ControllerRenderProps,
-  FieldErrors,
-  UseFormClearErrors,
-  UseFormRegister,
-} from 'react-hook-form'
-import type {
-  ActiveClientSummary,
-  ClientCreationImpactResponse,
-  DeletedClientSummary,
-} from '../../api/contracts'
+import type { Control, ControllerRenderProps, FieldErrors, UseFormClearErrors, UseFormRegister } from 'react-hook-form'
+import type { ActiveClientSummary, ClientCreationImpactResponse, DeletedClientSummary } from '../../api/contracts'
 import type { CreateClientFormValues } from '../../schemas'
 import { CreateClientBusinessStep } from './CreateClientBusinessStep'
 import { CreateClientIdentityStep } from './CreateClientIdentityStep'

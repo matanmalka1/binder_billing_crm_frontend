@@ -5,12 +5,7 @@ import { annualReportsApi, annualReportsQK, type AnnualReportScheduleKey } from 
 import { showErrorToast } from '../../../../utils/utils'
 import { Button } from '../../../../components/ui/primitives/Button'
 import { Input } from '../../../../components/ui/inputs/Input'
-import {
-  SCHEDULE_FIELDS,
-  buildAnnexPayload,
-  buildEmptyForm,
-  mapLineDataToForm,
-} from '../../annex.constants'
+import { SCHEDULE_FIELDS, buildAnnexPayload, buildEmptyForm, mapLineDataToForm } from '../../annex.constants'
 import { AnnexDataTable } from './AnnexDataTable'
 import { ANNEX_TEXT, FIELD_INPUT_CLASS, TABLE_ICON_CLASS } from './annex.constants'
 import { getInputType } from './annex.helpers'
@@ -74,8 +69,7 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
 
   const fields = SCHEDULE_FIELDS[schedule]
   const resetForm = () => setFormData(buildEmptyForm(schedule))
-  const handleFormChange = (key: string, value: string) =>
-    setFormData((prev) => ({ ...prev, [key]: value }))
+  const handleFormChange = (key: string, value: string) => setFormData((prev) => ({ ...prev, [key]: value }))
 
   if (isLoading) return <p className="text-xs text-gray-400 py-2">{ANNEX_TEXT.loading}</p>
 
@@ -126,12 +120,7 @@ export const AnnexDataPanel: React.FC<Props> = ({ reportId, schedule, scheduleLa
             <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>
               <X className={TABLE_ICON_CLASS} />
             </Button>
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => addMutation.mutate()}
-              isLoading={addMutation.isPending}
-            >
+            <Button type="button" size="sm" onClick={() => addMutation.mutate()} isLoading={addMutation.isPending}>
               <Check className={`${TABLE_ICON_CLASS} ml-1`} />
               {ANNEX_TEXT.save}
             </Button>

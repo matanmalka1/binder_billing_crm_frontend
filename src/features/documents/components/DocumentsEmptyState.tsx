@@ -6,10 +6,7 @@ interface DocumentsEmptyStateProps {
   onUploadClick: () => void
 }
 
-export const DocumentsEmptyState: React.FC<DocumentsEmptyStateProps> = ({
-  hasDocuments,
-  onUploadClick,
-}) => (
+export const DocumentsEmptyState: React.FC<DocumentsEmptyStateProps> = ({ hasDocuments, onUploadClick }) => (
   <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-gray-200 py-14 text-center">
     <FileText className="h-9 w-9 text-gray-300" />
     {!hasDocuments ? (

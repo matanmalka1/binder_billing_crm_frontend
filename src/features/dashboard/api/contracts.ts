@@ -30,10 +30,7 @@ export interface ReadyForPickupAttentionItem extends BaseAttentionItem {
   item_type: 'ready_for_pickup'
 }
 
-export type AttentionItem =
-  | UnpaidChargeAttentionItem
-  | UnpaidChargesAttentionItem
-  | ReadyForPickupAttentionItem
+export type AttentionItem = UnpaidChargeAttentionItem | UnpaidChargesAttentionItem | ReadyForPickupAttentionItem
 
 export interface AttentionResponse {
   items: AttentionItem[]

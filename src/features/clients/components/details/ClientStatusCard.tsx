@@ -94,9 +94,7 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           type="button"
           onClick={() => setSelectedYear(y)}
           className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${
-            selectedYear === y
-              ? 'bg-primary-100 text-primary-700'
-              : 'text-gray-500 hover:text-gray-700'
+            selectedYear === y ? 'bg-primary-100 text-primary-700' : 'text-gray-500 hover:text-gray-700'
           }`}
         >
           {y}
@@ -177,25 +175,15 @@ export const ClientStatusCard: React.FC<Props> = ({ clientId }) => {
           icon={<FolderOpen size={14} />}
           title="קלסרים"
           primary={firstBusinessId == null ? '—' : `${binders.active_count} פעילים`}
-          secondary={
-            firstBusinessId == null ? 'אין עסקים רשומים' : `${binders.in_office_count} במשרד`
-          }
-          onClick={
-            firstBusinessId == null
-              ? undefined
-              : () => navigate(`/binders?client_record_id=${clientId}`)
-          }
+          secondary={firstBusinessId == null ? 'אין עסקים רשומים' : `${binders.in_office_count} במשרד`}
+          onClick={firstBusinessId == null ? undefined : () => navigate(`/binders?client_record_id=${clientId}`)}
         />
         <Tile
           icon={<FileCheck size={14} />}
           title="מסמכים"
-          primary={
-            firstBusinessId == null ? '—' : `${documents.present_count}/${documents.total_count}`
-          }
+          primary={firstBusinessId == null ? '—' : `${documents.present_count}/${documents.total_count}`}
           secondary={firstBusinessId == null ? 'אין עסקים רשומים' : 'מסמכים קיימים'}
-          onClick={
-            firstBusinessId == null ? undefined : () => navigate(CLIENT_ROUTES.documents(clientId))
-          }
+          onClick={firstBusinessId == null ? undefined : () => navigate(CLIENT_ROUTES.documents(clientId))}
         />
       </div>
     </section>

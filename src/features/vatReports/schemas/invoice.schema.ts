@@ -22,13 +22,9 @@ const invoiceCommonFields = {
   counterparty_id_type: z.enum(['il_business', 'il_personal', 'foreign', 'anonymous']).optional(),
 }
 
-export type CounterpartyIdType = z.infer<
-  NonNullable<typeof invoiceCommonFields.counterparty_id_type>
->
+export type CounterpartyIdType = z.infer<NonNullable<typeof invoiceCommonFields.counterparty_id_type>>
 
-export const isCounterpartyIdType = (
-  value: string | null | undefined,
-): value is CounterpartyIdType =>
+export const isCounterpartyIdType = (value: string | null | undefined): value is CounterpartyIdType =>
   value === 'il_business' || value === 'il_personal' || value === 'foreign' || value === 'anonymous'
 
 export const vatInvoiceRowSchema = z
@@ -37,11 +33,7 @@ export const vatInvoiceRowSchema = z
     ...invoiceCommonFields,
   })
   .superRefine((data, ctx) => {
-    if (
-      data.invoice_type === 'expense' &&
-      data.document_type === 'tax_invoice' &&
-      !data.counterparty_id
-    ) {
+    if (data.invoice_type === 'expense' && data.document_type === 'tax_invoice' && !data.counterparty_id) {
       ctx.addIssue({
         code: 'custom',
         message: 'חובה להזין מספר עוסק של הספק',
@@ -69,8 +61,7 @@ const buildInvoicePayloadBase = (values: VatInvoiceEditValues) => ({
   invoice_date: values.invoice_date || undefined,
   counterparty_name: values.counterparty_name || undefined,
   counterparty_id: values.counterparty_id || undefined,
-  counterparty_id_type:
-    values.counterparty_id_type || inferCounterpartyIdType(values.counterparty_id),
+  counterparty_id_type: values.counterparty_id_type || inferCounterpartyIdType(values.counterparty_id),
 })
 
 export const toInvoiceEditPayload = (values: VatInvoiceEditValues): UpdateVatInvoicePayload =>

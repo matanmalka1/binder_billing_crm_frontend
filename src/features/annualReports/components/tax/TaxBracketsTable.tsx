@@ -13,9 +13,7 @@ export const TaxBracketsTable: React.FC<Props> = ({ brackets }) => {
 
   return (
     <div className="mt-3">
-      <p className="mb-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-        פירוט מדרגות מס
-      </p>
+      <p className="mb-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">פירוט מדרגות מס</p>
       <div className="overflow-hidden rounded-md border border-gray-200">
         <table className="w-full text-xs">
           <thead className="bg-gray-50">

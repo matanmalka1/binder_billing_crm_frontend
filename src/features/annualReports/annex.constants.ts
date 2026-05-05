@@ -87,9 +87,7 @@ export const mapLineDataToForm = (
   schedule: AnnualReportScheduleKey,
   data: Record<string, unknown>,
 ): Record<string, string> =>
-  Object.fromEntries(
-    SCHEDULE_FIELDS[schedule].map((field) => [field.key, String(data[field.key] ?? '')]),
-  )
+  Object.fromEntries(SCHEDULE_FIELDS[schedule].map((field) => [field.key, String(data[field.key] ?? '')]))
 
 export const buildAnnexPayload = (
   schedule: AnnualReportScheduleKey,
@@ -97,8 +95,7 @@ export const buildAnnexPayload = (
 ): Record<string, unknown> => {
   const payload: Record<string, unknown> = {}
   for (const field of SCHEDULE_FIELDS[schedule]) {
-    payload[field.key] =
-      field.type === 'number' ? parseFloat(formData[field.key] || '0') : formData[field.key]
+    payload[field.key] = field.type === 'number' ? parseFloat(formData[field.key] || '0') : formData[field.key]
   }
   return payload
 }

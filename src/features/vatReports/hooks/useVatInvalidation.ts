@@ -11,10 +11,7 @@ interface InvalidateVatWorkItemOptions {
 
 const getCachedClientRecordId = (queryClient: QueryClient, workItemId: number | undefined) => {
   if (!workItemId) return null
-  return (
-    queryClient.getQueryData<VatWorkItemResponse>(vatReportsQK.detail(workItemId))
-      ?.client_record_id ?? null
-  )
+  return queryClient.getQueryData<VatWorkItemResponse>(vatReportsQK.detail(workItemId))?.client_record_id ?? null
 }
 
 export const invalidateVatLists = (queryClient: QueryClient) =>
@@ -22,20 +19,13 @@ export const invalidateVatLists = (queryClient: QueryClient) =>
 
 export const invalidateVatWorkItem = async (
   queryClient: QueryClient,
-  {
-    workItemId,
-    clientRecordId,
-    includeInvoices = false,
-    includeAudit = true,
-  }: InvalidateVatWorkItemOptions,
+  { workItemId, clientRecordId, includeInvoices = false, includeAudit = true }: InvalidateVatWorkItemOptions,
 ) => {
   const resolvedClientRecordId = clientRecordId ?? getCachedClientRecordId(queryClient, workItemId)
 
   await Promise.all([
     invalidateVatLists(queryClient),
-    workItemId
-      ? queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) })
-      : Promise.resolve(),
+    workItemId ? queryClient.invalidateQueries({ queryKey: vatReportsQK.detail(workItemId) }) : Promise.resolve(),
     workItemId && includeInvoices
       ? queryClient.invalidateQueries({ queryKey: vatReportsQK.invoices(workItemId) })
       : Promise.resolve(),

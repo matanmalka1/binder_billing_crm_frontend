@@ -1,12 +1,4 @@
-import {
-  ArrowLeft,
-  CheckCircle2,
-  Eye,
-  RotateCcw,
-  Trash2,
-  CalendarCheck,
-  PackageCheck,
-} from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Eye, RotateCcw, Trash2, CalendarCheck, PackageCheck } from 'lucide-react'
 import { RowActionItem, RowActionSeparator, RowActionsMenu } from '@/components/ui/table'
 import { canMarkReady, canReturn, canRevertReady } from '../../utils'
 import type { BinderResponse } from '../../types'
@@ -73,12 +65,7 @@ export const BinderRowActions: React.FC<BinderRowActionsProps> = ({
         />
       )}
       {canReturn(status) && (
-        <RowActionItem
-          label="החזרה"
-          onClick={onReturn}
-          icon={<ArrowLeft className="h-4 w-4" />}
-          disabled={disabled}
-        />
+        <RowActionItem label="החזרה" onClick={onReturn} icon={<ArrowLeft className="h-4 w-4" />} disabled={disabled} />
       )}
       {showHandover && (
         <RowActionItem

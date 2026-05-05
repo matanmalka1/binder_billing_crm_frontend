@@ -4,9 +4,8 @@ import { getVatWorkItemStatusLabel } from '../../utils/enums'
 export const toVatPeriodTypeFilter = (value: string | null): VatPeriodTypeFilter | '' =>
   VAT_PERIOD_TYPES.includes(value as VatPeriodTypeFilter) ? (value as VatPeriodTypeFilter) : ''
 
-export const toOptionalVatPeriodTypeFilter = (
-  value: VatPeriodTypeFilter | '',
-): VatPeriodTypeFilter | undefined => value || undefined
+export const toOptionalVatPeriodTypeFilter = (value: VatPeriodTypeFilter | ''): VatPeriodTypeFilter | undefined =>
+  value || undefined
 
 interface VatEmptyStateFilters {
   status?: string

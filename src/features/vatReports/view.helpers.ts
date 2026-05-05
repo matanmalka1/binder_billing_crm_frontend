@@ -4,15 +4,12 @@ import { semanticMonoToneClasses } from '@/utils/semanticColors'
 import { DEDUCTION_RATES, VAT_NUMERIC_KEYS } from './constants'
 import type { VatPeriodRow } from './api'
 
-
 export const formatVatPeriodTitle = (period: string, periodType: string | null): string => {
   const [year] = period.split('-')
   const yearNumber = Number(year)
   const monthsCount = periodType === 'bimonthly' ? 2 : 1
   const monthLabel = getReportingPeriodMonthLabel(period, monthsCount).replace('-', '–')
-  return Number.isInteger(yearNumber) && monthLabel !== period
-    ? `${monthLabel} ${yearNumber}`
-    : period
+  return Number.isInteger(yearNumber) && monthLabel !== period ? `${monthLabel} ${yearNumber}` : period
 }
 
 export const formatVatPeriodLabel = (period: string, isBimonthly: boolean): string =>
@@ -35,9 +32,7 @@ export const getVatClientTitle = (name: string | null, clientRecordId: number): 
 export const getNetVatTone = (value: string | number | null | undefined): string =>
   Number(value) >= 0 ? semanticMonoToneClasses.negative : semanticMonoToneClasses.positive
 
-export const getDeductionRateHint = (
-  category: string | undefined,
-): { label: string; className: string } | null => {
+export const getDeductionRateHint = (category: string | undefined): { label: string; className: string } | null => {
   if (category === undefined) return null
   const rate = DEDUCTION_RATES[category]
   if (rate === undefined || rate === 1) return null
@@ -47,10 +42,8 @@ export const getDeductionRateHint = (
   }
 }
 
-export const shouldRequireCounterpartyId = (
-  invoiceType: 'income' | 'expense',
-  documentType?: string,
-): boolean => invoiceType === 'expense' && documentType === 'tax_invoice'
+export const shouldRequireCounterpartyId = (invoiceType: 'income' | 'expense', documentType?: string): boolean =>
+  invoiceType === 'expense' && documentType === 'tax_invoice'
 
 export const blockNonNumericKey = (event: KeyboardEvent, allowDot = false): void => {
   const pattern = allowDot ? /[\d.]/ : /[\d]/

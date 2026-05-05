@@ -112,9 +112,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
           />
           <ChargesCreateModal
             open={isAddingCharge}
-            createError={
-              createChargeError ? getErrorMessage(createChargeError, 'שגיאה ביצירת חיוב') : null
-            }
+            createError={createChargeError ? getErrorMessage(createChargeError, 'שגיאה ביצירת חיוב') : null}
             createLoading={isCreatingCharge}
             onClose={() => setIsAddingCharge(false)}
             onSubmit={handleCreateCharge}
@@ -127,11 +125,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
         <div className="space-y-6">
           <AuthorityContactsCard clientId={client.id} />
           <CorrespondenceCard businessId={firstBusinessId ?? undefined} clientId={client.id} />
-          <SignatureRequestsCard
-            client={client}
-            businessId={firstBusinessId ?? undefined}
-            canManage={canEditClients}
-          />
+          <SignatureRequestsCard client={client} businessId={firstBusinessId ?? undefined} canManage={canEditClients} />
         </div>
       )}
 
@@ -185,13 +179,7 @@ export const ClientDetailsOverviewTab: FC<ClientDetailsOverviewTabProps> = ({
                 <Button type="button" variant="ghost" onClick={onEditClose} disabled={isUpdating}>
                   ביטול
                 </Button>
-                <Button
-                  type="submit"
-                  form={EDIT_FORM_ID}
-                  variant="ghost"
-                  isLoading={isUpdating}
-                  disabled={isUpdating}
-                >
+                <Button type="submit" form={EDIT_FORM_ID} variant="ghost" isLoading={isUpdating} disabled={isUpdating}>
                   שמור שינויים
                 </Button>
               </div>

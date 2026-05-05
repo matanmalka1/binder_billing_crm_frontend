@@ -21,9 +21,10 @@ export const useUsersPage = () => {
   const page_size = parsePositiveInt(searchParams.get('page_size'), PAGE_SIZE)
   const isActiveParam = searchParams.get('is_active')
   const search = searchParams.get('search') ?? ''
-  const is_active = (
-    isActiveParam === 'true' || isActiveParam === 'false' ? isActiveParam : undefined
-  ) as 'true' | 'false' | undefined
+  const is_active = (isActiveParam === 'true' || isActiveParam === 'false' ? isActiveParam : undefined) as
+    | 'true'
+    | 'false'
+    | undefined
   const filters = { page, page_size, is_active, search }
 
   const listQuery = useQuery({

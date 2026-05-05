@@ -20,13 +20,7 @@ interface TaxDeadlineFormProps {
   isSubmitting: boolean
 }
 
-export const TaxDeadlineForm = ({
-  open,
-  onClose,
-  onSubmit,
-  form,
-  isSubmitting,
-}: TaxDeadlineFormProps) => {
+export const TaxDeadlineForm = ({ open, onClose, onSubmit, form, isSubmitting }: TaxDeadlineFormProps) => {
   const {
     register,
     setValue,
@@ -41,9 +35,7 @@ export const TaxDeadlineForm = ({
     handleClearClient,
     handleClientQueryChange,
     resetClientPicker,
-  } = useClientPickerState(
-    createClientIdPickerHandlers((value, options) => setValue('client_id', value, options)),
-  )
+  } = useClientPickerState(createClientIdPickerHandlers((value, options) => setValue('client_id', value, options)))
   const selectedClientId = watch('client_id')
   const clientIdNumber = Number(selectedClientId)
   const selectedClientQuery = useQuery({
@@ -91,10 +83,7 @@ export const TaxDeadlineForm = ({
           error={errors.client_id?.message}
           label="לקוח *"
         />
-        <TaxDeadlineCommonFields
-          form={form}
-          vatType={selectedClientQuery.data?.vat_reporting_frequency ?? null}
-        />
+        <TaxDeadlineCommonFields form={form} vatType={selectedClientQuery.data?.vat_reporting_frequency ?? null} />
       </form>
     </Modal>
   )

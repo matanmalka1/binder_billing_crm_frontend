@@ -19,8 +19,7 @@ export const api = axios.create({
 
 const getPersistedAuthToken = (): string | null => {
   try {
-    const rawValue =
-      localStorage.getItem(AUTH_STORAGE_KEY) ?? sessionStorage.getItem(AUTH_STORAGE_KEY)
+    const rawValue = localStorage.getItem(AUTH_STORAGE_KEY) ?? sessionStorage.getItem(AUTH_STORAGE_KEY)
     if (!rawValue) return null
 
     const parsed = JSON.parse(rawValue)

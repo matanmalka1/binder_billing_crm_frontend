@@ -1,9 +1,5 @@
 type NS = string | readonly string[]
-type AsArray<T extends NS> = T extends string
-  ? readonly [T]
-  : T extends readonly string[]
-    ? T
-    : never
+type AsArray<T extends NS> = T extends string ? readonly [T] : T extends readonly string[] ? T : never
 
 export const createQueryKeys = <T extends NS>(namespace: T) => {
   const ns = (Array.isArray(namespace) ? namespace : [namespace]) as unknown as AsArray<T>

@@ -40,7 +40,6 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({
             value={filenameFilter}
             onChange={(e) => onFilenameChange('filename', e.target.value)}
             placeholder="חיפוש לפי שם קובץ..."
-
           />
         </div>
       </div>
@@ -70,9 +69,7 @@ export const DocumentResultsSection: React.FC<DocumentResultsSectionProps> = ({
                 <td className="px-4 py-3 font-mono text-xs text-gray-600 max-w-xs truncate">
                   {doc.original_filename ?? <span className="text-gray-300">—</span>}
                 </td>
-                <td className="px-4 py-3 text-gray-600">
-                  {doc.tax_year ?? <span className="text-gray-300">—</span>}
-                </td>
+                <td className="px-4 py-3 text-gray-600">{doc.tax_year ?? <span className="text-gray-300">—</span>}</td>
                 <td className="px-4 py-3">
                   <Link
                     to={`/clients/${doc.client_record_id}/documents`}

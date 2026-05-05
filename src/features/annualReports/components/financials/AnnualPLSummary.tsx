@@ -22,13 +22,7 @@ interface WaterfallRowProps {
   highlight?: boolean
 }
 
-const WaterfallRow: React.FC<WaterfallRowProps> = ({
-  label,
-  value,
-  isSubtract,
-  isResult,
-  highlight,
-}) => (
+const WaterfallRow: React.FC<WaterfallRowProps> = ({ label, value, isSubtract, isResult, highlight }) => (
   <div
     className={`flex items-center justify-between px-3 py-2 text-sm ${
       highlight
@@ -39,11 +33,7 @@ const WaterfallRow: React.FC<WaterfallRowProps> = ({
     }`}
   >
     <span className={isSubtract ? semanticMonoToneClasses.negative : ''}>{label}</span>
-    <span
-      className={
-        isSubtract ? semanticMonoToneClasses.negative : highlight ? 'text-warning-700' : ''
-      }
-    >
+    <span className={isSubtract ? semanticMonoToneClasses.negative : highlight ? 'text-warning-700' : ''}>
       {fmt(value)}
     </span>
   </div>
@@ -84,9 +74,7 @@ export const AnnualPLSummary: React.FC<Props> = ({ reportId, clientId }) => {
         <div>
           <div className="mb-1 flex items-center justify-between text-xs text-gray-500">
             <span>שיעור רווח גולמי</span>
-            <span className="font-semibold text-gray-700">
-              {formatPercent(summary.grossMargin)}
-            </span>
+            <span className="font-semibold text-gray-700">{formatPercent(summary.grossMargin)}</span>
           </div>
           <div className="h-2 w-full rounded-full bg-gray-200">
             <div

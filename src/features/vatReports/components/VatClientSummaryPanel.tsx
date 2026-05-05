@@ -14,22 +14,11 @@ import { getVatWorkItemStatusLabel } from '../../../utils/enums'
 import { formatVatAmountLtrSafe } from '../utils'
 import { useVatClientSummary } from '../hooks/useVatClientSummary'
 import type { VatClientSummaryPanelProps } from '../types'
-import {
-  canOpenVatPeriodRow,
-  formatVatPeriodLabel,
-  getClientSummaryRowsForYear,
-  getNetVatTone,
-} from '../view.helpers'
+import { canOpenVatPeriodRow, formatVatPeriodLabel, getClientSummaryRowsForYear, getNetVatTone } from '../view.helpers'
 
 const fmt = formatVatAmountLtrSafe
 
-const AmountCell = ({
-  value,
-  bold,
-}: {
-  value: string | number | null | undefined
-  bold?: boolean
-}) => (
+const AmountCell = ({ value, bold }: { value: string | number | null | undefined; bold?: boolean }) => (
   <span
     dir="ltr"
     className={`inline-block min-w-20 text-end font-mono tabular-nums ${bold ? 'font-bold' : ''} ${getNetVatTone(value)}`}
@@ -56,10 +45,7 @@ interface YearGroupProps {
 }
 
 const YearSummary = ({ annual }: { annual: VatAnnualSummary }) => {
-  const avgNetVat =
-    annual.periods_count > 0
-      ? (Number(annual.net_vat) / annual.periods_count).toFixed(2)
-      : null
+  const avgNetVat = annual.periods_count > 0 ? (Number(annual.net_vat) / annual.periods_count).toFixed(2) : null
 
   return (
     <section className="space-y-3">
@@ -76,18 +62,8 @@ const YearSummary = ({ annual }: { annual: VatAnnualSummary }) => {
           icon={CheckCircle2}
           variant="green"
         />
-        <StatsCard
-          title="מע״מ עסקאות"
-          value={fmt(annual.total_output_vat)}
-          icon={ReceiptText}
-          variant="neutral"
-        />
-        <StatsCard
-          title="מע״מ תשומות"
-          value={fmt(annual.total_input_vat)}
-          icon={MinusCircle}
-          variant="neutral"
-        />
+        <StatsCard title="מע״מ עסקאות" value={fmt(annual.total_output_vat)} icon={ReceiptText} variant="neutral" />
+        <StatsCard title="מע״מ תשומות" value={fmt(annual.total_input_vat)} icon={MinusCircle} variant="neutral" />
         <StatsCard
           title="מע״מ נטו לתשלום"
           value={fmt(annual.net_vat)}
@@ -117,9 +93,7 @@ const YearGroup: React.FC<YearGroupProps> = ({ annual, rows, onRowClick }) => {
           className="group cursor-pointer border-t border-gray-100 transition-colors hover:bg-gray-50"
         >
           <td className={`${tdCls} whitespace-nowrap`}>
-            <div className="font-semibold text-gray-900">
-              {formatVatPeriodLabel(row.period, isBimonthly)}
-            </div>
+            <div className="font-semibold text-gray-900">{formatVatPeriodLabel(row.period, isBimonthly)}</div>
           </td>
           <td className={`${tdCls} whitespace-nowrap`}>
             <Badge

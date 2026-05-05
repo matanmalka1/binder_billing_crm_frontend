@@ -148,9 +148,7 @@ export const Binders: React.FC = () => {
         onRevertReady={selectedBinder ? () => void revertReady(selectedBinder.id) : undefined}
         onReturn={selectedBinder ? () => dialogs.openReturnDialog(selectedBinder.id) : undefined}
         onBulkReady={selectedBinder ? () => dialogs.openBulkReadyDialog(selectedBinder) : undefined}
-        onOpenHandover={
-          selectedBinder ? () => dialogs.openHandoverDialog(selectedBinder) : undefined
-        }
+        onOpenHandover={selectedBinder ? () => dialogs.openHandoverDialog(selectedBinder) : undefined}
         onDelete={selectedBinder ? () => dialogs.openDeleteDialog(selectedBinder.id) : undefined}
         actionLoading={selectedBinder ? actionLoadingId === selectedBinder.id : false}
       />

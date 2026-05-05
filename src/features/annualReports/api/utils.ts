@@ -1,10 +1,5 @@
 import { makeClassGetter, makeLabelGetter } from '@/utils/labels'
-import type {
-  AnnualReportFull,
-  AnnualReportStatus,
-  ClientTypeForReport,
-  AnnualReportScheduleKey,
-} from './contracts'
+import type { AnnualReportFull, AnnualReportStatus, ClientTypeForReport, AnnualReportScheduleKey } from './contracts'
 
 // ── Status labels ──────────────────────────────────────────────────────────
 
@@ -23,8 +18,7 @@ export const STATUS_LABELS: Record<AnnualReportStatus, string> = {
   canceled: 'בוטל',
 }
 
-export const getStatusLabel = (status: string): string =>
-  (STATUS_LABELS as Record<string, string>)[status] ?? status
+export const getStatusLabel = (status: string): string => (STATUS_LABELS as Record<string, string>)[status] ?? status
 
 // ── Status badge variants ──────────────────────────────────────────────────
 
@@ -48,9 +42,8 @@ const statusVariants: Record<AnnualReportStatus, BadgeVariant> = {
 export const getStatusVariant = (status: string): BadgeVariant =>
   (statusVariants as Record<string, BadgeVariant>)[status] ?? 'neutral'
 
-export const getAllowedTransitions = (
-  report: Pick<AnnualReportFull, 'available_transitions'>,
-): AnnualReportStatus[] => report.available_transitions ?? []
+export const getAllowedTransitions = (report: Pick<AnnualReportFull, 'available_transitions'>): AnnualReportStatus[] =>
+  report.available_transitions ?? []
 
 // ── Client type labels ────────────────────────────────────────────────────
 
@@ -64,8 +57,7 @@ const clientTypeLabels: Record<ClientTypeForReport, string> = {
   exempt_dealer: 'עוסק פטור (1301)',
 }
 
-export const getClientTypeLabel = (type: string): string =>
-  (clientTypeLabels as Record<string, string>)[type] ?? type
+export const getClientTypeLabel = (type: string): string => (clientTypeLabels as Record<string, string>)[type] ?? type
 
 // ── Schedule labels ────────────────────────────────────────────────────────
 
@@ -87,8 +79,7 @@ const scheduleLabels: Record<AnnualReportScheduleKey, string> = {
   form_858: 'טופס 858 — יחידות השתתפות בשותפות נפט',
 }
 
-export const getScheduleLabel = (key: string): string =>
-  (scheduleLabels as Record<string, string>)[key] ?? key
+export const getScheduleLabel = (key: string): string => (scheduleLabels as Record<string, string>)[key] ?? key
 
 // ── Season progress helpers ────────────────────────────────────────────────
 

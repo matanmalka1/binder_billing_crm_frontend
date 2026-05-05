@@ -12,12 +12,7 @@ import {
   type VatInvoiceEditValues,
 } from '../schemas/invoice.schema'
 import { EXPENSE_CATEGORIES, CATEGORY_COLORS, VAT_EXPENSE_CATEGORY_OPTIONS } from '../constants'
-import {
-  formatVatAmount,
-  getVatDeductionRateClass,
-  getVatDeductionRateLabel,
-  toDateInputValue,
-} from '../utils'
+import { formatVatAmount, getVatDeductionRateClass, getVatDeductionRateLabel, toDateInputValue } from '../utils'
 import type { VatInvoiceEditRowProps } from '../types'
 import { semanticMonoToneClasses } from '../../../utils/semanticColors'
 import { blockNonNumericKey } from '../view.helpers'
@@ -88,11 +83,7 @@ export const VatInvoiceEditRow: React.FC<VatInvoiceEditRowProps> = ({
         />
       </td>
       <td className="px-2 py-1.5">
-        <Input
-          {...register('counterparty_name')}
-          onKeyDown={handleEscapeKeyDown}
-          className="h-7 w-36 text-xs px-1"
-        />
+        <Input {...register('counterparty_name')} onKeyDown={handleEscapeKeyDown} className="h-7 w-36 text-xs px-1" />
       </td>
       <td className="px-2 py-1.5">
         <Input

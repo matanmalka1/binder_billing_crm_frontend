@@ -38,23 +38,13 @@ const ICONS: Record<AlertIcon, React.ReactNode> = {
 }
 
 const Banner: React.FC<BannerItem> = ({ variant, icon, message, cta }) => (
-  <div
-    className={cn(
-      'flex items-start justify-between gap-3 rounded-lg border px-4 py-3',
-      VARIANT_STYLES[variant],
-    )}
-  >
+  <div className={cn('flex items-start justify-between gap-3 rounded-lg border px-4 py-3', VARIANT_STYLES[variant])}>
     <div className="flex items-start gap-2">
       <span className={cn('mt-0.5 shrink-0', ICON_STYLES[variant])}>{ICONS[icon]}</span>
       <p className="text-sm leading-snug">{message}</p>
     </div>
     {cta && (
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={cta.onClick}
-        className="shrink-0 gap-1.5 text-xs"
-      >
+      <Button variant="outline" size="sm" onClick={cta.onClick} className="shrink-0 gap-1.5 text-xs">
         <Send className="h-3 w-3" />
         {cta.label}
       </Button>

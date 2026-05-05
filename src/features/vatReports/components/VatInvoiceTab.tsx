@@ -18,9 +18,7 @@ export const VatInvoiceTab: React.FC<VatInvoiceTabProps> = ({
   isFilingPending,
 }) => {
   const canEdit =
-    canAddInvoice(workItem.available_actions) &&
-    !isClientClosed(workItem.client_status) &&
-    !isFilingPending
+    canAddInvoice(workItem.available_actions) && !isClientClosed(workItem.client_status) && !isFilingPending
   const { addInvoice, isAdding } = useAddInvoice(workItemId)
   const [categoryFilter, setCategoryFilter] = useState('')
 
@@ -31,9 +29,7 @@ export const VatInvoiceTab: React.FC<VatInvoiceTabProps> = ({
 
   const title = isExpense ? 'תשומות (מע"מ תשומות)' : 'עסקאות (מע"מ עסקאות)'
   const borderColor = isExpense ? 'border-r-orange-400' : 'border-r-emerald-400'
-  const emptyMessage = isExpense
-    ? 'עדיין לא הוספו חשבוניות תשומות'
-    : 'עדיין לא הוספו חשבוניות עסקאות'
+  const emptyMessage = isExpense ? 'עדיין לא הוספו חשבוניות תשומות' : 'עדיין לא הוספו חשבוניות עסקאות'
 
   return (
     <div dir="rtl">
@@ -64,11 +60,7 @@ export const VatInvoiceTab: React.FC<VatInvoiceTabProps> = ({
         />
         {canEdit && (
           <div className="mt-3">
-            <VatInvoiceAddForm
-              invoiceType={invoiceType}
-              addInvoice={addInvoice}
-              isAdding={isAdding}
-            />
+            <VatInvoiceAddForm invoiceType={invoiceType} addInvoice={addInvoice} isAdding={isAdding} />
           </div>
         )}
       </Card>

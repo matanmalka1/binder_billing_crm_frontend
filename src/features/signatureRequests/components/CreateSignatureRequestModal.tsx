@@ -101,8 +101,7 @@ export const CreateSignatureRequestModal: React.FC<Props> = ({
         <div className="flex items-start gap-2 rounded-lg border border-info-100 bg-info-50 px-3 py-2.5 text-xs text-info-700">
           <Link2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span>
-            לאחר יצירה, לחץ <strong>שלח</strong> כדי לקבל קישור חתימה שניתן לשלוח ללקוח (וואטסאפ,
-            אימייל, SMS וכד׳).
+            לאחר יצירה, לחץ <strong>שלח</strong> כדי לקבל קישור חתימה שניתן לשלוח ללקוח (וואטסאפ, אימייל, SMS וכד׳).
           </span>
         </div>
         {initialClientId == null &&

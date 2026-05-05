@@ -5,8 +5,7 @@ export const annualReportsQK = {
   reportCharges: (reportId: number, page: number, pageSize: number) =>
     ['tax', 'annual-reports', 'charges', reportId, { page, page_size: pageSize }] as const,
   statusHistory: (id: number | string) => ['tax', 'annual-reports', 'status-history', id] as const,
-  seasonSummary: (taxYear: number) =>
-    ['tax', 'annual-reports', 'season', taxYear, 'summary'] as const,
+  seasonSummary: (taxYear: number) => ['tax', 'annual-reports', 'season', taxYear, 'summary'] as const,
   seasonList: (taxYear: number) => ['tax', 'annual-reports', 'season', taxYear, 'list'] as const,
   activeSeasonSummary: ['tax', 'annual-reports', 'season', 'active', 'summary'] as const,
   activeSeasonList: ['tax', 'annual-reports', 'season', 'active', 'list'] as const,
@@ -17,6 +16,5 @@ export const annualReportsQK = {
   reportDetails: (id: number) => ['tax', 'annual-reports', id, 'details'] as const,
   taxCalc: (id: number) => ['tax', 'annual-reports', id, 'tax-calc'] as const,
   advancesSummary: (id: number) => ['tax', 'annual-reports', id, 'advances-summary'] as const,
-  annex: (id: number, schedule: string) =>
-    ['tax', 'annual-reports', id, 'annex', schedule] as const,
+  annex: (id: number, schedule: string) => ['tax', 'annual-reports', id, 'annex', schedule] as const,
 }

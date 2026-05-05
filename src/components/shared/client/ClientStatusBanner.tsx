@@ -11,9 +11,7 @@ export const ClientStatusBanner: React.FC<ClientStatusBannerProps> = ({ status, 
     return <Alert variant="error" message="לקוח סגור – צפייה בלבד" className={className} />
   }
   if (status === 'frozen') {
-    return (
-      <Alert variant="warning" message="לקוח מוקפא – אין יצירת עבודה חדשה" className={className} />
-    )
+    return <Alert variant="warning" message="לקוח מוקפא – אין יצירת עבודה חדשה" className={className} />
   }
   return null
 }

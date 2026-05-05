@@ -38,9 +38,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   }, [open])
 
   const isConfirmDisabled =
-    isLoading ||
-    confirmDisabled ||
-    (inputs ?? []).some((f) => f.required && !inputValues[f.name]?.trim())
+    isLoading || confirmDisabled || (inputs ?? []).some((f) => f.required && !inputValues[f.name]?.trim())
 
   const handleConfirm = () => {
     onConfirm(inputs?.length ? inputValues : undefined)
@@ -56,12 +54,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           <Button type="button" variant="secondary" disabled={isLoading} onClick={onCancel}>
             {cancelLabel || '—'}
           </Button>
-          <Button
-            type="button"
-            isLoading={isLoading}
-            disabled={isConfirmDisabled}
-            onClick={handleConfirm}
-          >
+          <Button type="button" isLoading={isLoading} disabled={isConfirmDisabled} onClick={handleConfirm}>
             {confirmLabel || '—'}
           </Button>
         </div>
@@ -76,9 +69,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
               label={field.required ? `${field.label} *` : field.label}
               type={field.type}
               value={inputValues[field.name] ?? ''}
-              onChange={(e) =>
-                setInputValues((prev) => ({ ...prev, [field.name]: e.target.value }))
-              }
+              onChange={(e) => setInputValues((prev) => ({ ...prev, [field.name]: e.target.value }))}
             />
           ))}
         </div>

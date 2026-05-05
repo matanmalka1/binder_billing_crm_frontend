@@ -5,11 +5,7 @@ import { timelineApi, timelineQK } from '../api'
 import { getErrorMessage, isPositiveInt, parsePositiveInt } from '../../../utils/utils'
 import { useActionRunner } from '@/features/actions'
 import type { TimelineEvent } from '../api'
-import {
-  normalizeTimelineEvents,
-  type NormalizedTimelineEvent,
-  type TimelineFilterKey,
-} from '../normalize'
+import { normalizeTimelineEvents, type NormalizedTimelineEvent, type TimelineFilterKey } from '../normalize'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -24,11 +20,7 @@ const eventMatchesFilters = (
   hasGroupedFilter: boolean,
 ): boolean => !hasGroupedFilter || event.filterKeys.some((key) => filters.includes(key))
 
-const eventMatchesSearch = (
-  event: NormalizedTimelineEvent,
-  query: string,
-  includeIds = false,
-): boolean =>
+const eventMatchesSearch = (event: NormalizedTimelineEvent, query: string, includeIds = false): boolean =>
   !query ||
   event.title.toLowerCase().includes(query) ||
   event.secondary?.toLowerCase().includes(query) ||
@@ -62,10 +54,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     queryFn: () => timelineApi.getClientTimeline(clientIdNumber, timelineParams),
   })
 
-  const events = useMemo<TimelineEvent[]>(
-    () => timelineQuery.data?.events ?? [],
-    [timelineQuery.data?.events],
-  )
+  const events = useMemo<TimelineEvent[]>(() => timelineQuery.data?.events ?? [], [timelineQuery.data?.events])
 
   // ── Derived timeline model ─────────────────────────────────────────────────
 
@@ -106,24 +95,14 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     const query = searchTerm.trim().toLowerCase()
 
     return historicalEvents.filter((event) => {
-      return (
-        eventMatchesFilters(event, typeFilters, hasGroupedFilter) &&
-        eventMatchesSearch(event, query, true)
-      )
+      return eventMatchesFilters(event, typeFilters, hasGroupedFilter) && eventMatchesSearch(event, query, true)
     })
   }, [historicalEvents, searchTerm, typeFilters, hasActiveFilters, hasGroupedFilter])
 
   // ── Actions ────────────────────────────────────────────────────────────────
 
-  const {
-    activeActionKey,
-    cancelPendingAction,
-    confirmPendingAction,
-    handleAction,
-    pendingAction,
-  } = useActionRunner({
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: timelineQK.clientRoot(clientIdNumber) }),
+  const { activeActionKey, cancelPendingAction, confirmPendingAction, handleAction, pendingAction } = useActionRunner({
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: timelineQK.clientRoot(clientIdNumber) }),
     errorFallback: 'שגיאה בביצוע פעולה',
     canonicalAction: true,
   })
@@ -153,9 +132,7 @@ export const useClientTimelinePage = (clientId: string | undefined) => {
     setTypeFilters((prev) => {
       if (type === 'all') return ['all']
       const withoutAll = prev.filter((item) => item !== 'all')
-      const next = withoutAll.includes(type)
-        ? withoutAll.filter((item) => item !== type)
-        : [...withoutAll, type]
+      const next = withoutAll.includes(type) ? withoutAll.filter((item) => item !== type) : [...withoutAll, type]
       return next.length === 0 ? ['all'] : next
     })
 

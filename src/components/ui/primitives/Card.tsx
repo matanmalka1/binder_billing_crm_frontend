@@ -51,9 +51,7 @@ export const Card: React.FC<CardProps> = ({
 
       <div className="p-6">{children}</div>
 
-      {footer && (
-        <div className="px-6 py-4 border-t border-gray-100/80 bg-gray-50/50">{footer}</div>
-      )}
+      {footer && <div className="px-6 py-4 border-t border-gray-100/80 bg-gray-50/50">{footer}</div>}
     </div>
   )
 }

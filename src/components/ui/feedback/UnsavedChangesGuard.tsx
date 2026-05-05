@@ -5,10 +5,7 @@ interface UnsavedChangesGuardProps {
   onDiscard: () => void
 }
 
-export const UnsavedChangesGuard: React.FC<UnsavedChangesGuardProps> = ({
-  onContinue,
-  onDiscard,
-}) => (
+export const UnsavedChangesGuard: React.FC<UnsavedChangesGuardProps> = ({ onContinue, onDiscard }) => (
   <OverlayContainer open variant="dialog">
     <h3 className="mb-2 text-base font-semibold text-gray-900">לבטל שינויים?</h3>
     <p className="mb-4 text-sm text-gray-600">יש שינויים שלא נשמרו. האם לסגור בכל זאת?</p>

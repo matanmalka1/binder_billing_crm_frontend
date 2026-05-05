@@ -30,18 +30,10 @@ export const useVatWorkItemActions = (workItemId: number) => {
   }
 
   const handleMaterialsComplete = () =>
-    run(
-      () => vatReportsApi.markMaterialsComplete(workItemId),
-      'קבלת החומרים אושרה',
-      'שגיאה בשינוי סטטוס',
-    )
+    run(() => vatReportsApi.markMaterialsComplete(workItemId), 'קבלת החומרים אושרה', 'שגיאה בשינוי סטטוס')
 
   const handleReadyForReview = () =>
-    run(
-      () => vatReportsApi.markReadyForReview(workItemId),
-      'התיק נשלח לבדיקה',
-      'שגיאה בשינוי סטטוס',
-    )
+    run(() => vatReportsApi.markReadyForReview(workItemId), 'התיק נשלח לבדיקה', 'שגיאה בשינוי סטטוס')
 
   const handleSendBack = (note: string) =>
     run(() => vatReportsApi.sendBack(workItemId, note), 'התיק הוחזר לתיקון', 'שגיאה בהחזרה לתיקון')

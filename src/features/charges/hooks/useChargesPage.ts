@@ -1,12 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useSearchParamFilters } from '../../../hooks/useSearchParamFilters'
-import {
-  chargesApi,
-  chargesQK,
-  type BulkChargeActionPayload,
-  type CreateChargePayload,
-} from '../api'
+import { chargesApi, chargesQK, type BulkChargeActionPayload, type CreateChargePayload } from '../api'
 import { getErrorMessage, showErrorToast } from '../../../utils/utils'
 import { useRole } from '../../../hooks/useRole'
 import { toast } from '../../../utils/toast'
@@ -37,10 +32,7 @@ export const useChargesPage = () => {
   const error = listError ? getErrorMessage(listError, 'שגיאה בטעינת רשימת חיובים') : null
   const { isAdvisor } = useRole()
 
-  const createMutation = useMutationWithToast<
-    Awaited<ReturnType<typeof chargesApi.create>>,
-    CreateChargePayload
-  >({
+  const createMutation = useMutationWithToast<Awaited<ReturnType<typeof chargesApi.create>>, CreateChargePayload>({
     mutationFn: (payload) => chargesApi.create(payload),
     successMessage: 'חיוב נוצר בהצלחה',
     errorMessage: 'שגיאה ביצירת חיוב',
@@ -147,9 +139,7 @@ export const useChargesPage = () => {
     actionLoadingId,
     bulkLoading,
     charges: chargeItems,
-    createError: createMutation.error
-      ? getErrorMessage(createMutation.error, 'שגיאה ביצירת חיוב')
-      : null,
+    createError: createMutation.error ? getErrorMessage(createMutation.error, 'שגיאה ביצירת חיוב') : null,
     createLoading: createMutation.isPending,
     error,
     filters,

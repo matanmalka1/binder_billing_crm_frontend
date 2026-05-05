@@ -24,11 +24,7 @@ export const ReminderRowActions: React.FC<ReminderRowActionsProps> = ({
 
   return (
     <RowActionsMenu ariaLabel={`פעולות לתזכורת ${reminder.id}`}>
-      <RowActionItem
-        label="פרטים"
-        onClick={() => onViewDetails(reminder)}
-        icon={<Eye className="h-4 w-4" />}
-      />
+      <RowActionItem label="פרטים" onClick={() => onViewDetails(reminder)} icon={<Eye className="h-4 w-4" />} />
       {isPending && (
         <>
           <RowActionItem

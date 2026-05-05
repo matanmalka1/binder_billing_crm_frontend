@@ -1,9 +1,5 @@
 import { makeLabelGetter } from './labels'
-import {
-  ENTITY_TYPE_LABELS,
-  CLIENT_STATUS_LABELS,
-  VAT_TYPE_LABELS,
-} from '../features/clients/constants'
+import { ENTITY_TYPE_LABELS, CLIENT_STATUS_LABELS, VAT_TYPE_LABELS } from '../features/clients/constants'
 
 // ── Binder status ──────────────────────────────────────────────────────────
 
@@ -52,10 +48,7 @@ export const CHARGE_STATUS_LABELS: Record<string, string> = {
 
 export const getChargeStatusLabel = makeLabelGetter(CHARGE_STATUS_LABELS)
 
-export const CHARGE_STATUS_VARIANTS: Record<
-  string,
-  'success' | 'warning' | 'error' | 'info' | 'neutral'
-> = {
+export const CHARGE_STATUS_VARIANTS: Record<string, 'success' | 'warning' | 'error' | 'info' | 'neutral'> = {
   draft: 'neutral',
   issued: 'info',
   paid: 'success',
@@ -83,10 +76,7 @@ export const ADVANCE_PAYMENT_STATUS_LABELS: Record<string, string> = {
 
 export const getAdvancePaymentStatusLabel = makeLabelGetter(ADVANCE_PAYMENT_STATUS_LABELS)
 
-export const ADVANCE_PAYMENT_STATUS_VARIANTS: Record<
-  string,
-  'success' | 'warning' | 'error' | 'neutral'
-> = {
+export const ADVANCE_PAYMENT_STATUS_VARIANTS: Record<string, 'success' | 'warning' | 'error' | 'neutral'> = {
   paid: 'success',
   partial: 'warning',
   pending: 'neutral',
@@ -135,10 +125,7 @@ export const SIGNATURE_REQUEST_TYPE_LABELS: Record<string, string> = {
 
 export const getSignatureRequestTypeLabel = makeLabelGetter(SIGNATURE_REQUEST_TYPE_LABELS)
 
-export const SIGNATURE_REQUEST_STATUS_VARIANTS: Record<
-  string,
-  'neutral' | 'info' | 'warning' | 'success' | 'error'
-> = {
+export const SIGNATURE_REQUEST_STATUS_VARIANTS: Record<string, 'neutral' | 'info' | 'warning' | 'success' | 'error'> = {
   draft: 'neutral',
   pending_signature: 'info',
   signed: 'success',

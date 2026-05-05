@@ -14,10 +14,7 @@ interface AnnualReportFullPanelProps {
   backPath?: string
 }
 
-export const AnnualReportFullPanel = ({
-  reportId,
-  backPath = '/tax/reports',
-}: AnnualReportFullPanelProps) => {
+export const AnnualReportFullPanel = ({ reportId, backPath = '/tax/reports' }: AnnualReportFullPanelProps) => {
   const {
     report,
     isLoading,
@@ -45,11 +42,7 @@ export const AnnualReportFullPanel = ({
   } = useAnnualReportDetailPage(reportId, backPath)
 
   if (isLoading) {
-    return (
-      <div className="flex flex-1 items-center justify-center py-24 text-sm text-gray-400">
-        טוען דוח...
-      </div>
-    )
+    return <div className="flex flex-1 items-center justify-center py-24 text-sm text-gray-400">טוען דוח...</div>
   }
 
   if (error || !report) {
@@ -73,12 +66,7 @@ export const AnnualReportFullPanel = ({
           actions={
             <>
               {isAdvisor && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleExportPdf}
-                  isLoading={isExportingPdf}
-                >
+                <Button variant="ghost" size="sm" onClick={handleExportPdf} isLoading={isExportingPdf}>
                   <Download className="h-4 w-4" />
                   הורד טיוטה
                 </Button>
@@ -91,12 +79,7 @@ export const AnnualReportFullPanel = ({
                 <Trash2 size={14} />
                 מחק דוח
               </Button>
-              <Button
-                variant="ghost"
-                onClick={handleSave}
-                disabled={!isDirty || isUpdating}
-                className="gap-1.5"
-              >
+              <Button variant="ghost" onClick={handleSave} disabled={!isDirty || isUpdating} className="gap-1.5">
                 <Save size={14} />
                 {isUpdating ? 'שומר...' : 'שמור'}
               </Button>

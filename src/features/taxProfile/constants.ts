@@ -23,11 +23,9 @@ export const TAX_PROFILE_FIELD_LABELS = {
   advanceRateInput: 'אחוז מקדמה (%)',
 } as const
 
-export const VAT_REPORTING_FREQUENCIES = [
-  'monthly',
-  'bimonthly',
-  'exempt',
-] as const satisfies readonly NonNullable<TaxProfileData['vat_reporting_frequency']>[]
+export const VAT_REPORTING_FREQUENCIES = ['monthly', 'bimonthly', 'exempt'] as const satisfies readonly NonNullable<
+  TaxProfileData['vat_reporting_frequency']
+>[]
 
 export const ADVANCE_RATE_INPUT = {
   min: 0,

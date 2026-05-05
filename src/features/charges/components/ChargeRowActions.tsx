@@ -24,8 +24,7 @@ export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
   onCancel,
   onOpenDetail,
 }) => {
-  const hasActions =
-    showActions && (canIssue(actions) || canMarkPaid(actions) || canCancel(actions))
+  const hasActions = showActions && (canIssue(actions) || canMarkPaid(actions) || canCancel(actions))
 
   return (
     <RowActionsMenu ariaLabel={`פעולות לחיוב ${chargeId}`}>
@@ -37,12 +36,7 @@ export const ChargeRowActions: React.FC<ChargeRowActionsProps> = ({
       />
       {hasActions && <RowActionSeparator />}
       {showActions && canIssue(actions) && (
-        <RowActionItem
-          label="הנפקה"
-          onClick={onIssue}
-          icon={<FileText className="h-4 w-4" />}
-          disabled={disabled}
-        />
+        <RowActionItem label="הנפקה" onClick={onIssue} icon={<FileText className="h-4 w-4" />} disabled={disabled} />
       )}
       {showActions && canMarkPaid(actions) && (
         <RowActionItem

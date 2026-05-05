@@ -53,12 +53,7 @@ export const RemindersPage: React.FC = () => {
       title="ניהול תזכורות"
       description="תזכורות ידניות שהמשתמש יצר למעקב אישי"
       actions={
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowCreateModal(true)}
-          className="gap-2"
-        >
+        <Button variant="ghost" size="sm" onClick={() => setShowCreateModal(true)} className="gap-2">
           תזכורת חדשה
           <Plus className="h-4 w-4" />
         </Button>
@@ -105,12 +100,7 @@ export const RemindersPage: React.FC = () => {
   }
 
   return (
-    <PageStateGuard
-      isLoading={isLoading}
-      error={error}
-      header={header}
-      loadingMessage="טוען תזכורות..."
-    >
+    <PageStateGuard isLoading={isLoading} error={error} header={header} loadingMessage="טוען תזכורות...">
       <RemindersSummaryCards
         pendingCount={pendingCount}
         sentCount={sentCount}

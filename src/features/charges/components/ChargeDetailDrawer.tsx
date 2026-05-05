@@ -1,11 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Trash2 } from 'lucide-react'
-import {
-  DetailDrawer,
-  DrawerField,
-  DrawerSection,
-} from '../../../components/ui/overlays/DetailDrawer'
+import { DetailDrawer, DrawerField, DrawerSection } from '../../../components/ui/overlays/DetailDrawer'
 import { Textarea } from '../../../components/ui/inputs/Textarea'
 import { Alert } from '../../../components/ui/overlays/Alert'
 import { Button } from '../../../components/ui/primitives/Button'
@@ -30,8 +26,9 @@ interface ChargeDetailDrawerProps {
 }
 
 export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId, onClose }) => {
-  const { actionLoading, charge, denied, runAction, isAdvisor, deleteCharge, isDeleting } =
-    useChargeDetailsPage(chargeId != null ? String(chargeId) : undefined)
+  const { actionLoading, charge, denied, runAction, isAdvisor, deleteCharge, isDeleting } = useChargeDetailsPage(
+    chargeId != null ? String(chargeId) : undefined,
+  )
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
   const [isConfirmingCancel, setIsConfirmingCancel] = useState(false)
   const [cancelReason, setCancelReason] = useState('')
@@ -97,11 +94,7 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
       <ConfirmDialog
         open={isConfirmingDelete}
         title="מחיקת חיוב"
-        message={
-          charge
-            ? `האם למחוק את חיוב #${charge.id}? פעולה זו אינה ניתנת לביטול.`
-            : 'האם למחוק את החיוב?'
-        }
+        message={charge ? `האם למחוק את חיוב #${charge.id}? פעולה זו אינה ניתנת לביטול.` : 'האם למחוק את החיוב?'}
         confirmLabel="מחק חיוב"
         cancelLabel="ביטול"
         isLoading={isDeleting}
@@ -126,11 +119,7 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
               >
                 {clientLabel}
               </Link>
-              <StatusBadge
-                status={charge.status}
-                getLabel={getChargeStatusLabel}
-                variantMap={chargeStatusVariants}
-              />
+              <StatusBadge status={charge.status} getLabel={getChargeStatusLabel} variantMap={chargeStatusVariants} />
             </span>
           ) : undefined
         }
@@ -157,26 +146,17 @@ export const ChargeDetailDrawer: React.FC<ChargeDetailDrawerProps> = ({ chargeId
             {charge.amount != null && (
               <DrawerField
                 label="סכום"
-                value={
-                  <span className="font-semibold text-gray-900">{getChargeAmountText(charge)}</span>
-                }
+                value={<span className="font-semibold text-gray-900">{getChargeAmountText(charge)}</span>}
               />
             )}
-            <DrawerField
-              label="תקופה"
-              value={getChargePeriodLabel(charge.period, charge.months_covered)}
-            />
+            <DrawerField label="תקופה" value={getChargePeriodLabel(charge.period, charge.months_covered)} />
             {charge.description && <DrawerField label="תיאור" value={charge.description} />}
-            {charge.annual_report_id && (
-              <DrawerField label="דוח שנתי" value={`#${charge.annual_report_id}`} />
-            )}
+            {charge.annual_report_id && <DrawerField label="דוח שנתי" value={`#${charge.annual_report_id}`} />}
             <DrawerField label="נוצר" value={formatDateTime(charge.created_at)} />
             <DrawerField label="הונפק" value={formatDateTime(charge.issued_at)} />
             <DrawerField label="שולם" value={formatDateTime(charge.paid_at)} />
             <DrawerField label="בוטל" value={formatDateTime(charge.canceled_at)} />
-            {charge.cancellation_reason && (
-              <DrawerField label="סיבת ביטול" value={charge.cancellation_reason} />
-            )}
+            {charge.cancellation_reason && <DrawerField label="סיבת ביטול" value={charge.cancellation_reason} />}
           </DrawerSection>
         )}
       </DetailDrawer>

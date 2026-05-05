@@ -22,9 +22,7 @@ export const CreateClientBusinessStep: React.FC<Props> = ({
   <div className="space-y-4">
     <p className="text-xs text-gray-500">שדות מסומנים בכוכבית חובה.</p>
     <div className="space-y-4 border-t border-gray-200 pt-4">
-      <p className="text-sm font-medium text-gray-700">
-        {isCompany ? 'פרטי חברה ויצירת קשר' : 'פרטי עסק'}
-      </p>
+      <p className="text-sm font-medium text-gray-700">{isCompany ? 'פרטי חברה ויצירת קשר' : 'פרטי עסק'}</p>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Input
@@ -34,9 +32,7 @@ export const CreateClientBusinessStep: React.FC<Props> = ({
             disabled={disabled}
             {...register('business_name')}
           />
-          {!isCompany && (
-            <p className="mt-1 text-xs text-gray-400">אם לא יוזן שם עסק, ייעשה שימוש בשם הלקוח.</p>
-          )}
+          {!isCompany && <p className="mt-1 text-xs text-gray-400">אם לא יוזן שם עסק, ייעשה שימוש בשם הלקוח.</p>}
         </div>
         <DatePicker
           label={isCompany ? 'תאריך התאגדות' : 'תאריך פתיחת תיק/פעילות'}
@@ -103,12 +99,7 @@ export const CreateClientBusinessStep: React.FC<Props> = ({
           {...register('address_zip_code')}
         />
       </div>
-      <Input
-        label="עיר *"
-        error={errors.address_city?.message}
-        disabled={disabled}
-        {...register('address_city')}
-      />
+      <Input label="עיר *" error={errors.address_city?.message} disabled={disabled} {...register('address_city')} />
     </div>
   </div>
 )

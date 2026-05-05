@@ -12,21 +12,14 @@ interface CorrespondenceEntryItemProps {
   onDelete: (id: number) => void
 }
 
-export const CorrespondenceEntryItem = ({
-  entry,
-  isDeleting,
-  onEdit,
-  onDelete,
-}: CorrespondenceEntryItemProps) => {
+export const CorrespondenceEntryItem = ({ entry, isDeleting, onEdit, onDelete }: CorrespondenceEntryItemProps) => {
   const config = CORRESPONDENCE_TYPE_CONFIG[entry.correspondence_type]
   const Icon = config.icon
 
   return (
     <li className="flex gap-4 py-3 pl-2">
       <div className="relative shrink-0 pt-0.5">
-        <div
-          className={`h-4 w-4 rounded-full border-2 border-white shadow-sm ${config.dotColor}`}
-        />
+        <div className={`h-4 w-4 rounded-full border-2 border-white shadow-sm ${config.dotColor}`} />
       </div>
 
       <div className="flex-1 min-w-0 space-y-1">
@@ -39,9 +32,7 @@ export const CorrespondenceEntryItem = ({
             <p className="truncate text-sm font-semibold text-gray-900">{entry.subject}</p>
           </div>
           <div className="flex items-center gap-1 shrink-0">
-            <time className="text-xs text-gray-400 tabular-nums">
-              {formatDate(entry.occurred_at)}
-            </time>
+            <time className="text-xs text-gray-400 tabular-nums">{formatDate(entry.occurred_at)}</time>
             <Button
               type="button"
               variant="ghost"
@@ -66,9 +57,7 @@ export const CorrespondenceEntryItem = ({
           </div>
         </div>
 
-        {entry.notes && (
-          <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{entry.notes}</p>
-        )}
+        {entry.notes && <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{entry.notes}</p>}
       </div>
     </li>
   )

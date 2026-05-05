@@ -58,9 +58,7 @@ export const StatusHistoryTimeline: React.FC<StatusHistoryTimelineProps> = ({ hi
                 </div>
 
                 {entry.note && (
-                  <p className="mt-1.5 text-xs text-gray-600 border-t border-gray-100 pt-1.5">
-                    {entry.note}
-                  </p>
+                  <p className="mt-1.5 text-xs text-gray-600 border-t border-gray-100 pt-1.5">{entry.note}</p>
                 )}
               </div>
             </li>

@@ -23,10 +23,7 @@ import {
   toFrequency,
   toNumberOrNull,
 } from './advancePaymentComponent.utils'
-import {
-  ADVANCE_PAYMENT_SUGGESTION_STALE_TIME_MS,
-  NOTES_TEXTAREA_CLASS,
-} from './advancePaymentComponent.constants'
+import { ADVANCE_PAYMENT_SUGGESTION_STALE_TIME_MS, NOTES_TEXTAREA_CLASS } from './advancePaymentComponent.constants'
 
 interface CreateAdvancePaymentModalProps {
   open: boolean
@@ -175,8 +172,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
                   onClick={applySuggestion}
                   className="text-sm text-primary-600 hover:underline text-right w-full px-0 hover:bg-transparent justify-end"
                 >
-                  הצעה לפי מחזור שנה קודמת: ₪{formatSuggestionAmount(suggestion.suggested_amount)} —
-                  לחץ למילוי
+                  הצעה לפי מחזור שנה קודמת: ₪{formatSuggestionAmount(suggestion.suggested_amount)} — לחץ למילוי
                 </Button>
               )}
             </div>
@@ -198,12 +194,7 @@ export const CreateAdvancePaymentModal: React.FC<CreateAdvancePaymentModalProps>
         />
         <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700">הערות (אופציונלי)</label>
-          <textarea
-            {...register('notes')}
-            rows={2}
-            className={NOTES_TEXTAREA_CLASS}
-            placeholder="הערות..."
-          />
+          <textarea {...register('notes')} rows={2} className={NOTES_TEXTAREA_CLASS} placeholder="הערות..." />
         </div>
       </form>
     </Modal>

@@ -16,9 +16,7 @@ export const createReportSchema = z.object({
   ]),
   deadline_type: z.enum(['standard', 'extended', 'custom']).default('standard'),
   submission_method: z.enum(['online', 'manual', 'representative']).optional(),
-  extension_reason: z
-    .enum(['military_service', 'health_reason', 'general', 'war_situation'])
-    .optional(),
+  extension_reason: z.enum(['military_service', 'health_reason', 'general', 'war_situation']).optional(),
   notes: z.string().optional(),
   has_rental_income: z.boolean().default(false),
   has_capital_gains: z.boolean().default(false),

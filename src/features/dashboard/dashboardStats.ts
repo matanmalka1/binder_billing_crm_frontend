@@ -15,15 +15,13 @@ type DashboardStatsData = Pick<
 
 type VatPeriodType = 'monthly' | 'bimonthly'
 
-const withParams = (base: string, params: Record<string, string>) =>
-  `${base}?${new URLSearchParams(params).toString()}`
+const withParams = (base: string, params: Record<string, string>) => `${base}?${new URLSearchParams(params).toString()}`
 
 const HREFS = {
   activeClients: withParams('/clients', { status: 'active' }),
   bindersInOffice: withParams('/binders', { status: 'in_office' }),
   remindersReady: withParams('/reminders', { status: 'pending', due: 'ready' }),
-  vat: (period: string, periodType: VatPeriodType) =>
-    withParams('/tax/vat', { period, period_type: periodType }),
+  vat: (period: string, periodType: VatPeriodType) => withParams('/tax/vat', { period, period_type: periodType }),
 }
 
 const vatVariant = (pending: number): StatItem['variant'] => (pending > 0 ? 'red' : 'green')
@@ -50,10 +48,7 @@ export const buildDashboardStats = (data: DashboardStatsData): StatItem[] => [
   {
     key: 'active_clients',
     title: 'לקוחות',
-    value:
-      data.total_clients > 0
-        ? `${data.active_clients.toLocaleString('he-IL')} לקוחות פעילים`
-        : 'אין לקוחות עדיין',
+    value: data.total_clients > 0 ? `${data.active_clients.toLocaleString('he-IL')} לקוחות פעילים` : 'אין לקוחות עדיין',
     description:
       data.total_clients > 0
         ? `מתוך ${data.total_clients.toLocaleString('he-IL')} סך הכל`
@@ -67,9 +62,7 @@ export const buildDashboardStats = (data: DashboardStatsData): StatItem[] => [
     key: 'in_office',
     title: 'קלסרים במשרד',
     value:
-      data.active_binders > 0
-        ? `${data.binders_in_office.toLocaleString('he-IL')} קלסרים במשרד`
-        : 'אין קלסרים עדיין',
+      data.active_binders > 0 ? `${data.binders_in_office.toLocaleString('he-IL')} קלסרים במשרד` : 'אין קלסרים עדיין',
     description:
       data.active_binders > 0
         ? `מתוך ${data.active_binders.toLocaleString('he-IL')} קלסרים פעילים`

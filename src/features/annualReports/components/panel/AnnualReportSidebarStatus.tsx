@@ -9,10 +9,7 @@ interface AnnualReportSidebarStatusProps {
   onTransition: (payload: StatusTransitionPayload) => void
 }
 
-export const AnnualReportSidebarStatus = ({
-  report,
-  onTransition,
-}: AnnualReportSidebarStatusProps) => {
+export const AnnualReportSidebarStatus = ({ report, onTransition }: AnnualReportSidebarStatusProps) => {
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const handleTransition = async (payload: StatusTransitionPayload) => {
@@ -26,11 +23,7 @@ export const AnnualReportSidebarStatus = ({
 
   return (
     <div className="p-4">
-      <StatusTransitionPanel
-        report={report}
-        onTransition={handleTransition}
-        isLoading={isTransitioning}
-      />
+      <StatusTransitionPanel report={report} onTransition={handleTransition} isLoading={isTransitioning} />
     </div>
   )
 }

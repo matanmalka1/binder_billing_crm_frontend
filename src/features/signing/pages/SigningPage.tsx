@@ -1,16 +1,9 @@
 import { useParams } from 'react-router-dom'
 import { FileSignature } from 'lucide-react'
-import {
-  SigningForm,
-  SigningStatus,
-  useSigningPageState,
-  type SigningTerminalState,
-} from '@/features/signing'
+import { SigningForm, SigningStatus, useSigningPageState, type SigningTerminalState } from '@/features/signing'
 
 const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
-    {children}
-  </div>
+  <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">{children}</div>
 )
 
 const TERMINAL_STATES: SigningTerminalState[] = ['loading', 'error', 'signed', 'declined']
@@ -74,9 +67,7 @@ export const SigningPage: React.FC = () => {
         )}
       </Shell>
 
-      <p className="mt-8 text-center text-xs text-gray-400">
-        מערכת ניהול משרד · חתימה מאובטחת ומוצפנת
-      </p>
+      <p className="mt-8 text-center text-xs text-gray-400">מערכת ניהול משרד · חתימה מאובטחת ומוצפנת</p>
     </div>
   )
 }

@@ -83,9 +83,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
       return
     }
 
-    const selectedIndex = options.findIndex(
-      (opt) => !opt.disabled && String(opt.value) === currentValue,
-    )
+    const selectedIndex = options.findIndex((opt) => !opt.disabled && String(opt.value) === currentValue)
     const firstEnabledIndex = options.findIndex((opt) => !opt.disabled)
     setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : firstEnabledIndex)
   }, [currentValue, open, options])
@@ -198,12 +196,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span
-          className={cn(
-            'flex-1 truncate text-right',
-            !currentValue ? 'text-gray-400' : 'text-gray-800',
-          )}
-        >
+        <span className={cn('flex-1 truncate text-right', !currentValue ? 'text-gray-400' : 'text-gray-800')}>
           {selectedLabel}
         </span>
         {CHEVRON}
@@ -236,17 +229,13 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
                   'flex w-full items-center gap-2 px-3 py-2 text-right text-sm transition-colors',
                   'disabled:opacity-40 disabled:cursor-not-allowed',
                   highlightedIndex === index ? 'bg-primary-50' : 'hover:bg-primary-50',
-                  currentValue === String(opt.value)
-                    ? 'text-primary-600 font-medium'
-                    : 'text-gray-700',
+                  currentValue === String(opt.value) ? 'text-primary-600 font-medium' : 'text-gray-700',
                 )}
                 role="option"
                 aria-selected={currentValue === String(opt.value)}
               >
                 <span className="flex-1 truncate">{opt.label}</span>
-                {currentValue === String(opt.value) && (
-                  <Check className="h-3.5 w-3.5 shrink-0 text-primary-500" />
-                )}
+                {currentValue === String(opt.value) && <Check className="h-3.5 w-3.5 shrink-0 text-primary-500" />}
               </button>
             ))}
           </div>,

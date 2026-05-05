@@ -96,9 +96,7 @@ export const Charges: React.FC = () => {
         onStatusClick={(status) => setFilter('status', status)}
       />
 
-      {!isAdvisor && (
-        <Alert variant="info" message="צפייה בלבד. יצירה ושינוי חיובים זמינים ליועץ בלבד." />
-      )}
+      {!isAdvisor && <Alert variant="info" message="צפייה בלבד. יצירה ושינוי חיובים זמינים ליועץ בלבד." />}
 
       <ChargesFiltersCard
         filters={filters}

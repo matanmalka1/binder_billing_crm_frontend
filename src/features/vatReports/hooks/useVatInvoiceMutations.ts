@@ -35,11 +35,7 @@ export const useAddInvoice = (workItemId: number) => {
   })
 
   const addInvoice = async (payload: CreateVatInvoicePayload): Promise<boolean> =>
-    runMutationWithFeedback(
-      () => mutation.mutateAsync(payload),
-      'החשבונית נוספה בהצלחה',
-      'שגיאה בהוספת חשבונית',
-    )
+    runMutationWithFeedback(() => mutation.mutateAsync(payload), 'החשבונית נוספה בהצלחה', 'שגיאה בהוספת חשבונית')
 
   return { addInvoice, isAdding: mutation.isPending }
 }
@@ -53,11 +49,7 @@ export const useDeleteInvoice = (workItemId: number) => {
   })
 
   const deleteInvoice = async (invoiceId: number): Promise<boolean> =>
-    runMutationWithFeedback(
-      () => mutation.mutateAsync(invoiceId),
-      'החשבונית נמחקה',
-      'שגיאה במחיקת חשבונית',
-    )
+    runMutationWithFeedback(() => mutation.mutateAsync(invoiceId), 'החשבונית נמחקה', 'שגיאה במחיקת חשבונית')
 
   return { deleteInvoice, isDeleting: mutation.isPending }
 }
@@ -71,10 +63,7 @@ export const useUpdateInvoice = (workItemId: number) => {
     onSuccess: async () => invalidateVatInvoiceQueries(queryClient, workItemId),
   })
 
-  const updateInvoice = async (
-    invoiceId: number,
-    payload: UpdateVatInvoicePayload,
-  ): Promise<boolean> =>
+  const updateInvoice = async (invoiceId: number, payload: UpdateVatInvoicePayload): Promise<boolean> =>
     runMutationWithFeedback(
       () => mutation.mutateAsync({ invoiceId, payload }),
       'החשבונית עודכנה',

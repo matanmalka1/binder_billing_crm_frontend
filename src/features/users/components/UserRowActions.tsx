@@ -18,16 +18,8 @@ export const UserRowActions: React.FC<UserRowActionsProps> = ({
   onToggleActive,
 }) => (
   <RowActionsMenu ariaLabel={`פעולות למשתמש ${user.full_name}`}>
-    <RowActionItem
-      label="עריכה"
-      onClick={() => onEdit(user)}
-      icon={<Pencil className="h-4 w-4" />}
-    />
-    <RowActionItem
-      label="איפוס סיסמה"
-      onClick={() => onResetPassword(user)}
-      icon={<KeyRound className="h-4 w-4" />}
-    />
+    <RowActionItem label="עריכה" onClick={() => onEdit(user)} icon={<Pencil className="h-4 w-4" />} />
+    <RowActionItem label="איפוס סיסמה" onClick={() => onResetPassword(user)} icon={<KeyRound className="h-4 w-4" />} />
     {user.id !== currentUserId && (
       <>
         <RowActionSeparator />

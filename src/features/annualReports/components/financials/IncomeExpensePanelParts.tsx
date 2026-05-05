@@ -1,11 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Button } from '../../../../components/ui/primitives/Button'
 import { cn, formatCurrencyILS as fmt } from '../../../../utils/utils'
-import {
-  FinancialAddFormShell,
-  FinancialAmountDescriptionFields,
-  FinancialSelectField,
-} from './FinancialLineFormParts'
+import { FinancialAddFormShell, FinancialAmountDescriptionFields, FinancialSelectField } from './FinancialLineFormParts'
 import { FIELD_PLACEHOLDERS } from './financialConstants'
 import { useIncomeLineForm } from './useFinancialLineForm'
 
@@ -16,12 +12,7 @@ export interface AddLineFormProps {
   label: string
 }
 
-export const AddLineForm: React.FC<AddLineFormProps> = ({
-  typeOptions,
-  onAdd,
-  isAdding,
-  label,
-}) => {
+export const AddLineForm: React.FC<AddLineFormProps> = ({ typeOptions, onAdd, isAdding, label }) => {
   const [open, setOpen] = useState(false)
   const form = useIncomeLineForm(undefined, (payload) => {
     onAdd(payload.source_type, payload.amount, payload.description)
@@ -76,30 +67,16 @@ export const AutoPopulateControls: React.FC<AutoPopulateControlsProps> = ({
   <div className="flex justify-end gap-2">
     {showForceConfirm ? (
       <>
-        <span className="self-center text-sm text-warning-700">
-          קיימות שורות — למחוק ולמלא מחדש?
-        </span>
+        <span className="self-center text-sm text-warning-700">קיימות שורות — למחוק ולמלא מחדש?</span>
         <Button type="button" variant="outline" size="sm" onClick={onCancelForce}>
           ביטול
         </Button>
-        <Button
-          type="button"
-          variant="danger"
-          size="sm"
-          onClick={() => onPopulate(true)}
-          isLoading={isPending}
-        >
+        <Button type="button" variant="danger" size="sm" onClick={() => onPopulate(true)} isLoading={isPending}>
           מחק ומלא מחדש
         </Button>
       </>
     ) : (
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => onPopulate(false)}
-        isLoading={isPending}
-      >
+      <Button type="button" variant="ghost" size="sm" onClick={() => onPopulate(false)} isLoading={isPending}>
         מלא מנתוני מע"מ
       </Button>
     )}
@@ -133,12 +110,7 @@ export const FinancialSummaryCards: React.FC<FinancialSummaryCardsProps> = ({
       )}
     >
       <p className="text-xs text-gray-500 mb-1">הכנסה חייבת</p>
-      <p
-        className={cn(
-          'text-lg font-bold',
-          taxableIncome >= 0 ? 'text-info-700' : 'text-negative-600',
-        )}
-      >
+      <p className={cn('text-lg font-bold', taxableIncome >= 0 ? 'text-info-700' : 'text-negative-600')}>
         {fmt(taxableIncome)}
       </p>
     </div>
@@ -171,17 +143,13 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
   footer,
 }) => (
   <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-    <div
-      className={cn('flex items-center gap-2 border-b border-gray-100 px-5 py-3', headerClassName)}
-    >
+    <div className={cn('flex items-center gap-2 border-b border-gray-100 px-5 py-3', headerClassName)}>
       {icon}
       <h4 className={cn('text-sm font-semibold', titleClassName)}>{title}</h4>
       <span className={cn('mr-auto text-xs font-medium', totalClassName)}>{fmt(total)}</span>
     </div>
     <div className="divide-y divide-gray-50 px-1">
-      {isEmpty ? (
-        <p className="px-4 py-6 text-center text-sm text-gray-400">{emptyMessage}</p>
-      ) : null}
+      {isEmpty ? <p className="px-4 py-6 text-center text-sm text-gray-400">{emptyMessage}</p> : null}
       {children}
     </div>
     <div className="px-4 pb-3 pt-2">{footer}</div>

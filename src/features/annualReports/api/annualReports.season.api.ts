@@ -14,16 +14,10 @@ export const annualReportSeasonApi = {
     return response.data
   },
 
-  listActiveSeasonReports: async (params: {
-    page?: number
-    page_size?: number
-  }): Promise<AnnualReportListResponse> => {
-    const response = await api.get<AnnualReportListResponse>(
-      ANNUAL_REPORT_ENDPOINTS.activeTaxYearReports,
-      {
-        params: toQueryParams(params),
-      },
-    )
+  listActiveSeasonReports: async (params: { page?: number; page_size?: number }): Promise<AnnualReportListResponse> => {
+    const response = await api.get<AnnualReportListResponse>(ANNUAL_REPORT_ENDPOINTS.activeTaxYearReports, {
+      params: toQueryParams(params),
+    })
     return response.data
   },
 
@@ -31,22 +25,16 @@ export const annualReportSeasonApi = {
     taxYear: number,
     params: { page?: number; page_size?: number },
   ): Promise<AnnualReportListResponse> => {
-    const response = await api.get<AnnualReportListResponse>(
-      ANNUAL_REPORT_ENDPOINTS.taxYearReports(taxYear),
-      {
-        params: toQueryParams(params),
-      },
-    )
+    const response = await api.get<AnnualReportListResponse>(ANNUAL_REPORT_ENDPOINTS.taxYearReports(taxYear), {
+      params: toQueryParams(params),
+    })
     return response.data
   },
 
   getOverdue: async (taxYear?: number): Promise<AnnualReportFull[]> => {
-    const response = await api.get<AnnualReportFull[]>(
-      ANNUAL_REPORT_ENDPOINTS.annualReportOverdue,
-      {
-        params: toQueryParams({ tax_year: taxYear }),
-      },
-    )
+    const response = await api.get<AnnualReportFull[]>(ANNUAL_REPORT_ENDPOINTS.annualReportOverdue, {
+      params: toQueryParams({ tax_year: taxYear }),
+    })
     return response.data
   },
 }

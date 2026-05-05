@@ -98,9 +98,7 @@ export const CreateClientIdentityStep: React.FC<Props> = ({
                 </div>
                 <div>
                   <dt className="text-amber-700">נמחק בתאריך</dt>
-                  <dd className="font-medium text-gray-950">
-                    {formatDate(deletedClient.deleted_at)}
-                  </dd>
+                  <dd className="font-medium text-gray-950">{formatDate(deletedClient.deleted_at)}</dd>
                 </div>
               </dl>
               {isAdvisor ? (
@@ -129,22 +127,12 @@ export const CreateClientIdentityStep: React.FC<Props> = ({
         </div>
       )}
       {activeConflicts.length > 0 && (
-        <div
-          className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700"
-          dir="rtl"
-        >
-          <p className="font-medium mb-1">
-            {isCompany ? 'ח.פ' : 'ת.ז'} זה כבר קיים במערכת — לא ניתן לפתוח לקוח כפול.
-          </p>
+        <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700" dir="rtl">
+          <p className="font-medium mb-1">{isCompany ? 'ח.פ' : 'ת.ז'} זה כבר קיים במערכת — לא ניתן לפתוח לקוח כפול.</p>
           <ul className="space-y-1">
             {activeConflicts.map((c) => (
               <li key={c.id}>
-                <a
-                  href={CLIENT_ROUTES.detail(c.id)}
-                  className="underline font-medium"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={CLIENT_ROUTES.detail(c.id)} className="underline font-medium" target="_blank" rel="noreferrer">
                   {c.full_name}
                 </a>
               </li>

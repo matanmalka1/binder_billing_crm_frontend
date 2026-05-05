@@ -4,12 +4,7 @@ import { StatusBadge } from '@/components/ui/primitives/StatusBadge'
 import { MonoValue } from '@/components/ui/primitives/MonoValue'
 import type { BinderResponse } from '../../types'
 import { getStatusLabel } from '@/utils/enums'
-import {
-  formatBinderNumber,
-  formatClientOfficeId,
-  formatDate,
-  formatMonthYear,
-} from '@/utils/utils'
+import { formatBinderNumber, formatClientOfficeId, formatDate, formatMonthYear } from '@/utils/utils'
 import { BINDER_STATUS_VARIANTS } from '../../constants'
 
 const formatPeriod = (start: string | null, end: string | null): string => {
@@ -29,21 +24,14 @@ export const BinderDetailsPanel: React.FC<BinderDetailsPanelProps> = ({ binder }
         <DrawerField
           label="לקוח"
           value={
-            <Link
-              to={`/clients/${binder.client_record_id}`}
-              className="text-primary-600 hover:underline"
-            >
+            <Link to={`/clients/${binder.client_record_id}`} className="text-primary-600 hover:underline">
               {binder.client_name ?? `לקוח #${binder.client_record_id}`}
             </Link>
           }
         />
         <DrawerField
           label="מס' לקוח "
-          value={
-            binder.office_client_number != null
-              ? formatClientOfficeId(binder.office_client_number)
-              : '—'
-          }
+          value={binder.office_client_number != null ? formatClientOfficeId(binder.office_client_number) : '—'}
         />
         <DrawerField label="ת.ז / ח.פ" value={binder.client_id_number ?? '—'} />
         {(binder.period_start != null || binder.period_end != null) && (
@@ -51,24 +39,11 @@ export const BinderDetailsPanel: React.FC<BinderDetailsPanelProps> = ({ binder }
         )}
         <DrawerField
           label="סטטוס"
-          value={
-            <StatusBadge
-              status={binder.status}
-              getLabel={getStatusLabel}
-              variantMap={BINDER_STATUS_VARIANTS}
-            />
-          }
+          value={<StatusBadge status={binder.status} getLabel={getStatusLabel} variantMap={BINDER_STATUS_VARIANTS} />}
         />
-        {binder.returned_at && (
-          <DrawerField label="תאריך החזרה" value={formatDate(binder.returned_at)} />
-        )}
-        {binder.pickup_person_name && (
-          <DrawerField label="נאסף על ידי" value={binder.pickup_person_name} />
-        )}
-        <DrawerField
-          label="ימים במשרד"
-          value={<MonoValue value={binder.days_in_office} format="days" />}
-        />
+        {binder.returned_at && <DrawerField label="תאריך החזרה" value={formatDate(binder.returned_at)} />}
+        {binder.pickup_person_name && <DrawerField label="נאסף על ידי" value={binder.pickup_person_name} />}
+        <DrawerField label="ימים במשרד" value={<MonoValue value={binder.days_in_office} format="days" />} />
       </DrawerSection>
     </>
   )

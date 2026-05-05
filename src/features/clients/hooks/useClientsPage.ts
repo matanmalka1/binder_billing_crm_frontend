@@ -23,12 +23,7 @@ import { isAxiosError } from 'axios'
 
 const extractErrorCode = (err: unknown): string | null => {
   if (isAxiosError(err)) {
-    return (
-      err.response?.data?.error ??
-      err.response?.data?.code ??
-      err.response?.data?.detail?.error ??
-      null
-    )
+    return err.response?.data?.error ?? err.response?.data?.code ?? err.response?.data?.detail?.error ?? null
   }
   return null
 }
@@ -49,9 +44,7 @@ export const useClientsPage = () => {
     search: searchParams.get('search') ?? '',
     status: (searchParams.get('status') as ListClientsParams['status']) ?? undefined,
     entity_type: (searchParams.get('entity_type') as ListClientsParams['entity_type']) ?? undefined,
-    accountant_id: can.editClients
-      ? parsePositiveInt(searchParams.get('accountant_id'), 0) || undefined
-      : undefined,
+    accountant_id: can.editClients ? parsePositiveInt(searchParams.get('accountant_id'), 0) || undefined : undefined,
     sort_by: (searchParams.get('sort_by') as ClientSortBy) || DEFAULT_CLIENT_SORT_BY,
     sort_order: (searchParams.get('sort_order') as ClientSortOrder) || DEFAULT_CLIENT_SORT_ORDER,
     page: parsePositiveInt(searchParams.get('page'), 1),
@@ -116,10 +109,7 @@ export const useClientsPage = () => {
     invalidateKeys: [clientsQK.all],
   })
 
-  const restoreMutation = useMutationWithToast<
-    Awaited<ReturnType<typeof clientsApi.restore>>,
-    number
-  >({
+  const restoreMutation = useMutationWithToast<Awaited<ReturnType<typeof clientsApi.restore>>, number>({
     mutationFn: (clientId) => clientsApi.restore(clientId),
     successMessage: 'הלקוח שוחזר בהצלחה',
     errorMessage: 'שגיאה בשחזור לקוח',
@@ -193,8 +183,7 @@ export const useClientsPage = () => {
     restoreDeletedClient,
     handleDismissDeletedDialog,
     restoreLoading: restoreMutation.isPending,
-    updateClient: (clientId: number, payload: UpdateClientPayload) =>
-      updateMutation.mutateAsync({ clientId, payload }),
+    updateClient: (clientId: number, payload: UpdateClientPayload) => updateMutation.mutateAsync({ clientId, payload }),
     updateLoading: updateMutation.isPending,
     isAdvisor,
     can,

@@ -10,10 +10,7 @@ export const useBinderMutations = (onDeleteSuccess: () => void) => {
     onSuccess: onDeleteSuccess,
   })
 
-  const markReadyMutation = useMutationWithToast<
-    Awaited<ReturnType<typeof bindersApi.ready>>,
-    number
-  >({
+  const markReadyMutation = useMutationWithToast<Awaited<ReturnType<typeof bindersApi.ready>>, number>({
     mutationFn: (binderId) => bindersApi.ready(binderId),
     successMessage: 'הקלסר סומן כמוכן לאיסוף',
     errorMessage: 'שגיאה בסימון קלסר כמוכן',
@@ -38,10 +35,7 @@ export const useBinderMutations = (onDeleteSuccess: () => void) => {
     invalidateKeys: [bindersQK.all],
   })
 
-  const revertReadyMutation = useMutationWithToast<
-    Awaited<ReturnType<typeof bindersApi.revertReady>>,
-    number
-  >({
+  const revertReadyMutation = useMutationWithToast<Awaited<ReturnType<typeof bindersApi.revertReady>>, number>({
     mutationFn: (binderId) => bindersApi.revertReady(binderId),
     successMessage: 'סטטוס מוכן לאיסוף בוטל',
     errorMessage: 'שגיאה בביטול סטטוס מוכן',

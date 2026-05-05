@@ -3,11 +3,7 @@ import type { BinderResponse } from '../types'
 
 interface UseBindersPageDialogsParams {
   getSelectedBinder: () => BinderResponse | null
-  markReadyBulk: (
-    clientId: number,
-    untilPeriodYear: number,
-    untilPeriodMonth: number,
-  ) => Promise<unknown>
+  markReadyBulk: (clientId: number, untilPeriodYear: number, untilPeriodMonth: number) => Promise<unknown>
   returnBinder: (binderId: number, pickupPersonName: string) => Promise<unknown>
   deleteBinder: (binderId: number) => Promise<unknown>
   handoverBinders: (

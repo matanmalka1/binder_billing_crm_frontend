@@ -1,12 +1,6 @@
 export type AdvancePaymentStatus = 'pending' | 'paid' | 'partial'
 export type AdvancePaymentTimingStatus = 'on_time' | 'overdue'
-export type AdvancePaymentMethod =
-  | 'bank_transfer'
-  | 'credit_card'
-  | 'check'
-  | 'direct_debit'
-  | 'cash'
-  | 'other'
+export type AdvancePaymentMethod = 'bank_transfer' | 'credit_card' | 'check' | 'direct_debit' | 'cash' | 'other'
 
 export interface AdvancePaymentRow {
   id: number

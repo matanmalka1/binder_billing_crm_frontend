@@ -20,13 +20,7 @@ export const FinancialFields = ({ register }: FinancialFieldsProps) => (
         endElement={currencySuffix}
         {...register('gross_income' as never)}
       />
-      <Input
-        label="הוצאות"
-        type="number"
-        min={0}
-        endElement={currencySuffix}
-        {...register('expenses' as never)}
-      />
+      <Input label="הוצאות" type="number" min={0} endElement={currencySuffix} {...register('expenses' as never)} />
       <Input
         label="מקדמות ששולמו"
         type="number"
@@ -35,13 +29,7 @@ export const FinancialFields = ({ register }: FinancialFieldsProps) => (
         {...register('advances_paid' as never)}
       />
       <div>
-        <Input
-          label="נקודות זיכוי"
-          type="number"
-          min={0}
-          step={0.25}
-          {...register('credit_points' as never)}
-        />
+        <Input label="נקודות זיכוי" type="number" min={0} step={0.25} {...register('credit_points' as never)} />
         <p className="mt-1 text-xs text-gray-500">לצורך הצגת אומדן בלבד — לא נשמר בדוח</p>
       </div>
     </div>

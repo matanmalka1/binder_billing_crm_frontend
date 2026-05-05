@@ -1,9 +1,6 @@
 import { type FC } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import {
-  ClientDetailsOverviewTab,
-  type ClientDetailsOverviewTabProps,
-} from './ClientDetailsOverviewTab'
+import { ClientDetailsOverviewTab, type ClientDetailsOverviewTabProps } from './ClientDetailsOverviewTab'
 import { ClientDetailsTabBar } from './ClientDetailsTabBar'
 import { CLIENT_DETAILS_TABS, type ActiveClientDetailsTab } from '../../constants'
 import { CLIENT_ROUTES } from '../../api/endpoints'
@@ -20,9 +17,7 @@ export const ClientDetailsTabContent: FC<ClientDetailsTabContentProps> = ({
   const navigate = useNavigate()
   const { clientId } = useParams<{ clientId: string }>()
 
-  const activeTab: ActiveClientDetailsTab = CLIENT_DETAILS_TABS.includes(initialTab)
-    ? initialTab
-    : 'details'
+  const activeTab: ActiveClientDetailsTab = CLIENT_DETAILS_TABS.includes(initialTab) ? initialTab : 'details'
 
   const handleTabChange = (tab: ActiveClientDetailsTab) => {
     if (!clientId) return

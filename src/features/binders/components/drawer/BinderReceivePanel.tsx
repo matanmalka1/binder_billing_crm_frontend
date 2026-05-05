@@ -21,12 +21,7 @@ interface BinderReceivePanelProps {
   annualReports: AnnualReportFull[]
   hasActiveBinder: boolean
   vatType: 'monthly' | 'bimonthly' | 'exempt' | null
-  onClientSelect: (client: {
-    id: number
-    name: string
-    id_number: string
-    client_status?: string | null
-  }) => void
+  onClientSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void
   onClientQueryChange: (query: string) => void
   onSubmit: (e?: React.BaseSyntheticEvent) => void
   onClose: () => void
@@ -118,9 +113,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
               label="עסק"
               error={errors.business_id?.message}
               options={businessOptions}
-              value={
-                field.value === null ? 'all' : field.value !== undefined ? String(field.value) : ''
-              }
+              value={field.value === null ? 'all' : field.value !== undefined ? String(field.value) : ''}
               onChange={(e) => {
                 const v = e.target.value
                 if (v === '') {
@@ -140,9 +133,7 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         />
       )}
 
-      {selectedClient && binderType && (
-        <BinderPeriodFields form={form} materialType={binderType} vatType={vatType} />
-      )}
+      {selectedClient && binderType && <BinderPeriodFields form={form} materialType={binderType} vatType={vatType} />}
 
       {selectedClient && binderType === 'annual_report' && (
         <Controller
@@ -187,23 +178,13 @@ export const BinderReceivePanel: React.FC<BinderReceivePanelProps> = ({
         />
       )}
 
-      <Textarea
-        label="הערות"
-        rows={3}
-        placeholder="הערות פנימיות (אופציונלי)"
-        {...register('notes')}
-      />
+      <Textarea label="הערות" rows={3} placeholder="הערות פנימיות (אופציונלי)" {...register('notes')} />
 
       <div className="flex justify-end gap-2 pt-2">
         <Button type="button" variant="ghost" onClick={onClose}>
           ביטול
         </Button>
-        <Button
-          type="submit"
-          variant="primary"
-          isLoading={isSubmitting}
-          disabled={isSubmitting || clientLocked}
-        >
+        <Button type="submit" variant="primary" isLoading={isSubmitting} disabled={isSubmitting || clientLocked}>
           קליטה
         </Button>
       </div>

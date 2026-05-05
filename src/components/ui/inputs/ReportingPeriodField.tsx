@@ -29,8 +29,7 @@ export const ReportingPeriodField: React.FC<ReportingPeriodFieldProps> = ({
 
   if (materialType === 'vat') {
     label = 'תקופת מע"מ'
-    options =
-      vatType === 'bimonthly' ? buildBimonthlyPeriodOptions(6) : buildMonthlyPeriodOptions(6)
+    options = vatType === 'bimonthly' ? buildBimonthlyPeriodOptions(6) : buildMonthlyPeriodOptions(6)
   } else if (ANNUAL_TYPES.includes(materialType)) {
     label = 'שנת דיווח'
     options = buildYearPeriodOptions(5)
@@ -40,20 +39,11 @@ export const ReportingPeriodField: React.FC<ReportingPeriodFieldProps> = ({
 
   const selectOptions = [{ value: '', label: 'בחר תקופה...' }, ...options]
 
-  const effectiveValue =
-    ANNUAL_TYPES.includes(materialType) && !value ? String(new Date().getFullYear()) : value
+  const effectiveValue = ANNUAL_TYPES.includes(materialType) && !value ? String(new Date().getFullYear()) : value
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)
 
-  return (
-    <Select
-      label={label}
-      error={error}
-      value={effectiveValue}
-      onChange={handleChange}
-      options={selectOptions}
-    />
-  )
+  return <Select label={label} error={error} value={effectiveValue} onChange={handleChange} options={selectOptions} />
 }
 
 ReportingPeriodField.displayName = 'ReportingPeriodField'

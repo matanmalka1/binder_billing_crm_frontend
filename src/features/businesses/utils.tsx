@@ -10,9 +10,8 @@ type BusinessRouteParams = {
   businessId: string
 }
 
-export const formatBusinessDisplayName = (
-  business: Pick<BusinessResponse, 'business_name'> | null,
-) => business?.business_name ?? BUSINESS_DETAILS_COPY.title
+export const formatBusinessDisplayName = (business: Pick<BusinessResponse, 'business_name'> | null) =>
+  business?.business_name ?? BUSINESS_DETAILS_COPY.title
 
 export const getBusinessRouteParams = (
   clientId: string | undefined,

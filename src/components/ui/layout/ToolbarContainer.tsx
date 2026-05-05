@@ -8,11 +8,7 @@ interface ToolbarContainerProps {
   className?: string
 }
 
-export const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
-  children,
-  elevated = false,
-  className,
-}) => {
+export const ToolbarContainer: React.FC<ToolbarContainerProps> = ({ children, elevated = false, className }) => {
   if (elevated) {
     return (
       <Card className={className}>
@@ -21,11 +17,7 @@ export const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
     )
   }
 
-  return (
-    <div className={cn('rounded-xl border border-gray-200 bg-gray-50/60 px-4 py-3', className)}>
-      {children}
-    </div>
-  )
+  return <div className={cn('rounded-xl border border-gray-200 bg-gray-50/60 px-4 py-3', className)}>{children}</div>
 }
 
 ToolbarContainer.displayName = 'ToolbarContainer'

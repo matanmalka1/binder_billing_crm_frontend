@@ -21,26 +21,12 @@ interface EditExpenseLineFormProps {
   onCancel: () => void
 }
 
-export const EditExpenseLineForm: React.FC<EditExpenseLineFormProps> = ({
-  line,
-  isSaving,
-  onSave,
-  onCancel,
-}) => {
+export const EditExpenseLineForm: React.FC<EditExpenseLineFormProps> = ({ line, isSaving, onSave, onCancel }) => {
   const form = useExpenseLineForm(line, onSave)
 
   return (
-    <FinancialEditFormShell
-      error={form.error}
-      isSubmitting={isSaving}
-      onSubmit={form.submit}
-      onCancel={onCancel}
-    >
-      <FinancialSelectField
-        value={form.category}
-        onChange={form.setCategory}
-        options={EXPENSE_LABELS}
-      />
+    <FinancialEditFormShell error={form.error} isSubmitting={isSaving} onSubmit={form.submit} onCancel={onCancel}>
+      <FinancialSelectField value={form.category} onChange={form.setCategory} options={EXPENSE_LABELS} />
       <FinancialAmountDescriptionFields
         amount={form.amount}
         onAmountChange={form.setAmount}

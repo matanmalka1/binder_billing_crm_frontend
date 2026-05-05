@@ -7,7 +7,4 @@ export type SigningPageState =
   | 'declined'
   | 'error'
 
-export type SigningTerminalState = Extract<
-  SigningPageState,
-  'loading' | 'error' | 'signed' | 'declined'
->
+export type SigningTerminalState = Extract<SigningPageState, 'loading' | 'error' | 'signed' | 'declined'>

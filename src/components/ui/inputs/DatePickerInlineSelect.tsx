@@ -8,11 +8,7 @@ interface InlineSelectProps {
   onChange: (val: number) => void
 }
 
-export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({
-  value,
-  options,
-  onChange,
-}) => {
+export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({ value, options, onChange }) => {
   const [open, setOpen] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const ref = useRef<HTMLDivElement>(null)
@@ -95,9 +91,7 @@ export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({
         aria-expanded={open}
       >
         {current?.label}
-        <ChevronDown
-          className={cn('h-3 w-3 text-gray-500 transition-transform', open && 'rotate-180')}
-        />
+        <ChevronDown className={cn('h-3 w-3 text-gray-500 transition-transform', open && 'rotate-180')} />
       </button>
       {open && (
         <div
@@ -118,9 +112,7 @@ export const DatePickerInlineSelect: React.FC<InlineSelectProps> = ({
               className={cn(
                 'w-full text-right px-3 py-1.5 text-sm transition-colors',
                 highlightedIndex === index && opt.value !== value && 'bg-gray-100',
-                opt.value === value
-                  ? 'bg-primary-600 text-white font-semibold'
-                  : 'text-gray-700 hover:bg-gray-100',
+                opt.value === value ? 'bg-primary-600 text-white font-semibold' : 'text-gray-700 hover:bg-gray-100',
               )}
               role="option"
               aria-selected={opt.value === value}

@@ -15,15 +15,13 @@ export const useClientDetailsActions = (clientId: number, activeTab: string) => 
 
   const relatedBindersQuery = useQuery({
     queryKey: bindersQK.forClientPage(clientId, 1, RELATED_PAGE_SIZE),
-    queryFn: () =>
-      bindersApi.listClientBinders(clientId, { page: 1, page_size: RELATED_PAGE_SIZE }),
+    queryFn: () => bindersApi.listClientBinders(clientId, { page: 1, page_size: RELATED_PAGE_SIZE }),
     enabled: activeTab === 'details',
   })
 
   const relatedChargesQuery = useQuery({
     queryKey: chargesQK.forClientPage(clientId, 1, RELATED_PAGE_SIZE),
-    queryFn: () =>
-      chargesApi.list({ client_record_id: clientId, page: 1, page_size: RELATED_PAGE_SIZE }),
+    queryFn: () => chargesApi.list({ client_record_id: clientId, page: 1, page_size: RELATED_PAGE_SIZE }),
     enabled: activeTab === 'details',
   })
 

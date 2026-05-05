@@ -21,8 +21,7 @@ export const useAnnualReportsPage = () => {
   const taxYear = season.summary?.tax_year ?? selectedTaxYear
   const filingSeasonYear = season.summary?.filing_season_year
 
-  const openReport = (id: number) =>
-    navigate(`/tax/reports/${id}`, { state: { from: '/tax/reports' } })
+  const openReport = (id: number) => navigate(`/tax/reports/${id}`, { state: { from: '/tax/reports' } })
 
   const handleFilterChange = (key: keyof AnnualReportsFilters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }))

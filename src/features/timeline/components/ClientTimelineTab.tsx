@@ -23,9 +23,7 @@ const isFutureDeadlineGroup = (group: EventGroup): boolean =>
 
 const getDefaultExpandedDates = (groups: EventGroup[]): Set<string> => {
   const defaults = new Set(
-    groups
-      .filter((group) => isTodayGroup(group) || isFutureDeadlineGroup(group))
-      .map((group) => group.date),
+    groups.filter((group) => isTodayGroup(group) || isFutureDeadlineGroup(group)).map((group) => group.date),
   )
   if (defaults.size === 0 && groups[0]) defaults.add(groups[0].date)
   return defaults
@@ -120,13 +118,7 @@ export const ClientTimelineTab: React.FC<ClientTimelineTabProps> = ({ clientId }
       />
 
       {totalPages > 1 && (
-        <PaginationCard
-          page={page}
-          totalPages={totalPages}
-          total={total}
-          label="אירועים"
-          onPageChange={setPage}
-        />
+        <PaginationCard page={page} totalPages={totalPages} total={total} label="אירועים" onPageChange={setPage} />
       )}
 
       <ConfirmDialog

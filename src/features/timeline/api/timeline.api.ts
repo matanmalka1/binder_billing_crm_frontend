@@ -4,10 +4,7 @@ import { toQueryParams } from '@/api/queryParams'
 import type { TimelineResponse, TimelineParams } from './contracts'
 
 export const timelineApi = {
-  getClientTimeline: async (
-    clientId: number,
-    params: TimelineParams,
-  ): Promise<TimelineResponse> => {
+  getClientTimeline: async (clientId: number, params: TimelineParams): Promise<TimelineResponse> => {
     const response = await api.get<TimelineResponse>(TIMELINE_ENDPOINTS.clientTimeline(clientId), {
       params: toQueryParams(params),
     })

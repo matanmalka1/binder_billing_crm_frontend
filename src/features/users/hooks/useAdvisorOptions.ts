@@ -20,15 +20,9 @@ export const useAdvisorOptions = (enabled = true) => {
     [query.data?.items],
   )
 
-  const options = useMemo(
-    () => advisors.map((user) => ({ value: String(user.id), label: user.full_name })),
-    [advisors],
-  )
+  const options = useMemo(() => advisors.map((user) => ({ value: String(user.id), label: user.full_name })), [advisors])
 
-  const nameById = useMemo(
-    () => new Map(advisors.map((user) => [user.id, user.full_name])),
-    [advisors],
-  )
+  const nameById = useMemo(() => new Map(advisors.map((user) => [user.id, user.full_name])), [advisors])
 
   return {
     advisors,

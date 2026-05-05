@@ -1,11 +1,6 @@
 import { useState } from 'react'
 import { Send, Link2, Copy, Check, X, History } from 'lucide-react'
-import {
-  RowActionItem,
-  RowActionLink,
-  RowActionSeparator,
-  RowActionsMenu,
-} from '@/components/ui/table'
+import { RowActionItem, RowActionLink, RowActionSeparator, RowActionsMenu } from '@/components/ui/table'
 import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
 import { toast } from '../../../utils/toast'
 import type { SignatureRequestResponse } from '../api'
@@ -87,13 +82,7 @@ export const SignatureRequestRowActions: React.FC<SignatureRequestRowActionsProp
             <RowActionItem
               label={copied ? 'הועתק!' : 'העתק קישור'}
               onClick={() => void handleCopy()}
-              icon={
-                copied ? (
-                  <Check className="h-4 w-4 text-positive-700" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )
-              }
+              icon={copied ? <Check className="h-4 w-4 text-positive-700" /> : <Copy className="h-4 w-4" />}
             />
           </>
         )}

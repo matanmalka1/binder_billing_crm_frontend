@@ -25,10 +25,7 @@ export const BinderHistorySection: React.FC<BinderHistorySectionProps> = ({ bind
   if (isLoading) return null
 
   return (
-    <Card
-      title="היסטוריית שינויים"
-      subtitle={history.length ? `${history.length} שינויים` : undefined}
-    >
+    <Card title="היסטוריית שינויים" subtitle={history.length ? `${history.length} שינויים` : undefined}>
       {history.length === 0 ? (
         <p className="text-sm text-gray-500">אין רשומות היסטוריה</p>
       ) : (
@@ -38,36 +35,26 @@ export const BinderHistorySection: React.FC<BinderHistorySectionProps> = ({ bind
               <div className="mb-1 flex flex-wrap items-center gap-1.5 text-sm">
                 {entry.old_status && (
                   <>
-                    <Badge
-                      variant={BINDER_STATUS_VARIANTS[entry.old_status] ?? 'neutral'}
-                      className="text-xs"
-                    >
+                    <Badge variant={BINDER_STATUS_VARIANTS[entry.old_status] ?? 'neutral'} className="text-xs">
                       {getStatusLabel(entry.old_status)}
                     </Badge>
                     <ArrowRight className="h-3 w-3 text-gray-400" />
                   </>
                 )}
-                <Badge
-                  variant={BINDER_STATUS_VARIANTS[entry.new_status] ?? 'neutral'}
-                  className="text-xs"
-                >
+                <Badge variant={BINDER_STATUS_VARIANTS[entry.new_status] ?? 'neutral'} className="text-xs">
                   {getStatusLabel(entry.new_status)}
                 </Badge>
               </div>
 
               <div className="flex items-center justify-end gap-1 text-xs text-gray-500">
-                {entry.changed_by_name && (
-                  <span className="text-gray-600">{entry.changed_by_name}</span>
-                )}
+                {entry.changed_by_name && <span className="text-gray-600">{entry.changed_by_name}</span>}
                 {entry.changed_by_name && <span>·</span>}
                 <Clock className="h-3 w-3" />
                 {format(parseISO(entry.changed_at), 'd MMM yyyy HH:mm', { locale: he })}
               </div>
 
               {entry.notes && (
-                <p className="mt-1.5 text-xs text-gray-600 border-t border-gray-100 pt-1.5">
-                  {entry.notes}
-                </p>
+                <p className="mt-1.5 text-xs text-gray-600 border-t border-gray-100 pt-1.5">{entry.notes}</p>
               )}
             </TimelineEntry>
           ))}

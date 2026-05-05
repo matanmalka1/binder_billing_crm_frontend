@@ -6,8 +6,7 @@ export const buildClientEditImpactMessage = (
   oldEntityType: EntityType | null | undefined,
   newEntityType: EntityType | null | undefined,
 ): string | null => {
-  const statusChangesToDestructive =
-    newStatus !== oldStatus && (newStatus === 'frozen' || newStatus === 'closed')
+  const statusChangesToDestructive = newStatus !== oldStatus && (newStatus === 'frozen' || newStatus === 'closed')
   const entityTypeChanged = newEntityType != null && newEntityType !== oldEntityType
 
   if (!statusChangesToDestructive && !entityTypeChanged) return null

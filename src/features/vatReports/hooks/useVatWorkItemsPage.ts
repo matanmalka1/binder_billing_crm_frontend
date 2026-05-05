@@ -79,13 +79,7 @@ export const useVatWorkItemsPage = () => {
   const [actionLoadingId, setActionLoadingId] = useState<number | null>(null)
 
   const actionMutation = useMutation({
-    mutationFn: ({
-      action,
-      itemId,
-    }: {
-      action: Exclude<VatWorkItemAction, 'sendBack'>
-      itemId: number
-    }) => {
+    mutationFn: ({ action, itemId }: { action: Exclude<VatWorkItemAction, 'sendBack'>; itemId: number }) => {
       if (action === 'materialsComplete') return vatReportsApi.markMaterialsComplete(itemId)
       return vatReportsApi.markReadyForReview(itemId)
     },
@@ -99,8 +93,7 @@ export const useVatWorkItemsPage = () => {
   })
 
   const sendBackMutation = useMutation({
-    mutationFn: ({ itemId, note }: { itemId: number; note: string }) =>
-      vatReportsApi.sendBack(itemId, note),
+    mutationFn: ({ itemId, note }: { itemId: number; note: string }) => vatReportsApi.sendBack(itemId, note),
     onSuccess: async (workItem) => {
       toast.success('התיק הוחזר לתיקון')
       await invalidateVatWorkItem(queryClient, {
@@ -160,9 +153,7 @@ export const useVatWorkItemsPage = () => {
 
   return {
     actionLoadingId,
-    createError: createMutation.error
-      ? getErrorMessage(createMutation.error, 'שגיאה ביצירת תיק מע"מ')
-      : null,
+    createError: createMutation.error ? getErrorMessage(createMutation.error, 'שגיאה ביצירת תיק מע"מ') : null,
     createLoading: createMutation.isPending,
     filters,
     isAdvisor,

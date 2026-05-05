@@ -5,10 +5,7 @@ import { StatusBadge } from '../../../components/ui/primitives/StatusBadge'
 import { getSignatureRequestTypeLabel, getSignatureRequestStatusLabel } from '../../../utils/enums'
 import { formatDate, formatDateTime } from '../../../utils/utils'
 import { signatureRequestStatusVariants } from '../utils'
-import {
-  SignatureRequestRowActions,
-  type SignatureRequestActionProps,
-} from './SignatureRequestRowActions'
+import { SignatureRequestRowActions, type SignatureRequestActionProps } from './SignatureRequestRowActions'
 
 // ── Shared field row for expanded details ─────────────────────────────────────
 
@@ -85,16 +82,10 @@ export const SignatureRequestRow: React.FC<Props> = ({
           {request.signer_email && <FieldRow label='דוא"ל' value={request.signer_email} />}
           {request.expires_at && <FieldRow label="תפוגה" value={formatDate(request.expires_at)} />}
           {request.sent_at && (
-            <FieldRow
-              label="נשלח"
-              value={<span className="tabular-nums">{formatDateTime(request.sent_at)}</span>}
-            />
+            <FieldRow label="נשלח" value={<span className="tabular-nums">{formatDateTime(request.sent_at)}</span>} />
           )}
           {request.signed_at && (
-            <FieldRow
-              label="נחתם"
-              value={<span className="tabular-nums">{formatDateTime(request.signed_at)}</span>}
-            />
+            <FieldRow label="נחתם" value={<span className="tabular-nums">{formatDateTime(request.signed_at)}</span>} />
           )}
           {request.decline_reason && <FieldRow label="סיבת דחייה" value={request.decline_reason} />}
           {isPending && signingUrl && (

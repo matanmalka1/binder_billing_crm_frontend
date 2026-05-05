@@ -12,9 +12,7 @@ import type { CreateTaxDeadlineForm, EditTaxDeadlineForm, TaxDeadlineFormValues 
 import { getCurrentTaxYear } from '../utils'
 import type { VatType } from '@/features/clients'
 
-type SharedTaxDeadlineForm =
-  | UseFormReturn<CreateTaxDeadlineForm>
-  | UseFormReturn<EditTaxDeadlineForm>
+type SharedTaxDeadlineForm = UseFormReturn<CreateTaxDeadlineForm> | UseFormReturn<EditTaxDeadlineForm>
 
 const currencySuffix = <span className="text-sm text-gray-400">₪</span>
 
@@ -23,10 +21,7 @@ interface TaxDeadlineCommonFieldsProps {
   vatType?: VatType | null
 }
 
-export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = ({
-  form,
-  vatType = null,
-}) => {
+export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = ({ form, vatType = null }) => {
   const typedForm = form as unknown as UseFormReturn<TaxDeadlineFormValues>
   const register = typedForm.register as UseFormRegister<TaxDeadlineFormValues>
   const control = typedForm.control as Control<TaxDeadlineFormValues>
@@ -36,11 +31,7 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
   const period = typedForm.watch('period')
 
   const periodMaterialType =
-    deadlineType === 'vat'
-      ? 'vat'
-      : deadlineType === 'annual_report'
-        ? 'annual_report'
-        : 'national_insurance'
+    deadlineType === 'vat' ? 'vat' : deadlineType === 'annual_report' ? 'annual_report' : 'national_insurance'
   const isAutoVatDueDate = deadlineType === 'vat'
 
   useEffect(() => {
@@ -80,9 +71,7 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
         materialType={periodMaterialType}
         vatType={vatType}
         value={typedForm.watch('period')}
-        onChange={(value) =>
-          typedForm.setValue('period', value, { shouldDirty: true, shouldValidate: true })
-        }
+        onChange={(value) => typedForm.setValue('period', value, { shouldDirty: true, shouldValidate: true })}
         error={errors.period?.message}
       />
       <input type="hidden" {...register('period', { required: REQUIRED_FIELD_MESSAGE })} />
@@ -98,12 +87,7 @@ export const TaxDeadlineCommonFields: React.FC<TaxDeadlineCommonFieldsProps> = (
         error={errors.payment_amount?.message}
       />
 
-      <Textarea
-        label="הערות"
-        rows={3}
-        placeholder="הערות נוספות על המועד..."
-        {...register('description')}
-      />
+      <Textarea label="הערות" rows={3} placeholder="הערות נוספות על המועד..." {...register('description')} />
     </>
   )
 }

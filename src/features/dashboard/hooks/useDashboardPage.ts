@@ -109,14 +109,7 @@ export const useDashboardPage = () => {
     }
 
     return { status: 'idle', message: '', data: null }
-  }, [
-    dashboardQuery.data,
-    dashboardQuery.error,
-    dashboardQuery.isPending,
-    hasRole,
-    isAdvisor,
-    isSecretary,
-  ])
+  }, [dashboardQuery.data, dashboardQuery.error, dashboardQuery.isPending, hasRole, isAdvisor, isSecretary])
 
   const attentionItems = dashboardQuery.data?.attention.items ?? []
 
@@ -128,9 +121,7 @@ export const useDashboardPage = () => {
   const quickActions = isOverviewData(dashboard.data) ? dashboard.data.quick_actions : undefined
   const advisorToday = isOverviewData(dashboard.data) ? dashboard.data.advisor_today : undefined
   const emptyState = dashboard.data ? { is_empty: dashboard.data.total_clients === 0 } : undefined
-  const attentionEmptyChecks = isOverviewData(dashboard.data)
-    ? dashboard.data.attention_empty_checks
-    : []
+  const attentionEmptyChecks = isOverviewData(dashboard.data) ? dashboard.data.attention_empty_checks : []
 
   const handleQuickAction = useCallback(
     (action: ActionCommand) => {

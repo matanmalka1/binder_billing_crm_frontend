@@ -15,13 +15,7 @@ import type { DeadlineGroup, TaxDeadlineResponse, DeadlineUrgencyLevel } from '.
 import { getTaxDeadlinePeriodLabel, getDeadlineDaysLabelShort } from '../utils'
 import { cn } from '../../../utils/utils'
 
-const DaysRemainingLabel = ({
-  dueDate,
-  urgency,
-}: {
-  dueDate: string
-  urgency: DeadlineUrgencyLevel
-}) => {
+const DaysRemainingLabel = ({ dueDate, urgency }: { dueDate: string; urgency: DeadlineUrgencyLevel }) => {
   if (urgency === 'none') return null
   const days = calculateDaysRemaining(dueDate)
   const label = getDeadlineDaysLabelShort(days, false)
@@ -197,12 +191,8 @@ const GroupRow = ({
       className={cn(
         'overflow-hidden p-0 transition-shadow',
         group.overdue_count > 0 && 'border-r-4 border-negative-500',
-        group.worst_urgency === 'critical' &&
-          !group.overdue_count &&
-          'border-r-4 border-negative-400',
-        group.worst_urgency === 'warning' &&
-          !group.overdue_count &&
-          'border-r-4 border-warning-400',
+        group.worst_urgency === 'critical' && !group.overdue_count && 'border-r-4 border-negative-400',
+        group.worst_urgency === 'warning' && !group.overdue_count && 'border-r-4 border-warning-400',
       )}
     >
       <button
@@ -232,9 +222,7 @@ const GroupRow = ({
 
         <span className="flex gap-1.5">
           {group.overdue_count > 0 && (
-            <Badge className={cn('border text-xs', getUrgencyColor('overdue'))}>
-              {group.overdue_count} באיחור
-            </Badge>
+            <Badge className={cn('border text-xs', getUrgencyColor('overdue'))}>{group.overdue_count} באיחור</Badge>
           )}
           {group.pending_count > 0 && group.overdue_count === 0 && (
             <Badge variant="warning" className="text-xs">
@@ -256,9 +244,7 @@ const GroupRow = ({
               : '—'}
         </span>
 
-        <span className="text-xs text-primary-600 font-medium">
-          {expanded ? 'סגור' : 'פתח לקוחות'}
-        </span>
+        <span className="text-xs text-primary-600 font-medium">{expanded ? 'סגור' : 'פתח לקוחות'}</span>
       </button>
 
       {expanded && (

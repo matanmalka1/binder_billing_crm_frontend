@@ -25,15 +25,12 @@ interface ProgressBarProps {
 }
 
 const ProgressBar = ({ label, percent, href }: ProgressBarProps) => {
-  const color =
-    percent >= 80 ? 'bg-green-500' : percent >= 40 ? 'bg-blue-500' : 'bg-amber-400'
+  const color = percent >= 80 ? 'bg-green-500' : percent >= 40 ? 'bg-blue-500' : 'bg-amber-400'
 
   const content = (
     <div className="group">
       <div className="mb-1 flex items-center justify-between text-xs font-semibold">
-        <span className={cn('text-gray-700', href && 'transition-colors group-hover:text-primary')}>
-          {label}
-        </span>
+        <span className={cn('text-gray-700', href && 'transition-colors group-hover:text-primary')}>{label}</span>
         <span className="tabular-nums text-primary">{percent}%</span>
       </div>
       <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
@@ -52,8 +49,7 @@ const ProgressBar = ({ label, percent, href }: ProgressBarProps) => {
 export const VatInsightsRow: React.FC<Props> = ({ vatStats }) => {
   const { stats: seasonStats } = useSeasonSummary()
   const { monthly, bimonthly, segmentation } = vatStats
-  const vatHref = (period: string, type: string) =>
-    `/tax/vat?period=${period}&period_type=${type}`
+  const vatHref = (period: string, type: string) => `/tax/vat?period=${period}&period_type=${type}`
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -70,10 +66,7 @@ export const VatInsightsRow: React.FC<Props> = ({ vatStats }) => {
             {segmentation.map((seg) => {
               const Icon = SEGMENT_ICONS[seg.label] ?? User
               return (
-                <div
-                  key={seg.label}
-                  className="rounded-xl border border-transparent bg-gray-100 p-3"
-                >
+                <div key={seg.label} className="rounded-xl border border-transparent bg-gray-100 p-3">
                   <div className="mb-1 flex items-start justify-between gap-1">
                     <p className="text-xs text-gray-500">{seg.label}</p>
                     {seg.label === 'עוסק פטור' && (

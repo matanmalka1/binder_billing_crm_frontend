@@ -14,15 +14,43 @@ import { RowActionsMenu, RowActionItem } from '../../../components/ui/table/RowA
 const COL_COUNT = 10
 
 const TABLE_HEADERS = [
-  { label: 'מס׳', className: 'px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-16' },
-  { label: 'שם לקוח', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-[22%]' },
-  { label: 'תאריך יעד', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-28' },
-  { label: 'מחזור', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]' },
-  { label: 'צפוי', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]' },
-  { label: 'שולם', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]' },
-  { label: 'יתרה', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]' },
-  { label: 'אחוז מקדמה', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-24' },
-  { label: 'סטטוס', className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-center align-middle w-24' },
+  {
+    label: 'מס׳',
+    className: 'px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-16',
+  },
+  {
+    label: 'שם לקוח',
+    className:
+      'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-[22%]',
+  },
+  {
+    label: 'תאריך יעד',
+    className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right align-middle w-28',
+  },
+  {
+    label: 'מחזור',
+    className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]',
+  },
+  {
+    label: 'צפוי',
+    className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]',
+  },
+  {
+    label: 'שולם',
+    className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]',
+  },
+  {
+    label: 'יתרה',
+    className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-[10%]',
+  },
+  {
+    label: 'אחוז מקדמה',
+    className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-left align-middle w-24',
+  },
+  {
+    label: 'סטטוס',
+    className: 'px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-center align-middle w-24',
+  },
   { label: '', className: 'px-3 py-1.5 align-middle w-10' },
 ]
 
@@ -79,9 +107,7 @@ const BatchContent = ({
     }
     return true
   })
-  const sorted = [...filtered].sort(
-    (a, b) => (b.missing_turnover ? 1 : 0) - (a.missing_turnover ? 1 : 0),
-  )
+  const sorted = [...filtered].sort((a, b) => (b.missing_turnover ? 1 : 0) - (a.missing_turnover ? 1 : 0))
 
   return (
     <div className="overflow-x-auto">
@@ -89,7 +115,9 @@ const BatchContent = ({
         <thead>
           <tr className="border-b border-gray-100 bg-gray-50">
             {TABLE_HEADERS.map((h) => (
-              <th key={h.label} className={h.className}>{h.label}</th>
+              <th key={h.label} className={h.className}>
+                {h.label}
+              </th>
             ))}
           </tr>
         </thead>
@@ -129,7 +157,9 @@ const BatchContent = ({
                       </span>
                     )}
                   </td>
-                  <td className={`px-3 py-1.5 text-sm tabular-nums whitespace-nowrap align-middle ${isOverdue ? 'text-red-500 font-medium' : 'text-gray-500'}`}>
+                  <td
+                    className={`px-3 py-1.5 text-sm tabular-nums whitespace-nowrap align-middle ${isOverdue ? 'text-red-500 font-medium' : 'text-gray-500'}`}
+                  >
                     {formatDate(row.due_date)}
                   </td>
                   <td className="px-3 py-1.5 text-sm tabular-nums text-left align-middle">
@@ -176,9 +206,7 @@ const BatchContent = ({
                       <RowActionItem
                         label="עבור ללקוח"
                         icon={<ExternalLink className="h-3.5 w-3.5" />}
-                        onClick={() =>
-                          window.open(`/clients/${row.client_record_id}/advance-payments`, '_self')
-                        }
+                        onClick={() => window.open(`/clients/${row.client_record_id}/advance-payments`, '_self')}
                       />
                     </RowActionsMenu>
                   </td>
@@ -216,13 +244,7 @@ export const AdvancePaymentBatchRow: React.FC<AdvancePaymentBatchRowProps> = ({
     ) : undefined
 
   return (
-    <MonthlyAccordionGroup
-      title={title}
-      summary={summary}
-      isCurrent={isCurrent}
-      defaultOpen={isCurrent}
-      badges={badge}
-    >
+    <MonthlyAccordionGroup title={title} summary={summary} isCurrent={isCurrent} defaultOpen={isCurrent} badges={badge}>
       <BatchContent
         batch={batch}
         search={search}

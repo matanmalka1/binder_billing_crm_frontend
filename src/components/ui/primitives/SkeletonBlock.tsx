@@ -34,14 +34,10 @@ export const SkeletonBlock: React.FC<SkeletonBlockProps> = ({
       width,
       height,
       roundedClass[rounded],
-      shimmer
-        ? 'bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer'
-        : 'animate-pulse bg-gray-100',
+      shimmer ? 'bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer' : 'animate-pulse bg-gray-100',
       className,
     )}
-    style={
-      shimmer ? { backgroundSize: '1000px 100%', animationDelay: delay } : { animationDelay: delay }
-    }
+    style={shimmer ? { backgroundSize: '1000px 100%', animationDelay: delay } : { animationDelay: delay }}
   />
 )
 

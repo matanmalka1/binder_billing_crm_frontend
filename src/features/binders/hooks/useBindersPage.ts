@@ -27,8 +27,7 @@ export const useBindersPage = () => {
 
   const pageItems = bindersQuery.data?.items ?? []
 
-  const { deepLinkBinderId, selectedBinder, handleSelectBinder, handleCloseDrawer } =
-    useBinderSelection(pageItems)
+  const { deepLinkBinderId, selectedBinder, handleSelectBinder, handleCloseDrawer } = useBinderSelection(pageItems)
 
   const mutations = useBinderMutations(handleCloseDrawer)
 
@@ -46,9 +45,7 @@ export const useBindersPage = () => {
       ready_for_pickup: 0,
       returned: 0,
     },
-    error: bindersQuery.error
-      ? getErrorMessage(bindersQuery.error, 'שגיאה בטעינת רשימת קלסרים')
-      : null,
+    error: bindersQuery.error ? getErrorMessage(bindersQuery.error, 'שגיאה בטעינת רשימת קלסרים') : null,
     filters,
     handleFilterChange,
     handleReset,

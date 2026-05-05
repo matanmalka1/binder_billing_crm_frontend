@@ -36,12 +36,7 @@ export const ModalFormActions: React.FC<ModalFormActionsProps> = ({
 
   return (
     <div className="flex items-center justify-end gap-2">
-      <Button
-        type="button"
-        variant={cancelVariant}
-        onClick={onCancel}
-        disabled={cancelDisabled || isLoading}
-      >
+      <Button type="button" variant={cancelVariant} onClick={onCancel} disabled={cancelDisabled || isLoading}>
         {cancelLabel}
       </Button>
       <Button

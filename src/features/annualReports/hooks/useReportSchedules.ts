@@ -10,8 +10,7 @@ export const useReportSchedules = (reportId: number | null) => {
   const qk = enabled ? queryKey : null
 
   const completeScheduleMutation = useMutation({
-    mutationFn: (schedule: AnnualReportScheduleKey) =>
-      annualReportsApi.completeSchedule(reportId as number, schedule),
+    mutationFn: (schedule: AnnualReportScheduleKey) => annualReportsApi.completeSchedule(reportId as number, schedule),
     onSuccess: () => {
       toast.success('נספח סומן כהושלם')
       if (qk) void queryClient.invalidateQueries({ queryKey: qk })
@@ -30,10 +29,8 @@ export const useReportSchedules = (reportId: number | null) => {
   })
 
   return {
-    completeSchedule: (schedule: AnnualReportScheduleKey) =>
-      completeScheduleMutation.mutate(schedule),
-    addSchedule: (schedule: AnnualReportScheduleKey, notes?: string) =>
-      addScheduleMutation.mutate({ schedule, notes }),
+    completeSchedule: (schedule: AnnualReportScheduleKey) => completeScheduleMutation.mutate(schedule),
+    addSchedule: (schedule: AnnualReportScheduleKey, notes?: string) => addScheduleMutation.mutate({ schedule, notes }),
     isCompletingSchedule: completeScheduleMutation.isPending,
     isAddingSchedule: addScheduleMutation.isPending,
   }

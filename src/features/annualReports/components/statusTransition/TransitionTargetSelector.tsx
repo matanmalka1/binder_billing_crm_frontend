@@ -2,11 +2,7 @@ import { getStatusLabel } from '../../api'
 import { cn } from '../../../../utils/utils'
 import type { TransitionTargetSelectorProps } from '../../types'
 
-export const TransitionTargetSelector = ({
-  allowed,
-  selected,
-  onSelect,
-}: TransitionTargetSelectorProps) => {
+export const TransitionTargetSelector = ({ allowed, selected, onSelect }: TransitionTargetSelectorProps) => {
   return (
     <div>
       <p className="mb-2 text-xs font-medium text-gray-500">העברה לסטטוס:</p>

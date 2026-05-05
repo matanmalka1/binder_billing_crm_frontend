@@ -1,9 +1,4 @@
-export const AUTHORITY_CONTACT_TYPE_VALUES = [
-  'assessing_officer',
-  'vat_branch',
-  'national_insurance',
-  'other',
-] as const
+export const AUTHORITY_CONTACT_TYPE_VALUES = ['assessing_officer', 'vat_branch', 'national_insurance', 'other'] as const
 
 export type ContactType = (typeof AUTHORITY_CONTACT_TYPE_VALUES)[number]
 

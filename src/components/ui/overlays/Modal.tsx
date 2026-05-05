@@ -12,14 +12,7 @@ interface ModalProps {
   isDirty?: boolean
 }
 
-export const Modal: React.FC<ModalProps> = ({
-  open,
-  title,
-  children,
-  footer,
-  onClose,
-  isDirty = false,
-}) => {
+export const Modal: React.FC<ModalProps> = ({ open, title, children, footer, onClose, isDirty = false }) => {
   const { showGuard, handleClose, handleContinue, handleDiscard } = useUnsavedChangesGuard({
     isDirty,
     onClose,
@@ -27,13 +20,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <>
-      <OverlayContainer
-        open={open}
-        variant="modal"
-        title={title}
-        footer={footer}
-        onClose={handleClose}
-      >
+      <OverlayContainer open={open} variant="modal" title={title} footer={footer} onClose={handleClose}>
         {children}
       </OverlayContainer>
 

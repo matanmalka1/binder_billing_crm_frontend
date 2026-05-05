@@ -23,13 +23,9 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
   return (
     <section dir="rtl" className="space-y-3">
       <div className="space-y-1">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">
-          פירוט לפי קטגוריה
-        </h3>
+        <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">פירוט לפי קטגוריה</h3>
         {showNonDeductibleNote && (
-          <p className="text-xs text-gray-500">
-            קטגוריות אלו אינן מזכות בניכוי מע&quot;מ לפי הנתונים שהוזנו.
-          </p>
+          <p className="text-xs text-gray-500">קטגוריות אלו אינן מזכות בניכוי מע&quot;מ לפי הנתונים שהוזנו.</p>
         )}
       </div>
 
@@ -57,12 +53,7 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
                   </td>
                   <td className={mutedAmountCellClass}>{formatVatAmount(grossAmount)}</td>
                   <td className={mutedAmountCellClass}>{formatVatAmount(row.grossVat)}</td>
-                  <td
-                    className={cn(
-                      'px-4 py-3 text-right font-mono font-bold tabular-nums',
-                      VAT_DEDUCTIBLE_ACCENT,
-                    )}
-                  >
+                  <td className={cn('px-4 py-3 text-right font-mono font-bold tabular-nums', VAT_DEDUCTIBLE_ACCENT)}>
                     {formatVatAmount(row.deductibleVat)}
                   </td>
                 </tr>
@@ -76,12 +67,7 @@ export const VatCategoryTable: React.FC<VatCategoryTableProps> = ({
               <td />
               <td className={amountCellClass}>{formatVatAmount(totalGrossAmount)}</td>
               <td className={amountCellClass}>{formatVatAmount(totalGrossVat)}</td>
-              <td
-                className={cn(
-                  `${amountCellClass} underline decoration-2 underline-offset-4`,
-                  VAT_DEDUCTIBLE_ACCENT,
-                )}
-              >
+              <td className={cn(`${amountCellClass} underline decoration-2 underline-offset-4`, VAT_DEDUCTIBLE_ACCENT)}>
                 {formatVatAmount(totalInputVat)}
               </td>
             </tr>

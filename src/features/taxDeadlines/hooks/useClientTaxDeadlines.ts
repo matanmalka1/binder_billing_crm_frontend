@@ -132,8 +132,7 @@ export const useClientTaxDeadlines = (clientId: number) => {
   })
 
   const generateMutation = useMutation({
-    mutationFn: (payload: { client_record_id: number; year: number }) =>
-      taxDeadlinesApi.generateDeadlines(payload),
+    mutationFn: (payload: { client_record_id: number; year: number }) => taxDeadlinesApi.generateDeadlines(payload),
     onSuccess: ({ created_count }) => {
       if (created_count > 0) {
         toast.success(`נוצרו ${created_count} מועדים בהצלחה`)

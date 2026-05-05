@@ -50,12 +50,7 @@ export interface ClientPickerFieldDef {
   placeholder?: string
 }
 
-export type FilterFieldDef =
-  | SearchFieldDef
-  | SelectFieldDef
-  | DateFieldDef
-  | DateRangeFieldDef
-  | ClientPickerFieldDef
+export type FilterFieldDef = SearchFieldDef | SelectFieldDef | DateFieldDef | DateRangeFieldDef | ClientPickerFieldDef
 
 // ─── SearchField ─────────────────────────────────────────────────────────────
 
@@ -308,14 +303,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               }
 
               if (field.type === 'client-picker') {
-                return (
-                  <ClientPickerField
-                    key={field.idKey}
-                    field={field}
-                    values={values}
-                    onChange={onChange}
-                  />
-                )
+                return <ClientPickerField key={field.idKey} field={field} values={values} onChange={onChange} />
               }
 
               return null

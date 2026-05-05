@@ -14,12 +14,7 @@ const typeOptions = [
   ...taskTypeValues.map((v) => ({ value: v, label: taskTypeLabels[v] })),
 ]
 
-export const TasksFiltersBar: React.FC<TasksFiltersBarProps> = ({
-  typeFilter,
-  onTypeChange,
-  hasFilters,
-  onClear,
-}) => (
+export const TasksFiltersBar: React.FC<TasksFiltersBarProps> = ({ typeFilter, onTypeChange, hasFilters, onClear }) => (
   <div className="flex items-center gap-3 flex-wrap">
     <Select
       options={typeOptions}

@@ -123,11 +123,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           ))}
         </Select>
 
-        <ReminderLinkedFields
-          form={form}
-          clientBinders={clientBinders}
-          clientBusinesses={clientBusinesses}
-        />
+        <ReminderLinkedFields form={form} clientBinders={clientBinders} clientBusinesses={clientBusinesses} />
 
         <Controller
           name="target_date"

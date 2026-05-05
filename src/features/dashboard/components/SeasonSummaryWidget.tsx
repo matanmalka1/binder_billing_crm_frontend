@@ -24,12 +24,8 @@ export const SeasonSummaryWidget: React.FC = () => {
                 <FilePlus className="h-5 w-5" />
               </span>
               <div className="min-w-0">
-                <p className="truncate text-xs font-semibold text-gray-400">
-                  עונת הגשה {filingSeasonYear}
-                </p>
-                <h3 className="mt-1 text-lg font-bold text-gray-950">
-                  עדיין אין דוחות שנתיים לשנת המס {taxYear}
-                </h3>
+                <p className="truncate text-xs font-semibold text-gray-400">עונת הגשה {filingSeasonYear}</p>
+                <h3 className="mt-1 text-lg font-bold text-gray-950">עדיין אין דוחות שנתיים לשנת המס {taxYear}</h3>
                 <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
                   לאחר יצירת הדוח הראשון יוצגו כאן התקדמות ההגשה, איחורים וסטטוסי עבודה.
                 </p>
@@ -64,12 +60,8 @@ export const SeasonSummaryWidget: React.FC = () => {
       <Link to="/tax/reports" className="group block p-5 transition-colors hover:bg-slate-50/70">
         <div className="mb-4 flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="truncate text-xs font-semibold text-gray-400">
-              עונת הגשה {stats.filingSeasonYear}
-            </p>
-            <h3 className="mt-1 text-lg font-bold text-gray-950">
-              דוחות שנתיים לשנת המס {stats.taxYear}
-            </h3>
+            <p className="truncate text-xs font-semibold text-gray-400">עונת הגשה {stats.filingSeasonYear}</p>
+            <h3 className="mt-1 text-lg font-bold text-gray-950">דוחות שנתיים לשנת המס {stats.taxYear}</h3>
             <p className="mt-0.5 text-sm font-semibold text-gray-700">
               {stats.done} / {stats.total} דוחות הוגשו
             </p>
@@ -106,16 +98,8 @@ export const SeasonSummaryWidget: React.FC = () => {
 
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
           <StatLabel count={stats.notStarted} label="לא התחילו" />
-          <StatLabel
-            count={stats.inProgress}
-            label="בעבודה"
-            className={semanticMonoToneClasses.info}
-          />
-          <StatLabel
-            count={stats.submitted}
-            label="הוגשו"
-            className={semanticMonoToneClasses.positive}
-          />
+          <StatLabel count={stats.inProgress} label="בעבודה" className={semanticMonoToneClasses.info} />
+          <StatLabel count={stats.submitted} label="הוגשו" className={semanticMonoToneClasses.positive} />
           <StatLabel count={stats.closed} label="סגורים" />
         </div>
       </Link>
@@ -123,15 +107,7 @@ export const SeasonSummaryWidget: React.FC = () => {
   )
 }
 
-const StatLabel = ({
-  count,
-  label,
-  className,
-}: {
-  count: number
-  label: string
-  className?: string
-}) => {
+const StatLabel = ({ count, label, className }: { count: number; label: string; className?: string }) => {
   if (count <= 0) return null
   return (
     <span>

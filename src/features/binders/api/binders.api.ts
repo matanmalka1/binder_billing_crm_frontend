@@ -52,29 +52,17 @@ export const bindersApi = {
     return response.data
   },
 
-  returnBinder: async (
-    binderId: number,
-    payload?: ReturnBinderPayload,
-  ): Promise<BinderResponse> => {
-    const response = await api.post<BinderResponse>(
-      BINDER_ENDPOINTS.binderReturn(binderId),
-      payload,
-    )
+  returnBinder: async (binderId: number, payload?: ReturnBinderPayload): Promise<BinderResponse> => {
+    const response = await api.post<BinderResponse>(BINDER_ENDPOINTS.binderReturn(binderId), payload)
     return response.data
   },
 
   handover: async (payload: BinderHandoverPayload): Promise<BinderHandoverResponse> => {
-    const response = await api.post<BinderHandoverResponse>(
-      BINDER_ENDPOINTS.binderHandover,
-      payload,
-    )
+    const response = await api.post<BinderHandoverResponse>(BINDER_ENDPOINTS.binderHandover, payload)
     return response.data
   },
 
-  getOpenBinders: async (params?: {
-    page?: number
-    page_size?: number
-  }): Promise<BinderListResponseExtended> => {
+  getOpenBinders: async (params?: { page?: number; page_size?: number }): Promise<BinderListResponseExtended> => {
     const response = await api.get<BinderListResponseExtended>(BINDER_ENDPOINTS.bindersOpen, {
       params,
     })
@@ -85,12 +73,9 @@ export const bindersApi = {
     clientId: number,
     params: ListOperationalBindersParams,
   ): Promise<BinderListResponseExtended> => {
-    const response = await api.get<BinderListResponseExtended>(
-      BINDER_ENDPOINTS.clientBinders(clientId),
-      {
-        params: toQueryParams(params),
-      },
-    )
+    const response = await api.get<BinderListResponseExtended>(BINDER_ENDPOINTS.clientBinders(clientId), {
+      params: toQueryParams(params),
+    })
     return response.data
   },
 
@@ -104,9 +89,7 @@ export const bindersApi = {
   },
 
   getIntakes: async (binderId: number): Promise<BinderIntakeListResponse> => {
-    const response = await api.get<BinderIntakeListResponse>(
-      BINDER_ENDPOINTS.binderIntakes(binderId),
-    )
+    const response = await api.get<BinderIntakeListResponse>(BINDER_ENDPOINTS.binderIntakes(binderId))
     return response.data
   },
 }

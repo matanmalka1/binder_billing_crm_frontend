@@ -36,7 +36,11 @@ export const VatWorkItems: React.FC = () => {
     submitCreate,
   } = useVatWorkItemsPage()
 
-  const { groups, isLoading: groupsLoading, error: groupsError } = useVatWorkItemGroups({
+  const {
+    groups,
+    isLoading: groupsLoading,
+    error: groupsError,
+  } = useVatWorkItemGroups({
     period_type: filters.period_type ?? undefined,
     status: filters.status || undefined,
     client_name: filters.clientSearchName || undefined,
@@ -60,15 +64,9 @@ export const VatWorkItems: React.FC = () => {
     setShowCreateModal(false)
   }
 
-  const handleClearFilters = useCallback(
-    () => setSearchParams(new URLSearchParams()),
-    [setSearchParams],
-  )
+  const handleClearFilters = useCallback(() => setSearchParams(new URLSearchParams()), [setSearchParams])
 
-  const handleRowClick = useCallback(
-    (item: VatWorkItemResponse) => navigate(`/tax/vat/${item.id}`),
-    [navigate],
-  )
+  const handleRowClick = useCallback((item: VatWorkItemResponse) => navigate(`/tax/vat/${item.id}`), [navigate])
 
   const columns = useMemo(
     () =>
@@ -96,36 +94,19 @@ export const VatWorkItems: React.FC = () => {
       />
 
       {!isAdvisor && (
-        <Alert
-          variant="info"
-          message='צפייה בלבד. פתיחת תיקי מע"מ זמינה ליועץ. ניתן לבצע הקלדת נתונים בתוך כל תיק.'
-        />
+        <Alert variant="info" message='צפייה בלבד. פתיחת תיקי מע"מ זמינה ליועץ. ניתן לבצע הקלדת נתונים בתוך כל תיק.' />
       )}
 
       {!statsLoading && groups.length > 0 && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <StatsCard
-            title="ממתין לחומרים"
-            value={statsPending ?? 0}
-            icon={Hourglass}
-            variant="orange"
-          />
+          <StatsCard title="ממתין לחומרים" value={statsPending ?? 0} icon={Hourglass} variant="orange" />
           <StatsCard title="בהקלדה" value={statsTyping ?? 0} icon={Clock} variant="blue" />
-          <StatsCard
-            title="ממתין לבדיקה"
-            value={statsReview ?? 0}
-            icon={FileText}
-            variant="orange"
-          />
+          <StatsCard title="ממתין לבדיקה" value={statsReview ?? 0} icon={FileText} variant="orange" />
           <StatsCard title="הוגש" value={statsFiled ?? 0} icon={CheckCircle2} variant="green" />
         </div>
       )}
 
-      <VatWorkItemsFiltersCard
-        filters={filters}
-        onFilterChange={setFilter}
-        onClear={handleClearFilters}
-      />
+      <VatWorkItemsFiltersCard filters={filters} onFilterChange={setFilter} onClear={handleClearFilters} />
 
       <VatWorkItemsGroupedCards
         groups={groups}
@@ -136,9 +117,7 @@ export const VatWorkItems: React.FC = () => {
         emptyState={{
           title: buildVatEmptyStateTitle(filters),
           message: isAdvisor ? 'נסה לשנות את הסינון או לפתוח תיק חדש' : 'נסה לשנות את הסינון',
-          action: isAdvisor
-            ? { label: 'תיק חדש', onClick: () => setShowCreateModal(true) }
-            : undefined,
+          action: isAdvisor ? { label: 'תיק חדש', onClick: () => setShowCreateModal(true) } : undefined,
         }}
       />
 

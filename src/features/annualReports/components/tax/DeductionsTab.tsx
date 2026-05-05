@@ -35,15 +35,11 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
               <h3 className="text-sm font-semibold text-gray-800">ניכויים מוכרים</h3>
             </div>
             {expenses.length > 0 && (
-              <span className={cn('text-sm font-bold', semanticMonoToneClasses.negative)}>
-                {fmt(totalRecognized)}
-              </span>
+              <span className={cn('text-sm font-bold', semanticMonoToneClasses.negative)}>{fmt(totalRecognized)}</span>
             )}
           </div>
           <div className="divide-y divide-gray-50">
-            {expenses.length === 0 && (
-              <p className="px-5 py-8 text-center text-sm text-gray-400">אין ניכויים להצגה</p>
-            )}
+            {expenses.length === 0 && <p className="px-5 py-8 text-center text-sm text-gray-400">אין ניכויים להצגה</p>}
             {expenses.map((e) => {
               const Icon = CATEGORY_ICONS[e.category] ?? MoreHorizontal
               return (
@@ -53,9 +49,7 @@ export const DeductionsTab: React.FC<Props> = ({ reportId, taxYear }) => {
                       <Icon className="h-3.5 w-3.5 text-gray-500" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-800">
-                        {EXPENSE_LABELS[e.category] ?? e.category}
-                      </p>
+                      <p className="text-sm font-medium text-gray-800">{EXPENSE_LABELS[e.category] ?? e.category}</p>
                       {Number(e.recognition_rate) < 100 && (
                         <p className={cn('text-xs', getRecognitionTone(e.recognition_rate))}>
                           {Number(e.recognition_rate)}% מוכר

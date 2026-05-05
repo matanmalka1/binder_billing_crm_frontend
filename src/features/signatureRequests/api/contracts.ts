@@ -1,12 +1,6 @@
 import type { PaginatedResponse } from '@/types'
 
-export type SignatureRequestStatus =
-  | 'draft'
-  | 'pending_signature'
-  | 'signed'
-  | 'declined'
-  | 'expired'
-  | 'canceled'
+export type SignatureRequestStatus = 'draft' | 'pending_signature' | 'signed' | 'declined' | 'expired' | 'canceled'
 
 export type SignatureRequestType =
   | 'engagement_agreement'

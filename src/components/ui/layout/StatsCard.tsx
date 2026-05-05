@@ -138,29 +138,16 @@ export const StatsCard: React.FC<StatsCardProps> = ({
           </div>
         )}
 
-        <div
-          className={cn('min-w-0 flex-1 text-right', compact && 'flex flex-col justify-between')}
-        >
+        <div className={cn('min-w-0 flex-1 text-right', compact && 'flex flex-col justify-between')}>
           <p className={cn('text-xs text-gray-500', compact ? 'mb-2 pl-9' : 'mb-0.5')}>{title}</p>
           {eyebrow && <p className="mb-1 text-xs font-medium text-gray-500">{eyebrow}</p>}
           <div>
-            <div
-              className={cn(
-                'font-bold leading-tight tabular-nums',
-                compact ? 'text-xl' : 'text-lg',
-                config.value,
-              )}
-            >
+            <div className={cn('font-bold leading-tight tabular-nums', compact ? 'text-xl' : 'text-lg', config.value)}>
               {typeof value === 'number' ? displayValue.toLocaleString('he-IL') : value}
             </div>
 
             {description && (
-              <p
-                className={cn(
-                  'mt-1 text-gray-600',
-                  compact ? 'text-xs leading-snug' : 'text-sm leading-relaxed',
-                )}
-              >
+              <p className={cn('mt-1 text-gray-600', compact ? 'text-xs leading-snug' : 'text-sm leading-relaxed')}>
                 {description}
               </p>
             )}
@@ -180,9 +167,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
               <span
                 className={cn(
                   'inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium',
-                  trend.value > 0
-                    ? 'bg-positive-100 text-positive-700'
-                    : 'bg-negative-100 text-negative-700',
+                  trend.value > 0 ? 'bg-positive-100 text-positive-700' : 'bg-negative-100 text-negative-700',
                 )}
               >
                 {trend.value > 0 ? '↑' : '↓'} {Math.abs(trend.value).toFixed(1)}%
@@ -192,9 +177,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
           )}
 
           {actionLabel && (
-            <p className={cn('text-xs font-medium text-gray-500', compact ? 'mt-2' : 'mt-3')}>
-              {actionLabel}
-            </p>
+            <p className={cn('text-xs font-medium text-gray-500', compact ? 'mt-2' : 'mt-3')}>{actionLabel}</p>
           )}
         </div>
       </div>
@@ -202,11 +185,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   )
 
   return isInteractive ? (
-    <button
-      type="button"
-      onClick={onClick}
-      className="w-full text-right transition-transform hover:scale-[1.01]"
-    >
+    <button type="button" onClick={onClick} className="w-full text-right transition-transform hover:scale-[1.01]">
       {card}
     </button>
   ) : (

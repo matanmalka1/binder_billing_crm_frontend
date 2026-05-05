@@ -10,12 +10,7 @@ interface UpdatePayload {
   status?: AdvancePaymentStatus
 }
 
-export const useAdvancePayments = (
-  clientId: number,
-  year: number,
-  statusFilter?: AdvancePaymentStatus[],
-  page = 1,
-) => {
+export const useAdvancePayments = (clientId: number, year: number, statusFilter?: AdvancePaymentStatus[], page = 1) => {
   const queryClient = useQueryClient()
   const qk = advancedPaymentsQK.forClientYear(clientId, year)
   const enabled = clientId > 0
@@ -35,8 +30,7 @@ export const useAdvancePayments = (
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, ...payload }: UpdatePayload) =>
-      advancePaymentsApi.update(clientId, id, payload),
+    mutationFn: ({ id, ...payload }: UpdatePayload) => advancePaymentsApi.update(clientId, id, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: qk })
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all })
@@ -45,8 +39,7 @@ export const useAdvancePayments = (
   })
 
   const createMutation = useMutation({
-    mutationFn: (payload: CreateAdvancePaymentPayload) =>
-      advancePaymentsApi.create(clientId, payload),
+    mutationFn: (payload: CreateAdvancePaymentPayload) => advancePaymentsApi.create(clientId, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: qk })
     },
@@ -71,8 +64,7 @@ export const useAdvancePayments = (
   return {
     rows,
     isLoading: enabled && listQuery.isPending,
-    error:
-      enabled && listQuery.error ? getErrorMessage(listQuery.error, 'שגיאה בטעינת מקדמות') : null,
+    error: enabled && listQuery.error ? getErrorMessage(listQuery.error, 'שגיאה בטעינת מקדמות') : null,
     totalExpected,
     totalPaid,
     total: listQuery.data?.total ?? 0,

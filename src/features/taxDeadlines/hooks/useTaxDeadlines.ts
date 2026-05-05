@@ -89,8 +89,7 @@ export const useTaxDeadlines = () => {
   })
 
   const generateMutation = useMutation({
-    mutationFn: (payload: { client_record_id: number; year: number }) =>
-      taxDeadlinesApi.generateDeadlines(payload),
+    mutationFn: (payload: { client_record_id: number; year: number }) => taxDeadlinesApi.generateDeadlines(payload),
     onSuccess: ({ created_count }) => {
       if (created_count > 0) {
         toast.success(`נוצרו ${created_count} מועדים בהצלחה`)
@@ -171,9 +170,7 @@ export const useTaxDeadlines = () => {
     filters,
     // State
     isLoading: deadlinesQuery.isPending,
-    error: deadlinesQuery.error
-      ? getErrorMessage(deadlinesQuery.error, 'שגיאה בטעינת מועדים')
-      : null,
+    error: deadlinesQuery.error ? getErrorMessage(deadlinesQuery.error, 'שגיאה בטעינת מועדים') : null,
     isCreating: createMutation.isPending,
     isUpdating: deadlineActions.isUpdating,
     completingId: deadlineActions.completingId,

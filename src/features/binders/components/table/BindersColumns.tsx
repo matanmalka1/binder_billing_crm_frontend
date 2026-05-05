@@ -1,11 +1,5 @@
 import { Link } from 'react-router-dom'
-import {
-  actionsColumn,
-  monoColumn,
-  statusColumn,
-  textColumn,
-  type Column,
-} from '@/components/ui/table'
+import { actionsColumn, monoColumn, statusColumn, textColumn, type Column } from '@/components/ui/table'
 import { MonoValue } from '@/components/ui/primitives/MonoValue'
 import type { BinderResponse } from '../../types'
 import { getStatusLabel } from '@/utils/enums'
@@ -93,11 +87,7 @@ export const buildBindersColumns = ({
     key: 'days_in_office',
     header: 'ימים במשרד',
     render: (binder) => (
-      <MonoValue
-        value={binder.days_in_office}
-        format="days"
-        returned={binder.status === 'returned'}
-      />
+      <MonoValue value={binder.days_in_office} format="days" returned={binder.status === 'returned'} />
     ),
   },
   actionsColumn({

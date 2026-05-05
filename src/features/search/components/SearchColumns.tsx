@@ -20,9 +20,7 @@ export const searchColumns: Column<SearchResult>[] = [
         <div className={cn('rounded-lg p-1.5', getResultColor(result.result_type))}>
           {getResultIcon(result.result_type)}
         </div>
-        <span className="text-xs font-medium text-gray-600">
-          {getResultLabel(result.result_type)}
-        </span>
+        <span className="text-xs font-medium text-gray-600">{getResultLabel(result.result_type)}</span>
       </div>
     ),
   },

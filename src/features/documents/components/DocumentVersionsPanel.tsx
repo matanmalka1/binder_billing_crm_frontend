@@ -10,11 +10,7 @@ interface DocumentVersionsPanelProps {
   taxYear?: number
 }
 
-export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
-  clientId,
-  documentType,
-  taxYear,
-}) => {
+export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({ clientId, documentType, taxYear }) => {
   const { data, isLoading } = useQuery({
     queryKey: documentsQK.versions(clientId, documentType, taxYear),
     queryFn: () => documentsApi.getVersions(clientId, documentType, taxYear),
@@ -32,9 +28,7 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
 
   return (
     <div className="border-t border-gray-100 bg-gray-50 px-4 py-3">
-      <p className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-        היסטוריית גרסאות
-      </p>
+      <p className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">היסטוריית גרסאות</p>
       <ul className="space-y-2">
         {items.map((v) => (
           <li key={v.id} className="flex items-center gap-3 text-xs text-gray-700">
@@ -42,9 +36,7 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
               v{v.version}
             </span>
             <span className="tabular-nums text-gray-400 shrink-0">{formatDate(v.uploaded_at)}</span>
-            <Badge variant={STATUS_BADGE_VARIANT[v.status] ?? 'neutral'}>
-              {STATUS_LABELS[v.status] ?? v.status}
-            </Badge>
+            <Badge variant={STATUS_BADGE_VARIANT[v.status] ?? 'neutral'}>{STATUS_LABELS[v.status] ?? v.status}</Badge>
             {v.original_filename && (
               <span className="truncate max-w-[180px] text-gray-600" title={v.original_filename}>
                 {v.original_filename}

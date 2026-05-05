@@ -17,13 +17,7 @@ export interface PageHeaderProps {
   size?: 'md' | 'lg'
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({
-  title,
-  description,
-  breadcrumbs,
-  actions,
-  size = 'lg',
-}) => (
+export const PageHeader: React.FC<PageHeaderProps> = ({ title, description, breadcrumbs, actions, size = 'lg' }) => (
   <header className="space-y-4 animate-fade-in">
     {breadcrumbs && breadcrumbs.length > 0 && (
       <nav className="flex items-center gap-2 text-sm animate-slide-in">
@@ -50,10 +44,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       size={size}
       actions={
         actions ? (
-          <div
-            className="flex items-center gap-2 animate-slide-in"
-            style={{ animationDelay: staggerDelay(1, 100) }}
-          >
+          <div className="flex items-center gap-2 animate-slide-in" style={{ animationDelay: staggerDelay(1, 100) }}>
             {actions}
           </div>
         ) : undefined

@@ -45,7 +45,6 @@ export const NUMERIC_MONTH_OPTIONS = Array.from({ length: 12 }, (_, index) => ({
   label: String(index + 1).padStart(2, '0'),
 }))
 
-
 /** Oct+ → next year; else current year. */
 export const getOperationalTaxYear = (): number => {
   const now = new Date()

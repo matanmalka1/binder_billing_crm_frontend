@@ -39,10 +39,7 @@ function extractImports(filePath) {
   const imports = []
   let skipNext = false
   for (const line of lines) {
-    if (
-      line.includes('arch-check-disable') ||
-      line.includes('eslint-disable-next-line no-restricted-imports')
-    ) {
+    if (line.includes('arch-check-disable') || line.includes('eslint-disable-next-line no-restricted-imports')) {
       skipNext = true
       continue
     }
@@ -149,9 +146,7 @@ if (STRICT) {
     for (const spec of rawImports.get(file) ?? []) {
       const resolved = resolveImport(file, spec)
       if (!resolved) continue
-      const importFeature = featureNames.find((f) =>
-        resolved.startsWith(resolve(FEATURES_DIR, f) + '/'),
-      )
+      const importFeature = featureNames.find((f) => resolved.startsWith(resolve(FEATURES_DIR, f) + '/'))
       if (!importFeature || importFeature === fileFeature) continue
       // Cross-feature component imports are allowed (composition pattern)
       if (resolved.includes('/components/')) continue

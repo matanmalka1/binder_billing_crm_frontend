@@ -41,8 +41,7 @@ export default defineConfig([
                 '*/features/*/constants*',
                 '*/features/*/api/*',
               ],
-              message:
-                'Cross-feature deep-linking is forbidden. Import from the feature root index.ts barrel instead.',
+              message: 'Cross-feature deep-linking is forbidden. Import from the feature root index.ts barrel instead.',
             },
           ],
         },
@@ -59,8 +58,7 @@ export default defineConfig([
           patterns: [
             {
               group: ['*/api/*', '@/api/*'],
-              message:
-                'Pure UI components cannot import from api/. Move logic to a feature hook or shared component.',
+              message: 'Pure UI components cannot import from api/. Move logic to a feature hook or shared component.',
             },
             {
               group: ['@tanstack/react-query'],

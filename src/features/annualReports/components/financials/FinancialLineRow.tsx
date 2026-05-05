@@ -56,10 +56,7 @@ export const LineRow: React.FC<LineRowProps> = ({
             <span className="text-xs">{supportingDocumentFilename ?? 'מסמך'}</span>
           </Button>
         ) : supportingDocumentRef ? (
-          <span
-            className="flex items-center gap-0.5 text-xs text-gray-500"
-            title={supportingDocumentRef}
-          >
+          <span className="flex items-center gap-0.5 text-xs text-gray-500" title={supportingDocumentRef}>
             <Paperclip className="h-3 w-3" />
             {supportingDocumentRef}
           </span>

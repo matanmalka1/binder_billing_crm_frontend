@@ -5,13 +5,9 @@ import { AMEND_REASON_MIN_LENGTH } from './constants'
 
 export const getEmptyTransitionForm = (): TransitionForm => ({ ...EMPTY_FORM })
 
-export const isValidAmendReason = (reason: string) =>
-  reason.trim().length >= AMEND_REASON_MIN_LENGTH
+export const isValidAmendReason = (reason: string) => reason.trim().length >= AMEND_REASON_MIN_LENGTH
 
-export const buildTransitionPayload = (
-  status: AnnualReportStatus,
-  form: TransitionForm,
-): StatusTransitionPayload => ({
+export const buildTransitionPayload = (status: AnnualReportStatus, form: TransitionForm): StatusTransitionPayload => ({
   status,
   note: form.note || null,
   ita_reference: form.itaRef || null,

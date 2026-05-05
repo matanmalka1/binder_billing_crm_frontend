@@ -1,10 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  documentsApi,
-  documentsQK,
-  type OperationalSignalsResponse,
-  type PermanentDocumentListResponse,
-} from '../api'
+import { documentsApi, documentsQK, type OperationalSignalsResponse, type PermanentDocumentListResponse } from '../api'
 import { useBusinessesForClient } from '@/hooks/useBusinessesForClient'
 import { getErrorMessage } from '../../../utils/utils'
 import { useDocumentUpload } from './useDocumentUpload'

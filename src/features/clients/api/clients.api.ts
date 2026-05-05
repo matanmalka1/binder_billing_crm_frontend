@@ -40,16 +40,12 @@ export const clientsApi = {
   },
 
   getConflictByIdNumber: async (idNumber: string): Promise<ClientConflictInfo> => {
-    const response = await api.get<ClientConflictInfo>(
-      CLIENT_ENDPOINTS.clientConflictByIdNumber(idNumber),
-    )
+    const response = await api.get<ClientConflictInfo>(CLIENT_ENDPOINTS.clientConflictByIdNumber(idNumber))
     return response.data
   },
 
   getBusinessById: async (clientId: number, businessId: number): Promise<BusinessResponse> => {
-    const response = await api.get<BusinessResponse>(
-      BUSINESS_ENDPOINTS.businessById(clientId, businessId),
-    )
+    const response = await api.get<BusinessResponse>(BUSINESS_ENDPOINTS.businessById(clientId, businessId))
     return response.data
   },
 
@@ -95,17 +91,14 @@ export const clientsApi = {
   },
 
   getStatusCard: async (clientId: number, year?: number): Promise<BusinessStatusCardResponse> => {
-    const response = await api.get<BusinessStatusCardResponse>(
-      CLIENT_ENDPOINTS.clientStatusCard(clientId),
-      { params: year ? { year } : undefined },
-    )
+    const response = await api.get<BusinessStatusCardResponse>(CLIENT_ENDPOINTS.clientStatusCard(clientId), {
+      params: year ? { year } : undefined,
+    })
     return response.data
   },
 
   getAuditTrail: async (clientId: number): Promise<EntityAuditTrailResponse> => {
-    const response = await api.get<EntityAuditTrailResponse>(
-      CLIENT_ENDPOINTS.clientAuditTrail(clientId),
-    )
+    const response = await api.get<EntityAuditTrailResponse>(CLIENT_ENDPOINTS.clientAuditTrail(clientId))
     return response.data
   },
 
@@ -123,15 +116,10 @@ export const clientsApi = {
     return response.data
   },
 
-  previewImpact: async (
-    payload: ClientImpactPreviewPayload,
-  ): Promise<ClientCreationImpactResponse> => {
-    const response = await api.post<ClientCreationImpactResponse>(
-      CLIENT_ENDPOINTS.clientsPreviewImpact,
-      {
-        client: payload,
-      },
-    )
+  previewImpact: async (payload: ClientImpactPreviewPayload): Promise<ClientCreationImpactResponse> => {
+    const response = await api.post<ClientCreationImpactResponse>(CLIENT_ENDPOINTS.clientsPreviewImpact, {
+      client: payload,
+    })
     return response.data
   },
 
@@ -149,14 +137,8 @@ export const clientsApi = {
     return response.data
   },
 
-  createBusiness: async (
-    clientId: number,
-    payload: CreateBusinessPayload,
-  ): Promise<BusinessResponse> => {
-    const response = await api.post<BusinessResponse>(
-      BUSINESS_ENDPOINTS.clientBusinesses(clientId),
-      payload,
-    )
+  createBusiness: async (clientId: number, payload: CreateBusinessPayload): Promise<BusinessResponse> => {
+    const response = await api.post<BusinessResponse>(BUSINESS_ENDPOINTS.clientBusinesses(clientId), payload)
     return response.data
   },
 
@@ -165,10 +147,7 @@ export const clientsApi = {
     businessId: number,
     payload: UpdateBusinessPayload,
   ): Promise<BusinessResponse> => {
-    const response = await api.patch<BusinessResponse>(
-      BUSINESS_ENDPOINTS.businessById(clientId, businessId),
-      payload,
-    )
+    const response = await api.patch<BusinessResponse>(BUSINESS_ENDPOINTS.businessById(clientId, businessId), payload)
     return response.data
   },
 
@@ -177,9 +156,7 @@ export const clientsApi = {
   },
 
   restoreBusiness: async (clientId: number, businessId: number): Promise<BusinessResponse> => {
-    const response = await api.post<BusinessResponse>(
-      BUSINESS_ENDPOINTS.businessRestore(clientId, businessId),
-    )
+    const response = await api.post<BusinessResponse>(BUSINESS_ENDPOINTS.businessRestore(clientId, businessId))
     return response.data
   },
 }

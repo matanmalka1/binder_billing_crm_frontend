@@ -47,9 +47,7 @@ export const BinderDetailDrawer: React.FC<BinderDetailDrawerProps> = ({
       ) : undefined
     }
   >
-    {!binder && (
-      <div className="flex items-center justify-center py-12 text-sm text-gray-400">טוען...</div>
-    )}
+    {!binder && <div className="flex items-center justify-center py-12 text-sm text-gray-400">טוען...</div>}
     {binder && (
       <>
         <BinderDetailsPanel binder={binder} />

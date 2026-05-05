@@ -7,9 +7,4 @@ export { SeasonSummaryWidget } from './components/SeasonSummaryWidget'
 export { VatInsightsRow } from './components/VatInsightsRow'
 export { useDashboardPage } from './hooks/useDashboardPage'
 export { DashboardPage } from './pages/DashboardPage'
-export type {
-  DashboardOverviewResponse,
-  DashboardSummaryResponse,
-  AttentionItem,
-  AttentionResponse,
-} from './api'
+export type { DashboardOverviewResponse, DashboardSummaryResponse, AttentionItem, AttentionResponse } from './api'

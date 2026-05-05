@@ -34,9 +34,7 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-negative-800">
-            {overdue.length === 1
-              ? 'דוח אחד חרג ממועד ההגשה'
-              : `${overdue.length} דוחות חרגו ממועד ההגשה`}
+            {overdue.length === 1 ? 'דוח אחד חרג ממועד ההגשה' : `${overdue.length} דוחות חרגו ממועד ההגשה`}
           </p>
           <p className="mt-0.5 text-xs text-negative-700">לחץ על שם הלקוח לפתיחת פרטי הדוח</p>
         </div>
@@ -69,14 +67,10 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
               tabIndex={0}
               onKeyDown={(e) => e.key === 'Enter' && onSelect(report.id)}
             >
-              <span className="text-sm font-medium text-gray-900 truncate">
-                {getClientReportName(report)}
-              </span>
+              <span className="text-sm font-medium text-gray-900 truncate">{getClientReportName(report)}</span>
               <div className="flex items-center gap-3 shrink-0 text-xs text-gray-500">
                 <span className="tabular-nums">{formatDate(report.filing_deadline)}</span>
-                {days !== null && (
-                  <span className="font-semibold text-negative-600 tabular-nums">{days} ימים</span>
-                )}
+                {days !== null && <span className="font-semibold text-negative-600 tabular-nums">{days} ימים</span>}
               </div>
             </div>
           )
@@ -90,9 +84,7 @@ export const OverdueBanner: React.FC<OverdueBannerProps> = ({ overdue, onSelect 
             onClick={() => setExpanded((v) => !v)}
             className="w-full pt-1 text-xs font-medium text-negative-700 hover:text-negative-900 hover:bg-transparent"
             aria-expanded={expanded}
-            aria-label={
-              expanded ? 'הצג פחות דוחות' : `הצג ${remaining} דוחות נוספים שחרגו ממועד ההגשה`
-            }
+            aria-label={expanded ? 'הצג פחות דוחות' : `הצג ${remaining} דוחות נוספים שחרגו ממועד ההגשה`}
           >
             {expanded ? 'הצג פחות' : `+ עוד ${remaining} דוחות`}
           </Button>

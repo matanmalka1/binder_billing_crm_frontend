@@ -28,17 +28,10 @@ interface RowActionLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   icon: React.ReactNode
 }
 
-export const RowActionLink: React.FC<RowActionLinkProps> = ({
-  label,
-  icon,
-  className,
-  onClick,
-  ...props
-}) => (
+export const RowActionLink: React.FC<RowActionLinkProps> = ({ label, icon, className, onClick, ...props }) => (
   <a
     className={
-      className ??
-      'block w-full px-3 py-2 text-right text-sm text-gray-700 transition-colors hover:bg-gray-50'
+      className ?? 'block w-full px-3 py-2 text-right text-sm text-gray-700 transition-colors hover:bg-gray-50'
     }
     onClick={(event) => {
       event.stopPropagation()

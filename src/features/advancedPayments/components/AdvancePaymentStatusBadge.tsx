@@ -8,9 +8,7 @@ interface AdvancePaymentStatusBadgeProps {
 }
 
 export const AdvancePaymentStatusBadge: React.FC<AdvancePaymentStatusBadgeProps> = ({ status }) => (
-  <Badge variant={STATUS_VARIANT[status] ?? 'neutral'}>
-    {getAdvancePaymentStatusLabel(status)}
-  </Badge>
+  <Badge variant={STATUS_VARIANT[status] ?? 'neutral'}>{getAdvancePaymentStatusLabel(status)}</Badge>
 )
 
 AdvancePaymentStatusBadge.displayName = 'AdvancePaymentStatusBadge'

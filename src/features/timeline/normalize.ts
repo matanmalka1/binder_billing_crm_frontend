@@ -63,10 +63,7 @@ const STRONG_EVENTS = new Set([
   'document_uploaded',
 ])
 
-const getMetadataString = (
-  metadata: TimelineEventMetadata | null | undefined,
-  keys: string[],
-): string | null => {
+const getMetadataString = (metadata: TimelineEventMetadata | null | undefined, keys: string[]): string | null => {
   for (const key of keys) {
     const value = metadata?.[key]
     if (typeof value === 'string' && value.trim()) return value
@@ -74,9 +71,7 @@ const getMetadataString = (
   return null
 }
 
-export const getDeadlineTypeLabel = (
-  metadata: TimelineEventMetadata | null | undefined,
-): string => {
+export const getDeadlineTypeLabel = (metadata: TimelineEventMetadata | null | undefined): string => {
   const type = getMetadataString(metadata, ['deadline_type', 'type'])
   return type ? (DEADLINE_TYPE_LABELS[type] ?? 'אחר') : 'אחר'
 }
@@ -87,12 +82,10 @@ const getDeadlineDate = (event: TimelineEvent): string => {
 }
 
 const isFutureDeadline = (event: TimelineEvent, now: Date): boolean =>
-  event.event_type === 'tax_deadline_due' &&
-  isAfter(endOfDay(parseISO(getDeadlineDate(event))), now)
+  event.event_type === 'tax_deadline_due' && isAfter(endOfDay(parseISO(getDeadlineDate(event))), now)
 
 const isPastEvent = (event: TimelineEvent, now: Date): boolean =>
-  event.event_type !== 'tax_deadline_due' ||
-  isBefore(startOfDay(parseISO(getDeadlineDate(event))), startOfDay(now))
+  event.event_type !== 'tax_deadline_due' || isBefore(startOfDay(parseISO(getDeadlineDate(event))), startOfDay(now))
 
 const shouldHideEvent = (event: TimelineEvent): boolean =>
   event.event_type === 'binder_status_change' &&
@@ -128,19 +121,13 @@ const buildSecondary = (event: TimelineEvent, groupedCount?: number): string | n
     return event.description && event.description !== 'מועד מס' ? event.description : null
   }
   if (event.event_type === 'reminder_created' && groupedCount && groupedCount > 1) {
-    const trigger = event.metadata?.trigger
-      ? getTimelineTriggerLabel(String(event.metadata.trigger))
-      : null
+    const trigger = event.metadata?.trigger ? getTimelineTriggerLabel(String(event.metadata.trigger)) : null
     return trigger ? `סוג תזכורת: ${trigger}` : null
   }
   return event.description || null
 }
 
-const normalizeEvent = (
-  event: TimelineEvent,
-  now: Date,
-  groupedCount?: number,
-): NormalizedTimelineEvent => {
+const normalizeEvent = (event: TimelineEvent, now: Date, groupedCount?: number): NormalizedTimelineEvent => {
   const isDeadline = event.event_type === 'tax_deadline_due'
   const future = isDeadline && isFutureDeadline(event, now)
   const filterKeys = FILTER_BY_EVENT_TYPE[event.event_type] ?? ['past']
@@ -159,16 +146,9 @@ const normalizeEvent = (
 }
 
 const reminderGroupKey = (event: TimelineEvent): string =>
-  [
-    event.event_type,
-    event.timestamp.slice(0, 10),
-    event.description,
-    event.metadata?.trigger ?? '',
-  ].join('|')
+  [event.event_type, event.timestamp.slice(0, 10), event.description, event.metadata?.trigger ?? ''].join('|')
 
-const groupReminders = (
-  events: TimelineEvent[],
-): Array<TimelineEvent & { groupedCount?: number }> => {
+const groupReminders = (events: TimelineEvent[]): Array<TimelineEvent & { groupedCount?: number }> => {
   const grouped = new Map<string, TimelineEvent & { groupedCount?: number }>()
   const output: Array<TimelineEvent & { groupedCount?: number }> = []
 

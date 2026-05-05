@@ -50,10 +50,7 @@ export const AUTHORITY_CONTACT_PLACEHOLDERS = {
     name: 'לדוגמה: רשות / גורם מטפל',
     office: 'לדוגמה: מחוז דרום',
   },
-} as const satisfies Record<
-  AuthorityContactFormValues['contact_type'],
-  { name: string; office: string }
->
+} as const satisfies Record<AuthorityContactFormValues['contact_type'], { name: string; office: string }>
 
 export const AUTHORITY_CONTACT_STATIC_PLACEHOLDERS = {
   phone: 'לדוגמה: 08-1234567',

@@ -11,10 +11,7 @@ interface ClientRemindersCardProps {
   clientName?: string
 }
 
-export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({
-  clientId,
-  clientName,
-}) => {
+export const ClientRemindersCard: React.FC<ClientRemindersCardProps> = ({ clientId, clientName }) => {
   const {
     reminders,
     isLoading,

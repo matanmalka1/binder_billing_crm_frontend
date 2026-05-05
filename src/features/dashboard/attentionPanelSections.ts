@@ -73,18 +73,14 @@ const KNOWN_ATTENTION_TYPES = new Set<AttentionItemType>(ATTENTION_SECTIONS.flat
 
 const getAttentionItemHref = (item: AttentionItem, fallback: string | undefined): string => {
   if (item.item_type === 'unpaid_charge') return `/charges?charge_id=${item.charge_id}`
-  if (item.client_id && item.business_id)
-    return `/clients/${item.client_id}/businesses/${item.business_id}`
+  if (item.client_id && item.business_id) return `/clients/${item.client_id}/businesses/${item.business_id}`
   if (item.client_id) return `/clients/${item.client_id}`
   return fallback ?? '/'
 }
 
 const getChargeItemDescription = (item: AttentionItem): string | undefined => {
   if (item.item_type !== 'unpaid_charge') return undefined
-  const parts = [
-    item.charge_subject,
-    item.charge_date ? `תאריך חיוב ${formatDate(item.charge_date)}` : null,
-  ]
+  const parts = [item.charge_subject, item.charge_date ? `תאריך חיוב ${formatDate(item.charge_date)}` : null]
   return parts.filter(Boolean).join(' · ') || undefined
 }
 
@@ -154,30 +150,26 @@ export const quickActionsToPanelSections = (rawActions: BackendAction[]): PanelS
     ])
   }
 
-  const ordered = [
-    ...QA_CATEGORY_ORDER,
-    ...[...grouped.keys()].filter((k) => !QA_CATEGORY_ORDER.includes(k as never)),
-  ]
+  const ordered = [...QA_CATEGORY_ORDER, ...[...grouped.keys()].filter((k) => !QA_CATEGORY_ORDER.includes(k as never))]
 
-  return ordered
-    .map((cat) => {
-      const catActions = grouped.get(cat) ?? []
-      const meta = QA_CATEGORY_META[cat] ?? DEFAULT_META
+  return ordered.map((cat) => {
+    const catActions = grouped.get(cat) ?? []
+    const meta = QA_CATEGORY_META[cat] ?? DEFAULT_META
 
-      return {
-        key: cat,
-        title: QA_CATEGORY_LABELS[cat] ?? cat,
-        icon: meta.icon,
-        tone: meta.tone,
-        viewAllHref: meta.href,
-        items: catActions.map((a, idx) => ({
-          id: `${cat}-${a.uiKey}-${idx}`,
-          label: a.action.clientName ?? a.action.binderNumber ?? a.label,
-          sublabel: a.dueLabel ?? QA_CATEGORY_LABELS[cat] ?? undefined,
-          href: meta.href,
-          meta: a.action.description ? { description: a.action.description } : undefined,
-          actions: [a],
-        })),
-      } satisfies PanelSection
-    })
+    return {
+      key: cat,
+      title: QA_CATEGORY_LABELS[cat] ?? cat,
+      icon: meta.icon,
+      tone: meta.tone,
+      viewAllHref: meta.href,
+      items: catActions.map((a, idx) => ({
+        id: `${cat}-${a.uiKey}-${idx}`,
+        label: a.action.clientName ?? a.action.binderNumber ?? a.label,
+        sublabel: a.dueLabel ?? QA_CATEGORY_LABELS[cat] ?? undefined,
+        href: meta.href,
+        meta: a.action.description ? { description: a.action.description } : undefined,
+        actions: [a],
+      })),
+    } satisfies PanelSection
+  })
 }

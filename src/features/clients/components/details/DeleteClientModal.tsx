@@ -12,13 +12,7 @@ interface Props {
   onCancel: () => void
 }
 
-export const DeleteClientModal: React.FC<Props> = ({
-  open,
-  clientName,
-  isDeleting,
-  onConfirm,
-  onCancel,
-}) => {
+export const DeleteClientModal: React.FC<Props> = ({ open, clientName, isDeleting, onConfirm, onCancel }) => {
   const [confirmation, setConfirmation] = useState('')
 
   const handleClose = () => {
@@ -60,8 +54,8 @@ export const DeleteClientModal: React.FC<Props> = ({
           <div className="space-y-2 text-sm">
             <p className="font-semibold">מחיקת הלקוח {clientName} היא פעולה בלתי הפיכה.</p>
             <p>
-              המחיקה תסיר את רשומת הלקוח מהעבודה השוטפת ועלולה להשפיע על תצוגת מסמכים, מועדים,
-              חיובים, קלסרים והיסטוריית פעילות המקושרים ללקוח.
+              המחיקה תסיר את רשומת הלקוח מהעבודה השוטפת ועלולה להשפיע על תצוגת מסמכים, מועדים, חיובים, קלסרים והיסטוריית
+              פעילות המקושרים ללקוח.
             </p>
           </div>
         </div>

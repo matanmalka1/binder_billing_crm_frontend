@@ -17,23 +17,14 @@ interface UserFormFieldsProps {
   showPassword?: boolean
 }
 
-export const UserFormFields: React.FC<UserFormFieldsProps> = ({
-  register,
-  errors,
-  showPassword = false,
-}) => {
+export const UserFormFields: React.FC<UserFormFieldsProps> = ({ register, errors, showPassword = false }) => {
   // Cast once here — both schemas share identical field names for these inputs.
   const reg = register as UseFormRegister<CreateUserFormValues>
   const err = errors as FieldErrors<CreateUserFormValues>
 
   return (
     <div className="space-y-4">
-      <Input
-        label="שם מלא *"
-        {...reg('full_name')}
-        error={err.full_name?.message}
-        placeholder="ישראל ישראלי"
-      />
+      <Input label="שם מלא *" {...reg('full_name')} error={err.full_name?.message} placeholder="ישראל ישראלי" />
       <Input
         label="אימייל *"
         type="email"

@@ -16,10 +16,7 @@ export const useMutationWithToast = <TData, TVariables>(options: Options<TData, 
     mutationFn: options.mutationFn,
     onSuccess: (data, variables) => {
       if (options.successMessage) {
-        const msg =
-          typeof options.successMessage === 'function'
-            ? options.successMessage(data)
-            : options.successMessage
+        const msg = typeof options.successMessage === 'function' ? options.successMessage(data) : options.successMessage
         toast.success(msg)
       }
       if (options.invalidateKeys) {

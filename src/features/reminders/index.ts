@@ -9,10 +9,4 @@ export { RemindersSummaryCards } from './components/RemindersSummaryCards'
 export { RemindersTable } from './components/RemindersTable'
 export { useReminders } from './hooks/useReminders'
 export { RemindersPage } from './pages/RemindersPage'
-export type {
-  ReminderType,
-  ReminderStatus,
-  Reminder,
-  CreateReminderRequest,
-  RemindersListResponse,
-} from './api'
+export type { ReminderType, ReminderStatus, Reminder, CreateReminderRequest, RemindersListResponse } from './api'

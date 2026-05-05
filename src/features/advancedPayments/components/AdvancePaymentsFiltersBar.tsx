@@ -1,9 +1,6 @@
 import { FilterPanel } from '@/components/ui/filters/FilterPanel'
 import { getOperationalYearOptions } from '@/constants/periodOptions.constants'
-import {
-  ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL,
-  ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS,
-} from '../constants'
+import { ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL, ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS } from '../constants'
 import type { AdvancePaymentStatus } from '../types'
 
 interface AdvancePaymentsFiltersBarProps {
@@ -29,12 +26,7 @@ const FIELDS = [
   },
 ]
 
-export const AdvancePaymentsFiltersBar = ({
-  year,
-  month,
-  status,
-  onParamChange,
-}: AdvancePaymentsFiltersBarProps) => (
+export const AdvancePaymentsFiltersBar = ({ year, month, status, onParamChange }: AdvancePaymentsFiltersBarProps) => (
   <FilterPanel
     fields={FIELDS}
     values={{

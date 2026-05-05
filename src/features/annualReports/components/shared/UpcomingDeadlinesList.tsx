@@ -44,13 +44,7 @@ export const UpcomingDeadlinesList: React.FC<Props> = ({ reports }) => {
             {upcoming.map((r) => {
               const st = getDeadlineStatus(r)
               return (
-                <li
-                  key={r.id}
-                  className={cn(
-                    'flex items-center gap-3 rounded-lg border px-4 py-3',
-                    STATUS_COLORS[st],
-                  )}
-                >
+                <li key={r.id} className={cn('flex items-center gap-3 rounded-lg border px-4 py-3', STATUS_COLORS[st])}>
                   {STATUS_ICONS[st]}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-800 truncate">

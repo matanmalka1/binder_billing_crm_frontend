@@ -1,6 +1,5 @@
 /** ISO-8601 calendar date string `YYYY-MM-DD`. */
-export type ISODateString =
-  `${number}${number}${number}${number}-${number}${number}-${number}${number}`
+export type ISODateString = `${number}${number}${number}${number}-${number}${number}-${number}${number}`
 
 export interface PaginatedResponse<T> {
   items: T[]
@@ -15,8 +14,7 @@ export interface PagedQueryParams {
   page_size: number
 }
 
-export type PagedFilters<T extends Record<string, unknown> = Record<string, unknown>> =
-  PagedQueryParams & T
+export type PagedFilters<T extends Record<string, unknown> = Record<string, unknown>> = PagedQueryParams & T
 
 export type UserRole = 'advisor' | 'secretary'
 

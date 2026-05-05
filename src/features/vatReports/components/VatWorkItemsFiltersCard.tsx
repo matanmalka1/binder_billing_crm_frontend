@@ -4,24 +4,33 @@ import { VAT_PERIOD_TYPE_SELECT_OPTIONS, VAT_WORK_ITEMS_STATUS_OPTIONS } from '.
 import type { VatWorkItemsFiltersCardProps } from '../types'
 import { getOperationalTaxYear, getOperationalYearOptions } from '@/constants/periodOptions.constants'
 
-export const VatWorkItemsFiltersCard = ({
-  filters,
-  onClear,
-  onFilterChange,
-}: VatWorkItemsFiltersCardProps) => {
-  const fields = useMemo(
-    () => {
-      const yearOptions = [{ value: '', label: 'כל השנים' }, ...getOperationalYearOptions()]
-      const defaultYear = String(getOperationalTaxYear())
-      return [
-        { type: 'client-picker' as const, idKey: 'clientSearch', nameKey: 'clientSearchName' },
-        { type: 'select' as const, key: 'year', label: 'שנה', options: yearOptions, defaultValue: defaultYear },
-        { type: 'select' as const, key: 'status', label: 'סטטוס', options: VAT_WORK_ITEMS_STATUS_OPTIONS },
-        { type: 'select' as const, key: 'period_type', label: 'סוג דיווח', options: VAT_PERIOD_TYPE_SELECT_OPTIONS },
-      ]
-    },
-    [],
-  )
+export const VatWorkItemsFiltersCard = ({ filters, onClear, onFilterChange }: VatWorkItemsFiltersCardProps) => {
+  const fields = useMemo(() => {
+    const yearOptions = [{ value: '', label: 'כל השנים' }, ...getOperationalYearOptions()]
+    const defaultYear = String(getOperationalTaxYear())
+    return [
+      { type: 'client-picker' as const, idKey: 'clientSearch', nameKey: 'clientSearchName' },
+      {
+        type: 'select' as const,
+        key: 'year',
+        label: 'שנה',
+        options: yearOptions,
+        defaultValue: defaultYear,
+      },
+      {
+        type: 'select' as const,
+        key: 'status',
+        label: 'סטטוס',
+        options: VAT_WORK_ITEMS_STATUS_OPTIONS,
+      },
+      {
+        type: 'select' as const,
+        key: 'period_type',
+        label: 'סוג דיווח',
+        options: VAT_PERIOD_TYPE_SELECT_OPTIONS,
+      },
+    ]
+  }, [])
 
   return (
     <FilterPanel

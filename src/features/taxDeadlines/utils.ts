@@ -4,10 +4,7 @@ import { getReportingPeriodShortMonthLabel } from '@/constants/periodOptions.con
 import { HEBREW_MONTHS } from './constants'
 import type { CreateTaxDeadlineForm, EditTaxDeadlineForm, TimelineFilters } from './types'
 
-type DeadlinePeriodFields = Pick<
-  TaxDeadlineResponse,
-  'deadline_type' | 'period' | 'period_months_count' | 'tax_year'
->
+type DeadlinePeriodFields = Pick<TaxDeadlineResponse, 'deadline_type' | 'period' | 'period_months_count' | 'tax_year'>
 
 export const isAnnualReportDeadline = (deadlineType: string) => deadlineType === 'annual_report'
 
@@ -127,28 +124,19 @@ export const sortTaxDeadlines = (deadlines: TaxDeadlineResponse[]) =>
   })
 
 export const getTimelineYearOptions = (deadlines: TaxDeadlineResponse[]) => {
-  const years = Array.from(
-    new Set(deadlines.map((deadline) => new Date(deadline.due_date).getFullYear())),
-  )
+  const years = Array.from(new Set(deadlines.map((deadline) => new Date(deadline.due_date).getFullYear())))
     .filter((year) => Number.isFinite(year))
     .sort((a, b) => b - a)
 
-  return [
-    { value: '', label: 'כל השנים' },
-    ...years.map((year) => ({ value: String(year), label: String(year) })),
-  ]
+  return [{ value: '', label: 'כל השנים' }, ...years.map((year) => ({ value: String(year), label: String(year) }))]
 }
 
-export const filterTimelineDeadlines = (
-  deadlines: TaxDeadlineResponse[],
-  filters: TimelineFilters,
-) =>
+export const filterTimelineDeadlines = (deadlines: TaxDeadlineResponse[], filters: TimelineFilters) =>
   sortTaxDeadlines(
     deadlines.filter((deadline) => {
       if (filters.status && deadline.status !== filters.status) return false
       if (filters.type && deadline.deadline_type !== filters.type) return false
-      if (filters.year && new Date(deadline.due_date).getFullYear() !== Number(filters.year))
-        return false
+      if (filters.year && new Date(deadline.due_date).getFullYear() !== Number(filters.year)) return false
       if (filters.overdueOnly) {
         return deadline.status === 'pending' && deadline.urgency_level === 'overdue'
       }

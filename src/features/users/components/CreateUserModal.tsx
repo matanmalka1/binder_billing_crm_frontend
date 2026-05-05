@@ -13,12 +13,7 @@ interface CreateUserModalProps {
   isLoading?: boolean
 }
 
-export const CreateUserModal: React.FC<CreateUserModalProps> = ({
-  open,
-  onClose,
-  onSubmit,
-  isLoading = false,
-}) => {
+export const CreateUserModal: React.FC<CreateUserModalProps> = ({ open, onClose, onSubmit, isLoading = false }) => {
   const {
     register,
     handleSubmit,

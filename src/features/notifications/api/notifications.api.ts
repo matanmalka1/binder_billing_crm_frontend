@@ -11,9 +11,7 @@ import type {
   SendNotificationResponse,
 } from './contracts'
 
-const normalizeNotifications = (
-  data: NotificationItem[] | NotificationListResponse,
-): NotificationItem[] => {
+const normalizeNotifications = (data: NotificationItem[] | NotificationListResponse): NotificationItem[] => {
   if (Array.isArray(data)) return data
   return Array.isArray(data.items) ? data.items : []
 }
@@ -36,10 +34,9 @@ export const notificationsApi = {
   },
 
   markRead: async (notificationIds: number[]): Promise<MarkReadResponse> => {
-    const response = await api.post<MarkReadResponse>(
-      NOTIFICATION_ENDPOINTS.notificationsMarkRead,
-      { notification_ids: notificationIds },
-    )
+    const response = await api.post<MarkReadResponse>(NOTIFICATION_ENDPOINTS.notificationsMarkRead, {
+      notification_ids: notificationIds,
+    })
     return response.data
   },
 
@@ -53,10 +50,7 @@ export const notificationsApi = {
   },
 
   send: async (payload: SendNotificationPayload): Promise<SendNotificationResponse> => {
-    const response = await api.post<SendNotificationResponse>(
-      NOTIFICATION_ENDPOINTS.notificationsSend,
-      payload,
-    )
+    const response = await api.post<SendNotificationResponse>(NOTIFICATION_ENDPOINTS.notificationsSend, payload)
     return response.data
   },
 }

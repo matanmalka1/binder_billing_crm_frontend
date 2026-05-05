@@ -70,17 +70,13 @@ export const TaxDeadlinesTable = ({
         key: 'deadline_type',
         header: 'סוג',
         render: (deadline) => (
-          <span className="text-sm text-gray-500">
-            {getDeadlineTypeLabel(deadline.deadline_type)}
-          </span>
+          <span className="text-sm text-gray-500">{getDeadlineTypeLabel(deadline.deadline_type)}</span>
         ),
       },
       {
         key: 'period',
         header: 'תקופה',
-        render: (deadline) => (
-          <span className="text-sm text-gray-500">{getTaxDeadlinePeriodLabel(deadline)}</span>
-        ),
+        render: (deadline) => <span className="text-sm text-gray-500">{getTaxDeadlinePeriodLabel(deadline)}</span>,
       },
       {
         key: 'due_date',
@@ -97,9 +93,7 @@ export const TaxDeadlinesTable = ({
             {
               key: 'urgency',
               header: 'דחיפות',
-              render: (deadline: TaxDeadlineResponse) => (
-                <DeadlineUrgencyBadge deadline={deadline} />
-              ),
+              render: (deadline: TaxDeadlineResponse) => <DeadlineUrgencyBadge deadline={deadline} />,
             },
           ]
         : []),

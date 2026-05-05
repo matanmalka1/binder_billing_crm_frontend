@@ -123,10 +123,7 @@ export const useTaxDeadlineActions = ({ invalidateAfterMutation }: UseTaxDeadlin
     editForm.reset({
       deadline_type: deadline.deadline_type,
       due_date: deadline.due_date,
-      period:
-        deadline.deadline_type === 'annual_report'
-          ? String(deadline.tax_year ?? '')
-          : (deadline.period ?? ''),
+      period: deadline.deadline_type === 'annual_report' ? String(deadline.tax_year ?? '') : (deadline.period ?? ''),
       payment_amount: deadline.payment_amount != null ? String(deadline.payment_amount) : '',
       description: deadline.description ?? '',
     })

@@ -123,21 +123,10 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
 
       <AdvancePaymentsKPICards clientId={clientId} year={year} />
 
-      <AdvancePaymentTable
-        rows={rows}
-        isLoading={isLoading}
-        canEdit={false}
-        onRowClick={(row) => setDrawerRow(row)}
-      />
+      <AdvancePaymentTable rows={rows} isLoading={isLoading} canEdit={false} onRowClick={(row) => setDrawerRow(row)} />
 
       {totalPages > 1 && (
-        <PaginationCard
-          page={page}
-          totalPages={totalPages}
-          total={total}
-          label="מקדמות"
-          onPageChange={setPage}
-        />
+        <PaginationCard page={page} totalPages={totalPages} total={total} label="מקדמות" onPageChange={setPage} />
       )}
 
       <AdvancePaymentDrawer

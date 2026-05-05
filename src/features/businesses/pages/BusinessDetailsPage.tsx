@@ -7,11 +7,7 @@ import { useRole } from '@/hooks/useRole'
 import { useBusinessDetails } from '../hooks/useBusinessDetails'
 import { BusinessDetailsCard } from '../components/BusinessDetailsCard'
 import { BUSINESS_DETAILS_COPY } from '../constants'
-import {
-  buildBusinessBreadcrumbs,
-  formatBusinessDisplayName,
-  getBusinessRouteParams,
-} from '../utils'
+import { buildBusinessBreadcrumbs, formatBusinessDisplayName, getBusinessRouteParams } from '../utils'
 
 export const BusinessDetails: FC = () => {
   const { clientId, businessId } = useParams<{
@@ -58,9 +54,7 @@ export const BusinessDetails: FC = () => {
       }
       loadingMessage={BUSINESS_DETAILS_COPY.loading}
     >
-      {business ? (
-        <BusinessDetailsCard business={business} client={client} canEdit={can.editClients} />
-      ) : null}
+      {business ? <BusinessDetailsCard business={business} client={client} canEdit={can.editClients} /> : null}
     </PageStateGuard>
   )
 }

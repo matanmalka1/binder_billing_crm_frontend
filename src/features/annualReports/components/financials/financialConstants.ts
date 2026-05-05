@@ -25,8 +25,7 @@ export const FIELD_PLACEHOLDERS = {
 } as const
 
 export const INLINE_ADD_FORM_CLASS = 'mt-2 flex flex-col gap-2'
-export const INLINE_EDIT_FORM_CLASS =
-  'mt-2 mb-2 space-y-2 rounded-md border border-info-100 bg-info-50/30 p-2'
+export const INLINE_EDIT_FORM_CLASS = 'mt-2 mb-2 space-y-2 rounded-md border border-info-100 bg-info-50/30 p-2'
 
 export const MONEY_INPUT_PROPS = {
   type: 'number',

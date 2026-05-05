@@ -22,11 +22,7 @@ const FIELDS = [
   },
 ]
 
-export const ChargesFiltersCard = ({
-  filters,
-  onClear,
-  onFilterChange,
-}: ChargesFiltersCardProps) => {
+export const ChargesFiltersCard = ({ filters, onClear, onFilterChange }: ChargesFiltersCardProps) => {
   const [clientName, setClientName] = useState('')
 
   // Resolve client name when filter arrives via URL (no name in URL params)

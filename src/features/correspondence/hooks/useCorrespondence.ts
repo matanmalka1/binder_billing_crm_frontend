@@ -72,8 +72,7 @@ export const useCorrespondence = (businessId: number | undefined, clientId?: num
     contacts: contactsQuery.data?.items ?? [],
     createEntry: (values: CorrespondenceFormValues) => createMutation.mutateAsync(values),
     isCreating: createMutation.isPending,
-    updateEntry: (id: number, values: CorrespondenceFormValues) =>
-      updateMutation.mutateAsync({ id, values }),
+    updateEntry: (id: number, values: CorrespondenceFormValues) => updateMutation.mutateAsync({ id, values }),
     isUpdating: updateMutation.isPending,
     deleteEntry: (id: number) => deleteMutation.mutate(id),
     deletingId,

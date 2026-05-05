@@ -20,20 +20,11 @@ export const AuthorityContactsListContent: React.FC<AuthorityContactsListContent
   onDelete,
 }) => {
   if (isLoading) {
-    return (
-      <p className="py-4 text-center text-sm text-gray-500">{AUTHORITY_CONTACT_TEXT.loading}</p>
-    )
+    return <p className="py-4 text-center text-sm text-gray-500">{AUTHORITY_CONTACT_TEXT.loading}</p>
   }
 
   if (contacts.length === 0) {
-    return (
-      <StateCard
-        icon={Users}
-        message={AUTHORITY_CONTACT_TEXT.empty}
-        size="compact"
-        variant="minimal"
-      />
-    )
+    return <StateCard icon={Users} message={AUTHORITY_CONTACT_TEXT.empty} size="compact" variant="minimal" />
   }
 
   return (

@@ -8,10 +8,7 @@ interface AdvancePaymentsKPICardsProps {
   year: number
 }
 
-export const AdvancePaymentsKPICards: React.FC<AdvancePaymentsKPICardsProps> = ({
-  clientId,
-  year,
-}) => {
+export const AdvancePaymentsKPICards: React.FC<AdvancePaymentsKPICardsProps> = ({ clientId, year }) => {
   const { data, isLoading } = useQuery({
     queryKey: advancedPaymentsQK.kpi(clientId, year),
     queryFn: () => advancePaymentsApi.getAnnualKPIs(clientId, year),

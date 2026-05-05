@@ -70,13 +70,7 @@ export const ScheduleAddForm: React.FC<ScheduleAddFormProps> = ({ schedules, onA
         <Button type="button" variant="ghost" size="sm" onClick={handleCancel}>
           {ANNEX_TEXT.cancel}
         </Button>
-        <Button
-          type="button"
-          size="sm"
-          onClick={handleAdd}
-          isLoading={isAdding}
-          disabled={!selected}
-        >
+        <Button type="button" size="sm" onClick={handleAdd} isLoading={isAdding} disabled={!selected}>
           {ANNEX_TEXT.addAnnex}
         </Button>
       </div>

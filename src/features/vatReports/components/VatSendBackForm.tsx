@@ -3,11 +3,7 @@ import { RotateCcw } from 'lucide-react'
 import { Button } from '../../../components/ui/primitives/Button'
 import type { VatSendBackFormProps } from '../types'
 
-export const VatSendBackForm: React.FC<VatSendBackFormProps> = ({
-  onCancel,
-  onSubmit,
-  loading,
-}) => {
+export const VatSendBackForm: React.FC<VatSendBackFormProps> = ({ onCancel, onSubmit, loading }) => {
   const [note, setNote] = useState('')
   return (
     <div className="space-y-2 pb-2">

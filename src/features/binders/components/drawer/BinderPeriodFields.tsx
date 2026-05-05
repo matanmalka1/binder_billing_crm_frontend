@@ -14,11 +14,7 @@ interface BinderPeriodFieldsProps {
   vatType: 'monthly' | 'bimonthly' | 'exempt' | null
 }
 
-export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
-  form,
-  materialType,
-  vatType,
-}) => {
+export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({ form, materialType, vatType }) => {
   const {
     control,
     formState: { errors },
@@ -41,9 +37,7 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
             error={errors.period_year?.message}
             options={[{ value: '', label: 'בחר שנה...', disabled: true }, ...getOperationalYearOptions()]}
             value={field.value ? String(field.value) : ''}
-            onChange={(event) =>
-              field.onChange(event.target.value ? Number(event.target.value) : undefined)
-            }
+            onChange={(event) => field.onChange(event.target.value ? Number(event.target.value) : undefined)}
             onBlur={field.onBlur}
             name={field.name}
           />
@@ -60,9 +54,7 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
               error={errors.period_month_start?.message}
               options={[{ value: '', label: 'בחר חודש...', disabled: true }, ...monthOptions]}
               value={field.value ? String(field.value) : ''}
-              onChange={(event) =>
-                field.onChange(event.target.value ? Number(event.target.value) : null)
-              }
+              onChange={(event) => field.onChange(event.target.value ? Number(event.target.value) : null)}
               onBlur={field.onBlur}
               name={field.name}
             />

@@ -36,9 +36,7 @@ export const useAuthorityContacts = (clientId: number) => {
     setPage,
     totalPages,
     isLoading: listQuery.isLoading,
-    error: listQuery.error
-      ? getErrorMessage(listQuery.error, AUTHORITY_CONTACT_TEXT.loadError)
-      : null,
+    error: listQuery.error ? getErrorMessage(listQuery.error, AUTHORITY_CONTACT_TEXT.loadError) : null,
     deleteContact: (id: number) => deleteMutation.mutate(id),
     deletingId: deleteMutation.isPending ? (deleteMutation.variables ?? null) : null,
   }

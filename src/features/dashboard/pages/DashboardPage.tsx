@@ -72,9 +72,7 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {denied && <Alert variant="warning" message={DASHBOARD_COPY.permissionDenied} />}
-      {dashboard.status === 'error' && !denied && (
-        <Alert variant="error" message={dashboard.message} />
-      )}
+      {dashboard.status === 'error' && !denied && <Alert variant="error" message={dashboard.message} />}
 
       {dashboard.status === 'loading' ? (
         <StatsSkeleton />

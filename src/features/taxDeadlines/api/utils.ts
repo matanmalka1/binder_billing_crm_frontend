@@ -10,11 +10,7 @@ const urgencyColors = {
   none: 'bg-gray-100 text-gray-800 border-gray-200',
 }
 
-export const getUrgencyColor = makeClassGetter(
-  urgencyColors,
-  undefined,
-  'bg-gray-100 text-gray-800 border-gray-200',
-)
+export const getUrgencyColor = makeClassGetter(urgencyColors, undefined, 'bg-gray-100 text-gray-800 border-gray-200')
 
 export const formatCurrency = (amount: string | number | null): string => {
   if (amount === null) return '—'

@@ -4,11 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { authorityContactsApi, authorityContactsQK, type AuthorityContactResponse } from '../api'
 import { showErrorToast } from '../../../utils/utils'
-import {
-  authorityContactSchema,
-  authorityContactDefaults,
-  type AuthorityContactFormValues,
-} from '../schemas'
+import { authorityContactSchema, authorityContactDefaults, type AuthorityContactFormValues } from '../schemas'
 import { toast } from '../../../utils/toast'
 import { AUTHORITY_CONTACT_TEXT } from '../constants'
 import { toAuthorityContactFormValues, toAuthorityContactPayload } from '../helpers'
@@ -38,9 +34,7 @@ export const useAuthorityContactForm = (
         : authorityContactsApi.createAuthorityContact(clientId, payload)
     },
     onSuccess: () => {
-      toast.success(
-        existing ? AUTHORITY_CONTACT_TEXT.updateSuccess : AUTHORITY_CONTACT_TEXT.createSuccess,
-      )
+      toast.success(existing ? AUTHORITY_CONTACT_TEXT.updateSuccess : AUTHORITY_CONTACT_TEXT.createSuccess)
       queryClient.invalidateQueries({ queryKey: qk })
       onSuccess()
     },

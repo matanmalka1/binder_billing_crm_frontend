@@ -48,13 +48,7 @@ export const DeletedClientDialog: React.FC<Props> = ({
             צור לקוח חדש
           </Button>
           {isAdvisor && (
-            <Button
-              type="button"
-              variant="primary"
-              onClick={onRestore}
-              isLoading={restoreLoading}
-              disabled={isLoading}
-            >
+            <Button type="button" variant="primary" onClick={onRestore} isLoading={restoreLoading} disabled={isLoading}>
               שחזר לקוח
             </Button>
           )}
@@ -64,9 +58,7 @@ export const DeletedClientDialog: React.FC<Props> = ({
       <div className="space-y-4">
         <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
           <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
-          <p className="text-sm text-amber-800">
-            לקוח עם מספר זהות זה קיים במערכת אך נמחק. בחר כיצד להמשיך.
-          </p>
+          <p className="text-sm text-amber-800">לקוח עם מספר זהות זה קיים במערכת אך נמחק. בחר כיצד להמשיך.</p>
         </div>
 
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-2">
@@ -76,24 +68,19 @@ export const DeletedClientDialog: React.FC<Props> = ({
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">נמחק בתאריך</span>
-            <span className="font-medium text-gray-900">
-              {formatDate(deletedClient.deleted_at)}
-            </span>
+            <span className="font-medium text-gray-900">{formatDate(deletedClient.deleted_at)}</span>
           </div>
         </div>
 
         <div className="space-y-2 text-sm text-gray-600">
           <p>
-            <span className="font-medium">שחזר לקוח</span> — מחזיר את הרשומה הישנה עם כל ההיסטוריה
-            (מסמכים, דוחות, חיובים).
+            <span className="font-medium">שחזר לקוח</span> — מחזיר את הרשומה הישנה עם כל ההיסטוריה (מסמכים, דוחות,
+            חיובים).
           </p>
           <p>
-            <span className="font-medium">צור לקוח חדש</span> — יוצר רשומה חדשה נקייה, הרשומה הישנה
-            תישאר מחוקה.
+            <span className="font-medium">צור לקוח חדש</span> — יוצר רשומה חדשה נקייה, הרשומה הישנה תישאר מחוקה.
           </p>
-          {!isAdvisor && (
-            <p className="text-amber-700">שחזור לקוח זמין ליועצים בלבד. פנה ליועץ לביצוע שחזור.</p>
-          )}
+          {!isAdvisor && <p className="text-amber-700">שחזור לקוח זמין ליועצים בלבד. פנה ליועץ לביצוע שחזור.</p>}
         </div>
       </div>
     </Modal>

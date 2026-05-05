@@ -97,35 +97,17 @@ export const AppRoutes: React.FC = () => {
             <Route path="binders" element={<Binders />} />
             <Route path="clients" element={<Clients />} />
             <Route path="clients/:clientId" element={<ClientDetails />} />
-            <Route
-              path="clients/:clientId/documents"
-              element={<ClientDetails initialTab="documents" />}
-            />
-            <Route
-              path="clients/:clientId/deadlines"
-              element={<ClientDetails initialTab="deadlines" />}
-            />
-            <Route
-              path="clients/:clientId/timeline"
-              element={<ClientDetails initialTab="timeline" />}
-            />
+            <Route path="clients/:clientId/documents" element={<ClientDetails initialTab="documents" />} />
+            <Route path="clients/:clientId/deadlines" element={<ClientDetails initialTab="deadlines" />} />
+            <Route path="clients/:clientId/timeline" element={<ClientDetails initialTab="timeline" />} />
             <Route path="clients/:clientId/vat" element={<ClientDetails initialTab="vat" />} />
             <Route
               path="clients/:clientId/advance-payments"
               element={<ClientDetails initialTab="advance-payments" />}
             />
-            <Route
-              path="clients/:clientId/annual-reports"
-              element={<ClientDetails initialTab="annual-reports" />}
-            />
-            <Route
-              path="clients/:clientId/communication"
-              element={<ClientDetails initialTab="communication" />}
-            />
-            <Route
-              path="clients/:clientId/reminders"
-              element={<ClientDetails initialTab="reminders" />}
-            />
+            <Route path="clients/:clientId/annual-reports" element={<ClientDetails initialTab="annual-reports" />} />
+            <Route path="clients/:clientId/communication" element={<ClientDetails initialTab="communication" />} />
+            <Route path="clients/:clientId/reminders" element={<ClientDetails initialTab="reminders" />} />
             <Route path="clients/:clientId/businesses/:businessId" element={<BusinessDetails />} />
             <Route path="search" element={<Search />} />
             <Route path="charges" element={<Charges />} />
@@ -137,10 +119,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="tax/advance-payments" element={<AdvancePayments />} />
             <Route path="tax/vat" element={<VatWorkItems />} />
             <Route path="tax/vat/:id" element={<VatWorkItemDetail />} />
-            <Route
-              path="tax/vat-compliance"
-              element={<Navigate to="/reports/vat-compliance" replace />}
-            />
+            <Route path="tax/vat-compliance" element={<Navigate to="/reports/vat-compliance" replace />} />
             <Route path="reports/vat-compliance" element={<VatComplianceReportView />} />
             <Route path="reports/aging" element={<AgingReportView />} />
             <Route path="reports/annual-status" element={<AnnualReportStatusView />} />

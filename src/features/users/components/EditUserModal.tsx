@@ -15,13 +15,7 @@ interface EditUserModalProps {
   isLoading?: boolean
 }
 
-export const EditUserModal: React.FC<EditUserModalProps> = ({
-  open,
-  user,
-  onClose,
-  onSubmit,
-  isLoading = false,
-}) => {
+export const EditUserModal: React.FC<EditUserModalProps> = ({ open, user, onClose, onSubmit, isLoading = false }) => {
   const {
     register,
     handleSubmit,

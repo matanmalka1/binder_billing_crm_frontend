@@ -1,15 +1,5 @@
-import type {
-  ExpenseCategoryType,
-  FinancialSummaryResponse,
-  IncomeSourceType,
-  TaxCalculationResult,
-} from '../../api'
-import {
-  DEFAULT_RECOGNITION_RATE,
-  FINANCIAL_MESSAGES,
-  MAX_PERCENTAGE,
-  MIN_PERCENTAGE,
-} from './financialConstants'
+import type { ExpenseCategoryType, FinancialSummaryResponse, IncomeSourceType, TaxCalculationResult } from '../../api'
+import { DEFAULT_RECOGNITION_RATE, FINANCIAL_MESSAGES, MAX_PERCENTAGE, MIN_PERCENTAGE } from './financialConstants'
 
 export interface IncomeFormPayload {
   source_type: IncomeSourceType
@@ -88,10 +78,7 @@ export const getFinancialTotals = (data?: FinancialSummaryResponse) => ({
   taxableIncome: Number(data?.taxable_income ?? 0),
 })
 
-export const getProfitSummary = (
-  financials: FinancialSummaryResponse,
-  tax: TaxCalculationResult,
-) => {
+export const getProfitSummary = (financials: FinancialSummaryResponse, tax: TaxCalculationResult) => {
   const grossIncome = Number(financials.total_income)
   const expenses = Number(financials.recognized_expenses)
   const profitBeforeTax = grossIncome - expenses
@@ -140,11 +127,9 @@ export const buildTrendChartRows = (
 
 export const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`
 
-export const toProgressWidth = (value: number) =>
-  `${Math.min(Math.max(value * 100, MIN_PERCENTAGE), MAX_PERCENTAGE)}%`
+export const toProgressWidth = (value: number) => `${Math.min(Math.max(value * 100, MIN_PERCENTAGE), MAX_PERCENTAGE)}%`
 
 export const getApiErrorMessage = (error: unknown, fallback: string) =>
   (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ?? fallback
 
-export const getApiStatus = (error: unknown) =>
-  (error as { response?: { status?: number } })?.response?.status
+export const getApiStatus = (error: unknown) => (error as { response?: { status?: number } })?.response?.status

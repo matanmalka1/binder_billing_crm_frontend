@@ -46,9 +46,7 @@ export const GroupSection = ({
             className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-600 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
             aria-label={expanded ? 'קפל' : 'פתח'}
           >
-            <ChevronDown
-              className={cn('h-4 w-4 transition-transform', !expanded && '-rotate-90')}
-            />
+            <ChevronDown className={cn('h-4 w-4 transition-transform', !expanded && '-rotate-90')} />
           </button>
         )}
       </header>

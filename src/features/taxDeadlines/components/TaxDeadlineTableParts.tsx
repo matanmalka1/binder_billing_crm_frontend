@@ -52,9 +52,7 @@ export const DeadlineDateWithUrgencyCell = ({ deadline }: { deadline: DeadlineDi
         className="border-transparent bg-transparent px-0 text-sm font-medium text-gray-700"
       />
       {urgencyText && (
-        <span className={cn('text-xs font-medium', URGENCY_TEXT_CLASS[deadline.urgency_level])}>
-          {urgencyText}
-        </span>
+        <span className={cn('text-xs font-medium', URGENCY_TEXT_CLASS[deadline.urgency_level])}>{urgencyText}</span>
       )}
     </div>
   )
@@ -65,10 +63,7 @@ export const DeadlineUrgencyBadge = ({ deadline }: { deadline: DeadlineDisplayFi
 
   if (deadline.urgency_level === 'none') return <span className="text-sm text-gray-400">—</span>
 
-  const Icon =
-    deadline.urgency_level === 'overdue' || deadline.urgency_level === 'critical'
-      ? AlertTriangle
-      : Clock3
+  const Icon = deadline.urgency_level === 'overdue' || deadline.urgency_level === 'critical' ? AlertTriangle : Clock3
 
   return (
     <Badge
@@ -83,13 +78,7 @@ export const DeadlineUrgencyBadge = ({ deadline }: { deadline: DeadlineDisplayFi
   )
 }
 
-export const DeadlineAmountCell = ({
-  amount,
-  status,
-}: {
-  amount: string | null
-  status: string
-}) => {
+export const DeadlineAmountCell = ({ amount, status }: { amount: string | null; status: string }) => {
   if (amount === null && status === 'pending') {
     return (
       <span className="text-sm italic text-gray-400" title="הסכום יעודכן לאחר הגשת הדוח">

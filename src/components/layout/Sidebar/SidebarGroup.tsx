@@ -10,12 +10,7 @@ interface SidebarGroupProps {
   onToggle: () => void
 }
 
-export const SidebarGroup: React.FC<SidebarGroupProps> = ({
-  group,
-  isSidebarOpen,
-  isExpanded,
-  onToggle,
-}) => {
+export const SidebarGroup: React.FC<SidebarGroupProps> = ({ group, isSidebarOpen, isExpanded, onToggle }) => {
   return (
     <div className="mb-2">
       {isSidebarOpen ? (

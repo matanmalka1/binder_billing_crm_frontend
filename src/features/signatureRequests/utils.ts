@@ -3,12 +3,7 @@ import type { SendSignatureRequestResponse } from './api'
 
 export { SIGNATURE_REQUEST_STATUS_VARIANTS as signatureRequestStatusVariants } from '../../utils/enums'
 
-export const SIGNATURE_REQUEST_TERMINAL_STATUSES = new Set([
-  'signed',
-  'expired',
-  'canceled',
-  'declined',
-])
+export const SIGNATURE_REQUEST_TERMINAL_STATUSES = new Set(['signed', 'expired', 'canceled', 'declined'])
 
 export const buildSigningUrl = (hint: string): string => {
   // hint may be: a full path like "/sign/<token>", a relative "sign/<token>", or a bare "<token>"
@@ -24,9 +19,7 @@ export const buildSigningUrl = (hint: string): string => {
   return `${window.location.origin}${path}`
 }
 
-export const useSignatureRequestSigningUrls = (
-  sendRequest: (id: number) => Promise<SendSignatureRequestResponse>,
-) => {
+export const useSignatureRequestSigningUrls = (sendRequest: (id: number) => Promise<SendSignatureRequestResponse>) => {
   const [signingUrls, setSigningUrls] = useState<Record<number, string>>({})
 
   const handleSend = useCallback(

@@ -23,14 +23,7 @@ export const ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL: {
 ]
 
 export const ADVANCE_PAYMENT_METHOD_OPTIONS: { value: AdvancePaymentMethod; label: string }[] = (
-  [
-    'bank_transfer',
-    'credit_card',
-    'check',
-    'direct_debit',
-    'cash',
-    'other',
-  ] as AdvancePaymentMethod[]
+  ['bank_transfer', 'credit_card', 'check', 'direct_debit', 'cash', 'other'] as AdvancePaymentMethod[]
 ).map((method) => ({ value: method, label: getAdvancePaymentMethodLabel(method) }))
 
 export const ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS = MONTH_OPTIONS

@@ -68,9 +68,7 @@ export interface TransitionDetailsFormProps {
   selected: AnnualReportStatus
   form: TransitionForm
   isLoading: boolean
-  onFieldChange: (
-    field: keyof TransitionForm,
-  ) => (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
+  onFieldChange: (field: keyof TransitionForm) => (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
   onCancel: () => void
   onSubmit: () => void
 }

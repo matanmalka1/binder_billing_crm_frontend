@@ -30,11 +30,7 @@ export const TransitionDetailsForm = ({
             onChange={onFieldChange('itaRef')}
             placeholder="מספר אסמכתא ממס הכנסה"
           />
-          <Select
-            label="שיטת הגשה"
-            value={form.submissionMethod}
-            onChange={onFieldChange('submissionMethod')}
-          >
+          <Select label="שיטת הגשה" value={form.submissionMethod} onChange={onFieldChange('submissionMethod')}>
             {SUBMISSION_METHOD_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -52,18 +48,8 @@ export const TransitionDetailsForm = ({
             value={form.assessmentAmount}
             onChange={onFieldChange('assessmentAmount')}
           />
-          <Input
-            label="החזר מס (₪)"
-            type="number"
-            value={form.refundDue}
-            onChange={onFieldChange('refundDue')}
-          />
-          <Input
-            label="תשלום נוסף (₪)"
-            type="number"
-            value={form.taxDue}
-            onChange={onFieldChange('taxDue')}
-          />
+          <Input label="החזר מס (₪)" type="number" value={form.refundDue} onChange={onFieldChange('refundDue')} />
+          <Input label="תשלום נוסף (₪)" type="number" value={form.taxDue} onChange={onFieldChange('taxDue')} />
         </div>
       )}
 

@@ -36,10 +36,7 @@ const VAT_CARD_CLASSES: Record<VatCardTone, { border: string; title: string; but
 const VatCard: React.FC<VatCardProps> = ({ title, tone, onNavigate, children }) => {
   const classes = VAT_CARD_CLASSES[tone]
   return (
-    <div
-      className={`rounded-xl border border-gray-100 border-r-4 ${classes.border} bg-white p-4 shadow-sm`}
-      dir="rtl"
-    >
+    <div className={`rounded-xl border border-gray-100 border-r-4 ${classes.border} bg-white p-4 shadow-sm`} dir="rtl">
       <div className="mb-3 flex items-center justify-between">
         <p className={`text-xs font-semibold uppercase tracking-wide ${classes.title}`}>{title}</p>
         {onNavigate && (
@@ -99,14 +96,10 @@ export const VatInputCard: React.FC<VatInputCardProps> = ({ data, onNavigate }) 
           <span className="text-gray-500">
             {row.label}
             {row.deductionRate < 1 && row.deductionRate > 0 && (
-              <span className="mr-1 text-xs text-gray-400">
-                ({Math.round(row.deductionRate * 100)}%)
-              </span>
+              <span className="mr-1 text-xs text-gray-400">({Math.round(row.deductionRate * 100)}%)</span>
             )}
           </span>
-          <span className="font-mono tabular-nums text-warning-700">
-            {formatVatAmount(row.deductibleVat)}
-          </span>
+          <span className="font-mono tabular-nums text-warning-700">{formatVatAmount(row.deductibleVat)}</span>
         </div>
       ))}
     </div>

@@ -107,15 +107,11 @@ export const VatFileModal: React.FC<VatFileModalProps> = ({
           <SelectDropdown
             value={filingMethod}
             onChange={(e) =>
-              setValue(
-                'submission_method',
-                e.target.value as VatFileModalFormValues['submission_method'],
-                {
-                  shouldDirty: true,
-                  shouldValidate: true,
-                  shouldTouch: true,
-                },
-              )
+              setValue('submission_method', e.target.value as VatFileModalFormValues['submission_method'], {
+                shouldDirty: true,
+                shouldValidate: true,
+                shouldTouch: true,
+              })
             }
             options={VAT_FILING_METHODS.map((m) => ({
               value: m,

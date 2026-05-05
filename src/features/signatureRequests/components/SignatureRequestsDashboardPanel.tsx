@@ -31,8 +31,7 @@ export const SignatureRequestsDashboardPanel: React.FC<Props> = ({ compact = fal
   const { signingUrls, handleSend } = useSignatureRequestSigningUrls(send)
 
   const displayedItems = useMemo(
-    () =>
-      showAll ? items : items.filter((r) => !SIGNATURE_REQUEST_TERMINAL_STATUSES.has(r.status)),
+    () => (showAll ? items : items.filter((r) => !SIGNATURE_REQUEST_TERMINAL_STATUSES.has(r.status))),
     [items, showAll],
   )
   const tableItems = compact ? displayedItems.slice(0, 3) : displayedItems
@@ -154,9 +153,7 @@ export const SignatureRequestsDashboardPanel: React.FC<Props> = ({ compact = fal
           <span
             className={cn(
               'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold',
-              displayedItems.length > 0
-                ? 'bg-blue-50 text-blue-700'
-                : 'bg-slate-100 text-slate-700',
+              displayedItems.length > 0 ? 'bg-blue-50 text-blue-700' : 'bg-slate-100 text-slate-700',
             )}
           >
             {showAll ? 'כולל ארכיון' : 'פעילות בלבד'}
@@ -179,9 +176,7 @@ export const SignatureRequestsDashboardPanel: React.FC<Props> = ({ compact = fal
         ) : compact ? (
           <div className="divide-y divide-gray-100 rounded-lg border border-gray-100">
             {tableItems.length === 0 ? (
-              <div className="px-3 py-4 text-center text-xs font-semibold text-gray-500">
-                אין בקשות חתימה פעילות
-              </div>
+              <div className="px-3 py-4 text-center text-xs font-semibold text-gray-500">אין בקשות חתימה פעילות</div>
             ) : (
               tableItems.map((req) => (
                 <button
@@ -193,8 +188,7 @@ export const SignatureRequestsDashboardPanel: React.FC<Props> = ({ compact = fal
                   <div className="min-w-0">
                     <p className="truncate text-xs font-bold text-gray-900">{req.title}</p>
                     <p className="mt-0.5 truncate text-[11px] text-gray-500">
-                      {req.business_name ?? `לקוח #${req.client_record_id}`} ·{' '}
-                      {formatDate(req.created_at)}
+                      {req.business_name ?? `לקוח #${req.client_record_id}`} · {formatDate(req.created_at)}
                     </p>
                   </div>
                   <StatusBadge
@@ -222,10 +216,7 @@ export const SignatureRequestsDashboardPanel: React.FC<Props> = ({ compact = fal
         )}
       </div>
 
-      <SignatureRequestAuditDrawer
-        requestId={auditRequestId}
-        onClose={() => setAuditRequestId(null)}
-      />
+      <SignatureRequestAuditDrawer requestId={auditRequestId} onClose={() => setAuditRequestId(null)} />
       <CreateSignatureRequestModal
         open={showCreate}
         isLoading={isCreating}

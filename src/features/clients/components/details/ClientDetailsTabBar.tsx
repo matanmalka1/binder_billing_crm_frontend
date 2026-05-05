@@ -1,10 +1,6 @@
 import { type FC } from 'react'
 import { cn } from '../../../../utils/utils'
-import {
-  CLIENT_DETAILS_TABS,
-  CLIENT_DETAILS_TAB_LABELS,
-  type ActiveClientDetailsTab,
-} from '../../constants'
+import { CLIENT_DETAILS_TABS, CLIENT_DETAILS_TAB_LABELS, type ActiveClientDetailsTab } from '../../constants'
 
 type ClientDetailsTabBarProps = {
   activeTab: ActiveClientDetailsTab
@@ -25,16 +21,12 @@ export const ClientDetailsTabBar: FC<ClientDetailsTabBarProps> = ({ activeTab, o
           className={cn(
             'relative rounded-t-md px-4 py-2 text-sm font-medium transition-colors',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
-            isActive
-              ? 'bg-white text-primary'
-              : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700',
+            isActive ? 'bg-white text-primary' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700',
           )}
         >
           {CLIENT_DETAILS_TAB_LABELS[tab]}
 
-          {isActive && (
-            <span className="absolute inset-x-0 bottom-[-1px] h-[3px] rounded-t-full bg-primary" />
-          )}
+          {isActive && <span className="absolute inset-x-0 bottom-[-1px] h-[3px] rounded-t-full bg-primary" />}
         </button>
       )
     })}

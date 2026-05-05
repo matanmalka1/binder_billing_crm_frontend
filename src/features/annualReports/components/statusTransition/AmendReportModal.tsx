@@ -27,13 +27,7 @@ export const AmendReportModal = ({
           <Button type="button" variant="outline" onClick={onClose}>
             ביטול
           </Button>
-          <Button
-            type="button"
-            variant="primary"
-            onClick={onSubmit}
-            isLoading={isPending}
-            disabled={!isReasonValid}
-          >
+          <Button type="button" variant="primary" onClick={onSubmit} isLoading={isPending} disabled={!isReasonValid}>
             שלח
           </Button>
         </div>
@@ -46,11 +40,7 @@ export const AmendReportModal = ({
         onChange={(e) => onReasonChange(e.target.value)}
         placeholder={`תאר את סיבת התיקון (לפחות ${AMEND_REASON_MIN_LENGTH} תווים)...`}
       />
-      {showValidation && (
-        <p className="mt-1 text-xs text-negative-500">
-          נדרשים לפחות {AMEND_REASON_MIN_LENGTH} תווים
-        </p>
-      )}
+      {showValidation && <p className="mt-1 text-xs text-negative-500">נדרשים לפחות {AMEND_REASON_MIN_LENGTH} תווים</p>}
     </Modal>
   )
 }

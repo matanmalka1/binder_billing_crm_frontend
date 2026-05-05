@@ -31,9 +31,7 @@ export const vatWorkItemCreateDefaultValues: VatWorkItemCreateFormValues = {
   pending_materials_note: '',
 }
 
-export const toCreateVatWorkItemPayload = (
-  values: VatWorkItemCreateFormValues,
-): CreateVatWorkItemPayload => ({
+export const toCreateVatWorkItemPayload = (values: VatWorkItemCreateFormValues): CreateVatWorkItemPayload => ({
   client_record_id: Number(values.client_id),
   period: values.period.trim(),
   mark_pending: values.mark_pending,

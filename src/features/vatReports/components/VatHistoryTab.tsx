@@ -34,12 +34,8 @@ export const VatHistoryTab: React.FC<VatHistoryTabProps> = ({ workItemId }) => {
                 <td className="px-4 py-3 text-gray-500 tabular-nums whitespace-nowrap">
                   {formatDateTime(entry.performed_at)}
                 </td>
-                <td className="px-4 py-3 font-medium text-gray-800">
-                  {ACTION_LABELS[entry.action] ?? entry.action}
-                </td>
-                <td className="px-4 py-3 text-gray-500 text-xs max-w-xs truncate">
-                  {formatVatHistoryDetails(entry)}
-                </td>
+                <td className="px-4 py-3 font-medium text-gray-800">{ACTION_LABELS[entry.action] ?? entry.action}</td>
+                <td className="px-4 py-3 text-gray-500 text-xs max-w-xs truncate">{formatVatHistoryDetails(entry)}</td>
                 <td className="px-4 py-3 font-mono text-xs text-gray-400">
                   {entry.performed_by_name ?? `#${entry.performed_by}`}
                 </td>

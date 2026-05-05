@@ -114,12 +114,7 @@ export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
           <Button type="button" variant="secondary" onClick={onCloseBulkReady}>
             ביטול
           </Button>
-          <Button
-            type="button"
-            isLoading={isMarkingReadyBulk}
-            disabled={!dialogBinder}
-            onClick={onConfirmBulkReady}
-          >
+          <Button type="button" isLoading={isMarkingReadyBulk} disabled={!dialogBinder} onClick={onConfirmBulkReady}>
             סמן כמוכן
           </Button>
         </div>

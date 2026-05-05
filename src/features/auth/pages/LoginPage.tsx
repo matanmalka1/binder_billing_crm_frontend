@@ -17,9 +17,7 @@ export const Login: React.FC = () => {
   const isAuthenticated = useAuthStore(selectIsAuthenticated)
   const login = useAuthStore((s) => s.login)
   const clearError = useAuthStore((s) => s.clearError)
-  const { isLoading, error } = useAuthStore(
-    useShallow((s) => ({ isLoading: s.isLoading, error: s.error })),
-  )
+  const { isLoading, error } = useAuthStore(useShallow((s) => ({ isLoading: s.isLoading, error: s.error })))
   const [showPassword, setShowPassword] = useState(false)
 
   const {
@@ -62,9 +60,7 @@ export const Login: React.FC = () => {
 
           {/* Heading */}
           <div className="mb-8">
-            <h1 className="mb-1.5 text-3xl font-black tracking-tight text-slate-900">
-              ברוכים השבים
-            </h1>
+            <h1 className="mb-1.5 text-3xl font-black tracking-tight text-slate-900">ברוכים השבים</h1>
             <p className="text-sm text-slate-500">התחברו לחשבון הניהול שלכם כדי להמשיך</p>
           </div>
 
@@ -135,9 +131,7 @@ export const Login: React.FC = () => {
           </form>
 
           {/* Footer */}
-          <p className="mt-10 text-center text-xs text-slate-400">
-            מערכת פנים ארגונית בלבד — גישה מורשית בלבד
-          </p>
+          <p className="mt-10 text-center text-xs text-slate-400">מערכת פנים ארגונית בלבד — גישה מורשית בלבד</p>
         </div>
       </div>
 
@@ -205,9 +199,7 @@ export const Login: React.FC = () => {
         </div>
 
         {/* Bottom: legal */}
-        <p className="relative z-10 text-xs text-slate-700">
-          © {getYear(new Date())} יוסף מאיר — כל הזכויות שמורות
-        </p>
+        <p className="relative z-10 text-xs text-slate-700">© {getYear(new Date())} יוסף מאיר — כל הזכויות שמורות</p>
       </div>
     </div>
   )

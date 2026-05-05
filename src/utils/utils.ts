@@ -2,11 +2,7 @@ import { isAxiosError } from 'axios'
 import { toast } from './toast'
 import { format, parseISO } from 'date-fns'
 import { he } from 'date-fns/locale'
-export {
-  getReportingPeriodMonthLabel,
-  MONTH_NAMES,
-  MONTH_OPTIONS,
-} from '@/constants/periodOptions.constants'
+export { getReportingPeriodMonthLabel, MONTH_NAMES, MONTH_OPTIONS } from '@/constants/periodOptions.constants'
 // ============================================================================
 // STRING & TYPE UTILITIES
 // ============================================================================
@@ -33,18 +29,12 @@ export const formatClientOfficeId = (value: number | string | null | undefined):
   return `#${value}`
 }
 
-export const formatPlainIdentifier = (
-  value: number | string | null | undefined,
-  fallback = '—',
-): string => {
+export const formatPlainIdentifier = (value: number | string | null | undefined, fallback = '—'): string => {
   if (value == null || value === '') return fallback
   return String(value)
 }
 
-export const formatShekelAmount = (
-  value: string | number | null | undefined,
-  fallback = '—',
-): string => {
+export const formatShekelAmount = (value: string | number | null | undefined, fallback = '—'): string => {
   if (value == null || value === '') return fallback
   return `₪${Number(value).toLocaleString('he-IL')}`
 }
@@ -83,10 +73,7 @@ const toILSNumeric = (value: string | number | null | undefined): number | null 
   return Number.isNaN(numeric) ? null : numeric
 }
 
-export const formatCurrencyILS = (
-  value: string | number | null | undefined,
-  maximumFractionDigits = 0,
-): string => {
+export const formatCurrencyILS = (value: string | number | null | undefined, maximumFractionDigits = 0): string => {
   const numeric = toILSNumeric(value)
   if (numeric === null) return '—'
   return numeric.toLocaleString('he-IL', {
@@ -96,10 +83,7 @@ export const formatCurrencyILS = (
   })
 }
 
-export const formatCompactCurrencyILS = (
-  value: string | number | null | undefined,
-  fractionDigits = 2,
-): string => {
+export const formatCompactCurrencyILS = (value: string | number | null | undefined, fractionDigits = 2): string => {
   const numeric = toILSNumeric(value)
   if (numeric === null) return '—'
   return numeric
@@ -129,11 +113,7 @@ type ErrorOptions = {
   canonicalAction?: boolean
 }
 
-const resolveErrorMessage = (
-  error: unknown,
-  fallbackMessage: string,
-  options?: ErrorOptions,
-): string => {
+const resolveErrorMessage = (error: unknown, fallbackMessage: string, options?: ErrorOptions): string => {
   if (options?.canonicalAction) {
     const status = getHttpStatus(error)
     if (status === 403) return 'אין הרשאה לבצע פעולה זו'
@@ -173,11 +153,8 @@ const resolveErrorMessage = (
   return fallbackMessage
 }
 
-export const getErrorMessage = (
-  error: unknown,
-  fallbackMessage: string,
-  options?: ErrorOptions,
-): string => resolveErrorMessage(error, fallbackMessage, options)
+export const getErrorMessage = (error: unknown, fallbackMessage: string, options?: ErrorOptions): string =>
+  resolveErrorMessage(error, fallbackMessage, options)
 
 /**
  * Convenience companion to `toast.error(message)`.
@@ -186,11 +163,7 @@ export const getErrorMessage = (
  *
  * It returns the resolved message so callers can also surface it inline.
  */
-export const showErrorToast = (
-  error: unknown,
-  fallbackMessage: string,
-  options?: ErrorOptions,
-): string => {
+export const showErrorToast = (error: unknown, fallbackMessage: string, options?: ErrorOptions): string => {
   const message = resolveErrorMessage(error, fallbackMessage, options)
   toast.error(message)
   return message

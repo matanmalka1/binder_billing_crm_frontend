@@ -9,11 +9,7 @@ interface TasksSummaryCardsProps {
   onFilter: (urgency: TaskUrgency | null) => void
 }
 
-export const TasksSummaryCards: React.FC<TasksSummaryCardsProps> = ({
-  items,
-  urgencyFilter,
-  onFilter,
-}) => {
+export const TasksSummaryCards: React.FC<TasksSummaryCardsProps> = ({ items, urgencyFilter, onFilter }) => {
   const overdue = items.filter((i) => i.urgency === 'overdue').length
   const approaching = items.filter((i) => i.urgency === 'approaching').length
   const upcoming = items.filter((i) => i.urgency === 'upcoming').length

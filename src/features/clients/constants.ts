@@ -88,11 +88,7 @@ export const ENTITY_TYPE_OPTIONS = ENTITY_TYPES.map((type) => ({
   label: ENTITY_TYPE_LABELS[type],
 }))
 
-export const CLIENT_STATUSES = [
-  'active',
-  'frozen',
-  'closed',
-] as const satisfies readonly ClientStatus[]
+export const CLIENT_STATUSES = ['active', 'frozen', 'closed'] as const satisfies readonly ClientStatus[]
 
 export const CLIENT_STATUS_LABELS: Record<ClientStatus, string> = {
   active: 'פעיל',
@@ -132,11 +128,12 @@ export const CREATE_CLIENT_ENTITY_OPTIONS = CREATE_ENTITY_TYPES.map((type) => ({
   value: type,
   label: ENTITY_TYPE_LABELS[type],
 }))
-export const CREATE_CLIENT_VAT_OPTIONS = VAT_REPORTING_FREQUENCY_OPTIONS.filter(
-  (option) => option.value !== 'exempt',
-)
+export const CREATE_CLIENT_VAT_OPTIONS = VAT_REPORTING_FREQUENCY_OPTIONS.filter((option) => option.value !== 'exempt')
 
-export const ADVANCE_PAYMENT_FREQUENCY_VALUES = ['monthly', 'bimonthly'] as const satisfies readonly AdvancePaymentFrequency[]
+export const ADVANCE_PAYMENT_FREQUENCY_VALUES = [
+  'monthly',
+  'bimonthly',
+] as const satisfies readonly AdvancePaymentFrequency[]
 
 export const ADVANCE_PAYMENT_FREQUENCY_LABELS: Record<AdvancePaymentFrequency, string> = {
   monthly: 'חודשי',
@@ -167,9 +164,7 @@ const SORT_ORDER_LABELS: Record<ClientSortBy, Record<ClientSortOrder, string>> =
   entity_type: { asc: 'סוג יישות: א׳ → ת׳', desc: 'סוג יישות: ת׳ → א׳' },
 }
 
-export const getClientSortOrderOptions = (
-  sortBy: ClientSortBy,
-): { value: ClientSortOrder; label: string }[] => [
+export const getClientSortOrderOptions = (sortBy: ClientSortBy): { value: ClientSortOrder; label: string }[] => [
   { value: 'asc', label: SORT_ORDER_LABELS[sortBy]?.asc ?? 'סדר עולה' },
   { value: 'desc', label: SORT_ORDER_LABELS[sortBy]?.desc ?? 'סדר יורד' },
 ]

@@ -76,11 +76,7 @@ export const CorrespondenceModal: React.FC<CorrespondenceModalProps> = ({
       }
     >
       <form onSubmit={submit} className="space-y-4">
-        <Select
-          label="סוג"
-          error={errors.correspondence_type?.message}
-          {...register('correspondence_type')}
-        >
+        <Select label="סוג" error={errors.correspondence_type?.message} {...register('correspondence_type')}>
           {CORRESPONDENCE_TYPE_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

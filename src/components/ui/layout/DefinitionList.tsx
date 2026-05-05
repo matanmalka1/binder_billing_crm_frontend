@@ -24,12 +24,7 @@ const gridCols = {
   4: 'grid-cols-2 md:grid-cols-4',
 }
 
-export const DefinitionList: React.FC<DefinitionListProps> = ({
-  items,
-  columns = 2,
-  layout = 'grid',
-  className,
-}) => {
+export const DefinitionList: React.FC<DefinitionListProps> = ({ items, columns = 2, layout = 'grid', className }) => {
   if (layout === 'stacked') {
     return (
       <dl className={className}>

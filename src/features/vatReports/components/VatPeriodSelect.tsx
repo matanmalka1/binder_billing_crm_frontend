@@ -23,11 +23,7 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
   className,
   enabled = true,
 }) => {
-  const { isValidClient, periodOptions, periodType, isLoading } = useVatPeriodOptions(
-    clientId,
-    year,
-    enabled,
-  )
+  const { isValidClient, periodOptions, periodType, isLoading } = useVatPeriodOptions(clientId, year, enabled)
   const selectedPeriodExists = !value || periodOptions.some((opt) => opt.period === value)
 
   const options = useMemo(
@@ -45,8 +41,7 @@ export const VatPeriodSelect: React.FC<VatPeriodSelectProps> = ({
     [isValidClient, isLoading, periodOptions],
   )
 
-  const combinedError =
-    error || (!selectedPeriodExists ? 'התקופה שנבחרה אינה זמינה ללקוח זה' : undefined)
+  const combinedError = error || (!selectedPeriodExists ? 'התקופה שנבחרה אינה זמינה ללקוח זה' : undefined)
 
   return (
     <>

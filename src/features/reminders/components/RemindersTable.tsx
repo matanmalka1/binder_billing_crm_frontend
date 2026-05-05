@@ -60,9 +60,7 @@ const clientColumns: Column<Reminder>[] = [
     key: 'client_id_number',
     header: 'ת.ז / ח.פ',
     render: (reminder) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {reminder.client_id_number ?? '—'}
-      </span>
+      <span className="font-mono text-sm text-gray-500 tabular-nums">{reminder.client_id_number ?? '—'}</span>
     ),
   },
 ]
@@ -87,9 +85,7 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
     {
       key: 'message',
       header: 'הודעה',
-      render: (r) => (
-        <TruncateText text={r.message} maxWidth="max-w-xs" className="text-gray-700" />
-      ),
+      render: (r) => <TruncateText text={r.message} maxWidth="max-w-xs" className="text-gray-700" />,
     },
     {
       key: 'target_date',
@@ -115,11 +111,7 @@ export const RemindersTable: React.FC<RemindersTableProps> = ({
       key: 'status',
       header: 'סטטוס',
       render: (r) => (
-        <Badge
-          variant={
-            reminderStatusVariants[r.status as keyof typeof reminderStatusVariants] ?? 'neutral'
-          }
-        >
+        <Badge variant={reminderStatusVariants[r.status as keyof typeof reminderStatusVariants] ?? 'neutral'}>
           {statusLabels[r.status]}
         </Badge>
       ),

@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react'
 import { AlertTriangle, Trash2 } from 'lucide-react'
-import {
-  DetailDrawer,
-  DrawerField,
-  DrawerSection,
-} from '../../../components/ui/overlays/DetailDrawer'
+import { DetailDrawer, DrawerField, DrawerSection } from '../../../components/ui/overlays/DetailDrawer'
 import { Input } from '../../../components/ui/inputs/Input'
 import { Select } from '../../../components/ui/inputs/Select'
 import { DatePicker } from '../../../components/ui/inputs/DatePicker'
@@ -67,14 +63,12 @@ export const AdvancePaymentDrawer: React.FC<AdvancePaymentDrawerProps> = ({
 
   const handleSave = async () => {
     const payload: UpdateAdvancePaymentPayload = {}
-    if (paidAmount !== toEditableAmount(row.paid_amount))
-      payload.paid_amount = paidAmount === '' ? null : paidAmount
+    if (paidAmount !== toEditableAmount(row.paid_amount)) payload.paid_amount = paidAmount === '' ? null : paidAmount
     if (expectedAmount !== toEditableAmount(row.expected_amount))
       payload.expected_amount = expectedAmount === '' ? null : expectedAmount
     if (status !== row.status) payload.status = status as UpdateAdvancePaymentPayload['status']
     if (paymentMethod !== (row.payment_method ?? ''))
-      payload.payment_method = (paymentMethod ||
-        null) as UpdateAdvancePaymentPayload['payment_method']
+      payload.payment_method = (paymentMethod || null) as UpdateAdvancePaymentPayload['payment_method']
     if (paidAt !== (row.paid_at ? row.paid_at.split('T')[0] : '')) payload.paid_at = paidAt || null
     if (notes !== (row.notes ?? '')) payload.notes = notes || null
 
@@ -113,12 +107,7 @@ export const AdvancePaymentDrawer: React.FC<AdvancePaymentDrawerProps> = ({
                   >
                     כן, מחק
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setConfirmDelete(false)}
-                    disabled={isDeleting}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(false)} disabled={isDeleting}>
                     ביטול
                   </Button>
                 </div>
@@ -137,12 +126,7 @@ export const AdvancePaymentDrawer: React.FC<AdvancePaymentDrawerProps> = ({
               <Button variant="outline" onClick={onClose} disabled={isUpdating || isDeleting}>
                 ביטול
               </Button>
-              <Button
-                variant="primary"
-                isLoading={isUpdating}
-                onClick={handleSave}
-                disabled={isDeleting}
-              >
+              <Button variant="primary" isLoading={isUpdating} onClick={handleSave} disabled={isDeleting}>
                 שמור
               </Button>
             </div>
@@ -162,9 +146,7 @@ export const AdvancePaymentDrawer: React.FC<AdvancePaymentDrawerProps> = ({
           <DrawerField label="תאריך יעד" value={formatDate(row.due_date)} />
           <DrawerField
             label="מחזור לתקופה"
-            value={
-              turnoverLabel ?? <span className="text-gray-400 text-xs">דוח מע״מ טרם הוגש</span>
-            }
+            value={turnoverLabel ?? <span className="text-gray-400 text-xs">דוח מע״מ טרם הוגש</span>}
           />
           {row.timing_status === 'overdue' && (
             <DrawerField

@@ -88,9 +88,7 @@ export const filterReminders = (reminders: Reminder[], search: string, typeFilte
 }
 
 export const getReminderDisplayLabel = (reminder: Reminder) =>
-  reminder.display_label ??
-  reminderTypeLabels[reminder.reminder_type as ReminderType] ??
-  reminder.reminder_type
+  reminder.display_label ?? reminderTypeLabels[reminder.reminder_type as ReminderType] ?? reminder.reminder_type
 
 const getReminderClientKey = (reminder: Reminder) => {
   if (reminder.client_record_id != null) return `client:${reminder.client_record_id}`

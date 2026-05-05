@@ -1,10 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import type {
-  ExpenseCategoryType,
-  ExpenseLineResponse,
-  IncomeLineResponse,
-  IncomeSourceType,
-} from '../../api'
+import type { ExpenseCategoryType, ExpenseLineResponse, IncomeLineResponse, IncomeSourceType } from '../../api'
 import { DEFAULT_RECOGNITION_RATE } from './financialConstants'
 import {
   buildExpensePayload,
@@ -13,10 +8,7 @@ import {
   type IncomeFormPayload,
 } from './financialHelpers'
 
-export const useIncomeLineForm = (
-  initial?: IncomeLineResponse,
-  onSubmit?: (payload: IncomeFormPayload) => void,
-) => {
+export const useIncomeLineForm = (initial?: IncomeLineResponse, onSubmit?: (payload: IncomeFormPayload) => void) => {
   const [typeKey, setTypeKey] = useState<IncomeSourceType | ''>(initial?.source_type ?? '')
   const [amount, setAmount] = useState(initial ? String(initial.amount) : '')
   const [description, setDescription] = useState(initial?.description ?? '')
@@ -50,16 +42,11 @@ export const useIncomeLineForm = (
   }
 }
 
-export const useExpenseLineForm = (
-  initial?: ExpenseLineResponse,
-  onSubmit?: (payload: AddExpensePayload) => void,
-) => {
+export const useExpenseLineForm = (initial?: ExpenseLineResponse, onSubmit?: (payload: AddExpensePayload) => void) => {
   const [category, setCategory] = useState<ExpenseCategoryType | ''>(initial?.category ?? '')
   const [amount, setAmount] = useState(initial ? String(initial.amount) : '')
   const [description, setDescription] = useState(initial?.description ?? '')
-  const [recognitionRate, setRecognitionRate] = useState(
-    String(initial?.recognition_rate ?? DEFAULT_RECOGNITION_RATE),
-  )
+  const [recognitionRate, setRecognitionRate] = useState(String(initial?.recognition_rate ?? DEFAULT_RECOGNITION_RATE))
   const [documentReference, setDocumentReference] = useState(initial?.supporting_document_ref ?? '')
   const [error, setError] = useState<string | null>(null)
 
@@ -74,13 +61,7 @@ export const useExpenseLineForm = (
 
   const submit = (event: FormEvent) => {
     event.preventDefault()
-    const result = buildExpensePayload(
-      category,
-      amount,
-      description,
-      recognitionRate,
-      documentReference,
-    )
+    const result = buildExpensePayload(category, amount, description, recognitionRate, documentReference)
     if (!result.payload) return setError(result.error ?? null)
     onSubmit?.(result.payload)
     return result.payload

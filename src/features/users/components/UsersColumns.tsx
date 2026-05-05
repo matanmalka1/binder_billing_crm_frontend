@@ -32,20 +32,12 @@ export const buildUserColumns = ({
   {
     key: 'role',
     header: 'תפקיד',
-    render: (user) => (
-      <Badge variant={user.role === 'advisor' ? 'info' : 'neutral'}>
-        {getRoleLabel(user.role)}
-      </Badge>
-    ),
+    render: (user) => <Badge variant={user.role === 'advisor' ? 'info' : 'neutral'}>{getRoleLabel(user.role)}</Badge>,
   },
   {
     key: 'is_active',
     header: 'סטטוס',
-    render: (user) => (
-      <Badge variant={user.is_active ? 'success' : 'error'}>
-        {user.is_active ? 'פעיל' : 'מושבת'}
-      </Badge>
-    ),
+    render: (user) => <Badge variant={user.is_active ? 'success' : 'error'}>{user.is_active ? 'פעיל' : 'מושבת'}</Badge>,
   },
   textColumn({
     key: 'last_login_at',

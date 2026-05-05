@@ -14,12 +14,7 @@ interface Props {
   isLoading?: boolean
 }
 
-export const CreateBusinessModal: React.FC<Props> = ({
-  open,
-  onClose,
-  onSubmit,
-  isLoading = false,
-}) => {
+export const CreateBusinessModal: React.FC<Props> = ({ open, onClose, onSubmit, isLoading = false }) => {
   const {
     control,
     register,
@@ -57,12 +52,7 @@ export const CreateBusinessModal: React.FC<Props> = ({
       onClose={handleClose}
       title="הוספת עסק"
       footer={
-        <ModalFormActions
-          onCancel={handleClose}
-          onSubmit={onFormSubmit}
-          isLoading={isLoading}
-          submitLabel="הוסף עסק"
-        />
+        <ModalFormActions onCancel={handleClose} onSubmit={onFormSubmit} isLoading={isLoading} submitLabel="הוסף עסק" />
       }
     >
       <form onSubmit={onFormSubmit} className="space-y-4">

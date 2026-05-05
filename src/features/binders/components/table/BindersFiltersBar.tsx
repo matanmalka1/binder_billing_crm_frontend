@@ -22,12 +22,7 @@ const getFields = () => [
   },
 ]
 
-export const BindersFiltersBar = ({
-  filters,
-  counters,
-  onFilterChange,
-  onReset,
-}: BindersFiltersBarProps) => {
+export const BindersFiltersBar = ({ filters, counters, onFilterChange, onReset }: BindersFiltersBarProps) => {
   const statusPills = [
     {
       key: '',

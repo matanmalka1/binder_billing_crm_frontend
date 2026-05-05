@@ -4,12 +4,7 @@ import { ArrowUpCircle, ArrowDownCircle } from 'lucide-react'
 import { annualReportFinancialsApi, annualReportsQK } from '../../api'
 import { toast } from '../../../../utils/toast'
 import { useRole } from '../../../../hooks/useRole'
-import {
-  AddLineForm,
-  AutoPopulateControls,
-  FinancialSection,
-  FinancialSummaryCards,
-} from './IncomeExpensePanelParts'
+import { AddLineForm, AutoPopulateControls, FinancialSection, FinancialSummaryCards } from './IncomeExpensePanelParts'
 import { LineRow, INCOME_LABELS, EXPENSE_LABELS } from '../../report.constants'
 import { AddExpenseLineForm } from './AddExpenseLineForm'
 import { useIncomeExpenseMutations } from '../../hooks/useIncomeExpenseMutations'
@@ -60,11 +55,7 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
     useIncomeExpenseMutations(reportId)
 
   if (isLoading) {
-    return (
-      <p className="py-8 text-center text-sm text-gray-400">
-        {FINANCIAL_MESSAGES.loadingFinancials}
-      </p>
-    )
+    return <p className="py-8 text-center text-sm text-gray-400">{FINANCIAL_MESSAGES.loadingFinancials}</p>
   }
 
   const incomeLines = data?.income_lines ?? []
@@ -103,9 +94,7 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
           footer={
             <AddLineForm
               typeOptions={INCOME_LABELS}
-              onAdd={(key, amt, desc) =>
-                addIncome.mutate({ type_key: key, amount: Number(amt), description: desc })
-              }
+              onAdd={(key, amt, desc) => addIncome.mutate({ type_key: key, amount: Number(amt), description: desc })}
               isAdding={addIncome.isPending}
               label="הוסף הכנסה"
             />
@@ -128,10 +117,7 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
                   isSaving={updateIncome.isPending}
                   onCancel={() => setEditingLine(null)}
                   onSave={(p) =>
-                    updateIncome.mutate(
-                      { lineId: l.id, payload: p },
-                      { onSuccess: () => setEditingLine(null) },
-                    )
+                    updateIncome.mutate({ lineId: l.id, payload: p }, { onSuccess: () => setEditingLine(null) })
                   }
                 />
               )}
@@ -148,12 +134,7 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
           totalClassName="text-negative-600"
           emptyMessage={FINANCIAL_MESSAGES.noExpenses}
           isEmpty={expenseLines.length === 0}
-          footer={
-            <AddExpenseLineForm
-              onAdd={(p) => addExpense.mutate(p)}
-              isAdding={addExpense.isPending}
-            />
-          }
+          footer={<AddExpenseLineForm onAdd={(p) => addExpense.mutate(p)} isAdding={addExpense.isPending} />}
         >
           {expenseLines.map((l) => (
             <div key={l.id}>
@@ -175,10 +156,7 @@ export const IncomeExpensePanel: React.FC<IncomeExpensePanelProps> = ({ reportId
                   isSaving={updateExpense.isPending}
                   onCancel={() => setEditingLine(null)}
                   onSave={(p) =>
-                    updateExpense.mutate(
-                      { lineId: l.id, payload: p },
-                      { onSuccess: () => setEditingLine(null) },
-                    )
+                    updateExpense.mutate({ lineId: l.id, payload: p }, { onSuccess: () => setEditingLine(null) })
                   }
                 />
               )}

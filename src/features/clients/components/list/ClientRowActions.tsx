@@ -10,11 +10,7 @@ interface ClientRowActionsProps {
   onEditClient?: () => void
 }
 
-export const ClientRowActions: React.FC<ClientRowActionsProps> = ({
-  clientId,
-  officeClientNumber,
-  onEditClient,
-}) => {
+export const ClientRowActions: React.FC<ClientRowActionsProps> = ({ clientId, officeClientNumber, onEditClient }) => {
   const navigate = useNavigate()
   const clientOfficeId = formatClientOfficeId(officeClientNumber)
 
@@ -28,11 +24,7 @@ export const ClientRowActions: React.FC<ClientRowActionsProps> = ({
         icon={<UserCircle className="h-4 w-4" />}
       />
       {onEditClient && (
-        <RowActionItem
-          label="עריכת לקוח"
-          onClick={() => onEditClient()}
-          icon={<Pencil className="h-4 w-4" />}
-        />
+        <RowActionItem label="עריכת לקוח" onClick={() => onEditClient()} icon={<Pencil className="h-4 w-4" />} />
       )}
       <RowActionItem
         label="ציר זמן"

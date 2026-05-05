@@ -101,10 +101,7 @@ export const CreateClientTaxStep: React.FC<Props> = ({
         label="רואה חשבון מלווה"
         error={errors.accountant_id?.message}
         disabled={disabled || advisorsLoading}
-        options={[
-          { value: '', label: advisorsLoading ? 'טוען רואי חשבון...' : 'בחר רואה חשבון' },
-          ...advisorOptions,
-        ]}
+        options={[{ value: '', label: advisorsLoading ? 'טוען רואי חשבון...' : 'בחר רואה חשבון' }, ...advisorOptions]}
         value={accountantValue ?? ''}
         {...register('accountant_id')}
       />

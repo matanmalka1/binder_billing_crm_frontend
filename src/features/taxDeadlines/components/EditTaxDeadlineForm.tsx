@@ -12,13 +12,7 @@ interface EditTaxDeadlineFormProps {
   isSubmitting: boolean
 }
 
-export const EditTaxDeadlineFormModal = ({
-  open,
-  onClose,
-  onSubmit,
-  form,
-  isSubmitting,
-}: EditTaxDeadlineFormProps) => {
+export const EditTaxDeadlineFormModal = ({ open, onClose, onSubmit, form, isSubmitting }: EditTaxDeadlineFormProps) => {
   const { reset } = form
 
   const handleClose = () => {

@@ -25,10 +25,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
 
   const totalNet = invoices.reduce((s, i) => s + Number(i.net_amount ?? 0), 0)
   const totalVat = invoices.reduce((s, i) => s + Number(i.vat_amount ?? 0), 0)
-  const totalDeductibleVat = invoices.reduce(
-    (s, i) => s + Number(i.vat_amount ?? 0) * Number(i.deduction_rate ?? 0),
-    0,
-  )
+  const totalDeductibleVat = invoices.reduce((s, i) => s + Number(i.vat_amount ?? 0) * Number(i.deduction_rate ?? 0), 0)
 
   // base cols: מספר תאריך ספק ח.פ סוגמסמך סוגעסקה %הכרה נטו מעמ נוצרעי נוצרב = 11
   // expense adds: קטגוריה + מעמלניכוי = +2
@@ -112,9 +109,7 @@ export const VatInvoiceTable: React.FC<VatInvoiceTableProps> = ({
                 {formatVatAmount(totalVat)}
               </td>
               {isExpense && (
-                <td
-                  className={`px-4 py-2.5 font-mono tabular-nums font-bold ${semanticMonoToneClasses.positive}`}
-                >
+                <td className={`px-4 py-2.5 font-mono tabular-nums font-bold ${semanticMonoToneClasses.positive}`}>
                   {formatVatAmount(totalDeductibleVat)}
                 </td>
               )}

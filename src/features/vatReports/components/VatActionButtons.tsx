@@ -25,37 +25,19 @@ export const VatActionButtons: React.FC<VatActionButtonsProps> = ({
   return (
     <div className="flex flex-wrap items-center gap-2" dir="rtl">
       {showMaterialsComplete && (
-        <Button
-          variant="primary"
-          size="sm"
-          isLoading={isLoading}
-          disabled={closed}
-          onClick={onMaterialsComplete}
-        >
+        <Button variant="primary" size="sm" isLoading={isLoading} disabled={closed} onClick={onMaterialsComplete}>
           <PackageCheck className="h-4 w-4" />
           אישור קבלת חומרים
         </Button>
       )}
       {showReadyForReview && (
-        <Button
-          variant="primary"
-          size="sm"
-          isLoading={isLoading}
-          disabled={closed}
-          onClick={onReadyForReview}
-        >
+        <Button variant="primary" size="sm" isLoading={isLoading} disabled={closed} onClick={onReadyForReview}>
           <Send className="h-4 w-4" />
           שלח לבדיקה
         </Button>
       )}
       {showFile && (
-        <Button
-          variant="primary"
-          size="sm"
-          isLoading={isLoading}
-          disabled={closed}
-          onClick={onFile}
-        >
+        <Button variant="primary" size="sm" isLoading={isLoading} disabled={closed} onClick={onFile}>
           <Send className="h-4 w-4" />
           הגש מע&quot;מ
         </Button>

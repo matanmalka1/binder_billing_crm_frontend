@@ -20,19 +20,18 @@ import { formatVatPeriodTitle, getVatClientTitle } from '../view.helpers'
 
 type AlertTone = 'warning' | 'error'
 
-const ALERT_CLASSES: Record<AlertTone, { wrap: string; icon: string; Icon: typeof AlertTriangle }> =
-  {
-    warning: {
-      wrap: 'border-warning-200 bg-warning-50 text-warning-800',
-      icon: 'text-warning-500',
-      Icon: AlertTriangle,
-    },
-    error: {
-      wrap: 'border-negative-200 bg-negative-50 text-negative-800',
-      icon: 'text-negative-500',
-      Icon: AlertTriangle,
-    },
-  }
+const ALERT_CLASSES: Record<AlertTone, { wrap: string; icon: string; Icon: typeof AlertTriangle }> = {
+  warning: {
+    wrap: 'border-warning-200 bg-warning-50 text-warning-800',
+    icon: 'text-warning-500',
+    Icon: AlertTriangle,
+  },
+  error: {
+    wrap: 'border-negative-200 bg-negative-50 text-negative-800',
+    icon: 'text-negative-500',
+    Icon: AlertTriangle,
+  },
+}
 
 const AlertBanner: React.FC<{
   tone: AlertTone
@@ -49,13 +48,11 @@ const AlertBanner: React.FC<{
   )
 }
 
-export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({
-  workItem,
-  onFilingPendingChange,
-}) => {
+export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({ workItem, onFilingPendingChange }) => {
   const { isAdvisor } = useRole()
-  const { handleMaterialsComplete, handleReadyForReview, handleSendBack, isLoading } =
-    useVatWorkItemActions(workItem.id)
+  const { handleMaterialsComplete, handleReadyForReview, handleSendBack, isLoading } = useVatWorkItemActions(
+    workItem.id,
+  )
   const [showSendBack, setShowSendBack] = useState(false)
   const [showFileModal, setShowFileModal] = useState(false)
   const filed = isFiled(workItem.status)
@@ -101,9 +98,7 @@ export const VatWorkItemSummaryBar: React.FC<VatWorkItemSummaryBarProps> = ({
             getLabel={getVatWorkItemStatusLabel}
             variantMap={VAT_STATUS_BADGE_VARIANTS}
           />
-          {isAdvisor && (
-            <VatExportButtons clientId={workItem.client_record_id} period={workItem.period} />
-          )}
+          {isAdvisor && <VatExportButtons clientId={workItem.client_record_id} period={workItem.period} />}
         </div>
       </div>
 

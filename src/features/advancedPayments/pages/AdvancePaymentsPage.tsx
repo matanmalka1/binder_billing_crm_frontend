@@ -37,8 +37,19 @@ const PERIOD_OPTIONS = [
 
 const FILTER_FIELDS = [
   { type: 'search' as const, key: 'search', label: 'לקוח', placeholder: 'שם לקוח, ת.ז, ח.פ...' },
-  { type: 'select' as const, key: 'year', label: 'שנה', options: getOperationalYearOptions(), defaultValue: String(getOperationalTaxYear()) },
-  { type: 'select' as const, key: 'status', label: 'סטטוס', options: ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL },
+  {
+    type: 'select' as const,
+    key: 'year',
+    label: 'שנה',
+    options: getOperationalYearOptions(),
+    defaultValue: String(getOperationalTaxYear()),
+  },
+  {
+    type: 'select' as const,
+    key: 'status',
+    label: 'סטטוס',
+    options: ADVANCE_PAYMENT_STATUS_OPTIONS_WITH_ALL,
+  },
   { type: 'select' as const, key: 'period', label: 'סוג דיווח', options: PERIOD_OPTIONS },
 ]
 
@@ -102,8 +113,7 @@ export const AdvancePayments: React.FC = () => {
   })
 
   const createMutation = useMutation({
-    mutationFn: (payload: CreateAdvancePaymentPayload) =>
-      advancePaymentsApi.create(createClientId!, payload),
+    mutationFn: (payload: CreateAdvancePaymentPayload) => advancePaymentsApi.create(createClientId!, payload),
     onSuccess: () => {
       toast.success('מקדמה נוצרה')
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all })
@@ -205,8 +215,7 @@ export const AdvancePayments: React.FC = () => {
         skeletonCols={10}
       >
         {displayBatches.map((batch) => {
-          const isCurrent =
-            batch.year === todayYear && batch.month === todayMonth && year === todayYear
+          const isCurrent = batch.year === todayYear && batch.month === todayMonth && year === todayYear
           return (
             <AdvancePaymentBatchRow
               key={`${batch.year}-${batch.month}`}

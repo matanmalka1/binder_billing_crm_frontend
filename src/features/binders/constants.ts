@@ -5,10 +5,7 @@ export { getBinderTypeLabel } from '../../utils/enums'
 export const ANNUAL_BINDER_TYPES = new Set(['annual_report', 'capital_declaration'])
 export const PERIODIC_BINDER_TYPES = new Set(['vat', 'salary'])
 
-export const BINDER_STATUS_VARIANTS: Record<
-  string,
-  'success' | 'warning' | 'error' | 'info' | 'neutral'
-> = {
+export const BINDER_STATUS_VARIANTS: Record<string, 'success' | 'warning' | 'error' | 'info' | 'neutral'> = {
   in_office: 'info',
   closed_in_office: 'warning',
   archived_in_office: 'neutral',

@@ -30,13 +30,7 @@ export const TaxProfileCard: React.FC<TaxProfileCardProps> = ({ clientId, readOn
             <DefinitionList items={getTaxProfileItems(profile, nameById)} columns={2} />
             {!readOnly && (
               <div className="flex justify-end">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsEditing(true)}
-                  className="gap-2"
-                >
+                <Button type="button" variant="outline" size="sm" onClick={() => setIsEditing(true)} className="gap-2">
                   <Edit2 className="h-4 w-4" />
                   {TAX_PROFILE_TEXT.edit}
                 </Button>

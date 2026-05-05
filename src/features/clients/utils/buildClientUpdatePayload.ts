@@ -2,8 +2,7 @@ import type { FieldNamesMarkedBoolean } from 'react-hook-form'
 import type { UpdateClientPayload } from '../api'
 import type { ClientEditFormValues } from '../schemas'
 
-const blankToNull = (value: string | null | undefined): string | null =>
-  value?.trim() ? value.trim() : null
+const blankToNull = (value: string | null | undefined): string | null => (value?.trim() ? value.trim() : null)
 
 const getLocalISODate = (): string => {
   const date = new Date()
@@ -33,8 +32,7 @@ export const buildClientUpdatePayload = (
   if (dirtyFields.address_zip_code) payload.address_zip_code = blankToNull(data.address_zip_code)
   if (dirtyFields.entity_type) payload.entity_type = data.entity_type || null
   if (dirtyFields.vat_reporting_frequency || dirtyFields.entity_type) {
-    payload.vat_reporting_frequency =
-      data.entity_type === 'osek_patur' ? null : data.vat_reporting_frequency || null
+    payload.vat_reporting_frequency = data.entity_type === 'osek_patur' ? null : data.vat_reporting_frequency || null
   }
   if (dirtyFields.advance_payment_frequency) {
     payload.advance_payment_frequency = data.advance_payment_frequency || null
@@ -54,5 +52,4 @@ export const buildClientUpdatePayload = (
   return payload
 }
 
-export const hasClientUpdatePayload = (payload: UpdateClientPayload): boolean =>
-  Object.keys(payload).length > 0
+export const hasClientUpdatePayload = (payload: UpdateClientPayload): boolean => Object.keys(payload).length > 0

@@ -12,11 +12,7 @@ type Result = {
   error: string | null
 }
 
-export const useClientSignatureRequests = ({
-  clientId,
-  page = 1,
-  pageSize = 10,
-}: Params): Result => {
+export const useClientSignatureRequests = ({ clientId, page = 1, pageSize = 10 }: Params): Result => {
   const enabled = clientId != null && clientId > 0
 
   const query = useQuery({

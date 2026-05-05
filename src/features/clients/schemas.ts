@@ -18,11 +18,7 @@ export type CreateBusinessFormValues = z.infer<typeof createBusinessSchema>
 
 export const createClientSchema = z
   .object({
-    full_name: z
-      .string()
-      .trim()
-      .min(2, 'שם מלא חייב להכיל לפחות 2 תווים')
-      .max(100, 'שם מלא ארוך מדי'),
+    full_name: z.string().trim().min(2, 'שם מלא חייב להכיל לפחות 2 תווים').max(100, 'שם מלא ארוך מדי'),
     id_number: z.string().trim().min(1, 'יש להזין מספר מזהה'),
     entity_type: z.enum(CREATE_ENTITY_TYPES, { message: 'יש לבחור סוג ישות' }),
     phone: z
@@ -36,10 +32,7 @@ export const createClientSchema = z
     address_apartment: z.string().trim().optional().or(z.literal('')),
     address_city: z.string().trim().min(1, 'יש להזין עיר'),
     address_zip_code: z.string().trim().optional().or(z.literal('')),
-    vat_reporting_frequency: z
-      .enum(VAT_TYPES, { message: 'יש לציין תדירות דיווח מע"מ' })
-      .optional()
-      .nullable(),
+    vat_reporting_frequency: z.enum(VAT_TYPES, { message: 'יש לציין תדירות דיווח מע"מ' }).optional().nullable(),
     advance_payment_frequency: z
       .enum(ADVANCE_PAYMENT_FREQUENCY_VALUES, { message: 'יש לציין תדירות מקדמות' })
       .nullable()

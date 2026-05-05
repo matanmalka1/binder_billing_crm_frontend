@@ -27,16 +27,12 @@ export const TasksTable: React.FC<TasksTableProps> = ({ items, isLoading }) => {
     {
       key: 'label',
       header: 'משימה',
-      render: (item: UnifiedItem) => (
-        <span className="font-medium text-gray-900">{item.label}</span>
-      ),
+      render: (item: UnifiedItem) => <span className="font-medium text-gray-900">{item.label}</span>,
     },
     {
       key: 'type',
       header: 'סוג',
-      render: (item: UnifiedItem) => (
-        <span className="text-sm text-gray-600">{typeLabel(item.source_type)}</span>
-      ),
+      render: (item: UnifiedItem) => <span className="text-sm text-gray-600">{typeLabel(item.source_type)}</span>,
     },
     {
       key: 'due_date',
@@ -51,9 +47,7 @@ export const TasksTable: React.FC<TasksTableProps> = ({ items, isLoading }) => {
       render: (item: UnifiedItem) => {
         const urgency = item.urgency ?? 'upcoming'
         return (
-          <Badge
-            variant={taskUrgencyVariant[urgency as keyof typeof taskUrgencyVariant] ?? 'neutral'}
-          >
+          <Badge variant={taskUrgencyVariant[urgency as keyof typeof taskUrgencyVariant] ?? 'neutral'}>
             {taskUrgencyLabels[urgency as keyof typeof taskUrgencyLabels] ?? urgency}
           </Badge>
         )

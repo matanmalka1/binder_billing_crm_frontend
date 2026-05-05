@@ -14,11 +14,7 @@ interface FormValues {
   message: string
 }
 
-export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
-  open,
-  onClose,
-  clientId,
-}) => {
+export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ open, onClose, clientId }) => {
   const [clientQuery, setClientQuery] = useState('')
   const [clientError, setClientError] = useState<string | undefined>()
 
@@ -88,12 +84,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
         </div>
       }
     >
-      <form
-        id="send-notification-form"
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4"
-        dir="rtl"
-      >
+      <form id="send-notification-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4" dir="rtl">
         <div className="space-y-1">
           {clientId != null ? (
             <SelectedClientDisplay
@@ -152,9 +143,7 @@ export const SendNotificationModal: React.FC<SendNotificationModalProps> = ({
             rows={4}
             placeholder="הכנס את תוכן ההודעה..."
           />
-          {errors.message && (
-            <p className="mt-1 text-xs text-negative-600">{errors.message.message}</p>
-          )}
+          {errors.message && <p className="mt-1 text-xs text-negative-600">{errors.message.message}</p>}
         </div>
       </form>
     </Modal>

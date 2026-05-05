@@ -72,9 +72,7 @@ export const TimelineCommandBar: React.FC<TimelineCommandBarProps> = ({
   onPageSizeChange,
   eventTypeStats,
 }) => {
-  const lastUpdated = lastEventTimestamp
-    ? format(parseISO(lastEventTimestamp), 'd MMM HH:mm', { locale: he })
-    : null
+  const lastUpdated = lastEventTimestamp ? format(parseISO(lastEventTimestamp), 'd MMM HH:mm', { locale: he }) : null
 
   return (
     <div className="rounded-2xl border border-gray-200/60 bg-white/95 shadow-sm backdrop-blur-sm overflow-hidden">

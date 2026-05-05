@@ -22,10 +22,7 @@ declare global {
   }
 }
 
-export class AppErrorBoundary extends React.Component<
-  AppErrorBoundaryProps,
-  AppErrorBoundaryState
-> {
+export class AppErrorBoundary extends React.Component<AppErrorBoundaryProps, AppErrorBoundaryState> {
   public constructor(props: AppErrorBoundaryProps) {
     super(props)
     this.state = { hasError: false, error: null, errorInfo: null }
@@ -84,10 +81,7 @@ export class AppErrorBoundary extends React.Component<
             />
             {isDevelopment && (
               <div className="mt-3 text-center">
-                <button
-                  className="text-sm text-gray-500 hover:text-gray-700 underline"
-                  onClick={this.handleReset}
-                >
+                <button className="text-sm text-gray-500 hover:text-gray-700 underline" onClick={this.handleReset}>
                   נסה שוב (ללא רענון)
                 </button>
               </div>

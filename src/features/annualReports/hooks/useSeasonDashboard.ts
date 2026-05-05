@@ -4,13 +4,9 @@ import { getErrorMessage } from '../../../utils/utils'
 
 export const useSeasonDashboard = (taxYear?: number) => {
   const summaryQuery = useQuery({
-    queryKey: taxYear
-      ? annualReportsQK.seasonSummary(taxYear)
-      : annualReportsQK.activeSeasonSummary,
+    queryKey: taxYear ? annualReportsQK.seasonSummary(taxYear) : annualReportsQK.activeSeasonSummary,
     queryFn: () =>
-      taxYear
-        ? annualReportSeasonApi.getSeasonSummary(taxYear)
-        : annualReportSeasonApi.getActiveSeasonSummary(),
+      taxYear ? annualReportSeasonApi.getSeasonSummary(taxYear) : annualReportSeasonApi.getActiveSeasonSummary(),
   })
 
   const reportsQuery = useQuery({

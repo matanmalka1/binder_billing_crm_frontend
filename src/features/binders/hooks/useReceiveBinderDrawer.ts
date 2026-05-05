@@ -58,9 +58,7 @@ export const useReceiveBinderDrawer = (opts: UseReceiveBinderDrawerOptions = {})
 
   const form = useForm<ReceiveBinderFormValues>({
     resolver: zodResolver(receiveBinderSchema),
-    defaultValues: initialClient
-      ? { ...getDefaultValues(), client_record_id: initialClient.id }
-      : getDefaultValues(),
+    defaultValues: initialClient ? { ...getDefaultValues(), client_record_id: initialClient.id } : getDefaultValues(),
   })
 
   const clientRecordId: number | undefined = form.watch('client_record_id')
@@ -121,15 +119,13 @@ export const useReceiveBinderDrawer = (opts: UseReceiveBinderDrawerOptions = {})
   const { data: annualReportsData } = useQuery({
     queryKey: annualReportsQK.forClient(typeof clientRecordId === 'number' ? clientRecordId : 0),
     queryFn: () => annualReportsApi.listClientReports(clientRecordId as number),
-    enabled:
-      binderType === 'annual_report' && typeof clientRecordId === 'number' && clientRecordId > 0,
+    enabled: binderType === 'annual_report' && typeof clientRecordId === 'number' && clientRecordId > 0,
     staleTime: 30_000,
     retry: 1,
     refetchOnWindowFocus: false,
   })
 
-  const vatType: 'monthly' | 'bimonthly' | 'exempt' | null =
-    taxProfile?.vat_reporting_frequency ?? null
+  const vatType: 'monthly' | 'bimonthly' | 'exempt' | null = taxProfile?.vat_reporting_frequency ?? null
 
   useEffect(() => {
     if (!binderType) return
@@ -145,9 +141,7 @@ export const useReceiveBinderDrawer = (opts: UseReceiveBinderDrawerOptions = {})
     }
 
     const monthEnd =
-      binderType === 'vat' && vatType === 'bimonthly'
-        ? Math.min(periodMonthStart + 1, 12)
-        : periodMonthStart
+      binderType === 'vat' && vatType === 'bimonthly' ? Math.min(periodMonthStart + 1, 12) : periodMonthStart
     form.setValue('period_month_end', monthEnd, { shouldValidate: false })
   }, [binderType, periodMonthStart, vatType, form])
 
@@ -165,13 +159,7 @@ export const useReceiveBinderDrawer = (opts: UseReceiveBinderDrawerOptions = {})
       const monthEnd = ANNUAL_BINDER_TYPES.has(values.binder_type) ? 12 : values.period_month_end
 
       let vatReportId: number | null = null
-      if (
-        values.binder_type === 'vat' &&
-        values.client_record_id &&
-        values.period_year &&
-        monthStart &&
-        monthEnd
-      ) {
+      if (values.binder_type === 'vat' && values.client_record_id && values.period_year && monthStart && monthEnd) {
         const lookup = await vatReportsApi.lookup(
           values.client_record_id,
           toBinderPeriodValue(values.period_year, monthStart, monthEnd),
@@ -210,11 +198,7 @@ export const useReceiveBinderDrawer = (opts: UseReceiveBinderDrawerOptions = {})
         values.period_month_start &&
         values.period_month_end
       ) {
-        const period = toBinderPeriodValue(
-          values.period_year,
-          values.period_month_start,
-          values.period_month_end,
-        )
+        const period = toBinderPeriodValue(values.period_year, values.period_month_start, values.period_month_end)
         try {
           const existing = await vatReportsApi.lookup(values.client_record_id, period)
           if (existing) {
@@ -225,10 +209,7 @@ export const useReceiveBinderDrawer = (opts: UseReceiveBinderDrawerOptions = {})
             toast.info('לא קיים תיק מע"מ לתקופה זו', {
               action: {
                 label: 'צור תיק מע״מ',
-                onClick: () =>
-                  navigate(
-                    `/tax/vat?create=1&client_id=${values.client_record_id}&period=${period}`,
-                  ),
+                onClick: () => navigate(`/tax/vat?create=1&client_id=${values.client_record_id}&period=${period}`),
               },
             })
           }

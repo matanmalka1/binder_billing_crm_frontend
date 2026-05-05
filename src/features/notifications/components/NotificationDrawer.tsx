@@ -71,14 +71,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
             >
               סמן הכל כנקרא
             </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              aria-label="סגירה"
-              className="p-1"
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={onClose} aria-label="סגירה" className="p-1">
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -86,9 +79,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
 
         {/* List */}
         <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
-          {limited.length === 0 && (
-            <p className="px-5 py-8 text-center text-sm text-gray-400">אין התראות</p>
-          )}
+          {limited.length === 0 && <p className="px-5 py-8 text-center text-sm text-gray-400">אין התראות</p>}
           {limited.map((item) => (
             <Button
               key={item.id}
@@ -103,12 +94,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
               {/* Badge column (right side in RTL) */}
               <div className="flex flex-col items-center gap-1.5 pt-0.5 shrink-0">
                 <SeverityBadge severity={item.severity} />
-                {!item.is_read && (
-                  <span
-                    className="h-2 w-2 rounded-full bg-info-500 shrink-0"
-                    aria-label="לא נקרא"
-                  />
-                )}
+                {!item.is_read && <span className="h-2 w-2 rounded-full bg-info-500 shrink-0" aria-label="לא נקרא" />}
               </div>
               {/* Content column */}
               <div className="flex flex-col gap-1 min-w-0 flex-1">
@@ -118,9 +104,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ open, on
                 <p className="text-sm text-gray-800 leading-relaxed whitespace-normal break-words">
                   {item.content_snapshot}
                 </p>
-                {item.recipient && (
-                  <span className="text-xs text-gray-500">נשלח ל: {item.recipient}</span>
-                )}
+                {item.recipient && <span className="text-xs text-gray-500">נשלח ל: {item.recipient}</span>}
                 <span className="text-xs text-gray-400">
                   {new Date(item.created_at).toLocaleString('he-IL', {
                     dateStyle: 'short',

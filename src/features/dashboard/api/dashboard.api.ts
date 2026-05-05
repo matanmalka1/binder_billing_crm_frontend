@@ -1,10 +1,6 @@
 import { api } from '@/api/client'
 import { DASHBOARD_ENDPOINTS } from './endpoints'
-import type {
-  DashboardOverviewResponse,
-  DashboardSummaryResponse,
-  AttentionResponse,
-} from './contracts'
+import type { DashboardOverviewResponse, DashboardSummaryResponse, AttentionResponse } from './contracts'
 
 export const dashboardApi = {
   getOverview: async (): Promise<DashboardOverviewResponse> => {

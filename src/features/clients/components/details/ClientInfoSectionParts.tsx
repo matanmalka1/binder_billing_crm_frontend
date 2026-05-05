@@ -17,15 +17,7 @@ const displayValue = (value: ReactNode) => {
   return value
 }
 
-const SectionCard = ({
-  title,
-  children,
-  className,
-}: {
-  title: string
-  children: ReactNode
-  className?: string
-}) => (
+const SectionCard = ({ title, children, className }: { title: string; children: ReactNode; className?: string }) => (
   <Card title={title} className={cn('shadow-sm', className)}>
     {children}
   </Card>

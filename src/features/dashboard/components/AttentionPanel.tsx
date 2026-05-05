@@ -48,15 +48,18 @@ const TaskCard = ({ item, tone, sectionIcon: SectionIcon, activeActionKey, onAct
           <div className="mb-1 flex items-center gap-3">
             <p className="truncate text-sm font-bold text-gray-900">{item.label}</p>
             {meta?.badge && (
-              <span className={cn('shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase', tonePill[badgeTone])}>
+              <span
+                className={cn(
+                  'shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase',
+                  tonePill[badgeTone],
+                )}
+              >
                 {meta.badge}
               </span>
             )}
           </div>
           {item.sublabel && <p className="truncate text-sm text-gray-500">{item.sublabel}</p>}
-          {meta?.description && (
-            <p className="mt-0.5 truncate text-xs text-slate-400">{meta.description}</p>
-          )}
+          {meta?.description && <p className="mt-0.5 truncate text-xs text-slate-400">{meta.description}</p>}
         </div>
       </div>
 
@@ -76,14 +79,17 @@ const TaskCard = ({ item, tone, sectionIcon: SectionIcon, activeActionKey, onAct
             </p>
           </div>
         )}
-        {action && (
+        {action &&
           (() => {
             const isLoading = activeActionKey === action.action.uiKey
             const isDisabled = activeActionKey !== null && !isLoading
             return (
               <button
                 disabled={isDisabled || isLoading}
-                onClick={(e) => { e.preventDefault(); onAction(action.action) }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  onAction(action.action)
+                }}
                 className={cn(
                   'shrink-0 rounded-xl px-5 py-2 text-sm font-semibold transition-colors',
                   isLoading
@@ -103,8 +109,7 @@ const TaskCard = ({ item, tone, sectionIcon: SectionIcon, activeActionKey, onAct
                 )}
               </button>
             )
-          })()
-        )}
+          })()}
       </div>
     </>
   )
@@ -164,8 +169,7 @@ export const AttentionPanel = ({
   const toggleGroup = (section: PanelSection, stateKey: string) =>
     setVisibleCounts((prev) => {
       const current = prev[stateKey] ?? ATTENTION_BATCH_SIZE
-      const nextCount =
-        current >= section.items.length ? ATTENTION_BATCH_SIZE : current + ATTENTION_BATCH_SIZE
+      const nextCount = current >= section.items.length ? ATTENTION_BATCH_SIZE : current + ATTENTION_BATCH_SIZE
 
       return { ...prev, [stateKey]: nextCount }
     })
@@ -176,11 +180,7 @@ export const AttentionPanel = ({
         <DashboardSectionHeader
           icon={ShieldAlert}
           title="לוח תשומת לב"
-          subtitle={
-            totalItems === 0
-              ? 'הכל תקין — אין דברים ממתינים'
-              : `${totalItems} פריטים ממתינים לטיפול`
-          }
+          subtitle={totalItems === 0 ? 'הכל תקין — אין דברים ממתינים' : `${totalItems} פריטים ממתינים לטיפול`}
           count={totalItems}
           tone={totalItems > 0 ? 'amber' : 'neutral'}
         />
@@ -226,10 +226,13 @@ export const AttentionPanel = ({
                       : 'border-slate-100 bg-slate-50 hover:border-slate-200',
                   )}
                 >
-                  <p className={cn('mb-1 text-[10px]', isActive ? 'text-primary' : 'text-gray-500')}>
-                    {section.title}
-                  </p>
-                  <p className={cn('text-xl font-bold tabular-nums', isActive ? 'text-primary' : count === 0 ? 'text-slate-400' : 'text-gray-800')}>
+                  <p className={cn('mb-1 text-[10px]', isActive ? 'text-primary' : 'text-gray-500')}>{section.title}</p>
+                  <p
+                    className={cn(
+                      'text-xl font-bold tabular-nums',
+                      isActive ? 'text-primary' : count === 0 ? 'text-slate-400' : 'text-gray-800',
+                    )}
+                  >
                     {count}
                   </p>
                 </button>
@@ -285,7 +288,7 @@ export const AttentionPanel = ({
                             hasMore && 'border-l border-gray-100',
                           )}
                         >
-                            <ChevronUp className="h-3 w-3" />
+                          <ChevronUp className="h-3 w-3" />
                           הצג פחות
                         </button>
                       )}

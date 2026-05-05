@@ -11,20 +11,14 @@ type BusinessDetailsCardProps = {
   canEdit?: boolean
 }
 
-export const BusinessDetailsCard = ({
-  business,
-  client,
-  canEdit = false,
-}: BusinessDetailsCardProps) => {
+export const BusinessDetailsCard = ({ business, client, canEdit = false }: BusinessDetailsCardProps) => {
   return (
     <div className="space-y-6">
       <Card title={BUSINESS_DETAILS_COPY.sectionTitle}>
         <DefinitionList columns={4} items={buildBusinessSummaryItems(business, client)} />
       </Card>
 
-      {client && (
-        <BusinessNotesCard clientId={client.id} businessId={business.id} canEdit={canEdit} />
-      )}
+      {client && <BusinessNotesCard clientId={client.id} businessId={business.id} canEdit={canEdit} />}
     </div>
   )
 }

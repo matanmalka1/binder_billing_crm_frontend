@@ -15,11 +15,7 @@ import { TransitionTargetSelector } from './TransitionTargetSelector'
 import { ReadinessCheckPanel } from '../panel/ReadinessCheckPanel'
 import { buildTransitionPayload, getEmptyTransitionForm, isValidAmendReason } from './helpers'
 
-export const StatusTransitionPanel = ({
-  report,
-  onTransition,
-  isLoading,
-}: StatusTransitionPanelProps) => {
+export const StatusTransitionPanel = ({ report, onTransition, isLoading }: StatusTransitionPanelProps) => {
   const queryClient = useQueryClient()
   const allowed = getAllowedTransitions(report)
   const [selected, setSelected] = useState<(typeof allowed)[number] | null>(null)
@@ -46,8 +42,7 @@ export const StatusTransitionPanel = ({
   const [readinessOpen, setReadinessOpen] = useState(false)
 
   const setField =
-    (field: keyof TransitionForm) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    (field: keyof TransitionForm) => (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       setForm((prev) => ({ ...prev, [field]: event.target.value }))
     }
 
@@ -113,9 +108,7 @@ export const StatusTransitionPanel = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <span>סטטוס נוכחי:</span>
-              <Badge variant={getStatusVariant(report.status)}>
-                {getStatusLabel(report.status)}
-              </Badge>
+              <Badge variant={getStatusVariant(report.status)}>{getStatusLabel(report.status)}</Badge>
             </div>
             {report.status === 'submitted' && (
               <Button type="button" variant="outline" size="sm" onClick={() => setAmendOpen(true)}>

@@ -9,11 +9,7 @@ interface UseBusinessesForClientOptions {
   onAutoSelect?: (business: BusinessResponse) => void
 }
 
-export const useBusinessesForClient = ({
-  clientId,
-  enabled = true,
-  onAutoSelect,
-}: UseBusinessesForClientOptions) => {
+export const useBusinessesForClient = ({ clientId, enabled = true, onAutoSelect }: UseBusinessesForClientOptions) => {
   const { data, isLoading } = useQuery({
     queryKey: clientId ? clientsQK.businessesAll(clientId) : clientsQK.businessesAllFallback(),
     queryFn: () => clientsApi.listAllBusinessesForClient(clientId!),

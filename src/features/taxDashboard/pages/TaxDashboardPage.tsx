@@ -91,12 +91,9 @@ const upcomingColumns: Column<TaxDeadlineResponse>[] = [
 export const TaxDashboardPage: React.FC = () => {
   const navigate = useNavigate()
   const [activeFilter, setActiveFilter] = useState('')
-  const { currentYear, submissions, urgentDeadlines, upcomingDeadlines, isLoading, hasError } =
-    useTaxDashboard()
+  const { currentYear, submissions, urgentDeadlines, upcomingDeadlines, isLoading, hasError } = useTaxDashboard()
 
-  const header = (
-    <PageHeader title="לוח מסים" description={`סקירת הגשות ומועדים לשנת ${currentYear}`} />
-  )
+  const header = <PageHeader title="לוח מסים" description={`סקירת הגשות ומועדים לשנת ${currentYear}`} />
 
   const filteredUpcoming = useMemo(() => {
     if (!activeFilter) return upcomingDeadlines
@@ -110,11 +107,7 @@ export const TaxDashboardPage: React.FC = () => {
       header={header}
       loadingMessage="טוען לוח מסים..."
     >
-      <TaxSubmissionStats
-        data={submissions}
-        activeFilter={activeFilter}
-        onFilter={setActiveFilter}
-      />
+      <TaxSubmissionStats data={submissions} activeFilter={activeFilter} onFilter={setActiveFilter} />
 
       <DataTable
         data={urgentDeadlines}

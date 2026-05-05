@@ -26,9 +26,7 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
       return (
         <span className="block max-w-[220px]">
           <span className="block truncate font-semibold text-gray-900">{name}</span>
-          {showPeriod && (
-            <span className="block text-xs font-medium text-gray-500">פריט מע״מ #{item.id}</span>
-          )}
+          {showPeriod && <span className="block text-xs font-medium text-gray-500">פריט מע״מ #{item.id}</span>}
         </span>
       )
     },
@@ -51,8 +49,7 @@ export const buildVatWorkItemColumns = (opts: ColumnOpts): Column<VatWorkItemRes
     key: 'net_vat',
     header: 'מע"מ נטו',
     render: (item) => {
-      const amount =
-        item.is_overridden && item.final_vat_amount != null ? item.final_vat_amount : item.net_vat
+      const amount = item.is_overridden && item.final_vat_amount != null ? item.final_vat_amount : item.net_vat
       return (
         <span
           className={`inline-flex items-center gap-1 font-mono text-sm font-semibold tabular-nums ${

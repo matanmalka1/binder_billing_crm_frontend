@@ -21,12 +21,7 @@ export const TasksPage: React.FC = () => {
     clearFilters,
   } = useTasks()
 
-  const header = (
-    <PageHeader
-      title="משימות"
-      description="כלל המשימות הפעילות: מועדי מס, מקדמות, דוחות וחיובים פתוחים"
-    />
-  )
+  const header = <PageHeader title="משימות" description="כלל המשימות הפעילות: מועדי מס, מקדמות, דוחות וחיובים פתוחים" />
 
   const renderBody = () => {
     if (items.length === 0) {
@@ -54,17 +49,8 @@ export const TasksPage: React.FC = () => {
   }
 
   return (
-    <PageStateGuard
-      isLoading={isLoading}
-      error={error}
-      header={header}
-      loadingMessage="טוען משימות..."
-    >
-      <TasksSummaryCards
-        items={allItems}
-        urgencyFilter={urgencyFilter}
-        onFilter={setUrgencyFilter}
-      />
+    <PageStateGuard isLoading={isLoading} error={error} header={header} loadingMessage="טוען משימות...">
+      <TasksSummaryCards items={allItems} urgencyFilter={urgencyFilter} onFilter={setUrgencyFilter} />
 
       <TasksFiltersBar
         typeFilter={typeFilter}

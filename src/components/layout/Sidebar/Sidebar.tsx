@@ -24,9 +24,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
   const { user, logout } = useAuthStore()
   const visibleNavGroups = NAV_GROUPS.map((group) => ({
     ...group,
-    items: group.items.filter(
-      (item) => !item.roles || item.roles.includes(user?.role ?? 'secretary'),
-    ),
+    items: group.items.filter((item) => !item.roles || item.roles.includes(user?.role ?? 'secretary')),
   })).filter((group) => group.items.length > 0)
 
   const handleLogout = () => {
@@ -55,11 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
           className="shrink-0 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
           aria-label={isSidebarOpen ? 'כווץ תפריט' : 'הרחב תפריט'}
         >
-          {isSidebarOpen ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronLeft className="h-4 w-4" />
-          )}
+          {isSidebarOpen ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </button>
       </div>
 
@@ -83,13 +77,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }
                 <UserIcon className="h-4 w-4 text-gray-500" />
               </div>
               <div className="min-w-0 text-right">
-                <p className="truncate text-sm font-medium leading-tight text-gray-900">
-                  {user?.full_name || 'אורח'}
-                </p>
+                <p className="truncate text-sm font-medium leading-tight text-gray-900">{user?.full_name || 'אורח'}</p>
                 {user?.role && (
-                  <p className="truncate text-xs leading-tight text-gray-500">
-                    {getRoleLabel(user.role)}
-                  </p>
+                  <p className="truncate text-xs leading-tight text-gray-500">{getRoleLabel(user.role)}</p>
                 )}
               </div>
             </div>

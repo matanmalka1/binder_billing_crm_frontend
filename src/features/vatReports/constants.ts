@@ -1,8 +1,4 @@
-import {
-  VAT_RATE_TYPE_LABELS,
-  DOCUMENT_TYPE_LABELS,
-  getVatWorkItemStatusLabel,
-} from '../../utils/enums'
+import { VAT_RATE_TYPE_LABELS, DOCUMENT_TYPE_LABELS, getVatWorkItemStatusLabel } from '../../utils/enums'
 import { CATEGORY_COLOR_TOKENS } from '../../utils/chartColors'
 import { ALL_STATUSES_OPTION, ALL_CATEGORIES_OPTION } from '@/constants/filterOptions.constants'
 
@@ -114,10 +110,7 @@ export const CATEGORY_TABLE_LABELS: Record<string, string> = {
   travel: 'רכב',
 }
 
-export const VAT_STATUS_BADGE_VARIANTS: Record<
-  string,
-  'success' | 'warning' | 'error' | 'info' | 'neutral'
-> = {
+export const VAT_STATUS_BADGE_VARIANTS: Record<string, 'success' | 'warning' | 'error' | 'info' | 'neutral'> = {
   pending_materials: 'warning',
   material_received: 'info',
   data_entry_in_progress: 'info',
@@ -125,10 +118,7 @@ export const VAT_STATUS_BADGE_VARIANTS: Record<
   filed: 'success',
 }
 
-export const VAT_CLIENT_SUMMARY_STATUS_VARIANTS: Record<
-  string,
-  'success' | 'warning' | 'info' | 'neutral'
-> = {
+export const VAT_CLIENT_SUMMARY_STATUS_VARIANTS: Record<string, 'success' | 'warning' | 'info' | 'neutral'> = {
   filed: 'success',
   ready_for_review: 'warning',
   data_entry_in_progress: 'info',

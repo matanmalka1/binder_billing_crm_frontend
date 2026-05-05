@@ -16,11 +16,7 @@ interface ToastOptions {
  * Use `showErrorToast(error, fallback)` from `utils.ts` when starting from an
  * unknown error object and a fallback message.
  */
-const notify = (
-  type: 'success' | 'error' | 'info' | 'warning',
-  message: string,
-  options?: ToastOptions,
-) => {
+const notify = (type: 'success' | 'error' | 'info' | 'warning', message: string, options?: ToastOptions) => {
   const base = { style: RTL_STYLE }
   const durationDefaults: Record<typeof type, number> = {
     success: 4000,

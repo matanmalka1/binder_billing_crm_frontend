@@ -1,8 +1,5 @@
 import { useState } from 'react'
-import {
-  BulkSelectionActionButton,
-  BulkSelectionToolbar,
-} from '@/components/ui/table/BulkSelectionToolbar'
+import { BulkSelectionActionButton, BulkSelectionToolbar } from '@/components/ui/table/BulkSelectionToolbar'
 import { Button } from '@/components/ui/primitives/Button'
 import type { BulkChargeActionPayload } from '../api'
 import { CHARGE_CANCEL_REASON_PLACEHOLDER } from '../constants'
@@ -10,19 +7,11 @@ import { CHARGE_CANCEL_REASON_PLACEHOLDER } from '../constants'
 interface ChargeBulkToolbarProps {
   selectedCount: number
   loading: boolean
-  onAction: (
-    action: BulkChargeActionPayload['action'],
-    cancellationReason?: string,
-  ) => Promise<void>
+  onAction: (action: BulkChargeActionPayload['action'], cancellationReason?: string) => Promise<void>
   onClear: () => void
 }
 
-export const ChargeBulkToolbar: React.FC<ChargeBulkToolbarProps> = ({
-  selectedCount,
-  loading,
-  onAction,
-  onClear,
-}) => {
+export const ChargeBulkToolbar: React.FC<ChargeBulkToolbarProps> = ({ selectedCount, loading, onAction, onClear }) => {
   const [showCancelInput, setShowCancelInput] = useState(false)
   const [cancelReason, setCancelReason] = useState('')
 

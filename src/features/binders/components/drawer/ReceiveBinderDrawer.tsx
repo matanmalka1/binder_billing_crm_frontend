@@ -14,12 +14,7 @@ interface ReceiveBinderDrawerProps {
   annualReports: AnnualReportFull[]
   hasActiveBinder: boolean
   vatType: 'monthly' | 'bimonthly' | 'exempt' | null
-  onClientSelect: (client: {
-    id: number
-    name: string
-    id_number: string
-    client_status?: string | null
-  }) => void
+  onClientSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void
   onClientQueryChange: (query: string) => void
   onSubmit: (e?: React.BaseSyntheticEvent) => void
   isSubmitting: boolean
@@ -40,12 +35,7 @@ export const ReceiveBinderDrawer: React.FC<ReceiveBinderDrawerProps> = ({
   onSubmit,
   isSubmitting,
 }) => (
-  <DetailDrawer
-    open={open}
-    title="קליטת חומר מלקוח"
-    onClose={onClose}
-    isDirty={form.formState.isDirty}
-  >
+  <DetailDrawer open={open} title="קליטת חומר מלקוח" onClose={onClose} isDirty={form.formState.isDirty}>
     <BinderReceivePanel
       form={form}
       clientQuery={clientQuery}

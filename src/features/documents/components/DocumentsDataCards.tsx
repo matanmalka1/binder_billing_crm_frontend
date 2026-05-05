@@ -7,11 +7,7 @@ import { DocumentsUploadCard } from './DocumentsUploadCard'
 import { DocumentVersionsPanel } from './DocumentVersionsPanel'
 import { DocumentPreviewModal } from './DocumentPreviewModal'
 import { ConfirmDialog } from '../../../components/ui/overlays/ConfirmDialog'
-import type {
-  OperationalSignalsResponse,
-  PermanentDocumentResponse,
-  UploadDocumentPayload,
-} from '../api'
+import type { OperationalSignalsResponse, PermanentDocumentResponse, UploadDocumentPayload } from '../api'
 import { useAuthStore } from '../../../store/auth.store'
 import type { BusinessResponse } from '@/features/clients'
 import { UPLOAD_FORM_ID } from './DocumentsDataCards.constants'
@@ -102,12 +98,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-base font-semibold text-gray-900">מסמכים ({countLabel})</h3>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setUploadOpen(true)}
-          className="gap-1.5 shrink-0"
-        >
+        <Button variant="ghost" size="sm" onClick={() => setUploadOpen(true)} className="gap-1.5 shrink-0">
           <Plus className="h-4 w-4" />
           העלאת מסמך
         </Button>
@@ -123,10 +114,7 @@ export const DocumentsDataCards: React.FC<DocumentsDataCardsProps> = ({
       />
 
       {filteredDocuments.length === 0 ? (
-        <DocumentsEmptyState
-          hasDocuments={documents.length > 0}
-          onUploadClick={() => setUploadOpen(true)}
-        />
+        <DocumentsEmptyState hasDocuments={documents.length > 0} onUploadClick={() => setUploadOpen(true)} />
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filteredDocuments.map((doc) => (

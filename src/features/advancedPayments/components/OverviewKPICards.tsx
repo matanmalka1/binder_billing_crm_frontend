@@ -43,12 +43,7 @@ export const OverviewKPICards: React.FC<OverviewKPICardsProps> = ({
         variant="purple"
         progress={pct ?? undefined}
       />
-      <StatsCard
-        title="באיחור"
-        value={overdueCount != null ? String(overdueCount) : '—'}
-        icon={Clock}
-        variant="red"
-      />
+      <StatsCard title="באיחור" value={overdueCount != null ? String(overdueCount) : '—'} icon={Clock} variant="red" />
     </div>
   )
 }

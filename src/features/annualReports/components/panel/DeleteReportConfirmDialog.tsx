@@ -7,11 +7,7 @@ interface DeleteReportConfirmDialogProps {
   onConfirm: () => void
 }
 
-export const DeleteReportConfirmDialog = ({
-  isDeleting,
-  onCancel,
-  onConfirm,
-}: DeleteReportConfirmDialogProps) => {
+export const DeleteReportConfirmDialog = ({ isDeleting, onCancel, onConfirm }: DeleteReportConfirmDialogProps) => {
   useEscapeToClose({ open: true, onClose: onCancel })
 
   return (

@@ -46,15 +46,12 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
   const completed = getCompletedCount(schedules)
   const allDone = completed === schedules.length
 
-  const toggle = (key: string) =>
-    setExpanded((prev) => toggleExpandedSchedule(prev, key as AnnualReportScheduleKey))
+  const toggle = (key: string) => setExpanded((prev) => toggleExpandedSchedule(prev, key as AnnualReportScheduleKey))
 
   return (
     <Card
       title={ANNEX_TEXT.requiredSchedules}
-      subtitle={
-        allDone ? ANNEX_TEXT.allSchedulesComplete : `${completed}/${schedules.length} הושלמו`
-      }
+      subtitle={allDone ? ANNEX_TEXT.allSchedulesComplete : `${completed}/${schedules.length} הושלמו`}
     >
       <ul className="space-y-2">
         {schedules.map((entry) => {
@@ -66,9 +63,7 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
               key={entry.id}
               className={cn(
                 'rounded-lg border transition-colors',
-                entry.is_complete
-                  ? 'border-positive-200 bg-positive-50'
-                  : 'border-gray-200 bg-white hover:bg-gray-50',
+                entry.is_complete ? 'border-positive-200 bg-positive-50' : 'border-gray-200 bg-white hover:bg-gray-50',
               )}
             >
               <div className="flex items-center justify-between p-3">
@@ -79,12 +74,7 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
                     <Circle className="h-5 w-5 flex-shrink-0 text-gray-400" />
                   )}
                   <div>
-                    <p
-                      className={cn(
-                        'text-sm font-medium',
-                        entry.is_complete ? 'text-positive-800' : 'text-gray-800',
-                      )}
-                    >
+                    <p className={cn('text-sm font-medium', entry.is_complete ? 'text-positive-800' : 'text-gray-800')}>
                       {scheduleLabel}
                     </p>
                     {entry.notes && <p className="text-xs text-gray-500">{entry.notes}</p>}
@@ -105,11 +95,7 @@ export const ScheduleChecklist: React.FC<ScheduleChecklistProps> = ({
                     className="p-0.5 text-gray-400 hover:text-gray-600 hover:bg-transparent"
                     title={isExpanded ? ANNEX_TEXT.close : ANNEX_TEXT.expandData}
                   >
-                    {isExpanded ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" />
-                    )}
+                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                   </Button>
 
                   {!entry.is_complete && (

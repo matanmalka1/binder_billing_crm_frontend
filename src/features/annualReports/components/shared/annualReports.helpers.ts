@@ -1,11 +1,7 @@
 import type { AnnualReportFull } from '../../api'
 import { STATUS_LABELS } from '../../api'
 import type { TimelineEventStatus } from '../statusTransition/TimelineEvent'
-import {
-  formatAnnualReportDate,
-  REQUIRED_DOCUMENT_TYPES,
-  WARNING_DEADLINE_DAYS,
-} from './annualReports.constants'
+import { formatAnnualReportDate, REQUIRED_DOCUMENT_TYPES, WARNING_DEADLINE_DAYS } from './annualReports.constants'
 
 export interface AnnualReportTimelineEvent {
   title: string
@@ -15,8 +11,7 @@ export interface AnnualReportTimelineEvent {
   sortTime: number
 }
 
-export const getAnnualReportName = (report: AnnualReportFull): string =>
-  report.client_name ?? `דוח #${report.id}`
+export const getAnnualReportName = (report: AnnualReportFull): string => report.client_name ?? `דוח #${report.id}`
 
 export const getClientReportName = (report: AnnualReportFull): string =>
   report.client_name ?? `לקוח #${report.client_record_id}`
@@ -35,16 +30,10 @@ export const getDeadlineStatus = (report: AnnualReportFull): TimelineEventStatus
   return daysUntilDeadline < WARNING_DEADLINE_DAYS ? 'warning' : 'pending'
 }
 
-export const getMissingDocumentTypes = (
-  uploadedTypes: Set<string>,
-  signalTypes: string[] | undefined,
-): string[] =>
-  signalTypes?.length
-    ? signalTypes
-    : REQUIRED_DOCUMENT_TYPES.filter((type) => !uploadedTypes.has(type))
+export const getMissingDocumentTypes = (uploadedTypes: Set<string>, signalTypes: string[] | undefined): string[] =>
+  signalTypes?.length ? signalTypes : REQUIRED_DOCUMENT_TYPES.filter((type) => !uploadedTypes.has(type))
 
-const getReportStatusDescription = (report: AnnualReportFull): string =>
-  `סטטוס: ${STATUS_LABELS[report.status]}`
+const getReportStatusDescription = (report: AnnualReportFull): string => `סטטוס: ${STATUS_LABELS[report.status]}`
 
 export const buildTimelineEvents = (reports: AnnualReportFull[]): AnnualReportTimelineEvent[] =>
   reports
@@ -54,8 +43,7 @@ export const buildTimelineEvents = (reports: AnnualReportFull[]): AnnualReportTi
 
       if (report.submitted_at) {
         const submittedTime = new Date(report.submitted_at).getTime()
-        const onTime =
-          report.filing_deadline && submittedTime <= new Date(report.filing_deadline).getTime()
+        const onTime = report.filing_deadline && submittedTime <= new Date(report.filing_deadline).getTime()
         events.push({
           title: `הוגש — ${name} (${report.tax_year})`,
           description: getReportStatusDescription(report),

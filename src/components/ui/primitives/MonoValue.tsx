@@ -26,17 +26,10 @@ const daysTone = (days: number, returned?: boolean): NonNullable<MonoValueProps[
   return 'neutral'
 }
 
-export const MonoValue: React.FC<MonoValueProps> = ({
-  value,
-  tone = 'neutral',
-  format,
-  returned,
-  className,
-}) => {
+export const MonoValue: React.FC<MonoValueProps> = ({ value, tone = 'neutral', format, returned, className }) => {
   if (value == null) return <span className="text-gray-400">—</span>
 
-  const resolvedTone =
-    format === 'days' && typeof value === 'number' ? daysTone(value, returned) : tone
+  const resolvedTone = format === 'days' && typeof value === 'number' ? daysTone(value, returned) : tone
 
   return (
     <span

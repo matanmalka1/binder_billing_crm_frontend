@@ -23,10 +23,7 @@ interface ClientDetailsProps {
   initialTab?: ActiveClientDetailsTab
 }
 
-const ClientHeaderMetaItem: FC<{ icon: React.ReactNode; label: React.ReactNode }> = ({
-  icon,
-  label,
-}) => (
+const ClientHeaderMetaItem: FC<{ icon: React.ReactNode; label: React.ReactNode }> = ({ icon, label }) => (
   <span className="inline-flex min-w-0 items-center gap-1.5 text-sm font-medium text-gray-600">
     <span className="shrink-0 text-gray-500">{icon}</span>
     <span className="truncate">{label}</span>
@@ -37,9 +34,7 @@ const buildClientHeader = (client: ClientResponse) => ({
   title: (
     <span className="flex min-w-0 flex-wrap items-center gap-2">
       <span className="truncate">{client.full_name}</span>
-      <Badge variant={CLIENT_STATUS_BADGE_VARIANTS[client.status]}>
-        {getClientStatusLabel(client.status)}
-      </Badge>
+      <Badge variant={CLIENT_STATUS_BADGE_VARIANTS[client.status]}>{getClientStatusLabel(client.status)}</Badge>
       <span className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1 text-sm font-normal text-gray-500 mr-1">
         <ClientHeaderMetaItem
           icon={<Fingerprint className="h-3.5 w-3.5" />}
@@ -57,10 +52,7 @@ const buildClientHeader = (client: ClientResponse) => ({
   description: undefined,
 })
 
-const ClientHeaderMissingDocuments: FC<{ clientId: number; active: boolean }> = ({
-  clientId,
-  active,
-}) => {
+const ClientHeaderMissingDocuments: FC<{ clientId: number; active: boolean }> = ({ clientId, active }) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: documentsQK.clientSignals(clientId),
     queryFn: () => documentsApi.getSignalsByClient(clientId),
@@ -74,15 +66,11 @@ const ClientHeaderMissingDocuments: FC<{ clientId: number; active: boolean }> = 
   const missingDocuments = data?.missing_documents ?? []
   if (missingDocuments.length === 0) return null
 
-  const labels = missingDocuments.map(
-    (documentType) => DOC_TYPE_LABELS[documentType] ?? documentType,
-  )
+  const labels = missingDocuments.map((documentType) => DOC_TYPE_LABELS[documentType] ?? documentType)
 
   return (
     <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-      <span className="font-semibold text-amber-800">
-        חסרים {missingDocuments.length} מסמכים בפרטי הלקוח
-      </span>
+      <span className="font-semibold text-amber-800">חסרים {missingDocuments.length} מסמכים בפרטי הלקוח</span>
       <span className="text-gray-500">{labels.join(' · ')}</span>
       <Link
         to={`/clients/${clientId}/documents`}
@@ -99,17 +87,8 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = 'details' }
   const clientIdNum = clientId ? Number(clientId) : null
   const [isEditing, setIsEditing] = useState(false)
   const [taxYear, setTaxYear] = useState<number>(new Date().getFullYear())
-  const {
-    client,
-    isValidId,
-    isLoading,
-    error,
-    updateClient,
-    isUpdating,
-    deleteClient,
-    isDeleting,
-    can,
-  } = useClientDetails({ clientId: clientIdNum, taxYear })
+  const { client, isValidId, isLoading, error, updateClient, isUpdating, deleteClient, isDeleting, can } =
+    useClientDetails({ clientId: clientIdNum, taxYear })
 
   useEffect(() => {
     if (initialTab !== 'details') setIsEditing(false)
@@ -131,9 +110,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = 'details' }
       error={error || (!client ? 'שגיאה בטעינת פרטי לקוח' : null)}
       header={
         <>
-          {!can.editClients && (
-            <Alert variant="info" message="צפייה בלבד. עריכת פרטי לקוח זמינה ליועצים בלבד." />
-          )}
+          {!can.editClients && <Alert variant="info" message="צפייה בלבד. עריכת פרטי לקוח זמינה ליועצים בלבד." />}
           <PageHeader
             size="md"
             title={clientHeader?.title ?? client?.full_name ?? 'פרטי לקוח'}
@@ -144,12 +121,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ initialTab = 'details' }
             }
             actions={
               can.editClients && initialTab === 'details' ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsEditing(true)}
-                  className="gap-2"
-                >
+                <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)} className="gap-2">
                   <Edit2 className="h-4 w-4" />
                   ערוך פרטים
                 </Button>

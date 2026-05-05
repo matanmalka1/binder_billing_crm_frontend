@@ -63,9 +63,7 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
       }
     >
       <form onSubmit={onFormSubmit} className="space-y-4">
-        <p className="text-sm text-gray-600">
-          הזן סיסמה חדשה עבור המשתמש. הסיסמה חייבת להכיל לפחות 8 תווים.
-        </p>
+        <p className="text-sm text-gray-600">הזן סיסמה חדשה עבור המשתמש. הסיסמה חייבת להכיל לפחות 8 תווים.</p>
         <Input
           label="סיסמה חדשה *"
           type="password"

@@ -43,9 +43,7 @@ export const TaxCalculatorInputs = ({
       <div className="mb-3 flex items-start justify-between gap-2">
         <div className="flex items-center gap-1.5">
           <Info className="h-3.5 w-3.5 text-info-600 shrink-0 mt-px" />
-          <p className="text-xs text-info-700">
-            המחשבון מציג שיעורי מס עפ"י מדרגות מס לעסק יחיד/שותפות.
-          </p>
+          <p className="text-xs text-info-700">המחשבון מציג שיעורי מס עפ"י מדרגות מס לעסק יחיד/שותפות.</p>
         </div>
         {!editMode ? (
           <Button

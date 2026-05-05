@@ -139,11 +139,7 @@ interface FinancialFormActionsProps {
   onCancel: () => void
 }
 
-export const FinancialFormActions: React.FC<FinancialFormActionsProps> = ({
-  isSubmitting,
-  submitLabel,
-  onCancel,
-}) => (
+export const FinancialFormActions: React.FC<FinancialFormActionsProps> = ({ isSubmitting, submitLabel, onCancel }) => (
   <div className="flex gap-2">
     <Button type="submit" size="sm" isLoading={isSubmitting} className="flex-1">
       {submitLabel}
@@ -218,11 +214,7 @@ export const FinancialEditFormShell: React.FC<FinancialEditFormShellProps> = ({
     <div className={INLINE_EDIT_FORM_CLASS}>
       {children}
       <FinancialFormError error={error} />
-      <FinancialFormActions
-        isSubmitting={isSubmitting}
-        submitLabel={submitLabel}
-        onCancel={onCancel}
-      />
+      <FinancialFormActions isSubmitting={isSubmitting} submitLabel={submitLabel} onCancel={onCancel} />
     </div>
   </form>
 )

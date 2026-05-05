@@ -4,8 +4,7 @@ export const TAX_SUBMISSION_FILTERS = {
   inProgress: 'pending',
 } as const
 
-export type TaxSubmissionFilter =
-  (typeof TAX_SUBMISSION_FILTERS)[keyof typeof TAX_SUBMISSION_FILTERS]
+export type TaxSubmissionFilter = (typeof TAX_SUBMISSION_FILTERS)[keyof typeof TAX_SUBMISSION_FILTERS]
 
 export const TAX_SUBMISSION_STAT_TITLES = {
   total: 'סה"כ לקוחות',

@@ -49,10 +49,7 @@ export const ReadinessCheckPanel: React.FC<ReadinessCheckPanelProps> = ({ report
         </div>
         <div className="h-2 rounded-full bg-gray-200">
           <div
-            className={cn(
-              'h-2 rounded-full transition-all',
-              data.is_ready ? 'bg-positive-500' : 'bg-warning-500',
-            )}
+            className={cn('h-2 rounded-full transition-all', data.is_ready ? 'bg-positive-500' : 'bg-warning-500')}
             style={{ width: `${completion}%` }}
           />
         </div>

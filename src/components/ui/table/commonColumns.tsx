@@ -1,12 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Column } from './DataTable'
 import type { StatusVariant, StatusVariantMap, TableCellValue } from './columnTypes'
-import {
-  renderDateText,
-  renderMonoText,
-  renderMutedText,
-  renderStatusBadge,
-} from './columnRenderers'
+import { renderDateText, renderMonoText, renderMutedText, renderStatusBadge } from './columnRenderers'
 
 interface ColumnBaseOptions {
   key: string
@@ -57,8 +52,7 @@ const makeTextColumnFn =
     header,
     className,
     headerClassName,
-    render: (item, index) =>
-      renderFn({ value: getValue(item, index), className: valueClassName, emptyValue }),
+    render: (item, index) => renderFn({ value: getValue(item, index), className: valueClassName, emptyValue }),
   })
 
 export const textColumn = makeTextColumnFn(renderMutedText)
@@ -77,8 +71,7 @@ export const dateColumn = <T,>({
   header,
   className,
   headerClassName,
-  render: (item, index) =>
-    renderDateText({ value: getValue(item, index), className: valueClassName, emptyValue }),
+  render: (item, index) => renderDateText({ value: getValue(item, index), className: valueClassName, emptyValue }),
 })
 
 export const statusColumn = <T, TStatus extends string>({

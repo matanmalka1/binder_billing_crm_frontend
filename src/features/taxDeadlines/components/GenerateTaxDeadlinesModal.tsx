@@ -39,9 +39,7 @@ export const GenerateTaxDeadlinesModal: React.FC<GenerateTaxDeadlinesModalProps>
     handleClearClient,
     handleClientQueryChange,
     resetClientPicker,
-  } = useClientPickerState(
-    createClientIdPickerHandlers((value, options) => setValue('client_id', value, options)),
-  )
+  } = useClientPickerState(createClientIdPickerHandlers((value, options) => setValue('client_id', value, options)))
 
   useEffect(() => {
     if (open) return

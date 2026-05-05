@@ -9,9 +9,7 @@ export const VatWorkItemRowActions: React.FC<VatWorkItemRowActionsProps> = ({
   isDisabled,
   runAction,
 }) => {
-  const hasAny =
-    canMarkMaterialsComplete(item.available_actions) ||
-    canMarkReadyForReview(item.available_actions)
+  const hasAny = canMarkMaterialsComplete(item.available_actions) || canMarkReadyForReview(item.available_actions)
 
   if (isFiled(item.status)) {
     return <span className="text-xs text-gray-400">הוגש</span>

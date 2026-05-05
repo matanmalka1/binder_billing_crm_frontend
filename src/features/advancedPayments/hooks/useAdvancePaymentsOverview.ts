@@ -11,12 +11,7 @@ interface UseAdvancePaymentsOverviewParams {
   page: number
 }
 
-export const useAdvancePaymentsOverview = ({
-  year,
-  month,
-  statusFilter,
-  page,
-}: UseAdvancePaymentsOverviewParams) => {
+export const useAdvancePaymentsOverview = ({ year, month, statusFilter, page }: UseAdvancePaymentsOverviewParams) => {
   const queryParams = useMemo(() => {
     const statuses = statusFilter ? [statusFilter as AdvancePaymentStatus] : undefined
     return {

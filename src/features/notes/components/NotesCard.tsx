@@ -31,9 +31,7 @@ interface NoteRowProps {
 const NoteRow = ({ note, isDeleting, onEdit, onDelete }: NoteRowProps) => (
   <li className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
     <div className="flex-1 min-w-0">
-      <p className="text-sm font-semibold text-gray-900 whitespace-pre-wrap break-words">
-        {note.note}
-      </p>
+      <p className="text-sm font-semibold text-gray-900 whitespace-pre-wrap break-words">{note.note}</p>
       <p className="mt-2 text-xs font-medium text-gray-500">{formatDate(note.created_at)}</p>
     </div>
     <div className="flex items-center gap-1 shrink-0">
@@ -68,18 +66,7 @@ interface NotesCardProps {
 }
 
 export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
-  const {
-    notes,
-    total,
-    isLoading,
-    error,
-    addNote,
-    isAdding,
-    updateNote,
-    isUpdating,
-    deleteNote,
-    deletingId,
-  } = hook
+  const { notes, total, isLoading, error, addNote, isAdding, updateNote, isUpdating, deleteNote, deletingId } = hook
 
   const [showAdd, setShowAdd] = useState(false)
   const [addText, setAddText] = useState('')
@@ -119,13 +106,7 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
         className="shadow-sm"
         actions={
           canEdit && !showAdd ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowAdd(true)}
-              className="gap-2"
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={() => setShowAdd(true)} className="gap-2">
               <Plus className="h-4 w-4" />
               הוסף הערה
             </Button>
@@ -184,10 +165,7 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
           <ul className="space-y-3">
             {notes.map((note) =>
               editing?.id === note.id ? (
-                <li
-                  key={note.id}
-                  className="rounded-lg border border-primary-100 bg-primary-50/40 p-4 space-y-3"
-                >
+                <li key={note.id} className="rounded-lg border border-primary-100 bg-primary-50/40 p-4 space-y-3">
                   <Textarea
                     rows={3}
                     value={editText}
@@ -196,13 +174,7 @@ export const NotesCard = ({ hook, canEdit }: NotesCardProps) => {
                     autoFocus
                   />
                   <div className="flex gap-2 justify-end">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={handleEditCancel}
-                      disabled={isUpdating}
-                    >
+                    <Button type="button" variant="outline" size="sm" onClick={handleEditCancel} disabled={isUpdating}>
                       <X className="h-3.5 w-3.5" />
                     </Button>
                     <Button

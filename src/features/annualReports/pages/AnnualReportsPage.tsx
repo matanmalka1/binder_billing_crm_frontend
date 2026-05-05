@@ -34,32 +34,18 @@ export const AnnualReportsPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title={`דוחות שנתיים לשנת המס ${taxYearLabel}`}
-        description={
-          filingSeasonYear ? `עונת הגשה ${filingSeasonYear}` : 'ניהול ומעקב אחר דוחות שנתיים'
-        }
+        description={filingSeasonYear ? `עונת הגשה ${filingSeasonYear}` : 'ניהול ומעקב אחר דוחות שנתיים'}
         actions={
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={openCreate}
-            disabled={!taxYear}
-            className="gap-2"
-          >
+          <Button variant="ghost" size="sm" onClick={openCreate} disabled={!taxYear} className="gap-2">
             {taxYear ? `דוח שנתי ${taxYear}` : 'דוח שנתי'}
             <Plus className="h-4 w-4" />
           </Button>
         }
       />
 
-      {season.overdue.length > 0 && (
-        <OverdueBanner overdue={season.overdue} onSelect={openReport} />
-      )}
+      {season.overdue.length > 0 && <OverdueBanner overdue={season.overdue} onSelect={openReport} />}
 
-      <AnnualReportsFiltersBar
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        onReset={handleResetFilters}
-      />
+      <AnnualReportsFiltersBar filters={filters} onFilterChange={handleFilterChange} onReset={handleResetFilters} />
 
       {season.isLoading && <PageLoading message="טוען נתוני עונה..." />}
       {season.error && <Alert variant="error" message={season.error} />}
@@ -69,9 +55,7 @@ export const AnnualReportsPage: React.FC = () => {
           <SeasonSummaryCards summary={season.summary} />
           <SeasonProgressBar summary={season.summary} />
           <div>
-            <h2 className="mb-3 text-lg font-semibold text-gray-900">
-              כל הדוחות — שנת מס {taxYear}
-            </h2>
+            <h2 className="mb-3 text-lg font-semibold text-gray-900">כל הדוחות — שנת מס {taxYear}</h2>
             <SeasonReportsTable
               reports={filteredReports}
               isLoading={season.isLoading}

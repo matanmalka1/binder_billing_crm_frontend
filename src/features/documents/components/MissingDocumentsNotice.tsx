@@ -50,9 +50,7 @@ export const MissingDocumentsNotice: React.FC<MissingDocumentsNoticeProps> = ({
             <AlertTriangle className="h-5 w-5" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-lg font-bold text-amber-950">
-              חסרים {missingDocuments.length} מסמכים בפרטי הלקוח
-            </p>
+            <p className="text-lg font-bold text-amber-950">חסרים {missingDocuments.length} מסמכים בפרטי הלקוח</p>
             <div className="mt-4 flex flex-wrap justify-center gap-2">
               {missingDocuments.map((documentType) => (
                 <span

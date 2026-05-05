@@ -10,12 +10,7 @@ import { formatClientOfficeId } from '@/utils/utils'
 interface ClientSearchInputProps {
   value: string
   onChange: (query: string) => void
-  onSelect: (client: {
-    id: number
-    name: string
-    id_number: string
-    client_status?: string | null
-  }) => void
+  onSelect: (client: { id: number; name: string; id_number: string; client_status?: string | null }) => void
   error?: string
   label?: string
   placeholder?: string
@@ -140,9 +135,7 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
         aria-expanded={open}
         aria-controls="client-search-results"
         aria-activedescendant={
-          highlightedIndex >= 0
-            ? `client-search-option-${results[highlightedIndex]?.client_id}`
-            : undefined
+          highlightedIndex >= 0 ? `client-search-option-${results[highlightedIndex]?.client_id}` : undefined
         }
         startIcon={<Search className="h-4 w-4" />}
         endElement={
@@ -184,9 +177,7 @@ export const ClientSearchInput: React.FC<ClientSearchInputProps> = ({
               }`}
             >
               <span className="font-medium text-gray-900">{result.client_name}</span>
-              <span className="text-xs text-gray-400">
-                {formatClientOfficeId(result.client_id)}
-              </span>
+              <span className="text-xs text-gray-400">{formatClientOfficeId(result.client_id)}</span>
             </li>
           ))}
         </ul>
@@ -206,12 +197,7 @@ interface SelectedClientDisplayProps {
   label?: string
 }
 
-export const SelectedClientDisplay: React.FC<SelectedClientDisplayProps> = ({
-  name,
-  id,
-  onClear,
-  label = 'לקוח',
-}) => (
+export const SelectedClientDisplay: React.FC<SelectedClientDisplayProps> = ({ name, id, onClear, label = 'לקוח' }) => (
   <div className="space-y-1">
     <label className="block text-sm font-medium text-gray-700">{label}</label>
     <div className="flex items-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-3 py-3">

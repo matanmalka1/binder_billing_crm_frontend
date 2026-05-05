@@ -35,16 +35,8 @@ const toDetailText = (raw: string | null): string | null => {
   pushIfDefined(parts, parsed.vat_amount, (v) => `מע"מ: ${formatVatAmount(Number(v))}`)
   pushIfDefined(parts, parsed.status, (v) => `סטטוס: ${getVatWorkItemStatusLabel(String(v ?? ''))}`)
   pushIfDefined(parts, parsed.period, (v) => `תקופה: ${toStringValue(v)}`)
-  pushIfDefined(
-    parts,
-    parsed.final_vat_amount,
-    (v) => `סכום מע"מ סופי: ${formatVatAmount(Number(v))}`,
-  )
-  pushIfDefined(
-    parts,
-    parsed.filing_method,
-    (v) => `אופן הגשה: ${asLabel(v, VAT_FILING_METHOD_LABELS)}`,
-  )
+  pushIfDefined(parts, parsed.final_vat_amount, (v) => `סכום מע"מ סופי: ${formatVatAmount(Number(v))}`)
+  pushIfDefined(parts, parsed.filing_method, (v) => `אופן הגשה: ${asLabel(v, VAT_FILING_METHOD_LABELS)}`)
   pushIfDefined(parts, parsed.is_overridden, formatOverrideState)
 
   if (parts.length > 0) return parts.join(' | ')

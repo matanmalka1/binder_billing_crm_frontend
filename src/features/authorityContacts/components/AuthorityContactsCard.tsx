@@ -11,27 +11,10 @@ interface AuthorityContactsCardProps {
 }
 
 export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ clientId }) => {
-  const {
-    contacts,
-    total,
-    page,
-    setPage,
-    totalPages,
-    isLoading,
-    error,
-    deleteContact,
-    deletingId,
-  } = useAuthorityContacts(clientId)
-  const {
-    editing,
-    isModalOpen,
-    confirmDeleteId,
-    openCreate,
-    openEdit,
-    closeModal,
-    requestDelete,
-    clearDeleteRequest,
-  } = useAuthorityContactsCardState()
+  const { contacts, total, page, setPage, totalPages, isLoading, error, deleteContact, deletingId } =
+    useAuthorityContacts(clientId)
+  const { editing, isModalOpen, confirmDeleteId, openCreate, openEdit, closeModal, requestDelete, clearDeleteRequest } =
+    useAuthorityContactsCardState()
 
   return (
     <div className="space-y-4">
@@ -56,12 +39,7 @@ export const AuthorityContactsCard: React.FC<AuthorityContactsCardProps> = ({ cl
         />
       )}
 
-      <AuthorityContactModal
-        open={isModalOpen}
-        clientId={clientId}
-        existing={editing}
-        onClose={closeModal}
-      />
+      <AuthorityContactModal open={isModalOpen} clientId={clientId} existing={editing} onClose={closeModal} />
 
       <AuthorityContactDeleteDialog
         confirmDeleteId={confirmDeleteId}

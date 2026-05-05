@@ -39,11 +39,7 @@ export const EXTENSION_REASON_OPTIONS = [
   { value: 'war_situation', label: 'מצב ביטחוני' },
 ]
 
-export const REQUIRED_DOCUMENT_TYPES = [
-  'id_copy',
-  'power_of_attorney',
-  'engagement_agreement',
-] as const
+export const REQUIRED_DOCUMENT_TYPES = ['id_copy', 'power_of_attorney', 'engagement_agreement'] as const
 
 export const WARNING_DEADLINE_DAYS = 14
 export const OVERDUE_PREVIEW_LIMIT = 3

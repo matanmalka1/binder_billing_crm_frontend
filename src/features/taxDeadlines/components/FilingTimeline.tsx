@@ -242,11 +242,7 @@ export const FilingTimeline: React.FC<FilingTimelineProps> = ({ clientId }) => {
     <div className="space-y-4">
       <DeadlineSummaryCards deadlines={deadlines} />
 
-      <ClientDeadlineControls
-        filters={filters}
-        onChange={handleFilterChange}
-        isAdvisor={isAdvisor}
-      />
+      <ClientDeadlineControls filters={filters} onChange={handleFilterChange} isAdvisor={isAdvisor} />
 
       <TaxDeadlinesTable
         deadlines={deadlines}

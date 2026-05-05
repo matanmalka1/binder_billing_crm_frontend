@@ -31,30 +31,10 @@ export const DeadlineGroupSummaryCards = ({ groups }: DeadlineGroupSummaryCardsP
 
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      <StatsCard
-        title="מועדים פתוחים"
-        value={summary.openGroups}
-        icon={CalendarClock}
-        variant="blue"
-      />
-      <StatsCard
-        title="לקוחות ממתינים"
-        value={summary.totalClients}
-        icon={Users}
-        variant="orange"
-      />
-      <StatsCard
-        title="מועדים באיחור"
-        value={summary.overdueGroups}
-        icon={AlertTriangle}
-        variant="red"
-      />
-      <StatsCard
-        title="סכום פתוח"
-        value={formatCurrency(String(summary.openAmount))}
-        icon={Wallet}
-        variant="neutral"
-      />
+      <StatsCard title="מועדים פתוחים" value={summary.openGroups} icon={CalendarClock} variant="blue" />
+      <StatsCard title="לקוחות ממתינים" value={summary.totalClients} icon={Users} variant="orange" />
+      <StatsCard title="מועדים באיחור" value={summary.overdueGroups} icon={AlertTriangle} variant="red" />
+      <StatsCard title="סכום פתוח" value={formatCurrency(String(summary.openAmount))} icon={Wallet} variant="neutral" />
     </div>
   )
 }

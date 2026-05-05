@@ -51,18 +51,12 @@ export const getBalanceDescription = (advances: AdvancesSummary): string => {
 export const getFinalBalanceText = (finalBalance: number | string | null | undefined): string => {
   if (finalBalance == null) return '—'
   const amount = Number(finalBalance)
-  return amount > 0
-    ? `${formatCurrencyILS(amount)} לתשלום`
-    : `${formatCurrencyILS(Math.abs(amount))} החזר`
+  return amount > 0 ? `${formatCurrencyILS(amount)} לתשלום` : `${formatCurrencyILS(Math.abs(amount))} החזר`
 }
 
-export const formatAbsCurrency = (value: number | string): string =>
-  formatCurrencyILS(Math.abs(Number(value)))
+export const formatAbsCurrency = (value: number | string): string => formatCurrencyILS(Math.abs(Number(value)))
 
-export const getAlertBanners = (
-  report: AnnualReportFull,
-  advances?: BalanceAlertInput,
-): AlertBannerData[] => {
+export const getAlertBanners = (report: AnnualReportFull, advances?: BalanceAlertInput): AlertBannerData[] => {
   const banners: AlertBannerData[] = []
   const finalBalance = Number(advances?.final_balance ?? 0)
 

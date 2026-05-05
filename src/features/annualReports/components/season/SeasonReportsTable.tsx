@@ -64,19 +64,13 @@ const columns: Column<AnnualReportFull>[] = [
     key: 'client_name',
     header: 'לקוח',
     render: (r) => (
-      <span className="text-sm font-medium text-gray-900">
-        {r.client_name ?? `לקוח #${r.client_record_id}`}
-      </span>
+      <span className="text-sm font-medium text-gray-900">{r.client_name ?? `לקוח #${r.client_record_id}`}</span>
     ),
   },
   {
     key: 'client_id_number',
     header: 'ת.ז / ח.פ',
-    render: (r) => (
-      <span className="font-mono text-sm text-gray-500 tabular-nums">
-        {r.client_id_number ?? '—'}
-      </span>
-    ),
+    render: (r) => <span className="font-mono text-sm text-gray-500 tabular-nums">{r.client_id_number ?? '—'}</span>,
   },
   {
     key: 'client_type',
@@ -103,25 +97,16 @@ const columns: Column<AnnualReportFull>[] = [
   {
     key: 'deadline_type',
     header: 'סוג מועד',
-    render: (r) => (
-      <span className="text-sm text-gray-500">{getDeadlineTypeLabel(r.deadline_type)}</span>
-    ),
+    render: (r) => <span className="text-sm text-gray-500">{getDeadlineTypeLabel(r.deadline_type)}</span>,
   },
   {
     key: 'submitted_at',
     header: 'הוגש ב',
-    render: (r) => (
-      <span className="text-sm text-gray-500 tabular-nums">{formatDate(r.submitted_at)}</span>
-    ),
+    render: (r) => <span className="text-sm text-gray-500 tabular-nums">{formatDate(r.submitted_at)}</span>,
   },
 ]
 
-export const SeasonReportsTable: React.FC<SeasonReportsTableProps> = ({
-  reports,
-  isLoading,
-  taxYear,
-  onSelect,
-}) => (
+export const SeasonReportsTable: React.FC<SeasonReportsTableProps> = ({ reports, isLoading, taxYear, onSelect }) => (
   <DataTable
     data={reports}
     columns={columns}

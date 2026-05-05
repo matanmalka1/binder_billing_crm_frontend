@@ -11,20 +11,12 @@ import type {
 
 export const annualReportFinancialsApi = {
   getFinancials: async (reportId: number): Promise<FinancialSummaryResponse> => {
-    const response = await api.get<FinancialSummaryResponse>(
-      ANNUAL_REPORT_ENDPOINTS.annualReportFinancials(reportId),
-    )
+    const response = await api.get<FinancialSummaryResponse>(ANNUAL_REPORT_ENDPOINTS.annualReportFinancials(reportId))
     return response.data
   },
 
-  addIncomeLine: async (
-    reportId: number,
-    payload: IncomeLinePayload,
-  ): Promise<IncomeLineResponse> => {
-    const response = await api.post<IncomeLineResponse>(
-      ANNUAL_REPORT_ENDPOINTS.annualReportIncome(reportId),
-      payload,
-    )
+  addIncomeLine: async (reportId: number, payload: IncomeLinePayload): Promise<IncomeLineResponse> => {
+    const response = await api.post<IncomeLineResponse>(ANNUAL_REPORT_ENDPOINTS.annualReportIncome(reportId), payload)
     return response.data
   },
 
@@ -44,10 +36,7 @@ export const annualReportFinancialsApi = {
     await api.delete(ANNUAL_REPORT_ENDPOINTS.annualReportIncomeById(reportId, lineId))
   },
 
-  addExpenseLine: async (
-    reportId: number,
-    payload: ExpenseLinePayload,
-  ): Promise<ExpenseLineResponse> => {
+  addExpenseLine: async (reportId: number, payload: ExpenseLinePayload): Promise<ExpenseLineResponse> => {
     const response = await api.post<ExpenseLineResponse>(
       ANNUAL_REPORT_ENDPOINTS.annualReportExpenses(reportId),
       payload,

@@ -32,45 +32,31 @@ export const signatureRequestsApi = {
     return response.data
   },
 
-  listPending: async (params?: {
-    page?: number
-    page_size?: number
-  }): Promise<SignatureRequestListResponse> => {
-    const response = await api.get<SignatureRequestListResponse>(
-      SIGNATURE_REQUEST_ENDPOINTS.signatureRequestsPending,
-      { params },
-    )
+  listPending: async (params?: { page?: number; page_size?: number }): Promise<SignatureRequestListResponse> => {
+    const response = await api.get<SignatureRequestListResponse>(SIGNATURE_REQUEST_ENDPOINTS.signatureRequestsPending, {
+      params,
+    })
     return response.data
   },
 
   getById: async (id: number): Promise<SignatureRequestWithAudit> => {
-    const response = await api.get<SignatureRequestWithAudit>(
-      SIGNATURE_REQUEST_ENDPOINTS.signatureRequestById(id),
-    )
+    const response = await api.get<SignatureRequestWithAudit>(SIGNATURE_REQUEST_ENDPOINTS.signatureRequestById(id))
     return response.data
   },
 
   getAuditTrail: async (id: number): Promise<AuditEvent[]> => {
-    const response = await api.get<AuditEvent[]>(
-      SIGNATURE_REQUEST_ENDPOINTS.signatureRequestAuditTrail(id),
-    )
+    const response = await api.get<AuditEvent[]>(SIGNATURE_REQUEST_ENDPOINTS.signatureRequestAuditTrail(id))
     return response.data
   },
 
   // ── Mutations ────────────────────────────────────────────────────────────
 
   create: async (payload: CreateSignatureRequestPayload): Promise<SignatureRequestResponse> => {
-    const response = await api.post<SignatureRequestResponse>(
-      SIGNATURE_REQUEST_ENDPOINTS.signatureRequests,
-      payload,
-    )
+    const response = await api.post<SignatureRequestResponse>(SIGNATURE_REQUEST_ENDPOINTS.signatureRequests, payload)
     return response.data
   },
 
-  send: async (
-    id: number,
-    payload?: SendSignatureRequestPayload,
-  ): Promise<SendSignatureRequestResponse> => {
+  send: async (id: number, payload?: SendSignatureRequestPayload): Promise<SendSignatureRequestResponse> => {
     const response = await api.post<SendSignatureRequestResponse>(
       SIGNATURE_REQUEST_ENDPOINTS.signatureRequestSend(id),
       payload ?? {},
@@ -78,10 +64,7 @@ export const signatureRequestsApi = {
     return response.data
   },
 
-  cancel: async (
-    id: number,
-    payload?: CancelSignatureRequestPayload,
-  ): Promise<SignatureRequestResponse> => {
+  cancel: async (id: number, payload?: CancelSignatureRequestPayload): Promise<SignatureRequestResponse> => {
     const response = await api.post<SignatureRequestResponse>(
       SIGNATURE_REQUEST_ENDPOINTS.signatureRequestCancel(id),
       payload ?? {},
@@ -101,16 +84,12 @@ const publicApi = axios.create({
 
 export const signerApi = {
   view: async (token: string): Promise<SignerViewResponse> => {
-    const response = await publicApi.get<SignerViewResponse>(
-      SIGNATURE_REQUEST_ENDPOINTS.signerView(token),
-    )
+    const response = await publicApi.get<SignerViewResponse>(SIGNATURE_REQUEST_ENDPOINTS.signerView(token))
     return response.data
   },
 
   approve: async (token: string): Promise<SignerViewResponse> => {
-    const response = await publicApi.post<SignerViewResponse>(
-      SIGNATURE_REQUEST_ENDPOINTS.signerApprove(token),
-    )
+    const response = await publicApi.post<SignerViewResponse>(SIGNATURE_REQUEST_ENDPOINTS.signerApprove(token))
     return response.data
   },
 

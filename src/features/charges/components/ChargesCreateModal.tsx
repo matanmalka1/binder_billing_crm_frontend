@@ -1,11 +1,7 @@
 import { useMemo, useEffect, useRef } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
-import {
-  ClientPickerField,
-  createClientIdPickerHandlers,
-  useClientPickerState,
-} from '@/components/shared/client'
+import { ClientPickerField, createClientIdPickerHandlers, useClientPickerState } from '@/components/shared/client'
 import { MONTHS_COVERED_OPTIONS } from '@/constants/periodOptions.constants'
 import { FormField, Input, SelectDropdown } from '@/components/ui/inputs'
 import { Modal, ModalFormActions } from '@/components/ui/overlays'

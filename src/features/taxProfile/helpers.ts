@@ -21,32 +21,24 @@ export const getTaxProfileFormValues = (profile: TaxProfileData | null): TaxProf
   }
 
   return {
-    vat_reporting_frequency:
-      profile.vat_reporting_frequency ?? taxProfileDefaults.vat_reporting_frequency,
+    vat_reporting_frequency: profile.vat_reporting_frequency ?? taxProfileDefaults.vat_reporting_frequency,
     accountant_id: profile.accountant_id != null ? String(profile.accountant_id) : '',
     advance_rate: profile.advance_rate ?? '',
   }
 }
 
-export const toTaxProfileUpdatePayload = (
-  values: TaxProfileFormValues,
-): TaxProfileUpdatePayload => ({
+export const toTaxProfileUpdatePayload = (values: TaxProfileFormValues): TaxProfileUpdatePayload => ({
   vat_reporting_frequency: values.vat_reporting_frequency,
   accountant_id: values.accountant_id ? Number(values.accountant_id) : null,
   advance_rate: values.advance_rate || null,
 })
 
-export const VAT_REPORTING_FREQUENCY_OPTIONS: SelectOption[] = VAT_REPORTING_FREQUENCIES.map(
-  (value) => ({
-    value,
-    label: getVatTypeLabel(value),
-  }),
-)
+export const VAT_REPORTING_FREQUENCY_OPTIONS: SelectOption[] = VAT_REPORTING_FREQUENCIES.map((value) => ({
+  value,
+  label: getVatTypeLabel(value),
+}))
 
-export const getAdvisorSelectOptions = (
-  advisorOptions: SelectOption[],
-  isLoading: boolean,
-): SelectOption[] => [
+export const getAdvisorSelectOptions = (advisorOptions: SelectOption[], isLoading: boolean): SelectOption[] => [
   {
     value: '',
     label: isLoading ? TAX_PROFILE_TEXT.advisorsLoading : TAX_PROFILE_TEXT.advisorUnset,

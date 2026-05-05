@@ -25,12 +25,7 @@ export const EditIncomeLineForm: React.FC<EditIncomeLineFormProps> = ({
   const form = useIncomeLineForm(line, onSave)
 
   return (
-    <FinancialEditFormShell
-      error={form.error}
-      isSubmitting={isSaving}
-      onSubmit={form.submit}
-      onCancel={onCancel}
-    >
+    <FinancialEditFormShell error={form.error} isSubmitting={isSaving} onSubmit={form.submit} onCancel={onCancel}>
       <FinancialSelectField value={form.typeKey} onChange={form.setTypeKey} options={typeOptions} />
       <FinancialAmountDescriptionFields
         amount={form.amount}

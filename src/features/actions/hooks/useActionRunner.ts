@@ -44,8 +44,10 @@ export const useActionRunner = (options: UseActionRunnerOptions = {}) => {
     [actionMutation, options],
   )
 
-  const { cancelPendingAction, confirmPendingAction, handleAction, pendingAction } =
-    useConfirmableAction(runAction, (a) => Boolean(a.confirm))
+  const { cancelPendingAction, confirmPendingAction, handleAction, pendingAction } = useConfirmableAction(
+    runAction,
+    (a) => Boolean(a.confirm),
+  )
 
   return {
     activeActionKey,

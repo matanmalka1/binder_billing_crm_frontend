@@ -2,11 +2,7 @@ import { Banknote, CheckCircle2, Clock, TrendingUp, Users, XCircle } from 'lucid
 import type { StatsCardProps } from '@/components/ui/layout/StatsCard'
 import { fmtCurrency } from '@/utils/utils'
 import type { TaxSubmissionWidgetResponse } from './api'
-import {
-  TAX_SUBMISSION_FILTERS,
-  TAX_SUBMISSION_STAT_TITLES,
-  type TaxSubmissionFilter,
-} from './constants'
+import { TAX_SUBMISSION_FILTERS, TAX_SUBMISSION_STAT_TITLES, type TaxSubmissionFilter } from './constants'
 
 export interface TaxSubmissionStat {
   key: string
@@ -82,7 +78,5 @@ export const buildTaxSubmissionStats = (data: TaxSubmissionWidgetResponse): TaxS
   return stats
 }
 
-export const getNextTaxSubmissionFilter = (
-  currentFilter: string | undefined,
-  selectedFilter: TaxSubmissionFilter,
-) => (currentFilter === selectedFilter ? TAX_SUBMISSION_FILTERS.all : selectedFilter)
+export const getNextTaxSubmissionFilter = (currentFilter: string | undefined, selectedFilter: TaxSubmissionFilter) =>
+  currentFilter === selectedFilter ? TAX_SUBMISSION_FILTERS.all : selectedFilter

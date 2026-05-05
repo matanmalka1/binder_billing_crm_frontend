@@ -47,15 +47,11 @@ export const Button: React.FC<ButtonProps> = ({
       aria-busy={isLoading || undefined}
       {...props}
     >
-      {isLoading && (
-        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-      )}
+      {isLoading && <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />}
       {isLoading && loadingLabel ? (
         <span>{loadingLabel}</span>
       ) : (
-        <span className={cn('inline-flex items-center gap-2', isLoading && 'opacity-0')}>
-          {children}
-        </span>
+        <span className={cn('inline-flex items-center gap-2', isLoading && 'opacity-0')}>{children}</span>
       )}
     </button>
   )

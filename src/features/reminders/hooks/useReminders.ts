@@ -4,12 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { remindersApi, remindersQK } from '../api'
 import { useSearchParamFilters } from '../../../hooks/useSearchParamFilters'
-import {
-  getErrorMessage,
-  getHttpStatus,
-  parsePositiveInt,
-  showErrorToast,
-} from '../../../utils/utils'
+import { getErrorMessage, getHttpStatus, parsePositiveInt, showErrorToast } from '../../../utils/utils'
 import { toast } from '../../../utils/toast'
 import type { Reminder } from '../api'
 import { createReminderSchema, type CreateReminderFormValues } from '../schemas'
@@ -23,12 +18,7 @@ import {
   REMINDERS_PAGE_SIZE,
   type ReminderDueFilter,
 } from '../constants'
-import {
-  buildReminderPayload,
-  filterReminders,
-  hasDuplicateReminder,
-  makeReminderFormDefaults,
-} from '../utils'
+import { buildReminderPayload, filterReminders, hasDuplicateReminder, makeReminderFormDefaults } from '../utils'
 
 export const useReminders = (opts?: { clientId?: number; clientName?: string }) => {
   const clientId = opts?.clientId
@@ -45,9 +35,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   const dueFilter: ReminderDueFilter | undefined =
     searchParams.get('due') === REMINDER_DUE_READY_FILTER ? REMINDER_DUE_READY_FILTER : undefined
   const page = clientId ? 1 : parsePositiveInt(searchParams.get('page'), 1)
-  const pageSize = clientId
-    ? REMINDERS_PAGE_SIZE
-    : parsePositiveInt(searchParams.get('page_size'), REMINDERS_PAGE_SIZE)
+  const pageSize = clientId ? REMINDERS_PAGE_SIZE : parsePositiveInt(searchParams.get('page_size'), REMINDERS_PAGE_SIZE)
 
   const form = useForm<CreateReminderFormValues>({
     defaultValues: makeReminderFormDefaults(clientId),
@@ -57,23 +45,16 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
   const watchedClientRecordId = form.watch('client_record_id')
   const watchedReminderType = form.watch('reminder_type')
   // When the hook is used with a fixed clientId, use that; otherwise use the form value.
-  const activeClientId =
-    clientId ?? (watchedClientRecordId ? Number(watchedClientRecordId) : undefined)
+  const activeClientId = clientId ?? (watchedClientRecordId ? Number(watchedClientRecordId) : undefined)
 
-  const linkedEntities = useReminderLinkedEntities(
-    activeClientId,
-    watchedReminderType,
-    showCreateModal,
-  )
+  const linkedEntities = useReminderLinkedEntities(activeClientId, watchedReminderType, showCreateModal)
 
   const remindersQuery = useQuery({
     queryKey: remindersQK.list(clientId, statusFilter, page, pageSize, dueFilter),
     queryFn: () =>
       remindersApi.list({
         ...(clientId ? { client_record_id: clientId } : {}),
-        ...(statusFilter
-          ? { status: statusFilter as import('../api/contracts').ReminderStatus }
-          : {}),
+        ...(statusFilter ? { status: statusFilter as import('../api/contracts').ReminderStatus } : {}),
         ...(dueFilter ? { due: dueFilter } : {}),
         page,
         page_size: pageSize,
@@ -108,8 +89,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
       ? (remindersQuery.data?.total ?? 0)
       : (pendingCountQuery.data?.total ?? 0)
 
-  const sentCount =
-    statusFilter === 'sent' ? (remindersQuery.data?.total ?? 0) : (sentCountQuery.data?.total ?? 0)
+  const sentCount = statusFilter === 'sent' ? (remindersQuery.data?.total ?? 0) : (sentCountQuery.data?.total ?? 0)
 
   const activeReminderQueries = useQueries({
     queries: ACTIVE_REMINDER_STATUSES.map((status) => ({
@@ -134,8 +114,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
     [remindersQuery.data?.items, search, typeFilter],
   )
 
-  const hasFilters =
-    !!search || !!typeFilter || !!dueFilter || statusFilter !== DEFAULT_REMINDER_STATUS_FILTER
+  const hasFilters = !!search || !!typeFilter || !!dueFilter || statusFilter !== DEFAULT_REMINDER_STATUS_FILTER
 
   const setPage = useCallback(
     (nextPage: number) => {
@@ -243,9 +222,7 @@ export const useReminders = (opts?: { clientId?: number; clientName?: string }) 
     pageSize,
     rawTotal: remindersQuery.data?.total ?? 0,
     isLoading: remindersQuery.isLoading,
-    error: remindersQuery.error
-      ? getErrorMessage(remindersQuery.error, 'שגיאה בטעינת תזכורות')
-      : null,
+    error: remindersQuery.error ? getErrorMessage(remindersQuery.error, 'שגיאה בטעינת תזכורות') : null,
     statusFilter,
     setStatusFilter: setReminderStatusFilter,
     dueFilter,

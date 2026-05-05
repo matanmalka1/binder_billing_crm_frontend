@@ -19,10 +19,7 @@ type UseClientDetailsResult = {
   can: ReturnType<typeof useRole>['can']
 }
 
-export const useClientDetails = ({
-  clientId,
-  taxYear,
-}: UseClientDetailsParams): UseClientDetailsResult => {
+export const useClientDetails = ({ clientId, taxYear }: UseClientDetailsParams): UseClientDetailsResult => {
   const id = Number(clientId)
   const isValidId = isPositiveInt(id)
   const queryClient = useQueryClient()

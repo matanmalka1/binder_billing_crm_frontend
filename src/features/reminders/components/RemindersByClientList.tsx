@@ -31,28 +31,22 @@ export const RemindersByClientList: React.FC<RemindersByClientListProps> = ({
     <div className="space-y-4">
       {groups.map((group) => {
         const subInfo = [
-          group.officeClientNumber != null
-            ? `מס' לקוח: ${formatClientOfficeId(group.officeClientNumber)}`
-            : null,
+          group.officeClientNumber != null ? `מס' לקוח: ${formatClientOfficeId(group.officeClientNumber)}` : null,
           group.clientIdNumber ? `ת.ז / ח.פ: ${group.clientIdNumber}` : null,
         ]
           .filter(Boolean)
           .join(' · ')
 
-        const label = group.clientRecordId != null ? (
-          <Link
-            to={`/clients/${group.clientRecordId}`}
-            className="truncate hover:underline"
-          >
-            {group.clientName}
-          </Link>
-        ) : (
-          group.clientName
-        )
+        const label =
+          group.clientRecordId != null ? (
+            <Link to={`/clients/${group.clientRecordId}`} className="truncate hover:underline">
+              {group.clientName}
+            </Link>
+          ) : (
+            group.clientName
+          )
 
-        const meta = subInfo ? (
-          <span className="text-xs text-gray-500">{subInfo}</span>
-        ) : undefined
+        const meta = subInfo ? <span className="text-xs text-gray-500">{subInfo}</span> : undefined
 
         return (
           <GroupSection

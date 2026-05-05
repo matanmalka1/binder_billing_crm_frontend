@@ -18,8 +18,7 @@ const getActivePeriodPrefix = (): string => {
   return `${year}-${month}`
 }
 
-const isActivePeriod = (period: string): boolean =>
-  period.startsWith(getActivePeriodPrefix())
+const isActivePeriod = (period: string): boolean => period.startsWith(getActivePeriodPrefix())
 
 interface VatWorkItemsGroupedCardsProps {
   groups: VatWorkItemGroupSummary[]
@@ -32,46 +31,48 @@ interface VatWorkItemsGroupedCardsProps {
 
 const PAGE_SIZE = 50
 
-const GroupContent = memo(({
-  group,
-  columns,
-  onRowClick,
-}: {
-  group: VatWorkItemGroupSummary
-  columns: Column<VatWorkItemResponse>[]
-  onRowClick: (item: VatWorkItemResponse) => void
-}) => {
-  const [page, setPage] = useState(1)
+const GroupContent = memo(
+  ({
+    group,
+    columns,
+    onRowClick,
+  }: {
+    group: VatWorkItemGroupSummary
+    columns: Column<VatWorkItemResponse>[]
+    onRowClick: (item: VatWorkItemResponse) => void
+  }) => {
+    const [page, setPage] = useState(1)
 
-  const { data, isLoading } = useQuery({
-    queryKey: vatReportsQK.groupItems(group.period, { page, page_size: PAGE_SIZE }),
-    queryFn: () => vatReportsApi.listGroupItems(group.period, { page, page_size: PAGE_SIZE }),
-    staleTime: 30_000,
-  })
+    const { data, isLoading } = useQuery({
+      queryKey: vatReportsQK.groupItems(group.period, { page, page_size: PAGE_SIZE }),
+      queryFn: () => vatReportsApi.listGroupItems(group.period, { page, page_size: PAGE_SIZE }),
+      staleTime: 30_000,
+    })
 
-  if (isLoading) return <TableSkeleton rows={3} columns={columns.length} />
+    if (isLoading) return <TableSkeleton rows={3} columns={columns.length} />
 
-  return (
-    <>
-      <DataTable
-        data={data?.items ?? []}
-        columns={columns}
-        getRowKey={(r) => r.id}
-        onRowClick={onRowClick}
-        emptyMessage="אין תיקים בתקופה זו"
-      />
-      {data && data.total > PAGE_SIZE && (
-        <PaginationCard
-          page={page}
-          totalPages={getTotalPages(data.total, PAGE_SIZE)}
-          total={data.total}
-          label="תיקים"
-          onPageChange={setPage}
+    return (
+      <>
+        <DataTable
+          data={data?.items ?? []}
+          columns={columns}
+          getRowKey={(r) => r.id}
+          onRowClick={onRowClick}
+          emptyMessage="אין תיקים בתקופה זו"
         />
-      )}
-    </>
-  )
-})
+        {data && data.total > PAGE_SIZE && (
+          <PaginationCard
+            page={page}
+            totalPages={getTotalPages(data.total, PAGE_SIZE)}
+            total={data.total}
+            label="תיקים"
+            onPageChange={setPage}
+          />
+        )}
+      </>
+    )
+  },
+)
 
 GroupContent.displayName = 'GroupContent'
 
