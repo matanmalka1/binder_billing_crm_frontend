@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Inbox } from 'lucide-react'
 import { TableSkeleton } from '@/components/ui/table/TableSkeleton'
@@ -27,6 +27,7 @@ interface VatWorkItemsGroupedCardsProps {
   error?: string | null
   onRowClick: (item: VatWorkItemResponse) => void
   emptyState?: { title?: string; message?: string; action?: { label: string; onClick: () => void } }
+  filters?: { status?: string; client_name?: string }
 }
 
 const PAGE_SIZE = 50
@@ -36,16 +37,22 @@ const GroupContent = memo(
     group,
     columns,
     onRowClick,
+    filters,
   }: {
     group: VatWorkItemGroupSummary
     columns: Column<VatWorkItemResponse>[]
     onRowClick: (item: VatWorkItemResponse) => void
+    filters?: { status?: string; client_name?: string }
   }) => {
     const [page, setPage] = useState(1)
 
+    useEffect(() => { setPage(1) }, [filters?.status, filters?.client_name])
+
+    const itemParams = { page, page_size: PAGE_SIZE, status: filters?.status, client_name: filters?.client_name }
+
     const { data, isLoading } = useQuery({
-      queryKey: vatReportsQK.groupItems(group.period, { page, page_size: PAGE_SIZE }),
-      queryFn: () => vatReportsApi.listGroupItems(group.period, { page, page_size: PAGE_SIZE }),
+      queryKey: vatReportsQK.groupItems(group.period, itemParams),
+      queryFn: () => vatReportsApi.listGroupItems(group.period, itemParams),
       staleTime: 30_000,
     })
 
@@ -83,6 +90,7 @@ export const VatWorkItemsGroupedCards = ({
   error,
   onRowClick,
   emptyState,
+  filters,
 }: VatWorkItemsGroupedCardsProps) => {
   const sortedGroups = [...groups].sort((a, b) => a.period.localeCompare(b.period))
 
@@ -109,7 +117,7 @@ export const VatWorkItemsGroupedCards = ({
             isCurrent={isCurrent}
             defaultOpen={isCurrent}
           >
-            <GroupContent group={group} columns={columns} onRowClick={onRowClick} />
+            <GroupContent group={group} columns={columns} onRowClick={onRowClick} filters={filters} />
           </MonthlyAccordionGroup>
         )
       })}

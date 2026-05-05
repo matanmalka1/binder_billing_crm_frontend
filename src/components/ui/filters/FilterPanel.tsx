@@ -103,11 +103,11 @@ SearchFieldInner.displayName = 'SearchFieldInner'
 function ClientPickerField({
   field,
   values,
-  onChange,
+  onMultiChange,
 }: {
   field: ClientPickerFieldDef
   values: Record<string, string>
-  onChange: (key: string, value: string) => void
+  onMultiChange: (updates: Record<string, string>) => void
 }) {
   const idVal = values[field.idKey]
   const nameVal = field.nameKey ? values[field.nameKey] : undefined
@@ -127,12 +127,14 @@ function ClientPickerField({
       onQueryChange={setClientQuery}
       onSelect={(client) => {
         setClientQuery(client.name)
-        onChange(field.idKey, String(client.id))
-        if (field.nameKey) onChange(field.nameKey, client.name)
+        const updates: Record<string, string> = { [field.idKey]: String(client.id) }
+        if (field.nameKey) updates[field.nameKey] = client.name
+        onMultiChange(updates)
       }}
       onClear={() => {
-        onChange(field.idKey, '')
-        if (field.nameKey) onChange(field.nameKey, '')
+        const updates: Record<string, string> = { [field.idKey]: '' }
+        if (field.nameKey) updates[field.nameKey] = ''
+        onMultiChange(updates)
       }}
     />
   )
@@ -145,6 +147,7 @@ export interface FilterPanelProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: Record<string, any>
   onChange: (key: string, value: string) => void
+  onMultiChange?: (updates: Record<string, string>) => void
   onReset: () => void
   /** Tailwind grid class. Default: 'grid-cols-1 sm:grid-cols-3' */
   gridClass?: string
@@ -158,6 +161,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
   fields,
   values,
   onChange,
+  onMultiChange,
   onReset,
   gridClass = 'grid-cols-1 sm:grid-cols-3',
   above,
@@ -303,7 +307,8 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               }
 
               if (field.type === 'client-picker') {
-                return <ClientPickerField key={field.idKey} field={field} values={values} onChange={onChange} />
+                const handleMulti = onMultiChange ?? ((updates) => { for (const [k, v] of Object.entries(updates)) onChange(k, v) })
+                return <ClientPickerField key={field.idKey} field={field} values={values} onMultiChange={handleMulti} />
               }
 
               return null

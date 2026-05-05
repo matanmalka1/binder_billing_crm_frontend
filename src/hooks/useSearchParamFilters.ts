@@ -11,6 +11,16 @@ export const useSearchParamFilters = () => {
     setSearchParams(next)
   }
 
+  const setFilters = (updates: Record<string, string>, resetPage = true) => {
+    const next = new URLSearchParams(searchParams)
+    for (const [k, v] of Object.entries(updates)) {
+      if (v) next.set(k, v)
+      else next.delete(k)
+    }
+    if (resetPage) next.set('page', '1')
+    setSearchParams(next)
+  }
+
   const setPage = (page: number) => {
     const next = new URLSearchParams(searchParams)
     next.set('page', String(page))
@@ -26,5 +36,5 @@ export const useSearchParamFilters = () => {
     setSearchParams(next)
   }
 
-  return { searchParams, setFilter, setPage, resetFilters, setSearchParams }
+  return { searchParams, setFilter, setFilters, setPage, resetFilters, setSearchParams }
 }

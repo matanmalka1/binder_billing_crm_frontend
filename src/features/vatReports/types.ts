@@ -137,6 +137,7 @@ export interface VatWorkItemsFiltersCardProps {
   filters: Pick<VatWorkItemsFilters, 'status' | 'year' | 'period_type' | 'clientSearch' | 'clientSearchName'>
   onClear: () => void
   onFilterChange: (key: string, value: string) => void
+  onMultiFilterChange?: (updates: Record<string, string>) => void
 }
 
 export interface VatWorkItemSummaryBarProps {

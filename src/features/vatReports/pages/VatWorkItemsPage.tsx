@@ -28,6 +28,7 @@ export const VatWorkItems: React.FC = () => {
     loading: statsLoading,
     runAction,
     setFilter,
+    setFilters,
     setSearchParams,
     statsFiled,
     statsPending,
@@ -106,7 +107,7 @@ export const VatWorkItems: React.FC = () => {
         </div>
       )}
 
-      <VatWorkItemsFiltersCard filters={filters} onFilterChange={setFilter} onClear={handleClearFilters} />
+      <VatWorkItemsFiltersCard filters={filters} onFilterChange={setFilter} onMultiFilterChange={setFilters} onClear={handleClearFilters} />
 
       <VatWorkItemsGroupedCards
         groups={groups}
@@ -114,6 +115,7 @@ export const VatWorkItems: React.FC = () => {
         isLoading={groupsLoading}
         error={groupsError}
         onRowClick={handleRowClick}
+        filters={{ status: filters.status || undefined, client_name: filters.clientSearchName || undefined }}
         emptyState={{
           title: buildVatEmptyStateTitle(filters),
           message: isAdvisor ? 'נסה לשנות את הסינון או לפתוח תיק חדש' : 'נסה לשנות את הסינון',

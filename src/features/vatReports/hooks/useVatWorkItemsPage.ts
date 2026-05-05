@@ -25,7 +25,7 @@ type VatStatsStatus = (typeof statsStatuses)[number]
 
 export const useVatWorkItemsPage = () => {
   const queryClient = useQueryClient()
-  const { searchParams, setFilter, setSearchParams } = useSearchParamFilters()
+  const { searchParams, setFilter, setFilters, setSearchParams } = useSearchParamFilters()
   const { isAdvisor } = useRole()
 
   const filters = {
@@ -161,6 +161,7 @@ export const useVatWorkItemsPage = () => {
     runAction,
     sendBackWithNote,
     setFilter,
+    setFilters,
     setSearchParams,
     statsFiled,
     statsPending,
