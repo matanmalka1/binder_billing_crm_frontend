@@ -9,7 +9,7 @@ import type { TaxDeadlineFilters } from '../types'
 
 export const useGroupedDeadlines = () => {
   const { isAdvisor } = useRole()
-  const { searchParams, setFilter, setSearchParams } = useSearchParamFilters()
+  const { searchParams, setFilters, setSearchParams } = useSearchParamFilters()
 
   const defaultWindow = useMemo(() => {
     const today = new Date()
@@ -31,6 +31,7 @@ export const useGroupedDeadlines = () => {
 
   const filters: Omit<TaxDeadlineFilters, 'page' | 'page_size'> = useMemo(
     () => ({
+      client_id: searchParams.get('client_id') || '',
       client_name: searchParams.get('client_name') || '',
       deadline_type: searchParams.get('deadline_type') || '',
       status: searchParams.get('status') || '',
@@ -57,11 +58,14 @@ export const useGroupedDeadlines = () => {
   })
 
   const handleFilterChange = (key: string, value: string) => {
-    if (key === 'client_name') setFilter('business_name', '')
     const next = new URLSearchParams(searchParams)
     if (value) next.set(key, value)
     else next.delete(key)
     setSearchParams(next)
+  }
+
+  const handleMultiFilterChange = (updates: Record<string, string>) => {
+    setFilters(updates)
   }
 
   return {
@@ -72,6 +76,7 @@ export const useGroupedDeadlines = () => {
     isLoading: groupedQuery.isPending,
     error: groupedQuery.error ? getErrorMessage(groupedQuery.error, 'שגיאה בטעינת מועדים') : null,
     handleFilterChange,
+    handleMultiFilterChange,
     isAdvisor,
   }
 }

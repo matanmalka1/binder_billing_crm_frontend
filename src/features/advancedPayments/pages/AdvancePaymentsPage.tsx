@@ -36,7 +36,7 @@ const PERIOD_OPTIONS = [
 ]
 
 const FILTER_FIELDS = [
-  { type: 'search' as const, key: 'search', label: 'לקוח', placeholder: 'שם לקוח, ת.ז, ח.פ...' },
+  { type: 'client-picker' as const, idKey: 'client_id', nameKey: 'client_name', label: 'לקוח' },
   {
     type: 'select' as const,
     key: 'year',
@@ -65,7 +65,7 @@ export const AdvancePayments: React.FC = () => {
   const year = parsePositiveInt(searchParams.get('year'), todayYear)
 
   const [drawerRow, setDrawerRow] = useState<AdvancePaymentOverviewRow | null>(null)
-  const [filters, setFilters] = useState({ search: '', status: '', period: '' })
+  const [filters, setFilters] = useState({ client_id: '', client_name: '', status: '', period: '' })
 
   const [createPickerOpen, setCreatePickerOpen] = useState(false)
   const [createClientId, setCreateClientId] = useState<number | null>(null)
@@ -94,8 +94,18 @@ export const AdvancePayments: React.FC = () => {
     setFilters((prev) => ({ ...prev, [key]: value }))
   }
 
+  const handleMultiFilterChange = (updates: Record<string, string>) => {
+    const yearUpdate = updates['year']
+    if (yearUpdate !== undefined) {
+      const next = new URLSearchParams(searchParams)
+      next.set('year', yearUpdate)
+      setSearchParams(next)
+    }
+    setFilters((prev) => ({ ...prev, ...updates }))
+  }
+
   const handleFilterReset = () => {
-    setFilters({ search: '', status: '', period: '' })
+    setFilters({ client_id: '', client_name: '', status: '', period: '' })
     const next = new URLSearchParams(searchParams)
     next.delete('year')
     setSearchParams(next)
@@ -204,6 +214,7 @@ export const AdvancePayments: React.FC = () => {
         fields={FILTER_FIELDS}
         values={{ ...filters, year: String(year) }}
         onChange={handleFilterChange}
+        onMultiChange={handleMultiFilterChange}
         onReset={handleFilterReset}
         gridClass="grid-cols-1 sm:grid-cols-4"
       />
@@ -221,7 +232,7 @@ export const AdvancePayments: React.FC = () => {
               key={`${batch.year}-${batch.month}`}
               batch={batch}
               isCurrent={isCurrent}
-              search={filters.search}
+              search={filters.client_name}
               statusFilter={statusFilter}
               periodFilter={periodFilter}
               onRowClick={handleRowClick}

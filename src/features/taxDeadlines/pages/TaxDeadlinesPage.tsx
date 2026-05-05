@@ -44,7 +44,7 @@ export const TaxDeadlines: React.FC = () => {
     setShowGenerateModal,
   } = useTaxDeadlines()
 
-  const { filters, groups, isLoading, error, handleFilterChange } = useGroupedDeadlines()
+  const { filters, groups, isLoading, error, handleFilterChange, handleMultiFilterChange } = useGroupedDeadlines()
 
   const [selectedDeadline, setSelectedDeadline] = useState<TaxDeadlineResponse | null>(null)
 
@@ -95,7 +95,7 @@ export const TaxDeadlines: React.FC = () => {
 
       <DeadlineGroupSummaryCards groups={groups} />
 
-      <TaxDeadlinesFilters filters={{ ...filters, page: 1, page_size: 20 }} onChange={handleFilterChange} />
+      <TaxDeadlinesFilters filters={{ ...filters, page: 1, page_size: 20 }} onChange={handleFilterChange} onMultiChange={handleMultiFilterChange} />
 
       <TaxDeadlinesGroupedTable
         groups={groups}

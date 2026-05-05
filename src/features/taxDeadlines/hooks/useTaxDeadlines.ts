@@ -35,6 +35,7 @@ export const useTaxDeadlines = () => {
 
   const filters: TaxDeadlineFilters = useMemo(
     () => ({
+      client_id: searchParams.get('client_id') || '',
       client_name: searchParams.get('client_name') || searchParams.get('business_name') || '',
       deadline_type: searchParams.get('deadline_type') || '',
       status: searchParams.get('status') || '',

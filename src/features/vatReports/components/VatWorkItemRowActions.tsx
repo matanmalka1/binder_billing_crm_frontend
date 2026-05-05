@@ -21,7 +21,7 @@ export const VatWorkItemRowActions: React.FC<VatWorkItemRowActionsProps> = ({
     <RowActionsMenu ariaLabel={`פעולות לפריט ${item.id}`}>
       {canMarkMaterialsComplete(item.available_actions) && (
         <RowActionItem
-          label="אישור קבלה"
+          label="אשר קבלת חומרים"
           onClick={() => void runAction(item.id, 'materialsComplete')}
           icon={<PackageCheck className="h-4 w-4" />}
           disabled={isLoading || isDisabled}

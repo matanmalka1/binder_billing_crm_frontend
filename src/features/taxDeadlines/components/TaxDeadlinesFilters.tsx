@@ -5,15 +5,11 @@ import type { TaxDeadlineFilters } from '../types'
 interface TaxDeadlinesFiltersProps {
   filters: TaxDeadlineFilters
   onChange: (key: string, value: string) => void
+  onMultiChange?: (updates: Record<string, string>) => void
 }
 
 const FIELDS = [
-  {
-    type: 'search' as const,
-    key: 'client_name',
-    label: 'חיפוש לקוח במועדים',
-    placeholder: 'סנן קבוצות לפי שם לקוח...',
-  },
+  { type: 'client-picker' as const, idKey: 'client_id', nameKey: 'client_name', label: 'חיפוש לקוח' },
   {
     type: 'select' as const,
     key: 'deadline_type',
@@ -30,10 +26,11 @@ const FIELDS = [
   },
 ]
 
-export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersProps) => (
+export const TaxDeadlinesFilters = ({ filters, onChange, onMultiChange }: TaxDeadlinesFiltersProps) => (
   <FilterPanel
     fields={FIELDS}
     values={{
+      client_id: filters.client_id ?? '',
       client_name: filters.client_name ?? '',
       deadline_type: filters.deadline_type ?? '',
       status: filters.status ?? '',
@@ -41,12 +38,18 @@ export const TaxDeadlinesFilters = ({ filters, onChange }: TaxDeadlinesFiltersPr
       due_to: filters.due_to ?? '',
     }}
     onChange={onChange}
+    onMultiChange={onMultiChange}
     onReset={() => {
-      onChange('client_name', '')
-      onChange('deadline_type', '')
-      onChange('status', '')
-      onChange('due_from', '')
-      onChange('due_to', '')
+      if (onMultiChange) {
+        onMultiChange({ client_id: '', client_name: '', deadline_type: '', status: '', due_from: '', due_to: '' })
+      } else {
+        onChange('client_id', '')
+        onChange('client_name', '')
+        onChange('deadline_type', '')
+        onChange('status', '')
+        onChange('due_from', '')
+        onChange('due_to', '')
+      }
     }}
     gridClass="grid-cols-1 sm:grid-cols-3"
   />
