@@ -1,6 +1,6 @@
 // Public surface of the taxDeadlines feature
-export { taxDeadlinesApi, taxDeadlinesQK } from './api'
-export { getDeadlineTypeLabel, getUrgencyColor, formatCurrency, calculateDaysRemaining } from './api'
+export { taxDeadlinesApi } from './api'
+export { getDeadlineTypeLabel } from './api'
 export { FilingTimeline } from './components/FilingTimeline'
 export { GenerateTaxDeadlinesModal } from './components/GenerateTaxDeadlinesModal'
 export { TaxDeadlineDrawer } from './components/TaxDeadlineDrawer'
@@ -12,9 +12,5 @@ export { TaxDeadlines } from './pages/TaxDeadlinesPage'
 export { getDeadlineDaysLabelShort, getTaxDeadlinePeriodLabel } from './utils'
 export type {
   TaxDeadlineResponse,
-  TaxDeadlineListResponse,
   DeadlineUrgentItem,
-  DeadlineUrgencyLevel,
-  DeadlineGroup,
-  GroupedDeadlineListResponse,
 } from './api'
