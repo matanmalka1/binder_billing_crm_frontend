@@ -28,6 +28,7 @@ import { toast } from '../../../utils/toast'
 import { showErrorToast } from '../../../utils/utils'
 import { useRole } from '../../../hooks/useRole'
 import { getOperationalTaxYear, getOperationalYearOptions } from '@/constants/periodOptions.constants'
+import { useTaxProfile } from '@/features/taxProfile'
 
 const PERIOD_OPTIONS = [
   { value: '', label: 'כל הסוגים' },
@@ -76,6 +77,19 @@ export const AdvancePayments: React.FC = () => {
 
   const [genPickerOpen, setGenPickerOpen] = useState(false)
   const genPicker = useClientPickerState()
+
+  const genClientId = genPicker.selectedClient?.id ?? 0
+  const { profile: genProfile, isLoading: isGenProfileLoading, error: genProfileError } = useTaxProfile(genClientId)
+  const isGenProfileError = genProfileError !== null && genClientId > 0
+
+  const generationFrequency: 1 | 2 | null =
+    genClientId === 0
+      ? null
+      : genProfile?.advance_payment_frequency === 'bimonthly'
+        ? 2
+        : genProfile?.advance_payment_frequency === 'monthly'
+          ? 1
+          : null
 
   const { batches, isLoading } = useAdvancePaymentBatches(year)
 
@@ -135,7 +149,8 @@ export const AdvancePayments: React.FC = () => {
   })
 
   const generateMutation = useMutation({
-    mutationFn: () => advancePaymentsApi.generateSchedule(genPicker.selectedClient!.id, year),
+    mutationFn: (periodMonthsCount: 1 | 2) =>
+      advancePaymentsApi.generateSchedule(genClientId, year, periodMonthsCount),
     onSuccess: (data) => {
       toast.success(data.created > 0 ? `נוצרו ${data.created} מקדמות` : 'הכול קיים')
       void queryClient.invalidateQueries({ queryKey: advancedPaymentsQK.all })
@@ -144,6 +159,26 @@ export const AdvancePayments: React.FC = () => {
     },
     onError: (err) => showErrorToast(err, 'שגיאה ביצירת לוח מקדמות'),
   })
+
+  const handleGenerate = () => {
+    if (genClientId === 0) {
+      toast.error('לא נבחר לקוח תקין')
+      return
+    }
+    if (isGenProfileLoading) {
+      toast.error('פרופיל הלקוח עדיין נטען')
+      return
+    }
+    if (isGenProfileError) {
+      toast.error('שגיאה בטעינת פרופיל הלקוח')
+      return
+    }
+    if (generationFrequency == null) {
+      toast.error('לא ניתן ליצור לוח בלי תדירות מקדמות בפרופיל הלקוח')
+      return
+    }
+    generateMutation.mutate(generationFrequency)
+  }
 
   const handleSave = async (id: number, payload: UpdateAdvancePaymentPayload) => {
     await updateMutation.mutateAsync({ id, payload })
@@ -318,8 +353,14 @@ export const AdvancePayments: React.FC = () => {
             <Button
               variant="primary"
               isLoading={generateMutation.isPending}
-              disabled={genPicker.selectedClient === null}
-              onClick={() => generateMutation.mutate()}
+              disabled={
+                genPicker.selectedClient === null ||
+                isGenProfileLoading ||
+                isGenProfileError ||
+                generationFrequency == null ||
+                generateMutation.isPending
+              }
+              onClick={handleGenerate}
             >
               צור לוח
             </Button>
@@ -334,7 +375,19 @@ export const AdvancePayments: React.FC = () => {
             onSelect={genPicker.handleSelectClient}
             onClear={genPicker.handleClearClient}
           />
-          <p className="text-sm text-gray-500">התדירות תיקבע לפי סוג הדיווח בפרופיל הלקוח.</p>
+          {genPicker.selectedClient !== null && (
+            <p className="text-sm text-gray-500">
+              {isGenProfileLoading
+                ? 'טוען פרופיל לקוח...'
+                : isGenProfileError
+                  ? 'שגיאה בטעינת פרופיל הלקוח'
+                  : generationFrequency === 1
+                    ? 'תדירות מקדמות: חודשי'
+                    : generationFrequency === 2
+                      ? 'תדירות מקדמות: דו-חודשי'
+                      : 'תדירות מקדמות לא הוגדרה'}
+            </p>
+          )}
         </div>
       </Modal>
     </div>

@@ -15,7 +15,8 @@ interface ClientAdvancePaymentsHeaderProps {
   onYearChange: (year: number) => void
   onOpenCreate: () => void
   onGenerateSchedule: () => void
-  generationFrequency: 1 | 2
+  displayFrequency: 1 | 2 | null
+  generationFrequency: 1 | 2 | null
   isGenerating?: boolean
   advanceRate?: number | null
 }
@@ -36,6 +37,7 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
   onYearChange,
   onOpenCreate,
   onGenerateSchedule,
+  displayFrequency,
   generationFrequency,
   isGenerating,
   advanceRate,
@@ -59,31 +61,40 @@ export const ClientAdvancePaymentsHeader: React.FC<ClientAdvancePaymentsHeaderPr
             <div className="h-8 w-px bg-gray-200 hidden sm:block" />
             <div className="flex items-center bg-gray-100 rounded-xl p-1">
               <span className="px-3 py-1.5 text-sm text-gray-500">
-                תדירות: <span className="font-semibold text-gray-800">{FREQUENCY_LABEL[generationFrequency]}</span>
-                <span className="text-gray-400 text-xs mr-1">(לפי פרופיל מע״מ)</span>
+                {displayFrequency != null ? (
+                  <>
+                    תדירות מקדמות:{' '}
+                    <span className="font-semibold text-gray-800">{FREQUENCY_LABEL[displayFrequency]}</span>
+                  </>
+                ) : (
+                  <span className="text-gray-400">תדירות מקדמות לא הוגדרה</span>
+                )}
               </span>
               <button
                 type="button"
                 onClick={() => setConfirmGenerate(true)}
-                disabled={isGenerating}
-                className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-white hover:shadow-sm rounded-lg transition-all disabled:opacity-50"
+                disabled={isGenerating || generationFrequency == null}
+                title={generationFrequency == null ? 'לא ניתן ליצור לוח בלי תדירות מקדמות בפרופיל הלקוח' : undefined}
+                className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-white hover:shadow-sm rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Calendar className="h-3.5 w-3.5" />
                 {isGenerating ? 'יוצר...' : 'צור לוח שנתי'}
               </button>
             </div>
-            <ConfirmDialog
-              open={confirmGenerate}
-              title="יצירת לוח מקדמות"
-              message={`ליצור מקדמות ${FREQUENCY_LABEL[generationFrequency]} לשנת ${year}? מקדמות קיימות לא יושפעו.`}
-              confirmLabel="צור"
-              cancelLabel="ביטול"
-              onConfirm={() => {
-                setConfirmGenerate(false)
-                onGenerateSchedule()
-              }}
-              onCancel={() => setConfirmGenerate(false)}
-            />
+            {generationFrequency != null && (
+              <ConfirmDialog
+                open={confirmGenerate}
+                title="יצירת לוח מקדמות"
+                message={`ליצור מקדמות ${FREQUENCY_LABEL[generationFrequency]} לשנת ${year}? מקדמות קיימות לא יושפעו.`}
+                confirmLabel="צור"
+                cancelLabel="ביטול"
+                onConfirm={() => {
+                  setConfirmGenerate(false)
+                  onGenerateSchedule()
+                }}
+                onCancel={() => setConfirmGenerate(false)}
+              />
+            )}
           </>
         )}
       </div>

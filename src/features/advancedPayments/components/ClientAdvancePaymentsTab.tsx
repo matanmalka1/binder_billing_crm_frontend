@@ -9,7 +9,7 @@ import { advancePaymentsApi, advancedPaymentsQK } from '../api'
 import { toast } from '../../../utils/toast'
 import { getHttpStatus, showErrorToast } from '../../../utils/utils'
 import { ClientAdvancePaymentsHeader } from './ClientAdvancePaymentsHeader'
-import { AdvancePaymentTable } from './AdvancePaymentTable'
+import { ClientAdvancePaymentCards } from './ClientAdvancePaymentCards'
 import { AdvancePaymentsKPICards } from './AdvancePaymentsKPICards'
 import { AdvancePaymentDrawer } from './AdvancePaymentDrawer'
 import { CreateAdvancePaymentModal } from './CreateAdvancePaymentModal'
@@ -38,10 +38,15 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
   )
   const { advancePaymentFrequency, advanceRate } = useAdvanceRateInsights(clientId)
 
-  const generationFrequency: 1 | 2 = advancePaymentFrequency === 'bimonthly' ? 2 : 1
+  const generationFrequency: 1 | 2 | null =
+    advancePaymentFrequency === 'bimonthly' ? 2 : advancePaymentFrequency === 'monthly' ? 1 : null
+
+  const displayFrequency: 1 | 2 | null =
+    rows.length > 0 ? rows[0].period_months_count : generationFrequency
 
   const generateMutation = useMutation({
-    mutationFn: () => advancePaymentsApi.generateSchedule(clientId, year),
+    mutationFn: (periodMonthsCount: 1 | 2) =>
+      advancePaymentsApi.generateSchedule(clientId, year, periodMonthsCount),
     onSuccess: (data) => {
       const msg = data.created > 0 ? `נוצרו ${data.created} מקדמות` : 'הכול קיים'
       toast.success(msg)
@@ -79,6 +84,14 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
 
   const totalPages = getTotalPages(total, CLIENT_ADVANCE_PAYMENT_PAGE_SIZE)
 
+  const handleGenerateSchedule = () => {
+    if (generationFrequency == null) {
+      toast.error('לא ניתן ליצור לוח בלי תדירות מקדמות בפרופיל הלקוח')
+      return
+    }
+    generateMutation.mutate(generationFrequency)
+  }
+
   const handleStatusToggle = (status: AdvancePaymentStatus) => {
     setPage(1)
     setStatusFilter((prev) => toggleAdvancePaymentStatusFilter(prev, status))
@@ -115,7 +128,8 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
           setYear(nextYear)
         }}
         onOpenCreate={() => setModalOpen(true)}
-        onGenerateSchedule={() => generateMutation.mutate()}
+        onGenerateSchedule={handleGenerateSchedule}
+        displayFrequency={displayFrequency}
         generationFrequency={generationFrequency}
         isGenerating={generateMutation.isPending}
         advanceRate={advanceRate}
@@ -123,7 +137,11 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
 
       <AdvancePaymentsKPICards clientId={clientId} year={year} />
 
-      <AdvancePaymentTable rows={rows} isLoading={isLoading} canEdit={false} onRowClick={(row) => setDrawerRow(row)} />
+      <ClientAdvancePaymentCards
+        rows={rows}
+        isLoading={isLoading}
+        onRowClick={(row) => setDrawerRow(row)}
+      />
 
       {totalPages > 1 && (
         <PaginationCard page={page} totalPages={totalPages} total={total} label="מקדמות" onPageChange={setPage} />
@@ -145,7 +163,7 @@ export const ClientAdvancePaymentsTab: React.FC<ClientAdvancePaymentsTabProps> =
           open={modalOpen}
           clientId={clientId}
           year={year}
-          defaultPeriodMonthsCount={generationFrequency}
+          defaultPeriodMonthsCount={generationFrequency ?? displayFrequency ?? 1}
           isCreating={isCreating}
           onClose={() => setModalOpen(false)}
           onCreate={handleCreate}
