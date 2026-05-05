@@ -95,7 +95,11 @@ export const TaxDeadlines: React.FC = () => {
 
       <DeadlineGroupSummaryCards groups={groups} />
 
-      <TaxDeadlinesFilters filters={{ ...filters, page: 1, page_size: 20 }} onChange={handleFilterChange} onMultiChange={handleMultiFilterChange} />
+      <TaxDeadlinesFilters
+        filters={{ ...filters, page: 1, page_size: 20 }}
+        onChange={handleFilterChange}
+        onMultiChange={handleMultiFilterChange}
+      />
 
       <TaxDeadlinesGroupedTable
         groups={groups}

@@ -307,7 +307,11 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               }
 
               if (field.type === 'client-picker') {
-                const handleMulti = onMultiChange ?? ((updates) => { for (const [k, v] of Object.entries(updates)) onChange(k, v) })
+                const handleMulti =
+                  onMultiChange ??
+                  ((updates) => {
+                    for (const [k, v] of Object.entries(updates)) onChange(k, v)
+                  })
                 return <ClientPickerField key={field.idKey} field={field} values={values} onMultiChange={handleMulti} />
               }
 

@@ -107,7 +107,12 @@ export const VatWorkItems: React.FC = () => {
         </div>
       )}
 
-      <VatWorkItemsFiltersCard filters={filters} onFilterChange={setFilter} onMultiFilterChange={setFilters} onClear={handleClearFilters} />
+      <VatWorkItemsFiltersCard
+        filters={filters}
+        onFilterChange={setFilter}
+        onMultiFilterChange={setFilters}
+        onClear={handleClearFilters}
+      />
 
       <VatWorkItemsGroupedCards
         groups={groups}

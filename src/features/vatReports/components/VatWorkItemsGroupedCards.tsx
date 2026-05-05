@@ -46,7 +46,9 @@ const GroupContent = memo(
   }) => {
     const [page, setPage] = useState(1)
 
-    useEffect(() => { setPage(1) }, [filters?.status, filters?.client_name])
+    useEffect(() => {
+      setPage(1)
+    }, [filters?.status, filters?.client_name])
 
     const itemParams = { page, page_size: PAGE_SIZE, status: filters?.status, client_name: filters?.client_name }
 

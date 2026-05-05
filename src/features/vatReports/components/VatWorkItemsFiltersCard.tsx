@@ -4,7 +4,12 @@ import { VAT_PERIOD_TYPE_SELECT_OPTIONS, VAT_WORK_ITEMS_STATUS_OPTIONS } from '.
 import type { VatWorkItemsFiltersCardProps } from '../types'
 import { getOperationalTaxYear, getOperationalYearOptions } from '@/constants/periodOptions.constants'
 
-export const VatWorkItemsFiltersCard = ({ filters, onClear, onFilterChange, onMultiFilterChange }: VatWorkItemsFiltersCardProps) => {
+export const VatWorkItemsFiltersCard = ({
+  filters,
+  onClear,
+  onFilterChange,
+  onMultiFilterChange,
+}: VatWorkItemsFiltersCardProps) => {
   const fields = useMemo(() => {
     const yearOptions = [{ value: '', label: 'כל השנים' }, ...getOperationalYearOptions()]
     const defaultYear = String(getOperationalTaxYear())

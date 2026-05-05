@@ -151,6 +151,7 @@ export interface VatAuditTrailResponse {
 export interface VatPeriodRow {
   work_item_id: number
   period: string
+  period_type: string | null
   status: string
   total_output_vat: string
   total_input_vat: string
@@ -159,6 +160,11 @@ export interface VatPeriodRow {
   total_input_net: string
   final_vat_amount: string | null
   filed_at: string | null
+  submission_deadline: string | null
+  statutory_deadline: string | null
+  extended_deadline: string | null
+  days_until_deadline: number | null
+  is_overdue: boolean | null
 }
 
 export interface VatWorkItemGroupSummary {
