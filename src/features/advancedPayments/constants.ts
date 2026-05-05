@@ -2,7 +2,6 @@ import { getAdvancePaymentStatusLabel, getAdvancePaymentMethodLabel } from '../.
 import { MONTHS_COVERED_OPTIONS } from '@/constants/periodOptions.constants'
 import { ALL_STATUSES_OPTION } from '@/constants/filterOptions.constants'
 import type { AdvancePaymentMethod, AdvancePaymentStatus } from './types'
-import { MONTH_OPTIONS } from './utils'
 
 export const ADVANCE_PAYMENT_STATUS_FILTERS: AdvancePaymentStatus[] = ['pending', 'paid', 'partial']
 
@@ -26,8 +25,5 @@ export const ADVANCE_PAYMENT_METHOD_OPTIONS: { value: AdvancePaymentMethod; labe
   ['bank_transfer', 'credit_card', 'check', 'direct_debit', 'cash', 'other'] as AdvancePaymentMethod[]
 ).map((method) => ({ value: method, label: getAdvancePaymentMethodLabel(method) }))
 
-export const ADVANCE_PAYMENT_MONTH_FILTER_OPTIONS = MONTH_OPTIONS
-
-export { PAGE_SIZE_MD as PAGE_SIZE } from '@/constants/pagination.constants'
 
 export const ADVANCE_PAYMENT_FREQUENCY_OPTIONS = MONTHS_COVERED_OPTIONS
