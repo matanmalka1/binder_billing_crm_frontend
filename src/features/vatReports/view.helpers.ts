@@ -20,7 +20,9 @@ export const getClientSummaryRowsForYear = (
   year: number | undefined,
 ): VatPeriodRow[] => {
   if (year === undefined) return []
-  return (rows ?? []).filter((row) => row.period.startsWith(String(year)))
+  return (rows ?? [])
+    .filter((row) => row.period.startsWith(String(year)))
+    .sort((a, b) => a.period.localeCompare(b.period))
 }
 
 export const canOpenVatPeriodRow = (row: VatPeriodRow): boolean =>
