@@ -2,7 +2,7 @@ import { FilterPanel } from '@/components/ui/filters/FilterPanel'
 import { STATUS_LABELS } from '../../api/utils'
 import type { AnnualReportStatus } from '../../api/contracts'
 import { ALL_STATUSES_OPTION, ALL_YEARS_OPTION } from '@/constants/filterOptions.constants'
-import { getActiveReportYearOptions } from '@/constants/periodOptions.constants'
+import { getActiveReportYearOptions, getOperationalTaxYear } from '@/constants/periodOptions.constants'
 
 export interface AnnualReportsFilters {
   client_id: string
@@ -33,6 +33,7 @@ const getFields = () => [
     key: 'year',
     label: 'שנת מס',
     options: [ALL_YEARS_OPTION, ...getActiveReportYearOptions()],
+    defaultValue: String(getOperationalTaxYear()),
   },
 ]
 
