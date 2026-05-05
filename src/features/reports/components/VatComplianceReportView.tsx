@@ -4,7 +4,7 @@ import { PageHeader } from "../../../components/layout/PageHeader";
 import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
 import { Badge } from "../../../components/ui/primitives/Badge";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
-import { YEAR_OPTIONS } from "../../../utils/utils";
+import { getOperationalYearOptions } from "@/constants/periodOptions.constants";
 import { getVatTypeLabel } from "../../../utils/enums";
 
 const complianceBadgeVariant = (rate: number) => {
@@ -114,7 +114,7 @@ export const VatComplianceReportView: React.FC = () => {
         <SelectDropdown
           value={String(year)}
           onChange={(e) => setYear(Number(e.target.value))}
-          options={YEAR_OPTIONS}
+          options={getOperationalYearOptions()}
           className="w-28"
         />
       }

@@ -45,21 +45,6 @@ export const NUMERIC_MONTH_OPTIONS = Array.from({ length: 12 }, (_, index) => ({
   label: String(index + 1).padStart(2, '0'),
 }))
 
-export const buildYearOptions = (from = 2000): { value: string; label: string }[] => {
-  const end = new Date().getFullYear() + 1
-  return Array.from({ length: end - from + 1 }, (_, i) => ({
-    value: String(end - i),
-    label: String(end - i),
-  }))
-}
-
-/** Last 5 years descending, for year-filter dropdowns. */
-export const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => ({
-  value: String(new Date().getFullYear() - i),
-  label: String(new Date().getFullYear() - i),
-}))
-
-export const PERIOD_YEAR_OPTIONS = buildYearOptions()
 
 /** Oct+ → next year; else current year. */
 export const getOperationalTaxYear = (): number => {

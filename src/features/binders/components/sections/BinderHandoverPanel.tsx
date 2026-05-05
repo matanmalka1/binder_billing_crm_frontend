@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/primitives/Button'
 import { Checkbox } from '@/components/ui/primitives/Checkbox'
 import { bindersApi, bindersQK } from '../../api'
 import { formatMonthYear } from '@/utils/utils'
-import { NUMERIC_MONTH_OPTIONS, PERIOD_YEAR_OPTIONS } from '@/constants/periodOptions.constants'
+import { NUMERIC_MONTH_OPTIONS, getOperationalYearOptions } from '@/constants/periodOptions.constants'
 
 interface BinderHandoverPanelProps {
   clientId: number
@@ -130,7 +130,7 @@ export const BinderHandoverPanel: React.FC<BinderHandoverPanelProps> = ({
           label="עד שנת דיווח"
           value={String(untilPeriodYear)}
           onChange={(event) => setUntilPeriodYear(Number(event.target.value))}
-          options={PERIOD_YEAR_OPTIONS}
+          options={getOperationalYearOptions()}
         />
         <Select
           label="עד חודש דיווח"

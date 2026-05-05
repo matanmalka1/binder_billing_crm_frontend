@@ -3,7 +3,7 @@ import { Select } from '@/components/ui/inputs/Select'
 import {
   BIMONTHLY_START_MONTH_VALUES,
   MONTH_OPTIONS,
-  PERIOD_YEAR_OPTIONS,
+  getOperationalYearOptions,
 } from '@/constants/periodOptions.constants'
 import type { ReceiveBinderFormValues } from '../../schemas'
 import { PERIODIC_BINDER_TYPES } from '../../constants'
@@ -39,7 +39,7 @@ export const BinderPeriodFields: React.FC<BinderPeriodFieldsProps> = ({
           <Select
             label="שנת דיווח"
             error={errors.period_year?.message}
-            options={[{ value: '', label: 'בחר שנה...', disabled: true }, ...PERIOD_YEAR_OPTIONS]}
+            options={[{ value: '', label: 'בחר שנה...', disabled: true }, ...getOperationalYearOptions()]}
             value={field.value ? String(field.value) : ''}
             onChange={(event) =>
               field.onChange(event.target.value ? Number(event.target.value) : undefined)

@@ -3,11 +3,9 @@ import { toast } from './toast'
 import { format, parseISO } from 'date-fns'
 import { he } from 'date-fns/locale'
 export {
-  buildYearOptions,
   getReportingPeriodMonthLabel,
   MONTH_NAMES,
   MONTH_OPTIONS,
-  YEAR_OPTIONS,
 } from '@/constants/periodOptions.constants'
 // ============================================================================
 // STRING & TYPE UTILITIES

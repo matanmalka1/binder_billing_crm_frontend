@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/primitives/Button'
 import type { BinderResponse } from '../../types'
 import { BinderHandoverPanel } from '../sections/BinderHandoverPanel'
 import { Select } from '@/components/ui/inputs/Select'
-import { NUMERIC_MONTH_OPTIONS, PERIOD_YEAR_OPTIONS } from '@/constants/periodOptions.constants'
+import { NUMERIC_MONTH_OPTIONS, getOperationalYearOptions } from '@/constants/periodOptions.constants'
 
 interface BindersPageDialogsProps {
   confirmReturnForId: number | null
@@ -134,7 +134,7 @@ export const BindersPageDialogs: React.FC<BindersPageDialogsProps> = ({
             label="עד שנת דיווח"
             value={String(bulkReadyYear)}
             onChange={(event) => setBulkReadyYear(Number(event.target.value))}
-            options={PERIOD_YEAR_OPTIONS}
+            options={getOperationalYearOptions()}
           />
           <Select
             label="עד חודש דיווח"

@@ -2,7 +2,8 @@ import { PageHeader } from "../../../components/layout/PageHeader";
 import { PageStateGuard } from "../../../components/ui/layout/PageStateGuard";
 import { AdvancePaymentReportTable } from "./AdvancePaymentReportTable";
 import { useAdvancePaymentReport } from "../hooks/useAdvancePaymentReport";
-import { MONTH_OPTIONS as BASE_MONTH_OPTIONS, YEAR_OPTIONS } from "../../../utils/utils";
+import { MONTH_OPTIONS as BASE_MONTH_OPTIONS } from "../../../utils/utils";
+import { getOperationalYearOptions } from "@/constants/periodOptions.constants";
 import { SelectDropdown } from "../../../components/ui/inputs/SelectDropdown";
 import { ALL_MONTHS_OPTION } from "@/constants/filterOptions.constants";
 
@@ -17,7 +18,7 @@ export const AdvancePaymentReportView: React.FC = () => {
       <SelectDropdown
         value={String(year)}
         onChange={(e) => setYear(Number(e.target.value))}
-        options={YEAR_OPTIONS}
+        options={getOperationalYearOptions()}
         className="w-28"
       />
       <SelectDropdown
