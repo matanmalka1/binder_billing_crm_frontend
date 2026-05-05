@@ -6,6 +6,7 @@ export interface TaxProfileData {
   advance_rate: string | null
   advance_rate_updated_at: string | null
   accountant_id: number | null
+  advance_payment_frequency: 'monthly' | 'bimonthly' | null
 }
 
 export interface TaxProfileUpdatePayload {
@@ -15,4 +16,5 @@ export interface TaxProfileUpdatePayload {
   advance_rate?: string | null
   advance_rate_updated_at?: string | null
   vat_exempt_ceiling?: string | null
+  advance_payment_frequency?: 'monthly' | 'bimonthly' | null
 }

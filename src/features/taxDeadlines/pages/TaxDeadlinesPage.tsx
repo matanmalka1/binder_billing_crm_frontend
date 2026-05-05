@@ -108,7 +108,6 @@ export const TaxDeadlines: React.FC = () => {
       <TaxDeadlinesFilters
         filters={{ ...filters, page: 1, page_size: 20 }}
         onChange={handleFilterChange}
-        defaultStatus="pending"
       />
 
       <TaxDeadlinesGroupedTable

@@ -30,4 +30,5 @@ export type {
   BindersCard,
   DocumentsCard,
   BusinessStatusCardResponse,
+  AdvancePaymentFrequency,
 } from './contracts'

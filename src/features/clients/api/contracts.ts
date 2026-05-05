@@ -69,7 +69,7 @@ export interface ListClientsParams {
   entity_type?: EntityType
   accountant_id?: number
   tax_year?: number
-  sort_by?: 'full_name' | 'created_at' | 'status'
+  sort_by?: 'full_name' | 'created_at' | 'status' | 'entity_type'
   sort_order?: 'asc' | 'desc'
   page?: number
   page_size?: number
